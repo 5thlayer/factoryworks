@@ -87,10 +87,10 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 
 | mechanic | verdict | where |
 | --- | --- | --- |
-| [Interplanetary travel](#interplanetary-travel) | `planned` | pack-wide |
-| [Space platforms](#space-platforms) | `planned` | Terra Orbit and every orbit |
-| [Asteroid mining and reprocessing](#asteroid-mining-and-reprocessing) | `planned` | orbits |
-| [Interplanetary logistics](#interplanetary-logistics) | `planned` | pack-wide |
+| [Interplanetary travel](#interplanetary-travel) | `blocked` | pack-wide |
+| [Space platforms](#space-platforms) | `blocked` | Terra Orbit and every orbit |
+| [Asteroid mining and reprocessing](#asteroid-mining-and-reprocessing) | `blocked` | orbits |
+| [Interplanetary logistics](#interplanetary-logistics) | `blocked` | pack-wide |
 | [Spoilage](#spoilage) | `adapted` | Sapros, pack-wide |
 | [Quality](#quality) | `blocked` | — |
 | [Recycling](#recycling) | `planned` | Electro |
@@ -428,8 +428,8 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **via**: `pack`
-- **owner**: ADR-0026, ADR-0029, ADR-0056
+- **via**: `planetaryfactory_core`, `oritech`
+- **owner**: ADR-0026, ADR-0029, ADR-0056, ADR-0060
 - **ticket**: #87 (the machines are registered; the recipe conversion is not)
 
 Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
@@ -453,6 +453,11 @@ Sub-rules:
   ADR-0026 removed on purpose and #236 measured the cost of: Oritech keys its recipe lookup on the
   ingredient set, so with no circuit a colliding recipe is refused into the lookup at load and 44 of
   139 emitted recipes never reach the machine.
+
+  **ADR-0060 replaces the surface below.** The machines are core subclasses of Oritech's, and an
+  assembler, chemical plant or refinery holds a **player-set recipe**: set once, inputs filtered to
+  it, no lookup at all. Furnaces keep Oritech's first match, which is Factorio's own split. The MI
+  account that follows is kept as history.
 
   ADR-0056 removes that mod, and Modern Industrialization's **locked output slot** is the surface.
   One mechanism does three jobs: it selects the recipe (a locked slot refuses a rival recipe's
@@ -703,70 +708,46 @@ and the grid drives**, so the deciding half needs no recipe and the driven half 
 ### Electric network and transmission
 
 - **verdict**: `adapted`
-- **notice**: the grid is a modelled electrical system rather than an abstract pool — poles carry a
-  real voltage over wire with a real gauge, the run loses power over distance, and a bad circuit
-  damages components instead of merely underfeeding them.
+- **notice**: power reaches a machine in all-or-nothing ticks. A machine short of power stops
+  rather than slowing, and the long-distance pole has no supply area of its own.
 - **where**: all bodies
-- **via**: `powergrid`, `pack`
-- **owner**: ADR-0017 as amended by ADR-0035 and ADR-0036
+- **via**: `planetaryfactory_core`, `oritech`
+- **owner**: ADR-0017 as amended by ADR-0035, ADR-0036 and ADR-0060
 
-**Simplebelts: Power Grid owns the grid** — poles, wire and catenary — and Oritech's power layer
-was removed entire to make room for it, cables included. *Amended by #148: this read "Simplebelts: Electro
-Energetics", which the swap replaced. The row did not change hands, only mods — the acceptance test
-was brownout propagation and a wire-tier ladder, and both mods were adopted for passing it.* A **pack-authored supply-area pole**
-(ADR-0036) distributes inside an area, which is the one seam: the grid moves power between places,
-the pole feeds the machines standing in one. *Amended by ADR-0035: this read "Mekanism's Universal
-Cables distribute inside an area"; the mod left the pack and in-area distribution became the pack's
-own.*
-
-The mod runs at **shipped physics defaults** (ADR-0017), which is the decision this row turns on:
-voltage drop, per-material wire gauge, grounding, fuses, brownouts and component damage are all on.
-Flattening resistance to the config floor would delete the wire-tier ladder that is the reason to
-adopt the mod at all.
-
-An earlier version of this row named Oritech and called brownout `excluded` on the grounds that GT
-machines stall rather than derate. Both halves were wrong — GT has no power layer here, and the mod
-that replaced it models brownouts natively.
+FE is the pack's only energy currency (ADR-0060), at **1 FE = 100 J**. Two carriers move it. The
+core's **supply-area pole** (ADR-0036) feeds every machine standing in its area, and **Oritech's
+Energy Transmission Pole** carries power between areas in the place of Factorio's big electric pole.
+Oritech's energy pipes, Enderic Laser and storage blocks are recipe-removed, so there is no third
+route. *Before ADR-0060 this row was Create: Power Grid's, with voltage drop, wire gauge and a
+brownout model; the mod left with Create.*
 
 Sub-rules:
 
-- **Brownout: insufficient supply degrades what is running** — `blocked`, and the row has now been
-  wrong in both directions. Power Grid models sag on the *grid* natively, which is what the previous
-  `shipped` verdict rested on. But the machine side does not derate: `RecipeLogic.regressRecipe`
-  takes progress *down* by two per waiting tick (`recipeProgressLowEnergy: false` in
-  `config/oritech.yaml`), so a machine that can afford its full EU/t on a fraction `f` of ticks nets
-  `3f - 2` progress per tick and **never completes anything below f = 2/3**. Factorio has a slope
-  there; the pack has a cliff, with no signal separating "slow" from "permanently stuck". The
-  pole's water-fill makes it worse rather than better: sharing a shortfall evenly puts every machine
-  in an area under the cliff at once instead of stalling the hungriest. Verified by disassembly
-  against Oritech 7.0.2 while building #147; the fix is #157, and it is an ADR's worth of argument
-  because GT will not derate without touching recipe logic that ADR-0036 forbids reaching into.
-- **Voltage tiers** — `adapted`. Factorio steps low to medium to high voltage at the transformer;
-  Power Grid's ladder is wire gauge and material — copper, iron and gold, each with its own
-  resistance, span and current ceiling as physical data rather than a voltage rating in a `.toml` —
-  so upgrading a run means rewiring it rather than swapping a pole tier.
-- **Power poles have a supply area** — `shipped`. A pack-authored block in
-  `planetaryfactory_core` (ADR-0036, #147) that scans its area on a tick and pushes into every
-  machine inside it. Three tiers, 5x5, 7x7 and 18x18, Factorio's own numbers.
-- **Power poles have a wire reach** — `excluded`. The two halves used to be one row, which is what
-  let Factorio's big pole survive as a candidate: it justifies a *smaller* supply area, 4x4, by
-  buying 30 tiles of reach. Here the wire has the span — Power Grid's catenary, as a material
-  property — and the pole it hangs from does not enter it, so there is no reach for a pole tier to
-  differ in and the big pole is dropped (`not_emitted` in `data/pack/item-map.json`).
-- **Transformers between voltage levels** — `planned`. Kept craftable early because Transformer Oil
-  is seed oil and renewable, on the one-way rule that it must never become an input to the oil
-  chapter (ADR-0017).
-- **A separate FE side, bridged by a Converter** — `adapted`, and a pack addition Factorio has no
-  need for: Factorio has one kind of electricity and this pack has two, so the Converter is a
-  boundary the player must learn.
+- **Brownout: insufficient supply degrades what is running** — `adapted`. Factorio derates every
+  machine on the network in proportion to the shortfall. Here a machine that cannot draw its full
+  tick's energy makes no progress that tick, which is Oritech's own `MachineBlockEntity.workTick`,
+  and ADR-0060 keeps it rather than building a derate. The slope becomes a stutter: an area at half
+  supply runs at roughly half speed, but by ticks skipped rather than by a slower craft.
+- **Voltage tiers** — `excluded`. Factorio's electric network has none to begin with; the tiers
+  were Power Grid's wire gauge, which left with it (ADR-0060).
+- **Power poles have a supply area** — `planned`. The core's pole, three tiers at 5x5, 7x7 and
+  18x18, Factorio's own numbers. It was `shipped` on GregTech's energy capability and is ported to
+  NeoForge's transfer API with the rest of the core.
+- **Power poles have a wire reach** — `adapted`. Oritech's pole reaches 1–32 blocks, the big
+  electric pole's 32 read out of the Factorio dump, and carries 18,000 FE/t: one full steam block.
+  Factorio's wire has no throughput cap and its big pole also supplies a 4x4 area; neither is
+  reproduced. The small and medium poles' shorter reaches do not exist separately, because the
+  core's poles do not wire to each other.
+- **Transformers between voltage levels** — `excluded`. `by-consequence` of having no voltage.
 - **The power graph as a diagnostic surface** — `unargued`, no verdict.
 
 ### Power generation
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **via**: `pack`, `simplebelts`, `powergrid`
-- **owner**: ADR-0017 as amended by #104, #148 and **ADR-0048, which supersedes #101**. `via`
+- **via**: `pack`, `oritech`
+- **owner**: ADR-0017 as amended by #104, #148, **ADR-0048, which supersedes #101**, and ADR-0060,
+  which takes the chain off Create and Power Grid: the pack's Steam Engine emits electricity. `via`
   is ordered along the chain: the pack's Boiler, the pack's Steam Engine, Power Grid's generator
   assembly, the pack's Steam Turbine. *#101 read "the grid mod owns steam and solar"; ADR-0048 makes
   both steam fluids `planetaryfactory:` and leaves the grid mod owning solar. Power Grid never
@@ -799,8 +780,9 @@ Sub-rules:
   from any boiler or from anything else. The pack authors that step. The engine emits rotation and
   not electricity on purpose: an engine that fed a pole directly would route around every mechanic
   ADR-0036 selected Power Grid for.
-- **Solar panels and accumulators** — `planned`, and the grid mod's outright: Power Grid ships a
-  real-PV Solar Panel and the Battery the pack borrows as Factorio's accumulator (#148). It is also
+- **Solar panels and accumulators** — `planned`. The accumulator is the core's, at Factorio's 5 MJ
+  and 300 kW — 50,000 FE at 150 FE/t (ADR-0060) — and Oritech's storage blocks are recipe-removed.
+  *Before ADR-0060 both were Power Grid's (#148).* It is also
   the *planet* Electro's identity — see [Day and night cycle](#day-and-night-cycle).
 - **Steam as a stored, pipeable intermediate** — `planned` (#189), and **two fluids rather than
   one**. ADR-0048 registers low-temperature steam, which the Boiler makes and the Steam Engine eats,
@@ -1261,13 +1243,15 @@ Sub-rules:
 
 ### Interplanetary travel
 
-- **verdict**: `planned`
+- **verdict**: `blocked`
 - **where**: pack-wide
 - **via**: `gcyr`
 - **owner**: ADR-0001, ADR-0006, `docs/gdd.md` §2
 - **ticket**: #112, #54
 
-Six bodies, seven destinations.
+Six bodies, seven destinations. **`blocked` by ADR-0060**: GCyR left, and travel waits for a
+first-party Oritech space addon. This row and the three orbital rows below it are blocked together,
+and the bodies other than Terra are parked under `kubejs/parked/`.
 
 Sub-rules:
 
@@ -1279,7 +1263,7 @@ Sub-rules:
 
 ### Space platforms
 
-- **verdict**: `planned`
+- **verdict**: `blocked`
 - **where**: Terra Orbit, and every body's orbit
 - **via**: `gcyr` (space stations)
 - **owner**: ADR-0006
@@ -1301,7 +1285,7 @@ Sub-rules:
 
 ### Asteroid mining and reprocessing
 
-- **verdict**: `planned`
+- **verdict**: `blocked`
 - **where**: orbits
 - **via**: `pack`
 - **owner**: `docs/gdd.md` §3, Map #25 (out of scope for the first arc)
@@ -1318,7 +1302,7 @@ Sub-rules:
 
 ### Interplanetary logistics
 
-- **verdict**: `planned`
+- **verdict**: `blocked`
 - **where**: pack-wide
 - **via**: `pack`
 - **owner**: `docs/gdd.md` §4

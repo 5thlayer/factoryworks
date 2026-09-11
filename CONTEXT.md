@@ -231,7 +231,7 @@ _Avoid_: real water, unplaced water, virgin water, source water
 ### Making things
 
 **Plate**:
-The pack's one item per material — GregTech's, for every material (ADR-0053). It is what a furnace yields, since ore smelts 1:1 to a plate with no ingot step, and it is the form every recipe consumes. There is exactly one per material and never a second: where another mod ships a rival form for the same material, the pack's unification priority decides in GregTech's favour and the rival becomes unobtainable. Vanilla still owns the ingot, ore, nugget and raw forms, which the pack does not use.
+The pack's one item per material — FTB Materials', for every metal. It is what a furnace yields, since ore smelts 1:1 to a plate with no ingot step, and it is the form every recipe consumes. There is exactly one per material and never a second: where another mod ships a rival form for the same material, the rival's recipes are removed and it becomes unobtainable. The metal-derived intermediates — gear, rod, wire — come from the same supplier. Ingots, nuggets, dusts and raw forms exist in the jars but the pack does not use them.
 _Avoid_: sheet, ingot, GT plate, unified plate
 
 **Engineer's Pick**:

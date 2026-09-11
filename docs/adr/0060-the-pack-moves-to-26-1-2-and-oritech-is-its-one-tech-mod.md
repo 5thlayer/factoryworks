@@ -1,6 +1,6 @@
 ---
 status: provisional
-supersedes: [148, 178]
+supersedes: [28, 148, 178]
 ---
 
 # The pack moves to Minecraft 26.1.2, and Oritech is its one tech mod
@@ -27,6 +27,8 @@ leaving under ADR-0056.
 
 **Staying:** Researchd and Respoiled, both forks and both ported by the pack. Building Gadgets 2,
 FTB Filter System, FTB Quests, KubeJS, Block Runner, and plumbing that has no mechanic of its own.
+
+**Arriving:** FTB Materials, as the item layer (below).
 
 ## Why 26.1.2
 
@@ -119,8 +121,14 @@ These rulings from the SimpleBelts survey are part of this decision:
 - **ADR-0048's rotation clause falls.** Its only argument for a steam engine that emits rotation was
   ADR-0036's choice of Power Grid. The engine emits electricity, which is the Factorio-faithful reading
   ADR-0048 turned down only because of that choice.
-- **ADR-0018 rung 2's "movement at scale", Simplebelts 6 packages,** loses its mechanism. What `logistic`
-  science buys at rung 2 goes back to #25.
+- **ADR-0036's brownout requirement and wire-tier ladder fall.** Both were satisfied by Power Grid
+  and neither is rebuilt: a machine short of power stops, and the only wire is Oritech's pole. The
+  supply-area pole stands, and it now distributes FE rather than GregTech's EU.
+- **ADR-0053's plate owner changes.** Its rule, one plate per material and no ingot step, stands;
+  the plate is FTB Materials' rather than GregTech's.
+- **ADR-0018 rung 2's "movement at scale", Create 6 packages,** loses its mechanism and is dropped,
+  not replaced: Factorio has no mass package logistics. `#28`'s cut list granted it at rung 2, and
+  `docs/spec/terra-progression.md`'s Rung 2 is amended to match by #257.
 
 `#148` chose Simplebelts: Power Grid and `#178` answered "no" to Factorio belts; both are contradicted.
 `#102` is open and is left to the frontier: its answer becomes *the loader*.
@@ -169,7 +177,7 @@ are re-derived, not carried over.
 
 ## What is decided here and what is not
 
-**Decided:**
+**Decided at the first writing:**
 
 - the version, 26.1.2
 - the palette and its owners
@@ -178,26 +186,47 @@ are re-derived, not carried over.
 - the steam engine emits electricity
 - the belt rulings above
 
-**Not decided. Each needs its own ADR or ticket:**
+**Decided in the grilling that followed (2026-09-11).** These were this ADR's open list:
 
-- **The joules-per-FE constant.** Every Factorio wattage the Oritech survey marks reachable depends on
-  it, and so does the loader's charge.
-- **The item layer**, meaning which mod supplies each part of ADR-0021's alphabet. Railcraft Reborn
-  ships plates and gears, among them `iron_plate`, `copper_plate` and `steel_plate`. Oritech ships
-  ingots and dusts but no plates. Both ship `steel_ingot` and `nickel_ingot`. The overlap
-  AlmostUnified would have arbitrated is real, and small.
-- **Power between areas and energy storage.** These were Power Grid's catenary and Battery.
-  ADR-0036's brownout propagation and wire-tier ladder were hard requirements satisfied by Power Grid,
-  and whether they survive is open.
-- **Recipe selection on Oritech's machines.** It is first match with no lock. The Oritech survey's
-  subclass route is the candidate. ADR-0056's slot-locking conclusions described MI.
-- **Item bulk storage, barrelling and rung 2's logistics clause**, all of which Simplebelts carried and
-  which are unowned.
-- **Interplanetary travel.** GCyR leaves. Whether Oritech: Space Age (0.1.0, no dimensions) moves the
-  row is a survey of its own.
-- **The outfield veins' placer**, which ADR-0056 already left open.
-- **The re-read of the Oritech survey at 2.0.** Only its item capability was re-read (SimpleBelts
-  survey, fact 3).
+- **1 FE = 100 J.** Factorio's wattages then land inside Oritech's own range: an Assembling Machine 1
+  draws 37.5 FE/t, an electric mining drill 45, a Steam Engine makes 450 and a Boiler's steam is
+  worth 900. The core's existing joule figures convert at the same rate.
+- **The item layer is FTB Materials.** It supplies the Plate and every metal-derived intermediate —
+  gear, rod, wire — for every metal in ADR-0021's alphabet. Railcraft Reborn's plates and gears and
+  Oritech's ingots are recipe-removed, which is ADR-0017's rule applied rather than an arbitration.
+  Materials outside the alphabet are disabled through FTB Materials' own startup config, and the
+  forms the pack does not use — ingots, nuggets, dusts and every ore-processing form — are
+  recipe-removed, since Factorio has no ore multiplication.
+- **Power has two carriers and no brownout.** The core's poles feed the machines standing in an
+  area (ADR-0036's supply area). Oritech's Energy Transmission Pole carries power between areas in
+  the role of Factorio's big electric pole: wire reach 1–32, Factorio's 32, and 18,000 FE/t, which
+  is one full steam block of 20 Boilers and 40 Steam Engines. Its 2-tile supply area is not
+  reproduced. Oritech's energy pipes, Enderic Laser and storage blocks are recipe-removed. **An
+  underpowered machine stops rather than slowing**, which is Oritech's own behaviour, and
+  ADR-0036's brownout requirement is dropped rather than built.
+- **Energy storage is the core's accumulator**, at Factorio's 5 MJ and 300 kW, which is 50,000 FE
+  at 150 FE/t. Oritech's smallest store is twenty times that and would retire the puzzle.
+- **Machines are core subclasses of Oritech's.** An Oritech machine with a Factorio counterpart
+  becomes a `planetaryfactory_core` subclass that reuses Oritech's model. Assemblers, chemical
+  plants and refineries hold a **player-set recipe**: set once, inputs filtered to it, no lookup.
+  Furnaces keep Oritech's first match, which is Factorio's own split. Oritech recipes that conflict
+  with the corpus are reauthored. Every Oritech machine with no Factorio row is recipe-removed —
+  the Pulverizer, the forges and the ore-doubling Centrifuge among them.
+- **Storage is the core's.** Factorio's wooden, iron and steel chests and the barrel are registered
+  by the core. Their textures are authored, since nothing in the palette ships them.
+- **The outfield patches are placed by the core**, alongside the starting fields, so every patch
+  carries the amount ADR-0041 gives it.
+- **Interplanetary travel is deferred** until Oritech ships a first-party space addon. The rows
+  that depend on reaching orbit are `blocked` in the ledger, and the parked bodies stay parked.
+- **The port order is the core, then Researchd, then the SimpleBelts fork.** The core's dependency
+  on Researchd becomes optional, with research gating inert, until the Researchd port lands.
+  Respoiled is deferred: Decay matters only on Sapros, which is parked.
+
+**Still not decided:**
+
+- **The re-read of the Oritech survey at 2.0** is done for energy, recipe lookup, items and storage
+  (2026-09-11). Its module and addon system has not been re-read, so whether Oritech's addons carry
+  Modules and beacons is still the survey's claim, and that row stays `blocked`.
 
 ## Considered alternatives
 
