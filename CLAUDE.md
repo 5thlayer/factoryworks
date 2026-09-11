@@ -27,6 +27,26 @@ Which check a feature warrants — and whether it warrants one at all — is dec
 feature makes, not ad hoc per ticket. Six claims, six answers, and a content ticket names its check
 kind explicitly so that "no check" is a recorded decision. See `docs/testing/what-to-check.md`.
 
+### Checks the 26.1.2 move broke
+
+The move to 26.1.2 (ADR-0060) took GregTech and GCyR out and parked every body but Terra under
+`kubejs/parked/`. Five checks below fail for that reason alone, and they stay red until the port
+track gives each subject a home again. A failure in one of these is expected; a failure anywhere
+else is not.
+
+- `tests/flora/test_flora_data.py` — Sapros's data is parked, so the files it reads are gone.
+- `tests/factorio/test_recipe_convert.py` — reads `kubejs/startup_scripts/machines.js`, which
+  registered GregTech machines and was deleted.
+- `tests/pack/test_furnace_assets.py` — the Electric tier's textures live in the GTCEu jar.
+- `tests/pack/test_starting_kit.py` — the kit names GregTech ids.
+- `tests/factorio/test_pack_recipes.py`, the Steel Pick texture only — its source is GTCEu's tool
+  art. Re-running `scripts/build-pick-textures.py` cannot fix it.
+
+One check passes without proving anything: `tests/worldgen/test_start_geometry.py` checks Terra's
+start structure, which is parked, so nothing places it in a world.
+`data/pack/item-map.json` and `data/pack/subgroup-owner.json` still name Create, Power Grid and
+GregTech targets. They are the conversion's input and are rewritten with it.
+
 ### Flora data check
 
 `tests/flora/test_flora_data.py` asserts Sapros's tree and surface data are internally consistent
@@ -269,7 +289,8 @@ the player as two EMI entries for the same thing, and if both are `factorio_cate
 Personal Assembler's resolver has no cost model to choose between them. It shipped once, when
 Create's two gearbox conversions and the large cogwheel's second route were emitted alongside the
 direct recipes they duplicate and every subtree-local check passed. One item legitimately has a
-second route — Factorio's three solid-fuel oils — and that is a row with its reason.
+second route: solid fuel, which Factorio makes from each of its three oils, and that is a row
+with its reason.
 
 It also holds the **file-path invariant**, which is the other way one recipe becomes two entries and
 the one nothing else can see: a GT recipe's first path component must equal its recipe type's path.
@@ -280,8 +301,9 @@ manager as BOTH `planetaryfactory:grid/copper_coil` and `planetaryfactory:assemb
 The file is valid, the sweep keeps it, and `ServerEvents.recipes` runs BEFORE the re-registration,
 so even a probe inside the recipe event sees one recipe; only EMI shows the two. That is why
 the hand-written `pack/` sits INSIDE `assembling/` — the Factorio converter had the rule from #87
-and the other subtrees did not, so it shipped 91 duplicate entries. `planetaryfactory:smelting` is the pack's own class, not a GTRecipe, so its four recipes
-are not cloned and stay flat; that exemption is `FLAT_TYPES`, recorded rather than assumed.
+and the other subtrees did not, so it shipped 91 duplicate entries. `planetaryfactory:smelting`
+is the pack's own class, not a GTRecipe, so its four recipes are not cloned and stay flat; that
+exemption is `FLAT_TYPES`, recorded rather than assumed.
 
 Run it after any converter change. It does not assert the routes are balanced; costing is a
 decision.
@@ -291,9 +313,9 @@ decision.
 `kubejs/data/planetaryfactory/recipe/assembling/pack/` is the one subtree no converter generates: ADR-0039's
 two Engineer's Pick recipes, which the corpus can never author because Factorio has no mining-tool
 prototype. `tests/factorio/test_pack_recipes.py` is what holds them, since every other recipe here
-is checked against the corpus and these are checked against nothing otherwise — that both
-converters and the converter's own check still list `pack` as foreign (a run that forgets deletes
-them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
+is checked against the corpus and these are checked against nothing otherwise — that the
+converter still lists `pack` as foreign, which its own check reads from it rather than restating (a
+run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
 `recipe_survivors.js` admits and carry `factorio_category: crafting` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
 has its model, texture, lang key, the two wrench tags that carry the dismantle verb and the block

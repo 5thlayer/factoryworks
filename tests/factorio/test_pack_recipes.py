@@ -88,7 +88,6 @@ SURVIVORS = ROOT / "kubejs/server_scripts/recipe_survivors.js"
 # the roots are named rather than `kubejs/` itself.
 SCANNED = (ROOT / "kubejs/data", ROOT / "kubejs/assets")
 CONVERTER = ROOT / "scripts/factorio-recipe-convert.py"
-CONVERT_CHECK = ROOT / "tests/factorio/test_recipe_convert.py"
 TEXTURE_BUILDER = ROOT / "scripts/build-pick-textures.py"
 MODS = ROOT / "mods"
 NAMESPACE = "planetaryfactory"
@@ -257,14 +256,13 @@ def main():
           "its own decision, not this one's precedent"
           % (SUBTREE, sorted(recipes), sorted(picks)))
 
-    # Both converters must leave the subtree alone, and so must the converter's own check.
-    for path in (CONVERTER, CONVERT_CHECK):
-        declared = FOREIGN_RE.search(path.read_text(encoding="utf-8"))
-        if check(declared is not None, "%s declares no FOREIGN_SUBTREES" % path.name):
-            check(('"%s"' % SUBTREE) in declared.group(1),
-                  "%s does not list `%s` as foreign, so a converter run deletes ADR-0039's "
-                  "hand-written recipes and nothing can be mined again (#165)"
-                  % (path.name, SUBTREE))
+    # The converter must leave the subtree alone. Its check reads the same list out of it.
+    declared = FOREIGN_RE.search(CONVERTER.read_text(encoding="utf-8"))
+    if check(declared is not None, "%s declares no FOREIGN_SUBTREES" % CONVERTER.name):
+        check(('"%s"' % SUBTREE) in declared.group(1),
+              "%s does not list `%s` as foreign, so a converter run deletes ADR-0039's "
+              "hand-written recipes and nothing can be mined again (#165)"
+              % (CONVERTER.name, SUBTREE))
 
     types = survivor_types()
     for name, recipe in sorted(recipes.items()):
