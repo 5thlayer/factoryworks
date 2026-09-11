@@ -35,8 +35,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
-# Subtrees of EMITTED this converter does not write, each held by a check of its own.
-FOREIGN_SUBTREES = ("assembling/pack", "assembling/sapling")
+CONVERTER = ROOT / "scripts/factorio-recipe-convert.py"
+# Subtrees of EMITTED the converter does not write, each held by a check of its own. Read out of
+# the converter rather than restated, so the two can never disagree about what it owns.
+FOREIGN_SUBTREES = tuple(re.findall(r'"([^"]+)"', re.search(
+    r"^FOREIGN_SUBTREES = \((.*)\)$", CONVERTER.read_text(encoding="utf-8"), re.MULTILINE).group(1)))
 STARTUP = ROOT / "kubejs/startup_scripts"
 MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
 PF_BLOCKS = MOD / "PFBlocks.java"

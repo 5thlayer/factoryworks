@@ -12,7 +12,11 @@ Re-run after editing the palette or the terrain constants; it overwrites its out
 
 import json
 import os
+import sys
 import zipfile
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from launch import INSTALL  # noqa: E402 -- the one place the install's location is worked out
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MC = os.path.join(ROOT, "kubejs", "data", "minecraft")
@@ -22,10 +26,9 @@ PF = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
 # the instance launches. Minecraft rewrites both formats between versions -- 26.1 moved every
 # dimension-type flag into `attributes` and replaced the router's
 # `initial_density_without_jaggedness` with `preliminary_surface_level` -- so a template copied
-# into this repo is a template for the version it was copied from. The install sits two levels
-# above the instance, as in scripts/launch.py.
+# into this repo is a template for the version it was copied from.
 MC_VERSION = "26.1.2"
-GAME_JAR = os.path.join(ROOT, "..", "..", "Install", "versions", MC_VERSION, MC_VERSION + ".jar")
+GAME_JAR = INSTALL / "versions" / MC_VERSION / (MC_VERSION + ".jar")
 
 
 def vanilla(path):

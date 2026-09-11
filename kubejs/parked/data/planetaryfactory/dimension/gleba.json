@@ -1,5 +1,5 @@
 {
-  "_comment": "Sapros. Five biomes, placed on the same multi-noise axes GCyR's overworld-shaped noise router already produces: continentalness separates the two elevated biomes from the low wet ones, and humidity is what splits the Green Marshland from the Red. The split is load-bearing -- Yumako grows in one and Jellystem in the other, and a green grove and a red grove are different destinations. That every one of the five is actually emitted, rather than merely parsing, is asserted by tests/worldgen/expected.json.",
+  "_comment": "Sapros. Five biomes, placed on the same multi-noise axes GCyR's overworld-shaped noise router already produces: continentalness separates the two elevated biomes from the low wet ones, and humidity is what splits the Green Marshland from the Red. The split is load-bearing -- Yumako grows in one and Jellystem in the other, and a green grove and a red grove are different destinations. That every one of the five is actually emitted, rather than merely parsing, was asserted by tests/worldgen/expected.json, which left with GregTech (ADR-0060); nothing asserts it on 26.1.2.",
   "type": "planetaryfactory:sapros",
   "generator": {
     "type": "minecraft:noise",

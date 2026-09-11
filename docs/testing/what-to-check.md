@@ -13,7 +13,7 @@ own. Harnesses come and go; the claims do not. Find the claim, read off the chec
 |---|---|
 | This data parses, and this thing is registered | **Nothing.** Load-time facts are free. |
 | Cross-file references resolve | **Static data check** — `tests/`, no game launch. |
-| This is emitted into a world | **Fixture row** in `tests/worldgen/expected.json`. |
+| This is emitted into a world | **Fixture row** in a world-load harness (none on 26.1.2; see below). |
 | This pack logic computes something | **Unit test** in `planetaryfactory_core` or `respoiled`. |
 | This block or entity behaves in-world | **Nothing** if vanilla by construction, else **GameTest**. |
 | This looks or feels right | **Human on delivery.** |
@@ -162,7 +162,7 @@ stale the day it is written, and a per-ticket list is verifiable at the moment i
 ```markdown
 ## Checks
 
-- emitted → fixture rows for the five Sapros biomes in `tests/worldgen/expected.json`
+- emitted → fixture rows for the five Sapros biomes in the world-load harness
 - references → assertions in `tests/flora/test_flora_data.py` for both trees' loot and lang
 - in-world behaviour → none; `SaprosSapling` is a real `SaplingBlock`, vanilla by construction
 - looks right → human: land on Sapros, confirm sky and that both marshlands carry their tree

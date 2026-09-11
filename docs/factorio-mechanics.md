@@ -46,7 +46,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 
 | mechanic | verdict | where |
 | --- | --- | --- |
-| [Resource patches and finite ore](#resource-patches-and-finite-ore) | `shipped` | Terra, Ignus, Sapros |
+| [Resource patches and finite ore](#resource-patches-and-finite-ore) | `planned` | Terra, Ignus, Sapros |
 | [Manual mining](#manual-mining) | `adapted` | all bodies |
 | [Trees and wood](#trees-and-wood) | `adapted` | all bodies |
 | [Mining drills](#mining-drills) | `adapted` | all bodies |
@@ -109,10 +109,10 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 
 ### Resource patches and finite ore
 
-- **verdict**: `shipped`
+- **verdict**: `planned`
 - **where**: Terra, Ignus, Sapros
-- **via**: `gregtech`
-- **owner**: ADR-0007, ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045
+- **via**: `planetaryfactory_core`
+- **owner**: ADR-0007, ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045, ADR-0060
 
 Terra deals one ore shape: a filled disc of a single ore block, one deep, flush with the terrain
 surface, at Factorio's own spacing. `scripts/worldgen-check.py` asserted it against Oritech's
