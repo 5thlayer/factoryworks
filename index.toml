@@ -65,6 +65,18 @@ file = "config/ftbchunks-world.snbt"
 hash = "73345c2e0fcad604296129df0e3e764643968e96d177f949eefd2e8e0b4bc780"
 
 [[files]]
+file = "config/ftbmaterials-disabled-materials.json5"
+hash = "f3710f6c9064ca6a9c09d6846137d3d4fb10b61b219678e1f1629cc877b8af22"
+
+[[files]]
+file = "config/ftbmaterials-startup.json5"
+hash = "b0211b7954c49e1ef31814bc62e20c5fa0e8386eaf9d1f121cc35724e65fc047"
+
+[[files]]
+file = "config/ftbmaterials/custom-rules-default.json"
+hash = "ba3f0ddab64dc5551acf0dd5377f2b614327c973bd2de4d220a24ba8bc59dfb0"
+
+[[files]]
 file = "config/ftbquests/quests/chapter_groups.json5"
 hash = "1d3e3bbaf4217ac4414362faba91a7d11d5b9a2c5ea040579d985bec6a8a1517"
 
@@ -166,7 +178,7 @@ hash = "48b15278e1ed28dd8e3177b04c13437c02cb9597894b91e6f7a6fbfad66ddc1e"
 
 [[files]]
 file = "config/oritech-common.toml"
-hash = "cbee197fc78de1838c2ec1a6505ac798bde7f0c539bc26b9f0351bfff0a53936"
+hash = "c6d08522b1a705dedeb401e387274e4a10436dd64fdeef5c8ff9846386dae0a2"
 
 [[files]]
 file = "config/oritech-startup.toml"
@@ -1998,6 +2010,11 @@ metafile = true
 [[files]]
 file = "mods/ftb-library-forge.pw.toml"
 hash = "facc609e77625b3571b3dfb49b56bf63c756859f640fac7ad90ece82b4bf4be4"
+metafile = true
+
+[[files]]
+file = "mods/ftb-materials.pw.toml"
+hash = "9d8079157160b1b440486df8125859458899d01ede9fa8d5abac981b8e7e0d48"
 metafile = true
 
 [[files]]
