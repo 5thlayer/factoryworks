@@ -12,9 +12,9 @@ import java.util.Collection;
  *
  * <p><b>Why a blockstate is a sufficient check.</b> It is not, on its own: vanilla records nothing
  * that distinguishes a poured source from a worldgen one -- {@code BucketItem} empties as
- * {@code content.defaultFluidState().createLegacyBlock()}, byte-identical to what the generator
+ * {@code content.defaultFluidState().simplebeltsLegacyBlock()}, byte-identical to what the generator
  * lays down. What makes this predicate sound is the rule around it. With source formation off
- * ({@link WaterConservation}) and Create's two source-placing flags off, nothing in the pack can
+ * ({@link WaterConservation}) and Simplebelts's two source-placing flags off, nothing in the pack can
  * bring a source into existence, so every source block in the world is one worldgen or a structure
  * placed. Naturalness is guaranteed by construction rather than tracked.
  *
@@ -30,7 +30,7 @@ public final class OffshorePumpSiting {
     /**
      * What one neighbouring block is, as far as siting is concerned. Deliberately three cases
      * rather than a boolean: {@link #FLOWING} is not merely "not a source" but the state ADR-0050's
-     * deferred outlet block is allowed to create, and it must stay refused here for that block to
+     * deferred outlet block is allowed to simplebelts, and it must stay refused here for that block to
      * be a way of moving water rather than a way of making it.
      */
     public enum Neighbour {

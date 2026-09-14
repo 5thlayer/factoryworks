@@ -4,15 +4,15 @@ status: accepted
 
 # Modern Industrialization owns the item layer, and unification arbitrates one supplier
 
-ADR-0053 gave the item layer to GregTech. ADR-0056 takes GregTech out of the pack and says nothing
+ADR-0053 gave the item layer to Oritech. ADR-0056 takes Oritech out of the pack and says nothing
 about the item layer at all, which leaves twelve unified tags with no winner named and 153 emitted
-recipes pointing at `gtceu:` items that will not exist. This ADR supplies the replacement.
+recipes pointing at `oritech:` items that will not exist. This ADR supplies the replacement.
 
 ## The rule
 
 **Modern Industrialization supplies the item layer for the ADR-0021 alphabet, and the pack registers
-only the gaps.** AlmostUnified stays, and its job is unchanged: it arbitrates between MI, Create and
-vanilla, exactly as it arbitrated between GregTech, Create and vanilla.
+only the gaps.** AlmostUnified stays, and its job is unchanged: it arbitrates between MI, Simplebelts and
+vanilla, exactly as it arbitrated between Oritech, Simplebelts and vanilla.
 
 ## Why a mod owns this at all, again
 
@@ -22,7 +22,7 @@ mod does not already ship. What ADR-0053 got right, and what this ADR keeps, is 
 be named*: an item layer with two suppliers and no declared winner is what #220 is, and #220 is not a
 bug in AlmostUnified.
 
-`MaterialRegistry`, `MaterialBuilder` and `MIParts` are MI's equivalent of GregTech's material
+`MaterialRegistry`, `MaterialBuilder` and `MIParts` are MI's equivalent of Oritech's material
 registry, reachable from KubeJS through `AddMaterialsEventJS`. The alphabet ADR-0021 closed is
 mostly MI's stock set already, so the pack registers gaps rather than a whole alphabet.
 
@@ -39,23 +39,23 @@ with ADR-0036's Supply Area Pole.
 
 ## What this resolves rather than fixes
 
-**#220 dissolves.** The pack ships two plate items per material because GregTech and Create both
+**#220 dissolves.** The pack ships two plate items per material because Oritech and Simplebelts both
 supply them and unification replaces rather than broadens (ADR-0053's second error, and the one that
-shipped). With GregTech gone the pair is MI-and-Create rather than GregTech-and-Create — one pair,
+shipped). With Oritech gone the pair is MI-and-Simplebelts rather than Oritech-and-Simplebelts — one pair,
 not two — and the arbiter has one overlap to resolve instead of a three-way. That is a smaller
-problem, not an absent one: **AlmostUnified stays**, because Create still ships sheets and vanilla
+problem, not an absent one: **AlmostUnified stays**, because Simplebelts still ships sheets and vanilla
 still ships ingots.
 
 **ADR-0053's non-recipe trap does not go away.** Its central finding — that unification reaches
 inside recipes and nowhere else, so a literal item id in KubeJS, in `planetaryfactory_core` or in a
 research trigger points at whatever unification just orphaned — is a fact about AlmostUnified, not
-about GregTech. Every site ADR-0053 identified has to be re-pointed at MI ids in the same commit
+about Oritech. Every site ADR-0053 identified has to be re-pointed at MI ids in the same commit
 that regenerates the recipes, `StartingKit.java` included.
 
 ## Consequences
 
-- `data/pack/item-map.json`'s 16 `gtceu:` rows change namespace, and the change is a *re-judgement*
-  rather than a rename: MI's part naming is not GregTech's, and a row that resolves to nothing is a
+- `data/pack/item-map.json`'s 16 `oritech:` rows change namespace, and the change is a *re-judgement*
+  rather than a rename: MI's part naming is not Oritech's, and a row that resolves to nothing is a
   silent empty slot in the starting kit (#203's lesson).
 - `config/almostunified/` is regenerated against MI tags in the flip commit, not after it. A stale
   config is not an error — it is an ingredient that stops being replaced, with nothing in any log.

@@ -1,6 +1,6 @@
 # The recipe conversion, and the two checks on it
 
-`scripts/factorio-recipe-convert.py` turns `data/factorio/recipe.json` into GregTech recipe JSON
+`scripts/factorio-recipe-convert.py` turns `data/factorio/recipe.json` into Oritech recipe JSON
 under `kubejs/data/planetaryfactory/recipe/`. ADR-0026 is the decision; #87 is the build.
 
 ## What decides what
@@ -23,11 +23,11 @@ Nothing is scaled (#126, which rewrote ADR-0025's table). Item counts transfer 1
 fluid unit is one millibucket, and `energy_required` seconds become ticks at ×20. `crafting_speed`
 and `EUt` belong to the machine at registration (ADR-0029), so neither appears in a recipe.
 
-Two shapes come out: GregTech's `GTRecipe` — read off `GTRecipeSerializer`'s codec in GTCEu 7.0.2,
+Two shapes come out: Oritech's `GTRecipe` — read off `GTRecipeSerializer`'s codec in Oritech 7.0.2,
 where `type` and `duration` are the only required fields and every capability map is optional — and
 vanilla's furnace recipe for the 1:1 smelts (#91).
 
-Factorio's source category rides on the emitted recipe, in GregTech's `data` compound, because
+Factorio's source category rides on the emitted recipe, in Oritech's `data` compound, because
 `category-map.json` collapses three crafting categories into one machine and the Personal
 Assembler needs the distinction back — it is a filtered view of the Assembling Machine's recipes,
 not a machine of its own (#125).
@@ -35,7 +35,7 @@ not a machine of its own (#125).
 An item-map row may carry `components`, and the converter emits a `neoforge:components`
 ingredient for it. The science packs are the case: they are Researchd research packs, so the
 player holds one `researchd:research_pack` item told apart by a data component, not four items.
-On the OUTPUT side that leans on GregTech resolving a `SizedIngredient` back into stacks, which
+On the OUTPUT side that leans on Oritech resolving a `SizedIngredient` back into stacks, which
 is one more thing the world load has to confirm.
 
 ## What stops a recipe being emitted
@@ -74,7 +74,7 @@ registered recipe type; and the emitted files are exactly what the converter emi
 generated output is never hand-edited.
 
 **One world load, with the generated recipes in place** — a human. The static check cannot prove
-the recipe *shape*: the codec is Java, GregTech's generated material ids exist only in a loaded
+the recipe *shape*: the codec is Java, Oritech's generated material ids exist only in a loaded
 registry, and a wrong shape NPEs at datapack load rather than reporting anything readable. That
 failure is exactly what ADR-0026 was written about. Load a world and confirm **0 failed recipes**
 in the log, and that the emitted recipes appear in the Assembling Machine's JEI page.

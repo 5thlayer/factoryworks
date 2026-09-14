@@ -1,11 +1,11 @@
 {
-  "type": "gtceu:assembling",
+  "type": "oritech:assembling",
   "inputs": {
     "item": [
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:steel_plate"
+            "item": "oritech:steel_plate"
           },
           "count": 6
         }

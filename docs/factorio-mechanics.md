@@ -30,11 +30,11 @@ first place it has been written down, or `by-consequence` where it fell out of a
 something else and was never argued on its own merits. **`by-consequence` rows are owned by this
 ledger**, not by the ticket that caused them.
 
-`via` reuses `subgroup-owner.json`'s owner tokens — `gregtech`, `create`, `powergrid`,
+`via` reuses `subgroup-owner.json`'s owner tokens — `gregtech`, `simplebelts`, `powergrid`,
 `gcyr`, `pack`, `kubejs`, `native_mechanic` — and a value must exist in `index.toml`. **`mekanism` is
 no longer one of them** (ADR-0035): the mod is out of the manifest, so a row naming it would fail the
-must-exist rule. **`electro` is no longer one of them either** (#148): it named Create: Electro
-Energetics, which Create: Power Grid replaced, and it never satisfied the must-exist rule in the
+must-exist rule. **`electro` is no longer one of them either** (#148): it named Simplebelts: Electro
+Energetics, which Simplebelts: Power Grid replaced, and it never satisfied the must-exist rule in the
 first place — the mod id was `electroenergetics`. The three rows that wrote `electro` (GCyR) meant
 GCyR and now say `gcyr`. `candidates` is free
 text and commits to no jar; **`pack` is admissible as a candidate only with a named mechanism**
@@ -115,11 +115,11 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 - **owner**: ADR-0007, ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045
 
 Terra deals one ore shape: a filled disc of a single ore block, one deep, flush with the terrain
-surface, at Factorio's own spacing. `scripts/worldgen-check.py` asserted it against GregTech's
-registries and left with GregTech (ADR-0060), so nothing asserts it on 26.1.2. **ADR-0045 deletes Terra's buried veins entirely** — they were
+surface, at Factorio's own spacing. `scripts/worldgen-check.py` asserted it against Oritech's
+registries and left with Oritech (ADR-0060), so nothing asserts it on 26.1.2. **ADR-0045 deletes Terra's buried veins entirely** — they were
 ADR-0019's leftover default rather than a decision, and ADR-0043's surface-working rig made keeping
 them a demand for the digging gesture ADR-0019 removed the caves for. Ignus and Sapros are unaffected.
-*This entry described GregTech ore veins in chunk-aligned disc patches, retargeted onto the pack's own
+*This entry described Oritech ore veins in chunk-aligned disc patches, retargeted onto the pack's own
 ore blocks by ADR-0041 with the vein shape unchanged.*
 
 Sub-rules:
@@ -138,7 +138,7 @@ Sub-rules:
   *This row read "ore is prospected, not stumbled on", `adapted` under ADR-0019: surface indicators
   first, an Ore Finder satellite later. ADR-0045 discharges that prerequisite rather than meeting it,
   and the indicators become dead.*
-- **Infinite late-game resource (oil-style yield decay)** — `adapted`. #86: GregTech's bedrock
+- **Infinite late-game resource (oil-style yield decay)** — `adapted`. #86: Oritech's bedrock
   fluid deposit decays to a floor rather than to zero, and Terra's crude deposit is one. `adapted`
   rather than `shipped` because the form is wrong in two ways — the deposit is a per-chunk roll
   under the bedrock rather than a patch you can see on the surface, and it is tapped by a Fluid
@@ -198,25 +198,25 @@ Sub-rules:
   on 50 steel plates, because Researchd has no craft-triggered research method, and swaps its
   `character-mining-speed` effect for an `unlock-recipe` granting the Engineer's Steel Pick.
 - **Picking up a placed entity is the same gesture as mining** — `adapted`. The Engineer's Pick
-  absorbs GregTech's wrench dismantle verb, which rides the ordinary break path and is delivered by
+  absorbs Oritech's wrench dismantle verb, which rides the ordinary break path and is delivered by
   the two wrench item tags (ADR-0039). *This entry read "the wrench's rotate and pipe-connection
-  verbs are `planned` and unowned"; #168 settled them.* The Pick also declares GregTech's
+  verbs are `planned` and unowned"; #168 settled them.* The Pick also declares Oritech's
   `wrench_configure*` abilities, which set a **machine's** auto-output face — which side it pushes
-  items or fluids into. *#168 first declined those, reading GTCEu's "Use Wrench to set Connections"
+  items or fluids into. *#168 first declined those, reading Oritech's "Use Wrench to set Connections"
   string as meaning pipes; they are not pipes, and the decline was reversed in the same ticket once
-  a machine turned out to have no way to be pointed at a Create belt. Create owning the belts is why
+  a machine turned out to have no way to be pointed at a Simplebelts belt. Simplebelts owning the belts is why
   the verb is needed, not why it is moot.* What stays declined is `wrench_connect`, the actual
   pipe-connection verb on the pipe block's own path: ADR-0017 gives fluid and item logistics to
-  Create, GregTech's pipes left with its power layer, and ADR-0034's sweep leaves them unobtainable,
+  Simplebelts, Oritech's pipes left with its power layer, and ADR-0034's sweep leaves them unobtainable,
   so it would be declared against blocks Terra does not ship.
 - **Rotating a placed entity (`R`)** — `shipped`, #168. The Engineer's Pick declares NeoForge's
-  `wrench_rotate` ability, which is what GregTech gates the verb on; the wrench item tags never
+  `wrench_rotate` ability, which is what Oritech gates the verb on; the wrench item tags never
   carried it, so until #168 the rotation overlay drew on every machine while the right-click did
-  nothing. Declaring the ability was necessary and not sufficient: GregTech only sets a front face
+  nothing. Declaring the ability was necessary and not sufficient: Oritech only sets a front face
   for a **sneaking** player, while vanilla skips a block's interaction entirely when a sneaking
-  player holds a non-empty stack, so the one gesture GregTech accepts was the one that never
+  player holds a non-empty stack, so the one gesture Oritech accepts was the one that never
   arrived. The Pick answers `doesSneakBypassUse` to get past that, which is the hook NeoForge
-  provides where GregTech's own tools use `onItemUseFirst`. Confirmed turning a machine in-game.
+  provides where Oritech's own tools use `onItemUseFirst`. Confirmed turning a machine in-game.
   *This entry read "`planned`, no owner yet".*
 
 ### Trees and wood
@@ -266,7 +266,7 @@ Sub-rules:
 - **via**: `planetaryfactory_core`
 - **owner**: ADR-0043
 - **ticket**: #105
-- **notice**: Terra's two rigs are pack-authored and GregTech owns no drill here. A rig works the
+- **notice**: Terra's two rigs are pack-authored and Oritech owns no drill here. A rig works the
   **layer directly beneath it** — Factorio's tiles, in a game that has a third axis — so a rig is
   placed on a patch rather than scanning downward for one. Its rate is the drill's `mining_speed`
   over the **resource's** `mining_time`, so uranium costs the same rig twice what iron does; its
@@ -277,7 +277,7 @@ Sub-rules:
 Sub-rules:
 
 - **Burner tier before electric** — `adapted`. The tier exists and is Factorio's own block rather
-  than GregTech's steam stand-in. ADR-0040.
+  than Oritech's steam stand-in. ADR-0040.
 - **Drills output onto the tile they face** — `shipped` (#193). ADR-0043 reverses ADR-0040's
   `excluded`, which was argued entirely about belts and had deleted the drill-into-furnace pair as
   collateral. A rig pushes into an item handler on its faced tile and **otherwise stalls**, holding
@@ -288,13 +288,13 @@ Sub-rules:
   **Auto-output is a prototype property and not a machine rule** — `vector_to_place_result` is
   carried by the mining drills and the recycler and by nothing else, which is why the pack's furnace
   is emptied rather than pushing.
-- **Output onto a moving belt with no intermediate block** — `shipped`. A bare Create belt answers
+- **Output onto a moving belt with no intermediate block** — `shipped`. A bare Simplebelts belt answers
   `Capabilities.ItemHandler.BLOCK`, so a rig faced at one puts ore on it with nothing in between,
   which is what a Factorio drill does. *This entry read `planned`, blocked on a rig not being able
-  to reach Create's funnel. #182 closed that as `wontfix` on its premise: the funnel's inbound
-  surface exists for Create's own transport handing over, and the right arrangement for a machine
+  to reach Simplebelts's funnel. #182 closed that as `wontfix` on its premise: the funnel's inbound
+  surface exists for Simplebelts's own transport handing over, and the right arrangement for a machine
   with a buffer is the funnel sitting **on** it in extract mode, pulling through the machine's own
-  item handler — which needs no `DirectBeltInputBehaviour` call and no Create dependency. The
+  item handler — which needs no `DirectBeltInputBehaviour` call and no Simplebelts dependency. The
   entry also read that the item-handler path "ignores the belt's direction", which the bytecode
   refuted: the item lands on the queried segment and travels normally.*
 - **A drill shows which tiles it is working** — `adapted`. The rig tints the top face of every ore
@@ -306,18 +306,18 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **via**: `pack` (the Offshore Pump), vanilla water, `create` for pipes
+- **via**: `pack` (the Offshore Pump), vanilla water, `simplebelts` for pipes
 - **owner**: ADR-0050
 - **ticket**: #200
 
 Factorio's water is infinite in volume and **fixed in place** — that property is the whole reason the
 offshore pump exists and why shoreline is a siting concern. ADR-0050 keeps it with one rule: **water
-is extracted and transported, never created.**
+is extracted and transported, never simplebeltsd.**
 
 Sub-rules:
 
 - **The offshore pump** — `shipped` (#213), pack-authored. ADR-0048 had made it `not_emitted` on the
-  reasoning that Create's Mechanical Pump covered the water half; that block is a pipe-network pump
+  reasoning that Simplebelts's Mechanical Pump covered the water half; that block is a pipe-network pump
   and does not extract from the world at all, so ADR-0050 reverses the call. One adjacent source
   block, no minimum body size, no power (`energy_source: void`), 1,200 mB/s — which is exactly twenty
   Boilers at their extracted 60 mB/s. Placement is refused with a message where no source adjoins;
@@ -344,8 +344,8 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **via**: `create`
-- **owner**: ADR-0017 as amended by #101 (Create owns fluid handling entire — pipes and pumps for
+- **via**: `simplebelts`
+- **owner**: ADR-0017 as amended by #101 (Simplebelts owns fluid handling entire — pipes and pumps for
   moving, tanks for storing; Mekanism had no fluid role, and left the pack entirely with ADR-0035)
 - **ticket**: #106
 
@@ -358,8 +358,8 @@ Sub-rules:
   accepts any fluid, because that list is a content budget for nine items and eighteen recipes, and
   the pack has one container and none.
 - **Underground pipes** — `excluded`. The same argument as underground belts, one level up: a
-  Create pipe routes freely in three dimensions, so the crossing problem Factorio's pipe-to-ground
-  exists to solve does not arise, and `create:encased_fluid_pipe` is decoration rather than a
+  Simplebelts pipe routes freely in three dimensions, so the crossing problem Factorio's pipe-to-ground
+  exists to solve does not arise, and `simplebelts:encased_fluid_pipe` is decoration rather than a
   buried run. `subgroup-owner.json` marks `pipe-to-ground` `not_emitted` on that reasoning.
 - **Fluid mixing is forbidden in a pipe network** — `excluded`. `by-consequence`: no mod in the stack
   enforces single-fluid pipe networks, and adding it would be a pack mechanism nobody asked for.
@@ -420,7 +420,7 @@ Sub-rules:
   recorded skip in the join rather than a table row — the table names four items today: coal, wood
   (through `minecraft:logs`), solid fuel and rocket fuel.
 - **No ore multiplication** — `planned`, settled by ADR-0032: cut pack-wide, Mekanism's ladder and
-  Create's rung-0 Crushing Wheels alike. Yield gain by research or module is `blocked`, not
+  Simplebelts's rung-0 Crushing Wheels alike. Yield gain by research or module is `blocked`, not
   `excluded` — the lab cannot express levelled research (ADR-0022 prunes 106 such technologies) and
   Terra is deliberately not compensated for its scarcity (ADR-0020). See #120.
 
@@ -433,7 +433,7 @@ Sub-rules:
 - **ticket**: #87 (the machines are registered; the recipe conversion is not)
 
 Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
-(ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes GregTech out of the pack and
+(ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes Oritech out of the pack and
 makes Modern Industrialization the chassis.** The three machines, their tiers and their recipe type
 stay pack-authored; what changes underneath them is which mod supplies the block and the recipe
 lookup.
@@ -449,8 +449,8 @@ Sub-rules:
 - **Recipe selection in a machine** — `planned`. In Factorio a machine is *told* its recipe: the
   player picks it from a list, the machine displays it, holds it whether or not it is fed, and the
   setting copies to another machine. The pack has **no surface for this at all**, and that is the
-  design gap, not the absence of a programmed circuit. GregTech's answer is the circuit, which
-  ADR-0026 removed on purpose and #236 measured the cost of: GregTech keys its recipe lookup on the
+  design gap, not the absence of a programmed circuit. Oritech's answer is the circuit, which
+  ADR-0026 removed on purpose and #236 measured the cost of: Oritech keys its recipe lookup on the
   ingredient set, so with no circuit a colliding recipe is refused into the lookup at load and 44 of
   139 emitted recipes never reach the machine.
 
@@ -470,7 +470,7 @@ Sub-rules:
   [Electric system](https://wiki.factorio.com/Electric_system) page notes *"an active assembling
   machine 2 will consume 155 kW (150 kW energy consumption + 5 kW drain)"*, about a thirtieth of the
   draw, and the engine default is `energy_usage / 30` since no crafting machine sets the field.
-  GregTech has no equivalent -- an idle GT machine consumes nothing -- and reproducing it means real
+  Oritech has no equivalent -- an idle GT machine consumes nothing -- and reproducing it means real
   idle draw built in `planetaryfactory_core` for a lesson (*don't over-build*) that ore depletion
   (ADR-0020) and Emission already teach more cheaply. Folding it into `EUt` is worse than either: it
   looks like fidelity and behaves as a flat tax. Called **idle draw** in pack prose, never "drain",
@@ -516,7 +516,7 @@ ADR-0029 gives the Assembler speed 1 with durations of `energy_required x 20` un
   patterns a Factorio player has memorised do not transfer, because most of them are answers to
   being flat. Routing in Y replaces them (ADR-0044).
 - **where**: all bodies
-- **via**: `create`
+- **via**: `simplebelts`
 - **owner**: ADR-0044, ADR-0017, #93
 
 Sub-rules:
@@ -525,17 +525,17 @@ Sub-rules:
   at, so belt speed is a power-and-gearing decision made per run rather than three craftable tiers
   bought from the tech tree. Faster belts are therefore never a research unlock here.
 - **Throughput as a ratio budget** — `planned`. Factorio's belt has a known items/s *and* a bounded
-  researched stack multiplier, which is why a ratio is computable; Create's is `RPM/24` entries per
+  researched stack multiplier, which is why a ratio is computable; Simplebelts's is `RPM/24` entries per
   second with an items-per-entry that is whatever the upstream inserter handed over, unbounded to 64
   and surfaced nowhere. ADR-0044 defers the target to play — the question is whether a single belt
   ever bottlenecks a line before the machines do — and names the dials: the `getSpeed() / 480f`
   divisor in `BeltBlockEntity.getBeltMovementSpeed()` first, `maxRotationSpeed` second. Not
   `blocked`: the implementation is known, the number is not.
-- **Underground belts** — `excluded`. Not for want of a Create block: undergrounds solve a *weaving*
+- **Underground belts** — `excluded`. Not for want of a Simplebelts block: undergrounds solve a *weaving*
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
-  Minecraft has a Y axis and Create has sloped belt runs, so a belt that must cross another goes
+  Minecraft has a Y axis and Simplebelts has sloped belt runs, so a belt that must cross another goes
   over it. Argued from the medium, not from a mod's shortfall (ADR-0044).
-- **Splitters, with filtering and priority** — `adapted`. Create's tunnels are the splitter: a
+- **Splitters, with filtering and priority** — `adapted`. Simplebelts's tunnels are the splitter: a
   tunnel splits a belt's output across the belts beside it and filters what goes where, one filter
   slot per output. Brass Tunnel's seven `SelectionMode` values include `FORCED_SPLIT` and
   `FORCED_ROUND_ROBIN`, which refuse to distribute unless every target can take its share — that is
@@ -546,7 +546,7 @@ Sub-rules:
   pack promises.
 - **Two lanes per belt** — `excluded`. Lane balancing is a compression trick for a conveyor one tile
   wide on a plane — what you do when the only free axis runs along the belt. It goes with the
-  undergrounds and for the same reason (ADR-0044). *This entry read `by-consequence` of Create
+  undergrounds and for the same reason (ADR-0044). *This entry read `by-consequence` of Simplebelts
   having no lane model; the ledger now owns a reason of its own.*
 - **Belt as buffer** — `excluded`. A 64-block belt at one item per block holds 64 items where a
   64-tile yellow belt holds 512. Using belts as storage is a real Factorio idiom and ADR-0044 drops
@@ -561,13 +561,13 @@ prune, which is #25's call and not this ledger's.
 ### Inserters
 
 - **verdict**: `adapted`
-- **notice**: Create funnels and arms move items between inventories, but there is no swing-arm reach
+- **notice**: Simplebelts funnels and arms move items between inventories, but there is no swing-arm reach
   across a belt, no long-handed tier, and no stack-size bonus research.
 - **where**: all bodies
-- **via**: `create`
+- **via**: `simplebelts`
 - **owner**: ADR-0017, #93
 
-The notice above is written against funnels and chutes. **#102 asks whether Create's Mechanical Arm
+The notice above is written against funnels and chutes. **#102 asks whether Simplebelts's Mechanical Arm
 is the inserter instead** — an Arm is a swing arm, which is a much closer fit — and will rewrite this
 row's losses to whatever actually survives. #178 scoped the inserter family alongside the belts and
 **ADR-0044 explicitly does not decide it**, handing it back to #102 unblocked: the conveyance is
@@ -582,7 +582,7 @@ the separate `ArmInteractionPointType` registry.
 - **where**: —
 - **owner**: ADR-0017
 
-ADR-0017 gives item logistics to Create and cuts the dedicated routing mods, because a substitute
+ADR-0017 gives item logistics to Simplebelts and cuts the dedicated routing mods, because a substitute
 routing idiom is a straight bypass of the ladder. AE2 is the one gated exception, unlocked at endgame
 once every planet's puzzle is done — it is not a logistic-robot analogue and is not this row.
 
@@ -600,7 +600,7 @@ Building Gadgets 2 is installed (`mods/building-gadgets.pw.toml`, indexed) and i
 thing to a blueprint: copy a region, paste it elsewhere. That covers the *shape* half of a blueprint
 and none of the *logistics* half.
 
-**Create's Schematicannon is not this row.** It is vanilla Create and therefore already in the pack,
+**Simplebelts's Schematicannon is not this row.** It is vanilla Simplebelts and therefore already in the pack,
 but a Schematicannon prints a structure block-by-block from a chest at a fixed position — it is a
 building tool with a hopper, not a construction network, and the two mechanics are not
 interchangeable with Factorio's.
@@ -623,14 +623,14 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: Terra
-- **via**: `create`
-- **owner**: ADR-0017 (Create owns schedule-based rail networks)
+- **via**: `simplebelts`
+- **owner**: ADR-0017 (Simplebelts owns schedule-based rail networks)
 - **ticket**: #108
 
 Sub-rules:
 
-- **Schedules and stations** — `planned`. Create Trains have both.
-- **Rail signals and block-based traffic** — `adapted`. Create resolves train conflicts itself; there
+- **Schedules and stations** — `planned`. Simplebelts Trains have both.
+- **Rail signals and block-based traffic** — `adapted`. Simplebelts resolves train conflicts itself; there
   is no signal to place and no deadlock to debug.
 - **Train limits at a station** — `unargued`, no verdict.
 
@@ -641,12 +641,12 @@ Sub-rules:
   circuit rather than a named channel on a coloured wire — there is no reading a whole belt's contents
   off one wire, and no arithmetic on a signal beyond what a comparator does.
 - **where**: all bodies
-- **via**: `native_mechanic`, `create`, `powergrid`
+- **via**: `native_mechanic`, `simplebelts`, `powergrid`
 - **owner**: ADR-0030, and #148 for which block the four device rows name
 
 **Factorio's circuit network is Minecraft's redstone system**, and this row belongs to redstone
 rather than to a missing mod. Vanilla supplies the wire, the comparator, the repeater and the
-observer; **Create ships its own redstone line on top** — Redstone Link, Powered Latch, Pulse
+observer; **Simplebelts ships its own redstone line on top** — Redstone Link, Powered Latch, Pulse
 Repeater, Threshold and Stockpile Switches, Smart Observer, Display Link and Nixie Tubes — which
 between them cover most of what Factorio's combinators, lamps and display panels are for.
 
@@ -656,12 +656,12 @@ sitting in the base game. ADR-0030 records the decision and that lesson.
 
 Sub-rules:
 
-- **Read a machine's or container's contents as a signal** — `adapted`. Comparators and Create's
+- **Read a machine's or container's contents as a signal** — `adapted`. Comparators and Simplebelts's
   Stockpile Switch, per container, rather than one wire carrying every item type at once.
-- **Combinator logic — arithmetic, decider, constant** — `adapted`. Create's latches, switches and
+- **Combinator logic — arithmetic, decider, constant** — `adapted`. Simplebelts's latches, switches and
   gearshifts plus vanilla redstone logic. Arithmetic on a signal is the weakest part of the
   substitution.
-- **Wireless signal over distance** — `shipped`, and better than Factorio's: Create's Redstone Link
+- **Wireless signal over distance** — `shipped`, and better than Factorio's: Simplebelts's Redstone Link
   needs no wire and no relay, where Factorio needs a wire or a radar-linked circuit.
 - **Lamps and display panels as readouts** — `adapted`. Nixie Tubes and the Display Link for the
   redstone-driven readout, and, since #148, **Power Grid's own devices for the placed hardware**:
@@ -684,7 +684,7 @@ for #25, not a verdict on the mechanic, and the two were previously conflated in
 
 **The other axis — whether the eight recipes are emitted — was settled by #148, not by this row.**
 It was open because ADR-0030 deliberately left it to `subgroup-owner.json`: a mechanic supplied by
-vanilla and Create needs no emitted recipe to exist, so `not_emitted` would have contradicted nothing.
+vanilla and Simplebelts needs no emitted recipe to exist, so `not_emitted` would have contradicted nothing.
 The Electro-to-Power-Grid swap is what put candidate blocks on the table, so the swap decided it, and
 the shelf now **splits** rather than going one way whole:
 
@@ -693,7 +693,7 @@ the shelf now **splits** rather than going one way whole:
 - **The four combinators are `not_emitted`.** Their job is arithmetic and decision, and Power Grid
   ships nothing that does either: a potentiometer is a dial, a relay is a switch. Naming one anyway
   would put a Factorio name on a block that does not do the Factorio thing, and ADR-0030 already
-  supplies the capability from the comparator and Create's switches — so the player loses a recipe
+  supplies the capability from the comparator and Simplebelts's switches — so the player loses a recipe
   and keeps the mechanic. `selector-combinator` is doubly unemittable: its recipe takes five
   `decider-combinator`.
 
@@ -710,8 +710,8 @@ and the grid drives**, so the deciding half needs no recipe and the driven half 
 - **via**: `powergrid`, `pack`
 - **owner**: ADR-0017 as amended by ADR-0035 and ADR-0036
 
-**Create: Power Grid owns the grid** — poles, wire and catenary — and GregTech's power layer
-was removed entire to make room for it, cables included. *Amended by #148: this read "Create: Electro
+**Simplebelts: Power Grid owns the grid** — poles, wire and catenary — and Oritech's power layer
+was removed entire to make room for it, cables included. *Amended by #148: this read "Simplebelts: Electro
 Energetics", which the swap replaced. The row did not change hands, only mods — the acceptance test
 was brownout propagation and a wire-tier ladder, and both mods were adopted for passing it.* A **pack-authored supply-area pole**
 (ADR-0036) distributes inside an area, which is the one seam: the grid moves power between places,
@@ -724,7 +724,7 @@ voltage drop, per-material wire gauge, grounding, fuses, brownouts and component
 Flattening resistance to the config floor would delete the wire-tier ladder that is the reason to
 adopt the mod at all.
 
-An earlier version of this row named GregTech and called brownout `excluded` on the grounds that GT
+An earlier version of this row named Oritech and called brownout `excluded` on the grounds that GT
 machines stall rather than derate. Both halves were wrong — GT has no power layer here, and the mod
 that replaced it models brownouts natively.
 
@@ -734,12 +734,12 @@ Sub-rules:
   wrong in both directions. Power Grid models sag on the *grid* natively, which is what the previous
   `shipped` verdict rested on. But the machine side does not derate: `RecipeLogic.regressRecipe`
   takes progress *down* by two per waiting tick (`recipeProgressLowEnergy: false` in
-  `config/gtceu.yaml`), so a machine that can afford its full EU/t on a fraction `f` of ticks nets
+  `config/oritech.yaml`), so a machine that can afford its full EU/t on a fraction `f` of ticks nets
   `3f - 2` progress per tick and **never completes anything below f = 2/3**. Factorio has a slope
   there; the pack has a cliff, with no signal separating "slow" from "permanently stuck". The
   pole's water-fill makes it worse rather than better: sharing a shortfall evenly puts every machine
   in an area under the cliff at once instead of stalling the hungriest. Verified by disassembly
-  against GTCEu 7.0.2 while building #147; the fix is #157, and it is an ADR's worth of argument
+  against Oritech 7.0.2 while building #147; the fix is #157, and it is an ADR's worth of argument
   because GT will not derate without touching recipe logic that ADR-0036 forbids reaching into.
 - **Voltage tiers** — `adapted`. Factorio steps low to medium to high voltage at the transformer;
   Power Grid's ladder is wire gauge and material — copper, iron and gold, each with its own
@@ -765,7 +765,7 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **via**: `pack`, `create`, `powergrid`
+- **via**: `pack`, `simplebelts`, `powergrid`
 - **owner**: ADR-0017 as amended by #104, #148 and **ADR-0048, which supersedes #101**. `via`
   is ordered along the chain: the pack's Boiler, the pack's Steam Engine, Power Grid's generator
   assembly, the pack's Steam Turbine. *#101 read "the grid mod owns steam and solar"; ADR-0048 makes
@@ -773,28 +773,28 @@ Sub-rules:
   touches steam — its generator takes rotation in and puts volts out.* *#148: the third step was
   Electro's Alternator, a single block; Power Grid's counterpart is a **built assembly** rather than
   a fixed structure — a Stator of Coils on Shafts, an Armature of Rotors, a Commutator and a
-  Generator Clutch, coupled to a Create kinetic network and needing an excitation current — standing
+  Generator Clutch, coupled to a Simplebelts kinetic network and needing an excitation current — standing
   in exactly the same place in the chain.* **`mekanism` was struck by #104** — the pack installs base
   Mekanism, which registers no generator block at all, so the clause naming it never named anything.
-  **`gregtech` was struck by ADR-0048**: the boiler is the pack's, and `create` is now on the row for
-  the rotation the pack's Steam Engine emits rather than for an engine of Create's own.
+  **`gregtech` was struck by ADR-0048**: the boiler is the pack's, and `simplebelts` is now on the row for
+  the rotation the pack's Steam Engine emits rather than for an engine of Simplebelts's own.
 - **ticket**: #104, #189, #224
 
 Sub-rules:
 
 - **Boiler and steam engine as the first power** — `adapted`. The chain is **four** steps, not two:
   the **pack's Boiler** burns solid fuel and makes low-temperature steam, the **pack's Steam Engine**
-  eats that steam and emits Create rotation, Power Grid's generator assembly turns SU into watts, and
+  eats that steam and emits Simplebelts rotation, Power Grid's generator assembly turns SU into watts, and
   the grid carries them. A Factorio player's boiler-and-engine pair has a rotational stage wedged in
   the middle of it, and the grid is granted at a rung rather than arriving with the first fire.
-  *(#104 corrects "three steps" and "a Create Steam Engine burns fuel": the Steam Engine burns
+  *(#104 corrects "three steps" and "a Simplebelts Steam Engine burns fuel": the Steam Engine burns
   nothing — it is the prime mover.)* **ADR-0048 re-cut both of the first two steps.** The first was
   #37's LP Solid Boiler; the boiler is now pack-authored, one tier, under ADR-0047's burner model —
   the third customer of the buffer the Furnace and the Burner Mining Drill already share, and #224
   shipped it: `planetaryfactory:boiler`, fuel and water in, low-temperature steam out at Factorio's
   own 60 mB/s. The second
-  was *"a Create Steam Engine turns that steam into rotation"*, and it **was never implementable**:
-  Create has no steam fluid at all. Its boiler is a Fluid Tank multiblock holding **water**, heated
+  was *"a Simplebelts Steam Engine turns that steam into rotation"*, and it **was never implementable**:
+  Simplebelts has no steam fluid at all. Its boiler is a Fluid Tank multiblock holding **water**, heated
   by Blaze Burners, and the Steam Engine mounts on that tank — it cannot consume steam from a pipe,
   from any boiler or from anything else. The pack authors that step. The engine emits rotation and
   not electricity on purpose: an engine that fed a pole directly would route around every mechanic
@@ -812,7 +812,7 @@ Sub-rules:
   **for the fluid, not for fission**, and the Turbine has two producers on two bodies — Terra's
   Nuclear Reactor and Ignus's acid neutralisation. Filing a cross-body generator under Terra's
   fission chapter hid what it is. Superheated steam is a **pack-owned fluid** — `planetaryfactory:`,
-  not GregTech's, since `gtceu:steam` is not inert and GregTech's own steam machines accept it,
+  not Oritech's, since `oritech:steam` is not inert and Oritech's own steam machines accept it,
   which would re-open the power layer #37 removed (ADR-0048; this corrects an earlier "its own GT
   material") — and **only the Turbine accepts it**; ordinary steam keeps the four-step chain above, which the Turbine will not take, and
   that fluid split — not the Converter — is what stops it retiring the rung-1 generator assembly. **Not
@@ -867,12 +867,12 @@ Sub-rules:
 - **owner**: ADR-0055 (supersedes ADR-0005)
 - **ticket**: #109, #118
 
-GTCEu 7.0.2 has no pollution system — the mod contains nothing matching `pollut` — so Emission is
+Oritech 7.0.2 has no pollution system — the mod contains nothing matching `pollut` — so Emission is
 ours and none of it is built yet.
 
 **ADR-0005's EU/t proxy was superseded before it shipped.** That ADR scored Emission per chunk off
 the **EU/t draw of running GT machines** and rejected per-entity rates as costing "tagging every
-recipe in a GregTech pack". Factorio states emission per prototype as
+recipe in a Oritech pack". Factorio states emission per prototype as
 `energy_source.emissions_per_minute`, and that field is in the dump the extractors already read —
 extraction is not tagging, and the pipeline that makes it free was built *after* ADR-0005. ADR-0055
 takes the corpus rates instead. The proxy also misranks: a boiler pollutes far more per joule than
@@ -1001,7 +1001,7 @@ route around.
 Same #26 cascade, reversed with the rest of it. The seven shelves shared one stated reason and it is
 false, so leaving this one behind would keep a shelf cut for an argument nobody holds. `personal-roboport`
 in the utility-equipment shelf will collide with ADR-0017's one-mod-owns-each-capability rule, since
-Create owns logistics before AE2 — that needs its own argument, and it gets one rather than
+Simplebelts owns logistics before AE2 — that needs its own argument, and it gets one rather than
 inheriting a dead premise.
 
 ### Modules and beacons
@@ -1239,9 +1239,9 @@ Sub-rules:
   per ADR-0028. Two `KeyMapping`s in `planetaryfactory_core`, defaulting to `CTRL` + left and right
   mouse and declared in Controls so a conflict with Carry On or Building Gadgets is the player's to
   resolve. Magnitude is Factorio's verbatim — the held stack in, everything the target will give up
-  out, halved for the split. The target set is every GregTech machine and every pack-authored block
+  out, halved for the split. The target set is every Oritech machine and every pack-authored block
   that holds items, reached through the block's own item handler with no pack-authored slot policy.
-  **The mid-recipe question answers itself on both engines**: GregTech consumes inputs at
+  **The mid-recipe question answers itself on both engines**: Oritech consumes inputs at
   `RecipeLogic.setupRecipe`, so a running machine has nothing to take back, and the pack's furnace —
   which consumes at completion instead — already refuses extraction from anything but its output slot
   in `FurnaceItemHandler`. Delegating to the handler is what makes the two timings invisible.
@@ -1252,7 +1252,7 @@ Sub-rules:
   from the inventory in survival. No work.
 - **Drop item into a machine** (`Z`) — `excluded`. It is a one-item quick transfer, and shipping both
   means two bindings differing only in magnitude.
-- **Drag-building** — `excluded`. `by-consequence`: Create's belts are placed endpoint-to-endpoint
+- **Drag-building** — `excluded`. `by-consequence`: Simplebelts's belts are placed endpoint-to-endpoint
   rather than one tile at a time (ADR-0044), so the gesture has nothing to drag across.
 
 ---
@@ -1369,14 +1369,14 @@ mechanics and its absence has never been argued.
 
 - **verdict**: `planned`
 - **where**: Electro
-- **via**: `create`
+- **via**: `simplebelts`
 - **owner**: `docs/gdd.md` §2, `docs/planets.md`
 - **ticket**: #13
 
 Sub-rules:
 
 - **Scrap recycles into a spread of unrelated outputs, and the surplus is the puzzle** — `planned`.
-  Create crushers on generated ruins.
+  Simplebelts crushers on generated ruins.
 - **Any item can be recycled back into a quarter of its ingredients** — `blocked`, following
   [Quality](#quality); without quality the universal recycler has no second purpose.
 - **Voiding the surplus is a legitimate answer** — `unargued`, no verdict.
@@ -1402,7 +1402,7 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: Electro
-- **via**: `create`, `powergrid`
+- **via**: `simplebelts`, `powergrid`
 - **owner**: `docs/planets.md`
 - **ticket**: #13, then that body's `Puzzle:` ticket
 
@@ -1477,7 +1477,7 @@ every planet instead of one factory and a shipping lane.
 - **where**: —
 - **owner**: `by-consequence`
 
-Follows [Trains](#trains): Create trains already route in three dimensions without a dedicated
+Follows [Trains](#trains): Simplebelts trains already route in three dimensions without a dedicated
 elevated-rail tier, so the mechanic has nothing to add.
 
 ### Fusion power

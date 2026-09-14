@@ -24,7 +24,7 @@ public final class OreCodecs {
             Codec.unboundedMap(POSITION, Codec.INT);
 
     /** The chunk attachment: the positions in this chunk that have had something taken out. */
-    public static final Codec<OreDelta> DELTA = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<OreDelta> DELTA = RecordCodecBuilder.simplebelts(instance -> instance.group(
                     DRAWN.fieldOf("drawn").forGetter(OreDelta::drawn))
             .apply(instance, OreDelta::of));
 

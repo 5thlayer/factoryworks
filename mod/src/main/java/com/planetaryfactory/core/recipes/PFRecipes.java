@@ -23,10 +23,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class PFRecipes {
 
     public static final DeferredRegister<RecipeType<?>> TYPES =
-            DeferredRegister.create(Registries.RECIPE_TYPE, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebelts(Registries.RECIPE_TYPE, PlanetaryFactoryCore.NAMESPACE);
 
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
-            DeferredRegister.create(Registries.RECIPE_SERIALIZER, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebelts(Registries.RECIPE_SERIALIZER, PlanetaryFactoryCore.NAMESPACE);
 
     public static final String SMELTING = "smelting";
 

@@ -1,8 +1,8 @@
 package com.planetaryfactory.core.assembler;
 
-import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
-import com.gregtechceu.gtceu.api.recipe.content.Content;
-import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
+import com.gregtechceu.oritech.api.capability.recipe.ItemRecipeCapability;
+import com.gregtechceu.oritech.api.recipe.content.Content;
+import com.gregtechceu.oritech.api.recipe.kind.GTRecipe;
 import com.mojang.logging.LogUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -145,7 +145,7 @@ public final class RuntimeHandRecipes {
         return recipe.data != null && HAND_CATEGORY.equals(recipe.data.getString(CATEGORY_KEY));
     }
 
-    /** One GregTech recipe as the resolver sees it. Only ever called after {@link #unreadable}. */
+    /** One Oritech recipe as the resolver sees it. Only ever called after {@link #unreadable}. */
     private static HandRecipe read(GTRecipe recipe, HolderLookup.Provider registries) {
         return new HandRecipe(
                 recipe.id.toString(),

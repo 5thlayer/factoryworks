@@ -19,9 +19,9 @@ import org.junit.jupiter.api.Test;
 class MachineLockStatusTest {
 
     private static final RecipeResearchIndex<String, String> INDEX = RecipeResearchIndex.<String, String>builder()
-            .add("steam_power", List.of("gtceu:steam_turbine", "gtceu:bronze_boiler"))
-            .add("alloys", List.of("gtceu:bronze_boiler"))
-            .add("electricity", List.of("gtceu:lv_macerator"))
+            .add("steam_power", List.of("oritech:steam_turbine", "oritech:bronze_boiler"))
+            .add("alloys", List.of("oritech:bronze_boiler"))
+            .add("electricity", List.of("oritech:lv_macerator"))
             .build();
 
     private static RecipeLockLookup<String, String> locking(String... lockedIds) {
@@ -32,13 +32,13 @@ class MachineLockStatusTest {
     /** Nothing in the machine, nothing to explain -- an empty machine is idle for the obvious reason. */
     @Test
     void anEmptyMachineReportsNothing() {
-        assertEquals(Optional.empty(), MachineLockStatus.lockStopping(List.of(), locking("gtceu:steam_turbine")));
+        assertEquals(Optional.empty(), MachineLockStatus.lockStopping(List.of(), locking("oritech:steam_turbine")));
     }
 
     @Test
     void aLockedCandidateNamesTheResearchThatUnlocksIt() {
         Optional<RecipeLockLookup.Lock<String>> lock =
-                MachineLockStatus.lockStopping(List.of("gtceu:steam_turbine"), locking("gtceu:steam_turbine"));
+                MachineLockStatus.lockStopping(List.of("oritech:steam_turbine"), locking("oritech:steam_turbine"));
 
         assertEquals(Set.of("steam_power"), lock.orElseThrow().unlockingResearches());
     }
@@ -52,7 +52,7 @@ class MachineLockStatusTest {
     void anUnlockedCandidateMeansResearchIsNotWhatStopsIt() {
         assertEquals(
                 Optional.empty(),
-                MachineLockStatus.lockStopping(List.of("gtceu:steam_turbine"), locking()),
+                MachineLockStatus.lockStopping(List.of("oritech:steam_turbine"), locking()),
                 "the recipe is runnable, so the lock is not the reason");
     }
 
@@ -61,7 +61,7 @@ class MachineLockStatusTest {
         assertEquals(
                 Optional.empty(),
                 MachineLockStatus.lockStopping(
-                        List.of("gtceu:steam_turbine", "gtceu:lv_macerator"), locking("gtceu:steam_turbine")));
+                        List.of("oritech:steam_turbine", "oritech:lv_macerator"), locking("oritech:steam_turbine")));
     }
 
     /**
@@ -71,8 +71,8 @@ class MachineLockStatusTest {
     @Test
     void severalLockedCandidatesNameEveryResearchBetweenThem() {
         Optional<RecipeLockLookup.Lock<String>> lock = MachineLockStatus.lockStopping(
-                List.of("gtceu:steam_turbine", "gtceu:lv_macerator"),
-                locking("gtceu:steam_turbine", "gtceu:lv_macerator"));
+                List.of("oritech:steam_turbine", "oritech:lv_macerator"),
+                locking("oritech:steam_turbine", "oritech:lv_macerator"));
 
         assertEquals(
                 List.of("steam_power", "electricity"),
@@ -83,8 +83,8 @@ class MachineLockStatusTest {
     @Test
     void aResearchUnlockingTwoLockedCandidatesIsNamedOnce() {
         Optional<RecipeLockLookup.Lock<String>> lock = MachineLockStatus.lockStopping(
-                List.of("gtceu:steam_turbine", "gtceu:bronze_boiler"),
-                locking("gtceu:steam_turbine", "gtceu:bronze_boiler"));
+                List.of("oritech:steam_turbine", "oritech:bronze_boiler"),
+                locking("oritech:steam_turbine", "oritech:bronze_boiler"));
 
         assertEquals(
                 List.of("steam_power", "alloys"),
@@ -109,18 +109,18 @@ class MachineLockStatusTest {
     @Test
     void theSearchStopsAtTheFirstRunnableCandidate() {
         List<String> walked = new ArrayList<>();
-        List<String> candidates = List.of("gtceu:steam_turbine", "gtceu:lv_macerator", "gtceu:bronze_boiler");
+        List<String> candidates = List.of("oritech:steam_turbine", "oritech:lv_macerator", "oritech:bronze_boiler");
 
         MachineLockStatus.lockStopping(
-                () -> candidates.stream().peek(walked::add).iterator(), locking("gtceu:steam_turbine"));
+                () -> candidates.stream().peek(walked::add).iterator(), locking("oritech:steam_turbine"));
 
-        assertEquals(List.of("gtceu:steam_turbine", "gtceu:lv_macerator"), walked);
+        assertEquals(List.of("oritech:steam_turbine", "oritech:lv_macerator"), walked);
     }
 
     @Test
     void theResearchesOfAReportCannotBeEditedByItsReader() {
         Set<String> researches = MachineLockStatus.lockStopping(
-                        List.of("gtceu:steam_turbine"), locking("gtceu:steam_turbine"))
+                        List.of("oritech:steam_turbine"), locking("oritech:steam_turbine"))
                 .orElseThrow()
                 .unlockingResearches();
 

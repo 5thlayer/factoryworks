@@ -105,7 +105,7 @@ def main():
 
     # ADR-0034 as amended by #172: A SURVIVOR NAMES A SURFACE, NOT A MOD. #144 asked whether the
     # allowlist could admit a whole mod's line in one row -- `{ mod: 'powergrid' }` -- and the
-    # answer is no: 84 of Create: Power Grid's 112 recipes sit on surfaces no block in this pack
+    # answer is no: 84 of Simplebelts: Power Grid's 112 recipes sit on surfaces no block in this pack
     # executes, so a mod-wide admission would have put 84 entries in EMI that are craftable
     # nowhere. That is the failure ADR-0034 exists to name, and it is a one-word edit away, so it
     # is asserted rather than trusted. The pack's namespace is applied ONCE, in recipes.js, to

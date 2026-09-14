@@ -1,11 +1,11 @@
 {
-  "type": "gtceu:chemical_plant",
+  "type": "oritech:chemical_plant",
   "inputs": {
     "item": [
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:sulfur_dust"
+            "item": "oritech:sulfur_dust"
           },
           "count": 5
         }
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_plate"
+            "item": "oritech:iron_plate"
           },
           "count": 1
         }
@@ -35,7 +35,7 @@
       {
         "content": {
           "ingredient": {
-            "fluid": "gtceu:sulfuric_acid"
+            "fluid": "oritech:sulfuric_acid"
           },
           "amount": 50
         }

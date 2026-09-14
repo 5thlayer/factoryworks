@@ -151,9 +151,9 @@ def texture_resolves(item, layer):
 
     The two picks are dressed from three different places on purpose, so this cannot be a single
     equality: the Iron Pick wears vanilla's own `minecraft:item/iron_pickaxe` (nothing to copy), and
-    the Steel Pick wears GTCEu's Damascus Steel pickaxe flattened into our namespace by
+    the Steel Pick wears Oritech's Damascus Steel pickaxe flattened into our namespace by
     `scripts/build-pick-textures.py`, because GT's tool art is three greyscale layers that only
-    become a material under GregTech's item-colour handler -- which never sees an item that is not
+    become a material under Oritech's item-colour handler -- which never sees an item that is not
     a GT tool.
 
     A texture that is not there renders as the black-and-magenta checkerboard with only a
@@ -304,10 +304,10 @@ def main():
               "%s is registered but nothing crafts it -- under ADR-0034's sweep there is no stock "
               "recipe to fall back on" % item)
 
-    # The wrench verb ADR-0039 absorbs is two tag entries, not code: Create reads the NeoForge tag
-    # and GregTech reads its own. A pick in neither dismantles no machine, and the pack has no
+    # The wrench verb ADR-0039 absorbs is two tag entries, not code: Simplebelts reads the NeoForge tag
+    # and Oritech reads its own. A pick in neither dismantles no machine, and the pack has no
     # other wrench to reach for.
-    for tag in ("c/tags/item/tools/wrench.json", "gtceu/tags/item/crafting_tools/wrench.json"):
+    for tag in ("c/tags/item/tools/wrench.json", "oritech/tags/item/crafting_tools/wrench.json"):
         path = DATA / tag
         if check(path.is_file(), "%s is missing, so the Pick does not dismantle machines" % tag):
             values = set(json.loads(path.read_text())["values"])
@@ -328,13 +328,13 @@ def main():
                   % path.relative_to(ROOT).as_posix())
 
     # The generated half of the Steel Pick's texture. Generated output is never hand-edited here;
-    # a GTCEu update that changed its tool art would otherwise leave the pack showing the old one
+    # a Oritech update that changed its tool art would otherwise leave the pack showing the old one
     # with nothing to say so.
     if check(TEXTURE_BUILDER.is_file(), "scripts/build-pick-textures.py is missing"):
         built = subprocess.run([sys.executable, str(TEXTURE_BUILDER), "--check"],
                                capture_output=True, text=True)
         check(built.returncode == 0,
-              "the Steel Pick's texture is stale against the installed GTCEu jar -- re-run "
+              "the Steel Pick's texture is stale against the installed Oritech jar -- re-run "
               "scripts/build-pick-textures.py (%s)" % built.stdout.strip())
 
     # The flat-time block tag the jar asks for by name. A tag that does not exist is empty, and an

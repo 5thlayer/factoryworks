@@ -32,7 +32,7 @@ public final class PFTrees {
     }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> feature(String path) {
-        return ResourceKey.create(
+        return ResourceKey.simplebelts(
                 Registries.CONFIGURED_FEATURE,
                 ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, path));
     }

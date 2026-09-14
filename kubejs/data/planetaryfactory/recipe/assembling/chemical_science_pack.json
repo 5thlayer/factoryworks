@@ -1,5 +1,5 @@
 {
-  "type": "gtceu:assembling",
+  "type": "oritech:assembling",
   "inputs": {
     "item": [
       {
@@ -21,7 +21,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:sulfur_dust"
+            "item": "oritech:sulfur_dust"
           },
           "count": 1
         }

@@ -19,7 +19,7 @@ different ways:
     that places and then silently produces nothing reaches the player as a dead factory three
     machines later. A missing lang key does not fail: it renders the raw key. So the key the item
     actually asks for is read out of the item's source rather than typed here.
-  - **The pack-side files.** It is a `planetaryfactory:` block, so GregTech's model provider does
+  - **The pack-side files.** It is a `planetaryfactory:` block, so Oritech's model provider does
     not serve it and every hop is ours: blockstate to model to texture, a lang key, a loot table.
     Each way of breaking those fails quietly -- a black-and-magenta cube, a raw translation key as
     the block's name, or a block that breaks into nothing.

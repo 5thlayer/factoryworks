@@ -8,13 +8,13 @@ at the top of this file, argued once and applied five times.
 
 Three decisions live here, each argued in ADR-0041:
 
-  - **Each block drops GregTech's raw ore.** The block changes and the item does not, which is
+  - **Each block drops Oritech's raw ore.** The block changes and the item does not, which is
     what keeps `data/pack/item-map.json`, every generated recipe, ADR-0032's 1:1 chain and
     ADR-0034's sweep untouched. The loot table is the non-player path only -- an explosion, a
     creative break -- because a player's break is a *draw* and the mod pays that out itself,
     one unit at a time. A loot table that rolled the block's whole amount would be a way to
     empty a patch with one hit.
-  - **`c:ores` is not decoration.** GregTech's Miner scans that tag (`MinerLogic` reads
+  - **`c:ores` is not decoration.** Oritech's Miner scans that tag (`MinerLogic` reads
     `Tags.Blocks.ORES`), so it is the tag that decides whether rung 1's drill can see a
     pack-authored block at all. `#planetaryfactory:factorio_mining_time` is the other one: it is
     what gives ADR-0039's flat seconds-per-ore to these blocks, and it already names `#c:ores`.
@@ -49,15 +49,15 @@ ORES = {
     "iron": {"drop": "minecraft:raw_iron", "name": "Iron Ore Patch"},
     "copper": {"drop": "minecraft:raw_copper", "name": "Copper Ore Patch"},
     "coal": {"drop": "minecraft:coal", "name": "Coal Patch"},
-    "uranium": {"drop": "gtceu:raw_uranium", "name": "Uranium Ore Patch"},
+    "uranium": {"drop": "oritech:raw_uranium", "name": "Uranium Ore Patch"},
     "stone": {"drop": "minecraft:cobblestone", "name": "Stone Patch"},
 }
 
-# The tags every one of them carries, and why. `c:ores` is the one with teeth -- GregTech's Miner
+# The tags every one of them carries, and why. `c:ores` is the one with teeth -- Oritech's Miner
 # scans it -- and `mineable/pickaxe` plus `needs_stone_tool` are what make the Engineer's Pick the
 # tool for them.
 BLOCK_TAGS = {
-    "c/tags/block/ores.json": "GregTech's Miner scans this tag; a block outside it is invisible to rung 1's drill.",
+    "c/tags/block/ores.json": "Oritech's Miner scans this tag; a block outside it is invisible to rung 1's drill.",
     "minecraft/tags/block/mineable/pickaxe.json": "The Engineer's Pick is a pickaxe (ADR-0039).",
     "minecraft/tags/block/needs_stone_tool.json": "Rung 0's Iron Pick is the tool tier the opening ships with.",
 }

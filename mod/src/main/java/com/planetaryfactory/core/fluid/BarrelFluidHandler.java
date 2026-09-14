@@ -15,7 +15,7 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
  *
  * <p><b>The guard is against duplication, not against fluids.</b> {@link FluidHandlerItemStack} writes
  * the fluid component onto whatever stack it was handed, without looking at the count -- so filling a
- * held stack of ten would set fifty millibuckets on all ten at the cost of fifty. Create never does
+ * held stack of ten would set fifty millibuckets on all ten at the cost of fifty. Simplebelts never does
  * this: {@code GenericItemFilling} and {@code GenericItemEmptying} both copy the stack and
  * {@code setCount(1)} before touching the capability, which is what makes a stack size above one safe
  * in the first place. This refuses the case anyway, because the barrel is stackable and some other

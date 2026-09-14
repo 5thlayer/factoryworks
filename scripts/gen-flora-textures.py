@@ -95,7 +95,7 @@ png(f"{BASE}/item/jellynut.png", blob(CLEAR, [176, 92, 156, 255], 8, r=4))
 
 # Stromatolites. Layered mineral crust in one shape, two tints: what a player reads off the
 # block is which metal, and the organism is the same either way. Not ore textures on purpose --
-# nothing here is a GregTech ore block, and it should not look like one.
+# nothing here is a Oritech ore block, and it should not look like one.
 def crust(base, band, seed):
     rnd = random.Random(seed)
     rows = noise(base, 10, seed)

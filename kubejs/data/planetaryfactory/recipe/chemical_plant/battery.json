@@ -1,11 +1,11 @@
 {
-  "type": "gtceu:chemical_plant",
+  "type": "oritech:chemical_plant",
   "inputs": {
     "fluid": [
       {
         "content": {
           "ingredient": {
-            "fluid": "gtceu:sulfuric_acid"
+            "fluid": "oritech:sulfuric_acid"
           },
           "amount": 20
         }
@@ -15,7 +15,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_plate"
+            "item": "oritech:iron_plate"
           },
           "count": 1
         }
@@ -23,7 +23,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:copper_plate"
+            "item": "oritech:copper_plate"
           },
           "count": 1
         }

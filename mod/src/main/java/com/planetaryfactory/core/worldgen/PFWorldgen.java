@@ -17,7 +17,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  */
 public final class PFWorldgen {
     public static final DeferredRegister<StructureProcessorType<?>> PROCESSORS =
-            DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebelts(Registries.STRUCTURE_PROCESSOR, PlanetaryFactoryCore.NAMESPACE);
 
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<GroundProcessor>>
             GROUND_PROCESSOR = PROCESSORS.register("ground", () -> () -> GroundProcessor.CODEC);

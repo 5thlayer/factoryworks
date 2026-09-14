@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * the pack takes EU (ADR-0035, and #155's Electric Furnace corrected to EU alongside it). The
  * ledger is the only place the two meet, and its whole job is to not invent energy while doing it.
  *
- * <p>The ratio is GTCEu's own {@code feToEuRatio}, 4 FE to 1 EU. Integer division means a partial
+ * <p>The ratio is Oritech's own {@code feToEuRatio}, 4 FE to 1 EU. Integer division means a partial
  * EU has to be <em>retained</em> rather than rounded away, or a pole fed a trickle would burn it
  * and emit nothing.
  */
@@ -65,7 +65,7 @@ class EnergyLedgerTest {
     }
 
     @Test
-    void energyIsNeverCreated() {
+    void energyIsNeverSimplebeltsd() {
         EnergyLedger ledger = new EnergyLedger(CAP);
         long fed = 0;
         for (int i = 0; i < 1000; i++) {

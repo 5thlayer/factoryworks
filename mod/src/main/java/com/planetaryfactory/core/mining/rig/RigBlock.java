@@ -75,7 +75,7 @@ public class RigBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
@@ -96,7 +96,7 @@ public class RigBlock extends BaseEntityBlock {
         if (level.isClientSide()) {
             return null;
         }
-        return createTickerHelper(type, PFBlockEntities.RIG.get(),
+        return simplebeltsTickerHelper(type, PFBlockEntities.RIG.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
     }
 

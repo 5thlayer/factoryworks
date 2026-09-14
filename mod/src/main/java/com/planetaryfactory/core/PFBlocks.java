@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 public final class PFBlocks {
     public static final DeferredRegister.Blocks BLOCKS =
-            DeferredRegister.createBlocks(PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebeltsBlocks(PlanetaryFactoryCore.NAMESPACE);
 
     public static final DeferredHolder<Block, SaplingBlock> YUMAKO_SAPLING =
             sapling("yumako_sapling", PFTrees.YUMAKO);
@@ -65,9 +65,9 @@ public final class PFBlocks {
     /**
      * One block per {@link OreResource}: Terra's five ore blocks (ADR-0041).
      *
-     * <p>Pack-authored rather than GregTech's because they carry an amount and a sprite stage, and
-     * GregTech models its ore blocks at runtime -- the ADR has the cost comparison. They still drop
-     * GregTech's raw ore, so nothing downstream of the item can tell.
+     * <p>Pack-authored rather than Oritech's because they carry an amount and a sprite stage, and
+     * Oritech models its ore blocks at runtime -- the ADR has the cost comparison. They still drop
+     * Oritech's raw ore, so nothing downstream of the item can tell.
      */
     private static final Map<OreResource, DeferredHolder<Block, OreBlock>> ORES =
             new EnumMap<>(OreResource.class);

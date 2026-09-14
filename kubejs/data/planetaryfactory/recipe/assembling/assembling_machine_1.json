@@ -1,5 +1,5 @@
 {
-  "type": "gtceu:assembling",
+  "type": "oritech:assembling",
   "inputs": {
     "item": [
       {
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_gear"
+            "item": "oritech:iron_gear"
           },
           "count": 5
         }
@@ -21,7 +21,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_plate"
+            "item": "oritech:iron_plate"
           },
           "count": 9
         }
@@ -33,7 +33,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:lv_assembling_machine"
+            "item": "oritech:lv_assembling_machine"
           },
           "count": 1
         }

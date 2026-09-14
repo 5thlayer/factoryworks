@@ -32,9 +32,9 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 # ADR-0017's owners, plus `pack` for the three rows that name a machine this pack registers
 # on a GT chassis rather than a mod (ADR-0025, ADR-0026). `mekanism` is not an owner: ADR-0035
 # took the mod out of the pack, and this set is what catches a stale `owner` string left behind.
-# `electro` is not one either: #148 swapped Create: Electro Energetics for Create: Power Grid, and
+# `electro` is not one either: #148 swapped Simplebelts: Electro Energetics for Simplebelts: Power Grid, and
 # the token is `powergrid` -- the mod id, which `electro` never was.
-MODS = {"gregtech", "create", "powergrid", "pack"}
+MODS = {"gregtech", "simplebelts", "powergrid", "pack"}
 
 # Terminal values: not a machine, and deliberately so. `undecided` means ADR-0017 has no row
 # for the capability -- a decision nobody has taken, not an oversight. `undecided:smelting` was
@@ -49,10 +49,10 @@ TERMINALS = {
 # Every recipe type the file may name. A process outside this set is either a typo or a
 # machine nobody registered; both should fail here rather than at datapack load.
 PROCESSES = {
-    "create:pressing",
-    "create:filling",
-    "create:emptying",
-    "create:mixing",
+    "simplebelts:pressing",
+    "simplebelts:filling",
+    "simplebelts:emptying",
+    "simplebelts:mixing",
     "pack:assembling",
     "pack:chemical_plant",
     "pack:oil_refinery",
@@ -63,7 +63,7 @@ PROCESSES = {
 
 # Terminal values for the PROCESS axis, as distinct from the owner axis above. `native_mechanic`
 # means the capability is in scope and fully supported, by a mod mechanic that needs no recipe:
-# Create's Spout and Item Drain key on `IFluidHandlerItem`, so barrelling works and the pack emits
+# Simplebelts's Spout and Item Drain key on `IFluidHandlerItem`, so barrelling works and the pack emits
 # nothing BECAUSE it works (#93). Separate from `not_emitted`, which means cut from the corpus --
 # filing a working mechanic under that token would read to a later author as a removed feature.
 PROCESS_TERMINALS = {

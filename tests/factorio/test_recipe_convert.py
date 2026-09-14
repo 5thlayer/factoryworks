@@ -20,8 +20,8 @@ files agree with each other:
   - every emitted recipe's ingredients and results resolve through the item map, and its `type`
     is a recipe type this pack registers
 
-WHAT IT CANNOT PROVE is that the recipe SHAPE is right: GregTech's codec is Java, the ids of
-GregTech's generated material items exist only in a loaded registry, and a wrong shape NPEs at
+WHAT IT CANNOT PROVE is that the recipe SHAPE is right: Oritech's codec is Java, the ids of
+Oritech's generated material items exist only in a loaded registry, and a wrong shape NPEs at
 datapack load rather than reporting anything readable. That is ADR-0026's second check -- one
 world load with the generated recipes in place -- and it needs a human.
 
@@ -52,8 +52,8 @@ PACK_SMELTING = "planetaryfactory:smelting"
 # The namespaces an item-map target may live in: this pack, the game, and the three mods whose
 # capabilities ADR-0017 puts on Terra. Mekanism is deliberately absent -- ADR-0035 takes it out
 # of the pack, so a row pointing at it would be a row written against a mod that is leaving.
-NAMESPACES = {"minecraft", "planetaryfactory", "gtceu", "create", "powergrid",
-              # GregTech's multiblock builder lands in `kubejs:`, not `gtceu:` -- the tiered
+NAMESPACES = {"minecraft", "planetaryfactory", "oritech", "simplebelts", "powergrid",
+              # Oritech's multiblock builder lands in `kubejs:`, not `oritech:` -- the tiered
               # builder and the multiblock builder disagree about the namespace, which is why
               # the Oil Refinery's id differs from the Chemical Plant's (#107, machines.js).
               "kubejs",
@@ -114,21 +114,21 @@ def first_party_items():
 
     Both halves of ADR-0015's split: the KubeJS startup scripts and `planetaryfactory_core`.
     """
-    items = set(re.findall(r"event\.create\('(planetaryfactory:[a-z0-9_]+)'",
+    items = set(re.findall(r"event\.simplebelts\('(planetaryfactory:[a-z0-9_]+)'",
                            (STARTUP / "items.js").read_text()))
     # A block registers an item too, and the chest ladder is a block (#133): its rows would
     # otherwise read as unregistered while sitting three lines away in `blocks.js`.
-    items |= set(re.findall(r"event\.create\('(planetaryfactory:[a-z0-9_]+)'",
+    items |= set(re.findall(r"event\.simplebelts\('(planetaryfactory:[a-z0-9_]+)'",
                             (STARTUP / "blocks.js").read_text()))
     items |= mod_registered_blocks()
     items |= mod_registered_items()
     machines = (STARTUP / "machines.js").read_text()
-    for name in re.findall(r"event\.create\('([a-z0-9_]+)'\)", machines):
-        # KJSTieredMachineBuilder registers through GregTech's registrate, so the ids come out
-        # `gtceu:<tier>_<name>` -- the namespace and the tier prefix are both unreachable from
+    for name in re.findall(r"event\.simplebelts\('([a-z0-9_]+)'\)", machines):
+        # KJSTieredMachineBuilder registers through Oritech's registrate, so the ids come out
+        # `oritech:<tier>_<name>` -- the namespace and the tier prefix are both unreachable from
         # the script, which is why they are reconstructed here rather than read.
         for tier in re.findall(r"GTValues\.([A-Z]+)", machines.split(".tiers(", 1)[1].split(")", 1)[0]):
-            items.add(f"gtceu:{tier.lower()}_{name}")
+            items.add(f"oritech:{tier.lower()}_{name}")
     return items
 
 
@@ -192,7 +192,7 @@ def check_item_map(items, corpus, failures):
         if "blocked_by" in row and target in registered:
             failures.append(f"{name} is blocked_by #{row['blocked_by']} and is already "
                             "registered -- drop the field, the ticket landed")
-        if target.startswith("gtceu:") and row.get("kind") == "item" \
+        if target.startswith("oritech:") and row.get("kind") == "item" \
                 and target.endswith("_assembling_machine") and target not in registered:
             failures.append(f"{name} maps onto {target}, which machines.js does not register")
 
@@ -209,7 +209,7 @@ def check_overrides(overrides, corpus, failures):
 def check_emitted(items, recipe_types, failures):
     """Every emitted recipe resolves through the item map and onto a recipe type that exists.
 
-    Two shapes reach this directory: GregTech's, and vanilla's furnace for the 1:1 smelts (#91).
+    Two shapes reach this directory: Oritech's, and vanilla's furnace for the 1:1 smelts (#91).
     """
     targets = {row["target"] for row in items.values() if "target" in row}
     # A `blocked_by` row is decided but its item is not registered yet -- it arrives with a

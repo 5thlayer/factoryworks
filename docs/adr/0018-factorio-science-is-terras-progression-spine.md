@@ -6,7 +6,7 @@ supersedes: [55]
 # Factorio science is Terra's progression spine, and Researchd is the lab
 
 Terra runs three tech mods in series plus a grid mod, and every one of them ships its own
-progression. GregTech's is a voltage ladder, Create's is a build-complexity curve, Mekanism's is a
+progression. Oritech's is a voltage ladder, Simplebelts's is a build-complexity curve, Mekanism's is a
 processing-factor ladder. Left as they are, the pack has three ladders and no spine, and a
 Factorio-literate player — the audience this pack is for — recognises none of them.
 
@@ -23,9 +23,9 @@ Four packs plus an unscienced rung 0 (`#26`):
 
 | Rung | Pack | What the rung is about |
 | --- | --- | --- |
-| 0 | *(none)* | Steam and Create kinetics. **The pack-authored Burner Mining Drill** (ADR-0040), the Furnace, Create's belts and the Steam Engine. *This row read "LP Solid Boiler, LP Steam Miner, the Furnace, Create's belts and the Steam Engine"; ADR-0040 removed the LP Steam Miner and took the boiler's last justification with it.* **ADR-0032 removed Crushing Wheels from this row** — ore smelts 1:1, so the chain is Miner → Furnace → plate, one hop. |
+| 0 | *(none)* | Steam and Simplebelts kinetics. **The pack-authored Burner Mining Drill** (ADR-0040), the Furnace, Simplebelts's belts and the Steam Engine. *This row read "LP Solid Boiler, LP Steam Miner, the Furnace, Simplebelts's belts and the Steam Engine"; ADR-0040 removed the LP Steam Miner and took the boiler's last justification with it.* **ADR-0032 removed Crushing Wheels from this row** — ore smelts 1:1, so the chain is Miner → Furnace → plate, one hop. |
 | 1 | `automation` | **Electricity, and the first assembler** — the Alternator, the FE grid and Assembling Machine I (`#34`), **plus steel** (ADR-0039). *This row read "First machines and Mekanism enrichment"; ADR-0032 cut enrichment, and `#34` had already hung the grid on the Assembler so the rung's reward did not depend on it.* |
-| 2 | `logistic` | Movement at scale — Create 6 package logistics — **plus the Oil Refinery, the Chemical Plant, basic oil processing, solid fuel, sulfur, sulfuric acid and plastic** (ADR-0025), **and the red circuit, which plastic makes** (`#125`). |
+| 2 | `logistic` | Movement at scale — Simplebelts 6 package logistics — **plus the Oil Refinery, the Chemical Plant, basic oil processing, solid fuel, sulfur, sulfuric acid and plastic** (ADR-0025), **and the red circuit, which plastic makes** (`#125`). |
 | 3 | `chemical` | **Advanced oil processing, heavy and light cracking, lubricant** (ADR-0025), the blue circuit and the Electric Furnace (`#91`), and **the nuclear chapter** — `uranium-mining`, `uranium-processing` and `nuclear-power` are all chemical science in Factorio (ADR-0033). *The 5x dissolution tier is gone — ADR-0032.* |
 | 4 | `production` | **Rocket fuel, rocket control units, rocket parts and the silo**, plus `nuclear-fuel-reprocessing` (ADR-0033). Kovarex costs **space** science and is post-launch, so Terra's reactors run at raw 0.7% U-235 — Factorio's own inefficiency, not a pack nerf. |
 
@@ -64,10 +64,10 @@ takes the fourth slot, with its vanilla recipe discarded.
 **Terra's science packs are inert items.** Sapros's science pack decays; that is where the
 buffer-as-liability puzzle belongs, and it is specified with Sapros.
 
-## GregTech is instrumental, not the ladder
+## Oritech is instrumental, not the ladder
 
-GregTech is in the pack because GCyR requires it, because its miners are good, and because it is a
-cheap chassis for custom machines. It is **not** the progression. Create and Mekanism sit *in
+Oritech is in the pack because GCyR requires it, because its miners are good, and because it is a
+cheap chassis for custom machines. It is **not** the progression. Simplebelts and Mekanism sit *in
 series* on the same ladder, never as a parallel escape from it — ADR-0017 enforces that block by
 block.
 
@@ -78,7 +78,7 @@ Two consequences bind every recipe author:
   tanks**, so it cannot run the corpus's 26 `crafting-with-fluid` rows. ADR-0026 dropped that
   restriction on this line's authority and said recovering it was an amendment here; this is that
   amendment. The rider is narrowed rather than broken — the ban was on *accidental* gates,
-  invisible ones a recipe author creates by writing an `EUt` or picking a tier. A machine with no
+  invisible ones a recipe author simplebeltss by writing an `EUt` or picking a tier. A machine with no
   tank gates nothing by fiat: it is the machine's visible shape, it is Factorio's own ramp, and oil
   arrives at rung 2 alongside the tier that can drink it. `advanced-crafting` stays ungated — all
   three machines run it, and Factorio excludes only the character.
@@ -91,7 +91,7 @@ Two consequences bind every recipe author:
 The gate is **Researchd's Research Lab multiblock** (`#45`): research packs are items, the Lab
 accepts them by pipe and consumes them unattended, and unlocking fires `unlock_recipe` effects.
 FTB Quests keeps the book and the reward surface and **stops being the gate** — which supersedes the
-GTCEu `RecipeCondition` approach of `#36` entirely.
+Oritech `RecipeCondition` approach of `#36` entirely.
 
 Two rules ride on this:
 
@@ -108,14 +108,14 @@ and refused**.
 
 ## The pacing figure
 
-**20–25 hours** from spawn to first launch, for a Factorio-literate, GregTech-naive player following
+**20–25 hours** from spawn to first launch, for a Factorio-literate, Oritech-naive player following
 the book. It is a figure to **check the beat sheet against**, never a knob to tune costs with. A
 beat sheet that lands far outside it has the wrong number of beats, not the wrong prices.
 
 ## Considered Options
 
-- **GregTech's voltage ladder as the spine.** Rejected: it inverts the pack's design, and the
-  audience does not read voltage tiers as progression. It also makes Create and Mekanism decoration.
+- **Oritech's voltage ladder as the spine.** Rejected: it inverts the pack's design, and the
+  audience does not read voltage tiers as progression. It also makes Simplebelts and Mekanism decoration.
 - **Two ladders — science for unlocks, mod tiers for capability.** Rejected: the player then has two
   progressions to track and the cheaper one wins. The rung *is* the capability.
 - **FTB Quests Task Screens as the lab** (the premise this map was chartered on). Superseded by

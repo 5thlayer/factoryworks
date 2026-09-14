@@ -6,7 +6,7 @@ supersedes: [39, 40]
 # The oil chapter is two pack-authored GT machines, and it moves off rung 4
 
 ADR-0017 gave **Refining** to Mekanism, "by pack-authored recipes on machines it owns", and
-recipe-removed GregTech's Distillation Tower and Distillery on Terra. `#39` had reached the same
+recipe-removed Oritech's Distillation Tower and Distillery on Terra. `#39` had reached the same
 place a rung earlier: *"Processing: Mekanism, by pack-authored recipes on machines it already owns
 (PRC, Rotary Condensentrator, Thermal Evaporation, the chemical line)."*
 
@@ -23,12 +23,12 @@ asking where sulfur comes from.
 
 ## The rule
 
-**Terra's oil chapter runs on two machines this pack registers itself, on a GregTech chassis,
+**Terra's oil chapter runs on two machines this pack registers itself, on a Oritech chassis,
 through KubeJS. It owns the recipe shapes Factorio needs and nothing else.**
 
 ## Why not the obvious candidates
 
-**GregTech's Distillation Tower is not one fluid short — it is structurally wrong.**
+**Oritech's Distillation Tower is not one fluid short — it is structurally wrong.**
 `GTRecipeTypes.setMaxIOSize(itemIn, itemOut, fluidIn, fluidOut)`, read out of the 7.0.2 bytecode:
 
 | Recipe type | itemIn | itemOut | fluidIn | fluidOut |
@@ -44,16 +44,16 @@ fact is the input count.
 
 **The Large Chemical Reactor would work, and is still declined.** At `(3, 3, 5, 4)` it fits the
 recipe with room to spare and costs nothing to register. It loses on legibility and on ownership: it
-is a generic do-everything block that reads as GregTech, and pointing the chapter at it would hand
-GregTech the Chemistry row ADR-0017 assigns to Mekanism, silently, by recipe placement.
+is a generic do-everything block that reads as Oritech, and pointing the chapter at it would hand
+Oritech the Chemistry row ADR-0017 assigns to Mekanism, silently, by recipe placement.
 
-**A Create addon — Petrochem or Diesel Generators — was declined on the fluid vocabulary.** Both are
+**A Simplebelts addon — Petrochem or Diesel Generators — was declined on the fluid vocabulary.** Both are
 live on 1.21.1 NeoForge. Both ship their own crude, diesel, kerosene and LPG, and Almost Unified
 does not unify fluids. Adopting either means duplicate incompatible oils in EMI, or re-basing
 ADR-0009's heavy-oil oceans and the polymer chain onto a third party's fluid set. Both are also
-Create addons, and Create is hard-pinned at 6.0.10 by Electro's `required` mixins (ADR-0017).
+Simplebelts addons, and Simplebelts is hard-pinned at 6.0.10 by Electro's `required` mixins (ADR-0017).
 
-**A Mekanism addon for a custom multiblock was declined on cost**, and is moot: GTCEu already
+**A Mekanism addon for a custom multiblock was declined on cost**, and is moot: Oritech already
 exposes `MACHINE_REGISTRY` and `RECIPE_TYPE_REGISTRY` to KubeJS
 (`integration/kjs/builders/machine/*`), and **the pack registers custom GT machines this way** —
 Launch Terminals, Receiving Terminals and Drop Hatches are designed against it (`docs/gdd.md`).
@@ -107,39 +107,39 @@ bearable; making the *high-count* block a multiblock is where that tax would act
 four-facts doctrine is already "spent, not exempted"; a tier ladder here would spend it again for a
 speed multiplier.
 
-**Both draw FE natively.** `config/gtceu.yaml` has `nativeEUToFE: true` with `enableFEConverters:
+**Both draw FE natively.** `config/oritech.yaml` has `nativeEUToFE: true` with `enableFEConverters:
 false`, which is `#39`'s "FE natively into GT machines, converters off". Every recipe is authored at
 LV `EUt`, per ADR-0018.
 
-## The fluids are GregTech's, and two of them were already right
+## The fluids are Oritech's, and two of them were already right
 
 Almost Unified does not unify fluids, and ADR-0017 restricts it to raw materials anyway. So the
-fluid ids are a one-way commitment, and the pack takes GregTech's:
+fluid ids are a one-way commitment, and the pack takes Oritech's:
 
 | Factorio | Pack | Lang |
 | --- | --- | --- |
-| Crude oil | `gtceu:raw_oil` | "Crude Oil" |
-| Heavy oil | `gtceu:heavy_oil` | *unchanged — already correct* |
-| Light oil | `gtceu:light_oil` | *unchanged — already correct* |
-| Petroleum gas | `gtceu:oil` | "Petroleum Gas" |
-| Lubricant | `gtceu:lubricant` | *unchanged* |
-| Plastic bar | `gtceu:polyethylene` | "Plastic Bar" |
+| Crude oil | `oritech:raw_oil` | "Crude Oil" |
+| Heavy oil | `oritech:heavy_oil` | *unchanged — already correct* |
+| Light oil | `oritech:light_oil` | *unchanged — already correct* |
+| Petroleum gas | `oritech:oil` | "Petroleum Gas" |
+| Lubricant | `oritech:lubricant` | *unchanged* |
+| Plastic bar | `oritech:polyethylene` | "Plastic Bar" |
 
-`gtceu:light_oil` and `gtceu:heavy_oil` exist as materials distinct from `light_fuel` and
+`oritech:light_oil` and `oritech:heavy_oil` exist as materials distinct from `light_fuel` and
 `heavy_fuel`, and their lang strings are already verbatim Factorio. **This matters beyond
-tidiness: ADR-0009 binds Electro's oceans to `gtceu:heavy_oil`.** Had the chapter used
+tidiness: ADR-0009 binds Electro's oceans to `oritech:heavy_oil`.** Had the chapter used
 `heavy_fuel`, Electro would have floated in a different fluid with a confusingly similar name, and
 nothing refined on Terra would have worked on what Electro is made of. ADR-0009 is confirmed by this
 ADR, not amended.
 
-Petroleum gas rides on `gtceu:oil`, which is registered `.liquid()` while `gtceu:refinery_gas` is
+Petroleum gas rides on `oritech:oil`, which is registered `.liquid()` while `oritech:refinery_gas` is
 `.gas()`. This was checked rather than assumed: `FluidBuilder` defaults to `hasFluidBlock = false`
 and `hasBucket = true` for every GT fluid regardless of state, and `determineDensity()`'s
 LIQUID/GAS/PLASMA split (1000 / -100 / -100000) only affects a placed fluid block, of which there is
 none. **Fluid state has no mechanical consequence in this pack** — it is texture, tint and tooltip.
 The choice is cosmetic and was made on readability.
 
-**Every other GregTech fraction is kept, unrecipe'd and hidden.** `light_fuel`, `heavy_fuel`,
+**Every other Oritech fraction is kept, unrecipe'd and hidden.** `light_fuel`, `heavy_fuel`,
 `naphtha`, `refinery_gas`, benzene, toluene, phenol and the whole sulfuric and cracked families
 cannot be unregistered — GT materials are data files read by the fork — so the rule is operational:
 author no recipes, and **hide them from EMI**. Visible-but-unreachable is the worse failure: a
@@ -177,13 +177,13 @@ non-petroleum routes documented in `docs/research/sulfur-and-oil-chains.md` are 
 2. Mekanism `injecting/gunpowder_to_sulfur.json` — the mob-drop bootstrap.
 
    *(1) and (2) are amended by ADR-0035: both routes left with the mod, so neither needs removing.
-   The removal that still has to happen is (3), which is GregTech's and the pack's own.*
-3. The `gtceu:sulfur` slot at weight 1 in `terra_polymetallic_deposit.json`, and its line in
+   The removal that still has to happen is (3), which is Oritech's and the pack's own.*
+3. The `oritech:sulfur` slot at weight 1 in `terra_polymetallic_deposit.json`, and its line in
    `tests/worldgen/expected.json`.
 
-(3) also deletes a known bug: GregTech's Sulfur has no raw-ore form, so that deposit currently drops
+(3) also deletes a known bug: Oritech's Sulfur has no raw-ore form, so that deposit currently drops
 an ore-form item **nothing in the pack can process** — GT's ore line is removed and Mekanism has no
-`c:ores/sulfur` recipe. `gtceu:sulfur` stays in Terra's `forbidden_ore_veins`; Ignus's sulfur vein
+`c:ores/sulfur` recipe. `oritech:sulfur` stays in Terra's `forbidden_ore_veins`; Ignus's sulfur vein
 and sulfuric acid geyser are untouched.
 
 **Sulfur gates blue science, so this forces the whole chapter down the ladder.** Factorio's tech
@@ -208,7 +208,7 @@ makes the ladder work.
 
 | Rung | Pack | Now holds |
 | --- | --- | --- |
-| 2 | `logistic` | Create package logistics, **Oil Refinery, Chemical Plant, basic oil processing, solid fuel, sulfur, sulfuric acid, plastic** |
+| 2 | `logistic` | Simplebelts package logistics, **Oil Refinery, Chemical Plant, basic oil processing, solid fuel, sulfur, sulfuric acid, plastic** |
 | 3 | `chemical` | **Advanced oil processing, heavy and light cracking, lubricant** |
 | 4 | `production` | **Rocket fuel, rocket control units, rocket parts, the silo** |
 
@@ -226,9 +226,9 @@ rocket fuel, rocket control units and concrete. That is rung 4.
 ## The polymer is Factorio's plastic, not Mekanism's HDPE
 
 `#40` chose Option 1b — reuse Mekanism's substrate → ethene → HDPE line, bridged by a `c:ethene` tag
-on `gtceu:ethylene`, re-basing GCyR's six Kapton-K part recipes onto HDPE sheet. **Superseded.**
+on `oritech:ethylene`, re-basing GCyR's six Kapton-K part recipes onto HDPE sheet. **Superseded.**
 Plastic is now Factorio's one step, `200 petroleum gas + 1 coal → 2 plastic`, on
-`gtceu:polyethylene`, and GCyR's six recipes re-base onto polyethylene plate instead.
+`oritech:polyethylene`, and GCyR's six recipes re-base onto polyethylene plate instead.
 
 The re-basing is the same KubeJS edit either way, so 1b's stated advantage was already thin. What
 decides it: the HDPE line's substrate input is renewable from `#c:fuels/bio`, which is a
@@ -238,7 +238,7 @@ drops the `c:ethene` tag bridge with it.
 ## Fuel is `#39` executed, not reopened
 
 GCyR's `gcyr:rocket_fuel` recipe type is rebound in KubeJS onto light oil → solid fuel → rocket
-fuel. `gtceu:rocket_fuel` — Dimethylhydrazine + Dinitrogen Tetroxide, not petrochemistry — is
+fuel. `oritech:rocket_fuel` — Dimethylhydrazine + Dinitrogen Tetroxide, not petrochemistry — is
 demoted to a later-planet tier. Hydrogen is cut as a launch fuel by raising its `EUt` above motor
 tier. All three were already decided in `#39`; none needs a fork source edit.
 
@@ -266,8 +266,8 @@ grid-side** — or rung 3 silently gates the Converter.
   in Factorio and the beat is that it is one recipe. Splitting it across two blocks to fit a mod's
   IO limits is the mod dictating the design.
 - **Take the Large Chemical Reactor.** Rejected above on legibility and silent ownership drift.
-- **Adopt Create: Petrochem or Create: Diesel Generators.** Rejected above on fluid vocabulary and
-  the Create 6.0.10 pin.
+- **Adopt Simplebelts: Petrochem or Simplebelts: Diesel Generators.** Rejected above on fluid vocabulary and
+  the Simplebelts 6.0.10 pin.
 - **Keep sulfur on coal and ship advanced processing only.** Rejected: it keeps the oil chapter at
   rung 4 and preserves `#39` intact, but it makes sulfur non-Factorio at the exact point the pack is
   buying fidelity, and it keeps a renewable sulfur loop under a rung meant to gate chemistry.
@@ -286,23 +286,23 @@ grid-side** — or rung 3 silently gates the Converter.
   topic full of holes. ~~Mekanism keeps ore processing and power-at-scale.~~ *(Three later decisions
   void the compensations this sentence offered Mekanism, and it is kept struck rather than deleted
   because it is the reason the Chemistry row felt affordable at the time. The fluid logistics and
-  bulk fluid storage named here went to Create under #101's amendment to ADR-0017; **ADR-0032
+  bulk fluid storage named here went to Simplebelts under #101's amendment to ADR-0017; **ADR-0032
   deleted the ore-processing row entirely** — ore smelts 1:1, so there is no capability to keep;
   and **#104 struck the power-at-scale clause**, base Mekanism registering no generator block at
   all. Read ADR-0017's table, not this sentence.)*
 - **`#39` is partly superseded**: its gate is re-argued, its ownership findings stand, its fuel
   decisions become execution. **`#40` is superseded** on the polymer's identity. Both get comments;
   neither is reopened.
-- **Crude now gates rung 2, not rung 4.** Terra's five GregTech bedrock fluid deposits and the
-  `gtceu:oilsands` vein become a **mid-game** blocker rather than a late one — and `tests/worldgen/
+- **Crude now gates rung 2, not rung 4.** Terra's five Oritech bedrock fluid deposits and the
+  `oritech:oilsands` vein become a **mid-game** blocker rather than a late one — and `tests/worldgen/
   expected.json` still has no `bedrock_fluids` block for Terra at all, while `#59`/`#60` are
   rewriting Terra as a flat, cave-free world. This is the most likely way the chapter breaks.
 - **Ore multiplication is out of scope and unresolved.** *Resolved by ADR-0032: all of it is cut, pack-wide.* Deleting the 5x dissolution tier follows
   from sulfuric acid moving to rung 2, and the fidelity argument that kills 5x kills 4x, 3x and
-  Create's rung-0 2x with it — rewriting ADR-0017's Ore processing row and emptying ADR-0018's rung
+  Simplebelts's rung-0 2x with it — rewriting ADR-0017's Ore processing row and emptying ADR-0018's rung
   1. Split to `#69`. **This ADR does not depend on the answer.**
 - **Two new blocks need models and a structure**, and neither is cut until it has been played. The
   pack's standing rule — adopt whole, cut as necessary, cutting waits for hands-on play — applies.
 - **Recipe removal grows.** ADR-0017 already recipe-removes GT's Distillation Tower and Distillery on
   Terra; this ADR adds the Mekanism sulfur routes, the HDPE line's role as the polymer, and an EMI
-  hide list for roughly fifteen GregTech fractions.
+  hide list for roughly fifteen Oritech fractions.

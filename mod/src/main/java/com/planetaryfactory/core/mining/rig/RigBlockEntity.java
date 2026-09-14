@@ -55,7 +55,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
  *
  * <ol>
  *   <li><b>An operation draws one unit, through {@link OreMining}.</b> Not around it. This is the
- *       specific thing {@code gtceu:lv_miner} gets wrong -- it deletes an ore block whole whatever
+ *       specific thing {@code oritech:lv_miner} gets wrong -- it deletes an ore block whole whatever
  *       amount it held, and takes its drops from the loot table. Terra's ore loot tables are
  *       empty, so that miner would destroy a field and pay out nothing.
  *   <li><b>The buffer is asked before the ground is.</b> A draw that could not be banked would
@@ -286,10 +286,10 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
      * logistics puzzle -- and under an amount model a spill risks losing a finite resource where a
      * stall preserves it.
      *
-     * <p>Rule 1 covers the pack's furnace, a chest, a vanilla hopper and a bare Create belt, all of
-     * which answer {@code Capabilities.ItemHandler.BLOCK}. A Create funnel answers no handler and
+     * <p>Rule 1 covers the pack's furnace, a chest, a vanilla hopper and a bare Simplebelts belt, all of
+     * which answer {@code Capabilities.ItemHandler.BLOCK}. A Simplebelts funnel answers no handler and
      * is reached the other way round -- set to extract, sitting on the rig, pulling through
-     * {@link RigItemHandler} -- which is why the mod takes no Create dependency and calls no
+     * {@link RigItemHandler} -- which is why the mod takes no Simplebelts dependency and calls no
      * {@code DirectBeltInputBehaviour} (#182, ADR-0044).
      */
     private void push(ServerLevel server) {
@@ -442,7 +442,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
 
     @Override
     @Nullable
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+    public AbstractContainerMenu simplebeltsMenu(int containerId, Inventory playerInventory, Player player) {
         return new RigMenu(containerId, playerInventory, this, data);
     }
 

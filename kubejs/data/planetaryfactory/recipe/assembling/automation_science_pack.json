@@ -1,11 +1,11 @@
 {
-  "type": "gtceu:assembling",
+  "type": "oritech:assembling",
   "inputs": {
     "item": [
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:copper_plate"
+            "item": "oritech:copper_plate"
           },
           "count": 1
         }
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_gear"
+            "item": "oritech:iron_gear"
           },
           "count": 1
         }

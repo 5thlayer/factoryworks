@@ -23,9 +23,9 @@ midgame — and, as it turns out, how Terra ends.
 > summing the amounts of the blocks in the vein's bounds, not by counting the blocks.** Counting would read a
 > fresh patch and a nearly-spent one alike. Still derived, still no persisted state.
 
-The framing this decision started with was that GregTech's veins are "bounded in area but not
-depletable: mine one forever, never move." That is not what the code does. A GregTech vein is
-ordinary blocks. Mining removes them, nothing regenerates them, and a GregTech Miner **replaces
+The framing this decision started with was that Oritech's veins are "bounded in area but not
+depletable: mine one forever, never move." That is not what the code does. A Oritech vein is
+ordinary blocks. Mining removes them, nothing regenerates them, and a Oritech Miner **replaces
 mined ore with cobblestone** — the config is `replaceMinedBlocksWith`, defaulted to `minecraft:cobblestone`. What makes a vein
 *feel* infinite is scale: cluster sizes of 32–40 on a 3-chunk grid, under a player hand-mining a
 face rather than draining a patch.
@@ -52,7 +52,7 @@ Terra copies this, and it is why the pack needs no on-planet rescue mechanic:
 - **Terra's ore→ingot ratio is the pack's deliberate floor.** Every later body improves on it. The
   scarcity the player feels early is a *processing* story, not a thin-patch story — which is what
   keeps it from ever becoming a wall (see below). ADR-0017 already puts extraction and assembly on
-  GregTech, so the baseline chain is a GregTech chain and every body measures itself against it.
+  Oritech, so the baseline chain is a Oritech chain and every body measures itself against it.
 - **The constraint moves as the factory matures.** Once big miners, foundries and electromagnetic
   plants are unlocked and mass-produced, processing stops being the problem. What binds then is raw
   ore **throughput** — how fast Terra's ground gives ore up.
@@ -98,9 +98,9 @@ randomized layout and patch sizes. Two things are settled here.
 > and `cassiterite` are in Terra's `forbidden_ore_veins`. Three fields ship, not five.
 
 ~~**The materials: iron, copper, zinc, tin and coal.**~~ The set is chosen to bootstrap the three things
-the opening needs — brass for Create, bronze for steam, and an LV miner — and it maps onto veins
-Terra already registers: `gtceu:iron`, `gtceu:copper`, `planetaryfactory:sphalerite`,
-`gtceu:cassiterite`, `gtceu:coal`. Nothing new is registered for it.
+the opening needs — brass for Simplebelts, bronze for steam, and an LV miner — and it maps onto veins
+Terra already registers: `oritech:iron`, `oritech:copper`, `planetaryfactory:sphalerite`,
+`oritech:cassiterite`, `oritech:coal`. Nothing new is registered for it.
 
 This membership is a **starting configuration, not an invariant** — it needs playtest. What ADR-0019
 fixes is that the set does not vary *by seed*; whether these five are the right five is a question
@@ -110,12 +110,12 @@ that gate lands wrong, the set moves.
 
 > **Amended by #176 — this paragraph is false, and was never marked superseded.** The shipped
 > `kubejs/data/planetaryfactory/structure/terra_start_{iron,copper,coal}_*.nbt` templates carry literal
-> `gtceu:iron_ore`, `gtceu:copper_ore` and `gtceu:coal_ore` blocks. `scripts/build-terra-start.py` gives the
+> `oritech:iron_ore`, `oritech:copper_ore` and `oritech:coal_ore` blocks. `scripts/build-terra-start.py` gives the
 > reason: a vein cannot be spawn-anchored. The consequence this paragraph predicted is real and accepted — the
 > starting fields have no map readout and are read with Jade instead.
 
 ~~**The patches are ore veins pinned to spawn, not ore placed by the structure.**~~ The structure
-anchors placement; the patches themselves are ordinary GregTech veins. This matters for a mechanical
+anchors placement; the patches themselves are ordinary Oritech veins. This matters for a mechanical
 reason: the map readout below is written against `GeneratedVeinMetadata`, which hand-placed ore in a
 structure would not have. Authoring the patches as blobs would make the tutorial area the one place
 in the world where the map readout silently does not work. Pinning veins also keeps the starting
@@ -127,7 +127,7 @@ all the way down.
 A patch whose depletion is invisible is a trap, not a decision. Factorio reads remaining ore **on
 the map**, and Terra does the same. Almost all of this already ships:
 
-- **FTB Chunks is in the pack** (`ftb-chunks-neoforge-2101.1.21.jar`), and GregTech injects its ore
+- **FTB Chunks is in the pack** (`ftb-chunks-neoforge-2101.1.21.jar`), and Oritech injects its ore
   layer into FTB Chunks' large map screen through `LargeMapScreenMixin`. The map surface is live
   today.
 - **The Prospector fills a server-side saved cache** (`ServerCache` → `ServerCacheSavedData`),
@@ -135,17 +135,17 @@ the map**, and Terra does the same. Almost all of this already ships:
   taken at scan time** — nothing re-reads the world afterwards. This is a real limitation and it is
   accepted: the map tells you what *was* there and, with the flag below, whether it is finished.
 - **`GeneratedVeinMetadata` already carries a `depleted` boolean**, codec'd, saved, sent to the
-  client, and honored by every map renderer GregTech ships. `OreVeinIcon` reads it, and
+  client, and honored by every map renderer Oritech ships. `OreVeinIcon` reads it, and
   `FTBChunksOptions.hideDepleted` lets a player hide worked-out sites entirely.
-- **Bedrock deposits already have a live readout** on the miner: `gtceu.machine.bedrock_ore_miner.depletion`
+- **Bedrock deposits already have a live readout** on the miner: `oritech.machine.bedrock_ore_miner.depletion`
   renders a depletion percentage, backed by `BedrockOreVeinSavedData`.
 
-The one gap: **stock GregTech never sets `depleted` itself.** The only writers are worldgen and a
+The one gap: **stock Oritech never sets `depleted` itself.** The only writers are worldgen and a
 debug command; what players get is a manual "Mark as Depleted" button on the map icon.
 
 > **Unbuilt as of #176.** `grep -rn 'GeneratedVein\|depleted' mod/src/main/java` returns nothing.
 
-So `planetaryfactory_core` **flips the flag automatically when a GregTech Miner exhausts its working
+So `planetaryfactory_core` **flips the flag automatically when a Oritech Miner exhausts its working
 area**. The miner that drained the vein is the machine that knows, it has the information for free,
 and it is already the outfield verb ADR-0019 chose. The flag is set by an *actual failure to find
 ore* — never by a parallel counter — which is the same honesty the whole design rests on: the map
@@ -207,11 +207,11 @@ safe. Raise it and it stops being a consolation and starts being a reason to sta
   any yield, so the size of the trickle was never the deciding number. Ignus and Electro keep
   theirs; the tail was never wrong there.
 - **Adopting a map mod for the readout.** Moot, and nearly a mistake: FTB Chunks is already in the
-  pack and GregTech already renders into it. Checked before deciding.
+  pack and Oritech already renders into it. Checked before deciding.
 - **Manual "Mark as Depleted" only.** Rejected as clerical, though it remains available and costs
   nothing.
 - **A three-state map — untouched / being worked / dead.** Deferred. It is where this wants to go,
-  but it needs a field GregTech does not have, and a three-state map is a bigger teaching load than
+  but it needs a field Oritech does not have, and a three-state map is a bigger teaching load than
   this transition needs.
 
 ## Consequences
@@ -252,7 +252,7 @@ world cannot.
 
 Deriving is also the only option that adds no persisted state: `GeneratedVeinMetadata` carries
 `originChunk`, `center`, `definition` and `depleted` and nothing else. There is no remaining-count
-field, and nothing in GregTech computes one.
+field, and nothing in Oritech computes one.
 
 `depleted` is unchanged — the cheap binary the Miner flips when it fails to find ore. It is not
 replaced by the yield number, and the two cannot drift: **yield 0 and `depleted` agree by
@@ -270,7 +270,7 @@ zinc and tin are cut with it, so the five above are drawn from a pool that no lo
 Uranium exists on Terra but is deliberately excluded from the starting area, as Factorio excludes it.
 
 This is not the playtest tuning the section anticipated: the pool changed, not the judgement about
-which of it belongs at spawn. The bootstrap targets named above — brass for Create, bronze for steam
+which of it belongs at spawn. The bootstrap targets named above — brass for Simplebelts, bronze for steam
 — are casualties of that cut and are re-specified elsewhere; they are not an argument for keeping
 the materials. Everything else here stands, including that the patches are spawn-pinned veins and
 that membership does not vary by seed.

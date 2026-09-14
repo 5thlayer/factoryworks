@@ -26,10 +26,10 @@ versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
 
-# GTCEu never asks the vanilla RecipeManager, so Researchd's own lock cannot see a GT
+# Oritech never asks the vanilla RecipeManager, so Researchd's own lock cannot see a GT
 # machine. `RecipeLogicMixin` is that hook; both mods are hard requirements for it.
 [[dependencies.${mod_id}]]
-modId = "gtceu"
+modId = "oritech"
 type = "required"
 versionRange = "[7.0.2,)"
 ordering = "AFTER"

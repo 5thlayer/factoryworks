@@ -3,8 +3,8 @@
   "package": "com.planetaryfactory.core.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "gtceu.RecipeLogicMixin",
-    "gtceu.RecipeLogicStatusMixin",
+    "oritech.RecipeLogicMixin",
+    "oritech.RecipeLogicStatusMixin",
     "minecraft.InventoryMenuMixin",
     "researchd.ResearchdBEPlacementHandlerMixin"
   ],

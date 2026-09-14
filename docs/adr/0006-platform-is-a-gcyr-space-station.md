@@ -4,7 +4,7 @@ status: accepted
 
 # A Platform is a GCyR space station, and it never moves
 
-GCyR ships `SpaceStationPackagerMachine`, `PacketCreateSpaceStation`, per-body orbit dimensions and
+GCyR ships `SpaceStationPackagerMachine`, `PacketSimplebeltsSpaceStation`, per-body orbit dimensions and
 a world border sized by `spaceStationMaxSize`. The design's Platform is the same object: a
 player-expanded orbital factory. We use GCyR's, rather than pasting our own structure into a void
 dimension via KubeJS as an earlier draft proposed. The Orbital Starter Kit is GCyR's station
@@ -44,4 +44,4 @@ means the unmanned cargo and Vanguard-equivalent path must work before any playe
 
 Cargo terminals are ours regardless: GCyR has `launch_pad` and `RocketEntity` but no cargo terminal
 concept, so Launch Terminal, Receiving Terminal and Drop Hatch are custom GT machines built on
-GTCEu's KubeJS machine builders.
+Oritech's KubeJS machine builders.

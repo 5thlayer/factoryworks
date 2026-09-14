@@ -78,7 +78,7 @@ public class FurnaceBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, LIT);
     }
 
@@ -104,7 +104,7 @@ public class FurnaceBlock extends BaseEntityBlock {
         if (level.isClientSide()) {
             return null;
         }
-        return createTickerHelper(type, PFBlockEntities.FURNACE.get(),
+        return simplebeltsTickerHelper(type, PFBlockEntities.FURNACE.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
     }
 

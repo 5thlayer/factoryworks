@@ -1,10 +1,10 @@
 # How Modern Industrialization resolves an ambiguous recipe
 
 Read against a clone of `AztechMC/Modern-Industrialization` at `1cc3ef3` (2026-09-10), beside the
-pack as `../mi-src`. Line numbers are that commit's. Written for #236, where GregTech's answer to
+pack as `../mi-src`. Line numbers are that commit's. Written for #236, where Oritech's answer to
 the same question is the programmed circuit and this pack has removed the circuit (ADR-0026).
 
-MI is a GregTech-shaped mod that infers a machine's recipe from its input slots, exactly as GregTech
+MI is a Oritech-shaped mod that infers a machine's recipe from its input slots, exactly as Oritech
 does. It therefore has #236's problem natively. It does not solve it with a circuit, and — this is
 the part worth knowing — **it does not solve it by locking the machine to a recipe either.** It
 locks *slots to items*, and lets the item filters make the inference unambiguous.
@@ -16,7 +16,7 @@ locks *slots to items*, and lets the item filters make the inference unambiguous
 `CrafterComponent.updateActiveRecipe` (`machines/components/CrafterComponent.java:379`) walks every
 candidate recipe. If a second recipe can also start, it asks `overlaps(first, second)` — do both
 recipes match the *same* input stack — and if so it sets `matchesMultipleRecipes = true` and
-**returns false**. The machine does not start. So MI's failure is GregTech's failure: an idle
+**returns false**. The machine does not start. So MI's failure is Oritech's failure: an idle
 machine with the correct items in it.
 
 The difference is entirely in what the player is told. The flag is a GUI component,
@@ -156,9 +156,9 @@ enchantment module. None of that applies here.
 Adopting the mod rather than the idea costs 278 Java files, 227 generated recipes, 35 items and 5
 blocks, plus `tesseract_api` as a second required jar. Under ADR-0034's default-deny sweep every one
 of those recipes is removed and every machine kept needs a `recipe_survivors.js` row naming a type
-`data/pack/category-map.json` registers — the shape #172 already paid for with Create: Power Grid.
+`data/pack/category-map.json` registers — the shape #172 already paid for with Simplebelts: Power Grid.
 Against that, the pack's own carrier already exists and is already being reopened: ADR-0039's
-Engineer's Pick, whose GregTech wrench-ability strings (`core/mining/PickAbilities.java:41`) do not
+Engineer's Pick, whose Oritech wrench-ability strings (`core/mining/PickAbilities.java:41`) do not
 survive ADR-0056.
 
 ### One limit, and it is MI's rather than the addon's

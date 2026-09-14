@@ -6,7 +6,7 @@ package com.planetaryfactory.core.smelting;
  * <p><b>The furnace has no sided inventory.</b> Every face and the null side return the same
  * handler, and what decides the outcome is the item and the operation rather than the direction.
  * That is Factorio's arrangement -- there the <em>inserter's</em> direction decides in or out and
- * the furnace itself has no faces -- and it is also what makes a Create funnel work wherever a
+ * the furnace itself has no faces -- and it is also what makes a Simplebelts funnel work wherever a
  * player puts it: funnels reach a neighbour through {@code InvManipulationBehaviour}, whose
  * capability is a {@code BlockCapability<IItemHandler, Direction>}, so a nominated-face inventory
  * answers a funnel on the wrong face with silence and no diagnosis.

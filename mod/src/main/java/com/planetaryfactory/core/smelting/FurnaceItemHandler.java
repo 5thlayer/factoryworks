@@ -13,7 +13,7 @@ import net.neoforged.neoforge.items.IItemHandler;
  * input it has not smelted yet.
  *
  * <p>That is Factorio's arrangement -- there the inserter's direction decides in or out and the
- * furnace has no faces -- and it is also what makes a Create funnel work on whichever face a
+ * furnace has no faces -- and it is also what makes a Simplebelts funnel work on whichever face a
  * player puts it on. The rules themselves are in {@link FurnaceSlots}, where they are checkable
  * without a world.
  */

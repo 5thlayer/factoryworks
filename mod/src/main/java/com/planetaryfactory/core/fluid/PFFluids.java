@@ -36,14 +36,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  *
  * <p>No model or blockstate JSON is generated for either liquid block: {@link LiquidBlock}s are not
  * rendered from one -- {@link com.planetaryfactory.core.fluid.client.SteamFluidClient} supplies the
- * still/flowing textures directly through {@code IClientFluidTypeExtensions}, the same seam GregTech
+ * still/flowing textures directly through {@code IClientFluidTypeExtensions}, the same seam Oritech
  * and every other fluid mod uses.
  */
 public final class PFFluids {
     public static final DeferredRegister<Fluid> FLUIDS =
-            DeferredRegister.create(Registries.FLUID, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebelts(Registries.FLUID, PlanetaryFactoryCore.NAMESPACE);
     public static final DeferredRegister.Blocks BLOCKS =
-            DeferredRegister.createBlocks(PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebeltsBlocks(PlanetaryFactoryCore.NAMESPACE);
 
     // ---- Steam ----------------------------------------------------------------------------
 

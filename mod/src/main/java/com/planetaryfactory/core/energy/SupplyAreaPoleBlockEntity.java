@@ -1,7 +1,7 @@
 package com.planetaryfactory.core.energy;
 
-import com.gregtechceu.gtceu.api.capability.GTCapability;
-import com.gregtechceu.gtceu.api.capability.IEnergyContainer;
+import com.gregtechceu.oritech.api.capability.GTCapability;
+import com.gregtechceu.oritech.api.capability.IEnergyContainer;
 import com.planetaryfactory.core.PFBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,11 +21,11 @@ import java.util.List;
  *
  * <p>Power Grid's Device Connector is one-way grid-to-FE ({@code canReceive() == false}), so FE is
  * the only currency the grid can hand a pack block. Every machine in the pack takes EU. The
- * conversion happens once, here, in {@link EnergyLedger} -- which is why GTCEu's FE converters stay
+ * conversion happens once, here, in {@link EnergyLedger} -- which is why Oritech's FE converters stay
  * disabled and why no converter block appears anywhere in the pack.
  *
  * <p>Energy is inserted with {@link IEnergyContainer#addEnergy(long)} rather than
- * {@code acceptEnergyFromNetwork}. The latter enforces GregTech's voltage tiers and can overvolt a
+ * {@code acceptEnergyFromNetwork}. The latter enforces Oritech's voltage tiers and can overvolt a
  * machine into exploding; {@code #37} deleted that ladder entire, so there is no tier for a pole to
  * respect and direct insertion is the honest operation. A pole supplies wirelessly, so it also has
  * no face to be accepted through.
@@ -46,7 +46,7 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
     /**
      * The FE buffer, sized at one tick of a busy area and derived rather than picked.
      *
-     * <p>A GregTech LV machine draws 32 EU/t. A substation area packed with 32 of them is
+     * <p>A Oritech LV machine draws 32 EU/t. A substation area packed with 32 of them is
      * 1024 EU/t, which is {@code 1024 * }{@link EnergyLedger#FE_PER_EU}{@code  = 4096 FE} for a
      * single tick. That is the number: enough that a full area can be served from one push, and
      * not one tick more.
@@ -140,7 +140,7 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
         return lastDemandedEu;
     }
 
-    /** Every position in the area that currently answers with a GregTech energy container. */
+    /** Every position in the area that currently answers with a Oritech energy container. */
     private List<BlockPos> scan(Level level) {
         List<BlockPos> found = new ArrayList<>();
         BlockPos origin = getBlockPos();
@@ -205,7 +205,7 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
     }
 
     private static IEnergyContainer container(Level level, BlockPos pos) {
-        // A pole supplies wirelessly, so it has no natural side to ask through. GregTech machines
+        // A pole supplies wirelessly, so it has no natural side to ask through. Oritech machines
         // answer on a null context; the faces are a fallback for anything that insists on one.
         IEnergyContainer container =
                 level.getCapability(GTCapability.CAPABILITY_ENERGY_CONTAINER, pos, null);

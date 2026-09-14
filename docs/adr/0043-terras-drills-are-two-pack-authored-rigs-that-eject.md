@@ -5,7 +5,7 @@ supersedes: [27, 37]
 
 # Terra's drill ladder is two pack-authored rigs, and a drill ejects onto the tile it faces
 
-ADR-0040 authored Terra's burner drill and left GregTech the electric one. It also recorded
+ADR-0040 authored Terra's burner drill and left Oritech the electric one. It also recorded
 "drills output onto a belt directly" as `excluded`. Both are overturned here, from the same
 starting point: **a Factorio player who places their first burner drill over the starting iron
 expects it to feed the furnace next to it, and expects to see which blocks it is working.**
@@ -16,9 +16,9 @@ belt, a furnace, a chest or another drill is merely what happens to be standing 
 "output onto a belt" deleted the drill-and-furnace pair as collateral, which is the first machine
 pair a Factorio player builds.
 
-## The ladder is two rigs and GregTech owns neither
+## The ladder is two rigs and Oritech owns neither
 
-ADR-0040's rung 1 was `gtceu:lv_miner`. That block cannot hold the pack's ore model. `MinerLogic`
+ADR-0040's rung 1 was `oritech:lv_miner`. That block cannot hold the pack's ore model. `MinerLogic`
 calls `ServerLevel.setBlock(pos, cobblestone)` and takes drops from the block's **loot table** —
 it deletes an ore block whole, whatever amount it held, and never routes through `OreMining`, so
 the position's `OreDelta` entry is left behind for the next block placed there to inherit. It also
@@ -28,17 +28,17 @@ queues anything in `c:ores` in a 17×17 column to bedrock at 160 ticks a block, 
 *Corrected by #193 on the delta, which is now stale: `OreBlock.onRemove` retires the position's
 entry on **any** removal, `setBlock(pos, cobblestone)` included, so nothing is left behind to be
 inherited. What survives is worse than the sentence it replaces. Terra's ore blocks carry an empty
-loot table — the amount pays out through `OreMining` and not through loot — so GregTech's miner
+loot table — the amount pays out through `OreMining` and not through loot — so Oritech's miner
 takes a full-amount block, replaces it with cobblestone and **pays out nothing at all**. The
 paragraph's conclusion is untouched; only its mechanism was wrong.*
 
 Making it fit means overriding its replacement block, its drop source, its per-operation
-semantics, its footprint, its speed and its output — maintaining GregTech's miner as a fork until
-it stops being GregTech's miner — and still hand-writing the renderer and the auto-output supplier,
-because `MachineBuilder` exposes no `autoOutput*` setter and GregTech renders no working area at
+semantics, its footprint, its speed and its output — maintaining Oritech's miner as a fork until
+it stops being Oritech's miner — and still hand-writing the renderer and the auto-output supplier,
+because `MachineBuilder` exposes no `autoOutput*` setter and Oritech renders no working area at
 all.
 
-**So `planetaryfactory_core` authors both rigs, and GregTech owns no drill on Terra.** ADR-0040's
+**So `planetaryfactory_core` authors both rigs, and Oritech owns no drill on Terra.** ADR-0040's
 own principle — "the pack authors first-party when fidelity demands it" — applied one rung further
 up than it was willing to go.
 
@@ -47,8 +47,8 @@ up than it was willing to go.
 | 0 | Burner Mining Drill | `burner-mining-drill` | 2×2 | the 2×2 beneath it |
 | 1 | Electric Mining Drill | `electric-mining-drill` | 3×3 | the 5×5 beneath it |
 
-`item-map.json`'s `electric-mining-drill` re-points from `gtceu:lv_miner` to the first-party block.
-GregTech's miners are removed from the game rather than left unobtainable: under ADR-0034's sweep
+`item-map.json`'s `electric-mining-drill` re-points from `oritech:lv_miner` to the first-party block.
+Oritech's miners are removed from the game rather than left unobtainable: under ADR-0034's sweep
 they are already uncraftable, and the only thing leaving them registered buys is a creative-mode
 block that silently corrupts ore deltas.
 
@@ -61,7 +61,7 @@ the player gets right or wrong, and it is what they will recognise.
 The order of attempts on that tile:
 
 1. **An item handler** — `Capabilities.ItemHandler.BLOCK`. This covers the pack's furnace, a chest,
-   a vanilla hopper, and every Create block that answers the capability.
+   a vanilla hopper, and every Simplebelts block that answers the capability.
 2. **Otherwise it stalls**, holding output in a small internal buffer and burning no fuel. A
    mis-faced drill stops rather than voiding ore — under an amount model, overflow that vanishes
    destroys a finite resource — and rather than looking like it works.
@@ -71,7 +71,7 @@ ground", defended as "Factorio's own behaviour and its one-item-per-tile rule". 
 that defence fail.** The one-item-per-tile rule is real but governs items already lying on the
 ground; no Factorio machine ejects to the ground when its output is blocked, and a blocked drill
 fills its output and halts. Rule 2's other stated ground — keeping a logistics path open with no
-Create dependency — went with ADR-0044 keeping Create's belts. So **rules 1 and 3 were the whole
+Simplebelts dependency — went with ADR-0044 keeping Simplebelts's belts. So **rules 1 and 3 were the whole
 mechanic**, and what looked like a fallback in a chain is backpressure: it is also what ADR-0041
 needs, since a stall preserves a finite resource where a spill destroys it. #182 raised this and is
 where the argument is written out; #105 owned the call and #193 made it. **A broken rig pays back
@@ -91,10 +91,10 @@ the mining areas below extracted rather than typed.*
 *The buffer's size is the pack's, not Factorio's: one stack. This ADR asked for "a small internal
 buffer" and did not size it, and there is no corpus figure to read.*
 
-**Create's `DirectBeltInputBehaviour` is deliberately not called, and the mod takes no Create
+**Simplebelts's `DirectBeltInputBehaviour` is deliberately not called, and the mod takes no Simplebelts
 dependency.** A bare horizontal belt does answer `Capabilities.ItemHandler.BLOCK`, so rule 1 will
-feed one, and a Create funnel, which answers no item handler, is reachable only by rule 2. Both are
-accepted for now because the prior question is open: whether this pack should ship Create's belts at
+feed one, and a Simplebelts funnel, which answers no item handler, is reachable only by rule 2. Both are
+accepted for now because the prior question is open: whether this pack should ship Simplebelts's belts at
 all, or Factorio's own. That is #178, and this ADR is not the place to answer it.
 
 *Corrected by ADR-0044, on two counts. **The paragraph above read that rule 1 feeds a belt "including
@@ -110,7 +110,7 @@ confirmed**: no funnel class appears among the jar's capability registrations, a
 `content/logistics/funnel/` references `Capabilities` nowhere — so ADR-0040's named answer to a drill
 that does not push is unreachable, along with chute, depot, brass tunnel, saw, millstone, basin and
 item drain. That, not the insertion direction, is why the `DirectBeltInputBehaviour` call is worth
-making. **#178 is now answered** — ADR-0044 keeps Create's belts — so the call is no longer waiting on
+making. **#178 is now answered** — ADR-0044 keeps Simplebelts's belts — so the call is no longer waiting on
 anything.*
 
 ## Both rigs draw their overlay on the ore
@@ -136,7 +136,7 @@ Factorio is two-dimensional and its drills work the tiles they stand on. The sta
 one block thick, so the rule is unambiguous there. For the buried outfield veins (y 20–48, 3D
 blobs) it means **the player digs down and places the rig on the vein**.
 
-The alternative — scanning the column downward, GregTech-style — is rejected on the overlay's
+The alternative — scanning the column downward, Oritech-style — is rejected on the overlay's
 account: under it the rig's area contains ore the player cannot see and the renderer cannot tint,
 so the overlay would show an empty area over a rich vein. It also makes veins trivial, letting a
 surface-placed rig eat forty blocks of depth with no exploration, which is the opposite of what
@@ -222,25 +222,25 @@ the player cannot see.
 The electric rig takes no fuel: it is a **supply-area pole customer** under ADR-0036. Standing
 inside a pole's area powers it — no wire, no connection, Factorio's own rule. ADR-0040 already
 called it "the pole's second customer"; that sentence survives even though its reasoning about
-GregTech wrapping FE does not.
+Oritech wrapping FE does not.
 
 ## Consequences
 
-- **ADR-0017 is amended again.** GregTech owns no extraction on Terra — not the burner rig
+- **ADR-0017 is amended again.** Oritech owns no extraction on Terra — not the burner rig
   (ADR-0040), not the electric one (here). Its fluid rig is untouched by this ADR.
 - **ADR-0040's excluded sub-rule is reversed**, and its rung-1 row is superseded. Its burner-drill
   reasoning otherwise stands.
 - **The ledger's Mining drills row** moves off `planned`, takes `adapted` with a notice, and its two
   `unargued` sub-rules are closed.
 - **#27's "automated mining — proposed as GT's, at the first tier"** and **#37's premise that
-  GregTech is in the pack partly "for its miners"** are both false as stated; both are back-linked.
-- **Three tickets are filed** by this decision: #178 (Factorio belts versus Create belts), #179
+  Oritech is in the pack partly "for its miners"** are both false as stated; both are back-linked.
+- **Three tickets are filed** by this decision: #178 (Factorio belts versus Simplebelts belts), #179
   (buried veins versus flat discs) and #180 (the universal `R` rotate verb).
 - **This ADR is `provisional`** under ADR-0042. Nobody has placed either rig.
 
 ## Considered alternatives
 
-- **Keep `gtceu:lv_miner` and mixin `MinerLogic`.** Rejected above: the override list is the class.
+- **Keep `oritech:lv_miner` and mixin `MinerLogic`.** Rejected above: the override list is the class.
 - **Keep it as-is and accept rung 1 breaks the amount model.** Rejected — it is a second extraction
   mechanism contradicting ADR-0041 on the same blocks, and ADR-0020's objection applies verbatim:
   "the counter always wins the argument while the player believes their eyes".
@@ -254,7 +254,7 @@ GregTech wrapping FE does not.
 - **A single-block rig with the areas rounded to 1×1 and 5×5.** Cheapest, and it costs the burner
   drill its entire justification: ADR-0040 put it in the starting pocket because "a burner drill
   covers four tiles and beats hands even at 0.25 items/s".
-- **Take the Create dependency and call `DirectBeltInputBehaviour`.** Correct in isolation — it is
+- **Take the Simplebelts dependency and call `DirectBeltInputBehaviour`.** Correct in isolation — it is
   one line in `mod/build.gradle`'s `compileOnly fileTree` — and deferred only because the belt
   question above it is open.
 - **A no-GUI rig**, fuelled by right-clicking with coal in hand and read through Jade. Genuinely

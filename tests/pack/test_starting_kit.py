@@ -39,7 +39,7 @@ NAMESPACE = "planetaryfactory"
 # What each pocket entry has to be recognisable as in the spec's "What you start with" bullet. The
 # book is beat 1's own sentence rather than the bullet's, so it is matched against the beat table.
 POCKET_IN_SPEC = {
-    "gtceu:prospector.lv": "prospector",
+    "oritech:prospector.lv": "prospector",
     "planetaryfactory:stone_furnace": "Stone Furnace",
     "planetaryfactory:burner_mining_drill": "Burner Mining Drill",
     "planetaryfactory:engineers_iron_pick": "Engineer's Iron Pick",

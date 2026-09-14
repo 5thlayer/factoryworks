@@ -12,14 +12,14 @@ import net.minecraft.world.level.material.MapColor;
 /**
  * A Terra ore block: an amount, rendered as one of Factorio's eight stages.
  *
- * <p>Pack-authored rather than GregTech's, and ADR-0041 gives the reason: GregTech registers its
+ * <p>Pack-authored rather than Oritech's, and ADR-0041 gives the reason: Oritech registers its
  * material ore blocks in code and models them at runtime, so a stage property on <em>its</em> block
  * would mean a mixin into both its registration and its model provider, across every material and
  * stone type it registers, to get the behaviour for five.
  *
- * <p>It is still a GregTech ore in every way the rest of the pack can observe: it carries
- * {@code c:ores}, which is the tag GregTech's own Miner scans for, and it pays out the same raw ore
- * item GregTech's own block of that material would ({@link OreResource}).
+ * <p>It is still a Oritech ore in every way the rest of the pack can observe: it carries
+ * {@code c:ores}, which is the tag Oritech's own Miner scans for, and it pays out the same raw ore
+ * item Oritech's own block of that material would ({@link OreResource}).
  *
  * <p><b>The block holds no amount.</b> The amount is derived from the position and the difference
  * is a chunk attachment ({@link OreDelta}), because a starting field is around 1150 blocks and a
@@ -35,7 +35,7 @@ public final class OreBlock extends Block {
      * changed its stage ladder changes this property when the extractor is re-run.
      */
     public static final IntegerProperty STAGE =
-            IntegerProperty.create("stage", 0, OreCorpus.get().stageCount() - 1);
+            IntegerProperty.simplebelts("stage", 0, OreCorpus.get().stageCount() - 1);
 
     private final OreResource resource;
 
@@ -54,7 +54,7 @@ public final class OreBlock extends Block {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(STAGE);
     }
 

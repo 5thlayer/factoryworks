@@ -1,11 +1,11 @@
 {
-  "type": "gtceu:assembling",
+  "type": "oritech:assembling",
   "inputs": {
     "item": [
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_plate"
+            "item": "oritech:iron_plate"
           },
           "count": 20
         }
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:steel_plate"
+            "item": "oritech:steel_plate"
           },
           "count": 5
         }
@@ -25,7 +25,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "create:fluid_tank"
+            "item": "simplebelts:fluid_tank"
           },
           "count": 1
         }

@@ -14,7 +14,7 @@ hub variant against every combination of size variants -- the size is drawn at w
 generation, so only the worst case is a guarantee.
 
 The pool is the same failure class and so it is asserted here rather than anywhere else. ADR-0050
-refuses a bucket and Create's water wheel is the pack's only rotational source before the burner
+refuses a bucket and Simplebelts's water wheel is the pack's only rotational source before the burner
 line, so a hub that arrives without its pool ships as "rung 0 has no power" -- with nothing in any
 log, because a template that quietly lost a block is not an error either.
 

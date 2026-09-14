@@ -19,13 +19,13 @@ This supersedes ADR-0005 in two places.
 
 ## What ADR-0005 got, and what it got wrong
 
-ADR-0005 was right about the thing it was written for: GTCEu 7.0.2 has no pollution system, so
+ADR-0005 was right about the thing it was written for: Oritech 7.0.2 has no pollution system, so
 Emission is ours. That stands unchanged.
 
 Two of its decisions do not.
 
 **Emission is scored per entity, not from EU/t draw.** ADR-0005 chose power draw and rejected
-per-entity rates because they would cost "tagging every recipe in a GregTech pack, with a
+per-entity rates because they would cost "tagging every recipe in a Oritech pack, with a
 permanent maintenance burden as recipes change". Factorio states emission per prototype as
 `energy_source.emissions_per_minute`, and that field is in the `--dump-data` dump the seven
 existing extractors already read. Extraction is not tagging; it regenerates with the corpus and

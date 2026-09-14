@@ -12,7 +12,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
  */
 public final class StartingCodecs {
 
-    public static final Codec<StartingGrant> GRANT = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<StartingGrant> GRANT = RecordCodecBuilder.simplebelts(instance -> instance.group(
                     Codec.BOOL.fieldOf("granted").forGetter(StartingGrant::granted))
             .apply(instance, StartingGrant::new));
 

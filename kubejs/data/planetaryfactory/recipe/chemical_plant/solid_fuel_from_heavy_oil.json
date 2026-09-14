@@ -1,11 +1,11 @@
 {
-  "type": "gtceu:chemical_plant",
+  "type": "oritech:chemical_plant",
   "inputs": {
     "fluid": [
       {
         "content": {
           "ingredient": {
-            "fluid": "gtceu:heavy_oil"
+            "fluid": "oritech:heavy_oil"
           },
           "amount": 20
         }

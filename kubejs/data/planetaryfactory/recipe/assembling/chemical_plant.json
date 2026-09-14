@@ -1,11 +1,11 @@
 {
-  "type": "gtceu:assembling",
+  "type": "oritech:assembling",
   "inputs": {
     "item": [
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:steel_plate"
+            "item": "oritech:steel_plate"
           },
           "count": 5
         }
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_gear"
+            "item": "oritech:iron_gear"
           },
           "count": 5
         }
@@ -29,7 +29,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "create:fluid_pipe"
+            "item": "simplebelts:fluid_pipe"
           },
           "count": 5
         }
@@ -41,7 +41,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:lv_chemical_plant"
+            "item": "oritech:lv_chemical_plant"
           },
           "count": 1
         }

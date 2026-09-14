@@ -119,7 +119,7 @@ system rather than a tier, and elevated rail has no analogue in a Minecraft pack
 `recycling` unlocks 314 recipes, an order of magnitude more than any other technology. They are not
 314 decisions: Factorio generates one per existing recipe, returning a quarter of its ingredients.
 **The rule is recorded, not its output** — a single `unlock-recipe-family` effect — because that is
-both smaller and truer, and because in this pack "recycling exists" is one decision about GregTech
+both smaller and truer, and because in this pack "recycling exists" is one decision about Oritech
 maceration.
 
 ## Considered Options
@@ -179,7 +179,7 @@ maceration.
 - **Researchd has a GUI research editor, and it writes datapacks.** `EditorDatapackWriter` emits
   `pack.mcmeta` and `data/<namespace>/researchd/research/*.json`, editing dependencies, effects,
   methods and icons. **It writes into the world save, not into pack content**:
-  `CreateDatapackPayload` fixes the root to
+  `SimplebeltsDatapackPayload` fixes the root to
   `MinecraftServer.getWorldPath(LevelResource.DATAPACK_DIR)`, and `saves` is gitignored — so
   anything edited in the GUI is outside version control until a copy step brings it back, and a
   shipped copy of the same ids cannot be loaded alongside the world-local one. It is not a layout tool: `DisplayImpl` holds only `name`

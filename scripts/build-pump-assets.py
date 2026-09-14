@@ -2,7 +2,7 @@
 """Emit the Offshore Pump's corpus row and pack-side assets (#213, ADR-0050).
 
 ADR-0050 makes the pump the *origin* of every drop of water in the factory: it is where the rule
-"water is extracted and transported, never created" becomes a block the player places rather than
+"water is extracted and transported, never simplebeltsd" becomes a block the player places rather than
 a number in a config file. This script supplies the one thing the mod must not type by hand --
 `pumping_speed` -- plus the ordinary blockstate/model/lang/loot-table plumbing every
 `planetaryfactory:` block needs under ADR-0015's split (mechanism in the mod, assets in the pack).

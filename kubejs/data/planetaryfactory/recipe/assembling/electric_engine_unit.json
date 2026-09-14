@@ -1,5 +1,5 @@
 {
-  "type": "gtceu:assembling",
+  "type": "oritech:assembling",
   "inputs": {
     "item": [
       {
@@ -23,7 +23,7 @@
       {
         "content": {
           "ingredient": {
-            "fluid": "gtceu:lubricant"
+            "fluid": "oritech:lubricant"
           },
           "amount": 15
         }

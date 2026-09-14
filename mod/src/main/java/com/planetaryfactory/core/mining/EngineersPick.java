@@ -24,8 +24,8 @@ import java.util.List;
  * <p><b>One tool, all block classes.</b> There is no axe, shovel, shears or hoe in this pack, so
  * this item is the correct tool for everything -- {@code requires_correct_tool_for_drops} is fixed
  * at block registration and no datapack reaches it, which is why the answer lives in the jar. It is
- * also the tool that dismantles a GregTech machine: that half is the two wrench item tags in
- * {@code kubejs/data}, not code, because GregTech and Create both ask a tag.
+ * also the tool that dismantles a Oritech machine: that half is the two wrench item tags in
+ * {@code kubejs/data}, not code, because Oritech and Simplebelts both ask a tag.
  *
  * <p><b>It also turns machines.</b> Rotation is a NeoForge {@code ItemAbility} rather than a tag,
  * which is why the wrench tags alone never delivered it; {@link PickAbilities} holds which verbs the
@@ -47,7 +47,7 @@ public final class EngineersPick extends Item {
      * <p>A tag, and therefore pack data: Terra's resource set is a design decision (ADR-0019), and
      * this jar owns only the arithmetic that turns a stated duration into a tool speed.
      */
-    public static final TagKey<Block> FACTORIO_MINING_TIME = TagKey.create(
+    public static final TagKey<Block> FACTORIO_MINING_TIME = TagKey.simplebelts(
             Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE,
                                                   "factorio_mining_time"));
@@ -93,7 +93,7 @@ public final class EngineersPick extends Item {
     /**
      * Rotation, and none of the wrench's other gated verbs.
      *
-     * <p>GregTech asks this before it will turn a machine, and until it was answered the pack had a
+     * <p>Oritech asks this before it will turn a machine, and until it was answered the pack had a
      * verb it advertised without performing: the rotation overlay draws on
      * {@code getToolTypes(stack).contains(WRENCH) || canPerformAction(WRENCH_ROTATE)}, an OR whose
      * first half the Pick's wrench tags already satisfied -- so the highlight appeared on every
@@ -110,13 +110,13 @@ public final class EngineersPick extends Item {
     /**
      * Sneaking does not hide the block from this tool, which is what makes rotation reachable.
      *
-     * <p>Declaring {@code wrench_rotate} was necessary and not sufficient. GregTech's
+     * <p>Declaring {@code wrench_rotate} was necessary and not sufficient. Oritech's
      * {@code onWrenchClick} only sets a machine's front face when the player is sneaking -- a plain
      * click falls through to the configure verbs this pack declines -- but vanilla's
      * {@code ServerPlayerGameMode.useItemOn} skips the block's interaction entirely when a sneaking
-     * player holds a non-empty stack. So the one gesture GregTech accepts was the one gesture that
+     * player holds a non-empty stack. So the one gesture Oritech accepts was the one gesture that
      * never arrived, and rotation was unreachable by any input: the overlay drew, both clicks did
-     * nothing. GregTech's own tools dodge this by implementing {@code onItemUseFirst}, which runs
+     * nothing. Oritech's own tools dodge this by implementing {@code onItemUseFirst}, which runs
      * before that check; this is the same escape through the hook NeoForge provides for it.
      *
      * <p>The Pick places nothing, so there is no block-placement gesture for this to swallow -- the

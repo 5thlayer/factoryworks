@@ -21,7 +21,7 @@ whole of the enforcement.**
 
 ## Why the pack's mixins existed, and why they stop
 
-GregTech never asked the vanilla `RecipeManager` — every machine walked its own `GTRecipeType`
+Oritech never asked the vanilla `RecipeManager` — every machine walked its own `GTRecipeType`
 ingredient trie — so Researchd's filter never saw the call and `RecipeLogicMixin` was the hook into
 the foreign finder that `RecipeFilterContext` documents as the remedy.
 
@@ -49,12 +49,12 @@ service of a distinction Factorio does not have.
 
 `RecipeLogicMixin`, `RecipeLogicStatusMixin`, `LockedRecipeRetry`, `ResearchLocks`,
 `PlacedByOwnership`, `MachineLockStatus`, `RecipeLockLookup` and `IdleMachineLockNote`, with
-`mixins.json` losing both `gtceu.` entries. #74's fail-open rule, #76's retry list and #79's
+`mixins.json` losing both `oritech.` entries. #74's fail-open rule, #76's retry list and #79's
 derive-per-call tooltip all go with them.
 
 **#76 does not need replacing.** `CrafterComponent.shouldUpdateActiveRecipe` re-searches every 100
 ticks on an unchanged inventory, so a machine holding a locked recipe's ingredients starts within
-five seconds of the research landing. GregTech's unsubscribe-forever failure has no equivalent here,
+five seconds of the research landing. Oritech's unsubscribe-forever failure has no equivalent here,
 and the fix for it is deleted rather than ported.
 
 **#79 is not deleted, it moves.** The reason an idle machine gives is a Jade provider (ADR-0059's

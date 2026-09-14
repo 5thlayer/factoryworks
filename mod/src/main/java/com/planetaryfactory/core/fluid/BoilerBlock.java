@@ -68,7 +68,7 @@ public class BoilerBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
@@ -94,7 +94,7 @@ public class BoilerBlock extends BaseEntityBlock {
         if (level.isClientSide()) {
             return null;
         }
-        return createTickerHelper(type, PFBlockEntities.BOILER.get(),
+        return simplebeltsTickerHelper(type, PFBlockEntities.BOILER.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
     }
 

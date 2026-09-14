@@ -127,19 +127,19 @@ patch that stops being metered once it is gone is the inconsistency ADR-0021 fel
 
 ## The ore block is pack-authored
 
-GregTech registers material ore blocks in code and models them at runtime — the jar ships no
+Oritech registers material ore blocks in code and models them at runtime — the jar ships no
 blockstate JSON for them, only for machines. Adding a stage property to GT's block means a mixin
 into its registration *and* its model provider, across every material and stone type it registers,
 to obtain the behaviour for five.
 
 So **`planetaryfactory_core` registers the ore blocks for the alphabet**, per ADR-0015's rule that
-mechanism lives in the mod. What makes this affordable is that **the block drops GregTech's raw ore
+mechanism lives in the mod. What makes this affordable is that **the block drops Oritech's raw ore
 item**: the block changes and the item does not, so `item-map.json`, every generated recipe,
 ADR-0032's 1:1 chain and ADR-0034's sweep are all untouched. The bounded cost is worldgen
-references — the structure templates' literal `gtceu:iron_ore`, Terra's vein definitions and
+references — the structure templates' literal `oritech:iron_ore`, Terra's vein definitions and
 `tests/worldgen/expected.json` — which is a generator re-run already under the worldgen check.
 
-**One risk gates this and must be settled first.** `gtceu:lv_miner` is rung 1's drill (ADR-0040) and
+**One risk gates this and must be settled first.** `oritech:lv_miner` is rung 1's drill (ADR-0040) and
 it *scans for ore blocks*. Whether it recognises a pack-registered block — presumably via ore tags —
 is unverified, and GT's miner is only in the jar. Read that scan logic before the worldgen
 migration, not after.
@@ -215,7 +215,7 @@ shrinking, which is more legible than a crater.
 
 ## Considered alternatives
 
-- **Make Terra's ore bedrock deposits.** GregTech's bedrock layer already has a real native counter
+- **Make Terra's ore bedrock deposits.** Oritech's bedrock layer already has a real native counter
   — `depleted_yield`, `BedrockOreVeinSavedData`, a depletion percentage on the miner. Rejected: #86
   cut Terra's bedrock ore deliberately, and ADR-0019 makes Terra's ore surface-prospected and dug
   from patches you can see. A bedrock deposit is an invisible tap read off a machine GUI, which is
@@ -246,7 +246,7 @@ Per `docs/testing/what-to-check.md`:
 - *The extractor's numbers match the dump* — **static check**, `tests/factorio/`, running the
   extractor's `--check` as the other four do.
 - *Four starting fields never overlap* — **static check**, `test_start_geometry.py` extended.
-- *The stage ratios render, the Jade line matches what the block pays out, and `gtceu:lv_miner`
+- *The stage ratios render, the Jade line matches what the block pays out, and `oritech:lv_miner`
   mines a pack ore block* — **human on delivery**, one world load.
 - *Whether the amounts pace rung 0 well* — **human on delivery**. This is the tuning number and it
   cannot be settled statically.

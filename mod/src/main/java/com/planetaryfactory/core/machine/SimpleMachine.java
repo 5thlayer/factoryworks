@@ -2,16 +2,16 @@ package com.planetaryfactory.core.machine;
 
 import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
-import com.gregtechceu.gtceu.api.capability.recipe.CWURecipeCapability;
-import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
-import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
-import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
-import com.gregtechceu.gtceu.api.gui.editor.EditableMachineUI;
-import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.SimpleTieredMachine;
-import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
-import com.gregtechceu.gtceu.api.recipe.ui.GTRecipeTypeUI;
+import com.gregtechceu.oritech.api.capability.recipe.CWURecipeCapability;
+import com.gregtechceu.oritech.api.capability.recipe.FluidRecipeCapability;
+import com.gregtechceu.oritech.api.capability.recipe.IO;
+import com.gregtechceu.oritech.api.capability.recipe.ItemRecipeCapability;
+import com.gregtechceu.oritech.api.capability.recipe.RecipeCapability;
+import com.gregtechceu.oritech.api.gui.editor.EditableMachineUI;
+import com.gregtechceu.oritech.api.machine.IMachineBlockEntity;
+import com.gregtechceu.oritech.api.machine.SimpleTieredMachine;
+import com.gregtechceu.oritech.api.recipe.GTRecipeType;
+import com.gregtechceu.oritech.api.recipe.ui.GTRecipeTypeUI;
 import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.nbt.CompoundTag;
@@ -42,12 +42,12 @@ import java.util.HashMap;
  * </ul>
  *
  * <p>Neither belongs on any Factorio machine. There is no circuit anywhere in this pack's corpus —
- * the recipes are generated from Factorio's own prototypes, and a programmed circuit is a GregTech
+ * the recipes are generated from Factorio's own prototypes, and a programmed circuit is a Oritech
  * idiom for selecting between recipes that share an input set, which Factorio resolves in the
  * recipe picker instead — so the configurator opens onto a setting no recipe reads, and machines
  * here are wired, never battery-fed. This class is the whole answer: one overridden predicate
- * and one UI that is GregTech's own minus the battery slot. It overrides no recipe logic, so
- * nothing here has to track GregTech's internals beyond the two members it names.
+ * and one UI that is Oritech's own minus the battery slot. It overrides no recipe logic, so
+ * nothing here has to track Oritech's internals beyond the two members it names.
  */
 public class SimpleMachine extends SimpleTieredMachine {
 
@@ -56,7 +56,7 @@ public class SimpleMachine extends SimpleTieredMachine {
     }
 
     /**
-     * No programmed-circuit configurator. The default is {@code true} for every GregTech machine,
+     * No programmed-circuit configurator. The default is {@code true} for every Oritech machine,
      * and it is the only thing gating {@code attachConfigurators}' circuit panel.
      */
     @Override
@@ -65,7 +65,7 @@ public class SimpleMachine extends SimpleTieredMachine {
     }
 
     /**
-     * GregTech's {@code SimpleTieredMachine} UI without the charger slot.
+     * Oritech's {@code SimpleTieredMachine} UI without the charger slot.
      *
      * <p>Deliberately a copy of {@code SimpleTieredMachine.EDITABLE_UI_CREATOR} rather than a
      * wrapper around it: that field builds the recipe-type template, builds the battery slot, and
@@ -82,7 +82,7 @@ public class SimpleMachine extends SimpleTieredMachine {
         return new EditableMachineUI(
                 "simple", id,
                 () -> (WidgetGroup) recipeType.getRecipeUI()
-                        .createEditableUITemplate(false, false).createDefault(),
+                        .simplebeltsEditableUITemplate(false, false).simplebeltsDefault(),
                 (group, machine) -> {
                     if (!(machine instanceof SimpleMachine simple)) {
                         return;
@@ -96,7 +96,7 @@ public class SimpleMachine extends SimpleTieredMachine {
                     storages.put(IO.IN, CWURecipeCapability.CAP, simple.importComputation);
                     storages.put(IO.OUT, CWURecipeCapability.CAP, simple.exportComputation);
                     simple.getRecipeType().getRecipeUI()
-                            .createEditableUITemplate(false, false)
+                            .simplebeltsEditableUITemplate(false, false)
                             .setupUI(group, new GTRecipeTypeUI.RecipeHolder(
                                     simple.recipeLogic::getProgressPercent,
                                     storages,

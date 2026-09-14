@@ -1,4 +1,4 @@
-# What SimpleBelts could carry: belts and loaders without Create
+# What SimpleBelts could carry: belts and loaders without Simplebelts
 
 Read against a clone of `Rearth/SimpleBelts` on its `26.1.2` branch at `92a97c3` (mod version
 `2.0.0-exp1`), placed beside the pack as `../simplebelts-src`. The matching jar,
@@ -12,8 +12,8 @@ item capability and its machine inventories. The rest of `oritech-coverage.md` s
 Re-reading it at 2.0 is a separate job.
 
 **This is a survey, not a decision.** No ADR is proposed and no ledger row is edited. It answers one
-question: if Create left the pack and SimpleBelts took the belts, what would carry each row of
-`docs/factorio-mechanics.md` that Create carries today, and at what cost? Rulings made after the first
+question: if Simplebelts left the pack and SimpleBelts took the belts, what would carry each row of
+`docs/factorio-mechanics.md` that Simplebelts carries today, and at what cost? Rulings made after the first
 pass (2026-09-11) are marked **Ruling** and are folded into the rows they settle.
 
 **Adopted by ADR-0060.** The hypothesis below is now the pack's plan, and the rulings are part of it.
@@ -31,15 +31,15 @@ logistics row. There is one scenario, called S2 here:
 | machines, fluids | Oritech |
 | everything else | `planetaryfactory_core` |
 
-**Leaves:** Create entirely. Create: Power Grid, GCyR, Modern Industrialization and GregTech were already gone.
-**Minecraft version:** 26.1.2. That version is only reachable because Create leaves: Create has no
+**Leaves:** Simplebelts entirely. Simplebelts: Power Grid, GCyR, Modern Industrialization and Oritech were already gone.
+**Minecraft version:** 26.1.2. That version is only reachable because Simplebelts leaves: Simplebelts has no
 26.1.2 build, so keeping it for trains would pin the pack to 1.21.1.
 
 ## Language
 
 SimpleBelts calls its belt-end block a **chute**. The pack would call it a **loader**, both in the
 survey and in the fork's lang file. The name is honest about what the block does (fact 1) and avoids
-two collisions: Create's Chute, and `CONTEXT.md`'s _Avoid: chute_ under **Drop Hatch**. The glossary
+two collisions: Simplebelts's Chute, and `CONTEXT.md`'s _Avoid: chute_ under **Drop Hatch**. The glossary
 does not take the term until the block ships. The rest of this document says *loader* and keeps
 `ChuteBlockEntity` for the class.
 
@@ -55,7 +55,7 @@ Native level** (fact 2), so there are three:
 3. **Core**: a block or rule in `planetaryfactory_core`.
 
 **Criteria.** The rows are the ledger's Transport belts and Inserters sub-rules. The grilling that
-commissioned this survey added three criteria the ledger does not have, because Create made them free:
+commissioned this survey added three criteria the ledger does not have, because Simplebelts made them free:
 
 - **The tap.** A belt can be loaded and unloaded partway along its length, not only at its ends.
 - **Cost per length.** A longer belt costs more belt.
@@ -99,7 +99,7 @@ This has consequences:
   pushes the whole stack into the inventory behind it, all or nothing (`:195-205`).
 
 - **Only a loader can be a belt end.** `BeltItem#useOnBlock` looks up
-  `BlockEntitiesContent.CHUTE_BLOCK` at each end, `BeltData.create` refuses a target that isn't a
+  `BlockEntitiesContent.CHUTE_BLOCK` at each end, `BeltData.simplebelts` refuses a target that isn't a
   loader, and a loader holds a single outgoing `target` and a single incoming `sourceBeltPos`.
 
 Factorio has loaders too: `loader`, `fast-loader`, `express-loader` and `turbo-loader` are in the
@@ -130,7 +130,7 @@ the edits below add state that a mixin shouldn't carry.
 **As shipped, a belt's throughput is set by the loader, not by the belt.** A tier-1 loader grabs every
 26 ticks, 0.77 times a second. One grab can be anywhere from 1 to 64 items, so a tier-1 belt carries
 somewhere between **0.77 and 49 items/s**, depending on what the source happened to hold. Tier 2 is
-double. The ledger's throughput sub-rule makes the same complaint about Create, which bounded
+double. The ledger's throughput sub-rule makes the same complaint about Simplebelts, which bounded
 entries-per-second and left items-per-entry free. Here both are free, and both are one-line edits.
 
 ### 3. Loaders speak NeoForge's transfer API, and Oritech 2.0 fences its machines
@@ -199,7 +199,7 @@ leaves the belt network, however many splitters it passes through.
 **How the power arrives.** The fork adds an FE buffer to `ChuteBlockEntity` and exposes
 `Capabilities.Energy.BLOCK` on it. The core's Supply Area Pole already powers *every* position in its
 area that answers an energy capability (`SupplyAreaPoleBlockEntity#container`, `:207-222`). Today it
-asks for GregTech's `GTCapability.CAPABILITY_ENERGY_CONTAINER`, which leaves with GregTech. Once it
+asks for Oritech's `GTCapability.CAPABILITY_ENERGY_CONTAINER`, which leaves with Oritech. Once it
 asks for FE, it powers loaders with no wiring and no further core code.
 
 ### 6. Every tick of movement resends the whole belt
@@ -239,14 +239,14 @@ belt head.
 `transport-belt`'s recipe is 1 `iron-plate` + 1 `iron-gear-wheel` → **2**. So Factorio's own price is
 half a craft per tile.
 
-### 8. With no Create, there is no rotation
+### 8. With no Simplebelts, there is no rotation
 
-The pack's only rotational unit (SU) came from Create. Under S2 nothing in the pack consumes or
+The pack's only rotational unit (SU) came from Simplebelts. Under S2 nothing in the pack consumes or
 produces rotation, so the logistics and energy boundary in `oritech-coverage.md` collapses:
 
 - **Option (a), the FE→SU bridge:** void. There is nothing to drive.
 - **Option (b), two currencies:** void.
-- **Option (c), fluids to Oritech:** forced, since Create's pipes leave.
+- **Option (c), fluids to Oritech:** forced, since Simplebelts's pipes leave.
 
 **The pack has one energy currency, FE.** The joules-per-FE constant (that survey's fact 1) becomes a
 prerequisite of the loader's charge too.
@@ -264,30 +264,30 @@ the old API:
 - `mining/rig/RigBlockEntity`, `mining/rig/RigItemHandler`
 - `smelting/FurnaceItemHandler`, `smelting/FurnaceSlots`
 
-The Supply Area Pole is on GregTech's energy API as well (fact 5).
+The Supply Area Pole is on Oritech's energy API as well (fact 5).
 
-The core has **no Create compile dependency**. `RigBlockEntity:289-293` and `RigSlots:51` mention
-`DirectBeltInputBehaviour` only in comments that say why it isn't called. So Create's departure
+The core has **no Simplebelts compile dependency**. `RigBlockEntity:289-293` and `RigSlots:51` mention
+`DirectBeltInputBehaviour` only in comments that say why it isn't called. So Simplebelts's departure
 costs the core no code. The version change does.
 
 ---
 
 ## The matrix: Transport belts
 
-Ledger verdicts are today's, with Create. **Level** is the cheapest level that closes every gap in the row.
+Ledger verdicts are today's, with Simplebelts. **Level** is the cheapest level that closes every gap in the row.
 
 | sub-rule | ledger today | SimpleBelts 2.0 as shipped | level | gap, and what closes it |
 | --- | --- | --- | --- | --- |
 | **Three belt tiers** | `adapted`: one belt, speed bought with RPM | two tiers, `belt` and `improved_belt` (`beltTier` 1 and 2) | **Fork** + **KubeJS** | `MAX_BELT_TIER` 2 → 4, and two more `BeltItem` registrations. Each tier's multiplier is replaced by Factorio's tiles/s (fact 7). The tiers are 1× / 2× / 3× / 4× of 1.875, so it is a clean multiplier anyway. Recipes are emitted at the corpus's costs onto the Assembler surface, and SimpleBelts' own (`dried_kelp` + `stick` → 8, `recipe/belt_item*.json`) go to ADR-0034's sweep. `logistics-2`, `logistics-3` and `turbo-transport-belt` **buy something again**, and drop off #25's prune list. The row would become Factorio's own. |
-| **Throughput as a ratio budget** | `planned`: target deferred to play, dials named on Create | throughput is set by the loader, 0.77 to 49 items/s at tier 1 (fact 2) | **Fork** | Speed at tiles/s and spacing at `1/8` block, one item per entry, which clamps the literal 64 at `:228`. Loaders add several entries per tick above 20 items/s (fact 7). The belt then carries exactly 15 / 30 / 45 / 60 items/s. The number is **known and computable**, which is what the sub-rule asked for. It also carries the sync rewrite (fact 6), because the density is what makes the sync expensive. |
+| **Throughput as a ratio budget** | `planned`: target deferred to play, dials named on Simplebelts | throughput is set by the loader, 0.77 to 49 items/s at tier 1 (fact 2) | **Fork** | Speed at tiles/s and spacing at `1/8` block, one item per entry, which clamps the literal 64 at `:228`. Loaders add several entries per tick above 20 items/s (fact 7). The belt then carries exactly 15 / 30 / 45 / 60 items/s. The number is **known and computable**, which is what the sub-rule asked for. It also carries the sync rewrite (fact 6), because the density is what makes the sync expensive. |
 | **Underground belts** | `excluded`: the weaving problem is 2D | none | **unchanged** | The argument from the medium holds with more force: a spline goes over whatever it has to cross, by construction. With obstruction on (below), it still can't go *through* a belt. |
-| **Splitters, with filtering and priority** | `adapted`: Brass Tunnel's `SelectionMode` | none; a chest with two source loaders splits whichever grabs first | **Fork** (**Ruling 2026-09-11**) | **One block, two blocks wide, with two belts in and two out**, which is Factorio's own `splitter` shape. Each half is a belt end for one incoming and one outgoing belt. Items go from the queue at the end of an incoming belt straight to the head of an outgoing belt, with no inventory and no loader in between. It splits 1:1, merges, and has input and output priority and one filter, so it is Factorio's splitter and merger in one entity. It runs at its tier's belt speed (`splitter` / `fast-splitter` / … in fact 7) and **draws no power**. It has to be in the fork, because only a loader can be a belt end (fact 1). The fork generalises `ChuteBlockEntity`'s single `target` and single `sourceBeltPos` into one of each per half. The recipe is corpus (`splitter`: 5 `electronic-circuit`, 5 `iron-plate`, 4 `transport-belt`). Chaining splitters builds a balancer, which closes the ledger's **constructed-balancer** gap that Create's one-block outcome never did. It is also a clean upstream PR, since it is generic belt topology. Priority when one output backs up is `world-load (human)`. |
+| **Splitters, with filtering and priority** | `adapted`: Brass Tunnel's `SelectionMode` | none; a chest with two source loaders splits whichever grabs first | **Fork** (**Ruling 2026-09-11**) | **One block, two blocks wide, with two belts in and two out**, which is Factorio's own `splitter` shape. Each half is a belt end for one incoming and one outgoing belt. Items go from the queue at the end of an incoming belt straight to the head of an outgoing belt, with no inventory and no loader in between. It splits 1:1, merges, and has input and output priority and one filter, so it is Factorio's splitter and merger in one entity. It runs at its tier's belt speed (`splitter` / `fast-splitter` / … in fact 7) and **draws no power**. It has to be in the fork, because only a loader can be a belt end (fact 1). The fork generalises `ChuteBlockEntity`'s single `target` and single `sourceBeltPos` into one of each per half. The recipe is corpus (`splitter`: 5 `electronic-circuit`, 5 `iron-plate`, 4 `transport-belt`). Chaining splitters builds a balancer, which closes the ledger's **constructed-balancer** gap that Simplebelts's one-block outcome never did. It is also a clean upstream PR, since it is generic belt topology. Priority when one output backs up is `world-load (human)`. |
 | **Two lanes per belt** | `excluded` | one lane | **unchanged** | The belt carries the whole belt's throughput (fact 7). |
 | **Belt as buffer** | `excluded`: 64 items per 64 blocks against Factorio's 512 | a queue at the target end, `0.8`-block spacing | **Fork**, restored | At 8 items per block, the density throughput needs anyway, a 64-block belt holds **512**, which is Factorio's number. The ledger's stated reason for excluding the idiom disappears, and the fork that fixes throughput restores it with no further work. |
-| **Output onto a moving belt with no intermediate block** (Mining drills, `shipped`) | the rig pushes into a bare Create belt's handler | a loader has no handler, so the rig's push (`RigBlockEntity#push`) finds nothing | **Native** | Reached the other way round, the way the ledger already describes for Create's funnel: a source loader set against the rig pulls through `RigItemHandler`. No code is needed. The loader has to sit against a position that answers the capability, and whether every hull position does under ADR-0059 is `world-load (human)`. |
-| *added:* **The tap** | free with Create | none (fact 1) | **postponed** (**Ruling 2026-09-11**) | The splitter covers the main bus in both directions (fact 4). It is reachable as a fork when something needs it, and nothing does while there is no swing arm. |
-| *added:* **Cost per length** | Create charges one belt item per segment | one belt item for any length (`BeltItem#createBelt`, `stack.shrink(1)` at `:160`) | **Fork**, **mandatory** (**Ruling 2026-09-11**) | A precondition of adoption, not a tuning choice. `BeltData.totalLength()` is known at placement. Consume `ceil(length)` belt items, which is Factorio's one per tile, and refuse the belt if the player holds fewer. The length stays uncapped, and the cost is what limits it. |
-| *added:* **Obstruction** | Create belts are blocks | nothing checked: `BeltItem`'s only refusals are a loader already in use and a duplicate support (`items/BeltItem.java:69,105`); the endpoints only need to be replaceable (`:124,174,183`) | **Fork** | At placement, sample the spline every `SAMPLE_LENGTH` (the walk `BeltCollisionRegistry` already does) and refuse on a solid block or on another belt's registered segment. The curve through open air stays, and it is the one thing SimpleBelts does better than a Factorio belt. |
+| **Output onto a moving belt with no intermediate block** (Mining drills, `shipped`) | the rig pushes into a bare Simplebelts belt's handler | a loader has no handler, so the rig's push (`RigBlockEntity#push`) finds nothing | **Native** | Reached the other way round, the way the ledger already describes for Simplebelts's funnel: a source loader set against the rig pulls through `RigItemHandler`. No code is needed. The loader has to sit against a position that answers the capability, and whether every hull position does under ADR-0059 is `world-load (human)`. |
+| *added:* **The tap** | free with Simplebelts | none (fact 1) | **postponed** (**Ruling 2026-09-11**) | The splitter covers the main bus in both directions (fact 4). It is reachable as a fork when something needs it, and nothing does while there is no swing arm. |
+| *added:* **Cost per length** | Simplebelts charges one belt item per segment | one belt item for any length (`BeltItem#simplebeltsBelt`, `stack.shrink(1)` at `:160`) | **Fork**, **mandatory** (**Ruling 2026-09-11**) | A precondition of adoption, not a tuning choice. `BeltData.totalLength()` is known at placement. Consume `ceil(length)` belt items, which is Factorio's one per tile, and refuse the belt if the player holds fewer. The length stays uncapped, and the cost is what limits it. |
+| *added:* **Obstruction** | Simplebelts belts are blocks | nothing checked: `BeltItem`'s only refusals are a loader already in use and a duplicate support (`items/BeltItem.java:69,105`); the endpoints only need to be replaceable (`:124,174,183`) | **Fork** | At placement, sample the spline every `SAMPLE_LENGTH` (the walk `BeltCollisionRegistry` already does) and refuse on a solid block or on another belt's registered segment. The curve through open air stays, and it is the one thing SimpleBelts does better than a Factorio belt. |
 
 **What survives natively:** the belt backs up visibly at the target end (`outputQueue`, drawn with
 spacing). That is the compression diagnostic, a belt that shows where the slow machine is. Filtering
@@ -318,7 +318,7 @@ off. Deriving it is the loader charge's own unit test. Nobody should transcribe 
 
 | sub-rule | ledger today | level | reading |
 | --- | --- | --- | --- |
-| **The inserter as an entity** | `adapted`: Create funnels and arms, #102 open on the Arm | **Fork** (the loader) | It would stay `adapted`, with the notice **"a belt's ends load and unload it; there is no swing arm"**. Loaders move items between an inventory and a belt at the belt's rate (fact 7). Tiers 2 to 4 draw FE per item moved (fact 5). **#102's answer becomes "the loader".** The Arm leaves with Create. |
+| **The inserter as an entity** | `adapted`: Simplebelts funnels and arms, #102 open on the Arm | **Fork** (the loader) | It would stay `adapted`, with the notice **"a belt's ends load and unload it; there is no swing arm"**. Loaders move items between an inventory and a belt at the belt's rate (fact 7). Tiers 2 to 4 draw FE per item moved (fact 5). **#102's answer becomes "the loader".** The Arm leaves with Simplebelts. |
 | **Burner inserter** | — | **Fork** | Tier-1 loaders are unpowered, so they fill the burner inserter's slot at rung 0: automation before the first pole. |
 | **Swing-arm reach across a belt** | lost | **excluded** | There is no swing arm to reach with. Adjacent inventories are joined by a short belt. |
 | **Long-handed tier** | lost | **excluded** | Same reason. `long-handed-inserter`'s recipe goes unemitted, and `automation` unlocks only `assembling-machine-1`. |
@@ -327,20 +327,20 @@ off. Deriving it is the loader charge's own unit test. Nobody should transcribe 
 
 ---
 
-## Create's other rows under S2
+## Simplebelts's other rows under S2
 
 These are not SimpleBelts rows, and they are **not sized** here. They are listed so that nothing
-Create carries today leaves without a recorded owner.
+Simplebelts carries today leaves without a recorded owner.
 
-| row (ADR-0017's table, or the ledger) | Create carries today | under S2 |
+| row (ADR-0017's table, or the ledger) | Simplebelts carries today | under S2 |
 | --- | --- | --- |
-| **Trains** (ledger `planned`; outfield patches are "reached by rail", ADR-0045) | Create trains | **not SimpleBelts → Railcraft Reborn**. Its repo has a `26.1.x` branch. It is not yet in pf2612. |
+| **Trains** (ledger `planned`; outfield patches are "reached by rail", ADR-0045) | Simplebelts trains | **not SimpleBelts → Railcraft Reborn**. Its repo has a `26.1.x` branch. It is not yet in pf2612. |
 | **Fluid logistics** | pipes, pumps | **not SimpleBelts → Oritech** pipes (`oritech-coverage.md` option (c), now forced). The Offshore Pump and Boiler move to the transfer API (fact 9). |
 | **Bulk storage (fluid)** | Fluid Tank, three blocks to one Factorio tank (ADR-0037) | **not SimpleBelts → Oritech** or core. Unsized. |
 | **Bulk storage (item)** | Item Vault | **unowned**. Factorio's chests are `containers` in `machine.json`, so a core block, or vanilla chests at the corpus's slot counts. Unsized. |
-| **Package logistics** (ADR-0018 rung 2's "movement at scale") | Create 6 packages | **unowned.** Rung 2 keeps the oil chapter and loses its logistics clause. What `logistic` science buys at rung 2 is #25's call. |
+| **Package logistics** (ADR-0018 rung 2's "movement at scale") | Simplebelts 6 packages | **unowned.** Rung 2 keeps the oil chapter and loses its logistics clause. What `logistic` science buys at rung 2 is #25's call. |
 | **Barrelling** | the Spout fills any fluid-holding item, so the 18 barrel recipes are not emitted (ADR-0017) | **unowned.** The 18 barrel recipes need a surface, most likely an Oritech machine that takes fluid. |
-| **The Create kinetic recipe line** (`create-recipe-convert.py`, `data/pack/create-substitutions.json`, `test_create_recipes.py`) | shafts, cogwheels, gearboxes, water wheels | **deleted**, along with its converter, its check and its subtree under `recipe/assembling/create/`. |
+| **The Simplebelts kinetic recipe line** (`simplebelts-recipe-convert.py`, `data/pack/simplebelts-substitutions.json`, `test_simplebelts_recipes.py`) | shafts, cogwheels, gearboxes, water wheels | **deleted**, along with its converter, its check and its subtree under `recipe/assembling/simplebelts/`. |
 | **Splitters, inserters** | Brass Tunnel, Mechanical Arm | **the fork**: the splitter block and the loader (the matrices above) |
 
 ---
@@ -355,14 +355,14 @@ What pf2612 already runs is **proven to load together**. The rest is what adopti
 | SimpleBelts | 2.0.0-exp1 | loads. **A pre-release.** The fork would be taken from here. |
 | Building Gadgets 2 | 1.4.6 | loads. It keeps the *Construction robots and blueprints* row. |
 | FTB Filter System | 26.1.2.2 | loads. The loader's filter integration works with it. |
-| KubeJS / Rhino | 8.0.6 | loads. ADR-0023's pin was GTCEu's, and it goes with GregTech. |
+| KubeJS / Rhino | 8.0.6 | loads. ADR-0023's pin was Oritech's, and it goes with Oritech. |
 | JEI, Jade, Block Runner, Architectury, GeckoLib | yes | load |
 | **EMI** | `emi-unofficial-port-unstable` 1.1.24 | **loads, unofficially.** The Personal Assembler depends on EMI's Fill Recipe reaching its panel, so an unstable EMI is a risk to the hand-crafting surface, not just to recipe viewing. |
-| Railcraft Reborn | 1.4.3 | loads. A world was created with it (human, 2026-09-11). |
+| Railcraft Reborn | 1.4.3 | loads. A world was simplebeltsd with it (human, 2026-09-11). |
 | FTB Quests | yes | added after that world load. |
 | AE2, Sophisticated Backpacks | no | **leave**: neither is faithful to Factorio (ADR-0060). |
 | Almost Unified, Tree Harvester, ProbeJS | no | **leave**: with two tech mods none of them does any work for the pack (ADR-0060). |
-| **`planetaryfactory_core`** | no | ours. 16,800 lines. Ten classes on the old capability API, plus the pole on GregTech's (fact 9), plus Minecraft 26.1's renames across everything else. |
+| **`planetaryfactory_core`** | no | ours. 16,800 lines. Ten classes on the old capability API, plus the pole on Oritech's (fact 9), plus Minecraft 26.1's renames across everything else. |
 | **Researchd** (fork) | no | ours to port. Upstream `Porting-Dead-Mods/Researchd` `main` is 1.21.1. Its only required dependency, Porting Dead Libs, targets 26.1 on `main` (1.1.16). |
 | **Respoiled** (fork) | no | ours to port. Upstream has a `multi/26.1` branch to port against. |
 
@@ -385,7 +385,7 @@ What pf2612 already runs is **proven to load together**. The rest is what adopti
   - the two-wide splitter and merger
   - the loader's FE buffer and per-item charge on tiers 2 to 4
   - the loader's researched grab size
-- **Core**: the pole asks for FE instead of GregTech's capability. That is already owed to GregTech's
+- **Core**: the pole asks for FE instead of Oritech's capability. That is already owed to Oritech's
   departure, and it is all the loader's power needs.
 - **Postponed**: the tap.
 - **Excluded**: undergrounds and lanes, argued from the medium. Swing-arm reach and the long-handed
@@ -393,13 +393,13 @@ What pf2612 already runs is **proven to load together**. The rest is what adopti
 - **Moved elsewhere**: trains to Railcraft Reborn; fluids to Oritech. Item bulk storage, rung 2's
   packages and barrelling are left without an owner.
 
-**The finding in one line:** SimpleBelts is a thinner belt than Create's, a link between two loaders.
+**The finding in one line:** SimpleBelts is a thinner belt than Simplebelts's, a link between two loaders.
 But everything the pack needs from it is *reachable in one fork*, at Factorio's own numbers, which
-Create's RPM-driven belt never was. Tiers, a known items/s, belt as buffer, a real splitter, the stack
+Simplebelts's RPM-driven belt never was. Tiers, a known items/s, belt as buffer, a real splitter, the stack
 bonus, and energy spent on moving items all move from `adapted` or `excluded` to reachable. The inserter
 row stays `adapted`, now as a loader. After the rulings, **the core owes the belt layer nothing beyond
 the pole's FE swap**. The pack's real cost is the version change, and within it, porting its own
-three forks. Create's departure also takes rotation out of the pack, so energy becomes one currency.
+three forks. Simplebelts's departure also takes rotation out of the pack, so energy becomes one currency.
 
 ## Out of scope, noted
 

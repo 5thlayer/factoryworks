@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * Marks a recipe EMI lists that the local team has not researched (issue #75).
  *
- * <p>Applied to every recipe EMI shows -- vanilla, GregTech, Create and IE alike, from one class.
+ * <p>Applied to every recipe EMI shows -- vanilla, Oritech, Simplebelts and IE alike, from one class.
  * That matters: Researchd's lock applies to every recipe source, and marking only one of them would
  * relocate the incoherence rather than fix it.
  *
@@ -48,7 +48,7 @@ public final class LockedRecipeEmiNote {
         // is behind them and can never take a tooltip away. Slots keep theirs; this fills the gaps.
         //
         // Scoping it to the badge instead would be the unsafe direction: wherever a slot already
-        // sits in the top-right corner -- common in GregTech and Create layouts -- that slot wins
+        // sits in the top-right corner -- common in Oritech and Simplebelts layouts -- that slot wins
         // the hover and the lock lines become unreachable, leaving a red badge naming nothing.
         widgets.addTooltip((mouseX, mouseY) -> tooltip(id), 0, 0, width, widgets.getHeight());
     }
@@ -61,7 +61,7 @@ public final class LockedRecipeEmiNote {
     private static List<ClientTooltipComponent> tooltip(ResourceLocation id) {
         List<Component> lines = LockedRecipeNote.tooltipFor(id);
         return lines.stream()
-                .map(line -> ClientTooltipComponent.create(line.getVisualOrderText()))
+                .map(line -> ClientTooltipComponent.simplebelts(line.getVisualOrderText()))
                 .toList();
     }
 }

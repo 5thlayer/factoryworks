@@ -961,55 +961,55 @@ file = "kubejs/data/c/tags/item/tools/wrench.json"
 hash = "bd82a2597fc7eb09caf045eee0221585fd14f2c5f8427bda940711f0544c852e"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/heavy_oil_deposit.json"
+file = "kubejs/data/oritech/oritech/bedrock_fluid/heavy_oil_deposit.json"
 hash = "e9339ba672e781881721b8f8b37722c0c18aa5850f8c28610ea053c2eef3e6e9"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/lava_deposit.json"
+file = "kubejs/data/oritech/oritech/bedrock_fluid/lava_deposit.json"
 hash = "1ebea858da28db09511790463c9b4bdd2839551332941f57edcadca8fef7ce47"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/light_oil_deposit.json"
+file = "kubejs/data/oritech/oritech/bedrock_fluid/light_oil_deposit.json"
 hash = "6015e42fbcc57c424a01aa93bddebbcef0524002dc3da490463d52a442c44a23"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/natural_gas_deposit.json"
+file = "kubejs/data/oritech/oritech/bedrock_fluid/natural_gas_deposit.json"
 hash = "d68472f5ed0228e16356c13c36c6acd91ce6333264077e6b25152ca27f150922"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/oil_deposit.json"
+file = "kubejs/data/oritech/oritech/bedrock_fluid/oil_deposit.json"
 hash = "b424f217425f75e5ec552610d6e3cfae1f29148308020e15687ca71dfa4e9d4e"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/raw_oil_deposit.json"
+file = "kubejs/data/oritech/oritech/bedrock_fluid/raw_oil_deposit.json"
 hash = "130e0b347ce0d0a13e74f1ff82737366033104179f8484b267bd91370452f43c"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/salt_water_deposit.json"
+file = "kubejs/data/oritech/oritech/bedrock_fluid/salt_water_deposit.json"
 hash = "42f9187f5ce44b866cd4de2977e39339cde5d4c4a1e902d424c9eda2067122e4"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/coal.json"
+file = "kubejs/data/oritech/oritech/ore_vein/coal.json"
 hash = "ba9a2066a3943d5dd8d2d074f81d12f7af5cec1246e328a856bcfa0264f0b4a3"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/copper.json"
+file = "kubejs/data/oritech/oritech/ore_vein/copper.json"
 hash = "e535cbb98d48466c3244b62105b566be053e4f6ecac7622006919dbb65b9e362"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/iron.json"
+file = "kubejs/data/oritech/oritech/ore_vein/iron.json"
 hash = "04b6fc186103551062dd678a8f5f2eabbfe37b7224ca0b53996fe8208bbfc69b"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/stone.json"
+file = "kubejs/data/oritech/oritech/ore_vein/stone.json"
 hash = "1631d0b881a41459317398801d64c82725d63da786e91f797c7bf53036ad0973"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/uranium.json"
+file = "kubejs/data/oritech/oritech/ore_vein/uranium.json"
 hash = "167a8d625ad257195d1d1aaee1cf286808012e8da8dba6f5e3941c3752bc7fa6"
 
 [[files]]
-file = "kubejs/data/gtceu/tags/item/crafting_tools/wrench.json"
+file = "kubejs/data/oritech/tags/item/crafting_tools/wrench.json"
 hash = "809b62fe5d521e948e1eafd68f2723d5c76cd415d947b08bdc76ff1912f0c7b3"
 
 [[files]]
@@ -1101,47 +1101,47 @@ file = "kubejs/data/planetaryfactory/gt_materials/scrap.json"
 hash = "4e6d7a3754dbc3652a54048fbbe1c7970dfeb9f1ff2c74e21d656012f55a50fc"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_fluid/electro_petroleum_deposit.json"
+file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/electro_petroleum_deposit.json"
 hash = "98e13d85ce4b9860bbdb50de451d3c70c93aaabdb7a605764f8788068cc232e7"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_fluid/ignus_sulfuric_acid_geyser.json"
+file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/ignus_sulfuric_acid_geyser.json"
 hash = "6c837f1cdbb591a0cb77a7465edc5d780cee240fc217768c402d598d44c3eafd"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_fluid/terra_crude_oil_deposit.json"
+file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/terra_crude_oil_deposit.json"
 hash = "91dc790ac8d1eda59adcc63820e700fde29e39b160603fae42e8f0261b64bca5"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_ore/electro_scrap_deposit.json"
+file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/electro_scrap_deposit.json"
 hash = "fd357cc41cad54f5ea44c10941804fdb3615e01bf6a291e8341986294e082e67"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_ore/ignus_calcite_deposit.json"
+file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_calcite_deposit.json"
 hash = "744c4357fc98432e2a54fd9d5778c0d926c9af870a3c52f555404d7887b89b69"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_ore/ignus_coal_deposit.json"
+file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_coal_deposit.json"
 hash = "82aaf691ad292f84be72886bd07ec32193ea1dca99500a4f621916b668aaf021"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_ore/ignus_tungsten_deposit.json"
+file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_tungsten_deposit.json"
 hash = "2812c703cf8af135dea94621b70f42b2136b5470f830369730cbce0e56b2a47f"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_calcite.json"
+file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_calcite.json"
 hash = "fe38536639cef5496d917a80b393cc5039073f6f14c84b0b93cf23814a7a6d3d"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_coal.json"
+file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_coal.json"
 hash = "30454b236de18568a50865d8be35e85ca989fa95e2f13960aa9182cd9957039f"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_scheelite.json"
+file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_scheelite.json"
 hash = "95794eef4f3b8e710857eca6cdedaea998289f1fc982685b15d11f611ef35251"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_sulfur.json"
+file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_sulfur.json"
 hash = "30c242f669d75fbd585c23edf1e26362eb88db71c39e597d3c7a00887abc6241"
 
 [[files]]

@@ -5,7 +5,7 @@ package com.planetaryfactory.core.smelting;
  *
  * <p>ADR-0036's pole water-fills EU across the machines in its area, reading each one's
  * {@code getEnergyCanBeInserted()} and paying with {@code addEnergy}. This class is that surface,
- * with GregTech's {@code IEnergyContainer} left to the block entity so the arithmetic stays
+ * with Oritech's {@code IEnergyContainer} left to the block entity so the arithmetic stays
  * Minecraft-free.
  *
  * <p><b>A cable cannot feed it.</b> {@link #acceptFromNetwork} returns 0 and

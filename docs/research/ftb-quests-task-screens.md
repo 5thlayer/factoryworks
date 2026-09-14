@@ -47,8 +47,8 @@ of every block of the multiblock accepts insertion. The aux delegates straight t
 (`neoforge/.../NeoForgeTaskScreenAuxBlockEntity.java`).
 
 That is a plain NeoForge capability, so anything that pushes into an `IItemHandler` /
-`IFluidHandler` / `IEnergyStorage` works: vanilla hoppers and droppers, Create's chutes, funnels and
-belts-into-funnel, GTCEu machine auto-output and pipes, AE2 export buses, and so on. **No player
+`IFluidHandler` / `IEnergyStorage` works: vanilla hoppers and droppers, Simplebelts's chutes, funnels and
+belts-into-funnel, Oritech machine auto-output and pipes, AE2 export buses, and so on. **No player
 interaction is required and no player needs to be online** — insertion runs entirely off
 `TeamData`, which is server-side quest-file state.
 
@@ -73,10 +73,10 @@ Details that bite (`neoforge/.../NeoForgeTaskScreenBlockEntity.java`):
 
 ### Energy and GT
 
-The energy task is `forge_energy` — a NeoForge `IEnergyStorage`, i.e. **FE/RF**. GTCEu 1.21.1's
+The energy task is `forge_energy` — a NeoForge `IEnergyStorage`, i.e. **FE/RF**. Oritech 1.21.1's
 native transfer is EU on its own capability. Whether GT machines/cables will push FE into the screen
 without an explicit converter is **not verified here**; assume an FE-emitting intermediary (a GT
-energy converter, or a Create/other FE source) is needed until tested in game.
+energy converter, or a Simplebelts/other FE source) is needed until tested in game.
 
 ---
 
@@ -142,7 +142,7 @@ wrapper with `addProgress`, `setLocked`, `complete`, `reset`, `getTaskProgress`,
 
 ### Recipe unlocks: no
 
-Nothing in FTB Quests, KubeJS 2101 or GTCEu provides per-player recipe locking — recipes are
+Nothing in FTB Quests, KubeJS 2101 or Oritech provides per-player recipe locking — recipes are
 datapack-global. The closest real mechanism is **stages**:
 
 - `StageReward` (`quest/reward/StageReward.java`) grants/removes a stage on quest completion via
@@ -279,4 +279,4 @@ Do not build on:
 - Live delivery-progress events in KubeJS (poll instead).
 
 **Unverified in game** (read from code only): GT EU → screen FE without a converter; the stale-team
-screen behaviour after a party forms; whether GTCEu auto-output finds the two-slot item handler.
+screen behaviour after a party forms; whether Oritech auto-output finds the two-slot item handler.
