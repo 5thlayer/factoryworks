@@ -1,47 +1,27 @@
 package com.planetaryfactory.core.fluid;
 
 import com.planetaryfactory.core.PFDataComponents;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.ItemAccessFluidHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-/**
- * The barrel's fluid capability: NeoForge's component-backed handler, with one guard added.
- *
- * <p><b>No fluid filter.</b> Factorio bars steam and most Space Age fluids from barrels, and ADR-0037
- * declines to port that: Factorio's list is a content budget for nine items and eighteen recipes,
- * where this pack has one container and none. A filter would have to track the corpus forever, and
- * its failure mode is a barrel that silently refuses a fluid the pack expects it to carry.
- *
- * <p><b>The guard is against duplication, not against fluids.</b> {@link FluidHandlerItemStack} writes
- * the fluid component onto whatever stack it was handed, without looking at the count -- so filling a
- * held stack of ten would set fifty millibuckets on all ten at the cost of fifty. Simplebelts never does
- * this: {@code GenericItemFilling} and {@code GenericItemEmptying} both copy the stack and
- * {@code setCount(1)} before touching the capability, which is what makes a stack size above one safe
- * in the first place. This refuses the case anyway, because the barrel is stackable and some other
- * mod's automation is free to be less careful.
- */
-public final class BarrelFluidHandler extends FluidHandlerItemStack {
-    public BarrelFluidHandler(ItemStack container) {
-        super(PFDataComponents.FLUID_CONTENT, container, BarrelSpec.CAPACITY_MB);
+public final class BarrelFluidHandler extends ItemAccessFluidHandler {
+    public BarrelFluidHandler(ItemAccess access) {
+        super(access, PFDataComponents.FLUID_CONTENT.get(), BarrelSpec.CAPACITY_MB);
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
-        return single() ? super.fill(resource, action) : 0;
+    public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        return single() ? super.insert(index, resource, amount, transaction) : 0;
     }
 
     @Override
-    public FluidStack drain(FluidStack resource, FluidAction action) {
-        return single() ? super.drain(resource, action) : FluidStack.EMPTY;
-    }
-
-    @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
-        return single() ? super.drain(maxDrain, action) : FluidStack.EMPTY;
+    public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        return single() ? super.extract(index, resource, amount, transaction) : 0;
     }
 
     private boolean single() {
-        return container.getCount() == 1;
+        return itemAccess.getAmountAsLong() == 1;
     }
 }
