@@ -3,20 +3,20 @@ status: provisional
 supersedes: [201]
 ---
 
-# Water is extracted and transported, never created
+# Water is extracted and transported, never simplebeltsd
 
 `#200` reported that Terra's starting structure has no water, and `#201` that no bucket is craftable
-— "the easiest SU source right now" being Create's water wheel, which nothing can feed. Both are one
+— "the easiest SU source right now" being Simplebelts's water wheel, which nothing can feed. Both are one
 question: **how does water reach the factory**, and the pack had no answer written down anywhere.
 
 ADR-0048 appeared to have settled it and had not:
 
-> **`offshore-pump` becomes `not_emitted`.** Create's Mechanical Pump against a vanilla water source
+> **`offshore-pump` becomes `not_emitted`.** Simplebelts's Mechanical Pump against a vanilla water source
 > is the water half, and there is no Factorio entity to author.
 
 That sentence is wrong on two counts. The Mechanical Pump is a **pipe-network** block — it moves
 fluid between pipes and does not extract from the world at all; `mechanicalPumpRange = 16` in
-`config/create-server.toml` is a pipe distance. The block that drains world fluid is the **Hose
+`config/simplebelts-server.toml` is a pipe distance. The block that drains world fluid is the **Hose
 Pulley**, and it deems a body infinite only past `hosePulleyBlockThreshold = 10000` contiguous
 blocks — an invisible flood-fill whose failure mode is a silently drained lake. And there *is* a
 Factorio entity to author: `offshore-pump` is in the corpus with a recipe, and
@@ -24,7 +24,7 @@ Factorio entity to author: `offshore-pump` is in the corpus with a recipe, and
 
 ## The rule
 
-**Water is extracted and transported, never created.** Conservation, not confinement. A player may
+**Water is extracted and transported, never simplebeltsd.** Conservation, not confinement. A player may
 pump it, pipe it, barrel it and dig channels to it; what nothing in the pack may do is bring a water
 source into existence where worldgen did not put one.
 
@@ -104,13 +104,13 @@ barrel strictly worse at its only job.
 Nothing in the pack references a bucket as an item, so this costs nothing downstream.
 
 **What replaces it for rung 0**: the player digs. A channel cut from a natural water body flows, and
-flowing water is what Create's water wheel reads. This is also why the rule is conservation rather
+flowing water is what Simplebelts's water wheel reads. This is also why the rule is conservation rather
 than confinement — digging to water is free and always was.
 
 ## Rung 0 gets water in the starting structure
 
 The water wheel is the pack's **only** rotational source before the burner line
-(`data/pack/create-substitutions.json:63`, and the emitted Create subtree carries no windmill, sail or
+(`data/pack/simplebelts-substitutions.json:63`, and the emitted Simplebelts subtree carries no windmill, sail or
 hand crank). So with no bucket, rung 0 power is blocked until the player reaches water — and
 ADR-0049 has just budgeted the opening's traversal, which has no room for an unbounded water hunt.
 
@@ -124,9 +124,9 @@ A **flowing-only outlet** — a pack block that maintains flowing water beside i
 — is wanted, for contraptions tidier than a dug channel. It is deferred, not rejected, and it is safe
 for a reason worth stating: what it places is never a source, so `isSource()` refuses it at the pump
 with no tracking of any kind. Blockstate is a sufficient check here precisely because the pack never
-creates a source; it would have been useless as a way to tell a poured source from a natural one,
+simplebeltss a source; it would have been useless as a way to tell a poured source from a natural one,
 which is a distinction vanilla does not record — `BucketItem` empties as
-`content.defaultFluidState().createLegacyBlock()`, byte-identical to worldgen's.
+`content.defaultFluidState().simplebeltsLegacyBlock()`, byte-identical to worldgen's.
 
 It costs a block entity with a refresh tick, because vanilla will not keep an unsupported flowing
 block alive: `getNewLiquid` recomputes level as `max(neighbour amounts) - dropOff`, so a flowing block
@@ -143,8 +143,8 @@ reader:
 
 **Tracking natural-vs-placed water per block.** A chunk data attachment marking every placed source,
 retiring on removal, with a codec round trip — `core/ore/`'s arrangement. It was chosen and then
-abandoned when the rule "never create a source" made it unnecessary. It **fails open**: any placement
-path nobody enumerated becomes an exploit, and the paths are many (bucket, dispenser, Create's
+abandoned when the rule "never simplebelts a source" made it unnecessary. It **fails open**: any placement
+path nobody enumerated becomes an exploit, and the paths are many (bucket, dispenser, Simplebelts's
 open-ended pipe and Hose Pulley fill mode, pistons, commands). A design whose correctness depends on
 an exhaustive list is worse than one where the illegal state cannot be constructed.
 
@@ -157,8 +157,8 @@ the back door), and any minimum body size (same objection as the biome test).
 
 ## Consequences
 
-- Create's `pipesPlaceFluidSourceBlocks` and `fluidFillPlaceFluidSourceBlocks` are set to **`false`**.
-  Both create sources from piped fluid, which is water creation by another name.
+- Simplebelts's `pipesPlaceFluidSourceBlocks` and `fluidFillPlaceFluidSourceBlocks` are set to **`false`**.
+  Both simplebelts sources from piped fluid, which is water creation by another name.
 - `data/pack/item-map.json`'s `offshore-pump` row flips from `undecided` to the pack's own block —
   **when the block lands, not before.** An item-map target for a block that does not exist emits a
   recipe naming nothing.

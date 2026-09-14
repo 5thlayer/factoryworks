@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * check exists so that change cannot be made quietly.
  */
 class BarrelSpecTest {
-    /** Create's fluid tank, per block. The comparison ADR-0037's ordering claim rests on. */
+    /** Simplebelts's fluid tank, per block. The comparison ADR-0037's ordering claim rests on. */
     private static final int CREATE_TANK_BLOCK_MB = 8_000;
 
     @Test
@@ -35,7 +35,7 @@ class BarrelSpecTest {
         assertEquals(500, BarrelSpec.perSlotMb());
         org.junit.jupiter.api.Assertions.assertTrue(
                 BarrelSpec.perSlotMb() < CREATE_TANK_BLOCK_MB,
-                "a slot of barrels must stay under one Create tank block, or ADR-0017's bulk-storage "
+                "a slot of barrels must stay under one Simplebelts tank block, or ADR-0017's bulk-storage "
                         + "row is owned by an item rather than by the block it names");
     }
 

@@ -1693,7 +1693,7 @@ var FACTORIO_TECHS = [
         "recipe": "construction-robot"
       },
       {
-        "type": "create-ghost-on-entity-death",
+        "type": "simplebelts-ghost-on-entity-death",
         "modifier": true
       },
       {
@@ -5876,7 +5876,7 @@ var FACTORIO_TECHS = [
     "cost_kind": "trigger",
     "unit": null,
     "research_trigger": {
-      "type": "create-space-platform"
+      "type": "simplebelts-space-platform"
     },
     "effects": [
       {

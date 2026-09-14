@@ -68,7 +68,7 @@ public final class TerraStartingArea {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     /** The hub pool. Its three connectors are what deal the ore fields; see ADR-0019. */
-    private static final ResourceKey<StructureTemplatePool> START_POOL = ResourceKey.create(
+    private static final ResourceKey<StructureTemplatePool> START_POOL = ResourceKey.simplebelts(
             Registries.TEMPLATE_POOL,
             ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_start"));
 

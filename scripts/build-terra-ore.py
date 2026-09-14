@@ -5,11 +5,11 @@ Terra had four ore systems and three of them were invisible to prospecting, to d
 to the miner ladder. This closes the three that remain -- Mekanism's left with the mod
 (ADR-0035), and its six worldgen toggles with it:
 
-- **Vanilla and Create** die by construction: Terra's palette biomes are authored by
+- **Vanilla and Simplebelts** die by construction: Terra's palette biomes are authored by
   scripts/build-terra-worldgen.py with an empty `underground_ores` step, and they are
   deliberately *not* members of `#minecraft:is_overworld`, which is the tag every biome
   modifier in the jar set targets.
-- **GregTech** keeps four veins. The cut ones lose their `kubejs/data` override and the mod's
+- **Oritech** keeps four veins. The cut ones lose their `kubejs/data` override and the mod's
   originals are filtered out by packs/remove-terra-cut-veins.
 
 The survivors move into a shallow band above bedrock, because ADR-0019 retires the deepslate
@@ -22,7 +22,7 @@ import re
 import zipfile
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-VEINS = os.path.join(ROOT, "kubejs", "data", "gtceu", "gtceu", "ore_vein")
+VEINS = os.path.join(ROOT, "kubejs", "data", "oritech", "oritech", "ore_vein")
 PF = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
 FILTER_PACK = os.path.join(ROOT, "packs", "remove-terra-cut-veins")
 
@@ -38,11 +38,11 @@ KEEP = {
     "copper":  {"min_y": 20, "max_y": 48, "weight": 140},
 }
 
-# The block each vein deals, which since ADR-0041 is the pack's rather than GregTech's. A vein
-# layer's `targets` is `Either<List<TargetBlockState>, Material>` in GregTech's own codec, so a
+# The block each vein deals, which since ADR-0041 is the pack's rather than Oritech's. A vein
+# layer's `targets` is `Either<List<TargetBlockState>, Material>` in Oritech's own codec, so a
 # block state is expressible and a material is not the only option -- which is what lets an
 # outfield vein carry an amount exactly as a starting field does. The ore blocks still drop
-# GregTech's raw ore, so the vein is a vein in every way the rest of the pack can observe.
+# Oritech's raw ore, so the vein is a vein in every way the rest of the pack can observe.
 PACK_ORE = {
     "coal": "planetaryfactory:coal_ore",
     "iron": "planetaryfactory:iron_ore",
@@ -57,14 +57,14 @@ PACK_ORE = {
 # nothing before it competes for the band.
 STONE = {"min_y": 30, "max_y": 58, "weight": 150}
 
-# What a vein replaces. Vanilla's own stone-ore predicate, which is what every GregTech stone-layer
+# What a vein replaces. Vanilla's own stone-ore predicate, which is what every Oritech stone-layer
 # vein already resolves a material against.
 STONE_REPLACEABLES = {
     "predicate_type": "minecraft:tag_match",
     "tag": "minecraft:stone_ore_replaceables",
 }
 
-# GregTech ships no overworld uranium vein -- its uranium is `pitchblende`, an End vein that
+# Oritech ships no overworld uranium vein -- its uranium is `pitchblende`, an End vein that
 # packs/remove-nether-end-worldgen already blocks. Rather than unblock an End vein and drag its
 # dimension filter around, Terra gets its own, built from pitchblende's generator.
 URANIUM_SOURCE = "pitchblende"
@@ -80,14 +80,14 @@ def save(name, obj):
     with open(os.path.join(VEINS, name + ".json"), "w") as fh:
         json.dump(obj, fh, indent=4, sort_keys=True)
         fh.write("\n")
-    print("wrote kubejs/data/gtceu/gtceu/ore_vein/%s.json" % name)
+    print("wrote kubejs/data/oritech/oritech/ore_vein/%s.json" % name)
 
 
 def retarget(vein, name):
-    """Point every layer of a vein at the pack's ore block instead of a GregTech material.
+    """Point every layer of a vein at the pack's ore block instead of a Oritech material.
 
     The surface indicator is left alone: it is the rock scattered on top as a prospecting hint,
-    not the ore, and GregTech's own is what a player has learned to recognise.
+    not the ore, and Oritech's own is what a player has learned to recognise.
     """
     block = PACK_ORE[name]
     generator = vein.get("generator") or {}
@@ -118,16 +118,16 @@ def reband(vein, band):
     return vein
 
 
-def gtceu_jar():
+def oritech_jar():
     return next(
         os.path.join(ROOT, "mods", f)
         for f in os.listdir(os.path.join(ROOT, "mods"))
-        if re.match(r"gtceu-.*\.jar$", f)
+        if re.match(r"oritech-.*\.jar$", f)
     )
 
 
 def mod_veins(jar):
-    """Every vein GregTech ships -- the authority on what there is to cut.
+    """Every vein Oritech ships -- the authority on what there is to cut.
 
     Deliberately **not the contents of `VEINS`**. That directory is this script's own output and
     the script deletes the cut overrides out of it, so deriving the cut list from it works exactly
@@ -139,7 +139,7 @@ def mod_veins(jar):
     strip it from. It has neither, so a vein that only generates there generates nowhere, and the
     narrower reading would only be bookkeeping about dimensions nobody can visit.
     """
-    prefix = "data/gtceu/gtceu/ore_vein/"
+    prefix = "data/oritech/oritech/ore_vein/"
     with zipfile.ZipFile(jar) as z:
         return {
             name[len(prefix):-5]
@@ -149,7 +149,7 @@ def mod_veins(jar):
 
 
 def main():
-    jar = gtceu_jar()
+    jar = oritech_jar()
     # `uranium` and `stone` are pack veins written below rather than mod overrides, so neither is
     # a cut: removing them would delete the file this script is in the middle of writing.
     cut = sorted(mod_veins(jar) - set(KEEP) - {"uranium", "stone"})
@@ -159,15 +159,15 @@ def main():
 
     # Terra's uranium, from the End vein's generator.
     with zipfile.ZipFile(jar) as z:
-        src = json.loads(z.read("data/gtceu/gtceu/ore_vein/%s.json" % URANIUM_SOURCE))
+        src = json.loads(z.read("data/oritech/oritech/ore_vein/%s.json" % URANIUM_SOURCE))
     save("uranium", retarget(reband(src, URANIUM), "uranium"))
 
     # Stone's own vein, built from coal's generator: the same shallow layer shape, dealing the
-    # stone ore block. GregTech ships no stone *vein* to start from -- it has a `gtceu:stone`
-    # material but nothing that deals it out of the ground, because stone is scenery to GregTech.
+    # stone ore block. Oritech ships no stone *vein* to start from -- it has a `oritech:stone`
+    # material but nothing that deals it out of the ground, because stone is scenery to Oritech.
     # Treating it as a resource is the shape of ADR-0041's amendment to ADR-0021.
     #
-    # It gets its own surface indicator rather than inheriting coal's: `gtceu:coal` scattered over
+    # It gets its own surface indicator rather than inheriting coal's: `oritech:coal` scattered over
     # a stone vein would be a prospecting hint that names the wrong resource, and *no* indicator
     # would quietly exempt stone from ADR-0019's rule that ore is prospected rather than stumbled
     # on.
@@ -176,21 +176,21 @@ def main():
         # The block side of the indicator's Either, and the only honest option left.
         #
         # The material side is what all four other veins use, and it is closed to stone twice
-        # over. `gtceu:stone` is a real material but GregTech registers no surface rock for it --
+        # over. `oritech:stone` is a real material but Oritech registers no surface rock for it --
         # "No surface rock registered for material stone", thrown while loading registries, which
-        # reaches a player as a world that will not create. And every one of the 36 materials that
+        # reaches a player as a world that will not simplebelts. And every one of the 36 materials that
         # does have a rock is an *ore* material, so borrowing one would put a hint naming the
         # wrong resource on top of a stone patch.
         #
         # So: loose cobblestone, which is legible precisely because ADR-0019 caps Terra in dirt --
-        # rock lying on soil means rock underneath. It is a full block rather than GregTech's
+        # rock lying on soil means rock underneath. It is a full block rather than Oritech's
         # scatter, which is a cosmetic inconsistency this accepts in exchange for a patch a player
         # can actually find.
         "block": {"Name": "minecraft:cobblestone"},
         "density": 0.2,
         "placement": "surface",
         "radius": 5,
-        "type": "gtceu:surface",
+        "type": "oritech:surface",
     }]
     save("stone", stone)
 
@@ -198,7 +198,7 @@ def main():
         override = os.path.join(VEINS, name + ".json")
         if os.path.exists(override):
             os.remove(override)
-            print("removed override kubejs/data/gtceu/gtceu/ore_vein/%s.json" % name)
+            print("removed override kubejs/data/oritech/oritech/ore_vein/%s.json" % name)
 
     os.makedirs(FILTER_PACK, exist_ok=True)
     with open(os.path.join(FILTER_PACK, "pack.mcmeta"), "w") as fh:
@@ -209,21 +209,21 @@ def main():
             },
             "filter": {
                 "block": [
-                    {"namespace": "gtceu", "path": r"^gtceu/ore_vein/%s\.json" % n} for n in cut
+                    {"namespace": "oritech", "path": r"^oritech/ore_vein/%s\.json" % n} for n in cut
                 ]
             },
             "_comment": [
                 "ADR-0021 restricts Terra to Nauvis's resources. The kubejs/data overrides for",
                 "these veins are deleted rather than emptied, so this pack blocks the mod's own",
                 "files -- an emptied override would still register a vein with zero weight.",
-                "gtceu:uranium is a pack vein, not a mod one, so nothing here touches it.",
+                "oritech:uranium is a pack vein, not a mod one, so nothing here touches it.",
             ],
         }, fh, indent=2)
         fh.write("\n")
     print("wrote packs/remove-terra-cut-veins/pack.mcmeta (%d veins blocked)" % len(cut))
 
-    # The tag GregTech's surviving veins are scoped to. It exists because Terra's palette
-    # biomes are not in #minecraft:is_overworld -- which is what keeps Create's and vanilla's
+    # The tag Oritech's surviving veins are scoped to. It exists because Terra's palette
+    # biomes are not in #minecraft:is_overworld -- which is what keeps Simplebelts's and vanilla's
     # biome-modifier ore off the planet.
     tag = os.path.join(PF, "tags", "worldgen", "biome", "terra.json")
     os.makedirs(os.path.dirname(tag), exist_ok=True)

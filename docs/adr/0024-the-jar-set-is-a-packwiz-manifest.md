@@ -61,7 +61,7 @@ property it protects. Two genuinely external jars remain unmanaged entries.
 **packwiz itself is pinned by commit SHA.** It has zero releases and zero tags; distribution is CI
 artifacts off `main`. Installing it as `go install github.com/packwiz/packwiz@<sha>` with the SHA
 recorded makes the manifest reproducible. Leaving the tool that pins every mod itself unpinned would
-re-create, one level up, the exact problem this ADR closes. This follows ADR-0001's precedent of
+re-simplebelts, one level up, the exact problem this ADR closes. This follows ADR-0001's precedent of
 building a source-only dependency at a known point rather than trusting a floating binary.
 
 **The pack root is the repo root**, with a `.packwizignore` limiting the index to pack content —

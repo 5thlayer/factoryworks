@@ -18,8 +18,8 @@ class LockedRecipeRetryTest {
 
     private static final Function<Recipe, String> ID = Recipe::id;
 
-    private static final Recipe STICKY_PISTON = new Recipe("gtceu:assembler/sticky_piston_slime");
-    private static final Recipe CONVEYOR = new Recipe("gtceu:assembler/conveyor_module_lv");
+    private static final Recipe STICKY_PISTON = new Recipe("oritech:assembler/sticky_piston_slime");
+    private static final Recipe CONVEYOR = new Recipe("oritech:assembler/conveyor_module_lv");
 
     @Test
     void remembersARefusedRecipeSoTheMachineKeepsTicking() {
@@ -59,7 +59,7 @@ class LockedRecipeRetryTest {
     }
 
     /**
-     * GregTech iterates this list on the same tick that the pack writes to it -- the iteration calls
+     * Oritech iterates this list on the same tick that the pack writes to it -- the iteration calls
      * back into the refusal. Mutating in place would throw on the machine's own tick.
      */
     @Test
@@ -82,7 +82,7 @@ class LockedRecipeRetryTest {
 
     /** {@code handleSearchingRecipes} adds to this field itself, so what is left there must take it. */
     @Test
-    void handsBackAListGregTechCanAddTo() {
+    void handsBackAListOritechCanAddTo() {
         List<Recipe> remembered = LockedRecipeRetry.remember(null, STICKY_PISTON, ID);
 
         remembered.add(CONVEYOR);
@@ -91,7 +91,7 @@ class LockedRecipeRetryTest {
     }
 
     @Test
-    void takesOverAListGregTechBuilt() {
+    void takesOverAListOritechBuilt() {
         List<Recipe> gregtechs = new ArrayList<>(List.of(CONVEYOR));
 
         List<Recipe> remembered = LockedRecipeRetry.remember(gregtechs, STICKY_PISTON, ID);

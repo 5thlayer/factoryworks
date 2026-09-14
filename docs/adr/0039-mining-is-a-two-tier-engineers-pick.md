@@ -12,7 +12,7 @@ Minecraft block break, so it is per-block and **tool-tiered**" — a mechanic th
 deleted the means to deliver.
 
 The result is a pack in which **nothing can be mined at all**. `requires_correct_tool_for_drops` is a
-block property fixed at registration, not a tag, so hand-breaking iron ore, stone or a GregTech vein
+block property fixed at registration, not a tag, so hand-breaking iron ore, stone or a Oritech vein
 drops nothing and no datapack can change it. `#100`'s starting kit is prospector, Furnace, LP Steam
 Miner and a few plates — no tool. And **the corpus can never supply one**: ADR-0031 says the corpus
 authors every recipe it contains, the corpus is Factorio's, and Factorio has no mining-tool prototype
@@ -35,7 +35,7 @@ Both are **indestructible** — no durability bar on either. The steel recipe **
 pick, so the player holds one or the other and never both.
 
 **One tool, all block classes.** There is no axe, shovel, shears or hoe. The Pick mines wood, stone,
-ore, dirt and leaves, and it is the tool that dismantles a GregTech machine. That is Factorio's
+ore, dirt and leaves, and it is the tool that dismantles a Oritech machine. That is Factorio's
 single mining gesture wearing a pickaxe model, which is the whole trade this ADR makes: it reads as a
 pickaxe so a Minecraft player is at home, and it behaves as one gesture so a Factorio player is too.
 
@@ -151,14 +151,14 @@ carrying the player and hand-mining feels worst.~~
 
 ## The wrench's four verbs
 
-GTCEu 7.0.2's own `en_us.json` shows the wrench doing four distinct things, not one:
+Oritech 7.0.2's own `en_us.json` shows the wrench doing four distinct things, not one:
 
 | Verb | String | Disposition |
 | --- | --- | --- |
 | Dismantle | `"Hold left click to dismantle Machines"` | **The Engineer's Pick absorbs it.** Delivered by the tags below and confirmed in-game: a machine breaks and drops its item. |
 | Rotate / set facing | `"Rotates Blocks on Rightclick"` | **The Engineer's Pick absorbs it** — *#168, which settled what this row deferred.* The Pick declares the `wrench_rotate` ability; the tags below were never enough. |
-| Pipe connections | `"Use Wrench to set Connections, sneak to block Connections"` | **Split by #168.** This string describes `wrench_connect` on a pipe block, which is **declined** — ADR-0017 gives fluid and item logistics to Create and GT's pipes left with its power layer. The `wrench_configure*` abilities are **not** that verb, despite the string: they set a *machine's* auto-output face, and the Pick declares them. |
-| Multiblock maintenance | `"Pipe is loose. (Wrench)"` | **Already dead** — `config/gtceu.yaml:218` sets `enableMaintenance: false`. |
+| Pipe connections | `"Use Wrench to set Connections, sneak to block Connections"` | **Split by #168.** This string describes `wrench_connect` on a pipe block, which is **declined** — ADR-0017 gives fluid and item logistics to Simplebelts and GT's pipes left with its power layer. The `wrench_configure*` abilities are **not** that verb, despite the string: they set a *machine's* auto-output face, and the Pick declares them. |
+| Multiblock maintenance | `"Pipe is loose. (Wrench)"` | **Already dead** — `config/oritech.yaml:218` sets `enableMaintenance: false`. |
 
 Rotation is **not** deletable: Factorio has a rotate verb (`R`), so a pack with no way to turn a
 machine is missing a mechanic rather than simplifying one. This ADR deferred it rather than deciding
@@ -216,10 +216,10 @@ corpus recipes — `small-electric-pole`, `wooden-chest` and `shotgun` (the last
 - Two pack-authored recipes exist that no corpus regeneration will ever produce. A converter run must
   not remove them.
 - Rotation and pipe connections are `#168`'s. The wrench item tags this ADR grants do **not** hand
-  them over, which is worth stating because it looks as though they would: GregTech gates rotate and
+  them over, which is worth stating because it looks as though they would: Oritech gates rotate and
   the configure verbs on NeoForge `ItemAbility` declarations (`GTItemAbilities.WRENCH_ROTATE`,
   `WRENCH_CONFIGURE` and friends) that a plain `Item` answers false to, while dismantle rides the
-  ordinary break path this ADR already covers. Until #168 lands there is one visible seam: GTCEu's
+  ordinary break path this ADR already covers. Until #168 lands there is one visible seam: Oritech's
   rotation overlay draws on `toolTypes.contains(WRENCH) || canPerformAction(WRENCH_ROTATE)`, and the
   Pick satisfies the first half, so the overlay appears on a machine while right-click does nothing.
   *#168 has landed and closed that seam from the other end: the Pick declares `wrench_rotate`, so the

@@ -5,7 +5,7 @@ supersedes: [57, 179]
 
 # Terra's ore is surface discs everywhere, and the buried veins go
 
-`#179` asked whether GregTech's buried veins belong in a Factorio-faithful pack. They do not, and
+`#179` asked whether Oritech's buried veins belong in a Factorio-faithful pack. They do not, and
 the reason is older than the ticket: **the veins never won an argument in the first place.** ADR-0019
 put them there as the residue of vanilla worldgen — it decided flatness, cave removal and a surface
 starting area, and left "everywhere else" as it found it, then commissioned prospecting to make the
@@ -122,7 +122,7 @@ meaning the pack had to invent for it because ore was hidden. `#57` closes. The 
 loses its stated job and needs a new one or needs cutting; that is its own ticket, not this ADR's
 call.
 
-**GregTech's surface indicators become dead.** They marked buried veins and there are none. The
+**Oritech's surface indicators become dead.** They marked buried veins and there are none. The
 check that guards them goes with them, and both failure modes it was written for stop existing.
 
 **A regeneration is required before this can be built.** `regular_blob_amplitude_maximum_distance`,

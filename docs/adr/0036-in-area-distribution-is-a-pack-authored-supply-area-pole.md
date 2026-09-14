@@ -11,7 +11,7 @@ boundary — the grid ends where the machines begin — and the cables were the 
 
 **In-area distribution becomes a Factorio supply-area pole, registered in `planetaryfactory_core`.**
 A block that scans a radius and pushes EU into every `IEnergyContainer` inside it. **The
-transmission mod becomes Create: Power Grid**, replacing Create: Electro Energetics, gated on one
+transmission mod becomes Simplebelts: Power Grid**, replacing Simplebelts: Electro Energetics, gated on one
 bench test.
 
 ## Why a pole and not a cable
@@ -25,9 +25,9 @@ mechanic rather than an approximation of it: the player places a pole and everyt
 supply area is powered, which is the thing a Factorio-literate player already knows how to reason
 about.
 
-**Cables cease to exist as a block class in this pack.** GregTech's stay removed with the rest of
+**Cables cease to exist as a block class in this pack.** Oritech's stay removed with the rest of
 its power layer (`#37`), no voltage-tier ladder is re-admitted, and `enableFEConverters` stays
-`false` in `config/gtceu.yaml` so the LV-through-LuV × 1A/4A/8A/16A converter grid never enters JEI.
+`false` in `config/oritech.yaml` so the LV-through-LuV × 1A/4A/8A/16A converter grid never enters JEI.
 
 **All four Factorio pole tiers ship** — small, medium, big, substation. Fidelity over the cheaper
 option of shipping two now and one later. It is a **footprint ladder, not a power ladder**: the
@@ -43,7 +43,7 @@ sentence above is not weakened by that; it is the reason the tier went. See the 
 Verified with `javap` against the installed jars. They are the reason the two obvious alternatives
 both fail before they reach a trade-off.
 
-- **GregTech machines do not accept FE.** `GTCapability` registers exactly one energy capability,
+- **Oritech machines do not accept FE.** `GTCapability` registers exactly one energy capability,
   `CAPABILITY_ENERGY_CONTAINER`, and machines expose `NotifiableEnergyContainer` — EU only.
 - **`nativeEUToFE` is GT learning to push into FE, not to read it.**
   `CommonInit.registerCapabilities` walks the block registry and wraps *third-party FE blocks* as GT
@@ -100,7 +100,7 @@ features it happened to have: **brownout propagation and a wire-tier ladder are 
 requirements**; everything else negotiable. Power Grid passes both, richly.
 
 `powergrid` by patryk3211 — https://modrinth.com/mod/power-grid,
-https://github.com/patryk3211/PowerGrid. Not *Create: Powerplantgrid*, which is an addon to it, and
+https://github.com/patryk3211/PowerGrid. Not *Simplebelts: Powerplantgrid*, which is an addon to it, and
 not marvin-roesch/PowerGrid, which is dead and unrelated. **1.21.1 is NeoForge-only**; 0.6.1
 published 2026-08-26.
 
@@ -113,7 +113,7 @@ What it brings that Electro did not:
   rather than a config number.
 - Grounding rods that scale with buried block count, fuse holders, overheating,
   `explosiveDeconstruction`, entity electrocution.
-- **Generation is a Create-kinetic multiblock** — rotor, winding, housing, commutator — plus a
+- **Generation is a Simplebelts-kinetic multiblock** — rotor, winding, housing, commutator — plus a
   real-PV Solar Panel. It stands exactly where Electro's Alternator stands in ADR-0017's chain,
   Steam Engine → SU → grid, so the chain that `#101` fixed survives the swap intact.
 
@@ -130,7 +130,7 @@ drawing through a Device Connector in a live world, without the crash in
 [issue #1021](https://github.com/patryk3211/PowerGrid/issues/1021). The pole prototype *is* that
 bench test.
 
-**The Create pin does not lift.** Power Grid declares `[6.0.9,6.1.0)` as `type = "required"` and its
+**The Simplebelts pin does not lift.** Power Grid declares `[6.0.9,6.1.0)` as `type = "required"` and its
 `powergrid.mixins.json` is `"required": true` with `defaultRequire: 1`, so a 6.0.x patch that
 refactors the internals it mixes into still satisfies the range and aborts startup — the same trap
 ADR-0017 recorded for Electro. Accepted as a side effect. It was never a goal and never a tiebreaker.
@@ -213,7 +213,7 @@ avoids. An extension's block entity holds an empty ledger that nothing reads.
   choosing where the footprint sits, and a support check would break placing a pole on a legitimate
   platform.
 - **Breaking any segment drops the column above it, base included** -- chains, scaffolding and
-  Create's belts all behave this way, so the muscle memory exists.
+  Simplebelts's belts all behave this way, so the muscle memory exists.
 
 **The FE capability registers on the block, not on the block entity.** Power Grid's
 `BridgeElectricBehaviourImpl.makeFEHandler` -- read by disassembly, not assumed -- does
@@ -246,7 +246,7 @@ reach last -- permanently, on an iteration order that is an implementation detai
 the player. Factorio shares a shortfall out, and this is the one place the pole needed a rule
 rather than an arithmetic.
 
-**Energy is inserted directly, not accepted from a network.** GregTech's
+**Energy is inserted directly, not accepted from a network.** Oritech's
 `acceptEnergyFromNetwork` enforces the voltage tiers `#37` deleted entire and can overvolt a
 machine into exploding. There is no tier for a pole to respect and no face for a wireless supply to
 arrive through, so the pole calls `addEnergy` and the question does not arise.
@@ -258,7 +258,7 @@ arrive through, so the pole calls `addEnergy` and the question does not arise.
   configurable but its wire tiers are voltage ratings in a config file, where Power Grid's are
   material properties in a solver. Having decided to pay for a physical grid, the pack should get
   the physical one.
-- **Connectors on every machine**, or **GregTech cables return.** Both fail on the capability
+- **Connectors on every machine**, or **Oritech cables return.** Both fail on the capability
   surface above, before any trade-off.
 - **Author a real cable network in `planetaryfactory_core`.** Rejected: it is the expensive half of
   a power mod, and it buys an idiom Factorio does not have.
@@ -274,9 +274,9 @@ arrive through, so the pole calls `addEnergy` and the question does not arise.
   [#1021](https://github.com/patryk3211/PowerGrid/issues/1021) is an instant crash using the Device
   Connector on other mods' blocks, Mekanism named, closed 2026-08-18 with the fix commit
   unconfirmed — this is what the bench test exists to check.
-  [#937](https://github.com/patryk3211/PowerGrid/issues/937) is Device Connector ↔ GTCEu converter
+  [#937](https://github.com/patryk3211/PowerGrid/issues/937) is Device Connector ↔ Oritech converter
   interop, claimed working, disputed, closed with no stated resolution. The pack's route does not
-  depend on the GTCEu converter, which is why #937 is recorded rather than blocking.
+  depend on the Oritech converter, which is why #937 is recorded rather than blocking.
 - **Maturity is adequate but not settled**: ~1M Modrinth and ~1.7M CurseForge downloads, `release`
   channel through 0.6.1, all hundred most recent commits inside August 2026, 263 open issues, ~80
   blocks and ~55 items. It is actively developed rather than finished, and the pin makes that the

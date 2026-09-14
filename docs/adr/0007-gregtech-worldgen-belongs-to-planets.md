@@ -2,25 +2,25 @@
 status: accepted
 ---
 
-# GregTech worldgen belongs to planets, so the Nether and the End keep their dimensions and lose their veins
+# Oritech worldgen belongs to planets, so the Nether and the End keep their dimensions and lose their veins
 
 The pack's progression is planetary: build a rocket, pay fuel priced by distance, arrive somewhere
 hostile, establish a supply line. Two vanilla dimensions sit outside that entirely, reachable
-through a portal at no fuel cost and no rocket tier, and GregTech populates both.
+through a portal at no fuel cost and no rocket tier, and Oritech populates both.
 
-`gtceu-1.21.1-7.0.2.jar` ships 41 ore veins. Twelve are filtered to `minecraft:the_nether` —
+`oritech-1.21.1-7.0.2.jar` ships 41 ore veins. Twelve are filtered to `minecraft:the_nether` —
 sulfur, tetrahedrite, molybdenum, monazite, beryllium, certus quartz, banded iron, saltpeter, topaz,
 quartz, redstone and manganese. Six are filtered to `minecraft:the_end` — naquadah, pitchblende,
 scheelite, sheldonite, bauxite and magnetite. The single bedrock lava deposit is Nether-only.
 
 Left alone, that is a complete parallel endgame behind two portals. It collides with the planetary
-design at the exact points the design is built on: scheelite is GregTech's tungsten ore and the End
+design at the exact points the design is built on: scheelite is Oritech's tungsten ore and the End
 has it, while `docs/planets.md` makes tungsten the reason Ignus exists; the Nether holds
 the infinite lava that Ignus's thermal puzzle is built around; and the End's naquadah and platinum
 group are the endgame materials that reaching Atlantis is supposed to be about.
 
-**GregTech worldgen belongs to planets.** The Nether and the End keep their dimensions, their
-portals, their mobs and their vanilla resources. They lose their GregTech veins and bedrock
+**Oritech worldgen belongs to planets.** The Nether and the End keep their dimensions, their
+portals, their mobs and their vanilla resources. They lose their Oritech veins and bedrock
 deposits, and those materials are redistributed to bodies you fly to.
 
 Redistribution is decided per body rather than in one pass: each `Body:` ticket claims the materials
@@ -44,13 +44,13 @@ already implied by the source document.
 
 ## Consequences
 
-Every GregTech material currently exclusive to the Nether or the End must find a planetary home, or
+Every Oritech material currently exclusive to the Nether or the End must find a planetary home, or
 it becomes unobtainable. The per-body redistribution makes that a real risk: the last body to ship
 must be checked against the full list, and anything unclaimed is a gap. That check belongs in the
 final body ticket.
 
 The Nether becomes a mob-and-vanilla-materials dimension rather than a resource tier. Its worldgen
-still exists; nothing GregTech generates does.
+still exists; nothing Oritech generates does.
 
 Atlantis gains a candidate purpose. The Shattered Planet row in `docs/factorio-mechanics.md` leaves
 its mechanics deliberately open, and
@@ -61,7 +61,7 @@ Removal uses the same mechanism as slice 1's stock-body removal: the datapack re
 blocked by a `pack.mcmeta` filter in a zipped datapack under `kubejs/data/`, per
 `docs/research/gcyr-planet-definition.md`. No fork change.
 
-Players arriving from other GregTech packs will find the Nether and End empty of veins, which is
+Players arriving from other Oritech packs will find the Nether and End empty of veins, which is
 contrary to universal expectation in this mod's ecosystem. That is a deliberate signal that the
 progression is elsewhere, and it needs saying in the quest book rather than being left as a
 surprise.
@@ -80,5 +80,5 @@ currently start below Y 0. The other bodies are untouched; the `deepslate` retir
 The `terra_*` bedrock deposits keep working — they key off the bedrock layer, which is now Y 0.
 
 The practical consequence for anyone reading this ADR to place a vein: **Terra's Y-ranges are no
-longer GregTech's**, and the shallow band is deliberate — ore has to be reachable without caving,
+longer Oritech's**, and the shallow band is deliberate — ore has to be reachable without caving,
 because Terra has no caves.

@@ -35,7 +35,7 @@ not a choice at all.
 
 [`#90`](https://github.com/adamico/planetary-factory/issues/90) removed the vanilla crafting grid, and
 `#34` finished the job on ADR-0017's Hand-crafting surface row: the Crafting Table, Crafting on a
-Stick, CraftingTweaks, Sophisticated Backpacks' Crafting Upgrade, AE2's terminals, Create's Mechanical
+Stick, CraftingTweaks, Sophisticated Backpacks' Crafting Upgrade, AE2's terminals, Simplebelts's Mechanical
 Crafter and Mekanism's Formulaic Assemblicator are all cut. **After that there is no block in the pack
 that executes a `minecraft:crafting_shaped` recipe of more than four ingredients.** A surviving stock
 shaped recipe is therefore not "kept" — it is unreachable, exactly as `#97` says of one the pack
@@ -86,9 +86,9 @@ smelting is curated, not deleted** — and by the same argument so is any other 
 ### 3. `native_mechanic` — a capability that needs no recipe
 
 [`#93`](https://github.com/adamico/planetary-factory/issues/93) verified in
-`create-1.21.1-6.0.10.jar` that `GenericItemFilling.canItemBeFilled` and
+`simplebelts-1.21.1-6.0.10.jar` that `GenericItemFilling.canItemBeFilled` and
 `GenericItemEmptying.canItemBeEmptied` key on the item's `IFluidHandlerItem` capability: the Spout
-fills and the Item Drain drains any fluid-holding item **with no recipe at all**. Create's shipped
+fills and the Item Drain drains any fluid-holding item **with no recipe at all**. Simplebelts's shipped
 `filling`/`emptying` files exist for items that are *not* fluid handlers.
 
 Eighteen `fill-barrel` / `empty-barrel` rows are therefore `native_mechanic` in
@@ -129,7 +129,7 @@ is loud rather than silent.
 ### 7. The tail, which is not decided at all
 
 The manifest is 111 entries. Across every ADR and every closed ticket, the mods whose recipes are
-decided are GregTech, Create, Mekanism, Electro, GCyR, AE2 (terminals), Sophisticated Backpacks (the
+decided are Oritech, Simplebelts, Mekanism, Electro, GCyR, AE2 (terminals), Sophisticated Backpacks (the
 Crafting Upgrade), Crafting on a Stick and CraftingTweaks — nine. **Building Gadgets is explicitly
 kept** (ADR-0025 leans on it for the refinery), and its recipe is a shaped one. So are Akashic Tome's,
 Carry On's, the gravestone's, the elevator's, the backpacks' own.
@@ -162,7 +162,7 @@ grep is empty apart from ADR-0016's Sapros loot tables, which are about the oppo
   interesting cases — the 2x2, the QoL tail, GCyR's compiled Java — are not capability disputes at
   all. It is the same argument ADR-0032 used for splitting out of the same table.
 - **State the premise unqualified: everything stock goes.** The clean version, and false on delivery.
-  Vanilla smelting survives and carries pack content (`#91`); Create's Spout survives by carrying no
+  Vanilla smelting survives and carries pack content (`#91`); Simplebelts's Spout survives by carrying no
   recipe (`#93`); the 2x2 survives because it cannot be removed. An unqualified rule with three known
   violations on the day it is written teaches the next reader to ignore it.
 - **Enumerate the surviving recipes rather than the classes.** Rejected as unmaintainable: it is a
@@ -215,7 +215,7 @@ grep is empty apart from ADR-0016's Sapros loot tables, which are about the oppo
 
 **Amendment, [`#172`](https://github.com/adamico/planetary-factory/issues/172).** `#144` asked
 whether the allowlist could admit a whole mod's line as one decision — `{ mod: 'powergrid' }`
-rather than a row per surface — because Create: Power Grid arrived on the critical path with its
+rather than a row per surface — because Simplebelts: Power Grid arrived on the critical path with its
 own recipes swept and its blocks uncraftable. That would bend the rule at the top of this ADR,
 which requires a decision to name the recipe *and* the surface it is crafted on. A mod-wide
 admission names a mod.
@@ -227,8 +227,8 @@ ships 112 recipes:
 | --- | --- | --- |
 | `minecraft:crafting_shaped` | 43 | **no** — `#90`/`#34` cut every grid, `#140` made the 2x2 inert |
 | `minecraft:crafting_shapeless` | 28 | **no**, as above |
-| `create:mechanical_crafting` | 13 | **no** — ADR-0017 cuts the Mechanical Crafter by name |
-| `create:sequenced_assembly` and the rest | 28 | undecided; ADR-0021 cuts zinc, so the Deployer is brass and unbuildable |
+| `simplebelts:mechanical_crafting` | 13 | **no** — ADR-0017 cuts the Mechanical Crafter by name |
+| `simplebelts:sequenced_assembly` and the rest | 28 | undecided; ADR-0021 cuts zinc, so the Deployer is brass and unbuildable |
 
 **Seventy-five per cent of the mod's recipes are on surfaces nothing here executes.** Admitting by
 mod would not have made the grid craftable — it would have put 84 entries in EMI that are craftable
@@ -244,7 +244,7 @@ named a foreign mod would otherwise be a one-word edit away.
 
 The 84 unreachable recipes are **re-authored onto the pack's own Assembling Machine**, which is not
 a new answer: ADR-0017 §*"The two crafting executors are cut, not kept"* says exactly this of
-Create's own casings, which "fall through to where every other fluid-free `crafting` row already
+Simplebelts's own casings, which "fall through to where every other fluid-free `crafting` row already
 goes (`#88`): the Personal Assembler, and the Assembling Machines above it. They become ordinary
 corpus recipes with no special beat." Power Grid is that case arriving later.
 
@@ -273,7 +273,7 @@ recipes and nothing else.** This is the same fact as §1's, read from the other 
 
 - **The input alphabet, not the surface, was the expensive part.** ADR-0021 closes Terra to iron,
   copper, coal and uranium plus stone and what the surface grows, and cuts zinc with no exception.
-  Power Grid is built for a Create pack: andesite alloy, andesite casing, brass, the conductive
+  Power Grid is built for a Simplebelts pack: andesite alloy, andesite casing, brass, the conductive
   casing and the shaft are all zinc-bearing, and rose quartz is not on Terra either. And because
   this ADR's sweep removes every recipe the pack does not author, a *vanilla* ingredient is
   obtainable only if a block drops it — glass, glass panes, sticks, paper, terracotta and redstone
@@ -321,7 +321,7 @@ Two documents also still assert the opposite of `#90`, and both are tracked file
 expected to trust:
 
 - `docs/gdd.md` §5: *"The crafting grid, workbenches and portable crafting stay intact"*, and
-  *"Policy: follow GTCEu's stock recipe-type assignments, re-authoring only for the pack's own items"*
+  *"Policy: follow Oritech's stock recipe-type assignments, re-authoring only for the pack's own items"*
   — which is the premise this ADR reverses, stated as policy. The same section says nineteen lines
   later that the Assembler covers the components *"which have nowhere to go once the crafting grid is
   removed"*. §5 contradicts itself.

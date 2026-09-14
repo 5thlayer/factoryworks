@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import com.gregtechceu.gtceu.api.capability.IEnergyContainer;
+import com.gregtechceu.oritech.api.capability.IEnergyContainer;
 import com.planetaryfactory.core.PFBlockEntities;
 import com.planetaryfactory.core.recipes.PFRecipes;
 import com.planetaryfactory.core.recipes.SmeltingRecipe;
@@ -288,7 +288,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
     // -- the energy face ------------------------------------------------------------------------
 
     /**
-     * GregTech's container face, and the whole of what ADR-0036's pole talks to.
+     * Oritech's container face, and the whole of what ADR-0036's pole talks to.
      *
      * <p>Null on the two burner tiers, so a pole does not count a Stone Furnace as a machine it is
      * failing to power.
@@ -301,7 +301,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
     private final IEnergyContainer gtContainer = new IEnergyContainer() {
         @Override
         public long acceptEnergyFromNetwork(Direction side, long voltage, long amperage) {
-            // voltage and amperage are GregTech's signature, not ours; nothing here reads them.
+            // voltage and amperage are Oritech's signature, not ours; nothing here reads them.
             return energy.acceptFromNetwork();
         }
 
@@ -400,7 +400,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
 
     @Override
     @Nullable
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+    public AbstractContainerMenu simplebeltsMenu(int containerId, Inventory playerInventory, Player player) {
         return new FurnaceMenu(containerId, playerInventory, this, data);
     }
 

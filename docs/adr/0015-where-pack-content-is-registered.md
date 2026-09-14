@@ -19,7 +19,7 @@ once. They are separate documents for that reason.
 | Goes in                       | What                                                                                                  |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------- |
 | **`planetaryfactory_core`**   | Flora and any block whose behaviour needs a vanilla class no scripting API exposes — `SaplingBlock`, `TreeGrower`, multi-block growth. |
-| **KubeJS startup scripts**    | Every other custom block and item. GregTech worldgen layers, via `GTCEuStartupEvents.WORLD_GEN_LAYERS`. |
+| **KubeJS startup scripts**    | Every other custom block and item. Oritech worldgen layers, via `OritechStartupEvents.WORLD_GEN_LAYERS`. |
 | **Datapack JSON**             | Biomes, noise settings, surface rules, configured and placed features, loot tables, tags, recipes, ore veins, bedrock deposits. |
 | **Resource pack / lang**      | Every player-facing string, including overrides of GCyR's orphaned stone names.                        |
 
@@ -50,8 +50,8 @@ package at all**. `dev/latvian/mods/kubejs/` contains 33 packages and none is wo
 biome or structure; a filename search for `*eature*`, `*orldgen*` and `*tructure*` across the mod
 returns nothing. It cannot register or modify a feature, a biome or a placement.
 
-`kubejs/startup_scripts/worldgen_layers.js` is not a counterexample: that is GregTech's own
-`GTCEuStartupEvents.WORLD_GEN_LAYERS` API, called from a script, not KubeJS worldgen.
+`kubejs/startup_scripts/worldgen_layers.js` is not a counterexample: that is Oritech's own
+`OritechStartupEvents.WORLD_GEN_LAYERS` API, called from a script, not KubeJS worldgen.
 
 ## What KubeJS can do, verified
 
@@ -71,7 +71,7 @@ Recorded because it was assumed wrong once in each direction, and the assumption
   `survive(...)`, `farmersCanPlant()`, and a `SeedItemBuilder`.
 - **`kjs$runCommand` / `kjs$runCommandSilent`** exist on `LevelKJS` and `MinecraftServerKJS`. This is
   what made `/place feature` reachable, and ADR-0014 rejected that route on other grounds.
-- **KubeJS cannot register a GregTech material** — see `#18`. Materials are data files read by the
+- **KubeJS cannot register a Oritech material** — see `#18`. Materials are data files read by the
   GCyR fork.
 - **A block entity with a persistent, automatable, player-openable inventory is KubeJS's**, verified
   in a world by `#133`. `blockEntity(be => { be.inventory(name, [], 9, rows); be.rightClickOpensInventory(name) })`
@@ -87,10 +87,10 @@ Recorded because it was assumed wrong once in each direction, and the assumption
   - `rightClickOpensInventory` **writes `BlockBuilder.rightClick`**, so such a block cannot also
     carry a custom right-click callback.
 
-## Create integration comes free if the tags are right
+## Simplebelts integration comes free if the tags are right
 
 `TreeCutter` finds a tree by `isLog(BlockState)` and `isLeaf(BlockState)`, both tag-driven, and the
-Deployer places block items through the normal use-on path. So a Create tree farm works on the
+Deployer places block items through the normal use-on path. So a Simplebelts tree farm works on the
 pack's trees with no integration code, provided the blocks carry `minecraft:logs` and
 `minecraft:leaves`. Both the mod and `BlockBuilder.tagBlock()` can supply those.
 

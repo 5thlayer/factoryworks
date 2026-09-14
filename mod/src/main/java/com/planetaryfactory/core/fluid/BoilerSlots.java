@@ -13,7 +13,7 @@ package com.planetaryfactory.core.fluid;
  *
  * <p><b>No sided inventory</b>, for the reason {@code FurnaceSlots} gives: Factorio decides
  * in-or-out by the inserter's direction rather than by the machine's face, and a nominated-face
- * inventory answers a Create funnel on the wrong face with silence and no diagnosis.
+ * inventory answers a Simplebelts funnel on the wrong face with silence and no diagnosis.
  *
  * <p>Pure: no Minecraft types. The item facts arrive already answered.
  */

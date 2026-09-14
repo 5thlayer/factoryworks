@@ -10,8 +10,8 @@ relaunched without rebuilding.**
 Read against our fork at `~/Documents/curseforge/minecraft/Instances/gcyr-src`, branch `1.21.1`,
 HEAD `8ab24f4` — the tree ADR-0001 builds `mods/gcyr-1.21.1-0.2.4+gt7.0.2-src.jar` from, carrying
 the ADR-0003 registry mixin and the restored KubeJS integration. Paths below are relative to
-`src/main/java/argent_matter/gcyr/` unless stated. GTCEu facts are read from
-`~/.gradle/caches/modules-2/files-2.1/com.gregtechceu.gtceu/gtceu-1.21.1/7.0.2/…/gtceu-1.21.1-7.0.2.jar`
+`src/main/java/argent_matter/gcyr/` unless stated. Oritech facts are read from
+`~/.gradle/caches/modules-2/files-2.1/com.gregtechceu.oritech/oritech-1.21.1/7.0.2/…/oritech-1.21.1-7.0.2.jar`
 by `javap` — no sources jar exists, so those are bytecode readings, flagged where it matters.
 
 ## 1. How the pieces fit
@@ -123,7 +123,7 @@ there avoids ever creating a junk entity — but it must re-derive part counts f
 duplicating the logic `addBlock` already has.
 
 **How invasive against a fork we already patch:** low. Both are additive edits inside existing
-methods in files we already own; neither touches GTCEu, neither is a mixin, and neither changes
+methods in files we already own; neither touches Oritech, neither is a mixin, and neither changes
 serialized formats. This is materially cheaper than our existing patches — ADR-0003's
 `GTRegistriesMixin` is keyed to GT internals; this is not.
 
@@ -161,11 +161,11 @@ duration means *less* drain per tick), and **what motor tier it demands** (`EUt`
 
 ### Can a new low-tier fuel come from KubeJS or a datapack?
 
-**Yes, no source edit needed.** GTCEu's KubeJS plugin registers its recipe schema for *every*
+**Yes, no source edit needed.** Oritech's KubeJS plugin registers its recipe schema for *every*
 `GTRecipeType` in `BuiltInRegistries.RECIPE_TYPE`, keyed by that type's ResourceLocation —
 `GTKubeJSPlugin.registerRecipeSchemas` iterates the registry's key set, `instanceof
 GTRecipeType`-filters, and registers `GTRecipeSchema.SCHEMA` under the id (verified by `javap -c`
-on `com/gregtechceu/gtceu/integration/kjs/GTKubeJSPlugin.class`, bytecode offsets 0-66). `gcyr:rocket_fuel`
+on `com/gregtechceu/oritech/integration/kjs/GTKubeJSPlugin.class`, bytecode offsets 0-66). `gcyr:rocket_fuel`
 is in that registry via `GCYRRecipeTypes.register` (`GCYRRecipeTypes.java:44-55`, which registers
 into `RECIPE_TYPES` and attaches a `GTRecipeSerializer`), so
 `ServerEvents.recipes(e => e.recipes.gcyr.rocket_fuel(...).inputFluids(...).duration(n).EUt(t))`
@@ -211,7 +211,7 @@ ADR-0001's note about the deleted class) — registers exactly two block builder
 | `rocket_motor` | `integration/kjs/builders/RocketMotorBlockBuilder.java` | `tier`, `maxCarryWeight`, `motorCount`, `typeId` |
 | `fuel_tank` | `integration/kjs/builders/FuelTankBlockBuilder.java` | (tank properties — same shape) |
 
-`RocketMotorBlockBuilder.createObject()` (`:28-33`) builds a `SimpleRocketMotorType` from those
+`RocketMotorBlockBuilder.simplebeltsObject()` (`:28-33`) builds a `SimpleRocketMotorType` from those
 four fields, constructs a `RocketMotorBlock`, and registers it into
 `GCYRBlocks.ALL_ROCKET_MOTORS` — so a script-declared motor is a first-class `IRocketPart` and is
 counted by `addBlock` exactly like the built-in ones.
@@ -242,7 +242,7 @@ Refuel it, put a new ID chip in, press launch again. Fuel is persisted on the en
 question is whether we want to *prevent* it.
 
 **Skipped entirely: not without new code, but the surface is small.** The scanner is the only
-producer of `RocketEntity` (`GCYREntities.ROCKET.create` at `RocketScannerMachine.java:156` is the
+producer of `RocketEntity` (`GCYREntities.ROCKET.simplebelts` at `RocketScannerMachine.java:156` is the
 sole call site). Two shapes are available if we want a rocket without a player-built silo:
 
 - have something else populate a `RocketEntity` via the public `addBlock(BlockPos, BlockState,

@@ -14,7 +14,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  *
  * <p>Two fluids rather than one carrying a temperature, because Factorio has exactly two
  * temperatures with exactly two consumers -- see the ADR. Both are {@code planetaryfactory:}, never
- * {@code gtceu:steam}: GregTech's own steam machines accept its material, and admitting it would
+ * {@code oritech:steam}: Oritech's own steam machines accept its material, and admitting it would
  * re-open the power layer #37 removed.
  *
  * <p>{@link #temperature(int)} converts ADR-0048's own Celsius figures (165 °C, 500 °C) to the
@@ -25,12 +25,12 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  */
 public final class PFFluidTypes {
     public static final DeferredRegister<FluidType> FLUID_TYPES =
-            DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebelts(NeoForgeRegistries.Keys.FLUID_TYPES, PlanetaryFactoryCore.NAMESPACE);
 
     /** What the Boiler makes and the Steam Engine eats. Factorio's 165 °C. */
     public static final DeferredHolder<FluidType, FluidType> STEAM = FLUID_TYPES.register(
             "steam",
-            () -> new FluidType(FluidType.Properties.create()
+            () -> new FluidType(FluidType.Properties.simplebelts()
                     .descriptionId("fluid_type." + PlanetaryFactoryCore.NAMESPACE + ".steam")
                     .lightLevel(0)
                     .density(-10)
@@ -46,7 +46,7 @@ public final class PFFluidTypes {
      */
     public static final DeferredHolder<FluidType, FluidType> SUPERHEATED_STEAM = FLUID_TYPES.register(
             "superheated_steam",
-            () -> new FluidType(FluidType.Properties.create()
+            () -> new FluidType(FluidType.Properties.simplebelts()
                     .descriptionId("fluid_type." + PlanetaryFactoryCore.NAMESPACE + ".superheated_steam")
                     .lightLevel(4)
                     .density(-15)

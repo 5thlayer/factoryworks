@@ -8,7 +8,7 @@ first time a leaf fruits; a stromatolite that drops ore instead of bacteria quie
 Decay chain the body exists to carry (ADR-0016). All of them are hours away from the edit that caused them, and
 all of them are a string comparison here.
 
-What it deliberately does not check is behaviour -- refruiting, growth, whether Create's saw
+What it deliberately does not check is behaviour -- refruiting, growth, whether Simplebelts's saw
 fells the tree. That needs the game, and it is the launch test's job.
 
 Usage: tests/flora/test_flora_data.py
@@ -43,7 +43,7 @@ def mod_block_ids():
 
 
 def kubejs_ids(path):
-    return set(re.findall(r"event\.create\('(planetaryfactory:[a-z_]+)'", path.read_text()))
+    return set(re.findall(r"event\.simplebelts\('(planetaryfactory:[a-z_]+)'", path.read_text()))
 
 
 def json_strings(node):

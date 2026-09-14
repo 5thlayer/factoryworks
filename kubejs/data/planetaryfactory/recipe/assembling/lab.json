@@ -1,5 +1,5 @@
 {
-  "type": "gtceu:assembling",
+  "type": "oritech:assembling",
   "inputs": {
     "item": [
       {
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_gear"
+            "item": "oritech:iron_gear"
           },
           "count": 10
         }
@@ -21,7 +21,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "create:belt_connector"
+            "item": "simplebelts:belt_connector"
           },
           "count": 4
         }

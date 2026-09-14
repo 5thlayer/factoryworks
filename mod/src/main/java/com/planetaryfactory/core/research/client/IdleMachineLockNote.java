@@ -1,8 +1,8 @@
 package com.planetaryfactory.core.research.client;
 
-import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
-import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
-import com.gregtechceu.gtceu.api.recipe.kind.GTRecipe;
+import com.gregtechceu.oritech.api.machine.feature.IRecipeLogicMachine;
+import com.gregtechceu.oritech.api.recipe.RecipeHelper;
+import com.gregtechceu.oritech.api.recipe.kind.GTRecipe;
 import com.planetaryfactory.core.research.MachineLockStatus;
 import com.planetaryfactory.core.research.RecipeLockLookup;
 import com.planetaryfactory.core.research.RecipeResearchIndex;
@@ -18,13 +18,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * What an idle GregTech machine says when a research is the only thing stopping it (issue #79).
+ * What an idle Oritech machine says when a research is the only thing stopping it (issue #79).
  *
  * <p>The machine screen already has a place for "why am I not running": {@code IFancyTooltip}, which
- * GregTech answers from {@code waitingReason}. A lock never gets that far -- ADR-0027 -- so the
+ * Oritech answers from {@code waitingReason}. A lock never gets that far -- ADR-0027 -- so the
  * reason is worked out here instead, from the contents the machine holds at the moment of asking.
  *
- * <p><b>The candidates are GregTech's own search, minus the pack's lock.</b>
+ * <p><b>The candidates are Oritech's own search, minus the pack's lock.</b>
  * {@code RecipeLogic.matchRecipe} is exactly {@code return RecipeHelper.matchContents(machine,
  * recipe);} -- the whole method body in 7.0.2, read off the shipped jar; the conditions check lives
  * in {@code checkRecipe}, not here -- and the pack's refusal is a wrapper around it -- so searching the trie with {@code matchContents} directly yields

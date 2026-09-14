@@ -1,6 +1,6 @@
 package com.planetaryfactory.core;
 
-import com.gregtechceu.gtceu.api.capability.GTCapability;
+import com.gregtechceu.oritech.api.capability.GTCapability;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
@@ -33,7 +33,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  */
 public final class PFBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-            DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebelts(Registries.BLOCK_ENTITY_TYPE, PlanetaryFactoryCore.NAMESPACE);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SupplyAreaPoleBlockEntity>>
             SUPPLY_AREA_POLE = BLOCK_ENTITIES.register("supply_area_pole",
@@ -123,7 +123,7 @@ public final class PFBlockEntities {
      *
      * <p>Unsided, for the reason the furnace's and the rig's are: Factorio decides in-or-out by the
      * inserter's direction rather than by the machine's face, and a nominated-face inventory
-     * answers a Create funnel on any other face with silence and no diagnosis.
+     * answers a Simplebelts funnel on any other face with silence and no diagnosis.
      */
     private static void registerBoilerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlock(
@@ -180,7 +180,7 @@ public final class PFBlockEntities {
      *
      * <p><b>The item handler is unsided on purpose.</b> Direction never decides in or out -- the
      * item does, and {@link FurnaceItemHandler} routes it. That is Factorio's arrangement, and it
-     * is what makes a Create funnel work on whichever face a player put it on: funnels reach a
+     * is what makes a Simplebelts funnel work on whichever face a player put it on: funnels reach a
      * neighbour through a {@code BlockCapability<IItemHandler, Direction>}, so a nominated-face
      * inventory answers a funnel on any other face with silence and no diagnosis.
      *
@@ -210,7 +210,7 @@ public final class PFBlockEntities {
      * The rig's item face (#193): fuel in, ore out, on every side and on the null side.
      *
      * <p>Unsided for the reason the furnace's is -- Factorio decides in-or-out by the inserter's
-     * direction rather than by the machine's face, and a nominated-face inventory answers a Create
+     * direction rather than by the machine's face, and a nominated-face inventory answers a Simplebelts
      * funnel on any other face with silence and no diagnosis.
      *
      * <p><b>Registered on the part blocks as well as the anchors.</b> Three quarters of a 2x2 is

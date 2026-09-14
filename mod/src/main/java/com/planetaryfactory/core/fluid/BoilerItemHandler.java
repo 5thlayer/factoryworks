@@ -8,7 +8,7 @@ import net.neoforged.neoforge.items.IItemHandler;
  *
  * <p>Fuel in and nothing out, which is {@link BoilerSlots}' whole rule. Direction never changes
  * what happens here; the item does -- the same arrangement the Furnace and the rig keep, and the
- * reason a Create funnel works on whichever face a player puts it on.
+ * reason a Simplebelts funnel works on whichever face a player puts it on.
  */
 public record BoilerItemHandler(BoilerBlockEntity boiler) implements IItemHandler {
 

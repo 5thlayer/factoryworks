@@ -24,7 +24,7 @@ More precisely, because the ordering is not a simple ladder:
 - **Only an ADR may diverge from the corpus**, and it must say so in its own prose. ADR-0032 cut
   ore multiplication, ADR-0028 declared Factorio names as row keys, ADR-0049 kept Minecraft's
   walk. Each is a deliberate, argued exception. That is the mechanism, and it is the only one.
-- **Design prose has no standing to create a divergence.** `docs/gdd.md` and its neighbours are
+- **Design prose has no standing to simplebelts a divergence.** `docs/gdd.md` and its neighbours are
   informative — a sketch of intent written largely before the corpus pipeline existed. Where
   prose and corpus disagree, the corpus wins by default and the prose is stale until an ADR says
   otherwise.
@@ -36,7 +36,7 @@ More precisely, because the ordering is not a simple ladder:
   against a particular value of one.
 - **Every divergence appears in `docs/factorio-mechanics.md`.** The ledger already records
   verdicts; this ADR gives it the standing to be the index of exceptions, so a divergence has one
-  place to be found rather than being discoverable only by reading the ADR that created it.
+  place to be found rather than being discoverable only by reading the ADR that simplebeltsd it.
 
 ## The evidence this is real, not hygiene
 
@@ -55,7 +55,7 @@ time because the session had treated a document as binding that its author had n
 - `config/gcyr.yaml`'s `enableOxygen: true` was treated as a constraint. It is an upstream
   default the pack has never decided on, and one line.
 - **ADR-0005 rejected per-entity emission** — "score dirty recipe outputs instead of power draw"
-  — on the ground that it would cost "tagging every recipe in a GregTech pack, with a permanent
+  — on the ground that it would cost "tagging every recipe in a Oritech pack, with a permanent
   maintenance burden". `emissions_per_minute` is in the dump. The extraction pipeline that makes
   that cost zero was built *after* ADR-0005, and the ADR still carries `status: accepted` for a
   subsystem nobody has played. ADR-0042 would call it `provisional`; #181 is the audit that has

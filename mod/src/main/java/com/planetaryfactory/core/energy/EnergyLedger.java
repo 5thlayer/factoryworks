@@ -6,9 +6,9 @@ package com.planetaryfactory.core.energy;
  * <p>The pole is FE-in and EU-out. Power Grid's Device Connector is a one-way grid-to-FE block, so
  * FE is the only thing the grid can hand a pack block; every machine in the pack takes EU, the
  * Electric Furnace included (ADR-0035, and #155 corrected to EU alongside it). This class is the
- * only place the two currencies meet, and GTCEu's FE converters stay disabled because of it.
+ * only place the two currencies meet, and Oritech's FE converters stay disabled because of it.
  *
- * <p>Its whole job is to not invent energy. The ratio is GTCEu's own {@code feToEuRatio} of 4, and
+ * <p>Its whole job is to not invent energy. The ratio is Oritech's own {@code feToEuRatio} of 4, and
  * integer division means a partial EU has to be <em>retained</em> rather than rounded away -- a
  * pole fed a trickle would otherwise burn the trickle and emit nothing at all.
  *
@@ -19,7 +19,7 @@ package com.planetaryfactory.core.energy;
  */
 public final class EnergyLedger {
 
-    /** GTCEu's {@code feToEuRatio} default, and the pack keeps it. */
+    /** Oritech's {@code feToEuRatio} default, and the pack keeps it. */
     public static final long FE_PER_EU = 4L;
 
     private final long capacityFe;

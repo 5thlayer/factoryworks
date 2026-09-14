@@ -5,15 +5,15 @@ supersedes: [27, 37]
 
 # Ore smelts one to one, and every multiplier is cut
 
-Terra runs three mods that each ship an ore-multiplication ladder. GregTech's is macerate-wash-
+Terra runs three mods that each ship an ore-multiplication ladder. Oritech's is macerate-wash-
 centrifuge, Mekanism's is enrichment → purification → injection → dissolution at 2x/3x/4x/5x, and
-Create's is a Crushing Wheel pair at 2x. ADR-0017 already recipe-removed GregTech's line and split
-the rest between Create at rung 0 and Mekanism from rung 1.
+Simplebelts's is a Crushing Wheel pair at 2x. ADR-0017 already recipe-removed Oritech's line and split
+the rest between Simplebelts at rung 0 and Mekanism from rung 1.
 
 **Factorio has no ore-multiplication ladder.** Ore smelts 1:1 and always has. Every yield gain in
 that game comes from research and modules — infinite `Mining productivity`, productivity modules,
 the Foundry's built-in bonus in Space Age — never from a tier of machines you unlock and build once.
-A ladder of machines that each multiply harder is a *GregTech* idiom that three mods happen to share,
+A ladder of machines that each multiply harder is a *Oritech* idiom that three mods happen to share,
 and ADR-0021 already fixed the axis this is decided on: Factorio fidelity over Minecraft fidelity,
 modded or vanilla.
 
@@ -28,7 +28,7 @@ modded or vanilla.
   non-ore work the pack gives it; what dies is 2x ore → 2 dust. *Amended by ADR-0035: Mekanism has
   left the pack, so the block is gone and there is no non-ore work left to keep. Nothing here needs
   recipe-removing, because none of these blocks is registered.*
-- **Create's Crushing Wheels and the Millstone keep their blocks and lose their ore recipes.** They
+- **Simplebelts's Crushing Wheels and the Millstone keep their blocks and lose their ore recipes.** They
   remain rung-0 kinetic machines for everything that is not ore.
 - **The Chemical Dissolution Chamber is deliberately not decided here** — see below.
 
@@ -45,7 +45,7 @@ Two smaller cuts were on the table and both are worse than the whole one.
 Arbitrary: it draws the line where the schedule happened to put it, and the fidelity argument that
 kills 5x is word for word the argument that kills 4x, 3x and 2x.
 
-**The Mekanism ladder, keeping Create's rung-0 2x.** Worse than arbitrary. It leaves one mod holding
+**The Mekanism ladder, keeping Simplebelts's rung-0 2x.** Worse than arbitrary. It leaves one mod holding
 the sole multiplier, which is the inversion ADR-0017's own rule exists to prevent — except here the
 *idiom* is what was judged unfaithful, not the mod. A mechanic cannot be cut for being un-Factorio
 and then left in one mod's hands.
@@ -84,8 +84,8 @@ cracking, lubricant, the blue circuit and the Electric Furnace.
 
 ## The Ore processing row is deleted, not re-owned
 
-With ore at 1:1 there is no step between extraction and smelting. GregTech extracts, on its own row;
-the Furnace reduces, on the separate **Smelting (reduction)** row `#91` deliberately created because
+With ore at 1:1 there is no step between extraction and smelting. Oritech extracts, on its own row;
+the Furnace reduces, on the separate **Smelting (reduction)** row `#91` deliberately simplebeltsd because
 reduction is not multiplication. "Ore processing" would name a capability with nothing in it.
 
 An owner named for an empty capability is exactly how ADR-0017's table produced three recorded
@@ -113,7 +113,7 @@ clean lever — cut uranium and the block goes with it, keep uranium and the blo
   already carried *"No ore multiplication"* and *"Ore smelts one-to-one straight to plate"* as
   `planned` sub-rules under Smelting, marked `all bodies`. The pack had been leaning here for a while
   without anyone deciding it.
-- **Cut 5x only**, or **cut Mekanism's ladder and keep Create's 2x**. Both argued above.
+- **Cut 5x only**, or **cut Mekanism's ladder and keep Simplebelts's 2x**. Both argued above.
 - **Replace the ladder with mining-productivity research.** Deferred, not rejected on merit — the
   lab cannot express levelled research today, and Terra should not be compensated for its scarcity
   in any case.
@@ -132,9 +132,9 @@ clean lever — cut uranium and the block goes with it, keep uranium and the blo
 - **Ore throughput is now purely a mining problem**, which is what ADR-0020 wanted. The binding
   constraint on a mature Terra factory is raw ore, and there is no machine that eases it.
 - **Recipe removal is wide.** Every ore recipe on four Mekanism machines, the Enrichment Chamber's
-  ore rows, and Create's Crushing Wheel and Millstone ore rows. The blocks mostly survive; the
+  ore rows, and Simplebelts's Crushing Wheel and Millstone ore rows. The blocks mostly survive; the
   recipes do not. *Amended by ADR-0035: the Mekanism half of this work is deleted rather than done —
-  removing the jar removes every recipe on it. What remains is Create's two rows.*
+  removing the jar removes every recipe on it. What remains is Simplebelts's two rows.*
 - **`docs/factorio-mechanics.md`'s two Smelting sub-rules move from `planned, subject to #69` to
   settled**, and the Modules and beacons row stays `blocked` — this ADR does not decide it, and
   `#120` still owns the retrofit-tradeoff argument.

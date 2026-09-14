@@ -13,15 +13,15 @@
 // exist before these calls run. KubeJS does not load scripts alphabetically.
 
 ResearchdEvents.registerResearchPacks(event => {
-  event.create('planetary_factory:automation_science_pack')
+  event.simplebelts('planetary_factory:automation_science_pack')
     .literalName('Automation Science Pack')
     .color(200, 60, 60)
     .sortingValue(100);
-  event.create('planetary_factory:logistic_science_pack')
+  event.simplebelts('planetary_factory:logistic_science_pack')
     .literalName('Logistic Science Pack')
     .color(60, 200, 60)
     .sortingValue(101);
-  event.create('planetary_factory:chemical_science_pack')
+  event.simplebelts('planetary_factory:chemical_science_pack')
     .literalName('Chemical Science Pack')
     .color(60, 60, 200)
     .sortingValue(102);
@@ -53,14 +53,14 @@ ResearchdEvents.registerResearchPacks(event => {
 //     `data/factorio/technology.json` would otherwise read it as a bug.
 //
 // The unlock id is `assembling/pack/`: the recipe is hand-authored (ADR-0031's exception) and lives
-// in the one subtree no converter owns -- nested INSIDE `assembling/` because GregTech re-registers
+// in the one subtree no converter owns -- nested INSIDE `assembling/` because Oritech re-registers
 // every loaded GTRecipe under its own type path (#87), so a flat `pack/` would put a second id in
 // the recipe manager and this gate would name the wrong one of the two.
 // `tests/factorio/test_research_unlocks.py` asserts this id is a recipe the pack emits, which is
 // the coupling that makes the divergence safe.
 fromFactorio('steel-axe', {
   icon: 'planetaryfactory:engineers_steel_pick',
-  has: ['gtceu:steel_plate', 50],
+  has: ['oritech:steel_plate', 50],
   unlocks: ['planetaryfactory:assembling/pack/engineers_steel_pick']
 });
 
@@ -79,7 +79,7 @@ fromFactorio('steel-axe', {
 // have -- `boiler` and `steam-engine` (item-map `undecided`/`not_emitted`), `inserter` and
 // `long-handed-inserter` (`undecided`, which is also why `logistic-science-pack` has no recipe of
 // its own: its two ingredients are a belt and an inserter), `pipe-to-ground` (`not_emitted`),
-// `pumpjack` (`undecided`, #105) and the twenty barrel fill/empty rows (`native_mechanic`, Create's
+// `pumpjack` (`undecided`, #105) and the twenty barrel fill/empty rows (`native_mechanic`, Simplebelts's
 // Spout and Item Drain, never recipes). A lock on an id nothing emits unlocks nothing, silently, so
 // those effects are dropped here and `tests/factorio/test_research_unlocks.py` holds the rest.
 //
@@ -99,14 +99,14 @@ fromFactorio('steel-axe', {
 // Pump, the one block water enters the factory through (ADR-0050, #213). `boiler`, `steam-engine`
 // and `pipe-to-ground` have no pack recipe, so this node grants two of its five.
 //
-// The held item is Create's sheet, for the same reason as `electronics` below: AlmostUnified unifies
-// `c:plates/iron` and `create` outranks GregTech, so the furnace delivers `create:iron_sheet` however
-// `recipe/iron_plate.json` reads. Note that `StartingKit.java` grants `gtceu:iron_plate` x8 directly,
+// The held item is Simplebelts's sheet, for the same reason as `electronics` below: AlmostUnified unifies
+// `c:plates/iron` and `simplebelts` outranks Oritech, so the furnace delivers `simplebelts:iron_sheet` however
+// `recipe/iron_plate.json` reads. Note that `StartingKit.java` grants `oritech:iron_plate` x8 directly,
 // which no unification touches -- those eight do NOT count toward this fifty, and the same goes for
 // the kit's eight copper. #220.
 fromFactorio('steam-power', {
   icon: 'planetaryfactory:offshore_pump',
-  has: ['create:iron_sheet', 50],
+  has: ['simplebelts:iron_sheet', 50],
   unlocks: [
     'planetaryfactory:assembling/pipe',
     'planetaryfactory:assembling/offshore_pump'
@@ -117,8 +117,8 @@ fromFactorio('steam-power', {
 // without which `automation-science-pack` below can never fire.
 //
 // THE HELD ITEM IS CREATE'S SHEET, NOT THE PLATE THIS RECIPE'S JSON NAMES. `recipe/copper_plate.json`
-// results in `gtceu:copper_plate` on disk, but AlmostUnified unifies `c:plates/{material}` and its
-// `mod_priorities` put `create` above GregTech, so the furnace delivers `create:copper_sheet` -- 
+// results in `oritech:copper_plate` on disk, but AlmostUnified unifies `c:plates/{material}` and its
+// `mod_priorities` put `simplebelts` above Oritech, so the furnace delivers `simplebelts:copper_sheet` -- 
 // confirmed in a running game, and it is what EMI shows for `planetaryfactory:copper_plate`.
 // `checkItemPresence` resolves a literal id through `BuiltInRegistries.ITEM` and holds it as a
 // one-item `Ingredient`, so it matches the sheet or the plate but never both; naming the plate here
@@ -132,7 +132,7 @@ fromFactorio('steam-power', {
 // id tested without both looks exactly like a wrong id: this one was reverted once on that evidence.
 fromFactorio('electronics', {
   icon: 'planetaryfactory:electronic_circuit',
-  has: ['create:copper_sheet', 10],
+  has: ['simplebelts:copper_sheet', 10],
   unlocks: [
     'planetaryfactory:assembling/copper_cable',
     'planetaryfactory:assembling/electronic_circuit',
@@ -153,9 +153,9 @@ fromFactorio('automation-science-pack', {
 
 // 50 automation packs. Steel is Terra's only surviving alloy (#72) and its recipe rides the
 // count-bearing `planetaryfactory:smelting` type, whose ids are flat rather than under
-// `assembling/` -- GregTech does not re-register it, so it is not cloned (#87, FLAT_TYPES).
+// `assembling/` -- Oritech does not re-register it, so it is not cloned (#87, FLAT_TYPES).
 fromFactorio('steel-processing', {
-  icon: 'gtceu:steel_plate',
+  icon: 'oritech:steel_plate',
   unlocks: [
     'planetaryfactory:steel_plate',
     'planetaryfactory:assembling/steel_chest'
@@ -164,7 +164,7 @@ fromFactorio('steel-processing', {
 
 // 10 automation packs. `long-handed-inserter` is `undecided`, so this grants the machine only.
 fromFactorio('automation', {
-  icon: 'gtceu:lv_assembling_machine',
+  icon: 'oritech:lv_assembling_machine',
   unlocks: ['planetaryfactory:assembling/assembling_machine_1']
 });
 
@@ -183,7 +183,7 @@ fromFactorio('logistic-science-pack', {
 
 // 40 automation + logistic.
 fromFactorio('automation-2', {
-  icon: 'gtceu:mv_assembling_machine',
+  icon: 'oritech:mv_assembling_machine',
   unlocks: ['planetaryfactory:assembling/assembling_machine_2']
 });
 
@@ -194,10 +194,10 @@ fromFactorio('engine', {
 });
 
 // 50 automation + logistic. Three of the twenty-three effects: the barrel ITEM is emitted, while the
-// eighteen fill/empty rows are Create's Spout and Item Drain keying on `IFluidHandlerItem` and were
+// eighteen fill/empty rows are Simplebelts's Spout and Item Drain keying on `IFluidHandlerItem` and were
 // never recipes at all (`native_mechanic`, ADR-0034 exception class 1).
 fromFactorio('fluid-handling', {
-  icon: 'create:fluid_tank',
+  icon: 'simplebelts:fluid_tank',
   unlocks: [
     'planetaryfactory:assembling/storage_tank',
     'planetaryfactory:assembling/pump',
@@ -213,7 +213,7 @@ fromFactorio('fluid-handling', {
 // technology firing on MINING crude oil, costing nothing -- grants the Oil Refinery, the Chemical
 // Plant, basic oil processing and solid fuel. Neither half survives translation intact:
 //
-//   - `pumpjack` is an `undecided` item-map row (#105). Terra's crude is a GregTech bedrock fluid
+//   - `pumpjack` is an `undecided` item-map row (#105). Terra's crude is a Oritech bedrock fluid
 //     deposit tapped by a Fluid Drilling Rig (ADR-0017, docs/factorio-mechanics.md), not a patch you
 //     sit a pumpjack on, so this node's own effect has no recipe to grant.
 //   - `oil-processing`'s trigger cannot be expressed AT ALL. Researchd's four methods all read

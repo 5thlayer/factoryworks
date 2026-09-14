@@ -9,7 +9,7 @@ package com.planetaryfactory.core.fluid;
  * the recipe that consumes it. A bucket-parity 1 000 mB would be a twentyfold dose of every fluid in
  * the corpus riding in one item.
  *
- * <p>The barrel is deliberately bad at storage. 50 mB against {@code create:fluid_tank}'s 8 000 mB per
+ * <p>The barrel is deliberately bad at storage. 50 mB against {@code simplebelts:fluid_tank}'s 8 000 mB per
  * block is 1:160, where Factorio's own barrel-to-storage-tank ratio is 1:500 -- a different number
  * with the same ordering, which is the part that matters: no quantity of barrels is a cheaper tank.
  * Even a full vanilla stack of 64 would come to 3 200 mB, still under one tank block, so the stack
@@ -28,7 +28,7 @@ public final class BarrelSpec {
     /**
      * How much of {@code offeredMb} a barrel already holding {@code heldMb} can take.
      *
-     * <p>Partial fills are accepted rather than refused. Create's Spout offers what its own tank has
+     * <p>Partial fills are accepted rather than refused. Simplebelts's Spout offers what its own tank has
      * and expects to be told how much was taken; refusing anything short of a full 50 mB would stall
      * a Spout fed by a pipe that delivers in smaller pulses.
      */

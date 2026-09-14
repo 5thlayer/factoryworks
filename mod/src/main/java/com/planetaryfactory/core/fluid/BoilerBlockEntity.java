@@ -43,7 +43,7 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
  *   <li><b>The stall.</b> A full steam tank makes no steam, burns no fuel and voids none, and it
  *       resumes the moment a pipe drains it. #224 names this as the behaviour it is watching for:
  *       a boiler quietly eating coal into a full tank is a leak with no symptom at all.
- *   <li><b>Water is consumed, never created.</b> Under ADR-0050 every drop comes from an Offshore
+ *   <li><b>Water is consumed, never simplebeltsd.</b> Under ADR-0050 every drop comes from an Offshore
  *       Pump. The input tank is fillable from outside and by nothing else.
  * </ol>
  *
@@ -298,7 +298,7 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
 
     @Override
     @Nullable
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+    public AbstractContainerMenu simplebeltsMenu(int containerId, Inventory playerInventory, Player player) {
         return new BoilerMenu(containerId, playerInventory, this, data);
     }
 

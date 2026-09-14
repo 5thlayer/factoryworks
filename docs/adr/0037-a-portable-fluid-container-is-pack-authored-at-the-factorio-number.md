@@ -12,7 +12,7 @@ pointing at `#106` for a container nobody had named.
 
 **The barrel is `planetaryfactory:barrel`, registered in `planetaryfactory_core` as a real
 `IFluidHandlerItem`. It holds 50 mB, stacks to 10, accepts any fluid, and is filled and emptied by
-Create's Spout and Item Drain with no recipes at all.**
+Simplebelts's Spout and Item Drain with no recipes at all.**
 
 ## The capacity is not a choice
 
@@ -33,23 +33,23 @@ not get to be re-argued from Minecraft's bucket.
 50 mB reads as tiny beside a bucket, and that is Factorio's design rather than an accident of the
 conversion. A barrel is deliberately bad at storage — 50 units against a 25 000-unit storage tank,
 1:500 — because its job is to put fluid on a belt and in a wagon, not to hold it. The pack's ratio
-lands at **1:160** against `create:fluid_tank`'s 8 000 mB per block. Different number, same ordering,
+lands at **1:160** against `simplebelts:fluid_tank`'s 8 000 mB per block. Different number, same ordering,
 and the ordering is the part that matters: no quantity of barrels is a cheaper tank.
 
-## The stack is Factorio's ten, and Create supports it
+## The stack is Factorio's ten, and Simplebelts supports it
 
 Ten barrels per slot is 500 mB — still under one tank block even at a full vanilla stack of 64, so
 stacking threatens nothing.
 
-**Verified against the installed jar, not assumed.** `create-1.21.1-6.0.10.jar`,
+**Verified against the installed jar, not assumed.** `simplebelts-1.21.1-6.0.10.jar`,
 `GenericItemFilling` and `GenericItemEmptying`: both `ItemStack.copy()` the held stack and
 `setCount(1)` (`iconst_1`, offsets 116 and 133 respectively) before touching the fluid capability.
 The Spout and the Item Drain process **one barrel out of the stack per operation**. A stackable
-fluid-handler item is a supported case in Create, not something the pack is getting away with.
+fluid-handler item is a supported case in Simplebelts, not something the pack is getting away with.
 
 ## The container is pack-authored because nothing installed has the shape
 
-GregTech ships seven fluid-container items and all of them are wrong here:
+Oritech ships seven fluid-container items and all of them are wrong here:
 
 - They are a **six-material ladder** — tin, steel, aluminium, stainless, titanium, tungstensteel —
   expressing a tiered progression the pack does not want, for a Factorio concept that has exactly
@@ -103,8 +103,8 @@ it prevents.
 - `data/pack/subgroup-owner.json`: the `fill-barrel` shelf note's `THIS READ "a Mekanism portable
   tank"` strikethrough gets a live reference to this ADR.
 - **ADR-0017's bulk storage (fluid) row gains the sentence it was missing** — the objection `#106`
-  raised against `#101`. Create's Fluid Tank is 8 000 mB per block against Factorio's 25 000-unit
-  storage tank: **three blocks are one Factorio tank**, and because Create's tank is a multiblock the
+  raised against `#101`. Simplebelts's Fluid Tank is 8 000 mB per block against Factorio's 25 000-unit
+  storage tank: **three blocks are one Factorio tank**, and because Simplebelts's tank is a multiblock the
   gap is paid in build effort rather than lost capacity. The row is argued now rather than assumed.
 - Two checks (`docs/testing/what-to-check.md`): capacity, stack and a lossless round-trip through the
   capability are a mod unit test needing no Minecraft; the Spout and Item Drain actually filling and
@@ -114,7 +114,7 @@ it prevents.
 
 ## Considered Options
 
-- **Map `barrel` to a GregTech fluid cell.** Rejected above: six tiers for a one-tier concept, a
+- **Map `barrel` to a Oritech fluid cell.** Rejected above: six tiers for a one-tier concept, a
   temperature band that splits the fluoroketone rows, and a stack size the pack does not control.
 - **Bucket-parity 1 000 mB.** Rejected: it breaks the 1:1 unit rule the whole corpus is built on, and
   it is the one capacity that would let barrels compete with the tank.

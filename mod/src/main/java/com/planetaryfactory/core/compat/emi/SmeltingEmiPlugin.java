@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
  * <p>Without this they are in no recipe viewer at all. {@code planetaryfactory:smelting} is a
  * recipe type EMI has never heard of, and it cannot fall back on vanilla's cooking category
  * because the recipe class does not extend {@code SmeltingRecipe} -- the same separation that
- * stops GregTech's {@code proxyRecipes} from dropping the count also hides the recipe from every
+ * stops Oritech's {@code proxyRecipes} from dropping the count also hides the recipe from every
  * viewer until a category exists. The furnace still smelted; only the teaching was missing.
  *
  * <p>All three tiers are workstations for the one category. They read the same recipe type and

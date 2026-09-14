@@ -4,12 +4,12 @@ status: accepted
 
 # A locked machine waits on a timer, not on a broadcast
 
-A GregTech machine loaded with the ingredients of a research-locked recipe sat idle, correctly,
+A Oritech machine loaded with the ingredients of a research-locked recipe sat idle, correctly,
 and then stayed idle after the research completed. Only breaking and replacing it started the
 recipe (issue #76). This ADR records what the stale state actually was and why the fix is a machine
 that keeps checking rather than a research that goes and wakes machines.
 
-## The stale state is GregTech's, and it is not a cached refusal
+## The stale state is Oritech's, and it is not a cached refusal
 
 The first guess in the issue was a cached failed-search result on `RecipeLogic`, retried only on an
 input change. It is simpler and worse than that: **the machine stops ticking entirely.**
@@ -54,10 +54,10 @@ that set over. It also only ever covers *loaded* machines, so the timer's job (a
 unloaded chunk, subscribing again on `onMachineLoad`) still has to be done by something else. It
 buys a correct wake-up by adding a cross-mod scan and a second code path.
 
-**A timer** needs no new mechanism at all, because GregTech already has one. A recipe it matched
+**A timer** needs no new mechanism at all, because Oritech already has one. A recipe it matched
 but cannot currently run goes in `lastFailedMatches`, and that field's emptiness is the last term
 of the unsubscribe condition above. Writing the refused recipe there puts the machine in a state
-GregTech already understands: it stays subscribed, re-searches on its own, and starts the recipe on
+Oritech already understands: it stays subscribed, re-searches on its own, and starts the recipe on
 the first search after the research lands — within a quarter of a second. Nothing in Researchd is
 touched, and no completion event is subscribed to.
 
@@ -74,7 +74,7 @@ a locked recipe's ingredients runs a full trie search every fifth tick — `keep
 to true and `serverTick` gates the search on `getOffsetTimer() % 5` — for as long as it waits,
 which may be hours of play. A machine overriding `keepSubscribing` to false searches every tick.
 
-This is load GregTech's unsubscribe would otherwise have shed, and it is bounded by the number of
+This is load Oritech's unsubscribe would otherwise have shed, and it is bounded by the number of
 machines a player has loaded with the ingredients of a recipe they have not yet unlocked. In a pack
 whose research gates a growing share of the tech tree that number is not always small, and if it
 ever shows up in a profile the escape is the broadcast rejected above — added *alongside* this, not
@@ -88,4 +88,4 @@ research completed.
   machine starts.
 - Researchd's completion path stays untouched, so nothing here breaks when that fork moves.
 - The fix lives entirely behind `matchRecipe`, already the single funnel through which every
-  GregTech lock is tested (`RecipeLogicMixin`). There is no second place to keep in sync.
+  Oritech lock is tested (`RecipeLogicMixin`). There is no second place to keep in sync.

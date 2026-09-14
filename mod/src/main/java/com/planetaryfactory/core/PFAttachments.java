@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 public final class PFAttachments {
 
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
-            DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.simplebelts(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, PlanetaryFactoryCore.NAMESPACE);
 
     /**
      * The Assembler queue.

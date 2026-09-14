@@ -13,8 +13,8 @@ Minecraft gives us no way to do it. `ItemStack.isSameItemSameComponents` is `sta
 `IItemStackExtension` exposes 41 methods and none affects stacking; `ItemHandlerHelper.canItemStacksStack`
 was removed in the component rewrite; and no merge or insertion event exists. Worse, averaging has to
 run where the counts change, and `grow()`/`setCount()` do not know the donor stack — so every merge
-site needs patching individually. Vanilla has around 19. **GTCEu reimplements the arithmetic in 24
-more classes**, and AE2 and Create have their own storage layers again.
+site needs patching individually. Vanilla has around 19. **Oritech reimplements the arithmetic in 24
+more classes**, and AE2 and Simplebelts have their own storage layers again.
 
 So a per-stack freshness value fragments stacks in proportion to how many distinct values exist —
 1200 of them for a two-hour bioflux — and the one mechanism that would prevent it is unavailable.
@@ -28,8 +28,8 @@ tooltips read as information, where 1200 invisible timer values read as inventor
 
 Three things fall out for free. Nothing is stored on the stack, so there is no component to fragment,
 no merge to intercept, and no Mixin fight with `recipeessentials` over `DataComponentMap.equals`.
-Recipes see freshness natively in **every** mod, because tags and item IDs work identically in Create,
-Mekanism, GregTech and Integrated Dynamics — no integration code, and no risk of enforcing the
+Recipes see freshness natively in **every** mod, because tags and item IDs work identically in Simplebelts,
+Mekanism, Oritech and Integrated Dynamics — no integration code, and no risk of enforcing the
 mechanic unevenly across the pack's optional processing paths. And with no stored timer, advancement
 must be probabilistic, which four sequential stages turn from an exponential distribution into an
 Erlang-4 one — halving the spread, so the stage count doing the legibility work is the same stage
@@ -52,7 +52,7 @@ count doing the variance reduction.
   and fix the distribution.
 - **Lazy resolution on access instead of a sweep.** The original research recommendation. There is no
   machine-boundary hook that generalises past GT multiblocks — `recipeModifier` and `beforeWorking`
-  exist only on `MultiblockMachineBuilderWrapper` — so an item would enter a Create or Mekanism recipe
+  exist only on `MultiblockMachineBuilderWrapper` — so an item would enter a Simplebelts or Mekanism recipe
   unresolved.
 - **Freshness inheritance through crafting, and duration modulation on stale input.** Both are
   Factorio-faithful and both would need separate implementations in four mods' recipe systems. Uneven

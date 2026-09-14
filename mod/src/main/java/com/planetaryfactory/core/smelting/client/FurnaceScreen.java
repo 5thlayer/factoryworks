@@ -29,7 +29,7 @@ public class FurnaceScreen extends AbstractContainerScreen<FurnaceMenu> {
     private static final ResourceLocation BURN_PROGRESS =
             ResourceLocation.withDefaultNamespace("container/furnace/burn_progress");
 
-    /** The gauge's colours: GregTech's own energy yellow over an empty slate. */
+    /** The gauge's colours: Oritech's own energy yellow over an empty slate. */
     private static final int ENERGY_FULL = 0xFFFFD84D;
     private static final int ENERGY_EMPTY = 0xFF3A3A3A;
 
@@ -128,7 +128,7 @@ public class FurnaceScreen extends AbstractContainerScreen<FurnaceMenu> {
     }
 
     /**
-     * What GregTech's own machines put on the same hover, in the same order: what is in the buffer,
+     * What Oritech's own machines put on the same hover, in the same order: what is in the buffer,
      * and what it costs to run.
      *
      * <p>The draw rate is the half that makes the buffer legible. 2080 EU means nothing on its own;

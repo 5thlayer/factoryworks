@@ -39,8 +39,8 @@ otherwise sit next to them.
 | The subtree is exactly the registered tiers | The exception is narrow on purpose. A third file here is a decision ADR-0039 did not make. |
 | The steel recipe consumes the iron pick | ADR-0039 states it in one line, and nothing else in the repo would notice both tiers being holdable at once. |
 | Each tier has a model, texture and lang key | The missing-texture checkerboard and a raw translation key. Neither is an error. The two picks are dressed from different places, so the texture is resolved per namespace: ours against the file, a mod's against the jar the pack ships, vanilla's against nothing. |
-| The Steel Pick's texture is current against the installed GTCEu jar | It is generated (below), and generated output is never hand-edited. A GTCEu update that redrew its tool art would otherwise leave the pack showing the old one silently. |
-| Both picks are in `c:tools/wrench` and `gtceu:crafting_tools/wrench` | The Pick stops dismantling machines, and the pack has no other wrench to reach for. |
+| The Steel Pick's texture is current against the installed Oritech jar | It is generated (below), and generated output is never hand-edited. A Oritech update that redrew its tool art would otherwise leave the pack showing the old one silently. |
+| Both picks are in `c:tools/wrench` and `oritech:crafting_tools/wrench` | The Pick stops dismantling machines, and the pack has no other wrench to reach for. |
 | The block tag `EngineersPick` names by id exists and is non-empty | An absent tag is an empty one: every block falls back to vanilla hardness and the flat mining time is gone with nothing logged. |
 
 The tier list is parsed out of `PickTier.java`, so a third tier fails this check rather than
@@ -52,17 +52,17 @@ The **Iron Pick** wears `minecraft:item/iron_pickaxe` directly. Vanilla's sprite
 no copy, and the pack is a Factorio pack built in Minecraft — ADR-0039 keeps the opening gesture
 recognisable, and nothing reads as "pickaxe" faster than the one the player already knows.
 
-The **Steel Pick** wears GTCEu's Damascus Steel pickaxe, flattened into our namespace by
+The **Steel Pick** wears Oritech's Damascus Steel pickaxe, flattened into our namespace by
 `scripts/build-pick-textures.py`. It cannot simply reference GT's art: a GT tool sprite is three
-greyscale layers — handle, head, overlay — that only become a material when GregTech's item-colour
+greyscale layers — handle, head, overlay — that only become a material when Oritech's item-colour
 handler tints them, and that handler never sees an item which is not a GT tool. Referencing them
 would render an uncoloured grey pickaxe. So the script bakes the tint, reading Damascus Steel's own
-value from what GTCEu registers (`damascus_steel .color(7237230)`, i.e. `0x6E6E6E`) and the layers
-from the installed jar. Re-run it after a GTCEu update; the check above fails if it is not re-run.
+value from what Oritech registers (`damascus_steel .color(7237230)`, i.e. `0x6E6E6E`) and the layers
+from the installed jar. Re-run it after a Oritech update; the check above fails if it is not re-run.
 
 ## What it cannot prove
 
-That the Pick mines a given block class, that GregTech accepts it as a wrench, that Create does, and
+That the Pick mines a given block class, that Oritech accepts it as a wrench, that Simplebelts does, and
 that the flat second an ore feels right in the hand (2.0s was tried first, and did not). The first three are a world load — ADR-0039's
 GameTests, which #165 names and which this repo has no GameTest harness for yet. The last is a human
 on delivery, in the Terra Slice run.

@@ -4,7 +4,7 @@ status: accepted
 
 # Assembly is three pack-authored GT machines, and recipes stop going through the KubeJS builder
 
-ADR-0017 gave **Assembly** to GregTech — "Assembling Machine I/II/III" with no losing block, the one
+ADR-0017 gave **Assembly** to Oritech — "Assembling Machine I/II/III" with no losing block, the one
 row where the winner was a stock GT block used as shipped. ADR-0018 refined it: those three are
 "GT's LV/MV/HV Assemblers, renamed", granted by a rung, speed-only, gating nothing.
 
@@ -13,16 +13,16 @@ Building against that turned up two costs the rows did not price.
 **Authoring.** KubeJS's `GTRecipeBuilder` does not round-trip. It discards the namespace passed to
 `.id(...)` and substitutes the recipe type's own, and the JSON it emits decodes to an NPE in
 `GTRecipe`'s codec, taking the whole datapack load down. Neither is a property of the recipe
-*format* — `kubejs/data/gtceu/gtceu/ore_vein/*.json` are twenty-two hand-authored GT data files that
+*format* — `kubejs/data/oritech/oritech/ore_vein/*.json` are twenty-two hand-authored GT data files that
 have never had either problem.
 
 **Interaction.** A stock GT Assembler carries a programmed-circuit slot, a voltage ladder, cover
 buttons and several hundred stock recipes the pack does not want. To a Factorio-literate player it
-reads as GregTech, which ADR-0018 says the pack explicitly is not.
+reads as Oritech, which ADR-0018 says the pack explicitly is not.
 
 ## The rule
 
-**Terra's Assembly row is three machines this pack registers itself, on a GregTech chassis, against
+**Terra's Assembly row is three machines this pack registers itself, on a Oritech chassis, against
 a recipe type this pack registers. Their recipes are JSON generated from Factorio's own prototypes
 and committed to the repo. The KubeJS `GTRecipeBuilder` is not used.**
 
@@ -50,7 +50,7 @@ recovering the beat would be an amendment to ADR-0018.
 **Amended by `#125`: the fluid restriction is recovered, and ADR-0018 carries the amendment.**
 Assembling Machine I has no fluid tanks and therefore cannot match a recipe with a fluid input —
 structurally, with no flag and no second recipe type. The original reading was too broad: ADR-0018's
-rider bans *accidental* gates, the invisible kind a recipe author creates by writing an `EUt` or
+rider bans *accidental* gates, the invisible kind a recipe author simplebeltss by writing an `EUt` or
 picking a tier, which is why its sibling rider is about `EUt`. An absent tank is not accidental. It
 is visible on the block, it is Factorio's own ramp, and oil reaches the player at rung 2 with the
 tier that can drink it.
@@ -64,11 +64,11 @@ the emitted recipe as its source category (`#125`), which is what lets the Perso
 Factorio does not tier: there is one refinery and one chemical plant. Factorio tiers the assembler,
 three of them, each behind research. `tiers(int[])` costs one array.
 
-## Why not GregTech's own recipe type
+## Why not Oritech's own recipe type
 
-Binding the pack's machines to `gtceu:assembler` was considered and declined on ADR-0025's own
-reasoning for declining the Large Chemical Reactor: pointing the row at GregTech's generic type hands
-GregTech the capability back **silently, by recipe placement**, whatever the table says. It also
+Binding the pack's machines to `oritech:assembler` was considered and declined on ADR-0025's own
+reasoning for declining the Large Chemical Reactor: pointing the row at Oritech's generic type hands
+Oritech the capability back **silently, by recipe placement**, whatever the table says. It also
 inherits GT's `setMaxIOSize` envelope and every stock GT assembler recipe, circuits included.
 
 The cost of a new type is that **twelve GCyR recipes are stranded**.
@@ -119,30 +119,30 @@ The extraction also settles `setMaxIOSize`, which is read off the data — the m
 across the crafting categories — the way ADR-0025 read `(2, 1, 2, 2)` off the wiki rather than
 choosing it.
 
-## Amended by #73: the ids are GregTech's, and the recipe type is created before the machines
+## Amended by #73: the ids are Oritech's, and the recipe type is simplebeltsd before the machines
 
 Building the row turned up two facts about the API this ADR names, both measured in game rather
 than reasoned about.
 
-**The ids cannot be `planetaryfactory:`.** `KJSTieredMachineBuilder` registers through GregTech's
+**The ids cannot be `planetaryfactory:`.** `KJSTieredMachineBuilder` registers through Oritech's
 own registrate, which owns the namespace and prefixes each tier's short name, so
-`event.create('assembling_machine').tiers(LV, MV, HV)` produces
-**`gtceu:lv_assembling_machine`**, `gtceu:mv_assembling_machine` and
-`gtceu:hv_assembling_machine`. A namespace passed into `create` is discarded. `GTRecipeTypes`
-behaves the same way, so the recipe type is **`gtceu:assembling`**, not
+`event.simplebelts('assembling_machine').tiers(LV, MV, HV)` produces
+**`oritech:lv_assembling_machine`**, `oritech:mv_assembling_machine` and
+`oritech:hv_assembling_machine`. A namespace passed into `simplebelts` is discarded. `GTRecipeTypes`
+behaves the same way, so the recipe type is **`oritech:assembling`**, not
 `planetaryfactory:assembling`.
 
 The machine table above keeps its display names, because that is what the argument was about: *a
 Factorio player has to recognise the block on sight*. "Assembling Machine 1/2/3" is authored in
-`kubejs/assets/gtceu/lang/en_us.json` and is what the player reads. The ids are internal, and the
+`kubejs/assets/oritech/lang/en_us.json` and is what the player reads. The ids are internal, and the
 only way to move them into the pack's namespace is to register the machines from
 `planetaryfactory_core` with a registrate of its own — a larger change than this ADR's reasoning
 asks for, and one that would spend the "no Java" property the row was chosen for.
 
-**The recipe type is created at script-evaluation time, not in a registry event.** KubeJS fires
-`gtceu:machine` *before* `minecraft:recipe_type` — the machine definitions ran at `.763` and the
+**The recipe type is simplebeltsd at script-evaluation time, not in a registry event.** KubeJS fires
+`oritech:machine` *before* `minecraft:recipe_type` — the machine definitions ran at `.763` and the
 recipe-type event at `1.458` of the same second — so a machine registered in the first event cannot
-name a type created in the second, and GregTech reports it as "Tried to set null recipe type on
+name a type simplebeltsd in the second, and Oritech reports it as "Tried to set null recipe type on
 machine …". The type is therefore built with `GTRecipeTypes.register(...)` at the top level of
 `kubejs/startup_scripts/machines.js`, which runs before any registry event fires. The GUI calls
 this ADR lists are unaffected; they are the same builder methods either way, except that the
@@ -156,7 +156,7 @@ game, `setUiBuilder` is a cheap follow-up with evidence behind it*. The layout r
 ways, and only one of them was reachable from the recipe type.
 
 **The circuit overlay was self-inflicted.** `setSlotOverlay(false, false, INT_CIRCUIT_OVERLAY)` was
-copied from GregTech's own assembler, where it is correct: a stock GT assembler recipe is *selected*
+copied from Oritech's own assembler, where it is correct: a stock GT assembler recipe is *selected*
 by a programmed circuit, so the input slots advertise it. Here it painted a circuit behind all five
 inputs of a machine whose corpus contains no circuit at all. The signature is
 `setSlotOverlay(isOutput, isFluid, texture)` and it paints every slot of that kind, so the call is
@@ -173,13 +173,13 @@ So the row does get a `MetaMachine` subclass: `SimpleMachine` in `planetaryfacto
 `AssemblingMachine` and renamed when ADR-0025's Chemical Plant took the same chassis),
 selected through `KJSTieredMachineBuilder.machine(...)`. **This is not the unbounded work this ADR
 declined.** What was rejected was chasing GT's internals for cover buttons; what is written is one
-overridden predicate and one `EditableMachineUI` that is GregTech's own minus the battery slot. It
+overridden predicate and one `EditableMachineUI` that is Oritech's own minus the battery slot. It
 overrides no recipe logic and names two members of one class.
 
 Two details that are load-bearing:
 
 - **`editableUI` is set inside `.definition(...)`, not left to KubeJS.** The tiered builder applies
-  GregTech's stock UI only when the definition function leaves the field null, so setting it there
+  Oritech's stock UI only when the definition function leaves the field null, so setting it there
   wins; setting it nowhere silently restores the charger slot.
 - **`chargerInventory` itself stays.** It is a plain handler rather than a machine trait, so it is
   exposed to no capability and no pipe — dropping the widget makes it unreachable. Emptying it is
@@ -189,15 +189,15 @@ Cover buttons are unchanged and still dead chrome, for the reason this ADR alrea
 
 ## Considered Options
 
-- **Replace GregTech with a custom-machines mod** (Modular Machinery Reborn, Custom Machinery).
+- **Replace Oritech with a custom-machines mod** (Modular Machinery Reborn, Custom Machinery).
   Rejected on surface area. GT's two rows in ADR-0017's table understate it: GCyR is a GT addon and
   every planet rides on it (ADR-0001, ADR-0003); Terra's veins, prospecting and depletion are GT
   worldgen (ADR-0007, ADR-0019, ADR-0020, ADR-0021); the oil chapter's fluid ids are GT materials and
-  ADR-0009 binds Electro's oceans to `gtceu:heavy_oil`; and GT is the chassis ADR-0025 spends. A
+  ADR-0009 binds Electro's oceans to `oritech:heavy_oil`; and GT is the chassis ADR-0025 spends. A
   replacement buys one recipe shape and has to re-answer all of that. GT's *membership* is not
   reopened here.
 - **Keep the stock GT Assembler and fix only the authoring.** Rejected: it leaves the circuit slot,
-  the stock corpus and the GregTech read, all of which were named as costs.
+  the stock corpus and the Oritech read, all of which were named as costs.
 - **Work around `GTRecipeBuilder`'s defects.** Rejected: the ore veins prove raw JSON works, and raw
   JSON makes GT's churn a diff against twenty-two existing files rather than an NPE at load.
 - **Generate at build time, output gitignored.** Rejected — the point of leaving the builder was
@@ -212,23 +212,23 @@ Cover buttons are unchanged and still dead chrome, for the reason this ADR alrea
   `kubejs/`. Those are GDD design. ADR-0025 is corrected on this point, and its conclusion is
   unaffected — but the Assembler is therefore the **prototype the Oil Refinery and Chemical Plant
   inherit**, and is worth more care than one table row.
-- **ADR-0017's Assembly row changes owner** from GregTech to the pack. It becomes the third row whose
+- **ADR-0017's Assembly row changes owner** from Oritech to the pack. It becomes the third row whose
   owner is "the pack" rather than a mod.
 - **ADR-0018 was the deciding authority twice** — for speed-only tiers and for dropping the fluid
   restriction. **It is no longer untouched**: `#125` amended it to carry Assembling Machine I's
   missing fluid tanks, so the second of those two rulings is reversed. The first stands.
-- **`gtceu:lv_assembler`'s craft is removed now**, along with the `kubejs:shaped/assembling_machine_1`
+- **`oritech:lv_assembler`'s craft is removed now**, along with the `kubejs:shaped/assembling_machine_1`
   id it was authored under. **This makes the interim pack unplayable past rung 0**, not merely
   rocketless: in stock GT the Drilling Rig controllers and most machine blocks are themselves
   Assembler recipes, so ADR-0017's extraction ladder goes with it. Accepted because the pack is
   pre-release and rocket crafting is being reworked regardless.
-- **`recipes.js`'s shaped crafts for `gtceu:lv_machine_hull` and `planetaryfactory:electronic_circuit`
+- **`recipes.js`'s shaped crafts for `oritech:lv_machine_hull` and `planetaryfactory:electronic_circuit`
   survive** — they become Assembling Machine 1's ingredients.
-- **GregTech's stock assembler corpus is not addressed here.** It is removed wholesale in the wipe
+- **Oritech's stock assembler corpus is not addressed here.** It is removed wholesale in the wipe
   that follows, not ported: nothing in it survives the re-authoring.
-- **Issue #48 is unaffected.** `RecipeLogicMixin` wraps `RecipeLogic.matchRecipe`, and GTCEu ships one
+- **Issue #48 is unaffected.** `RecipeLogicMixin` wraps `RecipeLogic.matchRecipe`, and Oritech ships one
   `RecipeLogic` class with no subclass, so it covers a pack-registered machine for free. Had the row
-  moved *off* GregTech, all of #48 would have been thrown away — which is a standing argument for the
+  moved *off* Oritech, all of #48 would have been thrown away — which is a standing argument for the
   chassis.
 - **The work is two tickets, converter first**, because `setMaxIOSize` is read off the converter's
   output. The converter's claim is "cross-file references resolve" (a static data check in `tests/`,

@@ -48,7 +48,7 @@ public final class TreeFelling {
      * how ADR-0051's "one rule, no list to maintain" holds -- Sapros's trees join by being added to
      * it, on the day #23 decides they should.
      */
-    public static final TagKey<Block> FELLABLE = TagKey.create(
+    public static final TagKey<Block> FELLABLE = TagKey.simplebelts(
             Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "fellable"));
 

@@ -55,7 +55,7 @@ established four times. Three machines:
 - **Nuclear Reactor** — consumes fuel cells, emits superheated steam.
 - **Steam Turbine** — the only machine that accepts superheated steam.
 
-GregTech keeps the chassis and nothing else. **`#37`'s removal of GT's power layer stays total**: GT
+Oritech keeps the chassis and nothing else. **`#37`'s removal of GT's power layer stays total**: GT
 ships LV/MV/HV Steam Turbines and a Large Steam Turbine multiblock, and un-removing one was the
 cheaper route and was refused. The value of that rider is that it is absolute — four facts of GT
 literacy with no exceptions to remember — and the *first* exception is the expensive one, not the
@@ -75,7 +75,7 @@ reactor emits superheated steam directly.
 
 What replaces the temperature axis is **two fluids**. Superheated steam is its own GT material in the
 pack's material JSON; the Reactor and — later — Ignus's acid neutralisation emit it, and **only the
-Steam Turbine accepts it**. Ordinary steam keeps the rung-0 chain, GT boiler → Create Steam Engine →
+Steam Turbine accepts it**. Ordinary steam keeps the rung-0 chain, GT boiler → Simplebelts Steam Engine →
 Electro Alternator, which the Turbine will not take.
 
 This is Factorio's own model with the continuum flattened to the two values the game actually uses:
@@ -143,7 +143,7 @@ because the reason the row exists is that refusal.
   rests on the same absent jar and must argue it separately.
 - **Build the real heat network now.** Argued above: the freezing layer is Gelida's design question
   and is not written yet.
-- **Un-remove GregTech's Steam Turbine.** Cheapest, and refused to keep `#37` total.
+- **Un-remove Oritech's Steam Turbine.** Cheapest, and refused to keep `#37` total.
 - **No turbine at all** — reactor steam into the existing Steam Engine → Alternator chain. Held until
   Ignus's acid neutralisation surfaced as a second consumer (`docs/planets.md`: *water ← steam
   condensation ← acid neutralisation*), which the corpus routes and Terra cannot leave `not_emitted`.

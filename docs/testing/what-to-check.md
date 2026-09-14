@@ -72,8 +72,8 @@ A registry that loaded is not a world that contains anything. Ore veins, bedrock
 worldgen layers and biomes all have a state in which they parse, register, and are then never
 placed. The check is a launch into a fresh world that asserts against what the game actually
 loaded and, for biomes, actually located. **It has no harness on 26.1.2:** `scripts/worldgen-check.py`
-asserted GregTech's vein, deposit and layer registries through a GregTech-era KubeJS dump, and it
-left with GregTech (ADR-0060). The kind stands; the harness is rebuilt when a body next needs it.
+asserted Oritech's vein, deposit and layer registries through a Oritech-era KubeJS dump, and it
+left with Oritech (ADR-0060). The kind stands; the harness is rebuilt when a body next needs it.
 
 **A fixture row is unconditional.** Every body-level worldgen fact gets one — there is no
 judgement call about whether a given vein is important enough. The launch happens regardless and

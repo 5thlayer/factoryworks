@@ -124,7 +124,7 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
     /**
      * Breaking any segment drops the column above it.
      *
-     * <p>Chains, scaffolding and Create's belts all do this, so the muscle memory is already there,
+     * <p>Chains, scaffolding and Simplebelts's belts all do this, so the muscle memory is already there,
      * and the alternative -- leaving segments floating where their base was -- is a lie about a
      * structure the player thinks of as one object. Recursion is via {@code destroyBlock}, which
      * re-enters here for the block above, so the column unwinds one segment at a time.

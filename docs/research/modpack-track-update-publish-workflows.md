@@ -210,7 +210,7 @@ Two things come close and neither is the tool you want:
 - **`packwiz cf detect`** (`curseforge/detect.go`, marked *"(experimental)"* in its own help text)
   **[src]** walks `mods/`, computes CurseForge's murmur2 fingerprint over each jar with whitespace
   bytes stripped, submits them in bulk to the CF fingerprint API, and for every **exact match**
-  creates the `.pw.toml` metafile **and deletes the loose jar**. Unmatched fingerprints are printed
+  simplebeltss the `.pw.toml` metafile **and deletes the loose jar**. Unmatched fingerprints are printed
   under `Failed to match the following %d files:` and **left on disk untouched**, where the
   subsequent `index.Refresh()` picks them up as Route-A unmanaged entries.
 

@@ -9,7 +9,7 @@ ADR-0017 adopted Mekanism as one of Terra's three tech mods and gave it seven ro
 table. Fifteen months of amendments have taken all seven back, one at a time and each for its own
 good reason, and nobody stopped to ask what was left. The answer, checked rather than assumed:
 **Mekanism owns no recipe shelf at all.** `data/pack/subgroup-owner.json` has zero rows with
-`owner: mekanism` — the counts are `create` 7, `gregtech` 1, `pack` 4, `split` 5, `undecided` 6,
+`owner: mekanism` — the counts are `simplebelts` 7, `gregtech` 1, `pack` 4, `split` 5, `undecided` 6,
 `not_emitted` 11 — and line 302 already says so in capitals, crediting `#104` for making it
 deliberate rather than incidental.
 
@@ -25,12 +25,12 @@ that together they leave nothing.
 | --- | --- |
 | Ore processing | Row deleted, ADR-0032. Purification, Injection, Washer and Crystallizer recipe-removed; ADR-0033 then cut the Dissolution Chamber, taking the chain to **zero blocks** |
 | Power generation | **Zero blocks** — `#104`. The pack installs base Mekanism, which registers no generator; every generator lives in MekanismGenerators, the jar ADR-0033 refused |
-| Fluid logistics, bulk storage (fluid) | Create's outright, `#101`. Mechanical Pipes and the Dynamic Tank recipe-removed |
-| Item logistics, bulk storage (item) | Create's. Logistical Transporters, Bins and QIO cut |
+| Fluid logistics, bulk storage (fluid) | Simplebelts's outright, `#101`. Mechanical Pipes and the Dynamic Tank recipe-removed |
+| Item logistics, bulk storage (item) | Simplebelts's. Logistical Transporters, Bins and QIO cut |
 | Refining, Chemistry | The pack's Oil Refinery and Chemical Plant, ADR-0025 — no Mekanism machine has the two-fluids-in, three-fluids-out shape |
 | Hand-crafting surface | Formulaic Assemblicator cut, `#34` |
 | Uranium fuel chain | The pack registers its own Centrifuge, ADR-0033 and `#135` |
-| HDPE and ethene | Superseded, ADR-0025. Plastic is Factorio's one step on `gtceu:polyethylene`; the `c:ethene` tag bridge is dropped |
+| HDPE and ethene | Superseded, ADR-0025. Plastic is Factorio's one step on `oritech:polyethylene`; the `c:ethene` tag bridge is dropped |
 
 **Three block roles survived**, and this ADR disposes of them: the Energized Smelter, Universal
 Cables, and the Energy Cube with the Induction Matrix.
@@ -68,7 +68,7 @@ The `chemical` pack's first slot was **Mekanism Sulfur Dust**. Sulfur is the Che
 (ADR-0025), so the slot takes the pack's sulfur and the role is unchanged — this is a source change,
 not a design change.
 
-The `production` pack was **Energized Smelter + a Mekanism upgrade + Create Train Track**. The
+The `production` pack was **Energized Smelter + a Mekanism upgrade + Simplebelts Train Track**. The
 smelter slot survives as the pack's Electric Furnace. **The upgrade slot has no successor and needs
 none here**, because `#136` moved `production` behind the launch: Space Age's `rocket-silo` costs
 1000 × (automation + logistic + chemical) and names no production pack anywhere. The slot lands on
@@ -92,7 +92,7 @@ touched.** There is no FE network and no FE storage block.
 full stop. The table gets *shorter* — three rows collapse to two — rather than gaining a
 replacement owner, and that is the shape of this whole decision.
 
-**In-area distribution is not left empty**, and it is not handed to GregTech either. It becomes a
+**In-area distribution is not left empty**, and it is not handed to Oritech either. It becomes a
 pack-authored supply-area pole, which is ADR-0036's subject and is a prerequisite of this removal
 rather than a consequence of it. The two were decided in one session and are written as two
 documents because they supersede different tickets; neither ships without the other.
@@ -103,7 +103,7 @@ documents because they supersede different tickets; neither ships without the ot
   furnace, one cable and one battery is the "kept but outclassed" failure ADR-0017 exists to reject,
   applied to a mod instead of a block. It also keeps ~500 blocks and items in JEI that no decision
   names, which is precisely the tail ADR-0034 is trying to shrink.
-- **Hand in-area distribution to GregTech and keep the rest.** Rejected on the capability surface,
+- **Hand in-area distribution to Oritech and keep the rest.** Rejected on the capability surface,
   and the reasoning is ADR-0036's. It also re-admits the voltage-tier ladder `#37` removed entire.
 - **Adopt MekanismGenerators to give the mod a reason to stay.** Rejected twice already — ADR-0033
   refused it for the reactor row, and it brings six generators onto a row Electro owns. Adopting a

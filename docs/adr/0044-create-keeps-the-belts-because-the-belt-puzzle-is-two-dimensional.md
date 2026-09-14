@@ -2,14 +2,14 @@
 status: provisional
 ---
 
-# Create keeps the belts, because the puzzle they carry is two-dimensional
+# Simplebelts keeps the belts, because the puzzle they carry is two-dimensional
 
-`#178` asked the question ADR-0043 carved out and refused to answer: does this pack ship Create's
+`#178` asked the question ADR-0043 carved out and refused to answer: does this pack ship Simplebelts's
 belts, or author Factorio's own — transport belt, underground belt, splitter, and the inserter
 family, at Factorio's throughputs?
 
-**Create keeps them.** Not because authoring belts is expensive, though it is, and not because
-ADR-0017 already gave logistics to Create, which is an argument from precedent rather than from the
+**Simplebelts keeps them.** Not because authoring belts is expensive, though it is, and not because
+ADR-0017 already gave logistics to Simplebelts, which is an argument from precedent rather than from the
 mechanic. The reason is that **most of what makes Factorio's belt a puzzle is a consequence of
 Factorio being flat**, and this pack is not.
 
@@ -19,17 +19,17 @@ Factorio's belt carries four separable puzzles. Two of them exist only in two di
 
 - **Underground belts** are a *weaving* problem — getting two lanes past each other inside a fixed
   footprint, when you cannot go over or under. In three dimensions that problem dissolves: a belt
-  that needs to cross another one goes up. Create already ships sloped belt runs, so the pack has
+  that needs to cross another one goes up. Simplebelts already ships sloped belt runs, so the pack has
   the answer to the 2D problem *and* an answer Factorio cannot express.
 - **Two lanes per belt** is the same story one level down. Lane balancing is a compression trick for
   a conveyor one tile wide on a plane. It is not a general logistics idea; it is what you do when
   the only free axis is the one running along the belt.
 
-So the two mechanics Create is worst at are the two the medium already deleted. What replaces them
-— routing in Y — is a mechanic **Create ships and Factorio has no reference for**, which means
+So the two mechanics Simplebelts is worst at are the two the medium already deleted. What replaces them
+— routing in Y — is a mechanic **Simplebelts ships and Factorio has no reference for**, which means
 authoring first-party belts would not be reproducing Factorio's belt. It would be designing a 3D
 belt from scratch, with Factorio offering nothing to be faithful to, in exchange for losing the one
-Create already has.
+Simplebelts already has.
 
 That is the whole decision. The cost argument and the ADR-0017 precedent both point the same way and
 neither was needed.
@@ -64,7 +64,7 @@ buildable, and there is no output priority"*. Brass Tunnel's `SelectionMode` has
 `SPLIT`, `FORCED_SPLIT`, `ROUND_ROBIN`, `FORCED_ROUND_ROBIN`, `PREFER_NEAREST`, `RANDOMIZE`,
 `SYNCHRONIZE` — where the `FORCED_*` pair refuses to distribute unless every target can take its
 share, which *is* a balancer, and `PREFER_NEAREST` is positional priority. There is also one filter
-slot per output. What Create genuinely lacks is **building a balancer out of splitter pairs** — the
+slot per output. What Simplebelts genuinely lacks is **building a balancer out of splitter pairs** — the
 constructed pattern rather than the outcome — and the outcome is what this pack is promising.
 
 **Compression survives** because `canInsertAtFromSide` refuses when the target segment is occupied
@@ -73,7 +73,7 @@ visible, which is the diagnostic.
 
 ## Throughput is deferred to play, and the dials are named here
 
-Create's belt moves `getSpeed() / 480` blocks per tick — **`RPM / 24` blocks per second**, capped by
+Simplebelts's belt moves `getSpeed() / 480` blocks per tick — **`RPM / 24` blocks per second**, capped by
 `maxRotationSpeed = 256` at 10.67 b/s. A belt entry is a `TransportedItemStack` holding up to 64
 items, and entries are held one block apart by a hard `spacing = 1` in `BeltInventory.tick()`.
 
@@ -81,7 +81,7 @@ Both games have a stacked and an unstacked regime, so the naive comparison is wr
 directions: a rig handing over one item at a time produces one-item entries, and Factorio 2.0's bulk
 inserters and Big Mining Drill stack onto belts too. **The real difference is that Factorio's belt
 has a known items/s *and* a bounded, researched stack multiplier — two constants, which is why a
-ratio is computable — while Create's entries/s is known and its items-per-entry is whatever the
+ratio is computable — while Simplebelts's entries/s is known and its items-per-entry is whatever the
 upstream inserter happened to hand over, unbounded to 64 and surfaced nowhere.** One factor is
 designable; the other is not.
 
@@ -103,7 +103,7 @@ value of **locating the dials** is high, so they are recorded:
 - **First dial — belt items/s.** `BeltBlockEntity.getBeltMovementSpeed()`, the `getSpeed() / 480f`
   divisor. A mixin here changes belt speed per RPM and leaves the rest of the kinetic network alone.
 - **Second dial — the global ceiling.** `maxRotationSpeed`, if it is the kinetics cap that binds
-  rather than the belt. Reached for only after the first, because it speeds up every Create machine
+  rather than the belt. Reached for only after the first, because it speeds up every Simplebelts machine
   as a side effect.
 - **If entries must be bounded to one item**, there are three intervention points and no public
   hook: `BeltBlockEntity#tryInsertingFromSide`, which all seventeen external insertion routes funnel
@@ -119,7 +119,7 @@ machine durations Factorio's seconds unmodified.
 ## `maxBeltLength` goes to 64
 
 The pack capped a belt run at 20 blocks; it is now **64 — four chunks**. Factorio's belts are
-unbounded, and a 20-block cap made the spatial constraint a fact about Create's chaining idiom
+unbounded, and a 20-block cap made the spatial constraint a fact about Simplebelts's chaining idiom
 rather than about factory layout.
 
 This costs nothing, and for a fixed distance it *saves*. Non-controller belt segments early-return
@@ -137,7 +137,7 @@ lowering it later breaks nothing already built. It is a tuning dial, not a commi
 ## What this ADR does not decide
 
 **The inserter.** `#178` scoped "the inserter family" alongside the belts, and folding the two
-together is a large part of why it stayed open. The conveyance is settled here; whether Create's
+together is a large part of why it stayed open. The conveyance is settled here; whether Simplebelts's
 Mechanical Arm is Factorio's inserter is `#102`, which this ADR unblocks rather than answers. For the
 record, the Arm reaches 5 blocks against an inserter's 1 (2 long-handed), moves up to a full stack per
 cycle at roughly 2–2.5 transfers/s at maximum RPM, and does **not** implement
@@ -151,8 +151,8 @@ the four claims above.
 
 - **ADR-0017's `Item logistics` row is re-affirmed, now argued from the mechanic** rather than from
   the cut-list rule. The row does not change; its justification does.
-- **ADR-0018 keeps both its Create clauses.** Rung 0's *"Create's belts"* and rung 2's *"Movement at
-  scale — Create 6 package logistics"* stand. Rung 2 remains the one place the pack spends Factorio's
+- **ADR-0018 keeps both its Simplebelts clauses.** Rung 0's *"Simplebelts's belts"* and rung 2's *"Movement at
+  scale — Simplebelts 6 package logistics"* stand. Rung 2 remains the one place the pack spends Factorio's
   `logistic` science on something categorically unlike what Factorio spends it on, and that is left
   as `#25`'s call, not re-opened here.
 - **`logistics-2`, `logistics-3` and `turbo-transport-belt` still buy nothing** and remain candidates
@@ -161,6 +161,6 @@ the four claims above.
   rejected it as a house rule.
 - **ADR-0043's stated reason for not calling `DirectBeltInputBehaviour` was wrong on the facts** and
   is corrected there. The insertion path is not the defect; the funnel is.
-- **The mod takes a `compileOnly` Create dependency** when the `DirectBeltInputBehaviour` work lands.
+- **The mod takes a `compileOnly` Simplebelts dependency** when the `DirectBeltInputBehaviour` work lands.
   That is a build-config line alongside the five the mod already carries, and it commits nothing at
   runtime.

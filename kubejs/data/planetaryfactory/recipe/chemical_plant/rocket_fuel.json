@@ -1,5 +1,5 @@
 {
-  "type": "gtceu:chemical_plant",
+  "type": "oritech:chemical_plant",
   "inputs": {
     "item": [
       {
@@ -15,7 +15,7 @@
       {
         "content": {
           "ingredient": {
-            "fluid": "gtceu:light_oil"
+            "fluid": "oritech:light_oil"
           },
           "amount": 10
         }
