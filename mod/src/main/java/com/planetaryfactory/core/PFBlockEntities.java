@@ -108,7 +108,7 @@ public final class PFBlockEntities {
      */
     private static void registerPumpCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlock(
-                Capabilities.FluidHandler.BLOCK,
+                Capabilities.Fluid.BLOCK,
                 (level, pos, state, blockEntity, side) ->
                         blockEntity instanceof OffshorePumpBlockEntity pump
                                 ? pump.fluidHandler() : null,
@@ -127,12 +127,12 @@ public final class PFBlockEntities {
      */
     private static void registerBoilerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlock(
-                Capabilities.FluidHandler.BLOCK,
+                Capabilities.Fluid.BLOCK,
                 (level, pos, state, blockEntity, side) ->
                         blockEntity instanceof BoilerBlockEntity boiler ? boiler.fluidHandler() : null,
                 PFBlocks.BOILER.get());
         event.registerBlock(
-                Capabilities.ItemHandler.BLOCK,
+                Capabilities.Item.BLOCK,
                 (level, pos, state, blockEntity, side) ->
                         blockEntity instanceof BoilerBlockEntity boiler
                                 ? new BoilerItemHandler(boiler) : null,
@@ -162,7 +162,7 @@ public final class PFBlockEntities {
     private static void registerPoleCapabilities(RegisterCapabilitiesEvent event) {
         for (PoleTier tier : PoleTier.values()) {
             event.registerBlock(
-                    Capabilities.EnergyStorage.BLOCK,
+                    Capabilities.Energy.BLOCK,
                     (level, pos, state, blockEntity, side) -> {
                         BlockPos base = PoleColumn.baseOf(level, pos);
                         if (base == null) {
@@ -192,13 +192,13 @@ public final class PFBlockEntities {
         for (FurnaceTier tier : FurnaceTier.values()) {
             Block block = PFBlocks.furnace(tier).get();
             event.registerBlock(
-                    Capabilities.ItemHandler.BLOCK,
+                    Capabilities.Item.BLOCK,
                     (level, pos, state, blockEntity, side) ->
                             blockEntity instanceof FurnaceBlockEntity furnace
                                     ? new FurnaceItemHandler(furnace) : null,
                     block);
             event.registerBlock(
-                    GTCapability.CAPABILITY_ENERGY_CONTAINER,
+                    Capabilities.Energy.BLOCK,
                     (level, pos, state, blockEntity, side) ->
                             blockEntity instanceof FurnaceBlockEntity furnace
                                     ? furnace.energySide() : null,
@@ -224,12 +224,12 @@ public final class PFBlockEntities {
     private static void registerRigCapabilities(RegisterCapabilitiesEvent event) {
         for (RigTier tier : RigTier.values()) {
             event.registerBlock(
-                    Capabilities.ItemHandler.BLOCK,
+                    Capabilities.Item.BLOCK,
                     (level, pos, state, blockEntity, side) ->
                             blockEntity instanceof RigBlockEntity rig ? new RigItemHandler(rig) : null,
                     PFBlocks.rig(tier).get());
             event.registerBlock(
-                    Capabilities.ItemHandler.BLOCK,
+                    Capabilities.Item.BLOCK,
                     (level, pos, state, blockEntity, side) -> {
                         if (!(blockEntity instanceof RigPartBlockEntity part)
                                 || part.anchorPos() == null

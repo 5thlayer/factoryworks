@@ -24,8 +24,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import net.neoforged.neoforge.transfer.CombinedResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
  * The Boiler running (#224, ADR-0048): solid fuel and water in, low-temperature steam out.
@@ -80,14 +85,18 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
     private final NonNullList<ItemStack> items = NonNullList.withSize(BoilerSlots.SIZE, ItemStack.EMPTY);
     private final FuelBuffer fuel = new FuelBuffer();
 
-    private final FluidTank water = new FluidTank(WATER_CAPACITY, stack -> stack.getFluid() == Fluids.WATER) {
+    private final FluidStacksResourceHandler water = new FluidStacksResourceHandler(1, WATER_CAPACITY) {
+        @Override
+        public boolean isValid(int index, FluidResource resource) {
+            return resource.is(Fluids.WATER);
+        }
         @Override
         protected void onContentsChanged() {
             setChanged();
         }
     };
 
-    private final FluidTank steam = new FluidTank(STEAM_CAPACITY) {
+    private final FluidStacksResourceHandler steam = new FluidStacksResourceHandler(1, STEAM_CAPACITY) {
         @Override
         protected void onContentsChanged() {
             setChanged();
@@ -100,7 +109,7 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
             return switch (index) {
                 case DATA_FUEL -> clampToInt(fuel.storedJoules());
                 case DATA_FUEL_CAPACITY -> clampToInt(fuel.gaugeCapacity());
-                case DATA_WATER -> water.getFluidAmount();
+                case DATA_WATER -> water.getAmountAsInt(0);
                 case DATA_STEAM -> steam.getFluidAmount();
                 default -> 0;
             };
@@ -150,8 +159,8 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
             return;
         }
         int converted = BoilerCycle.tick(
-                water.getFluidAmount(),
-                steam.getCapacity() - steam.getFluidAmount(),
+                water.getAmountAsInt(0),
+                steam.getCapacityAsInt(0, net.neoforged.neoforge.transfer.fluid.FluidResource.EMPTY) - steam.getAmountAsInt(0),
                 MILLIBUCKETS_PER_TICK,
                 JOULES_PER_TICK,
                 fuel,
@@ -159,10 +168,12 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
         if (converted <= 0) {
             return;
         }
-        water.drain(converted, IFluidHandler.FluidAction.EXECUTE);
-        // Unit for unit: Factorio's boiler is a temperature change, not a reaction.
-        steam.fill(new FluidStack(PFFluids.STEAM_SOURCE.get(), converted),
-                IFluidHandler.FluidAction.EXECUTE);
+        try (Transaction tx = Transaction.openRoot()) {
+            water.extract(net.neoforged.neoforge.transfer.fluid.FluidResource.of(net.minecraft.world.level.material.Fluids.WATER), converted, tx);
+            // Unit for unit: Factorio's boiler is a temperature change, not a reaction.
+            steam.insert(net.neoforged.neoforge.transfer.fluid.FluidResource.of(PFFluids.STEAM_SOURCE.get()), converted, tx);
+            tx.commit();
+        }
         setChanged();
     }
 
@@ -199,41 +210,12 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
      * and can never drain the water back out, which would otherwise let a player launder water
      * through a machine that is supposed to be consuming it.
      */
-    public IFluidHandler fluidHandler() {
-        return new IFluidHandler() {
+    public ResourceHandler<FluidResource> fluidHandler() {
+        return new DelegatingResourceHandler<>(new CombinedResourceHandler<>(water, steam)) {
             @Override
-            public int getTanks() {
-                return 2;
-            }
-
-            @Override
-            public FluidStack getFluidInTank(int tank) {
-                return tank == 0 ? water.getFluid() : steam.getFluid();
-            }
-
-            @Override
-            public int getTankCapacity(int tank) {
-                return tank == 0 ? water.getCapacity() : steam.getCapacity();
-            }
-
-            @Override
-            public boolean isFluidValid(int tank, FluidStack stack) {
-                return tank == 0 && water.isFluidValid(stack);
-            }
-
-            @Override
-            public int fill(FluidStack resource, FluidAction action) {
-                return water.isFluidValid(resource) ? water.fill(resource, action) : 0;
-            }
-
-            @Override
-            public FluidStack drain(FluidStack resource, FluidAction action) {
-                return steam.drain(resource, action);
-            }
-
-            @Override
-            public FluidStack drain(int maxDrain, FluidAction action) {
-                return steam.drain(maxDrain, action);
+            public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+                if (index == 1) return 0;
+                return super.insert(index, resource, amount, transaction);
             }
         };
     }

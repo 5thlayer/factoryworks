@@ -4,7 +4,8 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import com.gregtechceu.oritech.api.capability.IEnergyContainer;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import com.planetaryfactory.core.PFBlockEntities;
 import com.planetaryfactory.core.recipes.PFRecipes;
 import com.planetaryfactory.core.recipes.SmeltingRecipe;
@@ -294,49 +295,29 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
      * failing to power.
      */
     @Nullable
-    public IEnergyContainer energySide() {
-        return tier.burnsFuel() ? null : gtContainer;
+    public EnergyHandler energySide() {
+        return tier.burnsFuel() ? null : neoEnergyHandler;
     }
 
-    private final IEnergyContainer gtContainer = new IEnergyContainer() {
+    private final EnergyHandler neoEnergyHandler = new EnergyHandler() {
         @Override
-        public long acceptEnergyFromNetwork(Direction side, long voltage, long amperage) {
-            // voltage and amperage are Oritech's signature, not ours; nothing here reads them.
-            return energy.acceptFromNetwork();
-        }
-
-        @Override
-        public boolean inputsEnergy(Direction side) {
-            return energy.inputsEnergy();
-        }
-
-        @Override
-        public long changeEnergy(long delta) {
-            long moved = energy.changeEnergy(delta);
-            if (moved != 0L) {
-                setChanged();
-            }
-            return moved;
-        }
-
-        @Override
-        public long getEnergyStored() {
+        public long getAmountAsLong() {
             return energy.getEnergyStored();
         }
 
         @Override
-        public long getEnergyCapacity() {
+        public long getCapacityAsLong() {
             return energy.getEnergyCapacity();
         }
 
         @Override
-        public long getInputAmperage() {
-            return energy.inputAmperage();
+        public int insert(int amount, TransactionContext transaction) {
+            return 0; // The pole is the boundary: a GT cable run gets nothing.
         }
 
         @Override
-        public long getInputVoltage() {
-            return energy.inputVoltage();
+        public int extract(int amount, TransactionContext transaction) {
+            return 0;
         }
     };
 

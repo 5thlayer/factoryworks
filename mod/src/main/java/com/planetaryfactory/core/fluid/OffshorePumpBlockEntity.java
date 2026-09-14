@@ -6,9 +6,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
  * The pump running (#213, ADR-0050): 60 mB of water into a small buffer every tick, for whatever
@@ -33,9 +36,9 @@ public class OffshorePumpBlockEntity extends BlockEntity {
      * One tick's production. Not a tank: a pump that banks water while unconnected would deliver a
      * burst on connection, which is a behaviour a player would have to learn.
      */
-    private final FluidTank buffer = new FluidTank(OffshorePumpSpec.milliBucketsPerTick(PumpCorpus.get().pumpingSpeed())) {
+    private final FluidStacksResourceHandler buffer = new FluidStacksResourceHandler(1, OffshorePumpSpec.milliBucketsPerTick(PumpCorpus.get().pumpingSpeed())) {
         @Override
-        protected void onContentsChanged() {
+        public void onContentsChanged() {
             setChanged();
         }
     };
@@ -50,9 +53,12 @@ public class OffshorePumpBlockEntity extends BlockEntity {
      * 60 mB a tick delivered, not 60 mB a tick offered.
      */
     public void serverTick() {
-        int room = buffer.getSpace();
+        int room = buffer.getCapacityAsInt(0, FluidResource.EMPTY) - buffer.getAmountAsInt(0);
         if (room > 0) {
-            buffer.fill(new FluidStack(Fluids.WATER, room), IFluidHandler.FluidAction.EXECUTE);
+            try (Transaction tx = Transaction.openRoot()) {
+                buffer.insert(FluidResource.of(Fluids.WATER), room, tx);
+                tx.commit();
+            }
         }
     }
 
@@ -60,41 +66,11 @@ public class OffshorePumpBlockEntity extends BlockEntity {
      * Extract-only. A pump is an origin, and letting something push fluid back into it would make
      * it a pipe junction that happens to make water.
      */
-    public IFluidHandler fluidHandler() {
-        return new IFluidHandler() {
+    public ResourceHandler<FluidResource> fluidHandler() {
+        return new DelegatingResourceHandler<>(buffer) {
             @Override
-            public int getTanks() {
-                return buffer.getTanks();
-            }
-
-            @Override
-            public FluidStack getFluidInTank(int tank) {
-                return buffer.getFluidInTank(tank);
-            }
-
-            @Override
-            public int getTankCapacity(int tank) {
-                return buffer.getTankCapacity(tank);
-            }
-
-            @Override
-            public boolean isFluidValid(int tank, FluidStack stack) {
-                return false;
-            }
-
-            @Override
-            public int fill(FluidStack resource, FluidAction action) {
+            public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
                 return 0;
-            }
-
-            @Override
-            public FluidStack drain(FluidStack resource, FluidAction action) {
-                return buffer.drain(resource, action);
-            }
-
-            @Override
-            public FluidStack drain(int maxDrain, FluidAction action) {
-                return buffer.drain(maxDrain, action);
             }
         };
     }

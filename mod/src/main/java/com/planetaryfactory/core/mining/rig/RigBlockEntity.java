@@ -33,8 +33,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
  * The behaviour behind both mining rigs (#193, #194): it mines the layer beneath it, burns solid
@@ -303,21 +304,25 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
                 RigDirections.toRigFacing(facing));
         BlockPos target = getBlockPos().offset(offset.dx(), offset.dy(), offset.dz());
 
-        IItemHandler handler = server.getCapability(
+        ResourceHandler<ItemResource> handler = server.getCapability(
                 // The side the item arrives from, which is the neighbour's face towards the rig.
-                Capabilities.ItemHandler.BLOCK, target, facing.getOpposite());
+                Capabilities.Item.BLOCK, target, facing.getOpposite());
         if (handler == null) {
             return;
         }
 
         int held = buffer.count();
-        ItemStack leftover = ItemHandlerHelper.insertItem(handler, stackOf(itemId, held), false);
-        if (leftover.getCount() == held) {
+        int inserted = 0;
+        try (Transaction tx = Transaction.openRoot()) {
+            inserted = handler.insert(ItemResource.of(stackOf(itemId, 1)), held, tx);
+            tx.commit();
+        }
+        if (inserted == 0) {
             return;
         }
         // `load` with a count of zero empties the buffer identity and all, which is what lets the
         // next resource in when a 2x2 straddles two fields.
-        buffer.load(itemId, leftover.getCount());
+        buffer.load(itemId, held - inserted);
         setChanged();
     }
 
