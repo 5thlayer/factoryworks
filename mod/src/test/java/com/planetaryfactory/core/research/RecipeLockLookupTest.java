@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 class RecipeLockLookupTest {
 
     private static final RecipeResearchIndex<String, String> INDEX = RecipeResearchIndex.<String, String>builder()
-            .add("steam_power", List.of("oritech:steam_turbine", "oritech:bronze_boiler"))
-            .add("alloys", List.of("oritech:bronze_boiler"))
+            .add("steam_power", List.of("oritech:powered_furnace", "oritech:foundry"))
+            .add("alloys", List.of("oritech:foundry"))
             .build();
 
     private static RecipeLockLookup<String, String> lockingNothing() {
@@ -33,12 +33,12 @@ class RecipeLockLookupTest {
 
     @Test
     void aRecipeTheTeamCanRunIsNotAnnotated() {
-        assertTrue(lockingNothing().lockOn("oritech:steam_turbine").isEmpty());
+        assertTrue(lockingNothing().lockOn("oritech:powered_furnace").isEmpty());
     }
 
     @Test
     void aLockedRecipeNamesTheResearchThatUnlocksIt() {
-        Optional<RecipeLockLookup.Lock<String>> lock = lockingEverything().lockOn("oritech:steam_turbine");
+        Optional<RecipeLockLookup.Lock<String>> lock = lockingEverything().lockOn("oritech:powered_furnace");
 
         assertTrue(lock.isPresent());
         assertEquals(Set.of("steam_power"), lock.get().unlockingResearches());
@@ -49,7 +49,7 @@ class RecipeLockLookupTest {
         assertEquals(
                 List.of("steam_power", "alloys"),
                 List.copyOf(lockingEverything()
-                        .lockOn("oritech:bronze_boiler")
+                        .lockOn("oritech:foundry")
                         .orElseThrow()
                         .unlockingResearches()),
                 "in index order, so a redraw does not shuffle the tooltip");
@@ -90,13 +90,13 @@ class RecipeLockLookupTest {
     void anEmptyIndexStillReportsTheLockItCannotName() {
         RecipeLockLookup<String, String> lookup = RecipeLockLookup.of(RecipeResearchIndex.empty(), id -> true);
 
-        assertTrue(lookup.lockOn("oritech:steam_turbine").isPresent());
+        assertTrue(lookup.lockOn("oritech:powered_furnace").isPresent());
     }
 
     @Test
     void theResearchesOfALockCannotBeEditedByItsReader() {
         Set<String> researches =
-                lockingEverything().lockOn("oritech:steam_turbine").orElseThrow().unlockingResearches();
+                lockingEverything().lockOn("oritech:powered_furnace").orElseThrow().unlockingResearches();
 
         assertThrows(UnsupportedOperationException.class, () -> researches.add("electricity"));
     }
@@ -104,7 +104,7 @@ class RecipeLockLookupTest {
     @Test
     void theLockIsDecidedByTheTeamsDataNotByTheIndex() {
         assertFalse(
-                lockingNothing().lockOn("oritech:bronze_boiler").isPresent(),
+                lockingNothing().lockOn("oritech:foundry").isPresent(),
                 "an id some research unlocks is not locked once that research is complete");
     }
 }

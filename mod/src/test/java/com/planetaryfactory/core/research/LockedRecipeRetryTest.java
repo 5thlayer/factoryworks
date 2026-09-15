@@ -13,33 +13,33 @@ import org.junit.jupiter.api.Test;
 /** Issue #76's acceptance criteria for the retry memory, as assertions. */
 class LockedRecipeRetryTest {
 
-    /** Stands in for a {@code GTRecipe}: an id, and an object identity distinct from it. */
+    /** Stands in for a machine recipe: an id, and an object identity distinct from it. */
     private record Recipe(String id) {}
 
     private static final Function<Recipe, String> ID = Recipe::id;
 
-    private static final Recipe STICKY_PISTON = new Recipe("oritech:assembler/sticky_piston_slime");
-    private static final Recipe CONVEYOR = new Recipe("oritech:assembler/conveyor_module_lv");
+    private static final Recipe FLUXGATE = new Recipe("oritech:assembler/fluxgate");
+    private static final Recipe BATTERY = new Recipe("oritech:assembler/battery");
 
     @Test
     void remembersARefusedRecipeSoTheMachineKeepsTicking() {
-        List<Recipe> remembered = LockedRecipeRetry.remember(null, STICKY_PISTON, ID);
+        List<Recipe> remembered = LockedRecipeRetry.remember(null, FLUXGATE, ID);
 
-        assertEquals(List.of(STICKY_PISTON), remembered, "an empty memory is what unsubscribes the machine");
+        assertEquals(List.of(FLUXGATE), remembered, "an empty memory is what unsubscribes the machine");
     }
 
     @Test
     void keepsWhatWasAlreadyRemembered() {
-        List<Recipe> first = LockedRecipeRetry.remember(null, STICKY_PISTON, ID);
+        List<Recipe> first = LockedRecipeRetry.remember(null, FLUXGATE, ID);
 
-        assertEquals(List.of(STICKY_PISTON, CONVEYOR), LockedRecipeRetry.remember(first, CONVEYOR, ID));
+        assertEquals(List.of(FLUXGATE, BATTERY), LockedRecipeRetry.remember(first, BATTERY, ID));
     }
 
     @Test
     void remembersARecipeOnlyOnce() {
-        List<Recipe> once = LockedRecipeRetry.remember(null, STICKY_PISTON, ID);
+        List<Recipe> once = LockedRecipeRetry.remember(null, FLUXGATE, ID);
 
-        assertEquals(List.of(STICKY_PISTON), LockedRecipeRetry.remember(once, STICKY_PISTON, ID));
+        assertEquals(List.of(FLUXGATE), LockedRecipeRetry.remember(once, FLUXGATE, ID));
     }
 
     /**
@@ -49,11 +49,11 @@ class LockedRecipeRetryTest {
      */
     @Test
     void treatsAModifiedCopyAsTheSameRecipe() {
-        Recipe modified = new Recipe(STICKY_PISTON.id());
-        assertNotSame(STICKY_PISTON, modified);
+        Recipe modified = new Recipe(FLUXGATE.id());
+        assertNotSame(FLUXGATE, modified);
 
         List<Recipe> remembered =
-                LockedRecipeRetry.remember(LockedRecipeRetry.remember(null, STICKY_PISTON, ID), modified, ID);
+                LockedRecipeRetry.remember(LockedRecipeRetry.remember(null, FLUXGATE, ID), modified, ID);
 
         assertEquals(1, remembered.size(), "one waiting recipe is one entry, however many ticks pass");
     }
@@ -64,39 +64,39 @@ class LockedRecipeRetryTest {
      */
     @Test
     void leavesTheListItWasGivenUntouched() {
-        List<Recipe> held = LockedRecipeRetry.remember(null, STICKY_PISTON, ID);
+        List<Recipe> held = LockedRecipeRetry.remember(null, FLUXGATE, ID);
 
-        List<Recipe> next = LockedRecipeRetry.remember(held, CONVEYOR, ID);
+        List<Recipe> next = LockedRecipeRetry.remember(held, BATTERY, ID);
 
         assertNotSame(held, next);
-        assertEquals(List.of(STICKY_PISTON), held, "an in-flight iteration must see what it started with");
+        assertEquals(List.of(FLUXGATE), held, "an in-flight iteration must see what it started with");
     }
 
     /** A no-op remember still hands back a copy, so the same guarantee holds on the dedup path. */
     @Test
     void copiesEvenWhenNothingIsAdded() {
-        List<Recipe> held = LockedRecipeRetry.remember(null, STICKY_PISTON, ID);
+        List<Recipe> held = LockedRecipeRetry.remember(null, FLUXGATE, ID);
 
-        assertNotSame(held, LockedRecipeRetry.remember(held, STICKY_PISTON, ID));
+        assertNotSame(held, LockedRecipeRetry.remember(held, FLUXGATE, ID));
     }
 
     /** {@code handleSearchingRecipes} adds to this field itself, so what is left there must take it. */
     @Test
     void handsBackAListOritechCanAddTo() {
-        List<Recipe> remembered = LockedRecipeRetry.remember(null, STICKY_PISTON, ID);
+        List<Recipe> remembered = LockedRecipeRetry.remember(null, FLUXGATE, ID);
 
-        remembered.add(CONVEYOR);
+        remembered.add(BATTERY);
 
-        assertTrue(remembered.contains(CONVEYOR));
+        assertTrue(remembered.contains(BATTERY));
     }
 
     @Test
     void takesOverAListOritechBuilt() {
-        List<Recipe> gregtechs = new ArrayList<>(List.of(CONVEYOR));
+        List<Recipe> gregtechs = new ArrayList<>(List.of(BATTERY));
 
-        List<Recipe> remembered = LockedRecipeRetry.remember(gregtechs, STICKY_PISTON, ID);
+        List<Recipe> remembered = LockedRecipeRetry.remember(gregtechs, FLUXGATE, ID);
 
-        assertEquals(List.of(CONVEYOR, STICKY_PISTON), remembered);
-        assertSame(CONVEYOR, remembered.get(0));
+        assertEquals(List.of(BATTERY, FLUXGATE), remembered);
+        assertSame(BATTERY, remembered.get(0));
     }
 }
