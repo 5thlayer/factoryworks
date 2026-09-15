@@ -54,7 +54,7 @@ StartupEvents.registry('item', event => {
   // authors rather than borrows. Its recipe is the Chemical Plant's and arrives with #107.
   event.create('planetaryfactory:plastic_bar')
     .displayName('Plastic Bar')
-    .texture('oritech:item/plastic_circuit_board')
+    .texture('oritech:item/plastic_sheet')
 
   // The oil chapter's two solids and the rocket's two intermediates.
   //
@@ -73,9 +73,14 @@ StartupEvents.registry('item', event => {
     .displayName('Rocket Fuel')
     .texture('minecraft:item/blaze_powder')
 
+  // Paired with the Plastic Bar above on purpose: Oritech's `plastic_sheet` and
+  // `reinforced_carbon_sheet` are one isometric silhouette in off-white and black, so the two
+  // read as the same kind of thing. `carbon_fibre_strands` is the raw bundle and would not --
+  // a Structure is a panel. Note Oritech's spelling is `fibre`; the `carbon_fiber_plate` this
+  // replaces was a GTCEu name and never existed here under either spelling.
   event.create('planetaryfactory:low_density_structure')
     .displayName('Low Density Structure')
-    .texture('oritech:item/carbon_fiber_plate')
+    .texture('oritech:item/reinforced_carbon_sheet')
 
   // Factorio's battery is a crafting INTERMEDIATE, not a placed power store: Oritech's batteries
   // are tiered chargeable hulls and Electro's capacitor is a different thing, so borrowing either
