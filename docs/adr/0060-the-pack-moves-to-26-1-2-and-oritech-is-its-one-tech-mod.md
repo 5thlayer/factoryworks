@@ -1,6 +1,6 @@
 ---
 status: provisional
-supersedes: [28, 148, 178]
+supersedes: [28, 148, 156, 178]
 ---
 
 # The pack moves to Minecraft 26.1.2, and Oritech is its one tech mod
