@@ -290,7 +290,7 @@ hash = "751be27942484f7b5a97e37b4455919cad51f0f5a8c1408187e0ea47623d1b89"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
-hash = "4545a52c58126eacebcc225e96455f26eace9dc79d94ad400c33023d268f7292"
+hash = "d3258b12a308a2dd576c79ee70de61741c451cefec8e7dc788aa9b157c35cf22"
 
 [[files]]
 file = "data/pack/subgroup-owner.json"
@@ -982,7 +982,7 @@ hash = "f9078270b2a482c4525d4dec9f37ee417928d66164420ad6d53e537a35278aa4"
 
 [[files]]
 file = "kubejs/data/minecraft/world_preset/normal.json"
-hash = "239a4e398bda6fd96b8be25008c78133c6e345298768765b65046bd5c801c274"
+hash = "df22baf260b1119b724580bea1019f54cec54b621a0ef0b8a29f3af6e2838a03"
 
 [[files]]
 file = "kubejs/data/minecraft/worldgen/noise_settings/overworld.json"
@@ -1262,7 +1262,7 @@ hash = "ea71c2ae051030135340d545388a340460194ed735cfad21b34f01501071d6bd"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/boiler.json"
-hash = "18e019f8c3028be0194bb9b399a8d6636a874071e9c288e8b3a740bed756d4a4"
+hash = "214fc0456629ba2aa8c348c8307775d62ae48b6bf61f328df7f3b8a2980db1f8"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/burner_mining_drill.json"
@@ -1270,7 +1270,7 @@ hash = "845eafff93d80b0e9fe2d4de540bb164879254e345a0415baf94b46fa1dea9fc"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/chemical_plant.json"
-hash = "f11659209eda986995d39bc7d6880dfea98509ea05ffaaaa272e00398f9e4585"
+hash = "d1c4a8a5196858837ad36f10dbb80ab716bcfe5e73323203e48fc0c04e999284"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/chemical_science_pack.json"
@@ -1302,7 +1302,7 @@ hash = "545880e8e3deb401183076fe14f1ec33b435f879054c0eeaa6896eca9c4e8fa6"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/engine_unit.json"
-hash = "781f425c9ee5314c61880cf7e666137bc3e7b64f79167bcefa6a16c72e6be57f"
+hash = "0561213b8f3a82fd46c09c612952c00cc827dba09a6195d91a8939937d472549"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/hazard_concrete.json"
@@ -1322,7 +1322,7 @@ hash = "b84497c4af02628b4af0c01f0d6a63fc76029aaf6bbb93d278d10415fbfdc7e0"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/lab.json"
-hash = "ec5256df60fd2bccca831b43c627f8bed47e11e3aa7281926bcfc90699cf4a54"
+hash = "68732b32b929a76ce205ce515584b50f9407be6df419a681fa078d8afba7ecc9"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/low_density_structure.json"
@@ -1334,11 +1334,11 @@ hash = "2d6278aad48c40d7932fddd3aba91055a025acf523a3593492a12154d54bca9f"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/offshore_pump.json"
-hash = "86e9cc021e3eb5c9ee28ccbe9cb095b4ea668f922a52e5d394139d2d7c328313"
+hash = "d86935ca793956c551888b14aa846a1f4a4cf5f5ad545772f5468af2ef7f4e19"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/oil_refinery.json"
-hash = "8cc8c92a105b22dec346db2270927a1de5bfe47fd7a75eb30bcc4fb55a2f2fd4"
+hash = "6d850175b489b358fc00179d1708b0757f777683d3281e1625cbd08775fea7a7"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/pack/engineers_iron_pick.json"
@@ -1350,7 +1350,7 @@ hash = "21bab5ccf7300990d433bb0bdf9ab96ef8b0355ce50845c50293f1fec2078525"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/pipe.json"
-hash = "60523c88d7742f0f8ad75a38c516b14ee8d55ca65fc8ab2a910d692154e9d1b5"
+hash = "d77b03d582520c8dcfa3ddcdc8d2fab083be690d992a88b7e983184d9ff45cf7"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/power_switch.json"
@@ -1362,15 +1362,15 @@ hash = "5e285be692258a5f5895615365a78d4ce8bd9e4923fc303df5b167052d366a01"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/pump.json"
-hash = "90bb7c3879f1d858ab810e8599a7595bb32e867c132d7a660ce0d3546891812a"
+hash = "b2dedb7ff86bf000bd770bc8e895baf3828b617157092f08488d74edbb2d8442"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/rail.json"
-hash = "20fdc153e72d458db3bce6cfc2c6ea93d791f7602fe94489d0ad8de5f9de625e"
+hash = "cd65e216ba15a8d0d2e7b2a73016bbc8bca2e23256be67c7cd7a24f9a76dd1dd"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/rail_signal.json"
-hash = "dd915d82de12862a8779f0e0da563b8943889c37a653176e4f3e5f86c2f9d7b6"
+hash = "d5f1378d042b272987a9c688613c2e575b0c648765c32e21f9198ec1da1a014f"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/refined_concrete.json"
@@ -1418,7 +1418,7 @@ hash = "8ffd5647f3cb9df6392e34d95e9e539fa070c7315749aa5c78c1330841df0a61"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/storage_tank.json"
-hash = "c7e47c8bdbb8696482900a7a5d75b4f3b785c34747ee64598011e1209ffee89f"
+hash = "58eeffc3d7e49e069d9e81afa67df52b0390c605b489d4c4422c6f041781d389"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/substation.json"
@@ -1426,11 +1426,11 @@ hash = "7fcbef5032f278132e1dc51aad8c88cabf08afd5dff7644060067b72ac0f0c37"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/train_stop.json"
-hash = "30f53d8c63b084292278d6449e13615ebb4c57e75ec20ec38ec235cf003f21c5"
+hash = "9145bf290607124cad35d0196a15e736cf241d249da0da126ebf6ca4c8301cfd"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/transport_belt.json"
-hash = "2c044087b5b83d42098331634a89ee8bb2bdd928551e8a56765afcbd80b89df2"
+hash = "b2870a377c9f0e027fee7d9f342a0a62732d0be558691dab4c5f2f7986f988be"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/wooden_chest.json"
@@ -1870,7 +1870,7 @@ hash = "dae099ae3be7f033c0c190ee8c3b023b42f6b235d9d0591be5926e8435dbd67f"
 
 [[files]]
 file = "kubejs/server_scripts/recipe_survivors.js"
-hash = "199dfa367b76315528da2d16d891573aa67a1e776825432e33c34af1c9a2049b"
+hash = "b8a5ac1e1310b0f6cb9e40d991d514f11a831cddbef6c920f4ca857c71725cea"
 
 [[files]]
 file = "kubejs/server_scripts/recipes.js"
@@ -1882,7 +1882,7 @@ hash = "f1c8fa34394e1b68631dac2ebce5eadda5915fc000df32ce84b494399ba6f6a6"
 
 [[files]]
 file = "kubejs/server_scripts/researchd.js"
-hash = "fb9ba44ece6748b1becaa9020ab0a40659d1cef72c9156e5254a281b92040c84"
+hash = "1541e4153dca47fa19ef63b16322fa374bbc20b8e5d6d2f68fd23ded5d990485"
 
 [[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
@@ -1890,7 +1890,7 @@ hash = "20580ceeb23855b9d54a9b11219143100dee749d16b356f7f60d667380958ead"
 
 [[files]]
 file = "kubejs/startup_scripts/blocks.js"
-hash = "c43ab965cb0cb546e832ad4ce416e3e00814cec2e001d3aad3770f570826d203"
+hash = "d52b647f509fb539bae54c95058682e65291bb350662fcf3eb88ad83a0fb5691"
 
 [[files]]
 file = "kubejs/startup_scripts/items.js"
