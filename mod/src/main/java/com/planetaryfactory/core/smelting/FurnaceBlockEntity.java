@@ -217,8 +217,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
     }
 
     private void complete(SmeltingRecipe smelt) {
-        ItemStack result = smelt.assemble(new SingleRecipeInput(items.get(FurnaceSlots.INPUT)),
-                level.registryAccess());
+        ItemStack result = smelt.assemble(new SingleRecipeInput(items.get(FurnaceSlots.INPUT)));
         ItemStack output = items.get(FurnaceSlots.OUTPUT);
         if (output.isEmpty()) {
             items.set(FurnaceSlots.OUTPUT, result.copy());
@@ -244,7 +243,12 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
         if (input.isEmpty() || level == null) {
             return Optional.empty();
         }
-        return level.getRecipeManager().getRecipeFor(PFRecipes.SMELTING_TYPE.get(),
+        // 26.1 keeps the recipe manager on the server rather than on the level; a client-side
+        // furnace has no recipes to look up and answers empty, which it did before too.
+        if (level.getServer() == null) {
+            return Optional.empty();
+        }
+        return level.getServer().getRecipeManager().getRecipeFor(PFRecipes.SMELTING_TYPE.get(),
                 new SingleRecipeInput(input), level);
     }
 
@@ -265,7 +269,11 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
         if (level == null || stack.isEmpty()) {
             return false;
         }
-        return level.getRecipeManager().getAllRecipesFor(PFRecipes.SMELTING_TYPE.get()).stream()
+        if (level.getServer() == null) {
+            return false;
+        }
+        return level.getServer().getRecipeManager().recipeMap()
+                .byType(PFRecipes.SMELTING_TYPE.get()).stream()
                 .anyMatch(holder -> holder.value().isIngredient(stack));
     }
 

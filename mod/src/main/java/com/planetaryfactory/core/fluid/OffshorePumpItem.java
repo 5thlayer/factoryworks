@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Placing a pump (#213, ADR-0050), and refusing to when there is nothing to pump.
@@ -35,11 +36,11 @@ public class OffshorePumpItem extends BlockItem {
             return InteractionResult.FAIL;
         }
         if (!OffshorePumpBlock.canSit(context.getLevel(), context.getClickedPos())) {
-            Player player = context.getPlayer();
-            if (player != null && !context.getLevel().isClientSide()) {
-                // Above the hotbar rather than in chat: it is feedback on a gesture the player just
-                // made, not a log line.
-                player.displayClientMessage(Component.translatable(NO_WATER_KEY), true);
+            // Above the hotbar rather than in chat: it is feedback on a gesture the player just
+            // made, not a log line. 26.1 moved the overlay form onto ServerPlayer, which is also
+            // the only side worth sending it from.
+            if (context.getPlayer() instanceof ServerPlayer player) {
+                player.sendSystemMessage(Component.translatable(NO_WATER_KEY), true);
             }
             return InteractionResult.FAIL;
         }

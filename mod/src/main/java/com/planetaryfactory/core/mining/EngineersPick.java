@@ -17,6 +17,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.List;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.ItemInstance;
 
 /**
  * Factorio's single mining gesture, wearing a pickaxe model (ADR-0039).
@@ -103,7 +106,7 @@ public final class EngineersPick extends Item {
      * research to double.
      */
     @Override
-    public boolean canPerformAction(ItemStack stack, ItemAbility ability) {
+    public boolean canPerformAction(ItemInstance stack, ItemAbility ability) {
         return PickAbilities.grants(ability.name());
     }
 
@@ -148,12 +151,12 @@ public final class EngineersPick extends Item {
      * who cannot see it has no way to tell the two picks apart but the name.
      */
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip,
-                                TooltipFlag flag) {
-        tooltip.add(Component.translatable("tooltip.planetaryfactory.engineers_pick.speed",
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+                                Consumer<Component> tooltip, TooltipFlag flag) {
+        tooltip.accept(Component.translatable("tooltip.planetaryfactory.engineers_pick.speed",
                                            String.format("%.1f", tier.secondsPerResource()))
                             .withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("tooltip.planetaryfactory.engineers_pick.universal")
+        tooltip.accept(Component.translatable("tooltip.planetaryfactory.engineers_pick.universal")
                             .withStyle(ChatFormatting.DARK_GRAY));
     }
 

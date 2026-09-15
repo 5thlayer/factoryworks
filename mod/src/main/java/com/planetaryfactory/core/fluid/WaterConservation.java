@@ -29,8 +29,8 @@ public final class WaterConservation {
 
     public static void onServerStarting(ServerStartingEvent event) {
         GameRules rules = event.getServer().getGameRules();
-        boolean wasSet = rules.getBoolean(GameRules.RULE_WATER_SOURCE_CONVERSION);
-        rules.getRule(GameRules.RULE_WATER_SOURCE_CONVERSION).set(false, event.getServer());
+        boolean wasSet = rules.get(GameRules.WATER_SOURCE_CONVERSION);
+        rules.set(GameRules.WATER_SOURCE_CONVERSION, false, event.getServer());
         if (wasSet) {
             // Only worth a line when it actually undid something -- a player's own toggle, or a
             // level.dat carried over from before this rule existed.

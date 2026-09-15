@@ -123,13 +123,4 @@ public class BoilerBlock extends BaseEntityBlock {
      * somewhere. That is the furnace ladder's own bargain and it is stated here rather than left
      * to be noticed.
      */
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState,
-            boolean moved) {
-        if (!state.is(newState.getBlock())
-                && level.getBlockEntity(pos) instanceof BoilerBlockEntity boiler) {
-            Containers.dropContents(level, pos, boiler);
-        }
-        super.onRemove(state, level, pos, newState, moved);
-    }
 }

@@ -9,7 +9,7 @@ public class BoilerItemHandler extends DelegatingResourceHandler<ItemResource> {
     private final BoilerBlockEntity blockEntity;
 
     public BoilerItemHandler(BoilerBlockEntity blockEntity) {
-        super(new VanillaContainerWrapper(blockEntity));
+        super(VanillaContainerWrapper.of(blockEntity));
         this.blockEntity = blockEntity;
     }
 

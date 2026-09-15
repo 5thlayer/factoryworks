@@ -38,7 +38,7 @@ public class OffshorePumpBlockEntity extends BlockEntity {
      */
     private final FluidStacksResourceHandler buffer = new FluidStacksResourceHandler(1, OffshorePumpSpec.milliBucketsPerTick(PumpCorpus.get().pumpingSpeed())) {
         @Override
-        public void onContentsChanged() {
+        protected void onContentsChanged(int index, net.neoforged.neoforge.fluids.FluidStack previousContents) {
             setChanged();
         }
     };

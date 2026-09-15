@@ -28,7 +28,7 @@ public class SmeltingEmiRecipe extends BasicEmiRecipe {
     private final int cookingTime;
 
     public SmeltingEmiRecipe(EmiRecipeCategory category, RecipeHolder<SmeltingRecipe> holder) {
-        super(category, holder.id(), 106, 32);
+        super(category, holder.id().identifier(), 106, 32);
         SmeltingRecipe recipe = holder.value();
         this.cookingTime = recipe.cookingTime();
         this.inputs = List.of(EmiIngredient.of(recipe.ingredient(), recipe.count()));

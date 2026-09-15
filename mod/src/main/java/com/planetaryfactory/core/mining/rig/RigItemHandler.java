@@ -9,7 +9,7 @@ public class RigItemHandler extends DelegatingResourceHandler<ItemResource> {
     private final RigBlockEntity blockEntity;
 
     public RigItemHandler(RigBlockEntity blockEntity) {
-        super(new VanillaContainerWrapper(blockEntity));
+        super(VanillaContainerWrapper.of(blockEntity));
         this.blockEntity = blockEntity;
     }
 

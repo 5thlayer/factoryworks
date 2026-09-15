@@ -8,6 +8,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 /**
  * The pole in the hand, and the only thing in the pack that says what a pole does.
@@ -38,27 +40,27 @@ public class SupplyAreaPoleItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(net.minecraft.world.item.ItemStack stack, TooltipContext context,
-                                List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+    public void appendHoverText(net.minecraft.world.item.ItemStack stack, TooltipContext context, TooltipDisplay display,
+                                Consumer<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, tooltip, flag);
         PoleTier tier = tier();
 
         // What it covers. Stated as Factorio states it -- a square of tiles -- plus the vertical
         // band, which is the dimension Factorio has no answer for and a player cannot guess.
-        tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.area",
+        tooltip.accept(Component.translatable("tooltip.planetaryfactory.pole.area",
                 tier.supplySize(), tier.supplySize(), tier.verticalRadius())
                 .withStyle(ChatFormatting.GRAY));
 
         // That it is wireless. The load-bearing line: a Minecraft player who is not told this will
         // go looking for the cable, fail to find one, and conclude the pole is broken.
-        tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.wireless")
+        tooltip.accept(Component.translatable("tooltip.planetaryfactory.pole.wireless")
                 .withStyle(ChatFormatting.GRAY));
 
         // That height does not move the area, and how to add height. One line for both, because
         // they are the same fact from two sides: the column exists so the wire can go up, and the
         // footprint stays on the ground while it does. Saying only the first would replace an
         // invisible bug with an invisible rule.
-        tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.column",
+        tooltip.accept(Component.translatable("tooltip.planetaryfactory.pole.column",
                 Component.translatable(getBlock().getDescriptionId()), PoleColumn.MAX_SEGMENTS)
                 .withStyle(ChatFormatting.DARK_GRAY));
     }

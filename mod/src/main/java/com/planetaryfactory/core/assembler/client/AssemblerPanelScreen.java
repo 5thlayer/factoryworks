@@ -110,7 +110,7 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
             boolean onCancel = mouseX >= cancelLeft() && mouseX <= cancelLeft() + CANCEL_SIZE
                     && mouseY >= rowTop + 2 && mouseY <= rowTop + 2 + CANCEL_SIZE;
             if (onCancel && index >= 0 && index < AssemblerQueueView.entries().size()) {
-                PacketDistributor.sendToServer(
+                net.neoforged.neoforge.network.PacketDistributor.sendToServer(
                         new PlanCancelPacket(AssemblerQueueView.entries().get(index).planId()));
                 return true;
             }

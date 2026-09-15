@@ -144,7 +144,7 @@ public final class OreMining {
     /** The block's initial amount: its field's quotient, or the outfield law's scaling of it. */
     public static int initialAmount(ServerLevel level, OreBlock ore, BlockPos pos) {
         OreFields fields = level.getDataStorage().computeIfAbsent(OreFields.TYPE);
-        return fields.initialAmount(ore.resource(), pos, level.getLevelData().getSpawnPos());
+        return fields.initialAmount(ore.resource(), pos, level.getLevelData().getRespawnData().pos());
     }
 
     /**

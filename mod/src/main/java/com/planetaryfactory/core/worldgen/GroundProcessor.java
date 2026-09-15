@@ -69,7 +69,7 @@ public final class GroundProcessor extends StructureProcessor {
     private static int ground(LevelReader level, int x, int z) {
         int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos(x, y, z);
-        while (y > level.getMinBuildHeight() && !isTerrain(level.getBlockState(cursor.setY(y)))) {
+        while (y > level.getMinY() && !isTerrain(level.getBlockState(cursor.setY(y)))) {
             y--;
         }
         return y;
