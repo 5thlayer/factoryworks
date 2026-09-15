@@ -3,12 +3,14 @@ package com.planetaryfactory.core.ore;
 import com.mojang.logging.LogUtils;
 import com.planetaryfactory.core.PFAttachments;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -168,9 +170,13 @@ public final class OreMining {
 
     private static void drop(ServerLevel level, BlockPos pos, OreResource resource) {
         Identifier id = Identifier.parse(resource.drop());
-        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(id).orElseThrow().value());
+        // Air, not a throw. The branch below is the whole handling for an id nothing registers,
+        // and 26.1 turning this lookup into an Optional is not a reason to turn a lost draw into
+        // a crash out of a block break.
+        ItemStack stack = new ItemStack(
+                BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(Items.AIR));
         if (stack.isEmpty()) {
-            // An id nothing registered resolves to air rather than throwing, so this branch is how
+            // An id nothing registered resolves to air, so this branch is how
             // `oritech:raw_iron` -- an item Oritech never registers, because vanilla covers iron --
             // ate every iron draw without a word. The unit is already spent by here; say so.
             LOGGER.error("{} pays out {}, which no mod registers: the draw is lost",
