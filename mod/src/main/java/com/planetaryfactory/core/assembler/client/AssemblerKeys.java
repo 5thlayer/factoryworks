@@ -67,7 +67,7 @@ public final class AssemblerKeys {
         // press through into whatever opens next; presses made with a screen up are handled below,
         // where the screen itself says what the key should do.
         if (pressed && client.screen == null) {
-            PacketDistributor.sendToServer(new OpenPanelPacket());
+            net.neoforged.neoforge.network.PacketDistributor.sendToServer(new OpenPanelPacket());
         }
     }
 
@@ -88,7 +88,7 @@ public final class AssemblerKeys {
             panel.onClose();
             event.setCanceled(true);
         } else if (event.getScreen() instanceof InventoryScreen) {
-            PacketDistributor.sendToServer(new OpenPanelPacket());
+            net.neoforged.neoforge.network.PacketDistributor.sendToServer(new OpenPanelPacket());
             event.setCanceled(true);
         }
     }

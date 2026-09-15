@@ -9,7 +9,7 @@ public class FurnaceItemHandler extends DelegatingResourceHandler<ItemResource> 
     private final FurnaceBlockEntity blockEntity;
 
     public FurnaceItemHandler(FurnaceBlockEntity blockEntity) {
-        super(new VanillaContainerWrapper(blockEntity));
+        super(VanillaContainerWrapper.of(blockEntity));
         this.blockEntity = blockEntity;
     }
 

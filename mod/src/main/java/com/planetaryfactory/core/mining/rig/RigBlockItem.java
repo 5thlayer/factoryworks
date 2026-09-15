@@ -86,6 +86,6 @@ public class RigBlockItem extends BlockItem {
         level.gameEvent(GameEvent.BLOCK_PLACE, anchorPos, GameEvent.Context.of(player, anchorState));
 
         context.getItemInHand().consume(1, player);
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 }

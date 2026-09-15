@@ -22,6 +22,6 @@ public final class BarrelFluidHandler extends ItemAccessFluidHandler {
     }
 
     private boolean single() {
-        return itemAccess.getAmountAsLong() == 1;
+        return itemAccess.getAmount() == 1;
     }
 }

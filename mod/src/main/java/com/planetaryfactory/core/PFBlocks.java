@@ -172,7 +172,7 @@ public final class PFBlocks {
                 grower,
                 BlockBehaviour.Properties.of()
                         .mapColor(net.minecraft.world.level.material.MapColor.PLANT)
-                        .noCollission()
+                        .noCollision()
                         .randomTicks()
                         .instabreak()
                         .sound(SoundType.GRASS)

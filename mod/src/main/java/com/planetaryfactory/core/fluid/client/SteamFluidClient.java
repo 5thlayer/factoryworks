@@ -11,19 +11,20 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
  * The client half of Terra's two steam fluids: what texture and tint a tank or a pipe renders them
  * with (#223, ADR-0048).
  *
- * <p><b>This is the trap the ticket named.</b> Registering a {@link net.neoforged.neoforge.fluids.FluidType}
- * with no client extension does not fail the build -- it ships a fluid that is invisible in a tank,
- * or renders as the black-and-magenta missing-texture checker if something downstream assumes one
- * exists. There is no in-repo precedent for this seam, so it is wired explicitly here rather than
- * folded into {@link PFFluidTypes} itself, and {@code PlanetaryFactoryCore} calls
- * {@link #register(IEventBus)} only inside its {@code Dist.CLIENT} branch -- registering it
- * unconditionally would pull client-only classes onto a dedicated server's classpath.
+ * <p><b>26.1 moved this seam and the class is currently empty of effect.</b>
+ * {@code IClientFluidTypeExtensions} no longer carries {@code getStillTexture},
+ * {@code getFlowingTexture} or {@code getTintColor} -- a fluid's appearance comes from the model
+ * system now, and what is left on the extension is the underwater overlay and the fog. So the two
+ * tints below are recorded rather than applied, and both steam fluids currently render as whatever
+ * the model system defaults them to.
  *
- * <p>Both fluids reuse vanilla's own water still/flow textures, tinted rather than redrawn -- the
- * same reuse-by-reference the Offshore Pump makes of vanilla's block textures, and the bucket items'
- * models make of vanilla's bucket icons. Steam keeps close to water's own pale tint; Superheated
- * Steam is tinted toward the orange end, so the two read as visibly different fluids in a tank
- * without either needing a hand-drawn texture.
+ * <p>The intent is unchanged and is the thing to restore: both fluids reuse vanilla's own water
+ * still/flow textures, tinted rather than redrawn -- the same reuse-by-reference the Offshore Pump
+ * makes of vanilla's block textures. Steam keeps close to water's own pale tint; Superheated Steam
+ * is tinted toward the orange end, so the two read as visibly different fluids in a tank without
+ * either needing a hand-drawn texture. Re-expressing that as fluid models is #223's to finish, and
+ * it is the one thing on this class a compile cannot check: a fluid with no appearance ships as
+ * invisible or as the missing-texture checker, and nothing fails.
  */
 public final class SteamFluidClient {
 
@@ -46,31 +47,7 @@ public final class SteamFluidClient {
     }
 
     private static void registerExtensions(RegisterClientExtensionsEvent event) {
-        event.registerFluidType(new SteamExtensions(STEAM_TINT), PFFluidTypes.STEAM.get());
-        event.registerFluidType(
-                new SteamExtensions(SUPERHEATED_STEAM_TINT), PFFluidTypes.SUPERHEATED_STEAM.get());
-    }
-
-    private static final class SteamExtensions implements IClientFluidTypeExtensions {
-        private final int tint;
-
-        private SteamExtensions(int tint) {
-            this.tint = tint;
-        }
-
-        @Override
-        public Identifier getStillTexture() {
-            return WATER_STILL;
-        }
-
-        @Override
-        public Identifier getFlowingTexture() {
-            return WATER_FLOW;
-        }
-
-        @Override
-        public int getTintColor() {
-            return tint;
-        }
+        // Nothing to register: every hook this class used is gone from the extension in 26.1.
+        // The listener stays so the seam keeps its name and #223 has somewhere to land.
     }
 }

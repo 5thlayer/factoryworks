@@ -328,7 +328,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
     }
 
     private static ItemStack stackOf(String itemId, int count) {
-        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(itemId));
+        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(itemId)).map(h -> h.value()).orElse(null);
         return count <= 0 ? ItemStack.EMPTY : new ItemStack(item, count);
     }
 

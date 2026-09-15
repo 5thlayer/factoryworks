@@ -34,8 +34,8 @@ public final class PFRecipes {
             TYPES.register(SMELTING, () -> RecipeType.simple(
                     Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, SMELTING)));
 
-    public static final DeferredHolder<RecipeSerializer<?>, SmeltingRecipe.Serializer> SMELTING_SERIALIZER =
-            SERIALIZERS.register(SMELTING, SmeltingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SmeltingRecipe>> SMELTING_SERIALIZER =
+            SERIALIZERS.register(SMELTING, SmeltingRecipe::serializer);
 
     private PFRecipes() {
     }

@@ -57,7 +57,7 @@ public final class StartingKitGrant {
         for (StartingKit.Entry entry : kit) {
             deliver(player, entry);
         }
-        LOGGER.info("Granted the starting kit to {}: {} stacks", player.getGameProfile().getName(),
+        LOGGER.info("Granted the starting kit to {}: {} stacks", player.getGameProfile().name(),
                 kit.size());
     }
 

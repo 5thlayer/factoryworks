@@ -32,6 +32,9 @@ import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import org.slf4j.Logger;
+import com.mojang.serialization.Codec;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.dimension.DimensionType;
 
 /**
  * Terra's opening: the hub and its three ore fields, stamped at world spawn.
@@ -96,7 +99,7 @@ public final class TerraStartingArea {
 
     public static void onServerStarted(ServerStartedEvent event) {
         ServerLevel level = event.getServer().overworld();
-        Stamped stamped = level.getDataStorage().computeIfAbsent(Stamped.FACTORY, Stamped.NAME);
+        Stamped stamped = level.getDataStorage().computeIfAbsent(Stamped.TYPE);
         if (stamped.done) {
             return;
         }
@@ -107,18 +110,18 @@ public final class TerraStartingArea {
         stamped.setDirty();
 
         Holder<StructureTemplatePool> pool = level.registryAccess()
-                .registryOrThrow(Registries.TEMPLATE_POOL)
-                .getHolder(START_POOL)
+                .lookupOrThrow(Registries.TEMPLATE_POOL)
+                .get(START_POOL)
                 .map(holder -> (Holder<StructureTemplatePool>) holder)
                 .orElse(null);
         if (pool == null) {
             LOGGER.error("No template pool {}: Terra has no starting area. Is the datapack loaded?",
-                    START_POOL.location());
+                    START_POOL.identifier());
             return;
         }
 
         BlockPos spawn = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG,
-                level.getSharedSpawnPos());
+                level.getLevelData().getRespawnData().pos());
         stamp(level, pool, spawn);
     }
 
@@ -130,7 +133,7 @@ public final class TerraStartingArea {
      * the {@code terrain_matching} projection, which places every column through a
      * {@link net.minecraft.world.level.levelgen.structure.templatesystem.GravityProcessor} that asks
      * the <em>level</em> -- not the chunk generator -- for the surface height. {@code Level.getHeight}
-     * does not generate: on a chunk that is not loaded it returns {@code getMinBuildHeight()}. So a
+     * does not generate: on a chunk that is not loaded it returns {@code getMinY()}. So a
      * field reaching past the loaded spawn area is not dropped, it is written at y=-64, buried in
      * bedrock, and the player finds part of a patch or none of it depending on how the spawn area
      * happened to fall. Nothing is logged, and both the pieces and the blocks are "placed" as far as
@@ -146,7 +149,7 @@ public final class TerraStartingArea {
                 level.getChunkSource().randomState(),
                 level.getStructureManager(),
                 level.getSeed(),
-                new ChunkPos(spawn),
+                new ChunkPos(spawn.getX() >> 4, spawn.getZ() >> 4),
                 level,
                 biome -> true);
         Optional<Structure.GenerationStub> stub = JigsawPlacement.addPieces(
@@ -157,7 +160,10 @@ public final class TerraStartingArea {
                 spawn,
                 false,
                 Optional.empty(),
-                MAX_DISTANCE_FROM_CENTER,
+                // 26.1 splits the single radius into a horizontal and a vertical one. The
+                // horizontal is the number this class has always meant; the vertical is vanilla's
+                // own default, so the placement's reach is unchanged.
+                new JigsawStructure.MaxDistance(MAX_DISTANCE_FROM_CENTER, DimensionType.Y_SIZE),
                 PoolAliasLookup.EMPTY,
                 JigsawStructure.DEFAULT_DIMENSION_PADDING,
                 JigsawStructure.DEFAULT_LIQUID_SETTINGS);
@@ -236,8 +242,8 @@ public final class TerraStartingArea {
         for (int x = box.minX(); x <= box.maxX(); x++) {
             for (int z = box.minZ(); z <= box.maxZ(); z++) {
                 int surface = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
-                int top = Math.min(OreCensus.scanTop(surface), level.getMaxBuildHeight() - 1);
-                int bottom = Math.max(OreCensus.scanBottom(surface), level.getMinBuildHeight());
+                int top = Math.min(OreCensus.scanTop(surface), level.getMaxY() - 1);
+                int bottom = Math.max(OreCensus.scanBottom(surface), level.getMinY());
                 for (int y = top; y >= bottom; y--) {
                     if (level.getBlockState(cursor.set(x, y, z)).getBlock() instanceof OreBlock ore) {
                         census.add(ore.resource(), x, y, z);
@@ -302,20 +308,23 @@ public final class TerraStartingArea {
     /** Once per world, not once per load. Presence is the whole state; the flag survives a reload. */
     public static final class Stamped extends SavedData {
         static final String NAME = "planetaryfactory_terra_starting_area";
-        static final Factory<Stamped> FACTORY = new Factory<>(Stamped::new, Stamped::load, null);
+
+        /** One flag, so one field. 26.1 serialises saved data through a codec. */
+        static final Codec<Stamped> CODEC = Codec.BOOL
+                .xmap(Stamped::of, stamped -> stamped.done)
+                .fieldOf("done")
+                .codec();
+
+        static final SavedDataType<Stamped> TYPE = new SavedDataType<>(
+                Identifier.fromNamespaceAndPath("planetaryfactory", "terra_starting_area"),
+                Stamped::new, CODEC);
 
         private boolean done;
 
-        private static Stamped load(CompoundTag tag, HolderLookup.Provider registries) {
+        private static Stamped of(boolean done) {
             Stamped stamped = new Stamped();
-            stamped.done = tag.getBoolean("done");
+            stamped.done = done;
             return stamped;
-        }
-
-        @Override
-        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-            tag.putBoolean("done", this.done);
-            return tag;
         }
     }
 }

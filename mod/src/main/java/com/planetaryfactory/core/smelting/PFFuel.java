@@ -4,24 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
 import com.planetaryfactory.core.network.FuelTablePacket;
 import com.planetaryfactory.core.network.PFNetwork;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import org.slf4j.Logger;
 
@@ -49,7 +48,22 @@ import org.slf4j.Logger;
 public final class PFFuel {
 
     private static final Logger LOG = LogUtils.getLogger();
-    private static final Gson GSON = new Gson();
+
+    /**
+     * One file's shape.
+     *
+     * <p>26.1's reload listener parses with a codec rather than handing over raw Gson, so the
+     * field names the converter writes are stated once, here, instead of as six GsonHelper calls.
+     * {@code tag} decides how {@code target} is read, and exactly one of the two keys is present.
+     */
+    private static final Codec<FuelRow> ROW_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.fieldOf("factorio_name").forGetter(FuelRow::factorioName),
+            Codec.STRING.optionalFieldOf("item", "").forGetter(row -> row.tag() ? "" : row.target()),
+            Codec.STRING.optionalFieldOf("tag", "").forGetter(row -> row.tag() ? row.target() : ""),
+            Codec.LONG.fieldOf("fuel_value").forGetter(FuelRow::fuelValue),
+            Codec.STRING.fieldOf("fuel_category").forGetter(FuelRow::fuelCategory)
+    ).apply(instance, (name, item, tag, value, category) ->
+            new FuelRow(name, tag.isEmpty() ? item : tag, !tag.isEmpty(), value, category)));
 
     /** Replaced wholesale on reload or on sync; read from both threads. */
     private static volatile FuelTable table = FuelTable.EMPTY;
@@ -60,8 +74,9 @@ public final class PFFuel {
     private PFFuel() {
     }
 
-    public static void register(AddReloadListenerEvent event) {
-        event.addListener(new Listener());
+    public static void register(AddServerReloadListenersEvent event) {
+        event.addListener(Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "fuel"),
+                new Listener());
     }
 
     /** Login and {@code /reload}: the two moments the table can differ from what a client holds. */
@@ -105,7 +120,7 @@ public final class PFFuel {
         }
         String itemId = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
         List<String> tags = new ArrayList<>();
-        stack.getTags().forEach(tag -> tags.add(tag.location().toString()));
+        stack.typeHolder().tags().forEach(tag -> tags.add(tag.location().toString()));
         return current.joules(itemId, tags);
     }
 
@@ -114,28 +129,21 @@ public final class PFFuel {
         return table;
     }
 
-    private static final class Listener extends SimpleJsonResourceReloadListener {
+    private static final class Listener extends SimpleJsonResourceReloadListener<FuelRow> {
 
         private Listener() {
-            super(GSON, "fuel");
+            super(ROW_CODEC, FileToIdConverter.json("fuel"));
         }
 
         @Override
-        protected void apply(Map<Identifier, JsonElement> files, ResourceManager manager,
+        protected void apply(Map<Identifier, FuelRow> files, ResourceManager manager,
                 ProfilerFiller profiler) {
             List<FuelRow> rows = new ArrayList<>();
-            for (Map.Entry<Identifier, JsonElement> file : files.entrySet()) {
+            for (Map.Entry<Identifier, FuelRow> file : files.entrySet()) {
                 if (!PlanetaryFactoryCore.NAMESPACE.equals(file.getKey().getNamespace())) {
                     continue;
                 }
-                JsonObject body = GsonHelper.convertToJsonObject(file.getValue(), "fuel");
-                boolean tag = body.has("tag");
-                rows.add(new FuelRow(
-                        GsonHelper.getAsString(body, "factorio_name"),
-                        GsonHelper.getAsString(body, tag ? "tag" : "item"),
-                        tag,
-                        GsonHelper.getAsLong(body, "fuel_value"),
-                        GsonHelper.getAsString(body, "fuel_category")));
+                rows.add(file.getValue());
             }
             accept(rows);
             LOG.info("Loaded {} furnace fuels from {} rows", table.size(), rows.size());

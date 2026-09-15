@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 /**
  * A tree is one entity: mining its base fells it (#205, ADR-0051).
@@ -99,7 +99,7 @@ public final class TreeFelling {
      * still fells -- removing a tree is what a creative player is asking for -- but drops nothing,
      * the same way vanilla's own creative break does not.
      */
-    public static void onBreak(BlockEvent.BreakEvent event) {
+    public static void onBreak(BreakBlockEvent event) {
         Player player = event.getPlayer();
         if (event.isCanceled()
                 || !(player.getMainHandItem().getItem() instanceof EngineersPick)

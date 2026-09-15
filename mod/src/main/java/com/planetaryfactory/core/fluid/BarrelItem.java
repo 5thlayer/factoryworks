@@ -10,6 +10,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 
 import java.util.List;
+import java.util.function.Consumer;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 /**
  * The barrel's name and tooltip, which is the whole of what makes a filled and an empty barrel
@@ -40,18 +42,18 @@ public class BarrelItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip,
-                                TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+                                Consumer<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, tooltip, flag);
         FluidStack held = fluid(stack);
         if (held.isEmpty()) {
-            tooltip.add(Component.translatable("tooltip.planetaryfactory.barrel.empty")
+            tooltip.accept(Component.translatable("tooltip.planetaryfactory.barrel.empty")
                     .withStyle(ChatFormatting.GRAY));
         } else {
             // The capacity is fixed (ADR-0037), so there is only ever one number to show, not a
             // bar: how much of the 50 mB is here. A partial fill is a normal state, not an error --
             // BarrelSpec.fillable accepts less than a full barrel -- so it has to read normally too.
-            tooltip.add(Component.translatable("tooltip.planetaryfactory.barrel.amount",
+            tooltip.accept(Component.translatable("tooltip.planetaryfactory.barrel.amount",
                     held.getAmount(), BarrelSpec.CAPACITY_MB)
                     .withStyle(ChatFormatting.GRAY));
         }

@@ -95,7 +95,7 @@ public final class PFFluids {
         return BlockBehaviour.Properties.of()
                 .mapColor(MapColor.WATER)
                 .replaceable()
-                .noCollission()
+                .noCollision()
                 .strength(100.0F)
                 .pushReaction(PushReaction.DESTROY)
                 .noLootTable()

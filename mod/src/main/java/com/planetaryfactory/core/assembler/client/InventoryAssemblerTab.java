@@ -35,7 +35,7 @@ public final class InventoryAssemblerTab {
         }
         tab = Button.builder(
                         Component.translatable("planetaryfactory_core.assembler.tab"),
-                        button -> PacketDistributor.sendToServer(new OpenPanelPacket()))
+                        button -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(new OpenPanelPacket()))
                 .bounds(screen.getGuiLeft(), screen.getGuiTop() - 22, 62, 20)
                 .tooltip(Tooltip.create(Component.translatable("planetaryfactory_core.assembler.tab.tooltip")))
                 .build();

@@ -59,7 +59,7 @@ public final class SelectAmountScreen extends AssemblerScreen<SelectAmountMenu> 
 
     /** Plan-request. The answer is the Crafting Plan the server opens next. */
     private void request(int amount) {
-        PacketDistributor.sendToServer(new PlanRequestPacket(menu.recipe(), Math.max(1, amount)));
+        net.neoforged.neoforge.network.PacketDistributor.sendToServer(new PlanRequestPacket(menu.recipe(), Math.max(1, amount)));
     }
 
     /** Nothing but the buttons, which are widgets and draw themselves. */

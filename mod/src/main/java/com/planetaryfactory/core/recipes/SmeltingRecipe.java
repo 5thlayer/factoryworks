@@ -4,14 +4,16 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
@@ -59,19 +61,40 @@ public record SmeltingRecipe(Ingredient ingredient, int count, ItemStack result,
     }
 
     @Override
-    public ItemStack assemble(SingleRecipeInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(SingleRecipeInput input) {
         return result.copy();
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries) {
+    /** What the recipe yields, for callers that want it without an input to assemble from. */
+    public ItemStack resultItem() {
         return result;
     }
 
-    /** The furnace is one slot wide; the dimensions are a crafting-grid notion it never uses. */
+    /**
+     * Placement is the recipe book's "put this in the grid for me" gesture, and the pack's furnace
+     * is not a grid. The ingredient is still declared, because {@code NOT_PLACEABLE} would also
+     * hide the recipe from the book's own ingredient index.
+     */
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return true;
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.create(ingredient);
+    }
+
+    /** No toast on unlock: these recipes are unlocked by research, which says so itself. */
+    @Override
+    public boolean showNotification() {
+        return false;
+    }
+
+    /** Ungrouped -- the pack's four smelts share no book row. */
+    @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.FURNACE_MISC;
     }
 
     @Override
@@ -84,33 +107,31 @@ public record SmeltingRecipe(Ingredient ingredient, int count, ItemStack result,
         return PFRecipes.SMELTING_TYPE.get();
     }
 
-    public static final class Serializer implements RecipeSerializer<SmeltingRecipe> {
-
-        private static final MapCodec<SmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(
-                        Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(SmeltingRecipe::ingredient),
-                        ExtraCodecs.POSITIVE_INT.optionalFieldOf("count", 1).forGetter(SmeltingRecipe::count),
-                        ItemStack.CODEC.fieldOf("result").forGetter(SmeltingRecipe::result),
-                        Codec.INT.optionalFieldOf("cookingtime", DEFAULT_COOKING_TIME)
-                                .forGetter(SmeltingRecipe::cookingTime))
-                        .apply(instance, SmeltingRecipe::new));
-
-        private static final StreamCodec<RegistryFriendlyByteBuf, SmeltingRecipe> STREAM_CODEC =
-                StreamCodec.composite(
-                        Ingredient.CONTENTS_STREAM_CODEC, SmeltingRecipe::ingredient,
-                        ByteBufCodecs.VAR_INT, SmeltingRecipe::count,
-                        ItemStack.STREAM_CODEC, SmeltingRecipe::result,
-                        ByteBufCodecs.VAR_INT, SmeltingRecipe::cookingTime,
-                        SmeltingRecipe::new);
-
-        @Override
-        public MapCodec<SmeltingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, SmeltingRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
+    /**
+     * The serializer.
+     *
+     * <p>26.1 makes {@link RecipeSerializer} a record of the two codecs rather than an interface,
+     * so this is one instance rather than a class to implement.
+     */
+    public static RecipeSerializer<SmeltingRecipe> serializer() {
+        return new RecipeSerializer<>(CODEC, STREAM_CODEC);
     }
+
+    private static final MapCodec<SmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                    Ingredient.CODEC.fieldOf("ingredient").forGetter(SmeltingRecipe::ingredient),
+                    ExtraCodecs.POSITIVE_INT.optionalFieldOf("count", 1).forGetter(SmeltingRecipe::count),
+                    ItemStack.CODEC.fieldOf("result").forGetter(SmeltingRecipe::result),
+                    Codec.INT.optionalFieldOf("cookingtime", DEFAULT_COOKING_TIME)
+                                .forGetter(SmeltingRecipe::cookingTime))
+                    .apply(instance, SmeltingRecipe::new));
+
+    private static final StreamCodec<RegistryFriendlyByteBuf, SmeltingRecipe> STREAM_CODEC =
+            StreamCodec.composite(
+                    Ingredient.CONTENTS_STREAM_CODEC, SmeltingRecipe::ingredient,
+                    ByteBufCodecs.VAR_INT, SmeltingRecipe::count,
+                    ItemStack.STREAM_CODEC, SmeltingRecipe::result,
+                    ByteBufCodecs.VAR_INT, SmeltingRecipe::cookingTime,
+                    SmeltingRecipe::new);
+
 }

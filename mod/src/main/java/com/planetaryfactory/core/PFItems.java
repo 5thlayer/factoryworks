@@ -133,7 +133,7 @@ public final class PFItems {
     static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerItem(
                 Capabilities.Fluid.ITEM,
-                (itemAccess, context) -> new BarrelFluidHandler(itemAccess),
+                (stack, itemAccess) -> new BarrelFluidHandler(itemAccess),
                 BARREL.get());
     }
 

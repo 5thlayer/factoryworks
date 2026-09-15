@@ -66,12 +66,12 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
     protected void init() {
         super.init();
         Button start = Button.builder(Component.translatable("planetaryfactory_core.assembler.start"),
-                        b -> PacketDistributor.sendToServer(new PlanStartPacket(menu.display().planId())))
+                        b -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(new PlanStartPacket(menu.display().planId())))
                 .bounds(leftPos + imageWidth - 150, topPos + imageHeight - 26, 70, 20).build();
         start.active = menu.display().complete();
         addRenderableWidget(start);
         addRenderableWidget(Button.builder(Component.translatable("planetaryfactory_core.assembler.back"),
-                        b -> PacketDistributor.sendToServer(new OpenPanelPacket()))
+                        b -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(new OpenPanelPacket()))
                 .bounds(leftPos + imageWidth - 76, topPos + imageHeight - 26, 70, 20).build());
     }
 
