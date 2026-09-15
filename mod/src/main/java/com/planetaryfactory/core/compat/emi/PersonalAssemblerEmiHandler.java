@@ -97,7 +97,7 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
     public boolean craft(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
         Identifier id = recipe.getId();
         if (id == null) return false;
-        net.neoforged.neoforge.network.PacketDistributor.sendToServer(new SelectAmountPacket(id, context.getAmount()));
+        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new SelectAmountPacket(id, context.getAmount()));
         return true;
     }
 }

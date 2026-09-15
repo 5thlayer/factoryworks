@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.client.renderer.RenderPipelines;
 
 /**
  * The mining rig's screen (#193): a fuel gauge and a progress arrow, in the shape the furnace
@@ -49,10 +50,10 @@ public class RigScreen extends AbstractContainerScreen<RigMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         int left = leftPos;
         int top = topPos;
-        graphics.blit(BACKGROUND, left, top, 0, 0, imageWidth, imageHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, left, top, 0.0F, 0.0F, imageWidth, imageHeight, 256, 256);
 
         // Vanilla's sheet draws an input recess at 55,16 and a fuel recess at 55,52. A rig has no
         // input -- it mines the ground -- so that one always goes, and the fuel one goes too on
@@ -76,17 +77,15 @@ public class RigScreen extends AbstractContainerScreen<RigMenu> {
 
         int arrow = Math.round(menu.miningProgress() * 24F);
         if (arrow > 0) {
-            graphics.blitSprite(BURN_PROGRESS, 24, 16, 0, 0, left + 79, top + 34, arrow, 16);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BURN_PROGRESS, 24, 16, 0, 0, left + 79, top + 34, arrow, 16);
         }
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
-        super.render(graphics, mouseX, mouseY, partialTick);
-        renderTooltip(graphics, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (menu.burnsFuel() && over(mouseX, mouseY, BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT)) {
-            graphics.renderComponentTooltip(font, fuelTooltip(), mouseX, mouseY);
+            graphics.setComponentTooltipForNextFrame(font, fuelTooltip(), mouseX, mouseY);
         }
     }
 

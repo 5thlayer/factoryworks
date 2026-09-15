@@ -7,7 +7,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -25,7 +25,7 @@ import net.minecraft.network.chat.Component;
  * <p>It draws {@link AssemblerQueueView}, the same client copy the panel draws, which the server
  * re-syncs four times a second whether or not a screen is open.
  */
-final class AssemblerHud implements LayeredDraw.Layer {
+final class AssemblerHud implements GuiLayer {
 
     /**
      * How many plans the corner shows.
@@ -78,11 +78,11 @@ final class AssemblerHud implements LayeredDraw.Layer {
             // has finished and is waiting for room to deliver.
             String item = entry.hasStep() ? entry.stepItem() : entry.rootItem();
             int count = entry.hasStep() ? entry.stepAmount() : entry.amount();
-            graphics.renderItem(PlanItems.stack(item), left, y);
-            graphics.drawString(font, "x" + count, left + 20, y + 4, 0xFFFFFF, true);
+            graphics.item(PlanItems.stack(item), left, y);
+            graphics.text(font, "x" + count, left + 20, y + 4, 0xFFFFFF, true);
             if (entry.steps() > 1) {
                 Component of = Component.literal((entry.step() + 1) + "/" + entry.steps());
-                graphics.drawString(font, of, left + WIDTH - font.width(of), y + 4, 0x999999, true);
+                graphics.text(font, of, left + WIDTH - font.width(of), y + 4, 0x999999, true);
             }
             int filled = (int) (WIDTH * Math.max(0.0f, Math.min(1.0f, entry.progress())));
             boolean pausedHead = index == 0 && AssemblerQueueView.blocked();
@@ -92,7 +92,7 @@ final class AssemblerHud implements LayeredDraw.Layer {
         if (entries.size() > shown) {
             Component more = Component.translatable(
                     "planetaryfactory_core.assembler.and_more", entries.size() - shown);
-            graphics.drawString(font, more, left, top - 12, 0x999999, true);
+            graphics.text(font, more, left, top - 12, 0x999999, true);
         }
     }
 }

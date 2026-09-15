@@ -22,13 +22,11 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
     private static final int SLOT_EDGE = 0xFF4A4A4A;
 
     protected AssemblerScreen(T menu, Inventory inventory, Component title, int width, int height) {
-        super(menu, inventory, title);
-        this.imageWidth = width;
-        this.imageHeight = height;
+        super(menu, inventory, title, width, height);
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         graphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, PANEL);
         renderPanel(graphics, mouseX, mouseY);
     }
@@ -63,16 +61,9 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
         }
     }
 
-    @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
-        super.render(graphics, mouseX, mouseY, partialTick);
-        renderTooltip(graphics, mouseX, mouseY);
-    }
-
     /** The title only. The inherited second label names a player inventory these screens draw themselves. */
     @Override
-    protected void renderLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        graphics.drawString(font, title, 8, 6, 0xFFFFFF, false);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.text(font, title, 8, 6, 0xFFFFFF, false);
     }
 }

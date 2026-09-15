@@ -23,8 +23,8 @@ import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
 import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
-import snownee.jade.api.ui.IElement;
-import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.api.ui.Element;
+import snownee.jade.api.ui.JadeUI;
 
 /**
  * What a mining rig is doing right now, on the HUD (#199).
@@ -108,7 +108,7 @@ public class RigJadePlugin implements IWailaPlugin {
                 // not say so; the slot is also the one the hopper feeding it fills.
                 ItemStack held = rig.getItem(RigSlots.FUEL);
                 if (!held.isEmpty()) {
-                    tag.put(FUEL_ITEM, held.save(accessor.getLevel().registryAccess()));
+                    JadeStacks.put(tag, FUEL_ITEM, held, accessor);
                 }
             }
         }
@@ -123,17 +123,16 @@ public class RigJadePlugin implements IWailaPlugin {
         @Override
         public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
             CompoundTag data = accessor.getServerData();
-            if (!data.getBoolean(PRESENT)) {
+            if (!data.getBooleanOr(PRESENT, false)) {
                 return;
             }
-            IElementHelper elements = IElementHelper.get();
-
+            
             // The banked stack and how far along the rig is, read left to right the way the ore
             // moves: out of the ground, into the buffer. A full buffer against frozen progress is
             // push-or-stall's only visible symptom, and nothing outside the block shows it today.
-            JadeLayout.line(tooltip, elements, banked(elements, data), progress(data));
+            JadeLayout.line(tooltip, banked(data), progress(data));
 
-            if (!data.getBoolean(HAS_ORE)) {
+            if (!data.getBooleanOr(HAS_ORE, false)) {
                 // The line the rig needs most. An exhausted footprint is not a fault, and without
                 // this it reads as one: same still block, same full buffer, same fuel.
                 tooltip.add(Component.translatable("tooltip.planetaryfactory.rig.jade.no_ore"));
@@ -142,9 +141,9 @@ public class RigJadePlugin implements IWailaPlugin {
                 // The stack first, then the buffer: what will burn next, then how much is left of
                 // what is burning now. An empty slot is the dash rather than a gap, for the same
                 // reason the banked line uses one.
-                JadeLayout.line(tooltip, elements, fuel(elements, accessor, data),
+                JadeLayout.line(tooltip, fuel(accessor, data),
                         Component.translatable("tooltip.planetaryfactory.rig.jade.fuel",
-                                data.getInt(FUEL), data.getInt(FUEL_CAPACITY)));
+                                data.getIntOr(FUEL, 0), data.getIntOr(FUEL_CAPACITY, 0)));
             }
         }
 
@@ -158,35 +157,35 @@ public class RigJadePlugin implements IWailaPlugin {
      * What the rig is holding. An empty buffer is a dash rather than a blank, for the same reason
      * the furnace's ends are: "nothing banked" is half the diagnosis, and a gap does not say it.
      */
-    private static IElement banked(IElementHelper elements, CompoundTag data) {
+    private static Element banked(CompoundTag data) {
         if (!data.contains(BUFFER_ITEM)) {
-            return elements.text(Component.translatable("tooltip.planetaryfactory.rig.jade.empty"));
+            return JadeUI.text(Component.translatable("tooltip.planetaryfactory.rig.jade.empty"));
         }
         // The buffer names its item by string, so the id has to be resolved here rather than read
-        // off a saved stack. An id this client cannot resolve is air, and `elements.item` on an
+        // off a saved stack. An id this client cannot resolve is air, and `JadeUI.item` on an
         // empty stack draws a blank -- which is the one thing this method promises not to do.
-        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(data.getString(BUFFER_ITEM)));
-        ItemStack banked = new ItemStack(item, data.getInt(BUFFER_COUNT));
+        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(data.getStringOr(BUFFER_ITEM, "")))
+                .map(holder -> holder.value()).orElse(null);
+        ItemStack banked = item == null
+                ? ItemStack.EMPTY
+                : new ItemStack(item, data.getIntOr(BUFFER_COUNT, 0));
         return banked.isEmpty()
-                ? elements.text(Component.translatable("tooltip.planetaryfactory.rig.jade.empty"))
-                : elements.item(banked);
+                ? JadeUI.text(Component.translatable("tooltip.planetaryfactory.rig.jade.empty"))
+                : JadeUI.item(banked);
     }
 
     /** What is in the fuel slot, drawn as its icon and count -- the dash when the slot is empty. */
-    private static IElement fuel(
-            IElementHelper elements, BlockAccessor accessor, CompoundTag data) {
-        ItemStack held = data.contains(FUEL_ITEM)
-                ? ItemStack.parse(accessor.getLevel().registryAccess(), data.getCompound(FUEL_ITEM))
-                        .orElse(ItemStack.EMPTY)
-                : ItemStack.EMPTY;
+    private static Element fuel(
+            BlockAccessor accessor, CompoundTag data) {
+        ItemStack held = JadeStacks.read(data, FUEL_ITEM, accessor);
         return held.isEmpty()
-                ? elements.text(Component.translatable("tooltip.planetaryfactory.rig.jade.empty"))
-                : elements.item(held);
+                ? JadeUI.text(Component.translatable("tooltip.planetaryfactory.rig.jade.empty"))
+                : JadeUI.item(held);
     }
 
     private static Component progress(CompoundTag data) {
-        int duration = data.getInt(DURATION);
-        int progress = data.getInt(PROGRESS);
+        int duration = data.getIntOr(DURATION, 0);
+        int progress = data.getIntOr(PROGRESS, 0);
         if (duration <= 0) {
             return Component.translatable("tooltip.planetaryfactory.rig.jade.idle");
         }

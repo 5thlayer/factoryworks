@@ -35,8 +35,8 @@ public final class InventoryAssemblerTab {
         }
         tab = Button.builder(
                         Component.translatable("planetaryfactory_core.assembler.tab"),
-                        button -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(new OpenPanelPacket()))
-                .bounds(screen.getGuiLeft(), screen.getGuiTop() - 22, 62, 20)
+                        button -> net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new OpenPanelPacket()))
+                .bounds(screen.getLeftPos(), screen.getTopPos() - 22, 62, 20)
                 .tooltip(Tooltip.create(Component.translatable("planetaryfactory_core.assembler.tab.tooltip")))
                 .build();
         event.addListener(tab);
@@ -45,6 +45,6 @@ public final class InventoryAssemblerTab {
     public static void onScreenRender(ScreenEvent.Render.Post event) {
         if (tab == null || !(event.getScreen() instanceof InventoryScreen)) return;
         GuiGraphicsExtractor graphics = event.getGuiGraphics();
-        tab.render(graphics, event.getMouseX(), event.getMouseY(), event.getPartialTick());
+        tab.extractRenderState(graphics, event.getMouseX(), event.getMouseY(), event.getPartialTick());
     }
 }

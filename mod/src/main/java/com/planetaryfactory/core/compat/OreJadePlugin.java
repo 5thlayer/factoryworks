@@ -67,8 +67,8 @@ public class OreJadePlugin implements IWailaPlugin {
             }
             tooltip.add(Component.translatable(
                     "tooltip.planetaryfactory.ore.jade.amount",
-                    data.getInt(REMAINING),
-                    data.getInt(INITIAL)));
+                    data.getIntOr(REMAINING, 0),
+                    data.getIntOr(INITIAL, 0)));
         }
 
         @Override

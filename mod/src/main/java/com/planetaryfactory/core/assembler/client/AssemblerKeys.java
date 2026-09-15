@@ -31,7 +31,7 @@ import org.lwjgl.glfw.GLFW;
  */
 public final class AssemblerKeys {
 
-    private static final String CATEGORY = "key.categories.inventory";
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.INVENTORY;
 
     private static KeyMapping openPanel;
 
@@ -67,7 +67,7 @@ public final class AssemblerKeys {
         // press through into whatever opens next; presses made with a screen up are handled below,
         // where the screen itself says what the key should do.
         if (pressed && client.screen == null) {
-            net.neoforged.neoforge.network.PacketDistributor.sendToServer(new OpenPanelPacket());
+            net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new OpenPanelPacket());
         }
     }
 
@@ -79,7 +79,7 @@ public final class AssemblerKeys {
      * alone: the panel closes, and the inventory swaps to the panel.
      */
     public static void onScreenKey(ScreenEvent.KeyPressed.Pre event) {
-        if (openPanel == null || !openPanel.matches(event.getKeyCode(), event.getScanCode())) return;
+        if (openPanel == null || !openPanel.matches(event.getKeyEvent())) return;
         Minecraft client = Minecraft.getInstance();
         if (client.player == null) return;
         if (event.getScreen() instanceof AssemblerPanelScreen panel) {
@@ -88,7 +88,7 @@ public final class AssemblerKeys {
             panel.onClose();
             event.setCanceled(true);
         } else if (event.getScreen() instanceof InventoryScreen) {
-            net.neoforged.neoforge.network.PacketDistributor.sendToServer(new OpenPanelPacket());
+            net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new OpenPanelPacket());
             event.setCanceled(true);
         }
     }
