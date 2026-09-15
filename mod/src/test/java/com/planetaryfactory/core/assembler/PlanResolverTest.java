@@ -239,9 +239,12 @@ class PlanResolverTest {
      * refusing the plan because the first match is not the one in the inventory is the bug that
      * reached a player as "the Assembler cannot craft this recipe" with a full bag of iron ingots.
      *
-     * <p>The two ids are the pack's own: Oritech's plate is what `item-map.json` maps `iron-plate`
-     * to, and the vanilla ingot is the other thing an `c:plates/iron`-style unification would fold
-     * in. They are arbitrary to the assertion and real so that reading them teaches nothing false.
+     * <p>The two ids are the pack's own, with one caveat worth stating rather than hiding:
+     * `item-map.json` maps `iron-plate` to `oritech:iron_plate`, but the installed
+     * `oritech-2.0.0-exp6.jar` registers no such item -- it has `iron_clump`, `iron_dust` and
+     * `iron_gem`. So that row is a target the pack *names* and does not yet resolve, which is
+     * ADR-0060's unfinished item-map work rather than this test's. The vanilla ingot is real.
+     * Both are arbitrary to every assertion here: the resolver takes items as strings.
      */
     private static RecipeGraph unifiedGraph() {
         return RecipeGraph.builder()

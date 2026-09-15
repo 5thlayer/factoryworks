@@ -44,6 +44,12 @@ else is not.
 
 One check passes without proving anything: `tests/worldgen/test_start_geometry.py` checks Terra's
 start structure, which is parked, so nothing places it in a world.
+
+`planetaryfactory_core` itself compiles again as of #268, and what that cost is recorded in
+`docs/port/blocked-removals-26.1.2.md`: every class deleted because GregTech left or because the
+Researchd fork is still on 1.21.1, each with the ticket that owns restoring it (#260, then #262,
+then #251). Read it before concluding a mechanic was dropped — the Minecraft-free rules and their
+unit tests survived; only the glue that reads a running game went.
 `data/pack/item-map.json` and `data/pack/subgroup-owner.json` still name Create, Power Grid and
 GregTech targets. They are the conversion's input and are rewritten with it.
 

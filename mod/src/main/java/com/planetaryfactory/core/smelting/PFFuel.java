@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -48,22 +46,6 @@ import org.slf4j.Logger;
 public final class PFFuel {
 
     private static final Logger LOG = LogUtils.getLogger();
-
-    /**
-     * One file's shape.
-     *
-     * <p>26.1's reload listener parses with a codec rather than handing over raw Gson, so the
-     * field names the converter writes are stated once, here, instead of as six GsonHelper calls.
-     * {@code tag} decides how {@code target} is read, and exactly one of the two keys is present.
-     */
-    private static final Codec<FuelRow> ROW_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.STRING.fieldOf("factorio_name").forGetter(FuelRow::factorioName),
-            Codec.STRING.optionalFieldOf("item", "").forGetter(row -> row.tag() ? "" : row.target()),
-            Codec.STRING.optionalFieldOf("tag", "").forGetter(row -> row.tag() ? row.target() : ""),
-            Codec.LONG.fieldOf("fuel_value").forGetter(FuelRow::fuelValue),
-            Codec.STRING.fieldOf("fuel_category").forGetter(FuelRow::fuelCategory)
-    ).apply(instance, (name, item, tag, value, category) ->
-            new FuelRow(name, tag.isEmpty() ? item : tag, !tag.isEmpty(), value, category)));
 
     /** Replaced wholesale on reload or on sync; read from both threads. */
     private static volatile FuelTable table = FuelTable.EMPTY;
@@ -132,7 +114,7 @@ public final class PFFuel {
     private static final class Listener extends SimpleJsonResourceReloadListener<FuelRow> {
 
         private Listener() {
-            super(ROW_CODEC, FileToIdConverter.json("fuel"));
+            super(FuelRow.CODEC, FileToIdConverter.json("fuel"));
         }
 
         @Override

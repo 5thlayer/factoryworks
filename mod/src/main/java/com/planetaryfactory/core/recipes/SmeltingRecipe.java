@@ -65,11 +65,6 @@ public record SmeltingRecipe(Ingredient ingredient, int count, ItemStack result,
         return result.copy();
     }
 
-    /** What the recipe yields, for callers that want it without an input to assemble from. */
-    public ItemStack resultItem() {
-        return result;
-    }
-
     /**
      * Placement is the recipe book's "put this in the grid for me" gesture, and the pack's furnace
      * is not a grid. The ingredient is still declared, because {@code NOT_PLACEABLE} would also
@@ -119,6 +114,10 @@ public record SmeltingRecipe(Ingredient ingredient, int count, ItemStack result,
 
     private static final MapCodec<SmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
+                    // Not a loosening of the 1.21.1 CODEC_NONEMPTY this replaces: 26.1 folded
+                    // that check into CODEC itself, which is built on
+                    // ExtraCodecs.nonEmptyHolderSet, and dropped the separate constant. An empty
+                    // ingredient still fails to load rather than becoming a free recipe.
                     Ingredient.CODEC.fieldOf("ingredient").forGetter(SmeltingRecipe::ingredient),
                     ExtraCodecs.POSITIVE_INT.optionalFieldOf("count", 1).forGetter(SmeltingRecipe::count),
                     ItemStack.CODEC.fieldOf("result").forGetter(SmeltingRecipe::result),

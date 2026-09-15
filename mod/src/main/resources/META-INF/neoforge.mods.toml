@@ -26,19 +26,21 @@ versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
 
-# Oritech never asks the vanilla RecipeManager, so Researchd's own lock cannot see a GT
-# machine. `RecipeLogicMixin` is that hook; both mods are hard requirements for it.
+# Optional, and Researchd is not here at all, because the 26.1.2 port removed every class that
+# touched either mod -- see `docs/port/blocked-removals-26.1.2.md`. Nothing in this jar imports
+# `rearth.oritech`, and the two mixins that named GregTech classes went with their targets.
+#
+# These two blocks were `required` and were a load failure rather than a build one, which is the
+# failure mode a green compile cannot see. The range was worse than the type: `[7.0.2,)` is
+# GTCEu's version line, and Oritech's `2.0.0-exp6` sorts *below* it, so the requirement could
+# never have been met by the jar the pack actually ships.
+#
+# `AFTER` is kept: #262 adds the machine chassis on top of Oritech, and load order is cheap to
+# state now and easy to forget then.
 [[dependencies.${mod_id}]]
 modId = "oritech"
-type = "required"
-versionRange = "[7.0.2,)"
-ordering = "AFTER"
-side = "BOTH"
-
-[[dependencies.${mod_id}]]
-modId = "researchd"
-type = "required"
-versionRange = "[1.2.5,)"
+type = "optional"
+versionRange = "[2.0.0-exp6,)"
 ordering = "AFTER"
 side = "BOTH"
 

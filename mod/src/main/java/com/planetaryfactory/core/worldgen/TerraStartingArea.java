@@ -307,16 +307,24 @@ public final class TerraStartingArea {
 
     /** Once per world, not once per load. Presence is the whole state; the flag survives a reload. */
     public static final class Stamped extends SavedData {
-        static final String NAME = "planetaryfactory_terra_starting_area";
-
-        /** One flag, so one field. 26.1 serialises saved data through a codec. */
+        /**
+         * One flag, so one field. 26.1 serialises saved data through a codec rather than a
+         * {@code save}/{@code load} pair, so the two directions can no longer disagree.
+         *
+         * <p><b>No unit test, deliberately.</b> `docs/testing/what-to-check.md` wants a codec
+         * round-tripped, and `AssemblerCodecsTest` is the precedent -- but that codec is reachable
+         * on the Minecraft-free test classpath and this one is not: it is nested in a class that
+         * loads the structure registry. A single {@code Codec.BOOL} field is also the one shape
+         * with nothing to drop. If this ever grows a second field, it moves out to its own
+         * Minecraft-free record and gets the round trip.
+         */
         static final Codec<Stamped> CODEC = Codec.BOOL
                 .xmap(Stamped::of, stamped -> stamped.done)
                 .fieldOf("done")
                 .codec();
 
         static final SavedDataType<Stamped> TYPE = new SavedDataType<>(
-                Identifier.fromNamespaceAndPath("planetaryfactory", "terra_starting_area"),
+                Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_starting_area"),
                 Stamped::new, CODEC);
 
         private boolean done;

@@ -47,8 +47,10 @@ public final class PFItems {
      * Factorio's barrel: 50 mB, stacking to ten, holding any fluid.
      *
      * <p>Both numbers are Factorio's and neither is tunable here -- see {@link BarrelSpec}. Filling
-     * and emptying are Create's Spout and Item Drain, natively and with no recipes at all, because
-     * both key on the fluid capability this item carries (#93).
+     * and emptying were Create's Spout and Item Drain, natively and with no recipes at all, because
+     * both key on the fluid capability this item carries (#93). Create left the pack with ADR-0060;
+     * which of Oritech's or Railcraft's blocks inherits that job is #262's to say. The capability
+     * is what makes either work, and it is unchanged.
      *
      * <p>{@link BarrelItem}, not a plain {@link Item}: a filled and an empty barrel are otherwise
      * identical in the inventory, and the fluid a barrel carries is not a decoration but the reason

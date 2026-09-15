@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.ore;
 
 import com.mojang.serialization.Codec;
+import com.planetaryfactory.core.PlanetaryFactoryCore;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,16 @@ import net.minecraft.world.level.saveddata.SavedDataType;
  */
 public final class OreFields extends SavedData {
 
-    public static final String NAME = "planetaryfactory_ore_fields";
-
     /**
      * The whole of this data as one codec. 26.1 serialises saved data through a codec rather than
      * through a {@code save}/{@code load} pair, so the field list is the only thing stated and the
      * two directions can no longer disagree.
+     *
+     * <p><b>No unit test, deliberately.</b> {@link Field} is built on {@link BlockPos} and
+     * {@link BoundingBox}, so this codec cannot be reached from the Minecraft-free test source set
+     * that holds {@code AssemblerCodecsTest}. What it would assert -- that the derivation survives
+     * a save -- is instead covered by the arithmetic tests under {@code core/ore/}, which take the
+     * field list directly.
      */
     public static final Codec<OreFields> CODEC = Field.CODEC.listOf()
             .xmap(OreFields::of, OreFields::fields)
@@ -43,7 +48,8 @@ public final class OreFields extends SavedData {
             .codec();
 
     public static final SavedDataType<OreFields> TYPE = new SavedDataType<>(
-            Identifier.fromNamespaceAndPath("planetaryfactory", "ore_fields"), OreFields::new, CODEC);
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "ore_fields"),
+            OreFields::new, CODEC);
 
     private final List<Field> fields = new ArrayList<>();
 
