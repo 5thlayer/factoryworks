@@ -13,14 +13,14 @@ import net.minecraft.server.level.ServerLevel;
 /**
  * A Terra ore block: an amount, rendered as one of Factorio's eight stages.
  *
- * <p>Pack-authored rather than Oritech's, and ADR-0041 gives the reason: Oritech registers its
+ * <p>Pack-authored rather than GregTech's, and ADR-0041 gives the reason: GregTech registers its
  * material ore blocks in code and models them at runtime, so a stage property on <em>its</em> block
  * would mean a mixin into both its registration and its model provider, across every material and
  * stone type it registers, to get the behaviour for five.
  *
- * <p>It is still a Oritech ore in every way the rest of the pack can observe: it carries
- * {@code c:ores}, which is the tag Oritech's own Miner scans for, and it pays out the same raw ore
- * item Oritech's own block of that material would ({@link OreResource}).
+ * <p>It is still a GregTech ore in every way the rest of the pack can observe: it carries
+ * {@code c:ores}, which is the tag GregTech's own Miner scans for, and it pays out the same raw ore
+ * item GregTech's own block of that material would ({@link OreResource}).
  *
  * <p><b>The block holds no amount.</b> The amount is derived from the position and the difference
  * is a chunk attachment ({@link OreDelta}), because a starting field is around 1150 blocks and a

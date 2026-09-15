@@ -29,7 +29,7 @@ import net.minecraft.world.level.Level;
  *
  * <h2>This deliberately does not extend {@code SmeltingRecipe}</h2>
  *
- * <p>Oritech's {@code GTRecipeType.proxyRecipes} converts {@code SmeltingRecipe} specifically and
+ * <p>GregTech's {@code GTRecipeType.proxyRecipes} converts {@code SmeltingRecipe} specifically and
  * reads only the single vanilla ingredient, so a subclass would have its count <em>dropped</em>:
  * {@code 5 iron_plate -> 1 steel_plate} would silently become {@code 1 iron_plate -> 1
  * steel_plate}. Wrong output, no error, no log line. Implementing {@link Recipe} directly is what

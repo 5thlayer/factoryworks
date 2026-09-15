@@ -9,7 +9,7 @@ package com.planetaryfactory.core.mining.rig;
  * <p><b>The rig has no sided inventory</b>, for the reason {@link
  * com.planetaryfactory.core.smelting.FurnaceSlots} gives: Factorio decides in-or-out by the
  * inserter's direction rather than by the machine's face, and a nominated-face inventory answers a
- * Simplebelts funnel on the wrong face with silence and no diagnosis. So every face and the null side
+ * Create funnel on the wrong face with silence and no diagnosis. So every face and the null side
  * get the same handler.
  *
  * <p>Note what this does <em>not</em> cover: the rig's own eject, which is not an inventory
@@ -46,8 +46,8 @@ public final class RigSlots {
     /**
      * Extraction reaches the output alone, so nothing can strip a rig of the coal it is burning.
      *
-     * <p>This is also the pull side of ADR-0044's answer to #182: a Simplebelts funnel set to extract,
-     * sitting on the rig, empties it through this rule -- which is why the rig takes no Simplebelts
+     * <p>This is also the pull side of ADR-0044's answer to #182: a Create funnel set to extract,
+     * sitting on the rig, empties it through this rule -- which is why the rig takes no Create
      * dependency and calls no {@code DirectBeltInputBehaviour}.
      */
     public static boolean canExtract(int slot) {

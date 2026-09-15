@@ -298,7 +298,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
     // -- the energy face ------------------------------------------------------------------------
 
     /**
-     * Oritech's container face, and the whole of what ADR-0036's pole talks to.
+     * GregTech's container face, and the whole of what ADR-0036's pole talks to.
      *
      * <p>Null on the two burner tiers, so a pole does not count a Stone Furnace as a machine it is
      * failing to power.

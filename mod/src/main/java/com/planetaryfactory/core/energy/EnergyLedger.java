@@ -3,8 +3,8 @@ package com.planetaryfactory.core.energy;
 /**
  * The pole's books.
  *
- * <p>FE in, FE out. ADR-0060 leaves the pack with no EU anywhere -- Oritech, Power Grid and
- * Simplebelts all go, and FE becomes its only energy currency -- so the FE-to-EU conversion this
+ * <p>FE in, FE out. ADR-0060 leaves the pack with no EU anywhere -- GregTech, Power Grid and
+ * Create all go, and FE becomes its only energy currency -- so the FE-to-EU conversion this
  * class used to be named for has no second currency left to meet. What remains is a buffer that
  * respects a capacity and does not invent energy.
  *

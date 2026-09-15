@@ -59,7 +59,7 @@ class LockedRecipeRetryTest {
     }
 
     /**
-     * Oritech iterates this list on the same tick that the pack writes to it -- the iteration calls
+     * GregTech iterates this list on the same tick that the pack writes to it -- the iteration calls
      * back into the refusal. Mutating in place would throw on the machine's own tick.
      */
     @Test
@@ -82,7 +82,7 @@ class LockedRecipeRetryTest {
 
     /** {@code handleSearchingRecipes} adds to this field itself, so what is left there must take it. */
     @Test
-    void handsBackAListOritechCanAddTo() {
+    void handsBackAListGregTechCanAddTo() {
         List<Recipe> remembered = LockedRecipeRetry.remember(null, FLUXGATE, ID);
 
         remembered.add(BATTERY);
@@ -91,7 +91,7 @@ class LockedRecipeRetryTest {
     }
 
     @Test
-    void takesOverAListOritechBuilt() {
+    void takesOverAListGregTechBuilt() {
         List<Recipe> gregtechs = new ArrayList<>(List.of(BATTERY));
 
         List<Recipe> remembered = LockedRecipeRetry.remember(gregtechs, FLUXGATE, ID);

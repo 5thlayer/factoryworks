@@ -6,14 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Which of Oritech's wrench verbs the Engineer's Pick answers to (#168).
+ * Which of GregTech's wrench verbs the Engineer's Pick answers to (#168).
  *
  * <p>Both halves are asserted, and the false half is the one worth having: a blanket
  * {@code return true} passes any check that only asks about rotation, while quietly granting the
  * four configure verbs that ADR-0017 declined. What is declined has to be asserted as declined.
  *
- * <p>This names abilities by string because the test classpath has neither Minecraft nor Oritech
- * on it -- which is the same reason {@link PickAbilities} does. The strings are Oritech 7.0.2's own,
+ * <p>This names abilities by string because the test classpath has neither Minecraft nor GregTech
+ * on it -- which is the same reason {@link PickAbilities} does. The strings are GTCEu 7.0.2's own,
  * read out of {@code GTItemAbilities}.
  */
 class PickAbilitiesTest {
@@ -25,7 +25,7 @@ class PickAbilitiesTest {
 
     @Test
     void theConfigureVerbsAreGranted() {
-        // A machine's auto-output face, not a pipe's connection. Oritech reads wrench_configure
+        // A machine's auto-output face, not a pipe's connection. GregTech reads wrench_configure
         // first and the other three only after it, so the gate has to be in the set or the rest
         // perform nothing.
         assertTrue(PickAbilities.grants("wrench_configure"));
@@ -37,7 +37,7 @@ class PickAbilitiesTest {
     @Test
     void theConnectVerbIsDeclined() {
         // This is the actual pipe-connection verb, on the pipe block's own path. ADR-0017 gives
-        // fluid and item logistics to Simplebelts and GT's pipes went with the power layer, so it would
+        // fluid and item logistics to Create and GT's pipes went with the power layer, so it would
         // be declared against blocks the pack does not ship.
         assertFalse(PickAbilities.grants("wrench_connect"));
     }
