@@ -3,6 +3,10 @@
 !servers.json
 .DS_Store
 .DS_Store?
+# Editor scratch, alive only while a file is open.
+*.swp
+*.swo
+*~
 .mixin.out
 *.dll
 *.jar.disabled

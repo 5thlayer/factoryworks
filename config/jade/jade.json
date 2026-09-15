@@ -129,6 +129,12 @@
       "loot_table": false,
       "mod_name": "ON"
     },
+    "planetaryfactory": {
+      "rig": true,
+      "furnace": true,
+      "ore_amount": true,
+      "supply_area_pole": true
+    },
     "balm": {
       "jade": true
     }
