@@ -35,30 +35,8 @@ neoForge {
     }
 }
 
-// The mixin in `mixin/oritech` compiles against Oritech and Researchd. Both are pack mods, so their
-// jars are already in `mods/` -- taken from there rather than from a maven so the build stays
-// offline and always compiles against exactly the jars the pack ships.
-//
-// Oritech ships LDLib as a jar-in-jar rather than depending on the pack's `ldlib2-*.jar`, which is a
-// different mod under a different package. Nothing here uses LDLib, but Oritech's `MetaMachine`
-// implements one of its interfaces and javac loads a class's whole supertype hierarchy before it
-// will resolve any call on it -- so reading a machine's position needs the nested jar unpacked.
-def oritechJars = rootProject.fileTree('mods').matching { include 'oritech-*.jar' }.files
-if (oritechJars.size() != 1) {
-    throw new GradleException(
-            "Expected exactly one oritech-*.jar in mods/ to unpack LDLib from, found ${oritechJars.size()}: " +
-            "${oritechJars*.name}. The jar set is a packwiz manifest (ADR-0024) -- reconcile mods/ with it.")
-}
-
-def extractLdLib = tasks.register('extractLdLib', Copy) {
-    from(zipTree(oritechJars.first())) {
-        include 'META-INF/jarjar/ldlib-*.jar'
-    }
-    into layout.buildDirectory.dir('ldlib')
-    eachFile { it.path = it.name }
-    includeEmptyDirs = false
-}
-
+// Compile-time jars are taken from `mods/` rather than from a maven, so the build stays offline and
+// always compiles against exactly the jars the pack ships.
 dependencies {
     // EMI and JEI are here for the recipe-viewer lock annotation (issue #75), and Jade for the
     // pole's live HUD line (#147). All three plugin classes are found by their own host's
@@ -71,9 +49,6 @@ dependencies {
             dir: rootProject.file('mods'),
             include: ['oritech-*.jar', 'researchd-*.jar', 'emi-*.jar', 'jei-*.jar',
                       'Jade-*.jar', 'jade-*.jar'])
-    compileOnly fileTree(dir: layout.buildDirectory.dir('ldlib'), include: ['*.jar'])
-            .builtBy(extractLdLib)
-
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather
     // than a Minecraft type, so the Assembler's attachment codec can be round-tripped on a plain
     // JVM -- which is what ADR-0038's "round-trip the data attachment" asks for. Minecraft itself
