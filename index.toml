@@ -1894,7 +1894,7 @@ hash = "c43ab965cb0cb546e832ad4ce416e3e00814cec2e001d3aad3770f570826d203"
 
 [[files]]
 file = "kubejs/startup_scripts/items.js"
-hash = "aae916166fbe80b1d4a889c971617a6d4207cc3b13122f7feb4f79e57cbe923b"
+hash = "ef28375e367ee983f4e14aec75d8a736f82da72566f609421c834f6a395c69a0"
 
 [[files]]
 file = "kubejs/startup_scripts/jsconfig.json"
