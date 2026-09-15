@@ -1,7 +1,7 @@
 package com.planetaryfactory.core.assembler;
 
 import java.util.List;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
@@ -20,22 +20,26 @@ import net.minecraft.server.level.ServerPlayer;
 public interface PlanSource {
 
     /**
-     * The resolver in force. #161 assigned the real one; {@link Unresolved} is kept as the shape a
-     * resolver that cannot answer takes, and as what the dialogs were built against.
+     * The resolver in force.
+     *
+     * <p>Back to {@link Unresolved} for the 26.1.2 port. #161's {@code RuntimePlanSource} asked
+     * Researchd whether a recipe was blocked and asked {@code RuntimeHandRecipes} for the graph, and
+     * both dependencies are gone until #260 and #262 land -- see
+     * {@code docs/port/blocked-removals-26.1.2.md}. This is the one line that has to move back.
      */
-    PlanSource ACTIVE = new RuntimePlanSource();
+    PlanSource ACTIVE = new Unresolved();
 
     /**
      * Resolves {@code amount} of a recipe against what the player has and what their team has
      * researched.
      */
-    ResolvedPlan resolve(ServerPlayer player, ResourceLocation recipe, int amount);
+    ResolvedPlan resolve(ServerPlayer player, Identifier recipe, int amount);
 
     /**
      * The largest count whose complete plan the inventory covers -- Select Amount's {@code all}, so
      * that {@code all} can never produce a plan that Start then refuses.
      */
-    int largestAffordable(ServerPlayer player, ResourceLocation recipe);
+    int largestAffordable(ServerPlayer player, Identifier recipe);
 
     /**
      * A resolution. {@code plan} is null exactly when the plan is incomplete, which is the one
@@ -59,7 +63,7 @@ public interface PlanSource {
     final class Unresolved implements PlanSource {
 
         @Override
-        public ResolvedPlan resolve(ServerPlayer player, ResourceLocation recipe, int amount) {
+        public ResolvedPlan resolve(ServerPlayer player, Identifier recipe, int amount) {
             return new ResolvedPlan(
                     new PlanDisplay(
                             PlanDisplay.NO_PLAN, recipe, amount,
@@ -68,7 +72,7 @@ public interface PlanSource {
         }
 
         @Override
-        public int largestAffordable(ServerPlayer player, ResourceLocation recipe) {
+        public int largestAffordable(ServerPlayer player, Identifier recipe) {
             return 0;
         }
     }

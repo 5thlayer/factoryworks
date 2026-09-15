@@ -5,7 +5,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IAdvancedRegistration;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * The pack's JEI plugin. Loaded by JEI's own annotation scan, so nothing in the mod references this
@@ -14,11 +14,11 @@ import net.minecraft.resources.ResourceLocation;
 @JeiPlugin
 public final class PlanetaryFactoryJeiPlugin implements IModPlugin {
 
-    private static final ResourceLocation UID =
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.MOD_ID, "jei_plugin");
+    private static final Identifier UID =
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.MOD_ID, "jei_plugin");
 
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return UID;
     }
 

@@ -58,8 +58,11 @@ public final class AssemblerTicker {
     }
 
     private static void sendHandRecipes(ServerPlayer player) {
-        PFNetwork.sendToPlayer(player,
-                HandRecipeSetPacket.of(RuntimeHandRecipes.graph(player.level()).ids()));
+        // Empty until #262 gives the hand set a recipe class to filter again. The packet still
+        // ships: the client's copy of the set has to be emptied on a reload just as surely as it
+        // has to be filled, and a client left holding a stale set would offer plans that no longer
+        // resolve. See docs/port/blocked-removals-26.1.2.md.
+        PFNetwork.sendToPlayer(player, HandRecipeSetPacket.of(java.util.Set.of()));
     }
 
     /** A pending plan is an open dialog, and an open dialog does not survive a logout. */

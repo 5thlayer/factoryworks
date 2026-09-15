@@ -9,7 +9,7 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Puts the pack's smelts in EMI (#155 follow-up).
@@ -26,8 +26,8 @@ import net.minecraft.resources.ResourceLocation;
 @EmiEntrypoint
 public final class SmeltingEmiPlugin implements EmiPlugin {
 
-    private static final ResourceLocation ICON_ID =
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "smelting");
+    private static final Identifier ICON_ID =
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "smelting");
 
     public static final EmiRecipeCategory SMELTING = new EmiRecipeCategory(
             ICON_ID, EmiStack.of(PFBlocks.furnace(FurnaceTier.STONE).get()));

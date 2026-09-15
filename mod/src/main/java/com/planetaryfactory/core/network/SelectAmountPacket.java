@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -17,13 +17,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  * {@code Integer.MAX_VALUE} on a shift-click. The server clamps it against what the resolver says is
  * affordable, so the extreme value is a request for "all" rather than a number anybody believes.
  */
-public record SelectAmountPacket(ResourceLocation recipe, int amount) implements CustomPacketPayload {
+public record SelectAmountPacket(Identifier recipe, int amount) implements CustomPacketPayload {
 
     public static final Type<SelectAmountPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "assembler_select_amount"));
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "assembler_select_amount"));
 
     public static final StreamCodec<ByteBuf, SelectAmountPacket> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, SelectAmountPacket::recipe,
+            Identifier.STREAM_CODEC, SelectAmountPacket::recipe,
             ByteBufCodecs.VAR_INT, SelectAmountPacket::amount,
             SelectAmountPacket::new);
 

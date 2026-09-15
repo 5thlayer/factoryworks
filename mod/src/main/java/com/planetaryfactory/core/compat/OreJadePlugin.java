@@ -6,7 +6,7 @@ import com.planetaryfactory.core.ore.OreMining;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -35,8 +35,8 @@ import snownee.jade.api.config.IPluginConfig;
 @WailaPlugin
 public class OreJadePlugin implements IWailaPlugin {
 
-    private static final ResourceLocation UID =
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "ore_amount");
+    private static final Identifier UID =
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "ore_amount");
 
     private static final String REMAINING = "OreRemaining";
     private static final String INITIAL = "OreInitial";
@@ -53,7 +53,7 @@ public class OreJadePlugin implements IWailaPlugin {
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return UID;
         }
     };
@@ -72,7 +72,7 @@ public class OreJadePlugin implements IWailaPlugin {
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return UID;
         }
     };

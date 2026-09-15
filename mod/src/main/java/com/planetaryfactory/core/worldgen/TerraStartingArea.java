@@ -16,7 +16,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -68,17 +68,17 @@ public final class TerraStartingArea {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     /** The hub pool. Its three connectors are what deal the ore fields; see ADR-0019. */
-    private static final ResourceKey<StructureTemplatePool> START_POOL = ResourceKey.simplebelts(
+    private static final ResourceKey<StructureTemplatePool> START_POOL = ResourceKey.create(
             Registries.TEMPLATE_POOL,
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_start"));
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_start"));
 
     /**
      * The name every hub connector carries. Vanilla offsets the hub so that the connector it picks
      * lands on the given position, so the player spawns on the hub edge with the fields radiating
      * away -- which is the reading ADR-0019 wants.
      */
-    private static final ResourceLocation START_JIGSAW =
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_start_hub");
+    private static final Identifier START_JIGSAW =
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_start_hub");
 
     /** One level of children: the hub, then its three patches. Matches the structure's own size. */
     private static final int MAX_DEPTH = 1;
@@ -202,7 +202,7 @@ public final class TerraStartingArea {
      * rather than the parallel remaining-count ADR-0020 refused.
      */
     private static void recordFields(ServerLevel level, List<StructurePiece> pieces) {
-        OreFields fields = level.getDataStorage().computeIfAbsent(OreFields.FACTORY, OreFields.NAME);
+        OreFields fields = level.getDataStorage().computeIfAbsent(OreFields.TYPE);
         for (StructurePiece piece : pieces) {
             BoundingBox box = piece.getBoundingBox();
             OreCensus census = census(level, box);

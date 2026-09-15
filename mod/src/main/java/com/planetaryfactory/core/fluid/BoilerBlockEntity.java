@@ -9,7 +9,6 @@ import com.planetaryfactory.core.smelting.PFFuel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -31,6 +30,8 @@ import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
 import net.neoforged.neoforge.transfer.CombinedResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  * The Boiler running (#224, ADR-0048): solid fuel and water in, low-temperature steam out.
@@ -48,7 +49,7 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
  *   <li><b>The stall.</b> A full steam tank makes no steam, burns no fuel and voids none, and it
  *       resumes the moment a pipe drains it. #224 names this as the behaviour it is watching for:
  *       a boiler quietly eating coal into a full tank is a leak with no symptom at all.
- *   <li><b>Water is consumed, never simplebeltsd.</b> Under ADR-0050 every drop comes from an Offshore
+ *   <li><b>Water is consumed, never created.</b> Under ADR-0050 every drop comes from an Offshore
  *       Pump. The input tank is fillable from outside and by nothing else.
  * </ol>
  *
@@ -91,14 +92,14 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
             return resource.is(Fluids.WATER);
         }
         @Override
-        protected void onContentsChanged() {
+        protected void onContentsChanged(int index, FluidStack previousContents) {
             setChanged();
         }
     };
 
     private final FluidStacksResourceHandler steam = new FluidStacksResourceHandler(1, STEAM_CAPACITY) {
         @Override
-        protected void onContentsChanged() {
+        protected void onContentsChanged(int index, FluidStack previousContents) {
             setChanged();
         }
     };
@@ -110,7 +111,7 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
                 case DATA_FUEL -> clampToInt(fuel.storedJoules());
                 case DATA_FUEL_CAPACITY -> clampToInt(fuel.gaugeCapacity());
                 case DATA_WATER -> water.getAmountAsInt(0);
-                case DATA_STEAM -> steam.getFluidAmount();
+                case DATA_STEAM -> steam.getAmountAsInt(0);
                 default -> 0;
             };
         }
@@ -120,8 +121,8 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
             switch (index) {
                 case DATA_FUEL -> fuel.load(value, fuel.lastLitJoules());
                 case DATA_FUEL_CAPACITY -> fuel.load(fuel.storedJoules(), value);
-                case DATA_WATER -> water.setFluid(new FluidStack(Fluids.WATER, value));
-                case DATA_STEAM -> steam.setFluid(new FluidStack(PFFluids.STEAM_SOURCE.get(), value));
+                case DATA_WATER -> water.set(0, FluidResource.of(Fluids.WATER), value);
+                case DATA_STEAM -> steam.set(0, FluidResource.of(PFFluids.STEAM_SOURCE.get()), value);
                 default -> {
                 }
             }
@@ -280,31 +281,31 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
 
     @Override
     @Nullable
-    public AbstractContainerMenu simplebeltsMenu(int containerId, Inventory playerInventory, Player player) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new BoilerMenu(containerId, playerInventory, this, data);
     }
 
     // -- persistence ----------------------------------------------------------------------------
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         items.clear();
-        ContainerHelper.loadAllItems(tag, items, registries);
-        fuel.load(tag.getLong("FuelJoules"), tag.getLong("FuelLitJoules"));
+        ContainerHelper.loadAllItems(input, items);
+        fuel.load(input.getLongOr("FuelJoules", 0L), input.getLongOr("FuelLitJoules", 0L));
         // Both tanks persist. A Boiler that came back empty over a logout would have destroyed
         // water an Offshore Pump had to lift, and steam a whole fuel item paid for.
-        water.readFromNBT(registries, tag.getCompound("Water"));
-        steam.readFromNBT(registries, tag.getCompound("Steam"));
+        water.deserialize(input.childOrEmpty("Water"));
+        steam.deserialize(input.childOrEmpty("Steam"));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        ContainerHelper.saveAllItems(tag, items, registries);
-        tag.putLong("FuelJoules", fuel.storedJoules());
-        tag.putLong("FuelLitJoules", fuel.lastLitJoules());
-        tag.put("Water", water.writeToNBT(registries, new CompoundTag()));
-        tag.put("Steam", steam.writeToNBT(registries, new CompoundTag()));
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ContainerHelper.saveAllItems(output, items);
+        output.putLong("FuelJoules", fuel.storedJoules());
+        output.putLong("FuelLitJoules", fuel.lastLitJoules());
+        water.serialize(output.child("Water"));
+        steam.serialize(output.child("Steam"));
     }
 }

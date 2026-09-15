@@ -21,9 +21,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.server.level.ServerLevel;
 
 /**
  * The rig's anchor (#192): the one block of the footprint that holds the block entity, carries
@@ -40,7 +41,7 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class RigBlock extends BaseEntityBlock {
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     /**
      * A block codec is only read by data generation, which this pack does not run -- present
@@ -75,7 +76,7 @@ public class RigBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
@@ -96,7 +97,7 @@ public class RigBlock extends BaseEntityBlock {
         if (level.isClientSide()) {
             return null;
         }
-        return simplebeltsTickerHelper(type, PFBlockEntities.RIG.get(),
+        return createTickerHelper(type, PFBlockEntities.RIG.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
     }
 
@@ -132,13 +133,10 @@ public class RigBlock extends BaseEntityBlock {
      * {@link RigBreaker#teardown}, which removes the anchor, which arrives here.
      */
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock())) {
-            if (level.getBlockEntity(pos) instanceof RigBlockEntity rig) {
-                Containers.dropContents(level, pos, rig);
-            }
-            RigBreaker.teardown(level, pos, tier, state.getValue(FACING), pos);
-        }
-        super.onRemove(state, level, pos, newState, moved);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
+                                               boolean movedByPiston) {
+        // The anchor's own inventory is dropped by 26.1's BlockEntity.preRemoveSideEffects, which
+        // empties any block entity that is a Container. What is left here is the footprint.
+        RigBreaker.teardown(level, pos, tier, state.getValue(FACING), pos);
     }
 }

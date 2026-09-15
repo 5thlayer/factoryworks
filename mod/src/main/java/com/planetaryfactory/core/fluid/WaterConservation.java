@@ -1,12 +1,12 @@
 package com.planetaryfactory.core.fluid;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.slf4j.Logger;
 
 /**
- * Water is extracted and transported, never simplebeltsd (ADR-0050). This is the vanilla half of that
+ * Water is extracted and transported, never created (ADR-0050). This is the vanilla half of that
  * rule: {@code waterSourceConversion} governs {@code WaterFluid.canConvertToSource}, and
  * {@code FlowingFluid.getNewLiquid} consults it before turning two adjacent sources into a third --
  * the 3x1x1 trench that makes a bucket infinite. Off, that conversion never fires, and no amount of

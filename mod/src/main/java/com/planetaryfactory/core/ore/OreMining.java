@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.planetaryfactory.core.PFAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import org.slf4j.Logger;
 
 /**
@@ -57,7 +57,7 @@ public final class OreMining {
      * break is still cancelled, so the block survives the gesture with its amount intact; only the
      * creative one actually removes it, and {@link OreBlock#onRemove} retires the delta behind it.
      */
-    public static void onBreak(BlockEvent.BreakEvent event) {
+    public static void onBreak(BreakBlockEvent event) {
         if (!(event.getLevel() instanceof ServerLevel level)) {
             return;
         }
@@ -116,7 +116,7 @@ public final class OreMining {
         int initial = initialAmount(level, ore, pos);
         OreDelta delta = deltaOf(level, pos);
         OreDelta.Draw draw = delta.draw(pos.asLong(), initial);
-        level.getChunk(pos).setUnsaved(true);
+        level.getChunk(pos).markUnsaved();
 
         // debug, not info: this was a hand break's line, one per player gesture. A running rig
         // draws every few ticks and several rigs would make this the loudest thing in the log.
@@ -143,8 +143,8 @@ public final class OreMining {
 
     /** The block's initial amount: its field's quotient, or the outfield law's scaling of it. */
     public static int initialAmount(ServerLevel level, OreBlock ore, BlockPos pos) {
-        OreFields fields = level.getDataStorage().computeIfAbsent(OreFields.FACTORY, OreFields.NAME);
-        return fields.initialAmount(ore.resource(), pos, level.getSharedSpawnPos());
+        OreFields fields = level.getDataStorage().computeIfAbsent(OreFields.TYPE);
+        return fields.initialAmount(ore.resource(), pos, level.getLevelData().getSpawnPos());
     }
 
     /**
@@ -157,7 +157,7 @@ public final class OreMining {
     public static void onRemoved(Level level, BlockPos pos) {
         if (level instanceof ServerLevel server) {
             deltaOf(server, pos).retire(pos.asLong());
-            server.getChunkAt(pos).setUnsaved(true);
+            server.getChunkAt(pos).markUnsaved();
         }
     }
 
@@ -167,8 +167,8 @@ public final class OreMining {
     }
 
     private static void drop(ServerLevel level, BlockPos pos, OreResource resource) {
-        ResourceLocation id = ResourceLocation.parse(resource.drop());
-        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(id));
+        Identifier id = Identifier.parse(resource.drop());
+        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(id).orElseThrow().value());
         if (stack.isEmpty()) {
             // An id nothing registered resolves to air rather than throwing, so this branch is how
             // `oritech:raw_iron` -- an item Oritech never registers, because vanilla covers iron --

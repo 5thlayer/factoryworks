@@ -8,7 +8,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -48,9 +48,9 @@ public final class TreeFelling {
      * how ADR-0051's "one rule, no list to maintain" holds -- Sapros's trees join by being added to
      * it, on the day #23 decides they should.
      */
-    public static final TagKey<Block> FELLABLE = TagKey.simplebelts(
+    public static final TagKey<Block> FELLABLE = TagKey.create(
             Registries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "fellable"));
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "fellable"));
 
     /**
      * One survey per player, held only while they keep looking at the same block.

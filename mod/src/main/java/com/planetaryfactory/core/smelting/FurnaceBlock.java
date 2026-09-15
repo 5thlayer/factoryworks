@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -39,7 +39,7 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class FurnaceBlock extends BaseEntityBlock {
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     /**
@@ -78,7 +78,7 @@ public class FurnaceBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, LIT);
     }
 
@@ -104,7 +104,7 @@ public class FurnaceBlock extends BaseEntityBlock {
         if (level.isClientSide()) {
             return null;
         }
-        return simplebeltsTickerHelper(type, PFBlockEntities.FURNACE.get(),
+        return createTickerHelper(type, PFBlockEntities.FURNACE.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
     }
 
@@ -123,12 +123,4 @@ public class FurnaceBlock extends BaseEntityBlock {
     }
 
     /** A broken furnace pays back what it held. Nothing here is a resource sink (ADR-0041). */
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof FurnaceBlockEntity furnace) {
-            net.minecraft.world.Containers.dropContents(level, pos, furnace);
-        }
-        super.onRemove(state, level, pos, newState, moved);
-    }
-
 }

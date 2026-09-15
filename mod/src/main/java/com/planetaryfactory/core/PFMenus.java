@@ -26,17 +26,17 @@ import java.util.function.Supplier;
 public final class PFMenus {
 
     public static final DeferredRegister<MenuType<?>> MENUS =
-            DeferredRegister.simplebelts(Registries.MENU, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.create(Registries.MENU, PlanetaryFactoryCore.NAMESPACE);
 
     /** No opening data: the panel shows the queue, and the queue is synced separately. */
     public static final Supplier<MenuType<AssemblerPanelMenu>> ASSEMBLER_PANEL =
             MENUS.register("assembler_panel", () -> new MenuType<>(AssemblerPanelMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
 
     public static final Supplier<MenuType<SelectAmountMenu>> SELECT_AMOUNT =
-            MENUS.register("assembler_select_amount", () -> IMenuTypeExtension.simplebelts(SelectAmountMenu::new));
+            MENUS.register("assembler_select_amount", () -> IMenuTypeExtension.create(SelectAmountMenu::new));
 
     public static final Supplier<MenuType<CraftingPlanMenu>> CRAFTING_PLAN =
-            MENUS.register("assembler_crafting_plan", () -> IMenuTypeExtension.simplebelts(CraftingPlanMenu::new));
+            MENUS.register("assembler_crafting_plan", () -> IMenuTypeExtension.create(CraftingPlanMenu::new));
 
     /**
      * One menu for all three furnace tiers (#155), not one per tier: they differ in whether there
@@ -44,7 +44,7 @@ public final class PFMenus {
      * packet so the client can tell.
      */
     public static final Supplier<MenuType<FurnaceMenu>> FURNACE =
-            MENUS.register("furnace", () -> IMenuTypeExtension.simplebelts(FurnaceMenu::new));
+            MENUS.register("furnace", () -> IMenuTypeExtension.create(FurnaceMenu::new));
 
     /**
      * One menu for both mining rigs (#193, #194), for the reason the furnace's is one: they differ
@@ -52,7 +52,7 @@ public final class PFMenus {
      * tell without a block entity to ask.
      */
     public static final Supplier<MenuType<RigMenu>> RIG =
-            MENUS.register("rig", () -> IMenuTypeExtension.simplebelts(RigMenu::new));
+            MENUS.register("rig", () -> IMenuTypeExtension.create(RigMenu::new));
 
     /**
      * The Boiler's menu (#224). One, not a ladder: ADR-0048 authors one boiler tier.

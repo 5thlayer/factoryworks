@@ -1,34 +1,33 @@
 package com.planetaryfactory.core.energy;
 
-import com.gregtechceu.oritech.api.capability.GTCapability;
-import com.gregtechceu.oritech.api.capability.IEnergyContainer;
 import com.planetaryfactory.core.PFBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
- * The pole's tick: rescan the area now and then, push EU into everything found, every tick.
+ * The pole's tick: rescan the area now and then, push FE into everything found, every tick.
  *
- * <h2>FE in, EU out</h2>
+ * <h2>FE in, FE out</h2>
  *
- * <p>Power Grid's Device Connector is one-way grid-to-FE ({@code canReceive() == false}), so FE is
- * the only currency the grid can hand a pack block. Every machine in the pack takes EU. The
- * conversion happens once, here, in {@link EnergyLedger} -- which is why Oritech's FE converters stay
- * disabled and why no converter block appears anywhere in the pack.
+ * <p>ADR-0060 leaves the pack with one energy currency. GregTech is gone, so there is no EU to
+ * convert to and no {@code IEnergyContainer} to insert into: a receiver is anything answering
+ * NeoForge's own {@link Capabilities.Energy#BLOCK}, and the pole hands it FE.
  *
- * <p>Energy is inserted with {@link IEnergyContainer#addEnergy(long)} rather than
- * {@code acceptEnergyFromNetwork}. The latter enforces Oritech's voltage tiers and can overvolt a
- * machine into exploding; {@code #37} deleted that ladder entire, so there is no tier for a pole to
- * respect and direct insertion is the honest operation. A pole supplies wirelessly, so it also has
- * no face to be accepted through.
+ * <p>Insertion runs inside a {@link Transaction} because that is the transfer API's contract --
+ * what {@code insert} reports is only committed when the transaction is. The pole opens one per
+ * tick and commits it, so a receiver that accepts less than it asked for costs the pole exactly
+ * what the receiver took and nothing more.
  *
  * <h2>Why the receiver list is cached</h2>
  *
@@ -46,10 +45,11 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
     /**
      * The FE buffer, sized at one tick of a busy area and derived rather than picked.
      *
-     * <p>A Oritech LV machine draws 32 EU/t. A substation area packed with 32 of them is
-     * 1024 EU/t, which is {@code 1024 * }{@link EnergyLedger#FE_PER_EU}{@code  = 4096 FE} for a
-     * single tick. That is the number: enough that a full area can be served from one push, and
-     * not one tick more.
+     * <p>The figure is inherited from the EU ladder it was derived on: thirty-two machines at
+     * 32 EU/t each, at the four-FE-to-one-EU ratio GregTech's converters used, came to 4,096 FE for
+     * a single tick. The ratio is gone but the sizing argument is not -- it is still one tick of a
+     * packed area -- and #266 is where the number is re-derived against whatever Oritech's
+     * machines actually draw.
      *
      * <p>Sizing it that way is what keeps it clear of the machine-side storage ADR-0036 forbids.
      * That prohibition exists so sag and blown fuses reach the machines instead of being absorbed,
@@ -75,8 +75,8 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
      * by the machine count and the delivered-against-demanded pair.
      */
     private int lastMachineCount;
-    private long lastDeliveredEu;
-    private long lastDemandedEu;
+    private long lastDeliveredFe;
+    private long lastDemandedFe;
 
     public SupplyAreaPoleBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.SUPPLY_AREA_POLE.get(), pos, state);
@@ -114,8 +114,8 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
         }
         if (receivers.isEmpty()) {
             lastMachineCount = 0;
-            lastDeliveredEu = 0L;
-            lastDemandedEu = 0L;
+            lastDeliveredFe = 0L;
+            lastDemandedFe = 0L;
             return;
         }
         // Deliberately not short-circuited on an empty ledger. A pole with no energy still has to
@@ -130,17 +130,17 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
         return lastMachineCount;
     }
 
-    /** EU actually handed out on the last tick. */
-    public long deliveredEuPerTick() {
-        return lastDeliveredEu;
+    /** FE actually handed out on the last tick. */
+    public long deliveredFePerTick() {
+        return lastDeliveredFe;
     }
 
-    /** EU the area asked for on the last tick, whether or not it was there to give. */
-    public long demandedEuPerTick() {
-        return lastDemandedEu;
+    /** FE the area asked for on the last tick, whether or not it was there to give. */
+    public long demandedFePerTick() {
+        return lastDemandedFe;
     }
 
-    /** Every position in the area that currently answers with a Oritech energy container. */
+    /** Every position in the area that currently answers with an FE handler. */
     private List<BlockPos> scan(Level level) {
         List<BlockPos> found = new ArrayList<>();
         BlockPos origin = getBlockPos();
@@ -149,7 +149,7 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
             if (pos.equals(origin) || !level.isLoaded(pos)) {
                 return;
             }
-            if (container(level, pos) != null) {
+            if (handler(level, pos) != null) {
                 found.add(pos.immutable());
             }
         });
@@ -157,19 +157,24 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
     }
 
     /** A machine that answered this tick, and the room it has. */
-    private record Receiver(IEnergyContainer container, long demand) {
+    private record Receiver(EnergyHandler handler, int demand) {
     }
 
     private void distribute(Level level) {
         List<Receiver> hungry = new ArrayList<>(receivers.size());
-        for (BlockPos pos : receivers) {
-            IEnergyContainer container = container(level, pos);
-            if (container == null) {
-                continue;
-            }
-            long demand = container.getEnergyCanBeInserted();
-            if (demand > 0L) {
-                hungry.add(new Receiver(container, demand));
+        try (Transaction probe = Transaction.open(null)) {
+            for (BlockPos pos : receivers) {
+                EnergyHandler handler = handler(level, pos);
+                if (handler == null) {
+                    continue;
+                }
+                // The transfer API has no "how much room is there" question, so room is a simulated
+                // insert: an insert inside a transaction that is then aborted. Asking for the
+                // capacity instead would read a full machine as hungry for everything it holds.
+                int demand = handler.insert(Integer.MAX_VALUE, probe);
+                if (demand > 0) {
+                    hungry.add(new Receiver(handler, demand));
+                }
             }
         }
         // The count is every machine the scan found, not just the hungry ones. A machine sitting
@@ -178,58 +183,60 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
         // exists to prevent.
         lastMachineCount = receivers.size();
         if (hungry.isEmpty()) {
-            lastDeliveredEu = 0L;
-            lastDemandedEu = 0L;
+            lastDeliveredFe = 0L;
+            lastDemandedFe = 0L;
             return;
         }
 
         long[] demands = hungry.stream().mapToLong(Receiver::demand).toArray();
-        long[] grants = EnergyShare.waterFill(ledger.availableEu(), demands);
+        long[] grants = EnergyShare.waterFill(ledger.availableFe(), demands);
 
         long wanted = 0L;
         for (long demand : demands) {
             wanted += demand;
         }
         long spent = 0L;
-        for (int i = 0; i < grants.length; i++) {
-            if (grants[i] > 0L) {
-                spent += hungry.get(i).container().addEnergy(grants[i]);
+        try (Transaction transaction = Transaction.open(null)) {
+            for (int i = 0; i < grants.length; i++) {
+                if (grants[i] > 0L) {
+                    spent += hungry.get(i).handler().insert((int) grants[i], transaction);
+                }
             }
+            transaction.commit();
         }
-        lastDemandedEu = wanted;
-        lastDeliveredEu = spent;
+        lastDemandedFe = wanted;
+        lastDeliveredFe = spent;
         if (spent > 0L) {
-            ledger.drainEu(spent);
+            ledger.drainFe(spent);
             setChanged();
         }
     }
 
-    private static IEnergyContainer container(Level level, BlockPos pos) {
-        // A pole supplies wirelessly, so it has no natural side to ask through. Oritech machines
+    private static EnergyHandler handler(Level level, BlockPos pos) {
+        // A pole supplies wirelessly, so it has no natural side to ask through. Most machines
         // answer on a null context; the faces are a fallback for anything that insists on one.
-        IEnergyContainer container =
-                level.getCapability(GTCapability.CAPABILITY_ENERGY_CONTAINER, pos, null);
-        if (container != null) {
-            return container;
+        EnergyHandler handler = level.getCapability(Capabilities.Energy.BLOCK, pos, null);
+        if (handler != null) {
+            return handler;
         }
         for (Direction side : Direction.values()) {
-            container = level.getCapability(GTCapability.CAPABILITY_ENERGY_CONTAINER, pos, side);
-            if (container != null) {
-                return container;
+            handler = level.getCapability(Capabilities.Energy.BLOCK, pos, side);
+            if (handler != null) {
+                return handler;
             }
         }
         return null;
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        ledger.setStoredFe(tag.getLong("StoredFe"));
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        ledger.setStoredFe(input.getLongOr("StoredFe", 0L));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.putLong("StoredFe", ledger.storedFe());
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putLong("StoredFe", ledger.storedFe());
     }
 }

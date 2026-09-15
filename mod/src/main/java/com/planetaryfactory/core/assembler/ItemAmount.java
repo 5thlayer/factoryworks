@@ -4,7 +4,7 @@ package com.planetaryfactory.core.assembler;
  * A count of one item, named by its {@link ItemKey}: its registry id together with its data
  * component patch, as a string.
  *
- * <p>A string and not a {@code ResourceLocation} or an {@code ItemStack} on purpose: everything the
+ * <p>A string and not a {@code Identifier} or an {@code ItemStack} on purpose: everything the
  * Assembler's queue does with an item is counting it, and keeping the identity a string is what lets
  * the queue -- where this ticket's real risk lives -- be a unit test rather than a world load. An
  * item with no components encodes to exactly its registry id (ADR-0052), so most keys read as ids

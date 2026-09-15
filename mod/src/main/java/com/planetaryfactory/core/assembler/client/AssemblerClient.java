@@ -2,7 +2,7 @@ package com.planetaryfactory.core.assembler.client;
 
 import com.planetaryfactory.core.PFMenus;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.bus.api.IEventBus;
@@ -34,7 +34,7 @@ public final class AssemblerClient {
     /** Above the hotbar in draw order, so the queue is not painted under it. */
     private static void registerHud(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR,
-                ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "assembler_queue"),
+                Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "assembler_queue"),
                 new AssemblerHud());
     }
 

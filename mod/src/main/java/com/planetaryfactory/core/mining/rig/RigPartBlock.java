@@ -19,9 +19,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.server.level.ServerLevel;
 
 /**
  * One block of a rig's footprint that is not the anchor (#192).
@@ -38,7 +39,7 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class RigPartBlock extends BaseEntityBlock {
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public static final com.mojang.serialization.MapCodec<RigPartBlock> CODEC =
             com.mojang.serialization.Codec.STRING
@@ -71,7 +72,7 @@ public class RigPartBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
@@ -118,9 +119,11 @@ public class RigPartBlock extends BaseEntityBlock {
      * nothing) and tears the rest of the rig down (#192, bed-and-door).
      */
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock()) && !level.isClientSide()
-                && level.getBlockEntity(pos) instanceof RigPartBlockEntity part) {
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
+                                               boolean movedByPiston) {
+        // Server-side by construction now: 26.1 hands this a ServerLevel, so the old isClientSide
+        // guard has nothing left to refuse.
+        if (level.getBlockEntity(pos) instanceof RigPartBlockEntity part) {
             BlockPos anchorPos = part.anchorPos();
             if (anchorPos != null && level.getBlockState(anchorPos).getBlock() instanceof RigBlock rig) {
                 popResource(level, pos, new ItemStack(
@@ -129,6 +132,5 @@ public class RigPartBlock extends BaseEntityBlock {
                         level.getBlockState(anchorPos).getValue(RigBlock.FACING), pos);
             }
         }
-        super.onRemove(state, level, pos, newState, moved);
     }
 }

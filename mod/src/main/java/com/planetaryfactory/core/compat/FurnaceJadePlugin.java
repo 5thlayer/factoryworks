@@ -6,7 +6,7 @@ import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceSlots;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -42,8 +42,8 @@ import snownee.jade.api.ui.IElementHelper;
 @WailaPlugin
 public class FurnaceJadePlugin implements IWailaPlugin {
 
-    private static final ResourceLocation UID =
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "furnace");
+    private static final Identifier UID =
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "furnace");
 
     private static final String INPUT = "FurnaceInput";
     private static final String OUTPUT = "FurnaceOutput";
@@ -69,7 +69,7 @@ public class FurnaceJadePlugin implements IWailaPlugin {
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return UID;
         }
     };
@@ -116,7 +116,7 @@ public class FurnaceJadePlugin implements IWailaPlugin {
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return UID;
         }
     };

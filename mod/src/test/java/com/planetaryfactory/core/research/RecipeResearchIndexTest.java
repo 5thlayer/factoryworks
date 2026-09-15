@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * The index is what stands in for {@code isRecipeBlocked} when there is no team to ask about
- * (issue #74). Strings stand in for {@code ResourceLocation} and {@code ResourceKey<Research>};
+ * (issue #74). Strings stand in for {@code Identifier} and {@code ResourceKey<Research>};
  * the index never looks inside either, so nothing here is weakened by the substitution.
  */
 class RecipeResearchIndexTest {

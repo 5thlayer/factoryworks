@@ -68,7 +68,7 @@ public final class ItemKeys {
         DataComponentType<Object> typed = (DataComponentType<Object>) type;
         if (typed.codec() == null) return null; // a transient component; nothing can name it
         return typed.codec()
-                .encodeStart(registries.simplebeltsSerializationContext(NbtOps.INSTANCE), value)
+                .encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), value)
                 .resultOrPartial(error -> LOGGER.warn("Assembler: cannot name {}: {}", type, error))
                 .map(Tag::toString)
                 .orElse(null);

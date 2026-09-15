@@ -1,21 +1,23 @@
 plugins {
     id 'java-library'
-    id 'net.neoforged.moddev' version '2.0.107'
+    id 'net.neoforged.moddev' version '2.0.147'
 }
 
 version = mod_version
 group = maven_group
 base.archivesName = mod_id
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+// Minecraft 26.1.2 and every 26.1 mod jar in `mods/` are compiled to class file version 69,
+// which is Java 25. Building on 21 cannot read them.
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 neoForge {
     version = project.neoforge_version
 
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
+    // No `parchment` block: ParchmentMC has published no mappings for 26.1 (the newest data is
+    // `parchment-1.21.9`). Restore it -- and the two `parchment_*` keys in `gradle.properties` --
+    // the day a 26.1 release exists; until then naming one fails the build rather than
+    // silently falling back.
 
     runs {
         client { client() }
@@ -91,6 +93,10 @@ repositories {
 // classpath. That is the pack's testing policy, not an oversight: the row for "this pack logic
 // computes something" asks for an ordinary unit test run without Minecraft, and a classpath that
 // cannot see a `ResourceLocation` is what keeps the logic honest about staying testable.
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xmaxerrs' << '9999'
+}
+
 tasks.named('test', Test).configure {
     useJUnitPlatform()
     testLogging { events 'failed' }

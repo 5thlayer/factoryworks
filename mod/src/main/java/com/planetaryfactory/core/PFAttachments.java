@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 public final class PFAttachments {
 
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
-            DeferredRegister.simplebelts(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, PlanetaryFactoryCore.NAMESPACE);
 
     /**
      * The Assembler queue.
@@ -36,7 +36,7 @@ public final class PFAttachments {
     public static final Supplier<AttachmentType<AssemblerQueue>> ASSEMBLER_QUEUE = ATTACHMENTS.register(
             "assembler_queue",
             () -> AttachmentType.builder(AssemblerQueue::new)
-                    .serialize(AssemblerCodecs.QUEUE)
+                    .serialize(AssemblerCodecs.QUEUE.fieldOf("queue"))
                     .copyOnDeath()
                     .build());
 
@@ -50,7 +50,7 @@ public final class PFAttachments {
     public static final Supplier<AttachmentType<OreDelta>> ORE_DELTA = ATTACHMENTS.register(
             "ore_delta",
             () -> AttachmentType.builder(OreDelta::new)
-                    .serialize(OreCodecs.DELTA)
+                    .serialize(OreCodecs.DELTA.fieldOf("delta"))
                     .build());
 
     /**
@@ -65,7 +65,7 @@ public final class PFAttachments {
             // The cast picks the Supplier overload: StartingGrant's boolean constructor makes the
             // bare method reference ambiguous against builder(Function<IAttachmentHolder, T>).
             () -> AttachmentType.builder((Supplier<StartingGrant>) StartingGrant::new)
-                    .serialize(StartingCodecs.GRANT)
+                    .serialize(StartingCodecs.GRANT.fieldOf("grant"))
                     .copyOnDeath()
                     .build());
 

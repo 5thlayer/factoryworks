@@ -7,7 +7,7 @@ import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -43,8 +43,8 @@ import snownee.jade.api.config.IPluginConfig;
 @WailaPlugin
 public class PoleJadePlugin implements IWailaPlugin {
 
-    private static final ResourceLocation UID =
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "supply_area_pole");
+    private static final Identifier UID =
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "supply_area_pole");
 
     private static final String MACHINES = "PoleMachines";
     private static final String DELIVERED = "PoleDelivered";
@@ -67,12 +67,12 @@ public class PoleJadePlugin implements IWailaPlugin {
                 return;
             }
             tag.putInt(MACHINES, pole.machineCount());
-            tag.putLong(DELIVERED, pole.deliveredEuPerTick());
-            tag.putLong(DEMANDED, pole.demandedEuPerTick());
+            tag.putLong(DELIVERED, pole.deliveredFePerTick());
+            tag.putLong(DEMANDED, pole.demandedFePerTick());
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return UID;
         }
     };
@@ -102,7 +102,7 @@ public class PoleJadePlugin implements IWailaPlugin {
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return UID;
         }
     };

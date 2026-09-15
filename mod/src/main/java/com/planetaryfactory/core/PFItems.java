@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public final class PFItems {
     public static final DeferredRegister.Items ITEMS =
-            DeferredRegister.simplebeltsItems(PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.createItems(PlanetaryFactoryCore.NAMESPACE);
 
     private static final List<DeferredHolder<Item, ? extends Item>> NATURAL = new ArrayList<>();
     private static final List<DeferredHolder<Item, ? extends Item>> FUNCTIONAL = new ArrayList<>();

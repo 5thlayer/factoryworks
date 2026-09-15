@@ -41,9 +41,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  */
 public final class PFFluids {
     public static final DeferredRegister<Fluid> FLUIDS =
-            DeferredRegister.simplebelts(Registries.FLUID, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.create(Registries.FLUID, PlanetaryFactoryCore.NAMESPACE);
     public static final DeferredRegister.Blocks BLOCKS =
-            DeferredRegister.simplebeltsBlocks(PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.createBlocks(PlanetaryFactoryCore.NAMESPACE);
 
     // ---- Steam ----------------------------------------------------------------------------
 

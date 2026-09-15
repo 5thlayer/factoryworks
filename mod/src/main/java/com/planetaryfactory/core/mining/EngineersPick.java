@@ -4,7 +4,7 @@ import com.planetaryfactory.core.PlanetaryFactoryCore;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,9 +47,9 @@ public final class EngineersPick extends Item {
      * <p>A tag, and therefore pack data: Terra's resource set is a design decision (ADR-0019), and
      * this jar owns only the arithmetic that turns a stated duration into a tool speed.
      */
-    public static final TagKey<Block> FACTORIO_MINING_TIME = TagKey.simplebelts(
+    public static final TagKey<Block> FACTORIO_MINING_TIME = TagKey.create(
             Registries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE,
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE,
                                                   "factorio_mining_time"));
 
     /**

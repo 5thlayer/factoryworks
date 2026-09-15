@@ -6,9 +6,10 @@ import com.planetaryfactory.core.PFBlockEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  * A part's only job: remember where its anchor is (#192). It carries no rules of its own --
@@ -40,20 +41,20 @@ public class RigPartBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         if (anchorPos != null) {
-            tag.putInt(TAG_ANCHOR_X, anchorPos.getX());
-            tag.putInt(TAG_ANCHOR_Y, anchorPos.getY());
-            tag.putInt(TAG_ANCHOR_Z, anchorPos.getZ());
+            output.putInt(TAG_ANCHOR_X, anchorPos.getX());
+            output.putInt(TAG_ANCHOR_Y, anchorPos.getY());
+            output.putInt(TAG_ANCHOR_Z, anchorPos.getZ());
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        anchorPos = tag.contains(TAG_ANCHOR_X)
-                ? new BlockPos(tag.getInt(TAG_ANCHOR_X), tag.getInt(TAG_ANCHOR_Y), tag.getInt(TAG_ANCHOR_Z))
-                : null;
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        anchorPos = input.getInt(TAG_ANCHOR_X)
+                .map(x -> new BlockPos(x, input.getIntOr(TAG_ANCHOR_Y, 0), input.getIntOr(TAG_ANCHOR_Z, 0)))
+                .orElse(null);
     }
 }

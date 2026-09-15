@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 
@@ -32,8 +32,8 @@ public final class PFTrees {
     }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> feature(String path) {
-        return ResourceKey.simplebelts(
+        return ResourceKey.create(
                 Registries.CONFIGURED_FEATURE,
-                ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, path));
+                Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, path));
     }
 }

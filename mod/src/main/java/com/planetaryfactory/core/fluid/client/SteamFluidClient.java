@@ -2,7 +2,7 @@ package com.planetaryfactory.core.fluid.client;
 
 import com.planetaryfactory.core.fluid.PFFluidTypes;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -27,10 +27,10 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
  */
 public final class SteamFluidClient {
 
-    private static final ResourceLocation WATER_STILL =
-            ResourceLocation.withDefaultNamespace("block/water_still");
-    private static final ResourceLocation WATER_FLOW =
-            ResourceLocation.withDefaultNamespace("block/water_flow");
+    private static final Identifier WATER_STILL =
+            Identifier.withDefaultNamespace("block/water_still");
+    private static final Identifier WATER_FLOW =
+            Identifier.withDefaultNamespace("block/water_flow");
 
     /** A pale, slightly translucent grey-blue -- steam rather than water, but visibly kin to it. */
     private static final int STEAM_TINT = 0xB0DCE6EC;
@@ -59,12 +59,12 @@ public final class SteamFluidClient {
         }
 
         @Override
-        public ResourceLocation getStillTexture() {
+        public Identifier getStillTexture() {
             return WATER_STILL;
         }
 
         @Override
-        public ResourceLocation getFlowingTexture() {
+        public Identifier getFlowingTexture() {
             return WATER_FLOW;
         }
 

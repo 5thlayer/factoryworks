@@ -7,7 +7,7 @@ import com.planetaryfactory.core.network.OpenPanelPacket;
 import com.planetaryfactory.core.network.PlanStartPacket;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -76,7 +76,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         hovered = ItemStack.EMPTY;
         super.render(graphics, mouseX, mouseY, partialTick);
         if (!hovered.isEmpty()) {
@@ -85,7 +85,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
     }
 
     @Override
-    protected void renderPanel(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         PlanDisplay display = menu.display();
         int width = (imageWidth - 16) / COLUMN;
         column(graphics, leftPos + 8, "consume", display.consume(), ChatFormatting.AQUA, mouseX, mouseY);
@@ -114,7 +114,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
         }
     }
 
-    private void column(GuiGraphics graphics, int x, String key, List<ItemAmount> amounts,
+    private void column(GuiGraphicsExtractor graphics, int x, String key, List<ItemAmount> amounts,
             ChatFormatting colour, int mouseX, int mouseY) {
         graphics.drawString(font,
                 Component.translatable("planetaryfactory_core.assembler." + key).withStyle(colour),

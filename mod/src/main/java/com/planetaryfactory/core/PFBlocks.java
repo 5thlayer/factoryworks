@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 public final class PFBlocks {
     public static final DeferredRegister.Blocks BLOCKS =
-            DeferredRegister.simplebeltsBlocks(PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.createBlocks(PlanetaryFactoryCore.NAMESPACE);
 
     public static final DeferredHolder<Block, SaplingBlock> YUMAKO_SAPLING =
             sapling("yumako_sapling", PFTrees.YUMAKO);

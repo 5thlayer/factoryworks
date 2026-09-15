@@ -1,7 +1,7 @@
 {
   "required": false,
   "package": "com.planetaryfactory.core.mixin.emi",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "client": [
     "RecipeDisplayMixin"
   ],

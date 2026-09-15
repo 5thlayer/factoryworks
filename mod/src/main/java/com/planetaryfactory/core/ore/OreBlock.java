@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.server.level.ServerLevel;
 
 /**
  * A Terra ore block: an amount, rendered as one of Factorio's eight stages.
@@ -35,7 +36,7 @@ public final class OreBlock extends Block {
      * changed its stage ladder changes this property when the extractor is re-run.
      */
     public static final IntegerProperty STAGE =
-            IntegerProperty.simplebelts("stage", 0, OreCorpus.get().stageCount() - 1);
+            IntegerProperty.create("stage", 0, OreCorpus.get().stageCount() - 1);
 
     private final OreResource resource;
 
@@ -54,7 +55,7 @@ public final class OreBlock extends Block {
     }
 
     @Override
-    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(STAGE);
     }
 
@@ -78,12 +79,8 @@ public final class OreBlock extends Block {
      * it. A stage change is not a removal, so mining a block does not trip this.
      */
     @Override
-    protected void onRemove(BlockState state, Level level,
-                            BlockPos pos, BlockState replacement,
-                            boolean moving) {
-        if (!state.is(replacement.getBlock())) {
-            OreMining.onRemoved(level, pos);
-        }
-        super.onRemove(state, level, pos, replacement, moving);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
+                                               boolean movedByPiston) {
+        OreMining.onRemoved(level, pos);
     }
 }
