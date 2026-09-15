@@ -12,11 +12,18 @@ docs/
 tests/
 scripts/
 .claude/
+.agents/
+skills-lock.json
 .github/
 .vscode/
 *.md
 .gitignore
 .gitattributes
+# Editor scratch, alive only while a file is open -- and gone by the time a
+# player would install, so indexing one records a hash of nothing.
+*.swp
+*.swo
+*~
 
 # --- The first-party mod's source and build tooling ---------------------------
 # `mod/` is fully tracked in git, so hashing it records nothing new.

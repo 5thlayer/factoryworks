@@ -122,7 +122,7 @@ hash = "085ae084a98180d4659ef60f9cf91281152a6e7b74a5a76c53f86e4f8f0d17f9"
 
 [[files]]
 file = "config/jade/jade.json"
-hash = "892687838b374248e45a904a9e742c017afefa9263aa693a0c7bef0ae5b5d521"
+hash = "ffc2d0665b43de821657750baac08ec9aef436bf578a7653cd2e128b297054e4"
 
 [[files]]
 file = "config/jade/plugins.json"
@@ -130,15 +130,15 @@ hash = "b32e15da4f70e2b453398c763fb350a10dc630ea5eeb56d59125446f343fcc7a"
 
 [[files]]
 file = "config/jade/profiles/1/jade.json"
-hash = "4155e32e0fbae68f72c7a950ace84f0759360850489c80a25d75d31b1c163496"
+hash = "44527e70f0b1cab64785ac4f04098b4784eda4cb230666609379d03f2fd895cc"
 
 [[files]]
 file = "config/jade/profiles/2/jade.json"
-hash = "da83e5a7facc75bb7865c3557b7fd12c45d93630c307eacb67716945968a53cf"
+hash = "8c1e0ed2a141d8be3ccf25ba644b9a6d756d9b2488ae7570442beef46cf3e7e8"
 
 [[files]]
 file = "config/jade/profiles/3/jade.json"
-hash = "ed8d15030c263fcdc3284fba73090e84e63fe145cc6551d6f674f4461b02399a"
+hash = "27421755139209cfb821b0ea65ba1893a7bfd36d6471397af9de2e9642bd8fb7"
 
 [[files]]
 file = "config/jade/server-plugin-overrides.json"
@@ -146,7 +146,7 @@ hash = "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
 
 [[files]]
 file = "config/jade/sort-order.json"
-hash = "45343806adbfa0e736ff9aef11acc4ca0151a330a2ad25a55d51ab42b61974bf"
+hash = "c0d2d8f2081541d67f95b264b743b30da193060be26e2fcb0cf26d4f22f565cc"
 
 [[files]]
 file = "config/jei-server.toml"
@@ -282,7 +282,7 @@ hash = "d70e2ae769b3a06d7b8c2982f78732e25e875acc5dc6b431263509d55a59dd69"
 
 [[files]]
 file = "data/pack/category-map.json"
-hash = "af3dabbd86ef8c269ae0e8226c17cb8aca06b0ce8591c332b774639db044b446"
+hash = "168706fc5f74f4f8c36badcd11f6e0ffdb706c63af5efbd69ecad6506831430f"
 
 [[files]]
 file = "data/pack/item-map.json"
@@ -290,7 +290,7 @@ hash = "751be27942484f7b5a97e37b4455919cad51f0f5a8c1408187e0ea47623d1b89"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
-hash = "d3258b12a308a2dd576c79ee70de61741c451cefec8e7dc788aa9b157c35cf22"
+hash = "4545a52c58126eacebcc225e96455f26eace9dc79d94ad400c33023d268f7292"
 
 [[files]]
 file = "data/pack/subgroup-owner.json"
@@ -305,10 +305,6 @@ file = "kubejs/README.txt"
 hash = "989f3737ae4621b8ff6730bce4cbeeee756921e7e510e0c281c8a350501d98af"
 
 [[files]]
-file = "kubejs/assets/gcyr/lang/en_us.json"
-hash = "976f4b723d45f908789511cbc67058120993f99f30e3b3ee047edf5053fdea32"
-
-[[files]]
 file = "kubejs/assets/kubejs/blockstates/oil_refinery.json"
 hash = "6463ce6d83c1d0a28b0290b99ae9d513706c62af1d17a728abcf62f702a7c4fb"
 
@@ -318,7 +314,7 @@ hash = "2e5fc0a6af45d289f84dddd6c7d04b0f569ca590a78da9a5ff0fa725dbd6f546"
 
 [[files]]
 file = "kubejs/assets/kubejs/models/block/machine/oil_refinery.json"
-hash = "20eed604bd09d3053e8c8177ed300de39264fa4cc15f38f44e9d7e6988b61628"
+hash = "716574bfd64de65be0fce4d569c441b042e0345b1d86a6fd19fba7a40111fe6f"
 
 [[files]]
 file = "kubejs/assets/kubejs/models/item/oil_refinery.json"
@@ -405,30 +401,6 @@ file = "kubejs/assets/planetaryfactory/blockstates/yumako_sapling.json"
 hash = "f9c8e7527d3def59fa590634e75c1361b209954252886d643d0163c504220c3c"
 
 [[files]]
-file = "kubejs/assets/planetaryfactory/gcyr/planet_assets/galaxies/milky_way.json"
-hash = "0ac08252e0bd4060c151927979b65a8e07dc1998945a8e2ed797005314f139db"
-
-[[files]]
-file = "kubejs/assets/planetaryfactory/gcyr/planet_assets/sky_renderers/electro.json"
-hash = "9e035308e82f925d1daea704917ea00edcbf3da4a6cd27e38471983a871df656"
-
-[[files]]
-file = "kubejs/assets/planetaryfactory/gcyr/planet_assets/sky_renderers/ignus.json"
-hash = "3afdfdaf0d4d7962f6aa42da40cd236b5e2874d2bed12bec77e0cebe7b917ad7"
-
-[[files]]
-file = "kubejs/assets/planetaryfactory/gcyr/planet_assets/sky_renderers/sapros.json"
-hash = "0c7c797eee1b3290f147da06c6c4a7236b75869f601a4ef9045cdd71e88f266c"
-
-[[files]]
-file = "kubejs/assets/planetaryfactory/gcyr/planet_assets/solar_systems/shattered_system.json"
-hash = "c3d50c90345a03b3f63b156a6d4fcfd9c9abee2be9219e682b1eee03376eff2a"
-
-[[files]]
-file = "kubejs/assets/planetaryfactory/gcyr/planet_assets/solar_systems/solar_system.json"
-hash = "29164eb82d87037838018b501fec02ff573ee0aad9ebade8bc0f31035c433086"
-
-[[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
 hash = "af6e442006a722cd711a65f754ce8d75845f14902b482875b925be963a0507a6"
 
@@ -446,11 +418,11 @@ hash = "c061096c7ba3deb017d0097b09390f9a95c24861e0ce7b7c485f94e5f467ec7f"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/electric_furnace.json"
-hash = "e11690df9545cae1d379a8c4437cc54e9ea00053e876d6016834ccdeab9b25c7"
+hash = "374d0efae68461843c1e1f06e4a793c832f48959cfb473a0f5d4823bbf1788c7"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/electric_furnace_on.json"
-hash = "df95ff36aff199b1f8fe856f9e2bb1fef1b76ca6ce1f3781ff73aba57bc1485e"
+hash = "afcfb41026da41b6aa3fa503a468b059e5961dac8df9d5eed5bebfe5390ff643"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/electric_mining_drill.json"
@@ -966,63 +938,11 @@ hash = "c143fb8b2ce84da8c834b2cd3a9435246dae66e025e5e7a439f463e170310f3a"
 
 [[files]]
 file = "kubejs/data/c/tags/block/ores.json"
-hash = "2162a7586822786fe1e9d1781eb7b6feb931f854423c4b2942bb373ead76ec67"
+hash = "51c19a284b92e460b899e1c103b6764e8f8bf443d5b87741e92051e6d762fc29"
 
 [[files]]
 file = "kubejs/data/c/tags/item/tools/wrench.json"
-hash = "bd82a2597fc7eb09caf045eee0221585fd14f2c5f8427bda940711f0544c852e"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/bedrock_fluid/heavy_oil_deposit.json"
-hash = "e9339ba672e781881721b8f8b37722c0c18aa5850f8c28610ea053c2eef3e6e9"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/bedrock_fluid/lava_deposit.json"
-hash = "1ebea858da28db09511790463c9b4bdd2839551332941f57edcadca8fef7ce47"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/bedrock_fluid/light_oil_deposit.json"
-hash = "6015e42fbcc57c424a01aa93bddebbcef0524002dc3da490463d52a442c44a23"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/bedrock_fluid/natural_gas_deposit.json"
-hash = "d68472f5ed0228e16356c13c36c6acd91ce6333264077e6b25152ca27f150922"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/bedrock_fluid/oil_deposit.json"
-hash = "b424f217425f75e5ec552610d6e3cfae1f29148308020e15687ca71dfa4e9d4e"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/bedrock_fluid/raw_oil_deposit.json"
-hash = "130e0b347ce0d0a13e74f1ff82737366033104179f8484b267bd91370452f43c"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/bedrock_fluid/salt_water_deposit.json"
-hash = "42f9187f5ce44b866cd4de2977e39339cde5d4c4a1e902d424c9eda2067122e4"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/ore_vein/coal.json"
-hash = "ba9a2066a3943d5dd8d2d074f81d12f7af5cec1246e328a856bcfa0264f0b4a3"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/ore_vein/copper.json"
-hash = "e535cbb98d48466c3244b62105b566be053e4f6ecac7622006919dbb65b9e362"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/ore_vein/iron.json"
-hash = "04b6fc186103551062dd678a8f5f2eabbfe37b7224ca0b53996fe8208bbfc69b"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/ore_vein/stone.json"
-hash = "1631d0b881a41459317398801d64c82725d63da786e91f797c7bf53036ad0973"
-
-[[files]]
-file = "kubejs/data/oritech/oritech/ore_vein/uranium.json"
-hash = "167a8d625ad257195d1d1aaee1cf286808012e8da8dba6f5e3941c3752bc7fa6"
-
-[[files]]
-file = "kubejs/data/oritech/tags/item/crafting_tools/wrench.json"
-hash = "809b62fe5d521e948e1eafd68f2723d5c76cd415d947b08bdc76ff1912f0c7b3"
+hash = "2c81f0bce3249118c12a4c5ec468d482e8e5c11403cfe09163213382a75475f5"
 
 [[files]]
 file = "kubejs/data/minecraft/dimension/overworld.json"
@@ -1062,11 +982,63 @@ hash = "f9078270b2a482c4525d4dec9f37ee417928d66164420ad6d53e537a35278aa4"
 
 [[files]]
 file = "kubejs/data/minecraft/world_preset/normal.json"
-hash = "df22baf260b1119b724580bea1019f54cec54b621a0ef0b8a29f3af6e2838a03"
+hash = "239a4e398bda6fd96b8be25008c78133c6e345298768765b65046bd5c801c274"
 
 [[files]]
 file = "kubejs/data/minecraft/worldgen/noise_settings/overworld.json"
 hash = "290166c39f81289b0a1c3a38932e9eccbf221f8f5f75e7f0ca6ccc842f084593"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/bedrock_fluid/heavy_oil_deposit.json"
+hash = "fd2659cebe8163da8fee1721a2db02c8b09915c4bb0129a2c053c42f38887ff7"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/bedrock_fluid/lava_deposit.json"
+hash = "1ebea858da28db09511790463c9b4bdd2839551332941f57edcadca8fef7ce47"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/bedrock_fluid/light_oil_deposit.json"
+hash = "c61665a0770a490021f1c5683a9cff1edc2f3da37fa99f077994d71c6d92d6df"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/bedrock_fluid/natural_gas_deposit.json"
+hash = "5fb513b2b184416a0c8da5647e9c4124b015aa227e4963e012b3f0ca0b60f30c"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/bedrock_fluid/oil_deposit.json"
+hash = "71440460344fb444f9071f00cbc3e89b4c01ed95d37ecc1cfcd5975e387dcbff"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/bedrock_fluid/raw_oil_deposit.json"
+hash = "641b6d344039981083a452705ec6d55e43057f89391556b1c12602086e1b97b2"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/bedrock_fluid/salt_water_deposit.json"
+hash = "c91105a978c8faea6e47672862b9e1ffec1ca60b41a1d9feb73ff0262787a719"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/ore_vein/coal.json"
+hash = "145365b54a613c605890c712fde7dcb1c5da043a4c3c3cc72b667a00babc9f2a"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/ore_vein/copper.json"
+hash = "840f311610e579ef1bdd6b355a3c0928c00bdf0de47b7a6147faae9530156741"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/ore_vein/iron.json"
+hash = "c8dcaf08285d47306913f2866ea06d952168bb80c5c290adc837663aa44bbf92"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/ore_vein/stone.json"
+hash = "3530f50ce8d5942699d12313a04507742f57468eaf16dbb89dae716e844bc325"
+
+[[files]]
+file = "kubejs/data/oritech/oritech/ore_vein/uranium.json"
+hash = "ad16036ba34d06d62538a990cf52fa1cbab974ad4b5e4a874280c956b08ad55e"
+
+[[files]]
+file = "kubejs/data/oritech/tags/item/crafting_tools/wrench.json"
+hash = "98698ff72ed00b6909f9dea1640fe3fe41e83cf1450e4f1f1a4324737cf7af77"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/fuel/coal.json"
@@ -1111,50 +1083,6 @@ hash = "276e2bb54a9e55f32b1ad8241e2ed18a354e85db93a0dc213d69e4a5ff1329fa"
 [[files]]
 file = "kubejs/data/planetaryfactory/gt_materials/scrap.json"
 hash = "4e6d7a3754dbc3652a54048fbbe1c7970dfeb9f1ff2c74e21d656012f55a50fc"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/electro_petroleum_deposit.json"
-hash = "98e13d85ce4b9860bbdb50de451d3c70c93aaabdb7a605764f8788068cc232e7"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/ignus_sulfuric_acid_geyser.json"
-hash = "6c837f1cdbb591a0cb77a7465edc5d780cee240fc217768c402d598d44c3eafd"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/terra_crude_oil_deposit.json"
-hash = "91dc790ac8d1eda59adcc63820e700fde29e39b160603fae42e8f0261b64bca5"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/electro_scrap_deposit.json"
-hash = "fd357cc41cad54f5ea44c10941804fdb3615e01bf6a291e8341986294e082e67"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_calcite_deposit.json"
-hash = "744c4357fc98432e2a54fd9d5778c0d926c9af870a3c52f555404d7887b89b69"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_coal_deposit.json"
-hash = "82aaf691ad292f84be72886bd07ec32193ea1dca99500a4f621916b668aaf021"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_tungsten_deposit.json"
-hash = "2812c703cf8af135dea94621b70f42b2136b5470f830369730cbce0e56b2a47f"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_calcite.json"
-hash = "fe38536639cef5496d917a80b393cc5039073f6f14c84b0b93cf23814a7a6d3d"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_coal.json"
-hash = "30454b236de18568a50865d8be35e85ca989fa95e2f13960aa9182cd9957039f"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_scheelite.json"
-hash = "95794eef4f3b8e710857eca6cdedaea998289f1fc982685b15d11f611ef35251"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_sulfur.json"
-hash = "30c242f669d75fbd585c23edf1e26362eb88db71c39e597d3c7a00887abc6241"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/loot_table/blocks/boiler.json"
@@ -1265,272 +1193,316 @@ file = "kubejs/data/planetaryfactory/loot_table/blocks/yumako_sapling.json"
 hash = "ec30199aaa8701f5453dfe974e46119aa845a6188bd265e9dc3fa11ced2c154c"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/electro_petroleum_deposit.json"
+hash = "05d5dbe7d2fdfe63718481f56906e603fb543fa8d32abfce0dc4aad19853e171"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/ignus_sulfuric_acid_geyser.json"
+hash = "4e389426edb8565d41f6026eb3cf89d37f87a86ce1c45a959eb1107195000ec0"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/bedrock_fluid/terra_crude_oil_deposit.json"
+hash = "2f43c1c8962dc77ee10496c703ae9f7046e97172e7e7519265b4b7d7d3c43542"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/electro_scrap_deposit.json"
+hash = "fd357cc41cad54f5ea44c10941804fdb3615e01bf6a291e8341986294e082e67"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_calcite_deposit.json"
+hash = "b88785d13f13839e48b406b39bcb55349b1e295b6589e630c2a1e2d12550ad7f"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_coal_deposit.json"
+hash = "7b30c143ed848024a3b903fbf593e7ca2527ed8526b77ebc148a0885eacb74a4"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/bedrock_ore/ignus_tungsten_deposit.json"
+hash = "9a6965db6020bd557e4a42e981444750e058940f8dfd0f8eb0a0d55eb509af7e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_calcite.json"
+hash = "1ff37e4cc325bee9de02ac048cf35537f0956bc46448a22ed75724841439e2ca"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_coal.json"
+hash = "0b3ecf7f510fc15c6e6e4396aa39390a5e726331b633b514d60b30cf76b23af3"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_scheelite.json"
+hash = "fbb13d85f4ab2f01a3c0139a448bd92eb7c23ec88811f00c9c4874b466ec4f9d"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/oritech/ore_vein/ignus_sulfur.json"
+hash = "b14dcc5efb5f64d63f254dabe92dc48d7c0663f777867ca21df60f62956da4e7"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/accumulator.json"
-hash = "b41c4968a0c6797d4f7e4793f1c63006149979fb6004c9558b34415e3e16d065"
+hash = "9fb926efb9d6c6048a1730c43ec620af3b55fd5d39d59102b1986c47ca79d664"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/advanced_circuit.json"
-hash = "1518c2088c966e879f891f6faee38086965125cf0b6b0d9f2602abe9c98f01a8"
+hash = "91567d31098665906443384974c17fefd618a0bdfec10f70e5b40d78f1466cac"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/assembling_machine_1.json"
-hash = "e1e2cc7092b1162e86ced084d1b624daeb1dee5f8fb1cd5c30e8cbbd4f86ac90"
+hash = "717e11e52d24c3b33fb4bf447cae6d4794098a379e170cf825ef86f7ef75df49"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/assembling_machine_2.json"
-hash = "2144e98ecf40d0ac6491c747ca8afacf93e659228cb55a9d1e76af15a0ca2044"
+hash = "86fa8ee31db06f401df67ced151b570a3c315601e6183da4c5db12330aa43989"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/automation_science_pack.json"
-hash = "371b855d9cc851170c5688bee9a7a8973177f159c9ef836d6722c25afc2a2c69"
+hash = "23c62545a821a29dd68cfdf055199fad386e94f9650215b51d1a84081c27e8fd"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/barrel.json"
-hash = "30d821bfb0de5816982eaacd2f66af53c41225c435c6805d4884eddd4fb2ad30"
+hash = "ea71c2ae051030135340d545388a340460194ed735cfad21b34f01501071d6bd"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/boiler.json"
-hash = "5a1d18f076a51a6aa98ff0043b3fb97061c0e074ba7b3b9a3849989eb4609c54"
+hash = "18e019f8c3028be0194bb9b399a8d6636a874071e9c288e8b3a740bed756d4a4"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/burner_mining_drill.json"
-hash = "80e1d2143ea625ed09b76a4b3982e8526c1f6a115cab2e60447d2ebd044cfae1"
+hash = "845eafff93d80b0e9fe2d4de540bb164879254e345a0415baf94b46fa1dea9fc"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/chemical_plant.json"
-hash = "d65eac43c102691227b6482ae5da3d6544d72272cf20e85dffa199b72c968551"
+hash = "f11659209eda986995d39bc7d6880dfea98509ea05ffaaaa272e00398f9e4585"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/chemical_science_pack.json"
-hash = "a8ab3f604da74c3bb519f388e3f5d05eb2aa1a7637d3aef59a5f1347565b8987"
+hash = "d72ae7d573eaa29af9db99f8be8c2dc8285fbaba73fe69e930d1a4b854007597"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/concrete.json"
-hash = "b8683b34522710b8f841547d874e7fd893790e04089c9eb3114562a13ed91180"
+hash = "8c3b8995c6390895e9e5f3c53799f38dd944db3ac814652e157cdfd7b1d6c202"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/copper_cable.json"
-hash = "20939a9cffff97d404ca90886c9eccb99c94d99f62fb1f78766a9390655af47b"
+hash = "4b6eb4c735133530760a681da89323ea51b550b6d1e0ade1b25942e0ecc257ed"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/display_panel.json"
-hash = "041b567bef9268dfef20023111fef5dc006bffcd266112e4d6c225895f4062f9"
+hash = "8f083a004d407932baaa95417c3b1287c383ea23b5b3f24a950dadd0f433a009"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/electric_engine_unit.json"
-hash = "c5ad32a3280ecffdf54a2d922aee97d5d7db9c2ac9c4381bb5eeabf510ec1cec"
+hash = "0a36d21d9b321c3fa4035973e27dd05d200f7f03c80145629ea959850c6576d2"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/electric_furnace.json"
-hash = "a38ff56303dc294432bfffa96eb870b8dfb50f20cd38cebefdeb1a44e24ab512"
+hash = "c26c15940ae0f00077f113e51770fe69ff835aad38e4366405e567455171a450"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/electronic_circuit.json"
-hash = "143a592eea17e64de925aeb779e067248e04622348ba88ada8133d67bdb8442f"
+hash = "545880e8e3deb401183076fe14f1ec33b435f879054c0eeaa6896eca9c4e8fa6"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/engine_unit.json"
-hash = "74e7d7dbe4f0b6b463c88d42a19e140a7862ac325af821352400d71984eb15b5"
+hash = "781f425c9ee5314c61880cf7e666137bc3e7b64f79167bcefa6a16c72e6be57f"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/hazard_concrete.json"
-hash = "71327eeb2144185c5dc6864fa020e26a44984b66379f8a28f82f44aa8c9a352f"
+hash = "4a144e4675064e6c92064c4f577c46aa4207054e1fee6141f772cf2060a8b8fe"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/iron_chest.json"
-hash = "8169aba9e044342c5ce39c6d4bb73462643417c0660ba9f6f77b66cd4c767353"
+hash = "0b1d2ded79e8473d83348e5d0da55432773cdefac7b4b48f37f027023b6f92e1"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/iron_gear_wheel.json"
-hash = "7937d303ddb655f4bf6ed8cf61b077db73485f4a3dacad92c1c9516c3c2af6f4"
+hash = "e02bc50acdd6fcee8acef1e0e04302a515f313beadcca32635475559d709a2e8"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/iron_stick.json"
-hash = "13f5f27b139518a4f436167538933563f4a9fce08e43d38a51a894381c57dc39"
+hash = "b84497c4af02628b4af0c01f0d6a63fc76029aaf6bbb93d278d10415fbfdc7e0"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/lab.json"
-hash = "1e92aa50fbfa1aa68085567cddaa363768075bc1de0660e484461a02d1ed0abc"
+hash = "ec5256df60fd2bccca831b43c627f8bed47e11e3aa7281926bcfc90699cf4a54"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/low_density_structure.json"
-hash = "3039c8b4a2f0869678c29e2557d30376a881eee71c1d33cc8422e6fc4677c208"
+hash = "ac16ad0eb2ac9394c5c50afb21d34c6a2a130e51e42cbedb069a7976fa0ffded"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/medium_electric_pole.json"
-hash = "4b6707f080e8cefb5de47e5a340d393d2e1865f0d1478a59cd177d5dacdc4cc0"
+hash = "2d6278aad48c40d7932fddd3aba91055a025acf523a3593492a12154d54bca9f"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/offshore_pump.json"
-hash = "ea9ee7fee1a0ec40d0e606a8a31b3b323082a59f737f880f0632836649577211"
+hash = "86e9cc021e3eb5c9ee28ccbe9cb095b4ea668f922a52e5d394139d2d7c328313"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/oil_refinery.json"
-hash = "1c62c526e834f1980bbeba19eda1ea1bc43e51ae8a941fe7322802895784ff58"
+hash = "8cc8c92a105b22dec346db2270927a1de5bfe47fd7a75eb30bcc4fb55a2f2fd4"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/pack/engineers_iron_pick.json"
-hash = "c0f281db4cb43d0bc405729ba9c73f9dc47faed002f0da7591803fd574f35113"
+hash = "f256e4675e2a581bd272031780efa5d69a6c754a36b30684418a3c7e84638766"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/pack/engineers_steel_pick.json"
-hash = "4234dba20c866b6fef7fa3c6b963a2e0ca14b6a44fe98d22827bebd8fc993e18"
+hash = "21bab5ccf7300990d433bb0bdf9ab96ef8b0355ce50845c50293f1fec2078525"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/pipe.json"
-hash = "0efcf74366c8dcd284308ade61c9a06fa6bfaa7fde67a44ed7ae3e8f6028dc3a"
+hash = "60523c88d7742f0f8ad75a38c516b14ee8d55ca65fc8ab2a910d692154e9d1b5"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/power_switch.json"
-hash = "7efafd75b11d893c53296a7502182ff69f970056fe87a2dac98f2d2947762780"
+hash = "d7b209710a4ed6f480984453d47f6c9c7a973b981cdf11bb76027e669f5d6a21"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/programmable_speaker.json"
-hash = "94145e404af32eef5629a5365001f4f058430d80dc88aba2fa25305713681792"
+hash = "5e285be692258a5f5895615365a78d4ce8bd9e4923fc303df5b167052d366a01"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/pump.json"
-hash = "87d83f8c8de737cc5a20ed85884932efc08b4aa0fc25624d86481fe84c5b439e"
+hash = "90bb7c3879f1d858ab810e8599a7595bb32e867c132d7a660ce0d3546891812a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/rail.json"
-hash = "8b560b0489fc50e29dde4791c554068bce3fa312704f9165bd3e52a036cfb916"
+hash = "20fdc153e72d458db3bce6cfc2c6ea93d791f7602fe94489d0ad8de5f9de625e"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/rail_signal.json"
-hash = "5414b0b5562700976e31f313b6f93503ccb8579de8a4781335015a7de53ce5c1"
+hash = "dd915d82de12862a8779f0e0da563b8943889c37a653176e4f3e5f86c2f9d7b6"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/refined_concrete.json"
-hash = "c07200e2b7e75fa1d4b910ad9e4be0c88f170d5fcb809fcffa32891c98197170"
+hash = "f735a73081745df5309d06f53358c0140ce06d6c22f80c20fe9dcdb0c6e1169a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/refined_hazard_concrete.json"
-hash = "ec81ddea37726216571dd48448551c70abd67e4fc5c972b5c925be2443c43096"
+hash = "48f61f7fc29371abe6d114e1130c7c5ff20cf18045ebf77c76c9a37735b34f98"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/sapling/acacia_sapling.json"
-hash = "b70f9511b3b15c85d054f2571d49831a3b4366d618f42daf84fc590e051573f1"
+hash = "c5da4585192767ecd9661152c0577185732cc590258f56271a875812105308e9"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/sapling/birch_sapling.json"
-hash = "8512b0d8dddef89b11a983c483f4e9a45465fd7e1232987cc0577a25cbf49d6e"
+hash = "c504ff359018ae2dd59968953d865bd0621a3562fb8abb20e27b73dc790ef72c"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/sapling/oak_sapling.json"
-hash = "d28110eeb7c95519eaa8db1a4ec6b6d00e5c623f972f834b87b1764ef34e8eac"
+hash = "7489ef4241de276a4eac64e0a31ea5cb41c0946ff0cd924821c4f2371bb5a3e0"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/small_electric_pole.json"
-hash = "45d526d953657e16682cd23511cb8a6c85a630f571f83a0f550ec5c0f22f0830"
+hash = "66b8d934016179afe9f8b64448b4c0a15faeeebf37c0181c51bf425123977576"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/small_lamp.json"
-hash = "cbe19421346447674c12b12aebb100cd9d759a37f0c051e7ad512184b533f647"
+hash = "8b05b16cf5ede71561f1873dcc001286c7372400a442dd50144280ca3d08f98c"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/solar_panel.json"
-hash = "f0022ea9206af0349f427a9e6a766fe4e3006469d56944f4e8532e6b53e04c40"
+hash = "84626eb0ecdea4a87a9911f3ad99c693649370572ef92f537593a42098fc0af7"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/steel_chest.json"
-hash = "496454b2586eb7bb4ff40ba213f6a6934375a32190f95d83f364efd49d085051"
+hash = "d6145d6c065247bc0443814d607554ee369c2f1fb3375c4feadc2481203fe8f3"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/steel_furnace.json"
-hash = "72a2e754778bf81f2d777bc85d72d90da5bd326c199e2c1b203881d37b856004"
+hash = "d8d3479ae1cd657c6b221786681a7cb35d77741e40c5ce72e450a7912efbbcd5"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stone_furnace.json"
-hash = "c7e52ff1777d141ed9a2b146a3c2e02a0ce03978794239f492a821c00d276c7d"
+hash = "8ffd5647f3cb9df6392e34d95e9e539fa070c7315749aa5c78c1330841df0a61"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/storage_tank.json"
-hash = "41a306bcea2bf10e581c279d5b09ee6e7dd4a9267b1cd5d978791b2a11989649"
+hash = "c7e47c8bdbb8696482900a7a5d75b4f3b785c34747ee64598011e1209ffee89f"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/substation.json"
-hash = "690f91668810f904c3f14d2cb5ebe1308237a9e9128fc65e6e8e31df89b6c2ba"
+hash = "7fcbef5032f278132e1dc51aad8c88cabf08afd5dff7644060067b72ac0f0c37"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/train_stop.json"
-hash = "6a3f59dcf65d4413f3d273e26bd2e40d2487e70a2484748f4f1e420941e7b35f"
+hash = "30f53d8c63b084292278d6449e13615ebb4c57e75ec20ec38ec235cf003f21c5"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/transport_belt.json"
-hash = "143bcdb043d179e0acbd6c9d6b22f7c8ca1f9231849c291def194f472978a486"
+hash = "2c044087b5b83d42098331634a89ee8bb2bdd928551e8a56765afcbd80b89df2"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/wooden_chest.json"
-hash = "15a360e8eb125db77798b455768d29de3ac1ccfc97c7a02a52d209bbf6f26ae6"
+hash = "bfb98b6904ff89ef890838efbb12a0e20216fea8b20c25c1477a05f35a62086c"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/battery.json"
-hash = "e991b96d8ac63ec6b2c53cb5b88d63cf5b041cce56fce95f8ac6f20393ea5ea7"
+hash = "1a01fd4d03e00b1163c8a3d66a31bac64619f365a77c3b7f7e140c54d685cba5"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/heavy_oil_cracking.json"
-hash = "9ef07e6fc83f17eeda9b46f4e06e334e8ee20985d13aecb7fc67bda08336cdb6"
+hash = "e681ce111c0a7fb83520234b8ace117b5585b708e6f18f6829bd623e0fe07031"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/light_oil_cracking.json"
-hash = "3e326e327a0ea6a1f9c7cb2103a3d4c4760fc036a26c8872f45f404a9669862e"
+hash = "37ae140724ecdab25cd1d5e5c63602dab470ee3827e24e7f93ef24012ddac40d"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/lubricant.json"
-hash = "ae47f6281c05ab58dbcbd272654715eac3673bf6ee3276e32cdd99146d91b85e"
+hash = "cc8d5ee734b0b99cf2d1e5a7b84fb825609531258fcc49bd415e45dc40332d3b"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/plastic_bar.json"
-hash = "ca060fd787804219bf1721f02d0a13956e54d26092c82c2040ece5757c144129"
+hash = "10bbe9dbbd5dc3bafeb5c42f24e95182f9e3524dab32ebcbbf0a81fd7874686c"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/processing_unit.json"
-hash = "2d2577bccf0fd43a999f0393ddcbd2dc33d298be4b5fb6f61b0ea04a7816fedb"
+hash = "e05b7a72c43f20b2f1eba915ed10bf32550b8e2363491b7c7115edc98d3b6121"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/rocket_fuel.json"
-hash = "604710caf36afa422d97a712536fbebb1681d23050b037c17e246618ee92efd8"
+hash = "962858b6563de365bf68f3368387242e3004114cfae237a958df026823637644"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/solid_fuel_from_heavy_oil.json"
-hash = "a5e4690d7ec23544e7986f07a92312b91f47383c63921f5c5bcab40eb6931675"
+hash = "53e700417245153b092213fd6b1a5aadb57701edec5b3409631eadaf0782c85d"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/solid_fuel_from_light_oil.json"
-hash = "a9bfd912ce3394f6e38f70344bd31d6964f432e48db5aa48d9d6a54cf6bbbba2"
+hash = "4e30ec775cdf57be4e5641556407b293bfb257911c639e5fd6a354752356ffea"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/solid_fuel_from_petroleum_gas.json"
-hash = "da0b215eec8b0ddf2be7b19a697d95cd7e1c963d809529c7a6cac307f2d08f08"
+hash = "e6696c8c76a30f4529c36dc394c775df2b4927a844afbe2f1c5714517c082f84"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/sulfur.json"
-hash = "96f9fb3db2b1d05cc81ab6223e53aaeda7bbe72599ecb132bcfc32348a6af411"
+hash = "8e5fd031bda968c5385ac85787242e8617cca0f25da617abd3a4828493976a5a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/chemical_plant/sulfuric_acid.json"
-hash = "030c7e42a6fd024136d66619836d0c9e81978c288ce45f04279dc361d0e1bde5"
+hash = "74f76c98bdea098a3680ee67db5b9d34d6536350fb75e19a8bd67a42073fdfa6"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/copper_plate.json"
-hash = "11ec15cd68b7e5eaeae9728ee625984f7b0617efee06a9da141e4738d5ca7606"
+hash = "cb649388759d480dd23a8d5910dbbe5d14b947265bfe9864d76dfe544e158de7"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/iron_plate.json"
-hash = "3a8432b7d9652a21f42bd9de2b0bc5e0b43b4abdbc14ca7d4374872b28ce5c3b"
+hash = "5c76ae568a46670e3761aa2db6a312d41e89e9a3af2f6bc3de423a814d061b4a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/oil_refinery/advanced_oil_processing.json"
-hash = "92b0e4fb2a0d6cc712169479648328bec685ad5ac9cf5be6d41adb07adec2690"
+hash = "920c3773cbbb88ed4eaeda5d20f660aaa1f66de04823814ed996becdcae1834c"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/oil_refinery/basic_oil_processing.json"
-hash = "5a7fa31f58e98df5d0fd2a13d73010448d676b747b6391cb6ab2e7cd43b070d1"
+hash = "538d8481131eec83045286e2f7aaae008c4c5ba7a4681549f33f367054d882e5"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/steel_plate.json"
-hash = "47b6d4f0dfb17075413c869d0820e8960ae030bc07e9b620198cf1bcd166b154"
+hash = "cfdd33de5ff79e6c6a8c915842dffcad0f8f491d8b6a8623ab2c0ac81b3c6c2c"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/stone_brick.json"
@@ -1622,31 +1594,31 @@ hash = "6df7f6b8701f43d38f2f3127a6a7a909aecf701cdcdc686afb61008efe9feeea"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_desert.json"
-hash = "c1e5a346bacf385762cb45d650fa831814fc436ad916e0abc6a890e13604c6bd"
+hash = "f3546e076c532e949ce220d0031278ee18910ce54092cb307ecbe01bfed19c86"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_dry_steppe.json"
-hash = "ed924122ec4eed85c64f0f7bd3bd16e92411bff213e39c8e370f847d8304eceb"
+hash = "5f70bb15d5afcdaa49108c3397cfc75731d213ceee5518a721291fb963d4f859"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_grassland.json"
-hash = "23a5815d5a6d084813b5c576a980e04f9d1d9923b2bf799793658fcac6bfd56d"
+hash = "7fd00ab3a172d13e01c355cd176078a8db6cab0812b5856076361f57a914f307"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_red_desert.json"
-hash = "fc8f3f1c547ee4bac8ad07d4c805222a72f15fd514836202b27b42f36612c408"
+hash = "1fcfca5906e805973ecb769fd2d0989bdba3f9df168006d7d5cc414b74c72fd1"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_sea.json"
-hash = "dbb2d8e656318793b64a8e99fd0f76b803edccee37e81dae272fffed0aee0c31"
+hash = "4ec82b601d2cf7eee007f8fd31b4e7553558944bec87afbea51a1192959985ef"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_shore.json"
-hash = "acd167e524e0e742b1af2886974ad19f60863bb1734205224d711a328658e5a8"
+hash = "6ebca6f7de524ff6859320820c3639c37571d449fdf9d940e6005f90eb1f8dc9"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_woodland.json"
-hash = "6403d08080af83d7e5d7e54a161c02af4e2eff3b78280c45c57180b23aac312a"
+hash = "09c8a0f8514d9f83081b4c4ea8c20520122dba01ae5d0c5d224244b211ea7dae"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/density_function/terra/factor.json"
@@ -1806,7 +1778,7 @@ hash = "ff97a17d0d91664dbba219216eaa9286f5c15081fabf05368facc7f160db5ed8"
 
 [[files]]
 file = "kubejs/parked/data/planetaryfactory/worldgen/noise_settings/electro.json"
-hash = "833b79ca4939edc730a3a6bfc9a0850e4936ccebf6b7f49f3ccb7d66666cdc79"
+hash = "b9a55ab4b391411497283e51bdf857bf78812deac47fb0b07e9f6fe78703cce4"
 
 [[files]]
 file = "kubejs/parked/data/planetaryfactory/worldgen/noise_settings/ignus.json"
@@ -1898,7 +1870,7 @@ hash = "dae099ae3be7f033c0c190ee8c3b023b42f6b235d9d0591be5926e8435dbd67f"
 
 [[files]]
 file = "kubejs/server_scripts/recipe_survivors.js"
-hash = "26a4c57db9fbbf3432d6b1dc870488d264ac88dc8174b7eea230bfe76e6f5c89"
+hash = "199dfa367b76315528da2d16d891573aa67a1e776825432e33c34af1c9a2049b"
 
 [[files]]
 file = "kubejs/server_scripts/recipes.js"
@@ -1910,7 +1882,7 @@ hash = "f1c8fa34394e1b68631dac2ebce5eadda5915fc000df32ce84b494399ba6f6a6"
 
 [[files]]
 file = "kubejs/server_scripts/researchd.js"
-hash = "25adac97a07f9fa23d4ab40c24ae4a85bdd7aafa2282d179e0a43985b4ff4dc2"
+hash = "fb9ba44ece6748b1becaa9020ab0a40659d1cef72c9156e5254a281b92040c84"
 
 [[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
@@ -1918,11 +1890,11 @@ hash = "20580ceeb23855b9d54a9b11219143100dee749d16b356f7f60d667380958ead"
 
 [[files]]
 file = "kubejs/startup_scripts/blocks.js"
-hash = "630038ff3c1457b65dac849d8b12af0904b3e45c8f556d0be91247e77fd80ace"
+hash = "c43ab965cb0cb546e832ad4ce416e3e00814cec2e001d3aad3770f570826d203"
 
 [[files]]
 file = "kubejs/startup_scripts/items.js"
-hash = "d78f6f74078f260e82678c9920c3d52e5de93c8e492f56bc395b613862773495"
+hash = "aee18b24c7fb7463f1479f60b6234be5aca4d7a5c032892c3de156f53f3cab68"
 
 [[files]]
 file = "kubejs/startup_scripts/jsconfig.json"
