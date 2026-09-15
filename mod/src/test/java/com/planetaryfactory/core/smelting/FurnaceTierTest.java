@@ -28,19 +28,19 @@ class FurnaceTierTest {
         assertEquals(1, FurnaceTier.STEEL.durationTicks(0));
     }
 
-    /** 180 kW * 32/420_000, ADR-0029's constant, truncated as its table truncates. */
+    /** 180 kW is 9,000 J a tick, and ADR-0060's rate is 100 J to the FE (#266). */
     @Test
-    void electricDrawsThirteenEuPerTick() {
-        assertEquals(13L, FurnaceTier.ELECTRIC.euPerTick());
-        assertEquals(0L, FurnaceTier.STONE.euPerTick());
-        assertEquals(0L, FurnaceTier.STEEL.euPerTick());
+    void electricDrawsNinetyFePerTick() {
+        assertEquals(90L, FurnaceTier.ELECTRIC.fePerTick());
+        assertEquals(0L, FurnaceTier.STONE.fePerTick());
+        assertEquals(0L, FurnaceTier.STEEL.fePerTick());
     }
 
-    /** One steel craft: 13 EU/t for 160 ticks. This is what the pole water-fills against. */
+    /** One steel craft: 90 FE/t for 160 ticks. This is what the pole water-fills against. */
     @Test
     void electricBuffersOneSteelCraft() {
-        assertEquals(2080L, FurnaceTier.ELECTRIC.bufferEu());
-        assertEquals(0L, FurnaceTier.STONE.bufferEu());
+        assertEquals(14_400L, FurnaceTier.ELECTRIC.bufferFe());
+        assertEquals(0L, FurnaceTier.STONE.bufferFe());
     }
 
     @Test

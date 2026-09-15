@@ -1,89 +1,76 @@
 package com.planetaryfactory.core.smelting;
 
 /**
- * The Electric Furnace's EU buffer (#155), which is the whole of what the supply-area pole sees.
+ * The Electric Furnace's FE buffer (#155, #266), which is the whole of what the supply-area pole
+ * sees.
  *
- * <p>ADR-0036's pole water-fills EU across the machines in its area, reading each one's
- * {@code getEnergyCanBeInserted()} and paying with {@code addEnergy}. This class is that surface,
- * with GregTech's {@code IEnergyContainer} left to the block entity so the arithmetic stays
- * Minecraft-free.
+ * <p>ADR-0036's pole water-fills across the machines in its area, reading each one's room and
+ * paying it. Since ADR-0060 what moves is Forge Energy and nothing else: GregTech's
+ * {@code IEnergyContainer} left with the mod, and the face the pole talks to is NeoForge's own
+ * {@link net.neoforged.neoforge.transfer.energy.EnergyHandler}, held by the block entity so the
+ * arithmetic here stays Minecraft-free.
  *
- * <p><b>A cable cannot feed it.</b> {@link #acceptFromNetwork} returns 0 and
- * {@link #inputsEnergy()} is false, so the pole is the only route in. Two ways to power one block
- * is an ambiguity about which drains first for no mechanic in return -- the same reason FE was
- * rejected here in favour of EU.
+ * <p><b>Insertion is not restricted to the pole any more, and does not need to be.</b> The
+ * ambiguity the old EU buffer refused a cable for -- two routes in, and no rule for which drains
+ * first -- does not arise when both routes carry the same currency into the same buffer. What the
+ * buffer still refuses is extraction: energy delivered to a furnace is spent there, never pulled
+ * back out into the grid.
  *
  * <p>Pure: no Minecraft types.
  */
 public final class FurnaceEnergyBuffer {
 
-    private final long capacityEu;
-    private long storedEu;
+    private final long capacityFe;
+    private long storedFe;
 
-    public FurnaceEnergyBuffer(long capacityEu) {
-        this.capacityEu = Math.max(0L, capacityEu);
+    public FurnaceEnergyBuffer(long capacityFe) {
+        this.capacityFe = Math.max(0L, capacityFe);
     }
 
     public long getEnergyStored() {
-        return storedEu;
+        return storedFe;
     }
 
     public long getEnergyCapacity() {
-        return capacityEu;
+        return capacityFe;
     }
 
+    /** Room, which is what an insert is clamped to. */
     public long getEnergyCanBeInserted() {
-        return capacityEu - storedEu;
+        return capacityFe - storedFe;
     }
 
     /** Takes what fits and reports it, which is what the pole debits itself by. */
-    public long addEnergy(long eu) {
-        return changeEnergy(eu);
+    public long addEnergy(long fe) {
+        return changeEnergy(fe);
     }
 
     /** Moves the buffer either way, clamped, and reports what actually moved. */
     public long changeEnergy(long delta) {
-        long before = storedEu;
-        storedEu = Math.max(0L, Math.min(capacityEu, storedEu + delta));
-        return storedEu - before;
+        long before = storedFe;
+        storedFe = Math.max(0L, Math.min(capacityFe, storedFe + delta));
+        return storedFe - before;
     }
 
     /**
      * Pays for one tick of operation, all or nothing.
      *
-     * <p>A partial tick is not a tick: spending 7 EU towards a 13 EU tick would make a
+     * <p>A partial tick is not a tick: spending 7 FE towards a 90 FE tick would make a
      * half-supplied furnace consume power and never finish.
      */
-    public boolean drawTick(long euPerTick) {
-        if (euPerTick <= 0L) {
+    public boolean drawTick(long fePerTick) {
+        if (fePerTick <= 0L) {
             return true;
         }
-        if (storedEu < euPerTick) {
+        if (storedFe < fePerTick) {
             return false;
         }
-        storedEu -= euPerTick;
+        storedFe -= fePerTick;
         return true;
     }
 
-    /** The pole is the boundary: a GT cable run gets nothing. */
-    public long acceptFromNetwork() {
-        return 0L;
-    }
-
-    public boolean inputsEnergy() {
-        return false;
-    }
-
-    public long inputVoltage() {
-        return 0L;
-    }
-
-    public long inputAmperage() {
-        return 0L;
-    }
-
-    /** For the block entity's save data. */
-    public void setStoredEu(long eu) {
-        storedEu = Math.max(0L, Math.min(capacityEu, eu));
+    /** For the block entity's save data and for a transaction that was aborted. */
+    public void setStoredFe(long fe) {
+        storedFe = Math.max(0L, Math.min(capacityFe, fe));
     }
 }

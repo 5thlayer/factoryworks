@@ -81,6 +81,12 @@ qualify:
 > the Oil Refinery's 420 kW, so nothing regenerates and no other machine's number moves. What does
 > not transfer is the *mechanism* -- `ModifierFunction` needs a GT machine, and the pack furnace
 > applies the constant itself. Its 6 kW idle draw stays `excluded` under the section below.
+>
+> **Restated by #266.** ADR-0060 takes GregTech out and leaves FE as the pack's one currency, so
+> this ADR's EU scale has nothing left to anchor on. The Electric Furnace's draw is re-derived
+> from the same 180 kW at ADR-0060's rate of 1 FE = 100 J and is **90 FE/t**, buffered at one
+> steel craft, 14,400 FE. The *source* of the number is unchanged -- the machine's own
+> `energy_usage` -- and so is the idle-draw exclusion; only the unit moved.
 
 Everything else in `machine.json` receives nothing, and for reasons already recorded elsewhere:
 the Rocket Silo is GCyR's; the Research Lab has no energy handler; `crushing` and `centrifuging`

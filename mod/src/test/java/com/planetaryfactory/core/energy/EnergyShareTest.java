@@ -24,7 +24,7 @@ class EnergyShareTest {
 
     @Test
     void aModestDemandIsMetInFullAndTheRestGoesToTheOthers() {
-        // 100 EU, three machines wanting 10 / 100 / 100. An equal cut would be 33 each, but the
+        // 100 FE, three machines wanting 10 / 100 / 100. An equal cut would be 33 each, but the
         // first only wants 10, so its spare 23 is redistributed rather than wasted.
         long[] grants = EnergyShare.waterFill(100, new long[] {10, 100, 100});
         assertEquals(10, grants[0]);
@@ -64,7 +64,7 @@ class EnergyShareTest {
 
     @Test
     void theIndivisibleRemainderIsStillHandedOut() {
-        // 10 EU across three equal demands: 3 each leaves 1 that must not evaporate.
+        // 10 FE across three equal demands: 3 each leaves 1 that must not evaporate.
         long[] grants = EnergyShare.waterFill(10, new long[] {100, 100, 100});
         assertEquals(10, grants[0] + grants[1] + grants[2]);
     }

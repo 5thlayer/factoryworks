@@ -45,11 +45,14 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
     /**
      * The FE buffer, sized at one tick of a busy area and derived rather than picked.
      *
-     * <p>The figure is inherited from the EU ladder it was derived on: thirty-two machines at
-     * 32 EU/t each, at the four-FE-to-one-EU ratio GregTech's converters used, came to 4,096 FE for
-     * a single tick. The ratio is gone but the sizing argument is not -- it is still one tick of a
-     * packed area -- and #266 is where the number is re-derived against whatever Oritech's
-     * machines actually draw.
+     * <p>The figure is ADR-0060's transmission rate: Oritech's Energy Transmission Pole carries
+     * 18,000 FE/t, which is one full steam block of 20 Boilers and 40 Steam Engines, and is
+     * therefore the most a supply-area pole can be handed in a tick. Sizing the buffer at exactly
+     * that is what makes "one tick" true rather than approximate -- a smaller buffer would refuse
+     * energy the wire was willing to deliver, and a larger one would start holding a reserve.
+     * The old 4,096 came from thirty-two machines at 32 EU/t through GregTech's four-to-one
+     * converter ratio; both the ratio and the machines are gone (#266) and the sizing argument is
+     * the surviving part.
      *
      * <p>Sizing it that way is what keeps it clear of the machine-side storage ADR-0036 forbids.
      * That prohibition exists so sag and blown fuses reach the machines instead of being absorbed,
@@ -57,7 +60,7 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
      * the grid gives less, the very next tick gives less. The buffer exists at all only because a
      * capability push and a block tick do not happen at the same instant.
      */
-    private static final long BUFFER_FE = 4_096L;
+    private static final long BUFFER_FE = 18_000L;
 
     private final EnergyLedger ledger = new EnergyLedger(BUFFER_FE);
     private final PoleEnergyStorage feSide = new PoleEnergyStorage(this);
@@ -119,7 +122,7 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
             return;
         }
         // Deliberately not short-circuited on an empty ledger. A pole with no energy still has to
-        // measure what its area is asking for, because "0 of 120 EU/t" is the reading that tells a
+        // measure what its area is asking for, because "0 of 120 FE/t" is the reading that tells a
         // player the machines are in range and the grid is not feeding them -- which is the whole
         // point of the Jade line. The cost is the capability lookups distribute() already does.
         distribute(level);

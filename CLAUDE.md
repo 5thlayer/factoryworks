@@ -75,7 +75,7 @@ survives both codecs, and that nothing in the mod reads recipes off vanilla's sm
 a source-text check because the assertion needs to name a Minecraft class the unit-test classpath
 deliberately does not have. The arithmetic and the rules are
 Minecraft-free unit tests under `mod/src/test/java/com/planetaryfactory/core/smelting/`: the
-per-tier duration, the 13 EU/t draw and its buffer, the unsided routing by item, and the stall —
+per-tier duration, the 90 FE/t draw and its buffer, the unsided routing by item, and the stall —
 a blocked output starts no smelt, burns no fuel and voids nothing (ADR-0041). Whether the three
 blocks smelt in a running game is a world load, and its GameTests land with #156.
 
