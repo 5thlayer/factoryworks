@@ -51,7 +51,7 @@ public final class PFBlocks {
      * factory. One block rather than a ladder -- Factorio has one pump and so does this pack.
      */
     public static final DeferredHolder<Block, OffshorePumpBlock> OFFSHORE_PUMP =
-            BLOCKS.register("offshore_pump", OffshorePumpBlock::new);
+            BLOCKS.registerBlock("offshore_pump", OffshorePumpBlock::new);
 
     /**
      * Terra's Boiler (#224, ADR-0048): fuel and water in, low-temperature steam out.
@@ -60,7 +60,7 @@ public final class PFBlocks {
      * with no heat layer, so Factorio's second boiler tier has nothing to be in this pack.
      */
     public static final DeferredHolder<Block, BoilerBlock> BOILER =
-            BLOCKS.register("boiler", BoilerBlock::new);
+            BLOCKS.registerBlock("boiler", BoilerBlock::new);
 
     /**
      * One block per {@link OreResource}: Terra's five ore blocks (ADR-0041).
@@ -74,7 +74,8 @@ public final class PFBlocks {
 
     static {
         for (OreResource resource : OreResource.values()) {
-            ORES.put(resource, BLOCKS.register(resource.blockName(), () -> new OreBlock(resource)));
+            ORES.put(resource, BLOCKS.registerBlock(resource.blockName(),
+                    props -> new OreBlock(resource, props)));
         }
     }
 
@@ -94,13 +95,15 @@ public final class PFBlocks {
 
     static {
         for (PoleTier tier : PoleTier.values()) {
-            POLES.put(tier, BLOCKS.register(tier.blockName(), () -> new SupplyAreaPoleBlock(tier)));
+            POLES.put(tier, BLOCKS.registerBlock(tier.blockName(),
+                    props -> new SupplyAreaPoleBlock(tier, props)));
         }
     }
 
     static {
         for (FurnaceTier tier : FurnaceTier.values()) {
-            FURNACES.put(tier, BLOCKS.register(tier.blockName(), () -> new FurnaceBlock(tier)));
+            FURNACES.put(tier, BLOCKS.registerBlock(tier.blockName(),
+                    props -> new FurnaceBlock(tier, props)));
         }
     }
 
@@ -115,8 +118,9 @@ public final class PFBlocks {
 
     static {
         for (RigTier tier : RigTier.values()) {
-            RIGS.put(tier, BLOCKS.register(tier.blockName(), () -> new RigBlock(tier)));
-            RIG_PARTS.put(tier, BLOCKS.register(tier.partBlockName(), () -> new RigPartBlock(tier)));
+            RIGS.put(tier, BLOCKS.registerBlock(tier.blockName(), props -> new RigBlock(tier, props)));
+            RIG_PARTS.put(tier, BLOCKS.registerBlock(tier.partBlockName(),
+                    props -> new RigPartBlock(tier, props)));
         }
     }
 
@@ -168,9 +172,9 @@ public final class PFBlocks {
     }
 
     private static DeferredHolder<Block, SaplingBlock> sapling(String name, TreeGrower grower) {
-        return BLOCKS.register(name, () -> new SaplingBlock(
+        return BLOCKS.registerBlock(name, props -> new SaplingBlock(
                 grower,
-                BlockBehaviour.Properties.of()
+                props
                         .mapColor(net.minecraft.world.level.material.MapColor.PLANT)
                         .noCollision()
                         .randomTicks()

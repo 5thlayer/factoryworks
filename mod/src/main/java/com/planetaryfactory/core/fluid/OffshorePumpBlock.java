@@ -55,10 +55,10 @@ public class OffshorePumpBlock extends BaseEntityBlock {
      * one.
      */
     public static final com.mojang.serialization.MapCodec<OffshorePumpBlock> CODEC =
-            simpleCodec(properties -> new OffshorePumpBlock());
+            simpleCodec(OffshorePumpBlock::new);
 
-    public OffshorePumpBlock() {
-        super(BlockBehaviour.Properties.of()
+    public OffshorePumpBlock(BlockBehaviour.Properties props) {
+        super(props
                 .mapColor(MapColor.METAL)
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()

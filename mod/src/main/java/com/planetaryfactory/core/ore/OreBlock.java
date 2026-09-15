@@ -27,6 +27,8 @@ import net.minecraft.server.level.ServerLevel;
  * block entity apiece is not affordable at that scale. What the blockstate carries is the
  * <em>stage</em> -- a small integer recomputed from the amount, never a second copy of it.
  */
+import net.minecraft.world.level.block.state.BlockBehaviour;
+
 public final class OreBlock extends Block {
 
     /**
@@ -40,8 +42,8 @@ public final class OreBlock extends Block {
 
     private final OreResource resource;
 
-    public OreBlock(OreResource resource) {
-        super(Properties.of()
+    public OreBlock(OreResource resource, BlockBehaviour.Properties props) {
+        super(props
                 .mapColor(MapColor.STONE)
                 .requiresCorrectToolForDrops()
                 .strength(3.0f, 3.0f)

@@ -49,8 +49,8 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
 
     private final PoleTier tier;
 
-    public SupplyAreaPoleBlock(PoleTier tier) {
-        super(BlockBehaviour.Properties.of()
+    public SupplyAreaPoleBlock(PoleTier tier, BlockBehaviour.Properties props) {
+        super(props
                 .strength(1.5F)
                 .sound(SoundType.COPPER)
                 // No tool requirement: the pack registers no mining-tool tags for its own blocks,
