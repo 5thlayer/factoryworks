@@ -6,18 +6,18 @@ package com.planetaryfactory.core.ore;
  * <p><b>The block changes and the item does not.</b> That is what makes a pack-authored ore block
  * affordable: {@code data/pack/item-map.json}, every generated recipe, ADR-0032's 1:1 ore-to-plate
  * chain and ADR-0034's default-deny sweep all name the item, and none of them can tell that the
- * block it came out of is no longer Oritech's.
+ * block it came out of is no longer GregTech's.
  *
  * <p>Stone is the fifth and the one ADR-0021 refused. It drops {@code minecraft:cobblestone}, which
  * the item map already records as Factorio's stone -- "Factorio's stone is the MINED rock, and
  * Minecraft's mined rock is cobblestone" -- so the {@code stone-brick} chain is untouched by its
  * arrival.
  *
- * <p><b>Which mod's item, is whichever one exists.</b> Oritech registers no raw ore for a
+ * <p><b>Which mod's item, is whichever one exists.</b> GregTech registers no raw ore for a
  * material vanilla already covers, so {@code oritech:raw_iron} and {@code oritech:raw_copper} are not
  * items and never were. Naming them here cost every iron and copper draw its payout in silence,
  * because an unregistered id resolves to air rather than throwing. Iron and copper pay vanilla's
- * raw ore; uranium, which vanilla has no raw item for, pays Oritech's.
+ * raw ore; uranium, which vanilla has no raw item for, pays GregTech's.
  *
  * <p>The amounts are not here. They are Factorio's, they are extracted, and {@link OreCorpus} is
  * where they enter the mod.

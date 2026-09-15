@@ -28,7 +28,7 @@ public final class BarrelSpec {
     /**
      * How much of {@code offeredMb} a barrel already holding {@code heldMb} can take.
      *
-     * <p>Partial fills are accepted rather than refused. Simplebelts's Spout offers what its own tank has
+     * <p>Partial fills are accepted rather than refused. Create's Spout offers what its own tank has
      * and expects to be told how much was taken; refusing anything short of a full 50 mB would stall
      * a Spout fed by a pipe that delivers in smaller pulses.
      */

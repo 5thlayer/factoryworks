@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Block items for what {@link PFBlocks} registers.
  *
- * <p>The saplings need one so they can be held, planted by hand and placed by a Simplebelts Deployer
+ * <p>The saplings need one so they can be held, planted by hand and placed by a Create Deployer
  * through the normal use-on path. The poles need one to be placed at all.
  *
  * <p>The barrel is the exception: an item with no block behind it, and the only thing here that is a
@@ -47,7 +47,7 @@ public final class PFItems {
      * Factorio's barrel: 50 mB, stacking to ten, holding any fluid.
      *
      * <p>Both numbers are Factorio's and neither is tunable here -- see {@link BarrelSpec}. Filling
-     * and emptying are Simplebelts's Spout and Item Drain, natively and with no recipes at all, because
+     * and emptying are Create's Spout and Item Drain, natively and with no recipes at all, because
      * both key on the fluid capability this item carries (#93).
      *
      * <p>{@link BarrelItem}, not a plain {@link Item}: a filled and an empty barrel are otherwise

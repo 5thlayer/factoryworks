@@ -14,7 +14,7 @@ import java.util.Collection;
  * that distinguishes a poured source from a worldgen one -- {@code BucketItem} empties as
  * {@code content.defaultFluidState().createLegacyBlock()}, byte-identical to what the generator
  * lays down. What makes this predicate sound is the rule around it. With source formation off
- * ({@link WaterConservation}) and Simplebelts's two source-placing flags off, nothing in the pack can
+ * ({@link WaterConservation}) and Create's two source-placing flags off, nothing in the pack can
  * bring a source into existence, so every source block in the world is one worldgen or a structure
  * placed. Naturalness is guaranteed by construction rather than tracked.
  *

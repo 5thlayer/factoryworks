@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * The pole's books, which are FE in and FE out (ADR-0060: with Oritech, Power Grid and Simplebelts
+ * The pole's books, which are FE in and FE out (ADR-0060: with GregTech, Power Grid and Create
  * gone there is no EU anywhere in the pack, and FE is its only energy currency). The ledger no
  * longer converts anything; what is left of its job is to respect a capacity and to not invent
  * energy while doing it.
  *
- * <p>The conversion this class used to hold -- Oritech's {@code feToEuRatio} of 4, and the retained
+ * <p>The conversion this class used to hold -- GregTech's {@code feToEuRatio} of 4, and the retained
  * remainder that kept a trickle from being rounded away -- went with the EU side it existed for.
  */
 class EnergyLedgerTest {

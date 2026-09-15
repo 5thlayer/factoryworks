@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * starts it.
  *
  * <p>Issue #76: a machine loaded with a locked recipe's ingredients does not start when the research
- * completes -- only breaking and replacing it does. The stale state is Oritech's, not Researchd's,
+ * completes -- only breaking and replacing it does. The stale state is GregTech's, not Researchd's,
  * and it is not a cached refusal. {@code RecipeLogic.serverTick} ends by unsubscribing itself
  * outright when {@code lastRecipe == null && isIdle() && !keepSubscribing && !recipeDirty &&
  * lastFailedMatches == null}. A locked recipe fails the trie's predicate -- {@code searchRecipe} is
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * is recorded, and the machine stops ticking. Nothing short of a block update subscribes it again,
  * which is exactly why break-and-replace was the only remedy a player found.
  *
- * <p>The remedy is the one Oritech already uses for a recipe it matched but cannot currently run:
+ * <p>The remedy is the one GregTech already uses for a recipe it matched but cannot currently run:
  * remember it in {@code lastFailedMatches}. That single field is the whole mechanism -- it is the
  * last term of the unsubscribe condition, so a machine holding a remembered match keeps ticking and
  * re-searches on its own (every tick, or every fifth for a machine that keeps subscribing). The
@@ -33,12 +33,12 @@ import org.jetbrains.annotations.Nullable;
  * than short-lived. What it costs meanwhile is one {@code findAndHandleRecipe} -- a full trie search
  * -- every fifth tick, since {@code IRecipeLogicMachine.keepSubscribing} defaults to true and
  * {@code serverTick} gates the search on {@code getOffsetTimer() % 5}. A machine that overrides
- * {@code keepSubscribing} to false searches every tick instead. This is load Oritech's unsubscribe
+ * {@code keepSubscribing} to false searches every tick instead. This is load GregTech's unsubscribe
  * would otherwise have shed, and it is the price of the machine noticing the research at all.
  *
  * <p><b>A new list, never the old one mutated.</b> {@code serverTick} iterates
  * {@code lastFailedMatches} calling {@code checkMatchedRecipeAvailable}, which runs
- * {@code matchRecipe} again -- so the pack's wrapper refuses, and remembers, <em>while Oritech is
+ * {@code matchRecipe} again -- so the pack's wrapper refuses, and remembers, <em>while GregTech is
  * iterating the very list being written</em>. Appending in place would be a
  * {@link java.util.ConcurrentModificationException} on the machine's own tick. Copying leaves the
  * in-flight iteration on the list it started with. The copy stays a mutable {@link ArrayList}

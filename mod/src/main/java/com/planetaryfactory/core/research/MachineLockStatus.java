@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Why an idle machine is idle, when the answer is a research (issue #79).
  *
- * <p>A Oritech machine loaded with the ingredients of a locked recipe sits there saying nothing.
+ * <p>A GregTech machine loaded with the ingredients of a locked recipe sits there saying nothing.
  * ADR-0027 explains why the refusal cannot speak for itself: on the fresh-search path the pack's
  * lock wrapper is the trie iterator's <em>predicate</em>, so refusing only means "this recipe does
  * not match". The machine ends the search with no recipe selected and therefore nothing to show a
@@ -22,7 +22,7 @@ import java.util.Set;
  * invalidation rule to get wrong -- pulling the ingredients out, or completing the research, changes
  * what the next query returns because the next query recomputes it. #76 is what a stored conclusion
  * re-checked on the wrong trigger costs, and this must not reproduce that. It also means the report
- * does not depend on whether Oritech re-runs its search when a machine empties.
+ * does not depend on whether GregTech re-runs its search when a machine empties.
  *
  * <p><b>One runnable candidate and there is nothing to say.</b> If the contents match a recipe the
  * team may already run, the machine is stopped by something else -- no power, full output, disabled
