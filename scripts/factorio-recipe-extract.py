@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Extract Factorio's recipe prototypes as the data the pack's recipes are generated from.
 
-ADR-0026 stops authoring Oritech recipes through KubeJS's `GTRecipeBuilder` and makes them
+ADR-0026 stops authoring GregTech recipes through KubeJS's `GTRecipeBuilder` and makes them
 raw JSON instead -- generated from Factorio's own prototypes rather than typed, under
 ADR-0022's extract-never-transcribe rule. This is the extraction half. The conversion half
 reads what this writes, plus the mapping files, and emits the recipe JSON itself.
@@ -159,7 +159,7 @@ def contents(entries):
     Factorio writes a result's amount as `amount`, or as `amount_min`/`amount_max` with a
     `probability` for the random ones. Those three are kept verbatim rather than collapsed
     to an average: a converter that has to decide what a 0.8-probability output means in
-    Oritech should be looking at the real numbers.
+    GregTech should be looking at the real numbers.
     """
     out = []
     for entry in entries or []:

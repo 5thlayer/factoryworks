@@ -127,21 +127,21 @@ gets a log line and a truncation rather than an infinite loop.
 **Still outstanding from the diff above.** Item 7, the two digital-storage mixins, and item 8, entity
 results, are not implemented. Neither blocks the engine from running; both are tracked on the issue.
 
-## Amended after testing it against a real Oritech bus
+## Amended after testing it against a real GregTech bus
 
 The spike this ADR's ticket demanded ran in game, against a real input bus. It overturned the write
 strategy and, with it, the whole **Interaction with the Biochamber** section above. Treat that
 section as superseded by this one.
 
 **Writes are `setStackInSlot`, not extract-then-insert.** The earlier strategy was chosen because it
-is correct whether or not a handler hands back a copy. It is not correct on a Oritech bus, and it
+is correct whether or not a handler hands back a copy. It is not correct on a GregTech bus, and it
 fails silently in two opposite directions. `IOFilteredInvWrapper.extractItem` returns empty whenever
 `!io.support(OUT)`, so on an **input** bus the write bailed on its first simulated extract and
 nothing ever decayed — no error, no log line, items fresh forever. On an **output** bus the two
 rollback paths called `insertItem` and discarded the return value, so a refused insert destroyed the
 stack. `DecayWriter` now plans a set of writes and commits them with `setStackInSlot`, which
 `NotifiableItemStackHandler` delegates straight to storage with no `io` check and no filter. With no
-extraction there is nothing to roll back, so the deletion defect is gone structurally. Oritech's own
+extraction there is nothing to roll back, so the deletion defect is gone structurally. GregTech's own
 recipe consumption uses `extractItemInternal`, which never consults those gates, so crafting is
 untouched.
 
@@ -159,8 +159,8 @@ with them.
 automation with no way to clear an input clog, since a bus refuses outward extraction. Rather than
 reintroduce a dedicated bus, `SpoilIndex` computes the terminal set at reload and `DecayUnclog`
 grants extraction for exactly those items, wired through two optional `@Pseudo` mixins that return a
-drained stack only where Oritech already returned empty. The mixin config is `required: false`, so
-the pack runs unchanged without Oritech. Fresh and mid-ladder items stay locked in the bus, so this
+drained stack only where GregTech already returned empty. The mixin config is `required: false`, so
+the pack runs unchanged without GregTech. Fresh and mid-ladder items stay locked in the bus, so this
 is not a siphon. The unclog is player-built — a hopper under the bus — not automatic.
 
 A terminal is a spoil result that no recipe consumes **or** whose recipe hands it straight back.
@@ -184,7 +184,7 @@ when someone opens it. `main` here means 1.21.1. The rebase in the consequences 
 `git fetch upstream && git rebase upstream/multi/1.21`.
 
 **Verified in game.** Dimension gate gone, `spoilRate` read as ticks, floor decay, identical rates in
-chest, barrel and shulker, decay inside a Oritech input bus, Jade showing fresh and spoiled counts
+chest, barrel and shulker, decay inside a GregTech input bus, Jade showing fresh and spoiled counts
 together, and terminal Spoilage draining through a hopper into a chest with fresh items left behind.
 Chunk catch-up was checked with two identical chests, one past the simulation distance, across a quit
 and rejoin: matching stage distributions. That path has no upstream analogue, since ADR 0010 deleted
@@ -192,5 +192,5 @@ the per-stack timestamp that every other mod computes elapsed time from, and it 
 untested thing in the engine.
 
 The output bus is proven by construction but not against a **formed multiblock**, which is what
-additionally exercises Oritech pulling from a bus while Decay writes to it. That belongs to the
+additionally exercises GregTech pulling from a bus while Decay writes to it. That belongs to the
 Biochamber.

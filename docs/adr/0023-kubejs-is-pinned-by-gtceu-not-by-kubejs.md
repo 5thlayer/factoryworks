@@ -2,7 +2,7 @@
 status: accepted
 ---
 
-# KubeJS is pinned by Oritech, not by KubeJS
+# KubeJS is pinned by GregTech, not by KubeJS
 
 The pack ships `kubejs-neoforge-2101.7.1-build.181`. Twice the version was raised and twice it was
 rolled back, and both times the reason was recorded only as folklore: *bumping KubeJS breaks the
@@ -21,12 +21,12 @@ KubeJS `2101.7.2` relocated its bindings package:
 | `2101.7.1-build.181` | `dev/latvian/mods/kubejs/bindings/event/ServerEvents` |
 | `2101.7.2-build.374` | `dev/latvian/mods/kubejs/plugin/builtin/event/ServerEvents` |
 
-`oritech 7.0.2` holds a compiled reference to the old path:
+`gtceu 7.0.2` holds a compiled reference to the old path:
 
 ```
 java.lang.NoClassDefFoundError: dev/latvian/mods/kubejs/bindings/event/ServerEvents
-  at oritech@7.0.2/com.gregtechceu.oritech.data.recipe.GTRecipes$KJSCallWrapper.recipeEventHasListeners(GTRecipes.java:134)
-  at oritech@7.0.2/com.gregtechceu.oritech.data.recipe.GTRecipes.recipeAddition(GTRecipes.java:112)
+  at gtceu@7.0.2/com.gregtechceu.gtceu.data.recipe.GTRecipes$KJSCallWrapper.recipeEventHasListeners(GTRecipes.java:134)
+  at gtceu@7.0.2/com.gregtechceu.gtceu.data.recipe.GTRecipes.recipeAddition(GTRecipes.java:112)
   at net.minecraft.server.ReloadableServerResources.loadResources(ReloadableServerResources.java)
   at net.minecraft.client.gui.screens.worldselection.WorldOpenFlows.loadWorldDataBlocking(WorldOpenFlows.java:200)
 ```
@@ -36,36 +36,36 @@ java.lang.NoClassDefFoundError: dev/latvian/mods/kubejs/bindings/event/ServerEve
 The throw site is `ReloadableServerResources.loadResources` — **world load**, not mod construction.
 On `build.374` the pack starts perfectly: no construction failures, all six KubeJS-plugin mods
 load, `6/6` startup scripts and `1/1` client scripts run with zero errors and zero warnings, and
-Oritech's own classes resolve through KubeJS in `worldgen_layers.js`. The game reaches the title
+GregTech's own classes resolve through KubeJS in `worldgen_layers.js`. The game reaches the title
 screen in under twenty seconds and looks entirely healthy.
 
 The failure arrives only when a world is opened, and it presents as *"Caught error loading
 resourcepacks, removing all selected resourcepacks"* — a message that names neither KubeJS nor
-Oritech. Anyone bumping the jar, watching the pack boot cleanly and then seeing a world fail to open
+GregTech. Anyone bumping the jar, watching the pack boot cleanly and then seeing a world fail to open
 would reasonably conclude that KubeJS itself was at fault. That is how the version came to be
 described as unbumpable.
 
 ## The decision
 
-**The KubeJS version is a function of the Oritech version. Treat it as Oritech's constraint, and record
-it against Oritech.**
+**The KubeJS version is a function of the GregTech version. Treat it as GregTech's constraint, and record
+it against GregTech.**
 
 Concretely:
 
-- Do not describe KubeJS as pinned. Describe `oritech 7.0.2` as pinning it to `2101.7.1`.
-- The ceiling moves when Oritech moves. Upstream's `1.21` branch already imports
+- Do not describe KubeJS as pinned. Describe `gtceu 7.0.2` as pinning it to `2101.7.1`.
+- The ceiling moves when GregTech moves. Upstream's `1.21` branch already imports
   `dev.latvian.mods.kubejs.plugin.builtin.event.ServerEvents`, but that fix ships in
   **`1.21-8.0.0 SNAPSHOT`**, not in any `7.x` release.
-- Therefore raising KubeJS means a Oritech **7.0.2 → 8.0.0** major bump, which pulls the `gcyr` fork
+- Therefore raising KubeJS means a GregTech **7.0.2 → 8.0.0** major bump, which pulls the `gcyr` fork
   (`gcyr-1.21.1-0.2.4+gt7.0.2`) along with it and re-opens the registration patches in
-  [ADR-0003](0003-patch-oritech-registration-in-our-gcyr-fork.md). That is a fork migration, not a
+  [ADR-0003](0003-patch-gtceu-registration-in-our-gcyr-fork.md). That is a fork migration, not a
   jar swap, and it should be planned as one.
-- A KubeJS addon that requires a newer KubeJS is still refused — but the reason to state is Oritech's
+- A KubeJS addon that requires a newer KubeJS is still refused — but the reason to state is GregTech's
   bytecode, not a property of KubeJS.
 
 ## What this costs
 
-ProbeJS `8.x` requires KubeJS `[2101.7.2-build.365,)` and therefore cannot run until Oritech moves.
+ProbeJS `8.x` requires KubeJS `[2101.7.2-build.365,)` and therefore cannot run until GregTech moves.
 The pack stays on ProbeJS `7.5.1`.
 
 This is a smaller loss than it first appeared. ProbeJS `7.5.1` generates complete typings already —
@@ -88,7 +88,7 @@ The failure mode above was discovered three times and recorded once. Two things 
 **But note what nearly went wrong.** On `build.374` both existing checks passed:
 `check-launch.sh` reported a clean launch, and `worldgen-check.py` reported *"worldgen registries
 match"*. Minecraft caught the `NoClassDefFoundError`, dropped every resource pack and loaded the
-world anyway; ore veins and worldgen layers are not touched by Oritech's recipe hook, so the fixture
+world anyway; ore veins and worldgen layers are not touched by GregTech's recipe hook, so the fixture
 still matched. The bump would have been declared green.
 
 What actually caught it was grepping `logs/latest.log` for exceptions. A check that asserts on
@@ -99,8 +99,8 @@ discarding state. **A recovered error is still a failure.**
 
 ## Consequences
 
-- The `kubejs-version-is-pinned` agent memory is rewritten to name Oritech as the constraint.
-- Issue #67 becomes a Oritech 8 migration rather than a KubeJS jar swap.
-- Any future "can we use newer KubeJS?" question is answered by checking Oritech's version, and by
+- The `kubejs-version-is-pinned` agent memory is rewritten to name GregTech as the constraint.
+- Issue #67 becomes a GregTech 8 migration rather than a KubeJS jar swap.
+- Any future "can we use newer KubeJS?" question is answered by checking GregTech's version, and by
   running the headless worldgen check — which now reaches world load, where this class of breakage
   actually lives.

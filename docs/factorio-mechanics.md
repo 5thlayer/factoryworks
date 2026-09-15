@@ -115,11 +115,11 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 - **owner**: ADR-0007, ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045, ADR-0060
 
 Terra deals one ore shape: a filled disc of a single ore block, one deep, flush with the terrain
-surface, at Factorio's own spacing. `scripts/worldgen-check.py` asserted it against Oritech's
-registries and left with Oritech (ADR-0060), so nothing asserts it on 26.1.2. **ADR-0045 deletes Terra's buried veins entirely** — they were
+surface, at Factorio's own spacing. `scripts/worldgen-check.py` asserted it against GregTech's
+registries and left with GregTech (ADR-0060), so nothing asserts it on 26.1.2. **ADR-0045 deletes Terra's buried veins entirely** — they were
 ADR-0019's leftover default rather than a decision, and ADR-0043's surface-working rig made keeping
 them a demand for the digging gesture ADR-0019 removed the caves for. Ignus and Sapros are unaffected.
-*This entry described Oritech ore veins in chunk-aligned disc patches, retargeted onto the pack's own
+*This entry described GregTech ore veins in chunk-aligned disc patches, retargeted onto the pack's own
 ore blocks by ADR-0041 with the vein shape unchanged.*
 
 Sub-rules:
@@ -138,7 +138,7 @@ Sub-rules:
   *This row read "ore is prospected, not stumbled on", `adapted` under ADR-0019: surface indicators
   first, an Ore Finder satellite later. ADR-0045 discharges that prerequisite rather than meeting it,
   and the indicators become dead.*
-- **Infinite late-game resource (oil-style yield decay)** — `adapted`. #86: Oritech's bedrock
+- **Infinite late-game resource (oil-style yield decay)** — `adapted`. #86: GregTech's bedrock
   fluid deposit decays to a floor rather than to zero, and Terra's crude deposit is one. `adapted`
   rather than `shipped` because the form is wrong in two ways — the deposit is a per-chunk roll
   under the bedrock rather than a patch you can see on the surface, and it is tapped by a Fluid
@@ -198,25 +198,25 @@ Sub-rules:
   on 50 steel plates, because Researchd has no craft-triggered research method, and swaps its
   `character-mining-speed` effect for an `unlock-recipe` granting the Engineer's Steel Pick.
 - **Picking up a placed entity is the same gesture as mining** — `adapted`. The Engineer's Pick
-  absorbs Oritech's wrench dismantle verb, which rides the ordinary break path and is delivered by
+  absorbs GregTech's wrench dismantle verb, which rides the ordinary break path and is delivered by
   the two wrench item tags (ADR-0039). *This entry read "the wrench's rotate and pipe-connection
-  verbs are `planned` and unowned"; #168 settled them.* The Pick also declares Oritech's
+  verbs are `planned` and unowned"; #168 settled them.* The Pick also declares GregTech's
   `wrench_configure*` abilities, which set a **machine's** auto-output face — which side it pushes
-  items or fluids into. *#168 first declined those, reading Oritech's "Use Wrench to set Connections"
+  items or fluids into. *#168 first declined those, reading GregTech's "Use Wrench to set Connections"
   string as meaning pipes; they are not pipes, and the decline was reversed in the same ticket once
   a machine turned out to have no way to be pointed at a Create belt. Create owning the belts is why
   the verb is needed, not why it is moot.* What stays declined is `wrench_connect`, the actual
   pipe-connection verb on the pipe block's own path: ADR-0017 gives fluid and item logistics to
-  Simplebelts, Oritech's pipes left with its power layer, and ADR-0034's sweep leaves them unobtainable,
+  Simplebelts, GregTech's pipes left with its power layer, and ADR-0034's sweep leaves them unobtainable,
   so it would be declared against blocks Terra does not ship.
 - **Rotating a placed entity (`R`)** — `shipped`, #168. The Engineer's Pick declares NeoForge's
-  `wrench_rotate` ability, which is what Oritech gates the verb on; the wrench item tags never
+  `wrench_rotate` ability, which is what GregTech gates the verb on; the wrench item tags never
   carried it, so until #168 the rotation overlay drew on every machine while the right-click did
-  nothing. Declaring the ability was necessary and not sufficient: Oritech only sets a front face
+  nothing. Declaring the ability was necessary and not sufficient: GregTech only sets a front face
   for a **sneaking** player, while vanilla skips a block's interaction entirely when a sneaking
-  player holds a non-empty stack, so the one gesture Oritech accepts was the one that never
+  player holds a non-empty stack, so the one gesture GregTech accepts was the one that never
   arrived. The Pick answers `doesSneakBypassUse` to get past that, which is the hook NeoForge
-  provides where Oritech's own tools use `onItemUseFirst`. Confirmed turning a machine in-game.
+  provides where GregTech's own tools use `onItemUseFirst`. Confirmed turning a machine in-game.
   *This entry read "`planned`, no owner yet".*
 
 ### Trees and wood
@@ -266,7 +266,7 @@ Sub-rules:
 - **via**: `planetaryfactory_core`
 - **owner**: ADR-0043
 - **ticket**: #105
-- **notice**: Terra's two rigs are pack-authored and Oritech owns no drill here. A rig works the
+- **notice**: Terra's two rigs are pack-authored and GregTech owns no drill here. A rig works the
   **layer directly beneath it** — Factorio's tiles, in a game that has a third axis — so a rig is
   placed on a patch rather than scanning downward for one. Its rate is the drill's `mining_speed`
   over the **resource's** `mining_time`, so uranium costs the same rig twice what iron does; its
@@ -277,7 +277,7 @@ Sub-rules:
 Sub-rules:
 
 - **Burner tier before electric** — `adapted`. The tier exists and is Factorio's own block rather
-  than Oritech's steam stand-in. ADR-0040.
+  than GregTech's steam stand-in. ADR-0040.
 - **Drills output onto the tile they face** — `shipped` (#193). ADR-0043 reverses ADR-0040's
   `excluded`, which was argued entirely about belts and had deleted the drill-into-furnace pair as
   collateral. A rig pushes into an item handler on its faced tile and **otherwise stalls**, holding
@@ -433,7 +433,7 @@ Sub-rules:
 - **ticket**: #87 (the machines are registered; the recipe conversion is not)
 
 Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
-(ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes Oritech out of the pack and
+(ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes GregTech out of the pack and
 makes Modern Industrialization the chassis.** The three machines, their tiers and their recipe type
 stay pack-authored; what changes underneath them is which mod supplies the block and the recipe
 lookup.
@@ -449,8 +449,8 @@ Sub-rules:
 - **Recipe selection in a machine** — `planned`. In Factorio a machine is *told* its recipe: the
   player picks it from a list, the machine displays it, holds it whether or not it is fed, and the
   setting copies to another machine. The pack has **no surface for this at all**, and that is the
-  design gap, not the absence of a programmed circuit. Oritech's answer is the circuit, which
-  ADR-0026 removed on purpose and #236 measured the cost of: Oritech keys its recipe lookup on the
+  design gap, not the absence of a programmed circuit. GregTech's answer is the circuit, which
+  ADR-0026 removed on purpose and #236 measured the cost of: GregTech keys its recipe lookup on the
   ingredient set, so with no circuit a colliding recipe is refused into the lookup at load and 44 of
   139 emitted recipes never reach the machine.
 
@@ -475,7 +475,7 @@ Sub-rules:
   [Electric system](https://wiki.factorio.com/Electric_system) page notes *"an active assembling
   machine 2 will consume 155 kW (150 kW energy consumption + 5 kW drain)"*, about a thirtieth of the
   draw, and the engine default is `energy_usage / 30` since no crafting machine sets the field.
-  Oritech has no equivalent -- an idle GT machine consumes nothing -- and reproducing it means real
+  GregTech has no equivalent -- an idle GT machine consumes nothing -- and reproducing it means real
   idle draw built in `planetaryfactory_core` for a lesson (*don't over-build*) that ore depletion
   (ADR-0020) and Emission already teach more cheaply. Folding it into `EUt` is worse than either: it
   looks like fidelity and behaves as a flat tax. Called **idle draw** in pack prose, never "drain",
@@ -794,7 +794,7 @@ Sub-rules:
   **for the fluid, not for fission**, and the Turbine has two producers on two bodies — Terra's
   Nuclear Reactor and Ignus's acid neutralisation. Filing a cross-body generator under Terra's
   fission chapter hid what it is. Superheated steam is a **pack-owned fluid** — `planetaryfactory:`,
-  not Oritech's, since `oritech:steam` is not inert and Oritech's own steam machines accept it,
+  not GregTech's, since `gtceu:steam` is not inert and GregTech's own steam machines accept it,
   which would re-open the power layer #37 removed (ADR-0048; this corrects an earlier "its own GT
   material") — and **only the Turbine accepts it**; ordinary steam keeps the four-step chain above, which the Turbine will not take, and
   that fluid split — not the Converter — is what stops it retiring the rung-1 generator assembly. **Not
@@ -849,12 +849,12 @@ Sub-rules:
 - **owner**: ADR-0055 (supersedes ADR-0005)
 - **ticket**: #109, #118
 
-Oritech 7.0.2 has no pollution system — the mod contains nothing matching `pollut` — so Emission is
+GregTech 7.0.2 has no pollution system — the mod contains nothing matching `pollut` — so Emission is
 ours and none of it is built yet.
 
 **ADR-0005's EU/t proxy was superseded before it shipped.** That ADR scored Emission per chunk off
 the **EU/t draw of running GT machines** and rejected per-entity rates as costing "tagging every
-recipe in a Oritech pack". Factorio states emission per prototype as
+recipe in a GregTech pack". Factorio states emission per prototype as
 `energy_source.emissions_per_minute`, and that field is in the dump the extractors already read —
 extraction is not tagging, and the pipeline that makes it free was built *after* ADR-0005. ADR-0055
 takes the corpus rates instead. The proxy also misranks: a boiler pollutes far more per joule than
@@ -1221,9 +1221,9 @@ Sub-rules:
   per ADR-0028. Two `KeyMapping`s in `planetaryfactory_core`, defaulting to `CTRL` + left and right
   mouse and declared in Controls so a conflict with Carry On or Building Gadgets is the player's to
   resolve. Magnitude is Factorio's verbatim — the held stack in, everything the target will give up
-  out, halved for the split. The target set is every Oritech machine and every pack-authored block
+  out, halved for the split. The target set is every GregTech machine and every pack-authored block
   that holds items, reached through the block's own item handler with no pack-authored slot policy.
-  **The mid-recipe question answers itself on both engines**: Oritech consumes inputs at
+  **The mid-recipe question answers itself on both engines**: GregTech consumes inputs at
   `RecipeLogic.setupRecipe`, so a running machine has nothing to take back, and the pack's furnace —
   which consumes at completion instead — already refuses extraction from anything but its output slot
   in `FurnaceItemHandler`. Delegating to the handler is what makes the two timings invisible.

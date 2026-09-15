@@ -29,9 +29,9 @@ class ItemKeyTest {
     void anItemWithNoComponentsIsExactlyItsRegistryId() {
         // The whole reason nothing else had to change: every key written before ADR-0052 -- every
         // committed queue attachment, every fixture in these tests -- is still the same string.
-        assertEquals("oritech:iron_plate", ItemKey.of("oritech:iron_plate", List.of()));
-        assertEquals("oritech:iron_plate", ItemKey.of("oritech:iron_plate", null));
-        assertFalse(ItemKey.hasPatch("oritech:iron_plate"));
+        assertEquals("gtceu:iron_plate", ItemKey.of("gtceu:iron_plate", List.of()));
+        assertEquals("gtceu:iron_plate", ItemKey.of("gtceu:iron_plate", null));
+        assertFalse(ItemKey.hasPatch("gtceu:iron_plate"));
     }
 
     @Test
@@ -84,7 +84,7 @@ class ItemKeyTest {
 
     @Test
     void theItemIdIsReadableBackOutOfAnyKey() {
-        assertEquals("oritech:iron_plate", ItemKey.itemId("oritech:iron_plate"));
+        assertEquals("gtceu:iron_plate", ItemKey.itemId("gtceu:iron_plate"));
         assertEquals(PACK, ItemKey.itemId(PACK + "[!researchd:research_pack]"));
     }
 }

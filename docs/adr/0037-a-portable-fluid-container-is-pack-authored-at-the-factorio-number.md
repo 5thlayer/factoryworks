@@ -49,7 +49,7 @@ fluid-handler item is a supported case in Create, not something the pack is gett
 
 ## The container is pack-authored because nothing installed has the shape
 
-Oritech ships seven fluid-container items and all of them are wrong here:
+GregTech ships seven fluid-container items and all of them are wrong here:
 
 - They are a **six-material ladder** — tin, steel, aluminium, stainless, titanium, tungstensteel —
   expressing a tiered progression the pack does not want, for a Factorio concept that has exactly
@@ -114,7 +114,7 @@ it prevents.
 
 ## Considered Options
 
-- **Map `barrel` to a Oritech fluid cell.** Rejected above: six tiers for a one-tier concept, a
+- **Map `barrel` to a GregTech fluid cell.** Rejected above: six tiers for a one-tier concept, a
   temperature band that splits the fluoroketone rows, and a stack size the pack does not control.
 - **Bucket-parity 1 000 mB.** Rejected: it breaks the 1:1 unit rule the whole corpus is built on, and
   it is the one capacity that would let barrels compete with the tank.

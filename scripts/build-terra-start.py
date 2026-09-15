@@ -8,22 +8,22 @@ world with no reachable ore at all: this is the opening that fixes that.
 
 Three decisions this script encodes, each argued in `docs/adr/0019-*.md` and in issue #84:
 
-**The patches are pack-authored ore blocks, not Oritech's and not a Oritech vein.** ADR-0041
-makes an ore block carry an amount, and Oritech models its material ore blocks at runtime --
+**The patches are pack-authored ore blocks, not GregTech's and not a GregTech vein.** ADR-0041
+makes an ore block carry an amount, and GregTech models its material ore blocks at runtime --
 so the blocks here are `planetaryfactory:<resource>_ore`, which carry the amount and the eight
-sprite stages. They still drop Oritech's raw ore and still carry `c:ores`, which is the tag
-Oritech's own Miner scans, so the miner ladder sees these patches exactly as before.
+sprite stages. They still drop GregTech's raw ore and still carry `c:ores`, which is the tag
+GregTech's own Miner scans, so the miner ladder sees these patches exactly as before.
 
 **The patch total is Factorio's and the per-block amount is a quotient.** This script writes no
 amount into the templates. It writes the ore blocks; the mod counts what was actually placed at
 stamp time and divides Factorio's own starting total by it (ADR-0041), because the size variant
 is drawn at world generation and only the placed field knows its own block count.
 
-**The patches are ordinary blocks, not a Oritech vein.** ADR-0020 already settled that
+**The patches are ordinary blocks, not a GregTech vein.** ADR-0020 already settled that
 depletion *is* physical block removal -- there is no depleted flag on a GT vein to set, and
 a GT Miner scans for ore blocks rather than consulting the vein registry, so the miner ladder
 sees these patches exactly as it sees a prospected one. A vein also cannot be spawn-anchored:
-Oritech places veins on its own grid (size 6, random offset 24, per ADR-0019's amendment),
+GregTech places veins on its own grid (size 6, random offset 24, per ADR-0019's amendment),
 and nothing in that placement can be told "one, here".
 
 **Anchoring is `minecraft:concentric_rings` at distance 0, count 1.** That is the only vanilla
@@ -68,7 +68,7 @@ SEED = 20260829
 # The single ore block each patch is made of.
 #
 # One block per patch, and deliberately *not* the buried vein's mix. The vein files
-# `kubejs/data/oritech/oritech/ore_vein/{iron,copper,coal}.json` deal four ore blocks each, and two
+# `kubejs/data/gtceu/gtceu/ore_vein/{iron,copper,coal}.json` deal four ore blocks each, and two
 # of those veins are mixed across metals: the iron vein carries malachite, which smelts to copper,
 # and the copper vein carries iron ore and pyrite, which smelt to iron. Underground that is a
 # feature -- a vein is a place you learn the local rock -- but the starting patch is the tutorial,
@@ -77,9 +77,9 @@ SEED = 20260829
 # organised.
 #
 # So each field is one block: the plain ore of its own metal. The vein files name *materials*
-# (`oritech:copper`) because Oritech resolves a material to the block for the layer it is generating
+# (`gtceu:copper`) because GregTech resolves a material to the block for the layer it is generating
 # in; a structure template needs the block id itself, and Terra's surface stone layer makes that
-# `oritech:<material>_ore`.
+# `gtceu:<material>_ore`.
 PATCHES = {
     "iron": {
         "block": "planetaryfactory:iron_ore",

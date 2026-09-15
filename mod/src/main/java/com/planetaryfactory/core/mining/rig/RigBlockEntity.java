@@ -59,7 +59,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  *
  * <ol>
  *   <li><b>An operation draws one unit, through {@link OreMining}.</b> Not around it. This is the
- *       specific thing {@code oritech:lv_miner} gets wrong -- it deletes an ore block whole whatever
+ *       specific thing {@code gtceu:lv_miner} gets wrong -- it deletes an ore block whole whatever
  *       amount it held, and takes its drops from the loot table. Terra's ore loot tables are
  *       empty, so that miner would destroy a field and pay out nothing.
  *   <li><b>The buffer is asked before the ground is.</b> A draw that could not be banked would

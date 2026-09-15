@@ -25,9 +25,9 @@ mechanic rather than an approximation of it: the player places a pole and everyt
 supply area is powered, which is the thing a Factorio-literate player already knows how to reason
 about.
 
-**Cables cease to exist as a block class in this pack.** Oritech's stay removed with the rest of
+**Cables cease to exist as a block class in this pack.** GregTech's stay removed with the rest of
 its power layer (`#37`), no voltage-tier ladder is re-admitted, and `enableFEConverters` stays
-`false` in `config/oritech.yaml` so the LV-through-LuV × 1A/4A/8A/16A converter grid never enters JEI.
+`false` in `config/gtceu.yaml` so the LV-through-LuV × 1A/4A/8A/16A converter grid never enters JEI.
 
 **All four Factorio pole tiers ship** — small, medium, big, substation. Fidelity over the cheaper
 option of shipping two now and one later. It is a **footprint ladder, not a power ladder**: the
@@ -43,7 +43,7 @@ sentence above is not weakened by that; it is the reason the tier went. See the 
 Verified with `javap` against the installed jars. They are the reason the two obvious alternatives
 both fail before they reach a trade-off.
 
-- **Oritech machines do not accept FE.** `GTCapability` registers exactly one energy capability,
+- **GregTech machines do not accept FE.** `GTCapability` registers exactly one energy capability,
   `CAPABILITY_ENERGY_CONTAINER`, and machines expose `NotifiableEnergyContainer` — EU only.
 - **`nativeEUToFE` is GT learning to push into FE, not to read it.**
   `CommonInit.registerCapabilities` walks the block registry and wraps *third-party FE blocks* as GT
@@ -246,7 +246,7 @@ reach last -- permanently, on an iteration order that is an implementation detai
 the player. Factorio shares a shortfall out, and this is the one place the pole needed a rule
 rather than an arithmetic.
 
-**Energy is inserted directly, not accepted from a network.** Oritech's
+**Energy is inserted directly, not accepted from a network.** GregTech's
 `acceptEnergyFromNetwork` enforces the voltage tiers `#37` deleted entire and can overvolt a
 machine into exploding. There is no tier for a pole to respect and no face for a wireless supply to
 arrive through, so the pole calls `addEnergy` and the question does not arise.
@@ -258,7 +258,7 @@ arrive through, so the pole calls `addEnergy` and the question does not arise.
   configurable but its wire tiers are voltage ratings in a config file, where Power Grid's are
   material properties in a solver. Having decided to pay for a physical grid, the pack should get
   the physical one.
-- **Connectors on every machine**, or **Oritech cables return.** Both fail on the capability
+- **Connectors on every machine**, or **GregTech cables return.** Both fail on the capability
   surface above, before any trade-off.
 - **Author a real cable network in `planetaryfactory_core`.** Rejected: it is the expensive half of
   a power mod, and it buys an idiom Factorio does not have.
@@ -274,9 +274,9 @@ arrive through, so the pole calls `addEnergy` and the question does not arise.
   [#1021](https://github.com/patryk3211/PowerGrid/issues/1021) is an instant crash using the Device
   Connector on other mods' blocks, Mekanism named, closed 2026-08-18 with the fix commit
   unconfirmed — this is what the bench test exists to check.
-  [#937](https://github.com/patryk3211/PowerGrid/issues/937) is Device Connector ↔ Oritech converter
+  [#937](https://github.com/patryk3211/PowerGrid/issues/937) is Device Connector ↔ GregTech converter
   interop, claimed working, disputed, closed with no stated resolution. The pack's route does not
-  depend on the Oritech converter, which is why #937 is recorded rather than blocking.
+  depend on the GregTech converter, which is why #937 is recorded rather than blocking.
 - **Maturity is adequate but not settled**: ~1M Modrinth and ~1.7M CurseForge downloads, `release`
   channel through 0.6.1, all hundred most recent commits inside August 2026, 263 open issues, ~80
   blocks and ~55 items. It is actively developed rather than finished, and the pin makes that the

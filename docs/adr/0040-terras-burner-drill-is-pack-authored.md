@@ -3,28 +3,28 @@ status: provisional
 supersedes: []
 ---
 
-# Terra's burner drill is pack-authored, and extraction stops being Oritech's end to end
+# Terra's burner drill is pack-authored, and extraction stops being GregTech's end to end
 
 > **Partly superseded by ADR-0043, and `provisional` under ADR-0042.** Two rows below are no longer
-> the pack's answer: rung 1 is a pack-authored electric rig rather than `oritech:lv_miner`, and the
+> the pack's answer: rung 1 is a pack-authored electric rig rather than `gtceu:lv_miner`, and the
 > `excluded` verdict on drills outputting directly is reversed — a drill ejects onto the tile it
 > faces. The burner drill's own argument stands. This document also asserts that the mod already
 > registers a furnace ladder; it does not.
 
-ADR-0017 gave Oritech extraction and said so without qualification: "The extraction ladder is
-Oritech's end to end — LP Steam Miner at rung 0, Basic Ore Drilling Rig, Advanced Ore Drilling
+ADR-0017 gave GregTech extraction and said so without qualification: "The extraction ladder is
+GregTech's end to end — LP Steam Miner at rung 0, Basic Ore Drilling Rig, Advanced Ore Drilling
 Rig, one rig per rung, each granted by a science tier." That sentence is now false at rung 0, on
 purpose.
 
 **Factorio's opening machine is a burner mining drill: it burns solid fuel, it is one entity, and
-it is the first thing a player builds.** Oritech has no solid-fuel miner. Its extraction line
+it is the first thing a player builds.** GregTech has no solid-fuel miner. Its extraction line
 starts at the LP Steam Miner, which takes steam piped in from a boiler — two blocks, a fluid
 connection, and a fuel that is not the coal in your hand. Fidelity to Factorio's opening and
-Oritech's ownership of extraction could not both hold, and the opening won.
+GregTech's ownership of extraction could not both hold, and the opening won.
 
 So: **`planetaryfactory_core` registers a burner mining drill, and it is rung 0's only drill. The
-LP Steam Miner leaves the pack.** Oritech keeps the electric ladder — `electric-mining-drill` is
-`oritech:lv_miner` at rung 1 — and keeps the fluid rig.
+LP Steam Miner leaves the pack.** GregTech keeps the electric ladder — `electric-mining-drill` is
+`gtceu:lv_miner` at rung 1 — and keeps the fluid rig.
 
 ## Why the Steam Miner goes rather than sitting alongside
 
@@ -35,7 +35,7 @@ tempting answer.
 It is cut because **rung 0 is budgeted 3–4 hours** and is already the chapter carrying the
 Personal Assembler, the furnace, belts, the first circuits and the walk to the Lab. A second drill
 whose only lesson is "now with pipes" is the cheapest beat to lose. Cutting it also disposes of the
-boiler, which had no other justification left: #37 removed Oritech's power layer and ADR-0036 put
+boiler, which had no other justification left: #37 removed GregTech's power layer and ADR-0036 put
 the grid on a pack-authored pole, so the steam drill was the last block in the pack that wanted
 steam.
 
@@ -59,7 +59,7 @@ Factorio separates *depletion* from *yield*: an operation takes one unit out of 
 an amount that a productivity bonus can raise. Vulcanus's Big Mining Drill is the payoff — 50% more
 yield per operation — and it is a body this pack has committed to.
 
-**So the burner drill and `oritech:lv_miner` both carry an explicit yield-per-operation of 1.0**,
+**So the burner drill and `gtceu:lv_miner` both carry an explicit yield-per-operation of 1.0**,
 even though nothing on Terra varies it. A dormant field a later body sets is cheap; retrofitting a
 second quantity into a mechanism that welded operations to payouts is not.
 
@@ -75,7 +75,7 @@ gets two, matching Factorio's own Nauvis:
 | Rung | Drill | Source |
 | --- | --- | --- |
 | 0 | Burner Mining Drill | `planetaryfactory_core`, this ADR |
-| 1 | `oritech:lv_miner` (Basic Miner) | Oritech, `electric-mining-drill` |
+| 1 | `gtceu:lv_miner` (Basic Miner) | GregTech, `electric-mining-drill` |
 
 ADR-0017's third rig is Vulcanus's **Big Mining Drill** — planet-locked, that body's puzzle, not
 Terra's ladder. Rung 1 is where the electric rig lands because rung 1 is where electricity lands
@@ -96,13 +96,13 @@ at rung 0 anyway.
 ## The burner tier is adapted, not excluded
 
 The ledger's **Burner tier before electric** sub-rule was `unargued`. It closes `adapted`: the tier
-exists and is Factorio's own block rather than Oritech's steam stand-in. The fidelity that remains
+exists and is Factorio's own block rather than GregTech's steam stand-in. The fidelity that remains
 missing is nothing — this is the one row where authoring bought back full fidelity rather than
 approximating it.
 
 ## Consequences
 
-- **ADR-0017's Mining automation row is amended**, not struck: Oritech owns the *electric*
+- **ADR-0017's Mining automation row is amended**, not struck: GregTech owns the *electric*
   extraction ladder and the fluid rig; rung 0's burner drill is the pack's.
 - **`#100`'s pocket swaps** the LP Steam Miner for the burner drill, and
   `docs/spec/terra-progression.md`'s rung 0 grants change with it. Beat 4 — "Place the Furnace and
@@ -117,7 +117,7 @@ approximating it.
 
 ## Considered alternatives
 
-- **A GT-chassis machine taught to burn coal.** The pack already registers machines on a Oritech
+- **A GT-chassis machine taught to burn coal.** The pack already registers machines on a GregTech
   chassis (ADR-0026), so the shape exists. Rejected: it fights the chassis for the one property
   that makes the block interesting, since GT chassis machines are EU and steam consumers.
 - **Another mod's burner miner, admitted past ADR-0034's sweep.** Rejected: it re-opens an

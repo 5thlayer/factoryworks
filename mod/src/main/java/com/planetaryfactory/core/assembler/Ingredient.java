@@ -9,7 +9,7 @@ import java.util.List;
  * are ordinary rather than exceptional: the converter emits tag ingredients where Factorio's name
  * has no single Minecraft answer ({@code wooden_chest} eats {@code #minecraft:planks}), and
  * AlmostUnified rewrites plain item ingredients into unified tags at load, so a recipe whose emitted
- * JSON says {@code oritech:iron_plate} accepts {@code create:iron_sheet} in the running game. A
+ * JSON says {@code gtceu:iron_plate} accepts {@code create:iron_sheet} in the running game. A
  * resolver that read only the first match would refuse a plan the crafting grid would have accepted,
  * which is exactly what it did before this type existed.
  *

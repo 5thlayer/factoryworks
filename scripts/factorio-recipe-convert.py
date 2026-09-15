@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Convert the extracted Factorio recipes into pack recipe JSON (ADR-0026, #87).
 
-Reads five committed inputs and writes Oritech recipe JSON. Nothing here decides anything:
+Reads five committed inputs and writes GregTech recipe JSON. Nothing here decides anything:
 every judgement lives in one of the data files, so a decision is reviewed as a diff to a
 design document rather than as a diff to a script.
 
@@ -54,8 +54,8 @@ OUT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe"
 # uppercase letter with an error that stops a world loading, so a README beside them is not
 # an option -- the documentation for that subtree lives here and in `docs/`.
 # Each is a path RELATIVE TO OUT_DIR, and each sits under `assembling/` rather than beside it --
-# see `emitted_path` below. Every one of these subtrees holds `oritech:assembling` recipes, so a file
-# directly under `pack/` would be re-registered by Oritech under `assembling/<name>` and appear
+# see `emitted_path` below. Every one of these subtrees holds `gtceu:assembling` recipes, so a file
+# directly under `pack/` would be re-registered by GregTech under `assembling/<name>` and appear
 # twice. Nesting them inside `assembling/` closes that round trip, which is why these are
 # two-part paths and not directory names.
 FOREIGN_SUBTREES = ("assembling/pack", "assembling/sapling")
@@ -90,7 +90,7 @@ PACK_SMELTING = "planetaryfactory:smelting"
 # Factorio's `crafting` / `advanced-crafting` / `crafting-with-fluid` all collapse to one
 # machine, and the Personal Assembler needs the distinction back: it is a filtered view of the
 # Assembling Machine's recipes, not a machine with a recipe type (#125's decision 6, CONTEXT.md).
-# So the source category rides on the emitted recipe, in Oritech's own `data` compound -- not
+# So the source category rides on the emitted recipe, in GregTech's own `data` compound -- not
 # as an item tag, and not by having the Personal Assembler read `data/factorio/recipe.json` at
 # runtime, which would make a regenerable build input into a shipped runtime asset.
 SOURCE_CATEGORY_KEY = "factorio_category"
@@ -120,7 +120,7 @@ def process_of(recipe, subgroups):
 
 
 def content(entry, row):
-    """One Oritech `Content`: a NeoForge SizedIngredient or SizedFluidIngredient.
+    """One GregTech `Content`: a NeoForge SizedIngredient or SizedFluidIngredient.
 
     `chance`, `maxChance` and `tierChanceBoost` are all `optionalFieldOf` on Content's codec and
     every Factorio recipe is deterministic, so they are left off rather than written as defaults.
@@ -140,7 +140,7 @@ def content(entry, row):
 
 
 def capability_of(row):
-    """Oritech keys its capability maps by the capability's own name."""
+    """GregTech keys its capability maps by the capability's own name."""
     return "fluid" if row["kind"] == "fluid" else "item"
 
 
@@ -166,7 +166,7 @@ def convert_smelting(recipe, items, override):
 def convert(recipe, recipe_type, items, override):
     """One GTRecipe as JSON.
 
-    The shape is read off `GTRecipeSerializer`'s codec in Oritech 7.0.2: `type` and `duration` are
+    The shape is read off `GTRecipeSerializer`'s codec in GregTech 7.0.2: `type` and `duration` are
     the only required fields, every capability map is `optionalFieldOf`, and the capability keys
     are the recipe capabilities' own names (`item`, `fluid`). ADR-0026 exists because a wrong
     shape NPEs in the codec at datapack load rather than reporting anything readable, so this
@@ -186,9 +186,9 @@ def convert(recipe, recipe_type, items, override):
 
 
 def emitted_path(recipe_type, name):
-    """Where a Oritech recipe's file has to sit, which is not a free choice (#87).
+    """Where a GregTech recipe's file has to sit, which is not a free choice (#87).
 
-    Oritech re-registers every GTRecipe the datapack loaded: `RecipeManagerLateMixin` strips
+    GregTech re-registers every GTRecipe the datapack loaded: `RecipeManagerLateMixin` strips
     everything before the first `/` of the id's path and `GTRecipeBuilder.save` puts the recipe
     type's own path back on the front. The round trip closes only for a file already under a
     directory named after its recipe type -- a flat `recipe/copper_cable.json` is loaded as

@@ -5,15 +5,15 @@ supersedes: [27, 37]
 
 # Ore smelts one to one, and every multiplier is cut
 
-Terra runs three mods that each ship an ore-multiplication ladder. Oritech's is macerate-wash-
+Terra runs three mods that each ship an ore-multiplication ladder. GregTech's is macerate-wash-
 centrifuge, Mekanism's is enrichment → purification → injection → dissolution at 2x/3x/4x/5x, and
-Simplebelts's is a Crushing Wheel pair at 2x. ADR-0017 already recipe-removed Oritech's line and split
+Simplebelts's is a Crushing Wheel pair at 2x. ADR-0017 already recipe-removed GregTech's line and split
 the rest between Create at rung 0 and Mekanism from rung 1.
 
 **Factorio has no ore-multiplication ladder.** Ore smelts 1:1 and always has. Every yield gain in
 that game comes from research and modules — infinite `Mining productivity`, productivity modules,
 the Foundry's built-in bonus in Space Age — never from a tier of machines you unlock and build once.
-A ladder of machines that each multiply harder is a *Oritech* idiom that three mods happen to share,
+A ladder of machines that each multiply harder is a *GregTech* idiom that three mods happen to share,
 and ADR-0021 already fixed the axis this is decided on: Factorio fidelity over Minecraft fidelity,
 modded or vanilla.
 
@@ -84,7 +84,7 @@ cracking, lubricant, the blue circuit and the Electric Furnace.
 
 ## The Ore processing row is deleted, not re-owned
 
-With ore at 1:1 there is no step between extraction and smelting. Oritech extracts, on its own row;
+With ore at 1:1 there is no step between extraction and smelting. GregTech extracts, on its own row;
 the Furnace reduces, on the separate **Smelting (reduction)** row `#91` deliberately created because
 reduction is not multiplication. "Ore processing" would name a capability with nothing in it.
 

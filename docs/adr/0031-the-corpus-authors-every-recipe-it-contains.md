@@ -52,7 +52,7 @@ win over the extracted data.
 ## Consequences
 
 - **`#55` and `#62` are superseded in part.** The three circuit tiers stay first-party items on
-  their own tags — that ruling holds, and `#62`'s removal of Oritech's and Mekanism's competing
+  their own tags — that ruling holds, and `#62`'s removal of GregTech's and Mekanism's competing
   circuit lines holds with it. What does not hold is their ingredient lists being the author's:
   they are the corpus's. Neither ticket knows this;
   [`#132`](https://github.com/adamico/planetary-factory/issues/132) is the ticket for that gap.

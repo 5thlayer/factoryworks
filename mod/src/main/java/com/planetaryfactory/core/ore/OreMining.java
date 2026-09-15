@@ -95,7 +95,7 @@ public final class OreMining {
      *
      * <p><b>This is the whole extraction mechanism, and there is deliberately one of it.</b>
      * ADR-0041 says hands and machines draw from the same number, and a second path that removed a
-     * block outright is exactly what disqualified {@code oritech:lv_miner} from being Terra's drill:
+     * block outright is exactly what disqualified {@code gtceu:lv_miner} from being Terra's drill:
      * it calls {@code setBlock(pos, cobblestone)} and takes its drops from the block's loot table,
      * so it deletes an ore block whole whatever amount it held. So {@link #onBreak} and the mining
      * rig (#193) both come through here, and neither carries its own copy of the sequence.
@@ -177,7 +177,7 @@ public final class OreMining {
                 BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(Items.AIR));
         if (stack.isEmpty()) {
             // An id nothing registered resolves to air, so this branch is how
-            // `oritech:raw_iron` -- an item Oritech never registers, because vanilla covers iron --
+            // `gtceu:raw_iron` -- an item GregTech never registers, because vanilla covers iron --
             // ate every iron draw without a word. The unit is already spent by here; say so.
             LOGGER.error("{} pays out {}, which no mod registers: the draw is lost",
                     resource.key(), resource.drop());

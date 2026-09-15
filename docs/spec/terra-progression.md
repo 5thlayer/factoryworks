@@ -1,7 +1,7 @@
 # Terra: spawn to first launch
 
 The beat-by-beat arc for Terra, against ADR-0018's **20–25 hours** for a Factorio-literate,
-Oritech-naive player following the book. The spine is ADR-0018, the ownership table is ADR-0017,
+GregTech-naive player following the book. The spine is ADR-0018, the ownership table is ADR-0017,
 the recipes are ADR-0031's corpus. This document is the *route* through them.
 
 **Beats name items and surfaces, never quantities.** Prices live in the corpus and in `#42`'s slot
@@ -99,7 +99,7 @@ mechanical belts. Every block on this list is pack-authored.
 then "Create's Steam Engine as prime mover". ADR-0040 deleted the LP Steam Miner and ADR-0043 made
 both rungs of the drill ladder the pack's; ADR-0047 and `#155` made the furnace ladder the pack's
 rather than a re-skinned vanilla block; and ADR-0048 made Terra's steam two pack-owned fluids on a
-pack-authored chain, which took the boiler off Oritech and the engine off Simplebelts. **Simplebelts's Steam
+pack-authored chain, which took the boiler off GregTech and the engine off Simplebelts. **Simplebelts's Steam
 Engine could never have held that slot**: Create has no steam fluid, and its engine mounts on a
 water-filled Fluid Tank rather than consuming steam from a pipe. The rewrite lands with `#190`;
 `#193` is the ticket that made the first of these true in the game.*
@@ -214,7 +214,7 @@ throughput rather than novelty.
 
 | Beat | Fed by |
 | --- | --- |
-| Rocket fuel, petroleum-derived, `oritech:rocket_fuel` and nothing else (`#41`). | machine |
+| Rocket fuel, petroleum-derived, `gtceu:rocket_fuel` and nothing else (`#41`). | machine |
 | Build the Rocket Silo. The largest multiblock in the pack. | hand + machine |
 | Feed it 50 cycles: HDPE, blue circuits, rocket fuel (`#41`, `#53`). | machine |
 | Build the rocket by hand. Once. Ceremony. | hand |

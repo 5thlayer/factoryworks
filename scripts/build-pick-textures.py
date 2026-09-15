@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""Build the Engineer's Steel Pick texture: Oritech's Damascus Steel pickaxe, flattened.
+"""Build the Engineer's Steel Pick texture: GregTech's Damascus Steel pickaxe, flattened.
 
-The Steel Pick is not a Oritech tool, so Oritech's item-colour handler never sees it -- and
+The Steel Pick is not a GregTech tool, so GregTech's item-colour handler never sees it -- and
 GT's tool art is three greyscale layers that only become a material when that handler tints them.
 Referencing them from our model would render an uncoloured grey pickaxe. So the tint is baked here
 instead: handle, head and overlay composited into one RGBA sprite, with Damascus Steel's own colour
-read from the value Oritech registers (`SecondDegreeMaterials`: `damascus_steel .color(7237230)`).
+read from the value GregTech registers (`SecondDegreeMaterials`: `damascus_steel .color(7237230)`).
 
 The Iron Pick needs no such file. Its model points straight at `minecraft:item/iron_pickaxe`,
 which needs no tint and no copy.
 
-Run after updating Oritech, in case its tool art changed:
+Run after updating GregTech, in case its tool art changed:
 
     scripts/build-pick-textures.py
 
-Reads the installed `mods/oritech-*.jar` and writes
+Reads the installed `mods/gtceu-*.jar` and writes
 `kubejs/assets/planetaryfactory/textures/item/engineers_steel_pick.png`. No PIL: the PNG codec
 below is a minimal 8-bit reader and an RGBA writer, which is less to install than Pillow and less
 to explain than a checked-in binary with no provenance.
@@ -114,13 +114,13 @@ HANDLE_WOOD = 0x7A5530       # GT tints the handle by its rod material; ours is 
 def gt_layers():
     """GT's three tool layers, read straight out of the jar the pack actually ships."""
     import io, zipfile
-    jars = sorted((ROOT / "mods").glob("oritech-*.jar"))
+    jars = sorted((ROOT / "mods").glob("gtceu-*.jar"))
     if len(jars) != 1:
-        raise SystemExit("expected exactly one mods/oritech-*.jar, found %d -- the jar set is a "
+        raise SystemExit("expected exactly one mods/gtceu-*.jar, found %d -- the jar set is a "
                          "packwiz manifest (ADR-0024), so reconcile mods/ with it" % len(jars))
     with zipfile.ZipFile(jars[0]) as jar:
         for name in LAYERS:
-            with jar.open("assets/oritech/textures/item/tools/" + name) as handle:
+            with jar.open("assets/gtceu/textures/item/tools/" + name) as handle:
                 yield read_png(io.BytesIO(handle.read()))[2]
 
 

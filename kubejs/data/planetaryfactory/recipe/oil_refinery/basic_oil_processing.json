@@ -1,11 +1,11 @@
 {
-  "type": "oritech:oil_refinery",
+  "type": "gtceu:oil_refinery",
   "inputs": {
     "fluid": [
       {
         "content": {
           "ingredient": {
-            "fluid": "oritech:raw_oil"
+            "fluid": "gtceu:raw_oil"
           },
           "amount": 100
         }
@@ -17,7 +17,7 @@
       {
         "content": {
           "ingredient": {
-            "fluid": "oritech:oil"
+            "fluid": "gtceu:oil"
           },
           "amount": 45
         }

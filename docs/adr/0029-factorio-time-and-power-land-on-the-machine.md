@@ -45,8 +45,8 @@ out right automatically, with no third scalar to tune.
 
 ## The mechanism
 
-Oritech supports this directly. `ModifierFunction.FunctionBuilder` (verified in
-`oritech-1.21.1-7.0.2.jar`) exposes `durationModifier` and `eutModifier` as **independent** knobs, each
+GregTech supports this directly. `ModifierFunction.FunctionBuilder` (verified in
+`gtceu-1.21.1-7.0.2.jar`) exposes `durationModifier` and `eutModifier` as **independent** knobs, each
 taking a `ContentModifier(multiplier, addition)`. `ContentModifier(0, n)` sets a value absolutely,
 which is what makes a recipe with no authored `EUt` work: the modifier supplies it from the machine.
 The recipe type stays `ELECTRIC` with `setEUIO('in')` — the field exists structurally, the modifier
@@ -117,7 +117,7 @@ page: *"an active assembling machine 2 will consume 155 kW (150 kW energy consum
 Not one crafting machine sets the field — the engine default is `energy_usage / 30` on an electric
 source, which is where `machine.json`'s figures come from.
 
-Oritech has no equivalent; an idle GT machine consumes nothing. Reproducing it means real idle draw
+GregTech has no equivalent; an idle GT machine consumes nothing. Reproducing it means real idle draw
 built in `planetaryfactory_core` and taught to the player, for a lesson — *don't over-build* — that
 ore depletion (ADR-0020) and Emission already teach more cheaply. Folding it into `EUt` is worse than
 either: it looks like fidelity and behaves as a flat tax.

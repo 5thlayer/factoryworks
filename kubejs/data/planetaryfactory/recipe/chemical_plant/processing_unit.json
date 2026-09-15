@@ -1,5 +1,5 @@
 {
-  "type": "oritech:chemical_plant",
+  "type": "gtceu:chemical_plant",
   "inputs": {
     "item": [
       {
@@ -23,7 +23,7 @@
       {
         "content": {
           "ingredient": {
-            "fluid": "oritech:sulfuric_acid"
+            "fluid": "gtceu:sulfuric_acid"
           },
           "amount": 5
         }

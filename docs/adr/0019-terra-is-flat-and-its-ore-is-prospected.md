@@ -11,7 +11,7 @@ descended, and its ore is hidden on purpose. A logistics pack wants the opposite
 
 This ADR changes Terra's world. **Which mod owns each capability is ADR-0017 and the progression
 spine is ADR-0018**; this one is about the ground they stand on. It amends ADR-0007, which gives
-Oritech worldgen to planets: that decision stands, and its consequences on Terra change.
+GregTech worldgen to planets: that decision stands, and its consequences on Terra change.
 
 ## What the Factorio feeling actually is
 
@@ -72,7 +72,7 @@ Factorio's set plus vanilla progression is its own ticket, and assigning bands b
 would be assigning bands to veins about to be deleted.
 
 **Legibility.** Surface ore fields exist **only in the starting area**. Beyond it, veins are buried
-and marked by Oritech's indicators — which are already enabled and are, on their own, useless,
+and marked by GregTech's indicators — which are already enabled and are, on their own, useless,
 because an indicator that never reaches the map is not information. A prospecting affordance is a
 hard prerequisite of this ADR, not an enhancement.
 
@@ -81,7 +81,7 @@ hard prerequisite of this ADR, not an enhancement.
 coal; randomized layout because a start worth surveying is better than a start memorised.
 
 **Extraction.** Once the starting patches deplete, manual extraction stops being the verb. Beyond
-spawn the player prospects, then places a machine. Oritech's miners are used exactly as they
+spawn the player prospects, then places a machine. GregTech's miners are used exactly as they
 already behave — finite, and replacing mined ore with cobblestone, so nothing is left as a crater.
 **This is what justifies having no caves**: you do not dig because digging is not the verb, and a
 world with no caves is only cruel if digging is how ore is found.
@@ -183,8 +183,8 @@ exists in the instance and is empty.
 
 The files therefore land in `kubejs/data/`, and the ADR's stated worry — that a wholesale replacement
 of a vanilla `minecraft:` entry depends on pack sort order rather than merge semantics — turns out to
-be already answered there: `kubejs/data/oritech/oritech/ore_vein/*.json` has been wholesale-replacing
-Oritech's own vein files since before this ADR. KubeJS's data pack sorts above both vanilla and the
+be already answered there: `kubejs/data/gtceu/gtceu/ore_vein/*.json` has been wholesale-replacing
+GregTech's own vein files since before this ADR. KubeJS's data pack sorts above both vanilla and the
 mods, so the override is the proven seam rather than the speculative one.
 
 Two further corrections found while building:
@@ -205,7 +205,7 @@ Two further corrections found while building:
 
 ## Amended in build: vein spacing is a config number, and the default makes ore continuous
 
-Oritech places veins on a grid, and `config/oritech.yaml`'s default `oreVeinGridSize: 3` puts one
+GregTech places veins on a grid, and `config/gtceu.yaml`'s default `oreVeinGridSize: 3` puts one
 every 48 blocks. Terra's four veins run 38–52 blocks across, so at the default they **touch**: the
 first in-world look reported ore in every chunk, which is a continuous layer rather than patches.
 
@@ -213,7 +213,7 @@ Grid size is raised to **6** (96 blocks, wider than the largest vein) with `oreV
 **24**, a quarter of the cell as at the default, so patches stay off a visible lattice. This is
 empirical like the terrain constants, and it is tuned against play rather than derived.
 
-Note that **Oritech rewrites `config/oritech.yaml` on every game load**, discarding any comment not
+Note that **GregTech rewrites `config/gtceu.yaml` on every game load**, discarding any comment not
 its own. The reasoning cannot live next to the value; it lives here.
 
 ## Amended in build: the starting area is a jigsaw structure, and its patches are plain blocks
@@ -222,11 +222,11 @@ This ADR asks for "a spawn-anchored structure with a fixed resource set and a ra
 and patch sizes" and leaves the mechanism open. Issue #84 closed it, and three of the four
 answers are worth recording because each rules out an option that looks obvious first.
 
-**The patches are ordinary ore blocks, not Oritech veins.** The tempting reading is that a
+**The patches are ordinary ore blocks, not GregTech veins.** The tempting reading is that a
 starting patch should be a vein so that ADR-0020's depletion and the miner ladder can see it.
 Neither needs it. ADR-0020 already settled that depletion *is* physical block removal — there is
-no depleted flag on a vein to set — and a Oritech Miner scans for ore blocks rather than
-consulting the vein registry. Against that, a vein cannot be spawn-anchored at all: Oritech
+no depleted flag on a vein to set — and a GregTech Miner scans for ore blocks rather than
+consulting the vein registry. Against that, a vein cannot be spawn-anchored at all: GregTech
 places veins on its own grid, and nothing in that placement can be told "one, here".
 
 **Anchoring is not worldgen at all: `planetaryfactory_core` stamps the pool onto world
@@ -287,7 +287,7 @@ copper vein carries iron ore and pyrite, which smelt to iron. Underground that i
 vein is where you learn the local rock. In the opening it is a lie, because the patch is the
 tutorial and has to answer "what is this a patch of" with one word; a player who mines the iron
 field and gets copper has been taught something false about how the world is organised. So each
-field is a single block: `oritech:iron_ore`, `oritech:copper_ore`, `oritech:coal_ore`.
+field is a single block: `gtceu:iron_ore`, `gtceu:copper_ore`, `gtceu:coal_ore`.
 
 **The fields lie on the terrain, and the mod owns the projection that puts them there.** They are
 one block thick and replace the topsoil block, which is both the Factorio reading and what keeps a

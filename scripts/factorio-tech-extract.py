@@ -153,7 +153,7 @@ def icon_path(tech):
     """The first icon path, whether the prototype uses `icon` or the layered `icons` form.
 
     Useless as a Minecraft texture -- it survives only as a hint when picking a
-    `oritech:`/`simplebelts:` item to stand in for the technology.
+    `gtceu:`/`simplebelts:` item to stand in for the technology.
     """
     if "icon" in tech:
         return tech["icon"]
@@ -171,7 +171,7 @@ def collapse_effects(effects, derivable):
     They are not 314 decisions: `recycler/data-updates.lua` generates one per existing
     recipe, returning a quarter of its ingredients. Recording the rule is both smaller and
     truer than recording its output, and it matches how the pack will implement it -- as
-    one decision about Oritech maceration, not 314 recipe ids.
+    one decision about GregTech maceration, not 314 recipe ids.
 
     A recipe only collapses if the name it is derived *from* actually exists, or if the
     recipe is hidden -- the hidden ones are the void recyclings (blueprints, fish,

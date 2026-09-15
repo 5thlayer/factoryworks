@@ -4,10 +4,10 @@ status: accepted
 
 # Terra's resources are Nauvis's resources
 
-Terra is the Nauvis analogue. Its ore has never been Nauvis's ore: twenty-three Oritech veins
+Terra is the Nauvis analogue. Its ore has never been Nauvis's ore: twenty-three GregTech veins
 running from iron down to olivine, Mekanism's six worldgen toggles, Create's two stripe features and
 — because Terra had no noise settings of its own until ADR-0019 — the entire vanilla ore set on top.
-That is Oritech's spread, Mekanism's spread, Simplebelts's spread and Minecraft's spread stacked in one
+That is GregTech's spread, Mekanism's spread, Simplebelts's spread and Minecraft's spread stacked in one
 world, and a Factorio-literate player reads none of it as meaningful.
 
 > **Amended by ADR-0041 — stone is a patch, not the ground.** The clause "stone as the ground
@@ -40,16 +40,16 @@ decay. **Terra was the exception**, carrying `terra_ferrous` (iron *and nickel*)
 `terra_cupriferous` (copper *and tin*) and `terra_polymetallic` (lead, silver) on top of the vein
 sprawl. This ADR generalises a doctrine the pack already had rather than inventing one.
 
-## All four of Terra's ore systems are cut, not just Oritech's
+## All four of Terra's ore systems are cut, not just GregTech's
 
-The framing this started from was "the 23 Oritech veins". Those are a minority of Terra's ore, and
+The framing this started from was "the 23 GregTech veins". Those are a minority of Terra's ore, and
 they are the only ore anything in this design can see:
 
-- **Prospecting reads Oritech's vein cache.** A Mekanism, Simplebelts or vanilla ore body is not on the
+- **Prospecting reads GregTech's vein cache.** A Mekanism, Simplebelts or vanilla ore body is not on the
   map.
-- **Depletion is Oritech's `depleted` flag, flipped by a Oritech Miner.** Nothing else can be
+- **Depletion is GregTech's `depleted` flag, flipped by a GregTech Miner.** Nothing else can be
   marked worked-out.
-- **The miner ladder is Oritech end to end**, so Oritech ore is the only ore whose extraction has
+- **The miner ladder is GregTech end to end**, so GregTech ore is the only ore whose extraction has
   a progression at all.
 
 Which means any surviving parallel system is not a second flavour of ore — it is a **straight
@@ -58,10 +58,10 @@ where "manual extraction stops being the verb" assumes no such thing exists.
 
 So the cut is applied to all four:
 
-- **Oritech veins** — the survivors are iron, copper, coal and an authored uranium vein; every
+- **GregTech veins** — the survivors are iron, copper, coal and an authored uranium vein; every
   other override is deleted.
 - ~~**Mekanism `config/Mekanism/world.toml`** — `shouldGenerate = false` for tin, osmium, uranium,
-  fluorite, lead and salt. Mekanism's uranium is off too: Terra's uranium is a Oritech vein, so it
+  fluorite, lead and salt. Mekanism's uranium is off too: Terra's uranium is a GregTech vein, so it
   is charted and depletable like the rest.~~ *Amended by ADR-0035: Mekanism left the pack, so its six
   toggles have nothing to switch off. The file, and the block in `scripts/build-terra-ore.py` that
   rewrote it, are both gone; the cut is applied to three ore systems, not four.*
@@ -72,7 +72,7 @@ So the cut is applied to all four:
 ## Decided
 
 - **The set is iron, copper, coal, uranium~~.~~, and stone (ADR-0041).** Cut: zinc, tin, lead, nickel, silver, osmium, gold,
-  redstone, fluorite, salt, lapis, diamond, emerald, and Oritech's decorative veins — apatite,
+  redstone, fluorite, salt, lapis, diamond, emerald, and GregTech's decorative veins — apatite,
   salts, mica, olivine, garnet, sapphire, manganese, mineral sand, lubricant, oilsands, galena,
   magnetite, cassiterite, copper_tin, garnet_tin.
 - **The cuts are deleted, not relocated.** No imports from other bodies, and no ADR-0016 decay
@@ -85,10 +85,10 @@ So the cut is applied to all four:
   #86: the coal and uranium bedrock deposits are not built.** Factorio's depleting-but-never-exhausted
   resource is oil, and only oil; an ore patch runs dry. A bedrock coal or uranium deposit would be an
   infinite ore patch, which is the shape this ADR exists to refuse. The bedrock set is therefore one
-  authored crude deposit — `planetaryfactory:terra_crude_oil_deposit`, on `oritech:raw_oil` — and
+  authored crude deposit — `planetaryfactory:terra_crude_oil_deposit`, on `gtceu:raw_oil` — and
   nothing else. `terra_ferrous_deposit` and `terra_cupriferous_deposit` are deleted too: the same
   argument reaches them, and ADR-0020's tail section is amended to say so. Terra's bedrock carries
-  oil and no ore. Oritech's own six overworld fluid deposits are narrowed to nowhere:
+  oil and no ore. GregTech's own six overworld fluid deposits are narrowed to nowhere:
   four of them are refined fractions, and shipping those would void the Oil Refinery of ADR-0025.
 - ~~**Stone is ambient terrain, never a patch.**~~ **Reversed by ADR-0041.** The bullet read: "This
   is the one place fidelity deliberately loses. A stone patch in a world made of stone reads as a
@@ -152,9 +152,9 @@ knowing. Re-filling the broken slots and re-basing the ownership table are separ
 ## Consequences
 
 - **`scripts/build-terra-vein-weights.py` is rewritten, not retired.** Its registry constraint still
-  holds — `OritechServerEvents.oreVeins` throws `Missing registry: oritech:ore_vein` during world load,
+  holds — `GregTechServerEvents.oreVeins` throws `Missing registry: gtceu:ore_vein` during world load,
   so overrides must ship as datapack files at the same id. What dies is its stated premise, *"cutting
-  Oritech's set to those four would starve its own recipe tree… nothing is removed."* This ADR is
+  GregTech's set to those four would starve its own recipe tree… nothing is removed."* This ADR is
   that sentence reversed, and the docstring must say so.
 - **A uranium vein is authored, not trimmed.** There is no `uranium.json` among the existing
   overrides.

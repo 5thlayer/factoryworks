@@ -44,4 +44,4 @@ means the unmanned cargo and Vanguard-equivalent path must work before any playe
 
 Cargo terminals are ours regardless: GCyR has `launch_pad` and `RocketEntity` but no cargo terminal
 concept, so Launch Terminal, Receiving Terminal and Drop Hatch are custom GT machines built on
-Oritech's KubeJS machine builders.
+GregTech's KubeJS machine builders.

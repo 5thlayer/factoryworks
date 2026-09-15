@@ -119,7 +119,7 @@ system rather than a tier, and elevated rail has no analogue in a Minecraft pack
 `recycling` unlocks 314 recipes, an order of magnitude more than any other technology. They are not
 314 decisions: Factorio generates one per existing recipe, returning a quarter of its ingredients.
 **The rule is recorded, not its output** — a single `unlock-recipe-family` effect — because that is
-both smaller and truer, and because in this pack "recycling exists" is one decision about Oritech
+both smaller and truer, and because in this pack "recycling exists" is one decision about GregTech
 maceration.
 
 ## Considered Options

@@ -3,11 +3,11 @@
 > **Its verdict is superseded by ADR-0025; its findings are not.** This document asked whether
 > sulfur *can* be had without oil and answered yes, on three routes. ADR-0025 later decided that it
 > *should not* be — sulfur is petroleum-derived, as in Factorio — and removed all three: coal and
-> charcoal gasification, gunpowder, and the weight-1 `oritech:sulfur` slot in Terra's polymetallic
+> charcoal gasification, gunpowder, and the weight-1 `gtceu:sulfur` slot in Terra's polymetallic
 > bedrock deposit. Everything below is still an accurate read of the jars as installed on
 > 2026-08-22, and the routes it documents are the routes ADR-0025 deletes. Read §1 as the evidence
 > for that deletion rather than as the pack's current sulfur supply. §4's fluid inventory carries one
-> correction, also in ADR-0025: the chapter uses `oritech:light_oil` and `oritech:heavy_oil`, not
+> correction, also in ADR-0025: the chapter uses `gtceu:light_oil` and `gtceu:heavy_oil`, not
 > `light_fuel` and `heavy_fuel`.
 
 Research for #38, resolving the unverified claim #26 built rung 3 on: that *in-pack sulfur is an
@@ -30,25 +30,25 @@ are wrong. See **Where the evidence contradicts #26**.
 | Thing | Version | Path |
 | --- | --- | --- |
 | Mekanism | 10.7.19.85 | `mods/Mekanism-1.21.1-10.7.19.85.jar` |
-| Oritech CEu Modern | 7.0.2 | `mods/oritech-1.21.1-7.0.2.jar` |
+| GregTech CEu Modern | 7.0.2 | `mods/gtceu-1.21.1-7.0.2.jar` |
 | GCyR (fork) | 0.2.4+gt7.0.2 | `mods/gcyr-1.21.1-0.2.4+gt7.0.2-src.jar`, source at `../gcyr-src` |
 | Create | 6.0.10 | `mods/create-1.21.1-6.0.10.jar` |
 | AlmostUnified | 1.4.2 | `mods/almostunified-neoforge-1.21.1-1.4.2.jar` |
 
-Loader is NeoForge 1.21.1. Oritech's recipes are generated in code, not shipped as JSON, so its
+Loader is NeoForge 1.21.1. GregTech's recipes are generated in code, not shipped as JSON, so its
 chains below are read out of the bytecode of
-`com/gregtechceu/oritech/data/recipe/serialized/chemistry/*.class` with `javap -c`; recipe *ids* are
+`com/gregtechceu/gtceu/data/recipe/serialized/chemistry/*.class` with `javap -c`; recipe *ids* are
 the string constants in those classes.
 
 There is **no Immersive Engineering, no Thermal, no PneumaticCraft and no Create: Dieselgenerators**
-in the pack. Only two mods have any petrochemistry: Oritech (all of it) and Mekanism (none of it).
+in the pack. Only two mods have any petrochemistry: GregTech (all of it) and Mekanism (none of it).
 
 ---
 
 ## 1. Sulfur's real source chains
 
 `c:dusts/sulfur` is the tag every downstream recipe reads. In-pack it holds `mekanism:dust_sulfur`
-(`data/c/tags/item/dusts/sulfur.json` in the Mekanism jar) and Oritech's generated `sulfur_dust`,
+(`data/c/tags/item/dusts/sulfur.json` in the Mekanism jar) and GregTech's generated `sulfur_dust`,
 unified by AlmostUnified — `config/almostunified/unification/materials.json` lists
 `c:dusts/{material}` under `tags` and `sulfur` is in `config/almostunified/placeholders.json:42`.
 
@@ -72,14 +72,14 @@ is abundant too.
 (`data/mekanism/recipe/chemical_conversion/salt_to_hydrogen_chloride.json`) — again no oil. Mob-drop
 sourced, so it is a bootstrap rather than a line.
 
-**C. Terra's polymetallic bedrock deposit — Oritech.**
-`kubejs/data/planetaryfactory/oritech/bedrock_ore/terra_polymetallic_deposit.json` lists
-`oritech:sulfur` at weight 1 alongside lead (4) and silver (2). Asserted by the worldgen check at
+**C. Terra's polymetallic bedrock deposit — GregTech.**
+`kubejs/data/planetaryfactory/gtceu/bedrock_ore/terra_polymetallic_deposit.json` lists
+`gtceu:sulfur` at weight 1 alongside lead (4) and silver (2). Asserted by the worldgen check at
 `tests/worldgen/expected.json` under `terra.bedrock_ores`. Infinite-ish and automatable, being a
 bedrock deposit.
 
-**D. Oritech chemistry from sulfur dust.**
-`AcidRecipes.class` → `sulfuric_acid_from_sulfur`: Sulfur **dust** + Water → `oritech:sulfuric_acid`.
+**D. GregTech chemistry from sulfur dust.**
+`AcidRecipes.class` → `sulfuric_acid_from_sulfur`: Sulfur **dust** + Water → `gtceu:sulfuric_acid`.
 Also `sulfur_dioxide_from_sulfur` (Sulfur + Oxygen), `sulfur_trioxide`, `sulfuric_acid_from_trioxide`.
 
 **E. Mekanism chemistry from sulfur dust.**
@@ -92,12 +92,12 @@ Also `sulfur_dioxide_from_sulfur` (Sulfur + Oxygen), `sulfur_trioxide`, `sulfuri
 
 ### Not on Terra
 
-- `oritech:sulfur` **ore veins are explicitly forbidden on Terra** —
-  `tests/worldgen/expected.json`, `terra.forbidden_ore_veins` contains `oritech:sulfur`. Oritech's
-  own `data/oritech/oritech/ore_vein/sulfur.json` is Nether-only anyway.
+- `gtceu:sulfur` **ore veins are explicitly forbidden on Terra** —
+  `tests/worldgen/expected.json`, `terra.forbidden_ore_veins` contains `gtceu:sulfur`. GregTech's
+  own `data/gtceu/gtceu/ore_vein/sulfur.json` is Nether-only anyway.
 - The sulfur *vein* and a sulfuric-acid geyser are **Ignus's**:
-  `kubejs/data/planetaryfactory/oritech/ore_vein/ignus_sulfur.json` and
-  `kubejs/data/planetaryfactory/oritech/bedrock_fluid/ignus_sulfuric_acid_geyser.json`, both filtered
+  `kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_sulfur.json` and
+  `kubejs/data/planetaryfactory/gtceu/bedrock_fluid/ignus_sulfuric_acid_geyser.json`, both filtered
   to `planetaryfactory:vulcanus`. Ignus's coal bedrock deposit carries sulfur too.
 
 ### Where the sulfur *slurry* line needs it
@@ -118,7 +118,7 @@ machine, no oil*. This is the mechanical fact rung 3 actually rests on.
 **Mekanism: no.** Grepping the whole jar for `oil`/`petrol` returns only Boiler classes. Mekanism has
 no crude oil, no refinery, no petroleum gas, no fraction of any kind.
 
-**Oritech: yes, as an additional route — but not as the only one, and not the cheap one.**
+**GregTech: yes, as an additional route — but not as the only one, and not the cheap one.**
 `PetrochemRecipes.class` defines `desulfurize_heavy_fuel`, `desulfurize_light_fuel`,
 `desulfurize_naphtha`, `desulfurize_natural_gas`, `desulfurize_refinery_gas`. Each is
 `Sulfuric<X> + Hydrogen → <X> + HydrogenSulfide` (verified in the bytecode: the operand order
@@ -130,7 +130,7 @@ That is genuinely Factorio-shaped — desulfurizing oil fractions yields sulfur.
 one-machine coal route beats it by a wide margin at rung 3.
 
 **Nothing else installed touches sulfur.** Create has no chemistry; GCyR adds fluids only via
-Oritech materials.
+GregTech materials.
 
 ## 3. "One chemical + one circuit + one mechanical" in Mekanism
 
@@ -155,26 +155,26 @@ set (sulfur, advanced circuit ×3, engine unit ×2) maps cleanly except for the 
 
 ## 4. What oil processing actually is
 
-**Oritech owns the refinery, entirely.** Two machines matter:
+**GregTech owns the refinery, entirely.** Two machines matter:
 
 - **Distillation Tower** (`DistillationTowerMachine.class`) — the multiblock, many outputs at once.
 - **Distillery** (`lv_distillery` … `uxv_distillery` models) — the single-output singleblock.
 
-Sources of crude, all four of them Oritech bedrock fluid deposits reachable by a **Fluid Drilling
+Sources of crude, all four of them GregTech bedrock fluid deposits reachable by a **Fluid Drilling
 Rig**, all filtered to `minecraft:overworld` and **none of them overridden or forbidden by this
-pack** (`kubejs/data/oritech/oritech/bedrock_fluid/` contains only `lava_deposit.json`):
+pack** (`kubejs/data/gtceu/gtceu/bedrock_fluid/` contains only `lava_deposit.json`):
 
 | Deposit | Fluid | Weight | Yield |
 | --- | --- | --- | --- |
-| `oil_deposit` | `oritech:oil` | 20 (+5 ocean, +5 sandy) | 175–300 |
-| `raw_oil_deposit` | `oritech:raw_oil` | 20 | 200–300 |
-| `light_oil_deposit` | `oritech:light_oil` | 25 | 175–300 |
-| `heavy_oil_deposit` | `oritech:heavy_oil` | 15 (+5 ocean, +10 sandy) | 100–200 |
-| `natural_gas_deposit` | `oritech:natural_gas` | 15 | 100–175 |
+| `oil_deposit` | `gtceu:oil` | 20 (+5 ocean, +5 sandy) | 175–300 |
+| `raw_oil_deposit` | `gtceu:raw_oil` | 20 | 200–300 |
+| `light_oil_deposit` | `gtceu:light_oil` | 25 | 175–300 |
+| `heavy_oil_deposit` | `gtceu:heavy_oil` | 15 (+5 ocean, +10 sandy) | 100–200 |
+| `natural_gas_deposit` | `gtceu:natural_gas` | 15 | 100–175 |
 
-Plus the **`oritech:oilsands` ore vein**, kept on Terra at weight 30
+Plus the **`gtceu:oilsands` ore vein**, kept on Terra at weight 30
 (`scripts/build-terra-vein-weights.py:49`, stock 40; generated copy at
-`kubejs/data/oritech/oritech/ore_vein/oilsands.json`).
+`kubejs/data/gtceu/gtceu/ore_vein/oilsands.json`).
 
 Distilling any crude (`distill_oil`, `distill_raw_oil`, `distill_light_oil`, `distill_heavy_oil` in
 `PetrochemRecipes.class`) gives the same four fractions, all sulfur-bearing:
@@ -198,16 +198,16 @@ divisor:
 
 | Fuel | `EUt` (tier) | `duration` |
 | --- | --- | --- |
-| `oritech:gasoline` | 0 | 25 |
-| `oritech:diesel` | 0 | 18 |
-| `oritech:rocket_fuel` | 1 | 75 |
-| `oritech:hydrogen` | 1 | 10 |
+| `gtceu:gasoline` | 0 | 25 |
+| `gtceu:diesel` | 0 | 18 |
+| `gtceu:rocket_fuel` | 1 | 75 |
+| `gtceu:hydrogen` | 1 | 10 |
 | hydrogen plasma | 3 | 18 |
 
-Note the id: it is **`oritech:rocket_fuel`**, a Oritech material, not `gcyr:rocket_fuel` as #25/#31
+Note the id: it is **`gtceu:rocket_fuel`**, a GregTech material, not `gcyr:rocket_fuel` as #25/#31
 record it. GCyR only tags it (`src/generated/resources/data/gcyr/tags/fluid/vehicle_fuels.json`).
 
-And `oritech:rocket_fuel` is **not oil-derived**. `MixerRecipes.class`, recipe id
+And `gtceu:rocket_fuel` is **not oil-derived**. `MixerRecipes.class`, recipe id
 `rocket_fuel_from_oxygen`, combines **Dimethylhydrazine + Dinitrogen Tetroxide**. Dimethylhydrazine
 comes from `ReactorRecipes.class` (`dimethylhydrazine_from_methanol` → Dimethylamine → …), and
 dinitrogen tetroxide from the nitrogen/ammonia chain in `AcidRecipes.class`. It is amine and
@@ -221,8 +221,8 @@ nitrogen chemistry, not petrochemistry. Gasoline and Diesel *are* oil-derived �
 Three things, in descending order of how much they matter.
 
 **1. "Rocket fuel is oil-derived there too" is false in this pack.** #26 used it to justify putting
-the silo and rocket fuel behind an oil rung. `oritech:rocket_fuel` is a nitrogen/amine chain (§5).
-Worse, **`oritech:hydrogen` fuels a rocket at the same motor tier (`EUt` 1)** as rocket fuel, and
+the silo and rocket fuel behind an oil rung. `gtceu:rocket_fuel` is a nitrogen/amine chain (§5).
+Worse, **`gtceu:hydrogen` fuels a rocket at the same motor tier (`EUt` 1)** as rocket fuel, and
 hydrogen falls out of the coal gasification recipe that makes sulfur, and out of any electrolyzer.
 A player can reach orbit on hydrogen without ever building a refinery. Rung 4 as "oil is physically
 required for the rocket" **does not hold as written** — either the rung needs to be re-argued on
@@ -231,15 +231,15 @@ polymer chain), or the fork needs to restrict the fuel list. #31 already establi
 is cheap. This is the finding that most needs a decision.
 
 **2. The reason #26 gave for the split is weaker than the reason that actually holds.** #26 said
-sulfur is "an ore/dust product". On Terra it is essentially *not* an ore product — `oritech:sulfur`
+sulfur is "an ore/dust product". On Terra it is essentially *not* an ore product — `gtceu:sulfur`
 veins are forbidden there, and the only ore-shaped source is one weight-1 slot in a bedrock deposit.
 It is a **coal product**, via Mekanism gasification. That is a better fact for the pack than the one
 recorded: it puts rung 3's chemistry on Terra's most abundant reweighted vein and on a renewable
-charcoal loop, and it needs no Oritech at all. The conclusion is unchanged; the rationale in the
+charcoal loop, and it needs no GregTech at all. The conclusion is unchanged; the rationale in the
 ADR should be the coal one.
 
 **3. Oil is not absent from Terra, and it is not gated.** #26 reads as though oil is a thing rung 4
-introduces. In fact Oritech's five oil/gas bedrock deposits and the oilsands vein are all live on
+introduces. In fact GregTech's five oil/gas bedrock deposits and the oilsands vein are all live on
 Terra today, untouched by the pack's overrides, and `docs/planets.md` separately assigns petroleum
 oceans to Electro and coal liquefaction to Ignus. Rung 4 will be gating a *machine* (the Fluid
 Drilling Rig and the Distillation Tower), never the resource. Worth saying explicitly in the spec,
@@ -248,16 +248,16 @@ all** — Terra's oil deposits are currently unasserted by the worldgen check.
 
 ## Adjacent findings worth carrying to the map
 
-- **A supply gap: sulfur ore → sulfur dust has no owner.** `config/oritech.yaml:243` sets
+- **A supply gap: sulfur ore → sulfur dust has no owner.** `config/gtceu.yaml:243` sets
   `bedrockOreDropTagPrefix: raw`, and `BedrockOreMinerLogic` falls back
-  `raw → crushed → gem → ore → dust`. Oritech's Sulfur has no raw-ore form, so the Terra
-  polymetallic deposit will drop an ore-form item. #37 removes Oritech's ore-processing line, and
+  `raw → crushed → gem → ore → dust`. GregTech's Sulfur has no raw-ore form, so the Terra
+  polymetallic deposit will drop an ore-form item. #37 removes GregTech's ore-processing line, and
   **Mekanism has no recipe for `c:ores/sulfur`** — its ore processing is per-material and sulfur is
   not one of its materials. Route (C) therefore has a hole unless a KubeJS recipe fills it. This
   belongs on the map's existing "GT dust-supply audit" out-of-scope item. Routes (A) and (B) are
   unaffected, so nothing is blocked.
-- **AlmostUnified's `mod_priorities` omits `oritech`** (`config/almostunified/unification/materials.json`
+- **AlmostUnified's `mod_priorities` omits `gtceu`** (`config/almostunified/unification/materials.json`
   lists minecraft, kubejs, create, mekanism). Unification still pools both sulfur dusts into the tag,
   but every unified output resolves to the Mekanism item. Probably intended given #37; worth a
   conscious confirmation.
-- **`gcyr:rocket_fuel` is a wrong id** and appears in #25 and #31. It is `oritech:rocket_fuel`.
+- **`gcyr:rocket_fuel` is a wrong id** and appears in #25 and #31. It is `gtceu:rocket_fuel`.

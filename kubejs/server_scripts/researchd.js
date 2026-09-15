@@ -53,14 +53,14 @@ ResearchdEvents.registerResearchPacks(event => {
 //     `data/factorio/technology.json` would otherwise read it as a bug.
 //
 // The unlock id is `assembling/pack/`: the recipe is hand-authored (ADR-0031's exception) and lives
-// in the one subtree no converter owns -- nested INSIDE `assembling/` because Oritech re-registers
+// in the one subtree no converter owns -- nested INSIDE `assembling/` because GregTech re-registers
 // every loaded GTRecipe under its own type path (#87), so a flat `pack/` would put a second id in
 // the recipe manager and this gate would name the wrong one of the two.
 // `tests/factorio/test_research_unlocks.py` asserts this id is a recipe the pack emits, which is
 // the coupling that makes the divergence safe.
 fromFactorio('steel-axe', {
   icon: 'planetaryfactory:engineers_steel_pick',
-  has: ['oritech:steel_plate', 50],
+  has: ['gtceu:steel_plate', 50],
   unlocks: ['planetaryfactory:assembling/pack/engineers_steel_pick']
 });
 
@@ -101,7 +101,7 @@ fromFactorio('steel-axe', {
 //
 // The held item is Create's sheet, for the same reason as `electronics` below: AlmostUnified unifies
 // `c:plates/iron` and `create` outranks GregTech, so the furnace delivers `create:iron_sheet` however
-// `recipe/iron_plate.json` reads. Note that `StartingKit.java` grants `oritech:iron_plate` x8 directly,
+// `recipe/iron_plate.json` reads. Note that `StartingKit.java` grants `gtceu:iron_plate` x8 directly,
 // which no unification touches -- those eight do NOT count toward this fifty, and the same goes for
 // the kit's eight copper. #220.
 fromFactorio('steam-power', {
@@ -117,7 +117,7 @@ fromFactorio('steam-power', {
 // without which `automation-science-pack` below can never fire.
 //
 // THE HELD ITEM IS CREATE'S SHEET, NOT THE PLATE THIS RECIPE'S JSON NAMES. `recipe/copper_plate.json`
-// results in `oritech:copper_plate` on disk, but AlmostUnified unifies `c:plates/{material}` and its
+// results in `gtceu:copper_plate` on disk, but AlmostUnified unifies `c:plates/{material}` and its
 // `mod_priorities` put `create` above GregTech, so the furnace delivers `create:copper_sheet` -- 
 // confirmed in a running game, and it is what EMI shows for `planetaryfactory:copper_plate`.
 // `checkItemPresence` resolves a literal id through `BuiltInRegistries.ITEM` and holds it as a
@@ -153,9 +153,9 @@ fromFactorio('automation-science-pack', {
 
 // 50 automation packs. Steel is Terra's only surviving alloy (#72) and its recipe rides the
 // count-bearing `planetaryfactory:smelting` type, whose ids are flat rather than under
-// `assembling/` -- Oritech does not re-register it, so it is not cloned (#87, FLAT_TYPES).
+// `assembling/` -- GregTech does not re-register it, so it is not cloned (#87, FLAT_TYPES).
 fromFactorio('steel-processing', {
-  icon: 'oritech:steel_plate',
+  icon: 'gtceu:steel_plate',
   unlocks: [
     'planetaryfactory:steel_plate',
     'planetaryfactory:assembling/steel_chest'
@@ -164,7 +164,7 @@ fromFactorio('steel-processing', {
 
 // 10 automation packs. `long-handed-inserter` is `undecided`, so this grants the machine only.
 fromFactorio('automation', {
-  icon: 'oritech:lv_assembling_machine',
+  icon: 'gtceu:lv_assembling_machine',
   unlocks: ['planetaryfactory:assembling/assembling_machine_1']
 });
 
@@ -183,7 +183,7 @@ fromFactorio('logistic-science-pack', {
 
 // 40 automation + logistic.
 fromFactorio('automation-2', {
-  icon: 'oritech:mv_assembling_machine',
+  icon: 'gtceu:mv_assembling_machine',
   unlocks: ['planetaryfactory:assembling/assembling_machine_2']
 });
 
@@ -213,7 +213,7 @@ fromFactorio('fluid-handling', {
 // technology firing on MINING crude oil, costing nothing -- grants the Oil Refinery, the Chemical
 // Plant, basic oil processing and solid fuel. Neither half survives translation intact:
 //
-//   - `pumpjack` is an `undecided` item-map row (#105). Terra's crude is a Oritech bedrock fluid
+//   - `pumpjack` is an `undecided` item-map row (#105). Terra's crude is a GregTech bedrock fluid
 //     deposit tapped by a Fluid Drilling Rig (ADR-0017, docs/factorio-mechanics.md), not a patch you
 //     sit a pumpjack on, so this node's own effect has no recipe to grant.
 //   - `oil-processing`'s trigger cannot be expressed AT ALL. Researchd's four methods all read

@@ -31,7 +31,7 @@ by construction. Both mods were read at the bytecode level:
   spoilage" and none touches ME networks. There is nothing to adopt.
 - **KubeJS cannot.** Neither mod ships a KubeJS plugin. Applied KubeJS exists, but its `storageDelta`
   event is observational and **not cancellable**, and it requires KubeJS 2101.7.2+ — one build newer
-  than the 2101.7.1-build.181 that ADR 0001 pins us to for Oritech compatibility.
+  than the 2101.7.1-build.181 that ADR 0001 pins us to for GregTech compatibility.
 
 So: two `@Inject(at = HEAD, cancellable = true)` mixins, living in the `respoiled` fork, both
 `required = false` so the pack still loads without either mod, both behind one shared tag predicate

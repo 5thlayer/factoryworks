@@ -1,5 +1,5 @@
 {
-  "type": "oritech:chemical_plant",
+  "type": "gtceu:chemical_plant",
   "inputs": {
     "fluid": [
       {
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "fluid": "oritech:oil"
+            "fluid": "gtceu:oil"
           },
           "amount": 30
         }
@@ -25,7 +25,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "oritech:sulfur_dust"
+            "item": "gtceu:sulfur_dust"
           },
           "count": 2
         }

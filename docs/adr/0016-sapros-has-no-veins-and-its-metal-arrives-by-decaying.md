@@ -9,7 +9,7 @@ iron **stromatolites** "in abundance" in the red and green marshlands, and calls
 sources of ore and ore bacteria". What a stromatolite yields is **ore bacteria**, and a bacterium
 becomes metal by *spoiling into it*. There is no vein, no drill and no furnace in that sentence.
 
-So **Sapros registers no Oritech ore veins, no bedrock ore deposit and no bedrock fluid
+So **Sapros registers no GregTech ore veins, no bedrock ore deposit and no bedrock fluid
 deposit.** Everything metallic on the body comes off a hand-mined surface block as bacteria plus
 stone, and turns into metal only by Decaying (ADR-0010, ADR-0011).
 
@@ -38,7 +38,7 @@ correctly. What consumes them is #17's.
 
 `sapros_rock` matches `gcyr:mercury_rock` and is scoped to `planetaryfactory:gleba`, and it
 places nothing, because nothing references it. Same reasoning as Electro's `electro_rock`: the
-layer is what gives the body a tab in Oritech's prospecting tooling, and a player who prospects
+layer is what gives the body a tab in GregTech's prospecting tooling, and a player who prospects
 Sapros and is told there are no veins has learned the design, where a player told nothing at all
 has found what looks like a bug. Because no vein names the layer, the fixture asserts it
 directly, through a `worldgen_layer` field.
@@ -68,7 +68,7 @@ simply never spends it.
 ## Consequences
 
 Between this ticket and #17, Sapros is a body a player can farm on and cannot smelt on. Anyone
-reading `kubejs/data/planetaryfactory/oritech/` and finding no Sapros files should find this ADR
+reading `kubejs/data/planetaryfactory/gtceu/` and finding no Sapros files should find this ADR
 before they conclude something was forgotten. The fixture's three empty objects — `ore_veins`,
 `bedrock_ores`, `bedrock_fluids` — are the executable half of that claim: each makes the check
 walk the entire loaded registry and fail if anything at all reaches `planetaryfactory:gleba`.
