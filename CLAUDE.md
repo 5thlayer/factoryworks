@@ -209,6 +209,37 @@ through itself. The check is the rule that `DelegatingResourceHandler` is named 
 guard. It is a source-text check because NeoForge is deliberately off the unit-test classpath.
 Whether a pipe actually respects the refusal is a world load.
 
+### Capability registration check
+
+`tests/pack/test_capability_registration.py` is the other half of the transfer-face check (#265):
+that half asserts a face which *is* registered refuses correctly on both overloads, and this one
+asserts the face exists at all. A machine whose registration is missing is not broken, it is
+**inert** — it places, ticks and renders, and no pipe, funnel or pole ever reaches it, with nothing
+thrown and nothing logged. Two seams make that reachable: a block entity type is declared in
+`BLOCK_ENTITIES.register` and its faces in `registerCapabilities`, with no compiler relationship
+between them, and both event handlers are reached only by an `addListener` line in
+`PlanetaryFactoryCore` — dropping that one line makes every machine in the mod inert at once.
+`FACES` and `ITEM_FACES` are the recorded tables of which type gets which faces, listed rather
+than discovered so that a new machine fails here instead of being answered "none"; a type that
+genuinely wants no face records an empty tuple, which is then a decision somebody wrote down.
+`ITEM_FACES` is asserted by *counting* `event.registerItem` calls rather than by matching their
+shape, because the next one will be spelled differently and a shape-matching regex would let it
+past — which is the failure the table exists to catch. Four assertions are the pack's own rather
+than generic plumbing — the pole answers on the **block** rather than the block entity type (a
+segment mid-column is an address a connector may be attached to, and an entity-bound registration
+answers only on the base), each of the three **ladders** registers for every tier off its own
+enum (a loop over fewer ships the remaining tiers inert, and the face assertion cannot see it
+because the spelling is still there), the rig's **parts** answer as well as its anchor (which
+corner holds the anchor is not visible, so a hopper under the wrong one finds nothing), and the
+Barrel's face is on the **item**, in `PFItems`, where no block-side assertion reaches.
+#265's own criterion — that the faces are the Transfer API's rather than the legacy system's — is
+carried by the positive half, each recorded face asserted to be spelled `Capabilities.<Kind>.BLOCK`.
+The legacy spellings are asserted absent too, but that half is a marker rather than a guard and
+says so: none of those names resolves on this NeoForge and GregTech's jars left with ADR-0060, so
+the compiler catches a backslide first. Source-text for the reason the guard check is:
+`RegisterCapabilitiesEvent` is a NeoForge type and the test source set has no NeoForge on it by
+design. Whether a pipe placed against a Boiler moves steam is a world load.
+
 ### Offshore Pump check
 
 `tests/pack/test_pump_assets.py` asserts the one block water enters the factory through (#213,
