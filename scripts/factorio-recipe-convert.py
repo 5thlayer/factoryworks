@@ -155,8 +155,13 @@ def convert_smelting(recipe, items, override):
     result = items[recipe["results"][0]["name"]]
     return {
         "type": PACK_SMELTING,
-        "ingredient": {"tag": ingredient["target"]} if ingredient["kind"] == "tag"
-        else {"item": ingredient["target"]},
+        # 26.1's `Ingredient.CODEC` is a string, not an object: a bare id for an item and a
+        # `#`-prefixed one for a tag. The 1.21.1 `{"item": ...}` / `{"tag": ...}` form this
+        # replaces does not fail loudly -- it fails at datapack load with "No key type in
+        # MapLike[...]" and the recipe is simply absent, which reads in-world as a furnace that
+        # will not smelt anything (#266's in-world check).
+        "ingredient": ("#" + ingredient["target"]) if ingredient["kind"] == "tag"
+        else ingredient["target"],
         "count": recipe["ingredients"][0]["amount"],
         "result": {"id": result["target"], "count": recipe["results"][0]["amount"]},
         "cookingtime": override.get("duration", round(recipe["energy_required"] * 20)),

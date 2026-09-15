@@ -1,8 +1,6 @@
 {
   "type": "planetaryfactory:smelting",
-  "ingredient": {
-    "item": "gtceu:iron_plate"
-  },
+  "ingredient": "gtceu:iron_plate",
   "count": 5,
   "result": {
     "id": "gtceu:steel_plate",

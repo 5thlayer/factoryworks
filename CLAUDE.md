@@ -335,6 +335,20 @@ hand-edited; re-run the converter. A Factorio name with no item-map row is a har
 runs the converter's `--check`; the recipe *shape* needs one world load. See
 `docs/testing/recipe-conversion-check.md`.
 
+### Emitted smelt shape check
+
+`tests/factorio/test_smelting_shape.py` asserts the four emitted `planetaryfactory:smelting`
+recipes are shaped the way **26.1** parses an ingredient: a string, `#`-prefixed for a tag, where
+1.21.1 took `{"item": ...}`. The old shape does not crash — it is one `Couldn't parse data file`
+line at datapack load and the recipe is then absent from the manager, which reaches a player as a
+furnace that holds the item, holds power and never smelts. It shipped that way through the port and
+cost #266's in-world check. `test_recipe_convert.py` could not see it: it runs the converter's
+`--check`, which re-runs the converter and compares the output to what the converter would emit —
+self-consistent by construction and blind to a shape Minecraft rejects. The GT subtrees carry the
+same stale shape and are deliberately **not** asserted here; they are `gtceu:` types, dead wholesale
+since ADR-0060, and belong to #273 with the rest of the format re-derivation. Run it after any
+converter change. A KubeJS reload is enough to see the fix in a running game — no restart.
+
 ### Stock-recipe sweep
 
 `kubejs/server_scripts/recipes.js` removes every recipe the pack does not admit by name, and
