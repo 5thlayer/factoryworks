@@ -51,10 +51,10 @@ public class BoilerBlock extends BaseEntityBlock {
      * carries one.
      */
     public static final com.mojang.serialization.MapCodec<BoilerBlock> CODEC =
-            simpleCodec(properties -> new BoilerBlock());
+            simpleCodec(BoilerBlock::new);
 
-    public BoilerBlock() {
-        super(BlockBehaviour.Properties.of()
+    public BoilerBlock(BlockBehaviour.Properties props) {
+        super(props
                 .mapColor(MapColor.METAL)
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()

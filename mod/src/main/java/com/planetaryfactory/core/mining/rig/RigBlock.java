@@ -49,15 +49,21 @@ public class RigBlock extends BaseEntityBlock {
      * carries one.
      */
     public static final com.mojang.serialization.MapCodec<RigBlock> CODEC =
-            com.mojang.serialization.Codec.STRING
-                    .xmap(RigTier::byName, RigTier::serializedName)
-                    .fieldOf("tier")
-                    .xmap(RigBlock::new, RigBlock::tier);
+            com.mojang.serialization.codecs.RecordCodecBuilder.mapCodec(instance -> instance.group(
+                    com.mojang.serialization.Codec.STRING
+                            .xmap(RigTier::byName, RigTier::serializedName)
+                            .fieldOf("tier")
+                            .forGetter(RigBlock::tier),
+                    // 26.1 carries the block's id on its Properties, so a block codec has to state
+                    // them rather than conjure a fresh set -- `propertiesCodec()` is vanilla's own
+                    // half of that pair.
+                    propertiesCodec()
+            ).apply(instance, RigBlock::new));
 
     private final RigTier tier;
 
-    public RigBlock(RigTier tier) {
-        super(BlockBehaviour.Properties.of()
+    public RigBlock(RigTier tier, BlockBehaviour.Properties props) {
+        super(props
                 .mapColor(MapColor.METAL)
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()

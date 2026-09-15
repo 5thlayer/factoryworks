@@ -49,15 +49,21 @@ public class FurnaceBlock extends BaseEntityBlock {
      * the three registrations rather than a stand-in tier that would be wrong for two of them.
      */
     public static final com.mojang.serialization.MapCodec<FurnaceBlock> CODEC =
-            com.mojang.serialization.Codec.STRING
-                    .xmap(FurnaceTier::byName, FurnaceTier::serializedName)
-                    .fieldOf("tier")
-                    .xmap(FurnaceBlock::new, FurnaceBlock::tier);
+            com.mojang.serialization.codecs.RecordCodecBuilder.mapCodec(instance -> instance.group(
+                    com.mojang.serialization.Codec.STRING
+                            .xmap(FurnaceTier::byName, FurnaceTier::serializedName)
+                            .fieldOf("tier")
+                            .forGetter(FurnaceBlock::tier),
+                    // 26.1 carries the block's id on its Properties, so a block codec has to state
+                    // them rather than conjure a fresh set -- `propertiesCodec()` is vanilla's own
+                    // half of that pair.
+                    propertiesCodec()
+            ).apply(instance, FurnaceBlock::new));
 
     private final FurnaceTier tier;
 
-    public FurnaceBlock(FurnaceTier tier) {
-        super(BlockBehaviour.Properties.of()
+    public FurnaceBlock(FurnaceTier tier, BlockBehaviour.Properties props) {
+        super(props
                 .mapColor(MapColor.STONE)
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()

@@ -56,8 +56,8 @@ public final class PFItems {
      * identical in the inventory, and the fluid a barrel carries is not a decoration but the reason
      * to hold one over another.
      */
-    public static final DeferredHolder<Item, Item> BARREL = ITEMS.register(
-            "barrel", () -> new BarrelItem(new Item.Properties().stacksTo(BarrelSpec.STACK_SIZE)));
+    public static final DeferredHolder<Item, Item> BARREL = ITEMS.registerItem(
+            "barrel", props -> new BarrelItem(props.stacksTo(BarrelSpec.STACK_SIZE)));
 
     /**
      * The Engineer's Pick, in its two tiers (ADR-0039).
@@ -82,31 +82,31 @@ public final class PFItems {
 
     static {
         for (PickTier tier : PickTier.values()) {
-            PICKS.put(tier, ITEMS.register(tier.id(),
-                    () -> new EngineersPick(tier, new Item.Properties().stacksTo(1))));
+            PICKS.put(tier, ITEMS.registerItem(tier.id(),
+                    props -> new EngineersPick(tier, props.stacksTo(1))));
         }
         NATURAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.YUMAKO_SAPLING));
         NATURAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.JELLYSTEM_SAPLING));
         for (PoleTier tier : PoleTier.values()) {
             // Not registerSimpleBlockItem: the pole carries the only description of itself the
             // pack has, so its item is a SupplyAreaPoleItem for the tooltip alone.
-            FUNCTIONAL.add(ITEMS.register(PFBlocks.pole(tier).getId().getPath(),
-                    () -> new SupplyAreaPoleItem(PFBlocks.pole(tier).get(), new Item.Properties())));
+            FUNCTIONAL.add(ITEMS.registerItem(PFBlocks.pole(tier).getId().getPath(),
+                    props -> new SupplyAreaPoleItem(PFBlocks.pole(tier).get(), props)));
         }
         for (FurnaceTier tier : FurnaceTier.values()) {
             FUNCTIONAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.furnace(tier)));
         }
         for (RigTier tier : RigTier.values()) {
-            DeferredHolder<Item, RigBlockItem> item = ITEMS.register(tier.blockName(),
-                    () -> new RigBlockItem(tier, new Item.Properties()));
+            DeferredHolder<Item, RigBlockItem> item = ITEMS.registerItem(tier.blockName(),
+                    props -> new RigBlockItem(tier, props));
             RIGS.put(tier, item);
             FUNCTIONAL.add(item);
         }
         FUNCTIONAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.BOILER));
         // Not registerSimpleBlockItem: the pump refuses to place away from water, and the refusal
         // is the item's, because by the time a block exists it is too late to decline.
-        FUNCTIONAL.add(ITEMS.register("offshore_pump",
-                () -> new OffshorePumpItem(new Item.Properties())));
+        FUNCTIONAL.add(ITEMS.registerItem("offshore_pump",
+                props -> new OffshorePumpItem(props)));
         FUNCTIONAL.add(BARREL);
         // Tools sit with the machinery, not with the saplings: a pick is the first thing a player
         // reaches for and the last place they would look for it is NATURAL_BLOCKS.

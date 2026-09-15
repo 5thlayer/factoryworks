@@ -42,15 +42,21 @@ public class RigPartBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public static final com.mojang.serialization.MapCodec<RigPartBlock> CODEC =
-            com.mojang.serialization.Codec.STRING
-                    .xmap(RigTier::byName, RigTier::serializedName)
-                    .fieldOf("tier")
-                    .xmap(RigPartBlock::new, RigPartBlock::tier);
+            com.mojang.serialization.codecs.RecordCodecBuilder.mapCodec(instance -> instance.group(
+                    com.mojang.serialization.Codec.STRING
+                            .xmap(RigTier::byName, RigTier::serializedName)
+                            .fieldOf("tier")
+                            .forGetter(RigPartBlock::tier),
+                    // 26.1 carries the block's id on its Properties, so a block codec has to state
+                    // them rather than conjure a fresh set -- `propertiesCodec()` is vanilla's own
+                    // half of that pair.
+                    propertiesCodec()
+            ).apply(instance, RigPartBlock::new));
 
     private final RigTier tier;
 
-    public RigPartBlock(RigTier tier) {
-        super(BlockBehaviour.Properties.of()
+    public RigPartBlock(RigTier tier, BlockBehaviour.Properties props) {
+        super(props
                 .mapColor(MapColor.METAL)
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()

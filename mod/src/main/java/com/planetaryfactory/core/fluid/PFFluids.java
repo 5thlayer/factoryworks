@@ -53,7 +53,8 @@ public final class PFFluids {
             FLUIDS.register("flowing_steam", () -> new BaseFlowingFluid.Flowing(steamProperties()));
 
     public static final DeferredHolder<Block, PFLiquidBlock> STEAM_BLOCK =
-            BLOCKS.register("steam", () -> new PFLiquidBlock(STEAM_SOURCE.get(), liquidProperties()));
+            BLOCKS.registerBlock("steam",
+                    props -> new PFLiquidBlock(STEAM_SOURCE.get(), liquidProperties(props)));
 
 
     // ---- Superheated Steam ------------------------------------------------------------------
@@ -71,9 +72,9 @@ public final class PFFluids {
                     "flowing_superheated_steam",
                     () -> new BaseFlowingFluid.Flowing(superheatedSteamProperties()));
 
-    public static final DeferredHolder<Block, PFLiquidBlock> SUPERHEATED_STEAM_BLOCK = BLOCKS.register(
+    public static final DeferredHolder<Block, PFLiquidBlock> SUPERHEATED_STEAM_BLOCK = BLOCKS.registerBlock(
             "superheated_steam",
-            () -> new PFLiquidBlock(SUPERHEATED_STEAM_SOURCE.get(), liquidProperties()));
+            props -> new PFLiquidBlock(SUPERHEATED_STEAM_SOURCE.get(), liquidProperties(props)));
 
 
     private PFFluids() {
@@ -90,9 +91,15 @@ public final class PFFluids {
                 .block(SUPERHEATED_STEAM_BLOCK);
     }
 
-    /** Vanilla's own water/lava shape: replaceable, no collision, no loot table of its own. */
-    private static BlockBehaviour.Properties liquidProperties() {
-        return BlockBehaviour.Properties.of()
+    /**
+     * Vanilla's own water/lava shape: replaceable, no collision, no loot table of its own.
+     *
+     * <p>Takes the properties rather than making them: 26.1 carries the block's registry id on the
+     * Properties, so a fresh {@code Properties.of()} here is an id-less block and a
+     * {@code Block id not set} at registration -- which is a load failure, not a compile one.
+     */
+    private static BlockBehaviour.Properties liquidProperties(BlockBehaviour.Properties props) {
+        return props
                 .mapColor(MapColor.WATER)
                 .replaceable()
                 .noCollision()
