@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -29,6 +30,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -312,10 +314,16 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
             return;
         }
 
+        ItemResource resource = ItemResource.of(stackOf(itemId, 1));
+        if (resource.isEmpty()) {
+            // An id nothing registers, which `stackOf` resolves to air. The rig stalls holding it
+            // rather than throwing at the transfer API, which refuses an empty resource outright.
+            return;
+        }
         int held = buffer.count();
         int inserted = 0;
         try (Transaction tx = Transaction.openRoot()) {
-            inserted = handler.insert(ItemResource.of(stackOf(itemId, 1)), held, tx);
+            inserted = handler.insert(resource, held, tx);
             tx.commit();
         }
         if (inserted == 0) {
@@ -327,8 +335,18 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
         setChanged();
     }
 
+    /**
+     * The buffer's id as a stack.
+     *
+     * <p>Air rather than null for an id nothing registers: the id is persisted, so a save carrying
+     * an item from a mod that has since been removed must stall the rig -- which an empty stack
+     * does, since the push below moves nothing -- rather than NPE out of the tick. Losing ore is
+     * the failure this whole class is arranged to avoid; crashing is worse.
+     */
     private static ItemStack stackOf(String itemId, int count) {
-        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(itemId)).map(h -> h.value()).orElse(null);
+        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(itemId))
+                .map(Holder::value)
+                .orElse(Items.AIR);
         return count <= 0 ? ItemStack.EMPTY : new ItemStack(item, count);
     }
 

@@ -26,7 +26,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
-import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import com.planetaryfactory.core.transfer.GuardedResourceHandler;
 import net.neoforged.neoforge.transfer.CombinedResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -82,6 +82,14 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
 
     private static final int MILLIBUCKETS_PER_TICK =
             BoilerSpec.milliBucketsPerTick(JOULES_PER_TICK, JOULES_PER_MILLIBUCKET);
+
+    /**
+     * The two tanks' indices behind {@link #fluidHandler()}'s combined face, in the order they are
+     * combined. Named because the face's whole rule is which index does what, and {@code 0} and
+     * {@code 1} do not say which is which.
+     */
+    private static final int WATER_TANK = 0;
+    private static final int STEAM_TANK = 1;
 
     private final NonNullList<ItemStack> items = NonNullList.withSize(BoilerSlots.SIZE, ItemStack.EMPTY);
     private final FuelBuffer fuel = new FuelBuffer();
@@ -210,13 +218,27 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
      * does. A pipe pushing water reaches tank 0 and nothing else; a pipe pulling reaches the steam
      * and can never drain the water back out, which would otherwise let a player launder water
      * through a machine that is supposed to be consuming it.
+     *
+     * <p>Both rules are stated per tank <em>and</em> reached by the slot-less overloads, which is
+     * what {@link GuardedResourceHandler} is for -- see its javadoc for why a plain
+     * {@code DelegatingResourceHandler} would let a pipe around both of them.
      */
     public ResourceHandler<FluidResource> fluidHandler() {
-        return new DelegatingResourceHandler<>(new CombinedResourceHandler<>(water, steam)) {
+        return new GuardedResourceHandler<>(new CombinedResourceHandler<>(water, steam)) {
             @Override
             public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
-                if (index == 1) return 0;
-                return super.insert(index, resource, amount, transaction);
+                if (index == WATER_TANK) {
+                    return super.insert(index, resource, amount, transaction);
+                }
+                return 0;
+            }
+
+            @Override
+            public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+                if (index == STEAM_TANK) {
+                    return super.extract(index, resource, amount, transaction);
+                }
+                return 0;
             }
         };
     }

@@ -9,7 +9,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
-import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import com.planetaryfactory.core.transfer.GuardedResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -65,12 +65,22 @@ public class OffshorePumpBlockEntity extends BlockEntity {
     /**
      * Extract-only. A pump is an origin, and letting something push fluid back into it would make
      * it a pipe junction that happens to make water.
+     *
+     * <p>{@link GuardedResourceHandler} rather than a plain {@code DelegatingResourceHandler}
+     * because the refusal has to hold for the slot-less {@code insert} too, which the plain one
+     * forwards straight to the buffer.
      */
     public ResourceHandler<FluidResource> fluidHandler() {
-        return new DelegatingResourceHandler<>(buffer) {
+        return new GuardedResourceHandler<>(buffer) {
             @Override
             public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
                 return 0;
+            }
+
+            /** Nothing can be pushed in, so nothing can be valid to push in either. */
+            @Override
+            public boolean isValid(int index, FluidResource resource) {
+                return false;
             }
         };
     }
