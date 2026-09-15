@@ -1,8 +1,6 @@
 {
   "type": "planetaryfactory:smelting",
-  "ingredient": {
-    "tag": "c:raw_materials/copper"
-  },
+  "ingredient": "#c:raw_materials/copper",
   "count": 1,
   "result": {
     "id": "gtceu:copper_plate",
