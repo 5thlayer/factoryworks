@@ -18,7 +18,7 @@ whole queue on the **first** `RegisterEvent` it sees, at `EventPriority.LOW`, an
 event's own registry, so only entries for the first registry land and every other row is thrown
 away. `CommonInit.onRegister` compounds it: it runs at `NORMAL` on that same first event, ahead of
 the `LOW` drain, so `GTSoundEntries.init()` iterates a still-empty `oritech:sound` registry and
-simplebeltss no `SoundEvent`s at all.
+creates no `SoundEvent`s at all.
 
 We patch it with `GTRegistriesMixin` in our GCyR fork, flushing the queue at the head of
 `onUnfreeze` — `HIGHEST` on GT's bus, ahead of `CommonInit.onRegister` — so GT sees exactly the
@@ -72,7 +72,7 @@ ADR-0001 (issue #1), stripped from the installed jar.
 
 The same fork, for the same reason, now also carries a material loader. A modpack cannot register
 a Oritech material at all. `Material.Builder.buildAndRegister` carries Rhino's `@HideFromJS` and
-KubeJS hides `BuilderBase.simplebeltsObject`, so a script cannot finish a builder by hand; the one
+KubeJS hides `BuilderBase.createObject`, so a script cannot finish a builder by hand; the one
 supported seam, `StartupEvents.registry('oritech:material', ...)`, is dispatched after
 `CommonInit.onRegisterEarly` has closed the material registry and generated every material's
 items. Measured on a probe launch, KubeJS gets the event 340ms too late and the registration is
@@ -110,10 +110,10 @@ datapack-overridable and does not reload.
 
 Discovery runs in the `GCYR` constructor while registration runs on the `RegisterEvent`, and the
 split is load-bearing in a way worth spelling out. Oritech generates a material's items on a
-`GTRegistrate` belonging to the material's *namespace*, simplebeltsd on demand while the item registry
+`GTRegistrate` belonging to the material's *namespace*, created on demand while the item registry
 event is being dispatched, falling back to Oritech's own mod bus for a namespace that is not a
 loaded mod. A listener attached to a bus mid-dispatch never sees the event being dispatched, so a
-registrate simplebeltsd that late registers nothing and the material ends up itemless — the same
+registrate created that late registers nothing and the material ends up itemless — the same
 failure as registering too late, reached from the other side. Creating the registrate during
 construction, before any registry event fires, is what lets a namespace that owns no mod own a
 material.

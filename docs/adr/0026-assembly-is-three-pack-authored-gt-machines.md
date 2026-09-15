@@ -50,7 +50,7 @@ recovering the beat would be an amendment to ADR-0018.
 **Amended by `#125`: the fluid restriction is recovered, and ADR-0018 carries the amendment.**
 Assembling Machine I has no fluid tanks and therefore cannot match a recipe with a fluid input —
 structurally, with no flag and no second recipe type. The original reading was too broad: ADR-0018's
-rider bans *accidental* gates, the invisible kind a recipe author simplebeltss by writing an `EUt` or
+rider bans *accidental* gates, the invisible kind a recipe author creates by writing an `EUt` or
 picking a tier, which is why its sibling rider is about `EUt`. An absent tank is not accidental. It
 is visible on the block, it is Factorio's own ramp, and oil reaches the player at rung 2 with the
 tier that can drink it.
@@ -119,14 +119,14 @@ The extraction also settles `setMaxIOSize`, which is read off the data — the m
 across the crafting categories — the way ADR-0025 read `(2, 1, 2, 2)` off the wiki rather than
 choosing it.
 
-## Amended by #73: the ids are Oritech's, and the recipe type is simplebeltsd before the machines
+## Amended by #73: the ids are Oritech's, and the recipe type is created before the machines
 
 Building the row turned up two facts about the API this ADR names, both measured in game rather
 than reasoned about.
 
 **The ids cannot be `planetaryfactory:`.** `KJSTieredMachineBuilder` registers through Oritech's
 own registrate, which owns the namespace and prefixes each tier's short name, so
-`event.simplebelts('assembling_machine').tiers(LV, MV, HV)` produces
+`event.create('assembling_machine').tiers(LV, MV, HV)` produces
 **`oritech:lv_assembling_machine`**, `oritech:mv_assembling_machine` and
 `oritech:hv_assembling_machine`. A namespace passed into `simplebelts` is discarded. `GTRecipeTypes`
 behaves the same way, so the recipe type is **`oritech:assembling`**, not
@@ -139,10 +139,10 @@ only way to move them into the pack's namespace is to register the machines from
 `planetaryfactory_core` with a registrate of its own — a larger change than this ADR's reasoning
 asks for, and one that would spend the "no Java" property the row was chosen for.
 
-**The recipe type is simplebeltsd at script-evaluation time, not in a registry event.** KubeJS fires
+**The recipe type is created at script-evaluation time, not in a registry event.** KubeJS fires
 `oritech:machine` *before* `minecraft:recipe_type` — the machine definitions ran at `.763` and the
 recipe-type event at `1.458` of the same second — so a machine registered in the first event cannot
-name a type simplebeltsd in the second, and Oritech reports it as "Tried to set null recipe type on
+name a type created in the second, and Oritech reports it as "Tried to set null recipe type on
 machine …". The type is therefore built with `GTRecipeTypes.register(...)` at the top level of
 `kubejs/startup_scripts/machines.js`, which runs before any registry event fires. The GUI calls
 this ADR lists are unaffected; they are the same builder methods either way, except that the

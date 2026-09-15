@@ -59,9 +59,20 @@ StartupEvents.registry('block', (event) => {
   //
   // 36 and 54 slots: a real progression above vanilla's 27, under the six-row ceiling, with the
   // wreck's own 9x5 hold sitting between them.
+  //
+  // BOTH TEXTURES RENDER WRONG ON PURPOSE, and that is a placeholder rather than a bug to fix by
+  // guessing. They are 64x64 chest *entity* atlases -- lid, base and clasp laid out flat -- while
+  // these blocks are plain cubes, so KubeJS maps the whole unwrapped sheet onto every face. What
+  // they buy is the right silhouette being named: an exposed-copper chest and Railcraft's void
+  // chest are the two the ladder wants, and the GTCEu machine casings they replace both named a
+  // namespace that has never held them, so those rendered as nothing at all.
+  //
+  // The fix is a 16x16 crop of each atlas's front face, committed the way
+  // `scripts/build-pick-textures.py` commits its flattened GTCEu tool art -- which is a derived
+  // asset, and so #234's question rather than this file's.
   event.create('planetaryfactory:iron_chest')
     .displayName('Iron Chest')
-    .texture('oritech:block/casings/solid/machine_casing_solid_steel')
+    .texture('minecraft:entity/chest/copper_exposed')
     .hardness(2.5)
     .resistance(2.5)
     .requiresTool(true)
@@ -73,7 +84,7 @@ StartupEvents.registry('block', (event) => {
 
   event.create('planetaryfactory:steel_chest')
     .displayName('Steel Chest')
-    .texture('oritech:block/casings/solid/machine_casing_clean_stainless_steel')
+    .texture('railcraft:entity/chest/void_chest')
     .hardness(3)
     .resistance(3)
     .requiresTool(true)
@@ -92,7 +103,7 @@ StartupEvents.registry('block', (event) => {
 // `kubejs/data/planetaryfactory/worldgen/configured_feature/`, placed by worldgen and grown by
 // the sapling from that same definition, so a farmed tree cannot differ from a wild one.
 //
-// `minecraft:logs` and `minecraft:leaves` are what make Simplebelts's saw fell these trees and its
+// `minecraft:logs` and `minecraft:leaves` are what make Create's saw fell these trees and its
 // Deployer treat them as a canopy. They are load-bearing integration, not decoration.
 
 // Both harvests are destructive: a tree yields once and is felled doing it, then replanted

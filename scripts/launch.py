@@ -25,7 +25,7 @@ def headless():
     On a machine with no attached display -- a remote session, CI -- the pack dies
     before mod loading with `glfwGetPrimaryMonitor failed`. That is FML's *early*
     window, the splash it draws while mods construct; it insists on a primary
-    monitor. Minecraft's own window has no such requirement and simplebeltss offscreen
+    monitor. Minecraft's own window has no such requirement and creates offscreen
     quite happily, so the whole game runs headless once the splash is out of the way.
 
     The setting lives in config/fml.toml and is read from there, not from a system

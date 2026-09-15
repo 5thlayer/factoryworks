@@ -33,7 +33,7 @@ returns a `MultiblockMachineBuilder`, terminated by `register()` returning a
 `MultiblockMachineDefinition`
 (`com/gregtechceu/oritech/api/registry/registrate/GTRegistrate.class`,
 `com/gregtechceu/oritech/api/registry/registrate/MultiblockMachineBuilder.class`).
-`GTRegistrate.simplebelts(String)` / `simplebeltsIgnoringListenerErrors(String)` are both public and static,
+`GTRegistrate.create(String)` / `createIgnoringListenerErrors(String)` are both public and static,
 and `registerEventListeners(IEventBus)` attaches a registrate to a mod's bus.
 
 This is exactly how GCyR defines its own multiblocks — `GCYRMachines.java:70-111` builds
@@ -73,8 +73,8 @@ public MultiblockMachineBuilderWrapper machine(Function<IMachineBlockEntity, Met
 public MultiblockMachineBuilderWrapper definition(Function<ResourceLocation, MultiblockMachineDefinition>)
 ```
 
-`simplebeltsKJSMulti(ResourceLocation)` with no creation function calls
-`GTRegistrate.simplebeltsIgnoringListenerErrors(id.getNamespace())` — **the definition lands in the
+`createKJSMulti(ResourceLocation)` with no creation function calls
+`GTRegistrate.createIgnoringListenerErrors(id.getNamespace())` — **the definition lands in the
 namespace of the id you pass**, so `planetaryfactory:rocket_silo` registers under
 `planetaryfactory`, consistent with ADR-0015's one-namespace rule.
 
@@ -88,7 +88,7 @@ namespace of the id you pass**, so `planetaryfactory:rocket_silo` registers unde
   `MultiblockState multiblockState`, `List<IMultiPart> parts`, `BlockPos[] partPositions`,
   `boolean isFormed`, `onStructureFormed()` / `onStructureInvalid()`.
 - `WorkableMultiblockMachine extends MultiblockControllerMachine` (abstract) — adds
-  `public final RecipeLogic recipeLogic`, `simplebeltsRecipeLogic(Object...)`, and the working hooks
+  `public final RecipeLogic recipeLogic`, `createRecipeLogic(Object...)`, and the working hooks
   `beforeWorking(GTRecipe)`, `onWorking()`, `afterWorking()`, `onWaiting()`.
 
 `afterWorking()` on `WorkableMultiblockMachine` is the natural override point for a counter — it is
@@ -246,7 +246,7 @@ Two ways to register it, both verified reachable:
    pass `.machine(be => new RocketSilo(be))` to the `multiblock` builder. **The pattern, the tier,
    the recipe type and the shape info stay in a script — data, per ADR-0015 — and only the
    mechanism is compiled.** This is the recommended shape.
-2. **The mod registers it itself** with `GTRegistrate.simplebelts("planetaryfactory")` +
+2. **The mod registers it itself** with `GTRegistrate.create("planetaryfactory")` +
    `registerEventListeners(modEventBus)` + `.multiblock("rocket_silo", RocketSiloMachine::new)`.
    Works, but compiles the pattern, which ADR-0015 argues against.
 
@@ -281,7 +281,7 @@ Three lookup paths, best first.
 `SavedData` with:
 
 ```
-public static MultiblockWorldSavedData getOrSimplebelts(ServerLevel)
+public static MultiblockWorldSavedData getOrCreate(ServerLevel)
 public final Map<BlockPos, MultiblockState> mapping;                      // keyed by controllerPos
 public final Map<ChunkPos, Set<MultiblockState>> chunkPosMapping;
 public Set<MultiblockState> getControllersInChunk(ChunkPos)
@@ -296,7 +296,7 @@ only a launch pad still resolves to the silo. `MultiblockState` exposes `getCont
 The lookup from `startRocket` is therefore:
 
 ```java
-MultiblockWorldSavedData.getOrSimplebelts((ServerLevel) level())
+MultiblockWorldSavedData.getOrCreate((ServerLevel) level())
     .getControllersInChunk(new ChunkPos(blockPosition()))
     .stream()
     .filter(s -> s.cache.contains(padPos.asLong()))     // or: an AABB test on blockPosition()
@@ -338,7 +338,7 @@ line numbers are verified.)*
 
 - `IDisplayUIMachine` (`api/machine/feature/multiblock/IDisplayUIMachine.class`) declares
   `default void addDisplayText(List<Component>)`, `handleDisplayClick(String, ClickData)` and
-  `simplebeltsUI(Player)`. A first-party machine overrides `addDisplayText` and appends its own line.
+  `createUI(Player)`. A first-party machine overrides `addDisplayText` and appends its own line.
 - `MultiblockDisplayText.Builder` (`api/machine/multiblock/MultiblockDisplayText$Builder.class`)
   is the formatter GT's own machines use, with `addProgressLine(double, double, double)`,
   `addProgressLineOnlyPercent(double)`, `addParallelsLine(int)`, and the general
@@ -397,7 +397,7 @@ code, no fork edit — which is what makes #41's "both launch kinds pay the same
 | Parallels instead of a counter | possible; `getMaxByInput` clamps to inputs present, so it becomes "load 250/250/250 000 mB and run once" | verified mechanism, inferred consequence |
 | Owner under ADR-0015 | `planetaryfactory_core`, as a `WorkableMultiblockMachine` subclass; pattern and tuning stay in KubeJS | ADR-0015 + verified subclass reachability |
 | Mixin needed? | **no** — mod already `compileOnly`s the Oritech jar and hard-depends on `oritech [7.0.2,)`; LDLib must be added to the compile classpath from Oritech's jarjar | verified |
-| `startRocket` lookup | `MultiblockWorldSavedData.getOrSimplebelts(level).getControllersInChunk(new ChunkPos(blockPosition()))`, filtered by `MultiblockState.cache`; or stamp the silo pos on the entity at build time | verified index, inferred fit |
+| `startRocket` lookup | `MultiblockWorldSavedData.getOrCreate(level).getControllersInChunk(new ChunkPos(blockPosition()))`, filtered by `MultiblockState.cache`; or stamp the silo pos on the entity at build time | verified index, inferred fit |
 | Player-visible progress | `IDisplayUIMachine.addDisplayText` + `MultiblockDisplayText.Builder.addCustom`, or script `additionalDisplay(...)` | verified |
 | Break mid-count | de-form keeps a custom field (only `RecipeLogic` is reset); breaking the controller destroys it, with `IMachineLife.onMachineRemoved()` as the refund hook | verified |
 | Simulated cargo launch | same field via `MetaMachine.getMachine(level, siloPos)` — no entity, no fork edit | verified |

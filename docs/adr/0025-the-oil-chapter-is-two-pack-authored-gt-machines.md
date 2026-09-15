@@ -47,11 +47,11 @@ recipe with room to spare and costs nothing to register. It loses on legibility 
 is a generic do-everything block that reads as Oritech, and pointing the chapter at it would hand
 Oritech the Chemistry row ADR-0017 assigns to Mekanism, silently, by recipe placement.
 
-**A Simplebelts addon — Petrochem or Diesel Generators — was declined on the fluid vocabulary.** Both are
+**A Create addon — Petrochem or Diesel Generators — was declined on the fluid vocabulary.** Both are
 live on 1.21.1 NeoForge. Both ship their own crude, diesel, kerosene and LPG, and Almost Unified
 does not unify fluids. Adopting either means duplicate incompatible oils in EMI, or re-basing
 ADR-0009's heavy-oil oceans and the polymer chain onto a third party's fluid set. Both are also
-Simplebelts addons, and Simplebelts is hard-pinned at 6.0.10 by Electro's `required` mixins (ADR-0017).
+Create addons, and Create is hard-pinned at 6.0.10 by Electro's `required` mixins (ADR-0017).
 
 **A Mekanism addon for a custom multiblock was declined on cost**, and is moot: Oritech already
 exposes `MACHINE_REGISTRY` and `RECIPE_TYPE_REGISTRY` to KubeJS
@@ -208,7 +208,7 @@ makes the ladder work.
 
 | Rung | Pack | Now holds |
 | --- | --- | --- |
-| 2 | `logistic` | Simplebelts package logistics, **Oil Refinery, Chemical Plant, basic oil processing, solid fuel, sulfur, sulfuric acid, plastic** |
+| 2 | `logistic` | Create package logistics, **Oil Refinery, Chemical Plant, basic oil processing, solid fuel, sulfur, sulfuric acid, plastic** |
 | 3 | `chemical` | **Advanced oil processing, heavy and light cracking, lubricant** |
 | 4 | `production` | **Rocket fuel, rocket control units, rocket parts, the silo** |
 
@@ -266,8 +266,8 @@ grid-side** — or rung 3 silently gates the Converter.
   in Factorio and the beat is that it is one recipe. Splitting it across two blocks to fit a mod's
   IO limits is the mod dictating the design.
 - **Take the Large Chemical Reactor.** Rejected above on legibility and silent ownership drift.
-- **Adopt Simplebelts: Petrochem or Simplebelts: Diesel Generators.** Rejected above on fluid vocabulary and
-  the Simplebelts 6.0.10 pin.
+- **Adopt Create: Petrochem or Create: Diesel Generators.** Rejected above on fluid vocabulary and
+  the Create 6.0.10 pin.
 - **Keep sulfur on coal and ship advanced processing only.** Rejected: it keeps the oil chapter at
   rung 4 and preserves `#39` intact, but it makes sulfur non-Factorio at the exact point the pack is
   buying fidelity, and it keeps a renewable sulfur loop under a rung meant to gate chemistry.
@@ -286,7 +286,7 @@ grid-side** — or rung 3 silently gates the Converter.
   topic full of holes. ~~Mekanism keeps ore processing and power-at-scale.~~ *(Three later decisions
   void the compensations this sentence offered Mekanism, and it is kept struck rather than deleted
   because it is the reason the Chemistry row felt affordable at the time. The fluid logistics and
-  bulk fluid storage named here went to Simplebelts under #101's amendment to ADR-0017; **ADR-0032
+  bulk fluid storage named here went to Create under #101's amendment to ADR-0017; **ADR-0032
   deleted the ore-processing row entirely** — ore smelts 1:1, so there is no capability to keep;
   and **#104 struck the power-at-scale clause**, base Mekanism registering no generator block at
   all. Read ADR-0017's table, not this sentence.)*
@@ -299,7 +299,7 @@ grid-side** — or rung 3 silently gates the Converter.
   rewriting Terra as a flat, cave-free world. This is the most likely way the chapter breaks.
 - **Ore multiplication is out of scope and unresolved.** *Resolved by ADR-0032: all of it is cut, pack-wide.* Deleting the 5x dissolution tier follows
   from sulfuric acid moving to rung 2, and the fidelity argument that kills 5x kills 4x, 3x and
-  Simplebelts's rung-0 2x with it — rewriting ADR-0017's Ore processing row and emptying ADR-0018's rung
+  Create's rung-0 2x with it — rewriting ADR-0017's Ore processing row and emptying ADR-0018's rung
   1. Split to `#69`. **This ADR does not depend on the answer.**
 - **Two new blocks need models and a structure**, and neither is cut until it has been played. The
   pack's standing rule — adopt whole, cut as necessary, cutting waits for hands-on play — applies.

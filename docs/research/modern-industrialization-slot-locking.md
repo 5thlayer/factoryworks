@@ -156,7 +156,7 @@ enchantment module. None of that applies here.
 Adopting the mod rather than the idea costs 278 Java files, 227 generated recipes, 35 items and 5
 blocks, plus `tesseract_api` as a second required jar. Under ADR-0034's default-deny sweep every one
 of those recipes is removed and every machine kept needs a `recipe_survivors.js` row naming a type
-`data/pack/category-map.json` registers — the shape #172 already paid for with Simplebelts: Power Grid.
+`data/pack/category-map.json` registers — the shape #172 already paid for with Create: Power Grid.
 Against that, the pack's own carrier already exists and is already being reopened: ADR-0039's
 Engineer's Pick, whose Oritech wrench-ability strings (`core/mining/PickAbilities.java:41`) do not
 survive ADR-0056.

@@ -400,7 +400,7 @@ def main():
               {"replace": True, "values": ["minecraft:normal"]})
 
     write(os.path.join(MC, "world_preset", "normal.json"), {
-        "_comment": "The simplebelts-world screen builds the overworld from the preset, not from dimension/overworld.json, so Terra's palette has to be named here too.",
+        "_comment": "The create-world screen builds the overworld from the preset, not from dimension/overworld.json, so Terra's palette has to be named here too.",
         "dimensions": {
             "minecraft:overworld": build_dimension(),
             "minecraft:the_nether": {

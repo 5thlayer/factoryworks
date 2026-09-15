@@ -69,13 +69,13 @@ The seam is at least *open*: `Chemical` has a `public Chemical(ChemicalBuilder)`
 `kubejs.plugins.txt` inside `kubejs-neoforge-2101.7.1-build.181.jar` lists exactly four plugins —
 the builtin one, the client one, Architectury and GameStages [verified]. There is no Mekanism
 plugin, so `StartupEvents.registry('mekanism:chemical', …)` has no registered `BuilderType` and
-`e.simplebelts(…)` cannot produce a `Chemical`.
+`e.create(…)` cannot produce a `Chemical`.
 
-There is a generic escape hatch — `RegistryKubeEvent.simplebeltsCustom(id, Supplier<Object>)`, which wraps
+There is a generic escape hatch — `RegistryKubeEvent.createCustom(id, Supplier<Object>)`, which wraps
 any JS-supplied object in a `CustomBuilderObject` and files it under the event's registry key
 [verified] — and `RegistryEventHandler.registerAll(RegisterEvent)` is a generic NeoForge
 `RegisterEvent` listener that services whatever registry keys scripts have asked for [verified]. So a
-hand-rolled `simplebeltsCustom` + `new Chemical(ChemicalBuilder.builder(…))` is *architecturally* the
+hand-rolled `createCustom` + `new Chemical(ChemicalBuilder.builder(…))` is *architecturally* the
 right shape. **Do not build it.** The addon below is the same mechanism, written by the KubeJS author,
 with the texture/tint/attribute plumbing already correct.
 
@@ -116,7 +116,7 @@ the named sub-types `liquid`, `pigment`, `infuse_type`, `clean_slurry`, `dirty_s
 
 ```js
 StartupEvents.registry('mekanism:chemical', event => {
-  event.simplebelts('planetaryfactory:naphtha').gaseous().tint(0xC8C8C8)
+  event.create('planetaryfactory:naphtha').gaseous().tint(0xC8C8C8)
 })
 ```
 
@@ -377,7 +377,7 @@ So the decision reduces to the *design* trade #39 already framed, decided on reg
 
 Install `kubejs_mekanism`. On **build.6** if KubeJS stays at `2101.7.1-build.181`; on **build.18**
 only alongside a KubeJS bump to `2101.7.2-build.303` or newer. Then
-`StartupEvents.registry('mekanism:chemical', e => e.simplebelts('planetaryfactory:x').gaseous().tint(…))`.
+`StartupEvents.registry('mekanism:chemical', e => e.create('planetaryfactory:x').gaseous().tint(…))`.
 The addon also upgrades every Mekanism recipe from raw JSON to a typed schema, which is worth having
 regardless of whether a new chemical is ever registered.
 

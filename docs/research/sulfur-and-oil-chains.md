@@ -32,7 +32,7 @@ are wrong. See **Where the evidence contradicts #26**.
 | Mekanism | 10.7.19.85 | `mods/Mekanism-1.21.1-10.7.19.85.jar` |
 | Oritech CEu Modern | 7.0.2 | `mods/oritech-1.21.1-7.0.2.jar` |
 | GCyR (fork) | 0.2.4+gt7.0.2 | `mods/gcyr-1.21.1-0.2.4+gt7.0.2-src.jar`, source at `../gcyr-src` |
-| Simplebelts | 6.0.10 | `mods/simplebelts-1.21.1-6.0.10.jar` |
+| Create | 6.0.10 | `mods/create-1.21.1-6.0.10.jar` |
 | AlmostUnified | 1.4.2 | `mods/almostunified-neoforge-1.21.1-1.4.2.jar` |
 
 Loader is NeoForge 1.21.1. Oritech's recipes are generated in code, not shipped as JSON, so its
@@ -40,7 +40,7 @@ chains below are read out of the bytecode of
 `com/gregtechceu/oritech/data/recipe/serialized/chemistry/*.class` with `javap -c`; recipe *ids* are
 the string constants in those classes.
 
-There is **no Immersive Engineering, no Thermal, no PneumaticCraft and no Simplebelts: Dieselgenerators**
+There is **no Immersive Engineering, no Thermal, no PneumaticCraft and no Create: Dieselgenerators**
 in the pack. Only two mods have any petrochemistry: Oritech (all of it) and Mekanism (none of it).
 
 ---
@@ -129,7 +129,7 @@ That is genuinely Factorio-shaped — desulfurizing oil fractions yields sulfur.
 **by-product of a refinery you built for other reasons**, not the gate on having sulfur at all. The
 one-machine coal route beats it by a wide margin at rung 3.
 
-**Nothing else installed touches sulfur.** Simplebelts has no chemistry; GCyR adds fluids only via
+**Nothing else installed touches sulfur.** Create has no chemistry; GCyR adds fluids only via
 Oritech materials.
 
 ## 3. "One chemical + one circuit + one mechanical" in Mekanism
@@ -149,7 +149,7 @@ set (sulfur, advanced circuit ×3, engine unit ×2) maps cleanly except for the 
   (`metallurgic_infusing/alloy/infused.json`). One new machine, two tiers, no oil.
 - **Mechanical** — **Mekanism has no engine unit and no motor.** This slot has no clean Mekanism
   filler. The honest options are an Enriched/Reinforced Alloy (chemical-flavoured, not mechanical),
-  a Mekanism machine casing, or breaking #26's "items from the owning mod" rule and taking Simplebelts's
+  a Mekanism machine casing, or breaking #26's "items from the owning mod" rule and taking Create's
   Precision Mechanism. **Flagged for #27** — this is a real gap in the ownership table, not
   something to settle from recipe files.
 
@@ -257,7 +257,7 @@ all** — Terra's oil deposits are currently unasserted by the worldgen check.
   belongs on the map's existing "GT dust-supply audit" out-of-scope item. Routes (A) and (B) are
   unaffected, so nothing is blocked.
 - **AlmostUnified's `mod_priorities` omits `oritech`** (`config/almostunified/unification/materials.json`
-  lists minecraft, kubejs, simplebelts, mekanism). Unification still pools both sulfur dusts into the tag,
+  lists minecraft, kubejs, create, mekanism). Unification still pools both sulfur dusts into the tag,
   but every unified output resolves to the Mekanism item. Probably intended given #37; worth a
   conscious confirmation.
 - **`gcyr:rocket_fuel` is a wrong id** and appears in #25 and #31. It is `oritech:rocket_fuel`.

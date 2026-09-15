@@ -9,7 +9,7 @@ ADR-0017 adopted Mekanism as one of Terra's three tech mods and gave it seven ro
 table. Fifteen months of amendments have taken all seven back, one at a time and each for its own
 good reason, and nobody stopped to ask what was left. The answer, checked rather than assumed:
 **Mekanism owns no recipe shelf at all.** `data/pack/subgroup-owner.json` has zero rows with
-`owner: mekanism` — the counts are `simplebelts` 7, `gregtech` 1, `pack` 4, `split` 5, `undecided` 6,
+`owner: mekanism` — the counts are `create` 7, `gregtech` 1, `pack` 4, `split` 5, `undecided` 6,
 `not_emitted` 11 — and line 302 already says so in capitals, crediting `#104` for making it
 deliberate rather than incidental.
 
@@ -25,8 +25,8 @@ that together they leave nothing.
 | --- | --- |
 | Ore processing | Row deleted, ADR-0032. Purification, Injection, Washer and Crystallizer recipe-removed; ADR-0033 then cut the Dissolution Chamber, taking the chain to **zero blocks** |
 | Power generation | **Zero blocks** — `#104`. The pack installs base Mekanism, which registers no generator; every generator lives in MekanismGenerators, the jar ADR-0033 refused |
-| Fluid logistics, bulk storage (fluid) | Simplebelts's outright, `#101`. Mechanical Pipes and the Dynamic Tank recipe-removed |
-| Item logistics, bulk storage (item) | Simplebelts's. Logistical Transporters, Bins and QIO cut |
+| Fluid logistics, bulk storage (fluid) | Create's outright, `#101`. Mechanical Pipes and the Dynamic Tank recipe-removed |
+| Item logistics, bulk storage (item) | Create's. Logistical Transporters, Bins and QIO cut |
 | Refining, Chemistry | The pack's Oil Refinery and Chemical Plant, ADR-0025 — no Mekanism machine has the two-fluids-in, three-fluids-out shape |
 | Hand-crafting surface | Formulaic Assemblicator cut, `#34` |
 | Uranium fuel chain | The pack registers its own Centrifuge, ADR-0033 and `#135` |
@@ -68,7 +68,7 @@ The `chemical` pack's first slot was **Mekanism Sulfur Dust**. Sulfur is the Che
 (ADR-0025), so the slot takes the pack's sulfur and the role is unchanged — this is a source change,
 not a design change.
 
-The `production` pack was **Energized Smelter + a Mekanism upgrade + Simplebelts Train Track**. The
+The `production` pack was **Energized Smelter + a Mekanism upgrade + Create Train Track**. The
 smelter slot survives as the pack's Electric Furnace. **The upgrade slot has no successor and needs
 none here**, because `#136` moved `production` behind the launch: Space Age's `rocket-silo` costs
 1000 × (automation + logistic + chemical) and names no production pack anywhere. The slot lands on

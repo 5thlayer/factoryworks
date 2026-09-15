@@ -75,7 +75,7 @@ reactor emits superheated steam directly.
 
 What replaces the temperature axis is **two fluids**. Superheated steam is its own GT material in the
 pack's material JSON; the Reactor and — later — Ignus's acid neutralisation emit it, and **only the
-Steam Turbine accepts it**. Ordinary steam keeps the rung-0 chain, GT boiler → Simplebelts Steam Engine →
+Steam Turbine accepts it**. Ordinary steam keeps the rung-0 chain, GT boiler → Create Steam Engine →
 Electro Alternator, which the Turbine will not take.
 
 This is Factorio's own model with the continuum flattened to the two values the game actually uses:

@@ -20,7 +20,7 @@
     "WHAT IS NOT AN OVERRIDE, and must not be moved here:",
     "  - a `!`-routed category (`data/pack/category-map.json`) -- not routed, so nothing to override;",
     "  - a `native_mechanic` shelf (`data/pack/subgroup-owner.json`) -- the eighteen barrel recipes",
-    "    are IN scope and fully supported by Simplebelts's Spout and Item Drain, which is why they emit",
+    "    are IN scope and fully supported by Create's Spout and Item Drain, which is why they emit",
     "    nothing (#93). Recording them here would read as a cut feature;",
     "  - a `not_emitted` shelf, or an `undecided` item-map row -- both are recorded where the",
     "    decision lives, and both already report themselves in the converter's summary.",

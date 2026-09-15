@@ -11,7 +11,7 @@ recipes pointing at `oritech:` items that will not exist. This ADR supplies the 
 ## The rule
 
 **Modern Industrialization supplies the item layer for the ADR-0021 alphabet, and the pack registers
-only the gaps.** AlmostUnified stays, and its job is unchanged: it arbitrates between MI, Simplebelts and
+only the gaps.** AlmostUnified stays, and its job is unchanged: it arbitrates between MI, Create and
 vanilla, exactly as it arbitrated between Oritech, Simplebelts and vanilla.
 
 ## Why a mod owns this at all, again
@@ -43,7 +43,7 @@ with ADR-0036's Supply Area Pole.
 supply them and unification replaces rather than broadens (ADR-0053's second error, and the one that
 shipped). With Oritech gone the pair is MI-and-Simplebelts rather than Oritech-and-Simplebelts — one pair,
 not two — and the arbiter has one overlap to resolve instead of a three-way. That is a smaller
-problem, not an absent one: **AlmostUnified stays**, because Simplebelts still ships sheets and vanilla
+problem, not an absent one: **AlmostUnified stays**, because Create still ships sheets and vanilla
 still ships ingots.
 
 **ADR-0053's non-recipe trap does not go away.** Its central finding — that unification reaches

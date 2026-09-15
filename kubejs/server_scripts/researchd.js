@@ -79,7 +79,7 @@ fromFactorio('steel-axe', {
 // have -- `boiler` and `steam-engine` (item-map `undecided`/`not_emitted`), `inserter` and
 // `long-handed-inserter` (`undecided`, which is also why `logistic-science-pack` has no recipe of
 // its own: its two ingredients are a belt and an inserter), `pipe-to-ground` (`not_emitted`),
-// `pumpjack` (`undecided`, #105) and the twenty barrel fill/empty rows (`native_mechanic`, Simplebelts's
+// `pumpjack` (`undecided`, #105) and the twenty barrel fill/empty rows (`native_mechanic`, Create's
 // Spout and Item Drain, never recipes). A lock on an id nothing emits unlocks nothing, silently, so
 // those effects are dropped here and `tests/factorio/test_research_unlocks.py` holds the rest.
 //
@@ -99,7 +99,7 @@ fromFactorio('steel-axe', {
 // Pump, the one block water enters the factory through (ADR-0050, #213). `boiler`, `steam-engine`
 // and `pipe-to-ground` have no pack recipe, so this node grants two of its five.
 //
-// The held item is Simplebelts's sheet, for the same reason as `electronics` below: AlmostUnified unifies
+// The held item is Create's sheet, for the same reason as `electronics` below: AlmostUnified unifies
 // `c:plates/iron` and `create` outranks GregTech, so the furnace delivers `create:iron_sheet` however
 // `recipe/iron_plate.json` reads. Note that `StartingKit.java` grants `oritech:iron_plate` x8 directly,
 // which no unification touches -- those eight do NOT count toward this fifty, and the same goes for
@@ -194,7 +194,7 @@ fromFactorio('engine', {
 });
 
 // 50 automation + logistic. Three of the twenty-three effects: the barrel ITEM is emitted, while the
-// eighteen fill/empty rows are Simplebelts's Spout and Item Drain keying on `IFluidHandlerItem` and were
+// eighteen fill/empty rows are Create's Spout and Item Drain keying on `IFluidHandlerItem` and were
 // never recipes at all (`native_mechanic`, ADR-0034 exception class 1).
 fromFactorio('fluid-handling', {
   icon: 'create:fluid_tank',

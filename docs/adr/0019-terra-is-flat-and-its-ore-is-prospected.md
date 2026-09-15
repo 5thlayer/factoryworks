@@ -197,7 +197,7 @@ Two further corrections found while building:
   inlines them.
 - **Vanilla ore needs no suppression clause in the noise settings.** Terra's palette is seven
   pack-namespace biomes authored from scratch, so vanilla ore is absent by omission — the
-  `underground_ores` step is simply empty. The same fact closes Simplebelts's ore and every other
+  `underground_ores` step is simply empty. The same fact closes Create's ore and every other
   biome-modifier feature: the palette biomes are deliberately **not** members of
   `#minecraft:is_overworld`, which is the tag those modifiers target. *This bullet also named
   Mekanism, which generated from its own config rather than a biome modifier and was switched off in

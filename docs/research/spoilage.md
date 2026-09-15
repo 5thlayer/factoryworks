@@ -72,7 +72,7 @@ This was investigated directly, because it is the only thing that would rescue a
   Vanilla has ~19 across `AbstractContainerMenu`, `Inventory`, `HopperBlockEntity`, `SimpleContainer`
   and others. **Oritech alone reimplements the merge arithmetic in 24 classes**, including
   `ItemNetHandler`, `GTTransferUtils`, `NotifiableItemStackHandler`, `QuantumChestMachine$ItemCache`
-  and `ConveyorCover`. AE2 and Simplebelts have their own storage layers again.
+  and `ConveyorCover`. AE2 and Create have their own storage layers again.
 - **Two further hazards.** `ItemStack.hashItemAndComponents` backs `ItemStackLinkedSet` and
   `RecipeCache`; making differing-freshness stacks compare equal breaks the equals/hashCode contract
   they rely on. And `recipeessentials-1.21.1-4.7.jar` already `@Overwrite`s `DataComponentMap.equals`
@@ -201,7 +201,7 @@ Investigated because it determines whether spoilage can deadlock a factory.
 | --- | --- | --- |
 | **Oritech** | **Never** | `NotifiableItemStackHandler.extractItem` → `canCapOutput() ? … : ItemStack.EMPTY`; input handlers built with `IO.IN` |
 | **Mekanism** | **Never** externally | `InputInventorySlot` passes `ConstantPredicates.notExternal()` as its `canExtract` |
-| **Simplebelts** | Per-machine | Basin, Depot, Deployer yes; Millstone, Saw, Crushing Wheel, Mechanical Crafter no |
+| **Create** | Per-machine | Basin, Depot, Deployer yes; Millstone, Saw, Crushing Wheel, Mechanical Crafter no |
 | **Integrated Dynamics** | Always | plain `InvWrapper`, no override |
 
 For Oritech this is absolute: pipes, AE2, SFM, GT's own Conveyor Modules and **even an Item Voiding
@@ -257,7 +257,7 @@ The fork's diff is subtractive except for two additions:
 ```
 
 `spoiltime` counts **update passes, not ticks** — at the default `spoilRate` of 30 ticks per pass,
-Simplebelts's `bar_of_chocolate` at 800 works out to one Minecraft day, matching the day-based headings in
+Create's `bar_of_chocolate` at 800 works out to one Minecraft day, matching the day-based headings in
 the example scripts.
 
 ### Shelf lives
@@ -286,11 +286,11 @@ The 120× spread between bacteria and bioflux is what forces a frequent sweep, a
 | **Any per-stack freshness value** (component, NBT, timestamp) | Fragments stacks unboundedly, and averaging-on-merge is not implementable (§1). |
 | **A Mixin fork to intercept merging** | ~19 vanilla mutation sites, 24 more in Oritech alone, plus AE2 and Simplebelts; breaks the `hashItemAndComponents` contract; collides with `recipeessentials`. Would work only sometimes. |
 | **A registered `DataComponentType` from KubeJS** | KubeJS 2101.7.1 cannot register component types. Moot now — we store nothing. |
-| **Lazy resolution on access** | The earlier recommendation. There is no machine-boundary hook that generalises beyond GT multiblocks, so a lazily-resolved item would enter a Simplebelts or Mekanism recipe unresolved. |
+| **Lazy resolution on access** | The earlier recommendation. There is no machine-boundary hook that generalises beyond GT multiblocks, so a lazily-resolved item would enter a Create or Mekanism recipe unresolved. |
 | **A single probabilistic stage** | Exponential lifetime: unbounded tail, ~63% of items dead before nominal. Four stages give Erlang-4 and halve the spread. |
 | **Freshness inheritance through crafting** | Would need separate implementation in each of four mods' recipe systems; uneven enforcement would bias which processing path players choose. |
 | **Duration modulation on stale input** | `recipeModifier` / `beforeWorking` exist only on GT multiblocks. Same cross-mod objection. |
-| **Trash slots à la Factorio** | We can add them to machines we author, not to Mekanism's or Simplebelts's. Uniformity fails. Clogging is a documented hazard instead (§4). |
+| **Trash slots à la Factorio** | We can add them to machines we author, not to Mekanism's or Create's. Uniformity fails. Clogging is a documented hazard instead (§4). |
 | **A GT `RecipeCondition`** | No condition in the hierarchy receives the input stack. |
 
 ## Consequence for the pack
@@ -300,7 +300,7 @@ The 120× spread between bacteria and bioflux is what forces a frequent sweep, a
   MIT-licensed with a NeoForge 1.21.1 build. The fork is tracked separately.
 - **Every spoilable material is four registered items plus one tag.** The Sapros spec owes the
   material list, the four state names per material, and the decay target of the final state.
-- **Recipes consuming a spoilable reference the tag**, so they work identically in Simplebelts, Mekanism,
+- **Recipes consuming a spoilable reference the tag**, so they work identically in Create, Mekanism,
   Oritech and Integrated Dynamics with no integration code.
 - **Spoilable recipes are gated to the Biochamber**, a GT multiblock this pack authors.
 - **Clogging is a documented hazard.** A spoiled stack in a machine input jams it, recoverable only

@@ -173,7 +173,7 @@ voltage ladder and logistics are not adopted.
 
 **`#87`'s file-path invariant disappears.** Oritech re-registers every loaded `GTRecipe` —
 `RecipeManagerLateMixin` strips everything before the first `/` of the id and `GTRecipeBuilder.save`
-puts the recipe type's path back on — which is why `grid/`, `simplebelts/` and `pack/` all sit *inside*
+puts the recipe type's path back on — which is why `grid/`, `create/` and `pack/` all sit *inside*
 `assembling/`. That is Oritech behaviour. With it gone the nesting is unnecessary and `FLAT_TYPES`
 in `tests/factorio/test_recipe_duplication.py` becomes every type. The invariant must not be deleted
 until the mod is actually gone from the instance.

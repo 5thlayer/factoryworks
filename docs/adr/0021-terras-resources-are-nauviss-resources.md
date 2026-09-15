@@ -5,7 +5,7 @@ status: accepted
 # Terra's resources are Nauvis's resources
 
 Terra is the Nauvis analogue. Its ore has never been Nauvis's ore: twenty-three Oritech veins
-running from iron down to olivine, Mekanism's six worldgen toggles, Simplebelts's two stripe features and
+running from iron down to olivine, Mekanism's six worldgen toggles, Create's two stripe features and
 — because Terra had no noise settings of its own until ADR-0019 — the entire vanilla ore set on top.
 That is Oritech's spread, Mekanism's spread, Simplebelts's spread and Minecraft's spread stacked in one
 world, and a Factorio-literate player reads none of it as meaningful.
@@ -65,7 +65,7 @@ So the cut is applied to all four:
   is charted and depletable like the rest.~~ *Amended by ADR-0035: Mekanism left the pack, so its six
   toggles have nothing to switch off. The file, and the block in `scripts/build-terra-ore.py` that
   rewrote it, are both gone; the cut is applied to three ore systems, not four.*
-- **Simplebelts worldgen** — zinc and copper stripe features off.
+- **Create worldgen** — zinc and copper stripe features off.
 - **Vanilla ore features** — suppressed in Terra's `noise_settings`, which ADR-0019 introduced and
   which now carries this as a requirement it did not previously have.
 
@@ -119,7 +119,7 @@ So the cut is applied to all four:
 - **Uranium is not a starting patch**, on the same fidelity grounds: Factorio never places it in the
   starting area.
 - **No zinc exception.** It was considered explicitly — zinc surviving as a *processing yield* from
-  copper rather than as a patch, which would have saved every Simplebelts brass recipe at a stroke — and
+  copper rather than as a patch, which would have saved every Create brass recipe at a stroke — and
   refused. **The line holds at patches and items, not at extraction alone.** An extraction-only line
   is the tempting version and it is precisely where the four-ore set becomes decoration: a player
   who can still hold zinc has not been told anything about where they are.
@@ -132,7 +132,7 @@ So the cut is applied to all four:
 - **ADR-0020's starting patches become iron, copper and coal** — were iron, copper, zinc, tin, coal.
   Uranium is excluded deliberately. ADR-0020 invited this by calling its list "a starting
   configuration, not an invariant"; what changes here is not playtest tuning but the pool the set is
-  drawn from. The bootstrap targets it named — brass for Simplebelts, bronze for steam — are what
+  drawn from. The bootstrap targets it named — brass for Create, bronze for steam — are what
   breaks, and re-filling them is the fallout below, not a reason to keep the materials.
 - **ADR-0019 gains a requirement**: Terra's noise settings must also suppress vanilla ore features,
   not only replace terrain and carvers.

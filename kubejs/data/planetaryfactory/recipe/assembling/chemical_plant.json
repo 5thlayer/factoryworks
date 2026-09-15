@@ -29,7 +29,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "simplebelts:fluid_pipe"
+            "item": "create:fluid_pipe"
           },
           "count": 5
         }

@@ -25,7 +25,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "simplebelts:fluid_tank"
+            "item": "create:fluid_tank"
           },
           "count": 1
         }

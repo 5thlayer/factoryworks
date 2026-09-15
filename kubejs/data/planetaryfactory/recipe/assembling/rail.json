@@ -33,7 +33,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "simplebelts:track"
+            "item": "create:track"
           },
           "count": 2
         }

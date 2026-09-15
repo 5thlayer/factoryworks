@@ -4,7 +4,7 @@ status: accepted
 
 # A Platform is a GCyR space station, and it never moves
 
-GCyR ships `SpaceStationPackagerMachine`, `PacketSimplebeltsSpaceStation`, per-body orbit dimensions and
+GCyR ships `SpaceStationPackagerMachine`, `PacketCreateSpaceStation`, per-body orbit dimensions and
 a world border sized by `spaceStationMaxSize`. The design's Platform is the same object: a
 player-expanded orbital factory. We use GCyR's, rather than pasting our own structure into a void
 dimension via KubeJS as an earlier draft proposed. The Orbital Starter Kit is GCyR's station

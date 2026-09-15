@@ -88,7 +88,7 @@ one that locks the craft *and* hides in all three viewers off one signal. From i
 - Server-side enforcement is by **mixin on the crafting stations themselves**:
   `ACraftingMenu`, `ASmithingMenu`, `AStonecutterMenu`, `AAbstractFurnaceBlockEntity`, `ACampfireBlock`.
   That is a real lock, not a hide — but note the list: **vanilla stations only.** No GT machine, no
-  Simplebelts, no Mekanism.
+  Create, no Mekanism.
 - Restriction kinds go well past recipes: `AItemRestriction`, `AItemTagRestriction`,
   `AItemModRestriction`, `ARecipeRestriction`, `ARecipeModRestriction` (lock every recipe of a mod
   namespace), `ADimensionRestriction`, `AOreRestriction`, `AMobRestriction`, `ALootRestriction`,
@@ -144,7 +144,7 @@ cannot be a maintained 1.21.1 jar. **This condition is unreachable for us.**
 ### `ftb_quest` — works today, keys off FTB Quests team data
 
 `FTBQuestCondition` **[jar]** resolves `machine.getOwner()`; for an `FTBOwner` it takes
-`getTeam()` and asks `FTBQuestsAPI.api().getQuestFile(true).getOrSimplebeltsTeamData(...)` whether the
+`getTeam()` and asks `FTBQuestsAPI.api().getQuestFile(true).getOrCreateTeamData(...)` whether the
 quest object (looked up by numeric quest id, cached in a `Long2ObjectMap`) is complete. Reverse mode
 exists (`isReverse` → "Requires %s **not** completed").
 
@@ -189,7 +189,7 @@ concept in this space we would definitely be reinventing if we wrote our own.
 
 `RecipeCondition.testCondition(GTRecipe, RecipeLogic)` takes a **`RecipeLogic`** — a GT machine's
 recipe-running trait. **GT recipe conditions gate GT machine recipes and nothing else.** They do not
-touch the vanilla crafting grid, and they do not touch Simplebelts, Mekanism, AE2 or Integrated Crafting
+touch the vanilla crafting grid, and they do not touch Create, Mekanism, AE2 or Integrated Crafting
 recipes. Given the pack's "processing spans four tech mods" stance, a GT-conditions-only gate would
 gate one quarter of the pack.
 

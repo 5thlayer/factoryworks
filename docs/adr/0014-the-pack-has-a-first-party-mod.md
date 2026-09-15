@@ -67,7 +67,7 @@ that way.
 
 Mod ID **`planetaryfactory_core`**. Registry namespace **`planetaryfactory`**.
 
-These are deliberately different, and NeoForge allows it — `DeferredRegister.simplebelts(Registries.BLOCK,
+These are deliberately different, and NeoForge allows it — `DeferredRegister.create(Registries.BLOCK,
 "planetaryfactory")` is legal from a mod whose ID is something else.
 
 - The **ID** avoids colliding with the modpack's own name once published. `_core` is the conventional

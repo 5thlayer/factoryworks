@@ -23,7 +23,7 @@ The second error is the one that shipped a bug.
 Every word there matters, and none of it is visible from any file in this repo:
 
 - **Replaces.** `"item": "oritech:iron_plate"` in an emitted recipe becomes `"item":
-  "simplebelts:iron_sheet"` at load. The GT plate is not *also* accepted — it is accepted **nowhere**.
+  "create:iron_sheet"` at load. The GT plate is not *also* accepted — it is accepted **nowhere**.
   The losing item becomes an orphan that no recipe in the pack will take.
 - **Only inside recipes.** The jar ships a `OritechModernRecipeUnifier` alongside its Simplebelts one,
   so the pack's `assembling/` and `chemical_plant/` GT recipes are rewritten like any other. Nothing
@@ -40,10 +40,10 @@ x8 directly, which no unification touches. Confirmed in a running game: the kit 
 sixteen items are inert — the opening hold, which is freeplay's debris chest read straight
 across, could be spent on nothing. Rung 0 was broken from the first minute and looked perfect.
 `#206`'s two research gates hit the same wall from the other side and were worked around by
-re-pointing them at `simplebelts:*_sheet`, a workaround this ADR removes.
+re-pointing them at `create:*_sheet`, a workaround this ADR removes.
 
 **Steel was the tell.** `oritech:steel_plate` behaved correctly throughout, for the single reason that
-Simplebelts ships no steel sheet, so there was nothing to lose to. The pack therefore held two classes of
+Create ships no steel sheet, so there was nothing to lose to. The pack therefore held two classes of
 plate with opposite liveness and nothing marking which was which.
 
 ## The rule
@@ -76,10 +76,10 @@ both were wrong. The check named below is what keeps that at two-and-correct rat
 
 ## Why Oritech and not Simplebelts
 
-Simplebelts winning was the live alternative, and it is the status quo, so it needed beating rather than
+Create winning was the live alternative, and it is the status quo, so it needed beating rather than
 merely differing from.
 
-- **Steel decides it.** Simplebelts ships no steel sheet and never will. A Simplebelts win guarantees the pack
+- **Steel decides it.** Create ships no steel sheet and never will. A Create win guarantees the pack
   ships two different nouns for one concept permanently — copper and iron are sheets, steel is a
   plate — and that split is visible to the player in a way the current one is not.
 - **It makes the repo's own text true.** `recipe/copper_plate.json` says `oritech:copper_plate` and
@@ -88,13 +88,13 @@ merely differing from.
   as written and are rewritten at load — which is exactly the invisibility this ADR exists to end,
   preserved as policy.
 - **It repairs the kit by doing nothing to the kit.** The sixteen items become live untouched.
-- **GT plates are material items** with a registry behind them; Simplebelts's sheets are three hand-made
+- **GT plates are material items** with a registry behind them; Create's sheets are three hand-made
   items. `oritech:steel_plate` exists at all only because GT generates it for the Steel material.
 
 ## Consequences
 
-- **`simplebelts:*_sheet` become unobtainable**, which is correct and already true in substance:
-  ADR-0034's sweep removes Simplebelts's own recipes, and `simplebelts-substitutions.json` re-authors the
+- **`create:*_sheet` become unobtainable**, which is correct and already true in substance:
+  ADR-0034's sweep removes Create's own recipes, and `create-substitutions.json` re-authors the
   kinetic line onto the pack's Assembling Machine.
 - **`#206`'s two `has:` ids revert** to `oritech:copper_plate` and `oritech:iron_plate`, and the long
   comments arguing for the sheets go with them.
@@ -105,8 +105,8 @@ merely differing from.
   `ignored_tags` entry, so that a future recipe naming zinc fails loudly instead of inheriting a
   silent exemption.
 - **Two committed rationales were arguing from the false premise** and are corrected with this ADR:
-  `simplebelts-substitutions.json` ("AlmostUnified makes it interchangeable with `simplebelts:iron_sheet`
-  anyway", and the block at its head reading "the pack's smelted iron plate IS Simplebelts's iron sheet
+  `create-substitutions.json` ("AlmostUnified makes it interchangeable with `create:iron_sheet`
+  anyway", and the block at its head reading "the pack's smelted iron plate IS Create's iron sheet
   in the running game") and the same reading in `grid-substitutions.json`. Both files' *targets* were
   always right and are now more right; only their reasoning was wrong. This is why `#172` is
   superseded: its conclusion stands, but a reader of it learns something untrue about how

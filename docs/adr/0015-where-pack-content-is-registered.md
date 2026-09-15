@@ -87,10 +87,10 @@ Recorded because it was assumed wrong once in each direction, and the assumption
   - `rightClickOpensInventory` **writes `BlockBuilder.rightClick`**, so such a block cannot also
     carry a custom right-click callback.
 
-## Simplebelts integration comes free if the tags are right
+## Create integration comes free if the tags are right
 
 `TreeCutter` finds a tree by `isLog(BlockState)` and `isLeaf(BlockState)`, both tag-driven, and the
-Deployer places block items through the normal use-on path. So a Simplebelts tree farm works on the
+Deployer places block items through the normal use-on path. So a Create tree farm works on the
 pack's trees with no integration code, provided the blocks carry `minecraft:logs` and
 `minecraft:leaves`. Both the mod and `BlockBuilder.tagBlock()` can supply those.
 

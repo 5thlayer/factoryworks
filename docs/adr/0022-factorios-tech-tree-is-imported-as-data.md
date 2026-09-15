@@ -179,7 +179,7 @@ maceration.
 - **Researchd has a GUI research editor, and it writes datapacks.** `EditorDatapackWriter` emits
   `pack.mcmeta` and `data/<namespace>/researchd/research/*.json`, editing dependencies, effects,
   methods and icons. **It writes into the world save, not into pack content**:
-  `SimplebeltsDatapackPayload` fixes the root to
+  `CreateDatapackPayload` fixes the root to
   `MinecraftServer.getWorldPath(LevelResource.DATAPACK_DIR)`, and `saves` is gitignored — so
   anything edited in the GUI is outside version control until a copy step brings it back, and a
   shipped copy of the same ids cannot be loaded alongside the world-local one. It is not a layout tool: `DisplayImpl` holds only `name`

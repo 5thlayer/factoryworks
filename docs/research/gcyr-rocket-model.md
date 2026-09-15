@@ -211,7 +211,7 @@ ADR-0001's note about the deleted class) — registers exactly two block builder
 | `rocket_motor` | `integration/kjs/builders/RocketMotorBlockBuilder.java` | `tier`, `maxCarryWeight`, `motorCount`, `typeId` |
 | `fuel_tank` | `integration/kjs/builders/FuelTankBlockBuilder.java` | (tank properties — same shape) |
 
-`RocketMotorBlockBuilder.simplebeltsObject()` (`:28-33`) builds a `SimpleRocketMotorType` from those
+`RocketMotorBlockBuilder.createObject()` (`:28-33`) builds a `SimpleRocketMotorType` from those
 four fields, constructs a `RocketMotorBlock`, and registers it into
 `GCYRBlocks.ALL_ROCKET_MOTORS` — so a script-declared motor is a first-class `IRocketPart` and is
 counted by `addBlock` exactly like the built-in ones.
@@ -242,7 +242,7 @@ Refuel it, put a new ID chip in, press launch again. Fuel is persisted on the en
 question is whether we want to *prevent* it.
 
 **Skipped entirely: not without new code, but the surface is small.** The scanner is the only
-producer of `RocketEntity` (`GCYREntities.ROCKET.simplebelts` at `RocketScannerMachine.java:156` is the
+producer of `RocketEntity` (`GCYREntities.ROCKET.create` at `RocketScannerMachine.java:156` is the
 sole call site). Two shapes are available if we want a rocket without a player-built silo:
 
 - have something else populate a `RocketEntity` via the public `addBlock(BlockPos, BlockState,

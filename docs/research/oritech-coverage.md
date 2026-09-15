@@ -8,7 +8,7 @@ they start with `data/`. Oritech is **CC0** (`LICENSE.md`), which matters for an
 "subclass it" or "fork it".
 
 **This is a survey, not a decision.** No ADR is proposed here. It answers one question: if the pack's
-mechanic-bearing palette were reduced to Simplebelts, Oritech and `planetaryfactory_core`, which rows of
+mechanic-bearing palette were reduced to Create, Oritech and `planetaryfactory_core`, which rows of
 `docs/factorio-mechanics.md` could Oritech carry, and at what cost.
 
 **Adopted by ADR-0060**, with one change: Simplebelts's logistics row went to a SimpleBelts fork and
@@ -19,7 +19,7 @@ still at 1.2.12, and re-reading them at 2.0 is one of that ADR's open items.
 
 | role | mod |
 | --- | --- |
-| logistics | Simplebelts |
+| logistics | Create |
 | machines | Oritech |
 | everything Oritech does not cover and cannot be customised to | `planetaryfactory_core` |
 
@@ -173,7 +173,7 @@ machines do not: `SteamEngineEntity:74`, `FoundryBlockEntity:20`, `CentrifugeBlo
 those cannot have a type of its own. Vanilla's `BlockEntity` constructor calls `validateBlockState`, and
 a save reloads through the type's factory. Reusing Oritech's type would therefore bring the block back
 as Oritech's class. **`DeepDrillEntity:82` is the exception.** It has a second constructor that takes a
-type, with the comment "to allow addons to simplebelts custom deep drill entities with special logic".
+type, with the comment "to allow addons to create custom deep drill entities with special logic".
 
 So the route for a fixed-type machine is to **extend its abstract base and copy the concrete logic**.
 CC0 makes copying free; the concrete classes run 70–300 lines. That changes the cost of a Java cell,
@@ -202,7 +202,7 @@ Ledger verdicts are today's. **Level** is the cheapest that closes every gap in 
 | **Mining drills** — electric | `adapted` | Deep Drill (`DeepDrillEntity`); Destroyer frame + Quarry Addon | **Java**, on `DeepDrillEntity` | The Destroyer frame is out: it is a gantry that breaks blocks (fact 7). The Deep Drill fits nearly as shipped. It has a 3x3 footprint, which is Factorio's `tile_width`/`tile_height` 3 (`data/factorio/machine.json`). It is the one concrete class with a type-taking constructor (fact 9). Every method that needs changing is public. `loadOreBlocks` scans a 3x3; the subclass makes it a 5x5 (`resource_searching_radius` 2.49) and stores **positions**, where `targetedOre` stores `Block`s. `serverTick` changes to draw one unit through the core's amount every `mining_time / 0.5` s, at 90 kW. `getMaxRfInput()` returns 0 because the Enderic Laser is its only power source (`LaserArmBlockEntity:829`); the subclass returns a real rate and exposes energy on its cores through `getEnergyStorageForMultiblock` (null today). It is built from 26 machine cores, so single placement is fact 5. It is 3 blocks tall. The model is free (fact 9). This supersedes the core rig for the electric tier; the burner tier stays core. |
 | **Mining drills** — pumpjack | `adapted` | Pump on oil springs (`OilSpringFeature`) | **Native** — finite oil, a departure ruled acceptable | **Ruling (2026-09-11):** finite crude is an accepted departure. You need several oil fields in Factorio anyway, and the infinite trickle is never enough on its own, so oil is finite like ore and the decaying-yield well goes. On those terms the pair is Native. *Placement* is two datapack files: `worldgen/configured_feature/oil_spring.json` (`number` 7, `blockId` `oritech:still_oil_block`) and `neoforge/biome_modifier/oil_spring{,_desert}.json`, retargeted at the pack's biomes. The spring is a sphere of oil source blocks with a column to the surface, and a fountain above ground when `easyFindFeatures` is on, so it is a visible well. Pool size is `max(number + variation, 13)` with variation in `[-number/2, number]` (`OilSpringFeature.placeStructure`). At the default 7, every spring is 13–14, and only values above about 9 change anything. *Extraction* is the Pump. It flood-fills the pool (up to `MAX_SEARCH_COUNT` 100,000) and drains one source block per bucket (`PumpBlockEntity:112-120`). **What stays non-Factorio, and is not config:** the rate is one bucket every `PUMP_RATE` 5 ticks at `ENERGY_USAGE` 512 FE per bucket (`:42-43`, `private static final`), a 16-bucket tank, and a 1x1 block where Factorio's pumpjack is 3x3. So Factorio's 10/s at 90 kW is not reachable without Java, and under the ruling that is part of the departure. The fluid becomes crude by retargeting the item layer (out of scope). Terra's Oritech crude deposit and the Fluid Drilling Rig leave with Oritech either way (`researchd.js:215`). If adopted, the ledger's *Infinite late-game resource (oil-style yield decay)* sub-rule becomes `excluded`. The pump reaching the pool through the column is **verified in a world** (human, 2026-09-11). |
 | **Water as a resource** | `planned` | Pump | **Shape-only** (ADR-0050) | Water is treated as infinite, which fits, but `ENERGY_USAGE = 512` per bucket and `PUMP_RATE = 5` ticks are hard-coded constants (`:42-43`), against the Offshore Pump's 1,200 mB/s at zero power. Core keeps the Offshore Pump. |
-| **Fluid handling** | `planned` | fluid pipes (`fluidPipeInternalStorageBuckets`), Portable Tank | see the boundary section | Simplebelts owns it under the hypothesis. |
+| **Fluid handling** | `planned` | fluid pipes (`fluidPipeInternalStorageBuckets`), Portable Tank | see the boundary section | Create owns it under the hypothesis. |
 | **Oil processing** — basic | `planned` | Refinery + Chamber modules; `oil`, `heavy_oil`, `naphtha`, `diesel`, `sulfuric_acid` fluids | **Java** | Schema fits (one fluid in, a list out), but the Refinery is a machine-core multiblock whose output count grows with stacked Chamber modules. It needs ADR-0059's single-placement 5x5 (fact 5) and a fixed three-output shape. Borrowing Oritech's fluids is item-layer work, which is out of scope. |
 | **Oil processing** — advanced, cracking, `sulfur` | `planned` | — | **Java** | Two fluid inputs (fact 2): a two-tank subclass *and* a new recipe type. |
 | **Smelting** — burner tiers | `planned` | — | **Core** | The existing `FurnaceTier` blocks stay. |
@@ -211,9 +211,9 @@ Ledger verdicts are today's. **Level** is the cheapest that closes every gap in 
 | **Chemical plant** | — (in Oil processing) | Refinery, Centrifuge (fluid-capable) | **Java** | 3 of the 11 `chemistry` recipes need two fluids (fact 2). |
 | **Centrifuge** | — (in Nuclear fission) | Centrifuge | **Java** | No result probability in the schema; `uranium-processing` needs 0.993/0.007. Override `craftItem`. *See the corpus note at the end.* |
 | **Handcrafting and the crafting queue** | `planned` | — | **not Oritech → core** | The Personal Assembler. |
-| **Transport belts**, **Inserters** | `adapted` | item pipes, Pipe Booster, Inventory Proxy Addon | **not needed** | Simplebelts owns them. Oritech's pipes are unadmitted. |
+| **Transport belts**, **Inserters** | `adapted` | item pipes, Pipe Booster, Inventory Proxy Addon | **not needed** | Create owns them. Oritech's pipes are unadmitted. |
 | **Construction robots and blueprints** | `adapted` | — | **not Oritech** | Building Gadgets 2 stays. |
-| **Trains** | `planned` | — | **not Oritech** | Simplebelts. |
+| **Trains** | `planned` | — | **not Oritech** | Create. |
 | **Circuit network** | `adapted` | Control Unit Addon (`RedstoneAddonBlockEntity`): enable/disable plus comparator output; the reactor's Redstone Port | **Native** for Oritech machines | Fits ADR-0030's redstone shape. Core machines get it by subclassing (`RedstoneControllable`). |
 | **Electric network** — supply area | `adapted` | energy pipes, Framed Superconductor | **Shape-only** (ADR-0036) | Cables are the distribution mechanism ADR-0036 and ADR-0057 refused. The Supply Area Pole stays core and speaks `EnergyApi` (public package). |
 | **Electric network** — wire reach | `adapted` | Energy Transmission Pole (`PowerPoleEntity`) | **Java** | Point-to-point, `poleConfig.minRange = 50` / `maxRange = 1000` (configurable), 1M RF/t, one output face — but a machine-core multiblock and a zipline (fact 5; ADR-0049). The reach is Native; the gesture and zipline are not. |
@@ -287,14 +287,14 @@ Superheated Steam through a port instead keeps ADR-0033 *and* regains the bonus.
 ## The logistics and energy boundary
 
 Q7 of the grilling that commissioned this survey was left open on purpose. Factorio's inserters draw
-from the electric network. Simplebelts's belts and arms run on rotation (SU). Oritech runs on FE. Three
+from the electric network. Create's belts and arms run on rotation (SU). Oritech runs on FE. Three
 options, with costs:
 
 | option | what it means | Oritech cost | core cost |
 | --- | --- | --- | --- |
-| **(a) FE→SU bridge** | Simplebelts keeps belts, arms, trains and fluid pipes. One electric network (Oritech FE). A core block turns FE into rotation, so an inserter is electric in effect. | none | **Java**: one generating kinetic block on Simplebelts's API, drawing through `EnergyApi`. Replaces the role Power Grid's generator played in ADR-0048's chain. |
-| **(b) Two currencies** | As (a), but rotation comes from Simplebelts's own sources, such as water wheels and windmills. Inserters are not electric. | none | none, but a Factorio fidelity loss with an `adapted` notice. If the Steam Engine emits FE (see its row), it is no longer a rotation source, and (b) rests on Simplebelts's generators alone. |
-| **(c) Fluids to Oritech** | Oritech takes pipes, tanks and pumping; Simplebelts keeps items and trains. | Native (pipe capacity is config) | Re-plumbing the Offshore Pump and Boiler. Both pipe families speak NeoForge's fluid capability, so this choice is **independent** of (a) versus (b). |
+| **(a) FE→SU bridge** | Create keeps belts, arms, trains and fluid pipes. One electric network (Oritech FE). A core block turns FE into rotation, so an inserter is electric in effect. | none | **Java**: one generating kinetic block on Create's API, drawing through `EnergyApi`. Replaces the role Power Grid's generator played in ADR-0048's chain. |
+| **(b) Two currencies** | As (a), but rotation comes from Create's own sources, such as water wheels and windmills. Inserters are not electric. | none | none, but a Factorio fidelity loss with an `adapted` notice. If the Steam Engine emits FE (see its row), it is no longer a rotation source, and (b) rests on Create's generators alone. |
+| **(c) Fluids to Oritech** | Oritech takes pipes, tanks and pumping; Create keeps items and trains. | Native (pipe capacity is config) | Re-plumbing the Offshore Pump and Boiler. Both pipe families speak NeoForge's fluid capability, so this choice is **independent** of (a) versus (b). |
 
 The joule-per-FE constant (fact 1) is a prerequisite of all three.
 
