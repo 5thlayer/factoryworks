@@ -138,16 +138,18 @@ public final class PFBlockEntities {
     /**
      * The pole's FE face, exposed on every segment of every tier.
      *
-     * <p>This is the entire V-to-machine boundary. Power Grid's own bridge block feeds it, no mod
-     * internals are touched on either side, and there is no separate placeable converter -- which
-     * is ADR-0036's arrangement, and the only interop path either grid mod's author supports.
+     * <p>This is the entire grid-to-machine boundary, and ADR-0036's arrangement: no mod internals
+     * are touched on either side and there is no separate placeable converter. The connector that
+     * feeds it was Power Grid's bridge block, which left the pack with ADR-0060; what supplies the
+     * pole now is #266's to settle. The face is a plain FE capability either way, which is the
+     * point of putting the boundary here rather than inside a mod.
      *
      * <p>Registered against the <em>block</em> rather than the block entity type, because a pole is
-     * a column and a connector may be attached to any segment of it. Power Grid's
-     * {@code BridgeElectricBehaviourImpl.makeFEHandler} does a plain
-     * {@code level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(facing), ...)} and
-     * never asks whether the target has a block entity, so an extension answering the lookup is
-     * ordinary rather than a trick.
+     * a column and a connector may be attached to any segment of it. That is not a courtesy to one
+     * mod's lookup: a caller doing the ordinary
+     * {@code level.getCapability(Capabilities.Energy.BLOCK, pos.relative(facing), ...)} never asks
+     * whether the target has a block entity, so every segment has to answer for the base or the
+     * connection silently is not one.
      *
      * <p>What comes back is the <em>base's own</em> {@link
      * com.planetaryfactory.core.energy.PoleEnergyStorage}. Nothing is transported up or down the

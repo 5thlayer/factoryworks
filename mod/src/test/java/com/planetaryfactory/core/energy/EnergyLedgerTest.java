@@ -6,9 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * The pole's books, which are FE in and FE out (ADR-0060: with GregTech, Power Grid and Create
- * gone there is no EU anywhere in the pack, and FE is its only energy currency). The ledger no
- * longer converts anything; what is left of its job is to respect a capacity and to not invent
- * energy while doing it.
+ * gone, FE is the pack's energy currency and there is nothing left for the pole to convert to).
+ * The ledger no longer converts anything; what is left of its job is to respect a capacity and to
+ * not invent energy while doing it. EU survives elsewhere in the mod -- see {@link EnergyLedger}'s
+ * note on the furnace ladder, which #266 re-derives.
  *
  * <p>The conversion this class used to hold -- GregTech's {@code feToEuRatio} of 4, and the retained
  * remainder that kept a trickle from being rounded away -- went with the EU side it existed for.

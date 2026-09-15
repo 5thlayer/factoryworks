@@ -3,10 +3,17 @@ package com.planetaryfactory.core.energy;
 /**
  * The pole's books.
  *
- * <p>FE in, FE out. ADR-0060 leaves the pack with no EU anywhere -- GregTech, Power Grid and
- * Create all go, and FE becomes its only energy currency -- so the FE-to-EU conversion this
- * class used to be named for has no second currency left to meet. What remains is a buffer that
- * respects a capacity and does not invent energy.
+ * <p>FE in, FE out. ADR-0060 takes GregTech, Power Grid and Create out and leaves FE as the
+ * pack's energy currency, so the FE-to-EU conversion this class used to be named for has no
+ * second currency left to meet at this boundary. What remains is a buffer that respects a
+ * capacity and does not invent energy.
+ *
+ * <p><b>EU has not left the mod, only this class.</b> {@link
+ * com.planetaryfactory.core.smelting.FurnaceTier} still states the Electric tier's draw in EU and
+ * {@code FurnaceScreen} still renders it, because ADR-0029 anchored that ladder on GregTech's
+ * voltage scale and re-deriving it is #266's job, not this port's. Read literally, the two files
+ * disagree; the honest reading is that the pole's side of the boundary is converted and the
+ * furnace's side is not yet.
  *
  * <p>How big the books are allowed to get is not this class's business -- it takes a capacity and
  * respects it. {@code SupplyAreaPoleBlockEntity.BUFFER_FE} owns that number and the argument for it.

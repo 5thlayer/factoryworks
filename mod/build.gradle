@@ -93,9 +93,6 @@ repositories {
 // classpath. That is the pack's testing policy, not an oversight: the row for "this pack logic
 // computes something" asks for an ordinary unit test run without Minecraft, and a classpath that
 // cannot see a `ResourceLocation` is what keeps the logic honest about staying testable.
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs << '-Xmaxerrs' << '9999'
-}
 
 tasks.named('test', Test).configure {
     useJUnitPlatform()

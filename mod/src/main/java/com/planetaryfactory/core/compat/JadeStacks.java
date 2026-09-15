@@ -3,6 +3,7 @@ package com.planetaryfactory.core.compat;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.ItemStack;
 import snownee.jade.api.BlockAccessor;
 
@@ -23,9 +24,13 @@ final class JadeStacks {
     private JadeStacks() {
     }
 
+    /** The registry-aware NBT ops both directions need; stated once. */
+    private static RegistryOps<Tag> ops(BlockAccessor accessor) {
+        return accessor.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE);
+    }
+
     static void put(CompoundTag tag, String key, ItemStack stack, BlockAccessor accessor) {
-        ItemStack.CODEC
-                .encodeStart(accessor.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE), stack)
+        ItemStack.CODEC.encodeStart(ops(accessor), stack)
                 .result()
                 .ifPresent(encoded -> tag.put(key, encoded));
     }
@@ -35,8 +40,7 @@ final class JadeStacks {
         if (encoded == null) {
             return ItemStack.EMPTY;
         }
-        return ItemStack.CODEC
-                .parse(accessor.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE), encoded)
+        return ItemStack.CODEC.parse(ops(accessor), encoded)
                 .result()
                 .orElse(ItemStack.EMPTY);
     }

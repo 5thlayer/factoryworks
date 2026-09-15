@@ -39,9 +39,12 @@ public final class PoleEnergyStorage implements EnergyHandler {
 
     @Override
     public int insert(int amount, TransactionContext transaction) {
-        if (amount <= 0 || pole.ledger().simulateReceiveFe(amount) <= 0L) {
+        if (amount <= 0) {
             return 0;
         }
+        // Snapshot before the mutation, unconditionally: a full buffer takes nothing and the
+        // snapshot is then a no-op to hand back, which is cheaper than asking the ledger twice
+        // what it will accept and then asking it again to accept it.
         journal.updateSnapshots(transaction);
         return (int) pole.ledger().receiveFe(amount);
     }
