@@ -1,6 +1,6 @@
 package com.planetaryfactory.core.assembler.client;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,7 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
         graphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, PANEL);
         renderPanel(graphics, mouseX, mouseY);
     }
@@ -44,7 +44,7 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
     }
 
     /** What this particular screen puts on the panel. */
-    protected abstract void renderPanel(GuiGraphics graphics, int mouseX, int mouseY);
+    protected abstract void renderPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY);
 
     /**
      * A well for every slot the menu carries.
@@ -54,7 +54,7 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
      * renders as blank panel, so the wells are drawn here from the menu's own slot positions rather
      * than from a second copy of the layout.
      */
-    protected void renderSlots(GuiGraphics graphics) {
+    protected void renderSlots(GuiGraphicsExtractor graphics) {
         for (net.minecraft.world.inventory.Slot slot : menu.slots) {
             int x = leftPos + slot.x;
             int y = topPos + slot.y;
@@ -64,7 +64,7 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         renderTooltip(graphics, mouseX, mouseY);
@@ -72,7 +72,7 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
 
     /** The title only. The inherited second label names a player inventory these screens draw themselves. */
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.drawString(font, title, 8, 6, 0xFFFFFF, false);
     }
 }

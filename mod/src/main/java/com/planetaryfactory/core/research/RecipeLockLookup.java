@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  * already researched -- is simply not locked.
  *
  * <p>Deliberately free of any Minecraft type, like {@link RecipeResearchIndex}: the mod passes
- * {@code ResourceLocation} and {@code ResourceKey<Research>}, the tests pass strings, and this is a
+ * {@code Identifier} and {@code ResourceKey<Research>}, the tests pass strings, and this is a
  * plain-JVM unit under the pack's testing policy.
  *
  * @param <I> the recipe id type

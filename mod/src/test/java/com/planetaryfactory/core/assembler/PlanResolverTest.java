@@ -242,7 +242,7 @@ class PlanResolverTest {
     private static RecipeGraph unifiedGraph() {
         return RecipeGraph.builder()
                 .add(new HandRecipe("gear",
-                        List.of(new Ingredient(List.of("oritech:iron_plate", "simplebelts:iron_sheet"), 2)),
+                        List.of(new Ingredient(List.of("oritech:iron_plate", "create:iron_sheet"), 2)),
                         List.of(new ItemAmount("gear", 1)), 10))
                 .build();
     }
@@ -250,11 +250,11 @@ class PlanResolverTest {
     @Test
     void anIngredientSeveralItemsSatisfyIsPaidWithWhicheverOneIsHeld() {
         PlanResolver.Resolution resolution = new PlanResolver(unifiedGraph(), Set.of()::contains)
-                .resolve("gear", 3, have("simplebelts:iron_sheet", 6));
+                .resolve("gear", 3, have("create:iron_sheet", 6));
 
         assertTrue(resolution.complete());
-        assertEquals(Map.of("simplebelts:iron_sheet", 6), asMap(resolution.rawCost()));
-        assertEquals(Map.of("simplebelts:iron_sheet", 6), asMap(resolution.steps().get(0).inputs()));
+        assertEquals(Map.of("create:iron_sheet", 6), asMap(resolution.rawCost()));
+        assertEquals(Map.of("create:iron_sheet", 6), asMap(resolution.steps().get(0).inputs()));
     }
 
     @Test
@@ -262,12 +262,12 @@ class PlanResolverTest {
         // Two entries naming the same item would each pass the queue's per-entry buffer check and
         // then together over-consume it, so the step's inputs are merged by item.
         PlanResolver.Resolution resolution = new PlanResolver(unifiedGraph(), Set.of()::contains)
-                .resolve("gear", 2, have("oritech:iron_plate", 3, "simplebelts:iron_sheet", 5));
+                .resolve("gear", 2, have("oritech:iron_plate", 3, "create:iron_sheet", 5));
 
         assertTrue(resolution.complete());
         List<ItemAmount> inputs = resolution.steps().get(0).inputs();
         assertEquals(inputs.size(), asMap(inputs).size(), "an item named twice in one step: " + inputs);
-        assertEquals(Map.of("oritech:iron_plate", 3, "simplebelts:iron_sheet", 1), asMap(inputs));
+        assertEquals(Map.of("oritech:iron_plate", 3, "create:iron_sheet", 1), asMap(inputs));
     }
 
     @Test

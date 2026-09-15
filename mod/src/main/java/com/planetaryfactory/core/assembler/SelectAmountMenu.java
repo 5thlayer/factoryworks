@@ -2,7 +2,7 @@ package com.planetaryfactory.core.assembler;
 
 import com.planetaryfactory.core.PFMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
@@ -18,11 +18,11 @@ import net.minecraft.world.entity.player.Inventory;
  */
 public final class SelectAmountMenu extends DialogMenu {
 
-    private final ResourceLocation recipe;
+    private final Identifier recipe;
     private final int amount;
     private final int largestAffordable;
 
-    public SelectAmountMenu(int containerId, Inventory inventory, ResourceLocation recipe, int amount, int largestAffordable) {
+    public SelectAmountMenu(int containerId, Inventory inventory, Identifier recipe, int amount, int largestAffordable) {
         super(PFMenus.SELECT_AMOUNT.get(), containerId);
         this.recipe = recipe;
         this.amount = amount;
@@ -31,10 +31,10 @@ public final class SelectAmountMenu extends DialogMenu {
 
     /** The client's side of the open, reading what the server wrote. */
     public SelectAmountMenu(int containerId, Inventory inventory, RegistryFriendlyByteBuf buffer) {
-        this(containerId, inventory, ResourceLocation.STREAM_CODEC.decode(buffer), buffer.readVarInt(), buffer.readVarInt());
+        this(containerId, inventory, Identifier.STREAM_CODEC.decode(buffer), buffer.readVarInt(), buffer.readVarInt());
     }
 
-    public ResourceLocation recipe() {
+    public Identifier recipe() {
         return recipe;
     }
 

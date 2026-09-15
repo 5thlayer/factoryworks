@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -51,7 +51,7 @@ public final class PersonalAssembler {
      * Step 3: Select Amount, with the count EMI's button asked for as its starting value and the
      * resolver's {@code all} beside it.
      */
-    public static void openSelectAmount(ServerPlayer player, ResourceLocation recipe, int amount) {
+    public static void openSelectAmount(ServerPlayer player, Identifier recipe, int amount) {
         PENDING.remove(player.getUUID());
         int all = PlanSource.ACTIVE.largestAffordable(player, recipe);
         // A resolver with an `all` clamps to it. One without -- nothing is affordable -- must not
@@ -67,7 +67,7 @@ public final class PersonalAssembler {
                         (id, inventory, who) -> new SelectAmountMenu(id, inventory, recipe, initial, all),
                         Component.translatable("planetaryfactory_core.assembler.select_amount")),
                 buffer -> {
-                    ResourceLocation.STREAM_CODEC.encode(buffer, recipe);
+                    Identifier.STREAM_CODEC.encode(buffer, recipe);
                     buffer.writeVarInt(initial);
                     buffer.writeVarInt(all);
                 });
@@ -77,7 +77,7 @@ public final class PersonalAssembler {
      * Step 4: resolve, and open the Crafting Plan on the result. The plan-result is the dialog's own
      * opening data, so the answer and the screen arrive together.
      */
-    public static void openPlan(ServerPlayer player, ResourceLocation recipe, int amount) {
+    public static void openPlan(ServerPlayer player, Identifier recipe, int amount) {
         // Clamped to what the resolver will plan for, so an over-large typed count comes back as a
         // plan the player can read rather than as an empty dialog with no reason on it. A packet
         // arrives from wherever it likes, and the field it comes from accepts any number of digits.

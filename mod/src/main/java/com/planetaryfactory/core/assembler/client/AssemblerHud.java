@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.network.chat.Component;
 
@@ -57,7 +57,7 @@ final class AssemblerHud implements LayeredDraw.Layer {
     private static final int BAR_BLOCKED = 0xFFB05030;
 
     @Override
-    public void render(GuiGraphics graphics, DeltaTracker delta) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
         Minecraft client = Minecraft.getInstance();
         if (client.options.hideGui || client.player == null) return;
         List<QueueSyncPacket.Entry> entries = AssemblerQueueView.entries();

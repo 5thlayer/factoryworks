@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * <p>The rule the whole design rests on is one sentence -- one adjacent block whose fluid state is
  * a source -- and the reason it is safe is not in this class at all: it is that the pack never
- * simplebeltss a source, so every source in the world is one worldgen or a structure placed. What these
+ * creates a source, so every source in the world is one worldgen or a structure placed. What these
  * tests hold is that the predicate stays that sentence. A size test or a biome test creeping in
  * here is the rejected design of ADR-0050 arriving by the back door, and both were rejected for
  * making water something the player hunts for.
@@ -35,7 +35,7 @@ class OffshorePumpSitingTest {
     @DisplayName("flowing water is refused -- it is what a placed outlet makes")
     void flowingIsRefused() {
         assertFalse(OffshorePumpSiting.accepts(List.of(FLOWING)),
-                "flowing water is the one state ADR-0050's deferred outlet block may simplebelts, and "
+                "flowing water is the one state ADR-0050's deferred outlet block may create, and "
                         + "admitting it here would make that block a source of water rather than a "
                         + "way to move it");
         assertFalse(OffshorePumpSiting.accepts(List.of(FLOWING, FLOWING, FLOWING, FLOWING)));

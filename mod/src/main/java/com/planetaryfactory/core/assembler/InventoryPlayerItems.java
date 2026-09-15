@@ -46,8 +46,8 @@ public final class InventoryPlayerItems implements PlayerItems {
         ItemStack prototype = prototypeOf(item);
         if (prototype.isEmpty()) return 0;
         int total = 0;
-        for (int slot = 0; slot < inventory.items.size(); slot++) {
-            ItemStack stack = inventory.items.get(slot);
+        for (int slot = 0; slot < inventory.getNonEquipmentItems().size(); slot++) {
+            ItemStack stack = inventory.getNonEquipmentItems().get(slot);
             if (ItemKeys.matches(prototype, stack)) total += stack.getCount();
         }
         return total;
@@ -58,12 +58,12 @@ public final class InventoryPlayerItems implements PlayerItems {
         ItemStack prototype = prototypeOf(item);
         if (prototype.isEmpty() || count <= 0) return 0;
         int left = count;
-        for (int slot = 0; slot < inventory.items.size() && left > 0; slot++) {
-            ItemStack stack = inventory.items.get(slot);
+        for (int slot = 0; slot < inventory.getNonEquipmentItems().size() && left > 0; slot++) {
+            ItemStack stack = inventory.getNonEquipmentItems().get(slot);
             if (!ItemKeys.matches(prototype, stack)) continue;
             int taken = Math.min(left, stack.getCount());
             stack.shrink(taken);
-            if (stack.isEmpty()) inventory.items.set(slot, ItemStack.EMPTY);
+            if (stack.isEmpty()) inventory.getNonEquipmentItems().set(slot, ItemStack.EMPTY);
             left -= taken;
         }
         inventory.setChanged();
@@ -105,8 +105,8 @@ public final class InventoryPlayerItems implements PlayerItems {
     private boolean fits(ItemStack prototype, int count) {
         int max = prototype.getMaxStackSize();
         long room = 0;
-        for (int slot = 0; slot < inventory.items.size(); slot++) {
-            ItemStack stack = inventory.items.get(slot);
+        for (int slot = 0; slot < inventory.getNonEquipmentItems().size(); slot++) {
+            ItemStack stack = inventory.getNonEquipmentItems().get(slot);
             if (stack.isEmpty()) {
                 room += max;
             } else if (ItemKeys.matches(prototype, stack) && stack.isStackable()) {

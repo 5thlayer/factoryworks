@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 /**
  * The question a recipe viewer asks per recipe (issue #75): is this id locked for the team I am
  * looking at it as, and which research would unlock it? Strings stand in for
- * {@code ResourceLocation} and {@code ResourceKey<Research>}; the lookup never looks inside either.
+ * {@code Identifier} and {@code ResourceKey<Research>}; the lookup never looks inside either.
  */
 class RecipeLockLookupTest {
 

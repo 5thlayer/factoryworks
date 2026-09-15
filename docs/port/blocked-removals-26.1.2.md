@@ -1,0 +1,68 @@
+# What the 26.1.2 port took out, and who owns putting it back
+
+ADR-0060 moved the pack to Minecraft 26.1.2 and took GregTech out. #268 is the ticket that made
+`planetaryfactory_core` compile again, and it carries an explicit escape hatch: a call site whose
+dependency is gone is either ported to the replacement, or **removed behind a note naming the ticket
+that owns it**. This file is that note, written once here rather than as a TODO comment in a file
+that no longer exists.
+
+Nothing here is a decision to drop a feature. Every row is code whose dependency does not exist on
+26.1.2 *yet*, and the git history holds the 1.21.1 implementation: `git log --diff-filter=D` finds
+the removing commit, and the file one commit before it is the thing to port.
+
+## Removed because GregTech is gone (ADR-0060)
+
+GTCEu is not installed and no `com.gregtechceu` reference may survive under `mod/src`. Oritech is
+the replacement chassis, and its API is a different shape — `rearth.oritech`, not a renamed
+`com.gregtechceu.gtceu`. Renaming an import cannot port these; each is a re-implementation.
+
+| removed | what it was | owner |
+| --- | --- | --- |
+| `core/machine/SimpleMachine.java` | The chassis under every single-block machine the pack registers — `SimpleTieredMachine` minus the programmed-circuit configurator and the charger slot. Both removals are GregTech-specific and neither idiom exists in Oritech. | #262 |
+| `core/assembler/RuntimeHandRecipes.java` | The Personal Assembler's hand set, read off the recipe manager by filtering `GTRecipe`s on `factorio_category: crafting`. The filter is right; the recipe class it filters is gone. | #262 |
+| `core/research/client/IdleMachineLockNote.java` | Why an idle machine is idle, searched out of GregTech's recipe trie with `RecipeHelper.matchContents`. Blocked twice over — it also needs Researchd. #251 already owns a Jade provider saying why a machine is doing nothing. | #251 |
+| `core/mixin/oritech/RecipeLogicMixin.java` | The research lock's refusal, injected into `RecipeLogic.matchRecipe`. | #262 |
+| `core/mixin/oritech/RecipeLogicStatusMixin.java` | The idle note's three-times-a-frame hook into the machine screen. | #251 |
+
+Both mixins named GregTech classes by target string, so their entries left
+`planetaryfactory_core.mixins.json` with them: a mixin naming a class that is not on the classpath
+fails the *load*, not the build, which is the one failure mode a green compile would have hidden.
+
+## Removed because Researchd is not ported yet (#260)
+
+The pack's Researchd fork is still on 1.21.1 (`~/minecraft_mods/researchd-src`, class file version
+65). There is no 26.1.2 jar to compile against, so every file importing
+`com.portingdeadmods.researchd` had to go. **#260 is the only thing blocking these**, and none of
+them needs redesigning — they are ports, not rewrites.
+
+| removed | what it was |
+| --- | --- |
+| `core/research/ResearchLocks.java` | The index of which research unlocks which recipe, read out of Researchd's `ResearchManager` and cached against its identity. |
+| `core/research/client/LockedByResearchLines.java` | The tooltip lines naming the researches that would unlock a recipe. |
+| `core/research/client/LockedRecipeNote.java` | The recipe-viewer annotation itself (#75). |
+| `core/compat/emi/LockedRecipeEmiNote.java` | EMI's half of that annotation. |
+| `core/compat/jei/LockedRecipeJeiDecorator.java` | JEI's half. |
+| `core/assembler/RuntimePlanSource.java` | The Crafting Plan resolver wired to a running server (#161) — it asks Researchd whether a recipe is blocked, and asks `RuntimeHandRecipes` for the graph, so it is blocked by both halves of this file. |
+| `core/mixin/researchd/ResearchdBEPlacementHandlerMixin.java` | A Researchd-internal fix the fork carries. |
+
+**The rules survived.** `RecipeLockLookup`, `MachineLockStatus`, `RecipeResearchIndex` and
+`LockBypassLog` import no Researchd type — they are the Minecraft-free logic with the unit tests
+that hold it, and they are untouched. What went is only the glue that reads the running game. That
+is the testing policy working as intended: the part worth keeping was the part that was checkable.
+
+## What a player loses meanwhile
+
+- **No research locks anywhere.** Recipes are not refused, not annotated in EMI or JEI, and no
+  machine says a research is why it is idle. `researchd.js` still declares the tree; nothing reads it.
+- **The Personal Assembler plans nothing.** `PlanSource.ACTIVE` is back to `PlanSource.Unresolved`,
+  which #160 wrote for exactly this state: every plan comes back incomplete, the dialogs open and the
+  round trip works, and Start stays correctly refused. The hand-set packet ships an empty set.
+- **No machine chassis**, so none of Terra's Assembling Machines or its Chemical Plant is registered.
+
+## The order to put it back in
+
+1. **#260** — port the Researchd fork. It unblocks seven files on its own, and six of them are
+   pure ports.
+2. **#262** — the Oritech chassis and the recipe class the hand set filters. `RuntimeHandRecipes`
+   and `SimpleMachine` both wait on what that decides.
+3. **#251** — the Jade provider, which is where the idle note's job now lives.

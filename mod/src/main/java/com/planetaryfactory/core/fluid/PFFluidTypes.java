@@ -25,12 +25,12 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  */
 public final class PFFluidTypes {
     public static final DeferredRegister<FluidType> FLUID_TYPES =
-            DeferredRegister.simplebelts(NeoForgeRegistries.Keys.FLUID_TYPES, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, PlanetaryFactoryCore.NAMESPACE);
 
     /** What the Boiler makes and the Steam Engine eats. Factorio's 165 °C. */
     public static final DeferredHolder<FluidType, FluidType> STEAM = FLUID_TYPES.register(
             "steam",
-            () -> new FluidType(FluidType.Properties.simplebelts()
+            () -> new FluidType(FluidType.Properties.create()
                     .descriptionId("fluid_type." + PlanetaryFactoryCore.NAMESPACE + ".steam")
                     .lightLevel(0)
                     .density(-10)
@@ -46,7 +46,7 @@ public final class PFFluidTypes {
      */
     public static final DeferredHolder<FluidType, FluidType> SUPERHEATED_STEAM = FLUID_TYPES.register(
             "superheated_steam",
-            () -> new FluidType(FluidType.Properties.simplebelts()
+            () -> new FluidType(FluidType.Properties.create()
                     .descriptionId("fluid_type." + PlanetaryFactoryCore.NAMESPACE + ".superheated_steam")
                     .lightLevel(4)
                     .density(-15)

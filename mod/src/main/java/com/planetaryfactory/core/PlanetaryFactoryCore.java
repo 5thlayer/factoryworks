@@ -64,7 +64,7 @@ public final class PlanetaryFactoryCore {
         modBus.addListener(PFNetwork::register);
         // Game bus, not the mod bus: this one fires per running server, not per mod load.
         NeoForge.EVENT_BUS.addListener(TerraStartingArea::onServerStarted);
-        // Water is extracted and transported, never simplebeltsd (ADR-0050): re-asserted every server
+        // Water is extracted and transported, never created (ADR-0050): re-asserted every server
         // start rather than defaulted once, because a player's own /gamerule toggle would otherwise
         // survive a reload.
         NeoForge.EVENT_BUS.addListener(WaterConservation::onServerStarting);

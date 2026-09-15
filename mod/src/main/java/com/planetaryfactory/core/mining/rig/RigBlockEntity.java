@@ -17,9 +17,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -36,6 +35,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  * The behaviour behind both mining rigs (#193, #194): it mines the layer beneath it, burns solid
@@ -327,7 +328,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
     }
 
     private static ItemStack stackOf(String itemId, int count) {
-        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemId));
+        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(itemId));
         return count <= 0 ? ItemStack.EMPTY : new ItemStack(item, count);
     }
 
@@ -447,37 +448,36 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
 
     @Override
     @Nullable
-    public AbstractContainerMenu simplebeltsMenu(int containerId, Inventory playerInventory, Player player) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new RigMenu(containerId, playerInventory, this, data);
     }
 
     // -- persistence ----------------------------------------------------------------------------
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         items.clear();
-        ContainerHelper.loadAllItems(tag, items, registries);
-        cycle.setProgress(tag.getInt("Progress"));
-        duration = tag.getInt("Duration");
-        fuel.load(tag.getLong("FuelJoules"), tag.getLong("FuelLitJoules"));
+        ContainerHelper.loadAllItems(input, items);
+        cycle.setProgress(input.getIntOr("Progress", 0));
+        duration = input.getIntOr("Duration", 0);
+        fuel.load(input.getLongOr("FuelJoules", 0L), input.getLongOr("FuelLitJoules", 0L));
         // A rig that logged out mid-stall comes back stalled and still holding it. A buffer that
         // came back empty would have voided ore across a logout with nothing in the log.
-        buffer.load(tag.contains("BufferItem") ? tag.getString("BufferItem") : null,
-                tag.getInt("BufferCount"));
+        buffer.load(input.getString("BufferItem").orElse(null), input.getIntOr("BufferCount", 0));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        ContainerHelper.saveAllItems(tag, items, registries);
-        tag.putInt("Progress", cycle.progress());
-        tag.putInt("Duration", duration);
-        tag.putLong("FuelJoules", fuel.storedJoules());
-        tag.putLong("FuelLitJoules", fuel.lastLitJoules());
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ContainerHelper.saveAllItems(output, items);
+        output.putInt("Progress", cycle.progress());
+        output.putInt("Duration", duration);
+        output.putLong("FuelJoules", fuel.storedJoules());
+        output.putLong("FuelLitJoules", fuel.lastLitJoules());
         if (buffer.itemId() != null) {
-            tag.putString("BufferItem", buffer.itemId());
-            tag.putInt("BufferCount", buffer.count());
+            output.putString("BufferItem", buffer.itemId());
+            output.putInt("BufferCount", buffer.count());
         }
     }
 }

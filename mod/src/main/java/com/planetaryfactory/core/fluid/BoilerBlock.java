@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -43,7 +43,7 @@ import net.minecraft.world.phys.BlockHitResult;
  */
 public class BoilerBlock extends BaseEntityBlock {
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     /**
      * A block codec is only read by data generation, which this pack does not run -- present
@@ -68,7 +68,7 @@ public class BoilerBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
@@ -94,7 +94,7 @@ public class BoilerBlock extends BaseEntityBlock {
         if (level.isClientSide()) {
             return null;
         }
-        return simplebeltsTickerHelper(type, PFBlockEntities.BOILER.get(),
+        return createTickerHelper(type, PFBlockEntities.BOILER.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
     }
 

@@ -3,7 +3,7 @@ package com.planetaryfactory.core.energy;
 import com.planetaryfactory.core.PFBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.server.level.ServerLevel;
 
 /**
  * A Factorio electric pole (ADR-0036): it supplies every machine standing in its area, and there is
@@ -88,7 +89,7 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
      * extension the player was asking for.
      */
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
                                               BlockPos pos, Player player, InteractionHand hand,
                                               BlockHitResult hit) {
         if (!(stack.getItem() instanceof BlockItem item) || !item.getBlock().equals(this)) {
@@ -96,20 +97,20 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
             // inverse of this, and is deliberately absent: breaking is already how blocks come off,
             // and a bare-hand interaction that deletes part of a build loses substations to
             // misclicks.
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         BlockPos top = PoleColumn.topOf(level, pos);
         if (top == null || PoleColumn.height(level, pos) >= PoleColumn.MAX_SEGMENTS) {
-            return ItemInteractionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
         BlockPos next = top.above();
         if (!level.getBlockState(next).canBeReplaced()) {
-            return ItemInteractionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
 
         if (level.isClientSide()) {
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         level.setBlockAndUpdate(next, defaultBlockState());
         level.playSound(null, next, getSoundType(state, level, next, player).getPlaceSound(),
@@ -118,7 +119,7 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
             stack.shrink(1);
         }
         invalidateColumn(level, next);
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     /**
@@ -130,18 +131,17 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
      * re-enters here for the block above, so the column unwinds one segment at a time.
      */
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState,
-                            boolean movedByPiston) {
-        if (!state.is(newState.getBlock())) {
-            BlockPos above = pos.above();
-            if (level.getBlockState(above).is(this)) {
-                level.destroyBlock(above, true);
-            }
-            // Everything that was standing on this base is now standing on nothing, so whatever a
-            // connector resolved through it has to be looked up again.
-            invalidateColumn(level, pos);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
+                                               boolean movedByPiston) {
+        // 26.1 calls this only when the block is genuinely gone, so the old
+        // `!state.is(newState.getBlock())` guard is the caller's job now.
+        BlockPos above = pos.above();
+        if (level.getBlockState(above).is(this)) {
+            level.destroyBlock(above, true);
         }
-        super.onRemove(state, level, pos, newState, movedByPiston);
+        // Everything that was standing on this base is now standing on nothing, so whatever a
+        // connector resolved through it has to be looked up again.
+        invalidateColumn(level, pos);
     }
 
     /**

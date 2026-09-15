@@ -4,10 +4,10 @@ import com.planetaryfactory.core.mining.rig.RigMenu;
 
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
@@ -22,10 +22,10 @@ import net.minecraft.world.entity.player.Inventory;
  */
 public class RigScreen extends AbstractContainerScreen<RigMenu> {
 
-    private static final ResourceLocation BACKGROUND =
-            ResourceLocation.withDefaultNamespace("textures/gui/container/furnace.png");
-    private static final ResourceLocation BURN_PROGRESS =
-            ResourceLocation.withDefaultNamespace("container/furnace/burn_progress");
+    private static final Identifier BACKGROUND =
+            Identifier.withDefaultNamespace("textures/gui/container/furnace.png");
+    private static final Identifier BURN_PROGRESS =
+            Identifier.withDefaultNamespace("container/furnace/burn_progress");
 
     private static final int FUEL_FULL = 0xFFFFD84D;
     private static final int FUEL_EMPTY = 0xFF3A3A3A;
@@ -49,7 +49,7 @@ public class RigScreen extends AbstractContainerScreen<RigMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
         int left = leftPos;
         int top = topPos;
         graphics.blit(BACKGROUND, left, top, 0, 0, imageWidth, imageHeight);
@@ -81,7 +81,7 @@ public class RigScreen extends AbstractContainerScreen<RigMenu> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         renderTooltip(graphics, mouseX, mouseY);

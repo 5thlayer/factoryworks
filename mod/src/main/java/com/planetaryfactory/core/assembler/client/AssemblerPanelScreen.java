@@ -5,7 +5,7 @@ import com.planetaryfactory.core.assembler.AssemblerQueueView;
 import com.planetaryfactory.core.network.PlanCancelPacket;
 import com.planetaryfactory.core.network.QueueSyncPacket;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,7 +34,7 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
     }
 
     @Override
-    protected void renderPanel(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         renderSlots(graphics);
         int y = topPos + ROWS_TOP;
         int index = 0;

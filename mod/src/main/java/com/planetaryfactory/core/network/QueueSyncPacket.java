@@ -14,7 +14,7 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
@@ -73,7 +73,7 @@ public record QueueSyncPacket(List<Entry> entries, boolean blocked) implements C
     }
 
     public static final Type<QueueSyncPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "assembler_queue_sync"));
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "assembler_queue_sync"));
 
     public static final StreamCodec<ByteBuf, QueueSyncPacket> STREAM_CODEC = StreamCodec.composite(
             Entry.STREAM_CODEC.apply(ByteBufCodecs.list()), QueueSyncPacket::entries,

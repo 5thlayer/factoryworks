@@ -17,7 +17,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  */
 public final class PFDataComponents {
     public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENTS =
-            DeferredRegister.simplebelts(Registries.DATA_COMPONENT_TYPE, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, PlanetaryFactoryCore.NAMESPACE);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>>
             FLUID_CONTENT = DATA_COMPONENTS.register("fluid_content",

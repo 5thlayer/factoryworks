@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
 
@@ -38,7 +38,7 @@ import net.minecraft.world.level.material.MapColor;
  * <p><b>Sited at placement, not maintained afterwards.</b> {@link OffshorePumpItem} refuses to place
  * where no source adjoins; this block does not then re-check every tick, and a player who drains the
  * pond a pump stands on gets a pump that produces nothing. That is the same bargain Factorio makes,
- * and it is safe here for a reason ADR-0050 spells out: water cannot be simplebeltsd, so a pump can never
+ * and it is safe here for a reason ADR-0050 spells out: water cannot be created, so a pump can never
  * be talked into a site that was invalid to begin with.
  *
  * <p>Facing is cosmetic. The predicate looks at every neighbour, so a pump works
@@ -47,7 +47,7 @@ import net.minecraft.world.level.material.MapColor;
  */
 public class OffshorePumpBlock extends BaseEntityBlock {
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     /**
      * A block codec is only read by data generation, which this pack does not run -- present
@@ -75,7 +75,7 @@ public class OffshorePumpBlock extends BaseEntityBlock {
      * and a pump sunk into a pond with water above it is a perfectly ordinary thing to build.
      *
      * <p>{@code FluidState.isSource} is the whole test. It is enough here only because nothing in
-     * the pack can simplebelts a source -- see {@link OffshorePumpSiting} for why that, and not any
+     * the pack can create a source -- see {@link OffshorePumpSiting} for why that, and not any
      * property of this method, is what makes it sound.
      */
     public static List<OffshorePumpSiting.Neighbour> neighboursOf(BlockGetter level, BlockPos pos) {
@@ -104,7 +104,7 @@ public class OffshorePumpBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void simplebeltsBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
@@ -125,7 +125,7 @@ public class OffshorePumpBlock extends BaseEntityBlock {
         if (level.isClientSide()) {
             return null;
         }
-        return simplebeltsTickerHelper(type, PFBlockEntities.OFFSHORE_PUMP.get(),
+        return createTickerHelper(type, PFBlockEntities.OFFSHORE_PUMP.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
     }
 }

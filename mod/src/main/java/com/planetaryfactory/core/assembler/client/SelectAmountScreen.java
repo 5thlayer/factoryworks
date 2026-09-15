@@ -2,7 +2,7 @@ package com.planetaryfactory.core.assembler.client;
 
 import com.planetaryfactory.core.assembler.SelectAmountMenu;
 import com.planetaryfactory.core.network.PlanRequestPacket;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -64,6 +64,6 @@ public final class SelectAmountScreen extends AssemblerScreen<SelectAmountMenu> 
 
     /** Nothing but the buttons, which are widgets and draw themselves. */
     @Override
-    protected void renderPanel(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
     }
 }

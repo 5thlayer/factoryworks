@@ -9,7 +9,7 @@ import com.planetaryfactory.core.mining.rig.RigSlots;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -53,8 +53,8 @@ import snownee.jade.api.ui.IElementHelper;
 @WailaPlugin
 public class RigJadePlugin implements IWailaPlugin {
 
-    private static final ResourceLocation UID =
-            ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "rig");
+    private static final Identifier UID =
+            Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "rig");
 
     private static final String PRESENT = "RigPresent";
     private static final String BUFFER_ITEM = "RigBufferItem";
@@ -114,7 +114,7 @@ public class RigJadePlugin implements IWailaPlugin {
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return UID;
         }
     };
@@ -149,7 +149,7 @@ public class RigJadePlugin implements IWailaPlugin {
         }
 
         @Override
-        public ResourceLocation getUid() {
+        public Identifier getUid() {
             return UID;
         }
     };
@@ -165,7 +165,7 @@ public class RigJadePlugin implements IWailaPlugin {
         // The buffer names its item by string, so the id has to be resolved here rather than read
         // off a saved stack. An id this client cannot resolve is air, and `elements.item` on an
         // empty stack draws a blank -- which is the one thing this method promises not to do.
-        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(data.getString(BUFFER_ITEM)));
+        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(data.getString(BUFFER_ITEM)));
         ItemStack banked = new ItemStack(item, data.getInt(BUFFER_COUNT));
         return banked.isEmpty()
                 ? elements.text(Component.translatable("tooltip.planetaryfactory.rig.jade.empty"))

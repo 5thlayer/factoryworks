@@ -28,19 +28,19 @@ public final class AssemblerCodecs {
             },
             UUID::toString);
 
-    public static final Codec<ItemAmount> ITEM_AMOUNT = RecordCodecBuilder.simplebelts(instance -> instance.group(
+    public static final Codec<ItemAmount> ITEM_AMOUNT = RecordCodecBuilder.create(instance -> instance.group(
                     Codec.STRING.fieldOf("item").forGetter(ItemAmount::item),
                     Codec.intRange(1, Integer.MAX_VALUE).fieldOf("count").forGetter(ItemAmount::count))
             .apply(instance, ItemAmount::new));
 
-    public static final Codec<CraftStep> CRAFT_STEP = RecordCodecBuilder.simplebelts(instance -> instance.group(
+    public static final Codec<CraftStep> CRAFT_STEP = RecordCodecBuilder.create(instance -> instance.group(
                     Codec.STRING.fieldOf("recipe").forGetter(CraftStep::recipe),
                     ITEM_AMOUNT.listOf().fieldOf("inputs").forGetter(CraftStep::inputs),
                     ITEM_AMOUNT.listOf().fieldOf("outputs").forGetter(CraftStep::outputs),
                     Codec.INT.fieldOf("duration_ticks").forGetter(CraftStep::durationTicks))
             .apply(instance, CraftStep::new));
 
-    public static final Codec<CraftingPlan> CRAFTING_PLAN = RecordCodecBuilder.simplebelts(instance -> instance.group(
+    public static final Codec<CraftingPlan> CRAFTING_PLAN = RecordCodecBuilder.create(instance -> instance.group(
                     UUID_CODEC.fieldOf("id").forGetter(CraftingPlan::id),
                     Codec.STRING.fieldOf("root_item").forGetter(CraftingPlan::rootItem),
                     Codec.INT.fieldOf("amount").forGetter(CraftingPlan::amount),
@@ -50,7 +50,7 @@ public final class AssemblerCodecs {
 
     private static final Codec<Map<String, Integer>> BUFFER = Codec.unboundedMap(Codec.STRING, Codec.INT);
 
-    public static final Codec<QueuedPlan> QUEUED_PLAN = RecordCodecBuilder.simplebelts(instance -> instance.group(
+    public static final Codec<QueuedPlan> QUEUED_PLAN = RecordCodecBuilder.create(instance -> instance.group(
                     CRAFTING_PLAN.fieldOf("plan").forGetter(QueuedPlan::plan),
                     BUFFER.fieldOf("buffer").forGetter(QueuedPlan::buffer),
                     Codec.INT.fieldOf("step").forGetter(QueuedPlan::stepIndex),

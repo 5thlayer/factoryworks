@@ -1,16 +1,12 @@
 package com.planetaryfactory.core.energy;
 
 /**
- * The pole's books, where FE becomes EU.
+ * The pole's books.
  *
- * <p>The pole is FE-in and EU-out. Power Grid's Device Connector is a one-way grid-to-FE block, so
- * FE is the only thing the grid can hand a pack block; every machine in the pack takes EU, the
- * Electric Furnace included (ADR-0035, and #155 corrected to EU alongside it). This class is the
- * only place the two currencies meet, and Oritech's FE converters stay disabled because of it.
- *
- * <p>Its whole job is to not invent energy. The ratio is Oritech's own {@code feToEuRatio} of 4, and
- * integer division means a partial EU has to be <em>retained</em> rather than rounded away -- a
- * pole fed a trickle would otherwise burn the trickle and emit nothing at all.
+ * <p>FE in, FE out. ADR-0060 leaves the pack with no EU anywhere -- Oritech, Power Grid and
+ * Simplebelts all go, and FE becomes its only energy currency -- so the FE-to-EU conversion this
+ * class used to be named for has no second currency left to meet. What remains is a buffer that
+ * respects a capacity and does not invent energy.
  *
  * <p>How big the books are allowed to get is not this class's business -- it takes a capacity and
  * respects it. {@code SupplyAreaPoleBlockEntity.BUFFER_FE} owns that number and the argument for it.
@@ -18,9 +14,6 @@ package com.planetaryfactory.core.energy;
  * <p>Pure: no Minecraft types, so the mod's Minecraft-free test source set can hold it to account.
  */
 public final class EnergyLedger {
-
-    /** Oritech's {@code feToEuRatio} default, and the pack keeps it. */
-    public static final long FE_PER_EU = 4L;
 
     private final long capacityFe;
     private long storedFe;
@@ -37,9 +30,9 @@ public final class EnergyLedger {
         return storedFe;
     }
 
-    /** EU the pole could hand out right now. The remainder below one EU stays on the books. */
-    public long availableEu() {
-        return storedFe / FE_PER_EU;
+    /** FE the pole could hand out right now. */
+    public long availableFe() {
+        return storedFe;
     }
 
     /** How much of an offered amount would be taken, without taking it. */
@@ -57,14 +50,14 @@ public final class EnergyLedger {
         return accepted;
     }
 
-    /** Hands out up to {@code maxEu}, debiting exactly the FE that EU was worth. */
-    public long drainEu(long maxEu) {
-        if (maxEu <= 0L) {
+    /** Hands out up to {@code maxFe}, debiting exactly that. */
+    public long drainFe(long maxFe) {
+        if (maxFe <= 0L) {
             return 0L;
         }
-        long eu = Math.min(maxEu, availableEu());
-        storedFe -= eu * FE_PER_EU;
-        return eu;
+        long drained = Math.min(maxFe, storedFe);
+        storedFe -= drained;
+        return drained;
     }
 
     /** For the block entity's save data. */

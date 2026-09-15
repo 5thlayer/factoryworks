@@ -1,7 +1,7 @@
 package com.planetaryfactory.core.assembler.client;
 
 import com.planetaryfactory.core.network.OpenPanelPacket;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -37,14 +37,14 @@ public final class InventoryAssemblerTab {
                         Component.translatable("planetaryfactory_core.assembler.tab"),
                         button -> PacketDistributor.sendToServer(new OpenPanelPacket()))
                 .bounds(screen.getGuiLeft(), screen.getGuiTop() - 22, 62, 20)
-                .tooltip(Tooltip.simplebelts(Component.translatable("planetaryfactory_core.assembler.tab.tooltip")))
+                .tooltip(Tooltip.create(Component.translatable("planetaryfactory_core.assembler.tab.tooltip")))
                 .build();
         event.addListener(tab);
     }
 
     public static void onScreenRender(ScreenEvent.Render.Post event) {
         if (tab == null || !(event.getScreen() instanceof InventoryScreen)) return;
-        GuiGraphics graphics = event.getGuiGraphics();
+        GuiGraphicsExtractor graphics = event.getGuiGraphics();
         tab.render(graphics, event.getMouseX(), event.getMouseY(), event.getPartialTick());
     }
 }

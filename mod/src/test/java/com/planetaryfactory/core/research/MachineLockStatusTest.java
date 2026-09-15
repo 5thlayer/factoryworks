@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * The question an idle machine answers when something asks why it is doing nothing (issue #79):
  * given the recipes its current contents match, is an incomplete research the only thing stopping
- * it, and which research is it? Strings stand in for {@code ResourceLocation} and
+ * it, and which research is it? Strings stand in for {@code Identifier} and
  * {@code ResourceKey<Research>}, exactly as in {@link RecipeLockLookupTest}.
  */
 class MachineLockStatusTest {

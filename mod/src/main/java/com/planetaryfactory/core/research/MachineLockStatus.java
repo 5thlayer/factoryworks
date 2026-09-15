@@ -30,7 +30,7 @@ import java.util.Set;
  * candidate is locked is an incomplete research the whole reason, which is exactly the claim the
  * message makes.
  *
- * <p>Minecraft-free, like {@link RecipeLockLookup}: the mod passes {@code ResourceLocation} and
+ * <p>Minecraft-free, like {@link RecipeLockLookup}: the mod passes {@code Identifier} and
  * {@code ResourceKey<Research>}, the tests pass strings, and this stays a plain-JVM unit under the
  * pack's testing policy.
  */

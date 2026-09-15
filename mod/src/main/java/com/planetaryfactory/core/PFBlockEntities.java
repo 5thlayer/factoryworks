@@ -1,6 +1,5 @@
 package com.planetaryfactory.core;
 
-import com.gregtechceu.oritech.api.capability.GTCapability;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
@@ -33,16 +32,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  */
 public final class PFBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-            DeferredRegister.simplebelts(Registries.BLOCK_ENTITY_TYPE, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, PlanetaryFactoryCore.NAMESPACE);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SupplyAreaPoleBlockEntity>>
             SUPPLY_AREA_POLE = BLOCK_ENTITIES.register("supply_area_pole",
-                    () -> new BlockEntityType<>(
-                            SupplyAreaPoleBlockEntity::new,
-                            PFBlocks.poleBlocks(),
-                            // No data fixer. The pack is pre-release and carries no world forward,
-                            // which is the standing position rather than an oversight here.
-                            null));
+                    // No data fixer, which 26.1's constructor no longer has a slot for anyway.
+                    // The pack is pre-release and carries no world forward, which is the standing
+                    // position rather than an oversight here.
+                    () -> new BlockEntityType<>(SupplyAreaPoleBlockEntity::new, PFBlocks.poleBlocks()));
 
     /**
      * All three furnace tiers share one type (#155). They differ in speed and in where their
@@ -51,8 +48,7 @@ public final class PFBlockEntities {
      */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FurnaceBlockEntity>>
             FURNACE = BLOCK_ENTITIES.register("furnace",
-                    () -> new BlockEntityType<>(FurnaceBlockEntity::new, PFBlocks.furnaceBlocks(),
-                            null));
+                    () -> new BlockEntityType<>(FurnaceBlockEntity::new, PFBlocks.furnaceBlocks()));
 
     /**
      * Both rigs' anchors share one type (#192, ADR-0043), the same arrangement as the pole and
@@ -61,12 +57,12 @@ public final class PFBlockEntities {
      */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RigBlockEntity>>
             RIG = BLOCK_ENTITIES.register("rig",
-                    () -> new BlockEntityType<>(RigBlockEntity::new, PFBlocks.rigBlocks(), null));
+                    () -> new BlockEntityType<>(RigBlockEntity::new, PFBlocks.rigBlocks()));
 
     /** Both rigs' parts share one type; each part's only field is its anchor's position. */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RigPartBlockEntity>>
             RIG_PART = BLOCK_ENTITIES.register("rig_part",
-                    () -> new BlockEntityType<>(RigPartBlockEntity::new, PFBlocks.rigPartBlocks(), null));
+                    () -> new BlockEntityType<>(RigPartBlockEntity::new, PFBlocks.rigPartBlocks()));
 
     /**
      * The Offshore Pump (#213, ADR-0050). One block, so one type with one block in it -- the
@@ -75,7 +71,7 @@ public final class PFBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OffshorePumpBlockEntity>>
             OFFSHORE_PUMP = BLOCK_ENTITIES.register("offshore_pump",
                     () -> new BlockEntityType<>(OffshorePumpBlockEntity::new,
-                            java.util.Set.of(PFBlocks.OFFSHORE_PUMP.get()), null));
+                            java.util.Set.of(PFBlocks.OFFSHORE_PUMP.get())));
 
     /**
      * Terra's Boiler (#224, ADR-0048). One block, so one type with one block in it -- the same
@@ -84,7 +80,7 @@ public final class PFBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BoilerBlockEntity>>
             BOILER = BLOCK_ENTITIES.register("boiler",
                     () -> new BlockEntityType<>(BoilerBlockEntity::new,
-                            java.util.Set.of(PFBlocks.BOILER.get()), null));
+                            java.util.Set.of(PFBlocks.BOILER.get())));
 
     private PFBlockEntities() {
     }

@@ -3,7 +3,7 @@ package com.planetaryfactory.core.recipes;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
@@ -23,16 +23,16 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class PFRecipes {
 
     public static final DeferredRegister<RecipeType<?>> TYPES =
-            DeferredRegister.simplebelts(Registries.RECIPE_TYPE, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.create(Registries.RECIPE_TYPE, PlanetaryFactoryCore.NAMESPACE);
 
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
-            DeferredRegister.simplebelts(Registries.RECIPE_SERIALIZER, PlanetaryFactoryCore.NAMESPACE);
+            DeferredRegister.create(Registries.RECIPE_SERIALIZER, PlanetaryFactoryCore.NAMESPACE);
 
     public static final String SMELTING = "smelting";
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<SmeltingRecipe>> SMELTING_TYPE =
             TYPES.register(SMELTING, () -> RecipeType.simple(
-                    ResourceLocation.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, SMELTING)));
+                    Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, SMELTING)));
 
     public static final DeferredHolder<RecipeSerializer<?>, SmeltingRecipe.Serializer> SMELTING_SERIALIZER =
             SERIALIZERS.register(SMELTING, SmeltingRecipe.Serializer::new);

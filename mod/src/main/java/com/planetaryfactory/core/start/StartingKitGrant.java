@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.planetaryfactory.core.PFAttachments;
 import java.util.List;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -69,7 +69,7 @@ public final class StartingKitGrant {
      * resolves before a world is ever loaded -- this log line is the second line of defence.
      */
     private static void deliver(ServerPlayer player, StartingKit.Entry entry) {
-        ResourceLocation id = ResourceLocation.tryParse(entry.item());
+        Identifier id = Identifier.tryParse(entry.item());
         Item item = id == null ? null : BuiltInRegistries.ITEM.getOptional(id).orElse(null);
         if (item == null) {
             LOGGER.error("The starting kit names {}, which is not a registered item: the player "

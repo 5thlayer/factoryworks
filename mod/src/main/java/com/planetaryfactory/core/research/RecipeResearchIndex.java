@@ -18,7 +18,7 @@ import java.util.Set;
  * what an index built from the research registry gives.
  *
  * <p>Deliberately free of any Minecraft type. Both parameters are the caller's: the mod passes
- * {@code ResourceLocation} and {@code ResourceKey<Research>}, the tests pass strings, and the class
+ * {@code Identifier} and {@code ResourceKey<Research>}, the tests pass strings, and the class
  * is a plain-JVM unit under the pack's testing policy. {@link ResearchLocks} is the only place that
  * knows how to fill one from a level.
  *

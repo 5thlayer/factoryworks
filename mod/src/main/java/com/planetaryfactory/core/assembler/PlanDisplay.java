@@ -6,7 +6,7 @@ import java.util.UUID;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * A resolved plan as the Crafting Plan dialog shows it: what it spends, and the flattened tree in
@@ -32,7 +32,7 @@ import net.minecraft.resources.ResourceLocation;
  */
 public record PlanDisplay(
         UUID planId,
-        ResourceLocation recipe,
+        Identifier recipe,
         int amount,
         List<ItemAmount> consume,
         List<ItemAmount> toCraft,
@@ -59,7 +59,7 @@ public record PlanDisplay(
     public static final StreamCodec<ByteBuf, PlanDisplay> STREAM_CODEC = StreamCodec.of(
             (buffer, display) -> {
                 UUIDUtil.STREAM_CODEC.encode(buffer, display.planId());
-                ResourceLocation.STREAM_CODEC.encode(buffer, display.recipe());
+                Identifier.STREAM_CODEC.encode(buffer, display.recipe());
                 ByteBufCodecs.VAR_INT.encode(buffer, display.amount());
                 AMOUNTS.encode(buffer, display.consume());
                 AMOUNTS.encode(buffer, display.toCraft());
@@ -69,7 +69,7 @@ public record PlanDisplay(
             },
             buffer -> new PlanDisplay(
                     UUIDUtil.STREAM_CODEC.decode(buffer),
-                    ResourceLocation.STREAM_CODEC.decode(buffer),
+                    Identifier.STREAM_CODEC.decode(buffer),
                     ByteBufCodecs.VAR_INT.decode(buffer),
                     AMOUNTS.decode(buffer),
                     AMOUNTS.decode(buffer),

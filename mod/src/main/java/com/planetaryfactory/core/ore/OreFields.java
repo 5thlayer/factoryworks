@@ -1,13 +1,14 @@
 package com.planetaryfactory.core.ore;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 
 /**
  * The starting fields this world actually dealt, and what one of their blocks is worth.
@@ -31,42 +32,28 @@ public final class OreFields extends SavedData {
 
     public static final String NAME = "planetaryfactory_ore_fields";
 
-    public static final Factory<OreFields> FACTORY =
-            new Factory<>(OreFields::new, OreFields::load, null);
+    /**
+     * The whole of this data as one codec. 26.1 serialises saved data through a codec rather than
+     * through a {@code save}/{@code load} pair, so the field list is the only thing stated and the
+     * two directions can no longer disagree.
+     */
+    public static final Codec<OreFields> CODEC = Field.CODEC.listOf()
+            .xmap(OreFields::of, OreFields::fields)
+            .fieldOf("fields")
+            .codec();
+
+    public static final SavedDataType<OreFields> TYPE = new SavedDataType<>(
+            Identifier.fromNamespaceAndPath("planetaryfactory", "ore_fields"), OreFields::new, CODEC);
 
     private final List<Field> fields = new ArrayList<>();
 
     public OreFields() {
     }
 
-    public static OreFields load(CompoundTag tag, HolderLookup.Provider registries) {
+    private static OreFields of(List<Field> fields) {
         OreFields data = new OreFields();
-        ListTag list = tag.getList("fields", CompoundTag.TAG_COMPOUND);
-        for (int index = 0; index < list.size(); index++) {
-            CompoundTag entry = list.getCompound(index);
-            int[] box = entry.getIntArray("box");
-            data.fields.add(new Field(
-                    entry.getString("resource"),
-                    new BoundingBox(box[0], box[1], box[2], box[3], box[4], box[5]),
-                    entry.getInt("amount")));
-        }
+        data.fields.addAll(fields);
         return data;
-    }
-
-    @Override
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        ListTag list = new ListTag();
-        for (Field field : fields) {
-            CompoundTag entry = new CompoundTag();
-            entry.putString("resource", field.resource());
-            BoundingBox box = field.box();
-            entry.putIntArray("box", new int[] {
-                    box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ()});
-            entry.putInt("amount", field.amountPerBlock());
-            list.add(entry);
-        }
-        tag.put("fields", list);
-        return tag;
     }
 
     /**
@@ -142,5 +129,11 @@ public final class OreFields extends SavedData {
      * @param amountPerBlock the patch total over the blocks that were actually placed
      */
     public record Field(String resource, BoundingBox box, int amountPerBlock) {
+
+        public static final Codec<Field> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.STRING.fieldOf("resource").forGetter(Field::resource),
+                BoundingBox.CODEC.fieldOf("box").forGetter(Field::box),
+                Codec.INT.fieldOf("amount").forGetter(Field::amountPerBlock)
+        ).apply(instance, Field::new));
     }
 }

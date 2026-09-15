@@ -1,12 +1,9 @@
 {
   "required": true,
   "package": "com.planetaryfactory.core.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "oritech.RecipeLogicMixin",
-    "oritech.RecipeLogicStatusMixin",
-    "minecraft.InventoryMenuMixin",
-    "researchd.ResearchdBEPlacementHandlerMixin"
+    "minecraft.InventoryMenuMixin"
   ],
   "injectors": {
     "defaultRequire": 1

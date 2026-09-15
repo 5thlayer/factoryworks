@@ -11,7 +11,7 @@ import com.mojang.logging.LogUtils;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
@@ -121,10 +121,10 @@ public final class PFFuel {
         }
 
         @Override
-        protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager manager,
+        protected void apply(Map<Identifier, JsonElement> files, ResourceManager manager,
                 ProfilerFiller profiler) {
             List<FuelRow> rows = new ArrayList<>();
-            for (Map.Entry<ResourceLocation, JsonElement> file : files.entrySet()) {
+            for (Map.Entry<Identifier, JsonElement> file : files.entrySet()) {
                 if (!PlanetaryFactoryCore.NAMESPACE.equals(file.getKey().getNamespace())) {
                     continue;
                 }

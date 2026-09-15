@@ -10,7 +10,7 @@ import dev.emi.emi.api.recipe.handler.EmiRecipeHandler;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -71,7 +71,7 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
      */
     @Override
     public boolean supportsRecipe(EmiRecipe recipe) {
-        ResourceLocation id = recipe.getId();
+        Identifier id = recipe.getId();
         return id != null && HandRecipeSet.contains(id.toString());
     }
 
@@ -95,7 +95,7 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
      */
     @Override
     public boolean craft(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
-        ResourceLocation id = recipe.getId();
+        Identifier id = recipe.getId();
         if (id == null) return false;
         PacketDistributor.sendToServer(new SelectAmountPacket(id, context.getAmount()));
         return true;
