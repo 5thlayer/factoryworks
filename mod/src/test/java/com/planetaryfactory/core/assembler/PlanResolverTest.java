@@ -237,12 +237,16 @@ class PlanResolverTest {
      * AlmostUnified and tag ingredients both hand the resolver an ingredient several items satisfy.
      * A gear that eats "two of either iron plate" has to be payable in whichever the player holds --
      * refusing the plan because the first match is not the one in the inventory is the bug that
-     * reached a player as "the Assembler cannot craft this recipe" with a full bag of iron sheets.
+     * reached a player as "the Assembler cannot craft this recipe" with a full bag of iron ingots.
+     *
+     * <p>The two ids are the pack's own: Oritech's plate is what `item-map.json` maps `iron-plate`
+     * to, and the vanilla ingot is the other thing an `c:plates/iron`-style unification would fold
+     * in. They are arbitrary to the assertion and real so that reading them teaches nothing false.
      */
     private static RecipeGraph unifiedGraph() {
         return RecipeGraph.builder()
                 .add(new HandRecipe("gear",
-                        List.of(new Ingredient(List.of("oritech:iron_plate", "create:iron_sheet"), 2)),
+                        List.of(new Ingredient(List.of("oritech:iron_plate", "minecraft:iron_ingot"), 2)),
                         List.of(new ItemAmount("gear", 1)), 10))
                 .build();
     }
@@ -250,11 +254,11 @@ class PlanResolverTest {
     @Test
     void anIngredientSeveralItemsSatisfyIsPaidWithWhicheverOneIsHeld() {
         PlanResolver.Resolution resolution = new PlanResolver(unifiedGraph(), Set.of()::contains)
-                .resolve("gear", 3, have("create:iron_sheet", 6));
+                .resolve("gear", 3, have("minecraft:iron_ingot", 6));
 
         assertTrue(resolution.complete());
-        assertEquals(Map.of("create:iron_sheet", 6), asMap(resolution.rawCost()));
-        assertEquals(Map.of("create:iron_sheet", 6), asMap(resolution.steps().get(0).inputs()));
+        assertEquals(Map.of("minecraft:iron_ingot", 6), asMap(resolution.rawCost()));
+        assertEquals(Map.of("minecraft:iron_ingot", 6), asMap(resolution.steps().get(0).inputs()));
     }
 
     @Test
@@ -262,12 +266,12 @@ class PlanResolverTest {
         // Two entries naming the same item would each pass the queue's per-entry buffer check and
         // then together over-consume it, so the step's inputs are merged by item.
         PlanResolver.Resolution resolution = new PlanResolver(unifiedGraph(), Set.of()::contains)
-                .resolve("gear", 2, have("oritech:iron_plate", 3, "create:iron_sheet", 5));
+                .resolve("gear", 2, have("oritech:iron_plate", 3, "minecraft:iron_ingot", 5));
 
         assertTrue(resolution.complete());
         List<ItemAmount> inputs = resolution.steps().get(0).inputs();
         assertEquals(inputs.size(), asMap(inputs).size(), "an item named twice in one step: " + inputs);
-        assertEquals(Map.of("oritech:iron_plate", 3, "create:iron_sheet", 1), asMap(inputs));
+        assertEquals(Map.of("oritech:iron_plate", 3, "minecraft:iron_ingot", 1), asMap(inputs));
     }
 
     @Test
