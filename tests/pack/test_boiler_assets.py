@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assert Terra's Boiler has the pack-side files it needs, and the numbers it was built on (#224).
 
-This is a `planetaryfactory:` block, so **Oritech's model provider does not serve it** -- every
+This is a `planetaryfactory:` block, so **GregTech's model provider does not serve it** -- every
 hop from blockstate to model to texture is the pack's own, and a missing one reaches the player as
 a purple-and-black cube with no error in any log. The `test_machine_assets.py` and
 `test_pump_assets.py` pattern, applied to the one block ADR-0048 puts at the head of the steam
@@ -128,10 +128,10 @@ def check_item_map(failures):
             f"the boiler row targets {row.get('target')!r} rather than {BLOCK_ID} -- ADR-0048 "
             "replaces the LP Solid Boiler with a pack-authored block"
         )
-    if "oritech" in json.dumps(row.get("target", "")):
+    if "gtceu" in json.dumps(row.get("target", "")):
         failures.append(
-            "the boiler row points back at Oritech -- ADR-0048 is explicit that a GT boiler "
-            "emitting oritech:steam re-opens the power layer #37 removed"
+            "the boiler row points back at GregTech -- ADR-0048 is explicit that a GT boiler "
+            "emitting gtceu:steam re-opens the power layer #37 removed"
         )
 
 

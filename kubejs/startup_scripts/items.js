@@ -27,21 +27,21 @@ StartupEvents.registry('item', event => {
   // `scripts/factorio-recipe-convert.py` into `kubejs/data/planetaryfactory/recipe/`.
 
   // Common
-  event.simplebelts('planetaryfactory:electronic_circuit')
+  event.create('planetaryfactory:electronic_circuit')
     .displayName('Electronic Circuit')
     .texture('oritech:item/quantum_processor_assembly')
 
-  event.simplebelts('planetaryfactory:advanced_circuit')
+  event.create('planetaryfactory:advanced_circuit')
     .displayName('Advanced Circuit')
     .texture('oritech:item/wetware_processor_assembly')
 
-  event.simplebelts('planetaryfactory:processing_unit')
+  event.create('planetaryfactory:processing_unit')
     .displayName('Processing Unit')
     .texture('oritech:item/crystal_processor_assembly')
 
   // Plastic authors for the same reason: it gates rung 2 (ADR-0025), and a rung-boundary row
   // authors rather than borrows. Its recipe is the Chemical Plant's and arrives with #107.
-  event.simplebelts('planetaryfactory:plastic_bar')
+  event.create('planetaryfactory:plastic_bar')
     .displayName('Plastic Bar')
     .texture('oritech:item/plastic_circuit_board')
 
@@ -54,15 +54,15 @@ StartupEvents.registry('item', event => {
   //
   // `planetaryfactory:rocket_fuel` is NOT `oritech:rocket_fuel`. This is Factorio's solid item, made
   // from solid fuel and light oil; Oritech's is the FLUID the GCyR rocket entity burns (#41).
-  event.simplebelts('planetaryfactory:solid_fuel')
+  event.create('planetaryfactory:solid_fuel')
     .displayName('Solid Fuel')
     .texture('minecraft:item/charcoal')
 
-  event.simplebelts('planetaryfactory:rocket_fuel')
+  event.create('planetaryfactory:rocket_fuel')
     .displayName('Rocket Fuel')
     .texture('minecraft:item/blaze_powder')
 
-  event.simplebelts('planetaryfactory:low_density_structure')
+  event.create('planetaryfactory:low_density_structure')
     .displayName('Low Density Structure')
     .texture('oritech:item/carbon_fiber_plate')
 
@@ -70,34 +70,34 @@ StartupEvents.registry('item', event => {
   // are tiered chargeable hulls and Electro's capacitor is a different thing, so borrowing either
   // would put an EU container inside a recipe that wants lead and acid. No tier suffix -- there is
   // one battery, and a ladder that never arrives costs nothing to leave unnamed.
-  event.simplebelts('planetaryfactory:battery')
+  event.create('planetaryfactory:battery')
     .displayName('Battery')
     .texture('oritech:item/lv_lithium_battery')
 
   // The engine units author because no installed mod ships Factorio's engine as one item, and
   // they feed recipes the pack wants. ADR-0031's author case at its plainest: no borrow candidate.
-  event.simplebelts('planetaryfactory:engine_unit')
+  event.create('planetaryfactory:engine_unit')
     .displayName('Engine Unit')
     .texture('oritech:item/lv_electric_motor')
 
-  event.simplebelts('planetaryfactory:electric_engine_unit')
+  event.create('planetaryfactory:electric_engine_unit')
     .displayName('Electric Engine Unit')
     .texture('oritech:item/hv_electric_motor')
 
   // Sapros
-  event.simplebelts('planetaryfactory:yumako_fresh')
+  event.create('planetaryfactory:yumako_fresh')
     .displayName('Yumako')
     .texture('planetaryfactory:item/yumako');
 
-  event.simplebelts('planetaryfactory:jellynut_fresh')
+  event.create('planetaryfactory:jellynut_fresh')
     .displayName('Jellynut')
     .texture('planetaryfactory:item/jellynut');
 
-  event.simplebelts('planetaryfactory:iron_bacteria_fresh')
+  event.create('planetaryfactory:iron_bacteria_fresh')
     .displayName('Iron Bacteria')
     .texture('planetaryfactory:item/iron_bacteria');
 
-  event.simplebelts('planetaryfactory:copper_bacteria_fresh')
+  event.create('planetaryfactory:copper_bacteria_fresh')
     .displayName('Copper Bacteria')
     .texture('planetaryfactory:item/copper_bacteria');
 });

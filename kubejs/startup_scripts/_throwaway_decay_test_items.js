@@ -9,7 +9,7 @@
 // point is to SEE a 64-stack split across rungs, and identical icons would hide exactly that.
 StartupEvents.registry('item', (event) => {
   const stage = (id, name, texture) =>
-    event.simplebelts(`planetaryfactory:${id}`).displayName(name).texture(texture);
+    event.create(`planetaryfactory:${id}`).displayName(name).texture(texture);
 
   stage('decaytest_fresh', 'Decay Test (Fresh)', 'planetaryfactory:item/yumako');
   stage('decaytest_ripe', 'Decay Test (Ripe)', 'planetaryfactory:item/jellynut');

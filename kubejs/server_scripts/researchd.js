@@ -13,15 +13,15 @@
 // exist before these calls run. KubeJS does not load scripts alphabetically.
 
 ResearchdEvents.registerResearchPacks(event => {
-  event.simplebelts('planetary_factory:automation_science_pack')
+  event.create('planetary_factory:automation_science_pack')
     .literalName('Automation Science Pack')
     .color(200, 60, 60)
     .sortingValue(100);
-  event.simplebelts('planetary_factory:logistic_science_pack')
+  event.create('planetary_factory:logistic_science_pack')
     .literalName('Logistic Science Pack')
     .color(60, 200, 60)
     .sortingValue(101);
-  event.simplebelts('planetary_factory:chemical_science_pack')
+  event.create('planetary_factory:chemical_science_pack')
     .literalName('Chemical Science Pack')
     .color(60, 60, 200)
     .sortingValue(102);
@@ -100,13 +100,13 @@ fromFactorio('steel-axe', {
 // and `pipe-to-ground` have no pack recipe, so this node grants two of its five.
 //
 // The held item is Simplebelts's sheet, for the same reason as `electronics` below: AlmostUnified unifies
-// `c:plates/iron` and `simplebelts` outranks Oritech, so the furnace delivers `simplebelts:iron_sheet` however
+// `c:plates/iron` and `create` outranks GregTech, so the furnace delivers `create:iron_sheet` however
 // `recipe/iron_plate.json` reads. Note that `StartingKit.java` grants `oritech:iron_plate` x8 directly,
 // which no unification touches -- those eight do NOT count toward this fifty, and the same goes for
 // the kit's eight copper. #220.
 fromFactorio('steam-power', {
   icon: 'planetaryfactory:offshore_pump',
-  has: ['simplebelts:iron_sheet', 50],
+  has: ['create:iron_sheet', 50],
   unlocks: [
     'planetaryfactory:assembling/pipe',
     'planetaryfactory:assembling/offshore_pump'
@@ -118,7 +118,7 @@ fromFactorio('steam-power', {
 //
 // THE HELD ITEM IS CREATE'S SHEET, NOT THE PLATE THIS RECIPE'S JSON NAMES. `recipe/copper_plate.json`
 // results in `oritech:copper_plate` on disk, but AlmostUnified unifies `c:plates/{material}` and its
-// `mod_priorities` put `simplebelts` above Oritech, so the furnace delivers `simplebelts:copper_sheet` -- 
+// `mod_priorities` put `create` above GregTech, so the furnace delivers `create:copper_sheet` -- 
 // confirmed in a running game, and it is what EMI shows for `planetaryfactory:copper_plate`.
 // `checkItemPresence` resolves a literal id through `BuiltInRegistries.ITEM` and holds it as a
 // one-item `Ingredient`, so it matches the sheet or the plate but never both; naming the plate here
@@ -132,7 +132,7 @@ fromFactorio('steam-power', {
 // id tested without both looks exactly like a wrong id: this one was reverted once on that evidence.
 fromFactorio('electronics', {
   icon: 'planetaryfactory:electronic_circuit',
-  has: ['simplebelts:copper_sheet', 10],
+  has: ['create:copper_sheet', 10],
   unlocks: [
     'planetaryfactory:assembling/copper_cable',
     'planetaryfactory:assembling/electronic_circuit',
@@ -197,7 +197,7 @@ fromFactorio('engine', {
 // eighteen fill/empty rows are Simplebelts's Spout and Item Drain keying on `IFluidHandlerItem` and were
 // never recipes at all (`native_mechanic`, ADR-0034 exception class 1).
 fromFactorio('fluid-handling', {
-  icon: 'simplebelts:fluid_tank',
+  icon: 'create:fluid_tank',
   unlocks: [
     'planetaryfactory:assembling/storage_tank',
     'planetaryfactory:assembling/pump',

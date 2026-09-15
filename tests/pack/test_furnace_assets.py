@@ -12,10 +12,10 @@ block's name, and a missing loot table makes the block break into nothing.
 
 Two things here are specific to this ladder rather than generic asset plumbing:
 
-  - **The Electric tier borrows Oritech's art, and must not borrow Oritech's model.** Oritech's own
-    `electric_furnace` model declares `"loader": "oritech:machine"`, which Oritech's model provider
+  - **The Electric tier borrows GregTech's art, and must not borrow GregTech's model.** GTCEu's own
+    `electric_furnace` model declares `"loader": "gtceu:machine"`, which GregTech's model provider
     does not serve for a `planetaryfactory:` block -- a copied model is a missing model. So the
-    textures are asserted to exist *inside the Oritech jar*, and the model is asserted not to name
+    textures are asserted to exist *inside the GTCEu jar*, and the model is asserted not to name
     that loader.
   - **Every tier has a lit variant.** The `LIT` blockstate drives the lit front on all three,
     including the Electric one, where it is the only thing telling "running" from "waiting for the
@@ -61,7 +61,7 @@ def texture_exists(texture):
     namespace, path = texture.split(":", 1)
     if namespace == "planetaryfactory":
         return (ASSETS / "textures" / f"{path}.png").is_file()
-    prefix = {"minecraft": None, "oritech": "oritech"}.get(namespace, namespace)
+    prefix = {"minecraft": None, "gtceu": "gtceu"}.get(namespace, namespace)
     if prefix is None:
         # Vanilla ships no jar here to read; a vanilla path is taken on trust, which is the same
         # trust every other vanilla parent in these models is taken on.
@@ -106,7 +106,7 @@ class FurnaceAssets(unittest.TestCase):
                                         f"{path.name} names {texture}, which does not exist")
 
     def test_the_electric_tier_does_not_borrow_gregtechs_model_loader(self):
-        # Oritech's own model declares `"loader": "oritech:machine"`, and Oritech's model provider
+        # GTCEu's own model declares `"loader": "gtceu:machine"`, and GregTech's model provider
         # does not serve it for a `planetaryfactory:` block. A copied model is a missing model,
         # and the failure is a black-and-magenta cube with nothing in the log to explain it.
         for suffix in ("", "_on"):
@@ -114,8 +114,8 @@ class FurnaceAssets(unittest.TestCase):
             model = json.loads(path.read_text(encoding="utf-8"))
             with self.subTest(model=path.name):
                 self.assertNotIn("loader", model, "this model has to be plain vanilla JSON")
-                self.assertTrue(any(t.startswith("oritech:") for t in model["textures"].values()),
-                                "the Electric tier wears Oritech's art, textures and all")
+                self.assertTrue(any(t.startswith("gtceu:") for t in model["textures"].values()),
+                                "the Electric tier wears GregTech's art, textures and all")
 
     def test_the_item_model_resolves_to_a_model_that_exists(self):
         for name in self.tiers:

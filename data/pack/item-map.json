@@ -43,23 +43,23 @@
     },
     "arithmetic-combinator": {
       "status": "not_emitted",
-      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Simplebelts's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Simplebelts needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
+      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Create's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
     },
     "assembling-machine-1": {
       "kind": "item",
-      "target": "oritech:lv_assembling_machine",
+      "target": "gtceu:lv_assembling_machine",
       "source": "borrowed",
-      "note": "ADR-0026's machine, registered through Oritech's registrate -- so the id is `oritech:` and the tier is a prefix, not a numeral (machines.js)."
+      "note": "ADR-0026's machine, registered through GregTech's registrate -- so the id is `gtceu:` and the tier is a prefix, not a numeral (machines.js)."
     },
     "assembling-machine-2": {
       "kind": "item",
-      "target": "oritech:mv_assembling_machine",
+      "target": "gtceu:mv_assembling_machine",
       "source": "borrowed",
       "note": "As `assembling-machine-1`."
     },
     "assembling-machine-3": {
       "kind": "item",
-      "target": "oritech:hv_assembling_machine",
+      "target": "gtceu:hv_assembling_machine",
       "source": "borrowed",
       "note": "As `assembling-machine-1`."
     },
@@ -81,13 +81,13 @@
       "kind": "item",
       "target": "planetaryfactory:barrel",
       "source": "authored",
-      "note": "ADR-0037. Registered in `planetaryfactory_core` as an `IFluidHandlerItem`: 50 mB -- Factorio's 50 units under the converter's 1:1 fluid rule -- stacking to 10, accepting any fluid. Oritech's cells were the only installed candidates and are a six-material ladder with a temperature band, for a concept that has one tier. Filled and emptied by Simplebelts's Spout and Item Drain with no recipes at all (#93), so this row is the only place the container is named."
+      "note": "ADR-0037. Registered in `planetaryfactory_core` as an `IFluidHandlerItem`: 50 mB -- Factorio's 50 units under the converter's 1:1 fluid rule -- stacking to 10, accepting any fluid. GregTech's cells were the only installed candidates and are a six-material ladder with a temperature band, for a concept that has one tier. Filled and emptied by Create's Spout and Item Drain with no recipes at all (#93), so this row is the only place the container is named."
     },
     "battery": {
       "kind": "item",
       "target": "planetaryfactory:battery",
       "source": "authored",
-      "note": "Factorio's battery is a crafting intermediate, not a placed power store: Oritech's batteries are tiered chargeable hulls and Electro's capacitor is a different thing, so borrowing either would put an EU container inside a recipe that wants lead and acid. Texture borrows `oritech:max_battery`. No tier suffix -- there is one battery."
+      "note": "Factorio's battery is a crafting intermediate, not a placed power store: GregTech's batteries are tiered chargeable hulls and Electro's capacitor is a different thing, so borrowing either would put an EU container inside a recipe that wants lead and acid. Texture borrows `gtceu:max_battery`. No tier suffix -- there is one battery."
     },
     "battery-equipment": {
       "status": "undecided",
@@ -112,7 +112,7 @@
       "kind": "item",
       "target": "planetaryfactory:boiler",
       "source": "authored",
-      "note": "Terra's Boiler: fuel and water in, low-temperature steam out (#224, ADR-0048). It REPLACES the LP Solid Boiler this row used to point at -- ADR-0048 makes the steam chain pack-authored on two pack-owned fluids, and a GT boiler emitting `oritech:steam` would re-open the power layer #37 removed. Third customer of the burner model the Furnace and the Burner Mining Drill share (ADR-0047): `fuel_value * effectivity` into a buffer, drained at the prototype's own draw. One tier -- ADR-0033's reactor emits superheated steam directly, so `heat-exchanger` stays on #135. Flipped from `undecided` when the block landed, not before: an item-map target for a block that does not exist emits a recipe naming nothing.",
+      "note": "Terra's Boiler: fuel and water in, low-temperature steam out (#224, ADR-0048). It REPLACES the LP Solid Boiler this row used to point at -- ADR-0048 makes the steam chain pack-authored on two pack-owned fluids, and a GT boiler emitting `gtceu:steam` would re-open the power layer #37 removed. Third customer of the burner model the Furnace and the Burner Mining Drill share (ADR-0047): `fuel_value * effectivity` into a buffer, drained at the prototype's own draw. One tier -- ADR-0033's reactor emits superheated steam directly, so `heat-exchanger` stays on #135. Flipped from `undecided` when the block landed, not before: an item-map target for a block that does not exist emits a recipe naming nothing.",
       "ticket": 224
     },
     "bulk-inserter": {
@@ -129,7 +129,7 @@
       "kind": "item",
       "target": "planetaryfactory:burner_mining_drill",
       "source": "authored",
-      "note": "Rung 0's rig, and `planetaryfactory_core`'s (ADR-0043, #193). Oritech owns no solid extraction on Terra: `oritech:lv_miner` deletes an ore block whole whatever amount it held and takes its drops from the loot table, which Terra's ore blocks do not have, so it would destroy a field and pay out nothing. The rig draws one unit per operation through `OreMining` instead (ADR-0041). 2x2 over the 2x2 beneath it, burning solid fuel at 150 kW under ADR-0047, and every one of those numbers is a `data/factorio/machine.json` row. Its own recipe is Factorio's, category `crafting`, so the Personal Assembler plans it at rung 0."
+      "note": "Rung 0's rig, and `planetaryfactory_core`'s (ADR-0043, #193). GregTech owns no solid extraction on Terra: `gtceu:lv_miner` deletes an ore block whole whatever amount it held and takes its drops from the loot table, which Terra's ore blocks do not have, so it would destroy a field and pay out nothing. The rig draws one unit per operation through `OreMining` instead (ADR-0041). 2x2 over the 2x2 beneath it, burning solid fuel at 150 kW under ADR-0047, and every one of those numbers is a `data/factorio/machine.json` row. Its own recipe is Factorio's, category `crafting`, so the Personal Assembler plans it at rung 0."
     },
     "car": {
       "status": "undecided",
@@ -168,9 +168,9 @@
     },
     "chemical-plant": {
       "kind": "item",
-      "target": "oritech:lv_chemical_plant",
+      "target": "gtceu:lv_chemical_plant",
       "source": "borrowed",
-      "note": "ADR-0025's Chemical Plant, registered by #107 through Oritech's registrate -- so the id is `oritech:` and the tier is a prefix. There is no second tier to add (ADR-0025: one tier, one recipe set); the prefix is the chassis's, not a ladder."
+      "note": "ADR-0025's Chemical Plant, registered by #107 through GregTech's registrate -- so the id is `gtceu:` and the tier is a prefix. There is no second tier to add (ADR-0025: one tier, one recipe set); the prefix is the chassis's, not a ladder."
     },
     "chemical-science-pack": {
       "kind": "item",
@@ -195,7 +195,7 @@
     },
     "constant-combinator": {
       "status": "not_emitted",
-      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Simplebelts's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Simplebelts needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
+      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Create's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
     },
     "construction-robot": {
       "status": "undecided",
@@ -216,19 +216,19 @@
     },
     "copper-plate": {
       "kind": "item",
-      "target": "oritech:copper_plate",
+      "target": "gtceu:copper_plate",
       "source": "borrowed",
       "note": "As `iron-plate`."
     },
     "crude-oil": {
       "kind": "fluid",
-      "target": "oritech:raw_oil",
+      "target": "gtceu:raw_oil",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from Oritech. Lang override to \"Crude Oil\"."
+      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang override to \"Crude Oil\"."
     },
     "crude-oil-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "crusher": {
       "status": "undecided",
@@ -237,7 +237,7 @@
     },
     "decider-combinator": {
       "status": "not_emitted",
-      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Simplebelts's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Simplebelts needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
+      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Create's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
     },
     "depleted-uranium-fuel-cell": {
       "status": "undecided",
@@ -248,7 +248,7 @@
       "kind": "item",
       "target": "powergrid:modular_display",
       "source": "borrowed",
-      "note": "Factorio's display panel shows a signal as an icon or text. Power Grid's Modular Display is a segmented panel you slot digit, letter, hex and symbol modules into, which is the same job. The CRT is the other candidate and is rejected: it needs 12 V on a heater, ~1000 V on the anode and deflection coils to steer a dot, so it is a subsystem rather than a panel. `display_module` is a component OF the Modular Display, not a placed block. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Simplebelts's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not."
+      "note": "Factorio's display panel shows a signal as an icon or text. Power Grid's Modular Display is a segmented panel you slot digit, letter, hex and symbol modules into, which is the same job. The CRT is the other candidate and is rejected: it needs 12 V on a heater, ~1000 V on the anode and deflection coils to steer a dot, so it is a subsystem rather than a panel. `display_module` is a component OF the Modular Display, not a placed block. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Create's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not."
     },
     "electric-engine-unit": {
       "kind": "item",
@@ -260,7 +260,7 @@
       "kind": "item",
       "target": "planetaryfactory:electric_furnace",
       "source": "authored",
-      "note": "The ladder's top rung (#155): `crafting_speed` 2, no fuel slot, 13 EU/t through Oritech's `IEnergyContainer`, fed by ADR-0036's supply-area pole and by nothing else -- `acceptEnergyFromNetwork` returns 0, so a GT cable run cannot reach it. #149 specified it on a GT chassis and is closed as superseded: a GT machine reads `SmeltingRecipe` through `GTRecipeType.proxyRecipes` and would be blind to the count-bearing `planetaryfactory:smelting` type. Idle draw is not modelled (ADR-0029 excludes it)."
+      "note": "The ladder's top rung (#155): `crafting_speed` 2, no fuel slot, 13 EU/t through GTCEu's `IEnergyContainer`, fed by ADR-0036's supply-area pole and by nothing else -- `acceptEnergyFromNetwork` returns 0, so a GT cable run cannot reach it. #149 specified it on a GT chassis and is closed as superseded: a GT machine reads `SmeltingRecipe` through `GTRecipeType.proxyRecipes` and would be blind to the count-bearing `planetaryfactory:smelting` type. Idle draw is not modelled (ADR-0029 excludes it)."
     },
     "electric-mining-drill": {
       "status": "undecided",
@@ -271,7 +271,7 @@
       "kind": "item",
       "target": "planetaryfactory:electronic_circuit",
       "source": "authored",
-      "note": "Registered in `kubejs/startup_scripts/items.js`. #62 removed Oritech's and Mekanism's competing lines; the tier carries progression, so it authors rather than borrows."
+      "note": "Registered in `kubejs/startup_scripts/items.js`. #62 removed GregTech's and Mekanism's competing lines; the tier carries progression, so it authors rather than borrows."
     },
     "engine-unit": {
       "kind": "item",
@@ -291,15 +291,15 @@
     },
     "express-splitter": {
       "status": "native_mechanic",
-      "note": "Simplebelts owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "express-transport-belt": {
       "status": "native_mechanic",
-      "note": "Simplebelts owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "express-underground-belt": {
       "status": "native_mechanic",
-      "note": "Simplebelts owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "fast-inserter": {
       "status": "undecided",
@@ -308,15 +308,15 @@
     },
     "fast-splitter": {
       "status": "native_mechanic",
-      "note": "Simplebelts owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "fast-transport-belt": {
       "status": "native_mechanic",
-      "note": "Simplebelts owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "fast-underground-belt": {
       "status": "native_mechanic",
-      "note": "Simplebelts owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "firearm-magazine": {
       "status": "undecided",
@@ -334,7 +334,7 @@
     },
     "fluoroketone-cold-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "fluoroketone-hot": {
       "status": "not_emitted",
@@ -342,7 +342,7 @@
     },
     "fluoroketone-hot-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "flying-robot-frame": {
       "status": "undecided",
@@ -387,13 +387,13 @@
     },
     "heavy-oil": {
       "kind": "fluid",
-      "target": "oritech:heavy_oil",
+      "target": "gtceu:heavy_oil",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from Oritech. Lang already verbatim Factorio. ADR-0009 binds Electro's oceans to this fluid."
+      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang already verbatim Factorio. ADR-0009 binds Electro's oceans to this fluid."
     },
     "heavy-oil-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "ice": {
       "status": "undecided",
@@ -402,7 +402,7 @@
     },
     "inserter": {
       "status": "undecided",
-      "note": "Can Simplebelts's Mechanical Arm be Factorio's inserter?",
+      "note": "Can Create's Mechanical Arm be Factorio's inserter?",
       "ticket": 102
     },
     "iron-chest": {
@@ -413,27 +413,27 @@
     },
     "iron-gear-wheel": {
       "kind": "item",
-      "target": "oritech:iron_gear",
+      "target": "gtceu:iron_gear",
       "source": "borrowed",
-      "note": "Oritech's gear prefix on Iron. A gear carries no progression and GT's line is not a parallel escape, so it borrows (ADR-0031). That the prefix is generated for Iron in Oritech 7.0.2 is a registry fact, so the world-load check is what confirms it."
+      "note": "GregTech's gear prefix on Iron. A gear carries no progression and GT's line is not a parallel escape, so it borrows (ADR-0031). That the prefix is generated for Iron in GTCEu 7.0.2 is a registry fact, so the world-load check is what confirms it."
     },
     "iron-ore": {
       "kind": "tag",
       "target": "c:raw_materials/iron",
       "source": "borrowed",
-      "note": "A tag, not an item: Terra's ore is Oritech's vein and Almost Unified may unify what it drops, so the row names the common tag rather than betting on one mod's raw ore. Ingredient side only, which is all `smelting` needs."
+      "note": "A tag, not an item: Terra's ore is GregTech's vein and Almost Unified may unify what it drops, so the row names the common tag rather than betting on one mod's raw ore. Ingredient side only, which is all `smelting` needs."
     },
     "iron-plate": {
       "kind": "item",
-      "target": "oritech:iron_plate",
+      "target": "gtceu:iron_plate",
       "source": "borrowed",
-      "note": "Oritech's material item. ADR-0032: ore smelts 1:1 to plate, no ingot step."
+      "note": "GregTech's material item. ADR-0032: ore smelts 1:1 to plate, no ingot step."
     },
     "iron-stick": {
       "kind": "item",
-      "target": "oritech:iron_rod",
+      "target": "gtceu:iron_rod",
       "source": "borrowed",
-      "note": "Oritech's rod prefix on Iron -- Factorio's iron stick. As `iron-gear-wheel`."
+      "note": "GregTech's rod prefix on Iron -- Factorio's iron stick. As `iron-gear-wheel`."
     },
     "lab": {
       "kind": "item",
@@ -453,17 +453,17 @@
     },
     "light-oil": {
       "kind": "fluid",
-      "target": "oritech:light_oil",
+      "target": "gtceu:light_oil",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from Oritech. Lang already verbatim Factorio."
+      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang already verbatim Factorio."
     },
     "light-oil-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "locomotive": {
       "status": "undecided",
-      "note": "Simplebelts's rail network as Factorio's.",
+      "note": "Create's rail network as Factorio's.",
       "ticket": 108
     },
     "logistic-robot": {
@@ -489,17 +489,17 @@
       "kind": "item",
       "target": "planetaryfactory:low_density_structure",
       "source": "authored",
-      "note": "Factorio fidelity: the Rocket Silo's cycle consumes Factorio's own rocket intermediates. This REVISES #41, which had the cycle take HDPE sheets directly (and whose HDPE was itself superseded by ADR-0035 -- plastic is `oritech:polyethylene`)."
+      "note": "Factorio fidelity: the Rocket Silo's cycle consumes Factorio's own rocket intermediates. This REVISES #41, which had the cycle take HDPE sheets directly (and whose HDPE was itself superseded by ADR-0035 -- plastic is `gtceu:polyethylene`)."
     },
     "lubricant": {
       "kind": "fluid",
-      "target": "oritech:lubricant",
+      "target": "gtceu:lubricant",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from Oritech. Lang unchanged."
+      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang unchanged."
     },
     "lubricant-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "medium-electric-pole": {
       "kind": "item",
@@ -543,7 +543,7 @@
       "kind": "item",
       "target": "kubejs:oil_refinery",
       "source": "borrowed",
-      "note": "ADR-0025's Oil Refinery, a MULTIBLOCK (#107) -- and Oritech's model provider does not serve the `kubejs:` namespace the multiblock builder lands in, which is why this id differs from the Chemical Plant's. Not tiered."
+      "note": "ADR-0025's Oil Refinery, a MULTIBLOCK (#107) -- and GregTech's model provider does not serve the `kubejs:` namespace the multiblock builder lands in, which is why this id differs from the Chemical Plant's. Not tiered."
     },
     "oxide-asteroid-chunk": {
       "status": "undecided",
@@ -552,7 +552,7 @@
     },
     "passive-provider-chest": {
       "status": "undecided",
-      "note": "Simplebelts 6's package logistics is the shelf's answer, gated to the `logistic` rung; which block is a provider chest is not chosen.",
+      "note": "Create 6's package logistics is the shelf's answer, gated to the `logistic` rung; which block is a provider chest is not chosen.",
       "ticket": 28
     },
     "personal-roboport-equipment": {
@@ -562,13 +562,13 @@
     },
     "petroleum-gas": {
       "kind": "fluid",
-      "target": "oritech:oil",
+      "target": "gtceu:oil",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from Oritech. Lang override to \"Petroleum Gas\". Registered `.liquid()`; fluid state has no mechanical consequence here."
+      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang override to \"Petroleum Gas\". Registered `.liquid()`; fluid state has no mechanical consequence here."
     },
     "petroleum-gas-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "piercing-rounds-magazine": {
       "status": "undecided",
@@ -577,13 +577,13 @@
     },
     "pipe": {
       "kind": "item",
-      "target": "simplebelts:fluid_pipe",
+      "target": "create:fluid_pipe",
       "source": "borrowed",
       "note": "As `storage-tank`."
     },
     "pipe-to-ground": {
       "status": "not_emitted",
-      "note": "No row is needed: the recipe is `not_emitted` (subgroup-owner.json) because underground pipes are `excluded` -- a Simplebelts pipe routes freely in three dimensions, and `simplebelts:encased_fluid_pipe` is decoration rather than a buried run."
+      "note": "No row is needed: the recipe is `not_emitted` (subgroup-owner.json) because underground pipes are `excluded` -- a Create pipe routes freely in three dimensions, and `create:encased_fluid_pipe` is decoration rather than a buried run."
     },
     "plastic-bar": {
       "kind": "item",
@@ -600,7 +600,7 @@
       "kind": "item",
       "target": "powergrid:contactor",
       "source": "borrowed",
-      "note": "Factorio's power switch cuts or joins two electrical networks on a control signal. Power Grid's Contactor is that exact device -- its own ponder calls it a heavy-duty relay that 'lets you switch high currents with a lower voltage input'. The LV/MV/HV Switches are rejected because they are toggled by hand or by a kinetic input rather than by a signal, which makes them a lever and not a switch the factory operates. Redstone reaches the Contactor's coil through Power Grid's own Redstone Converter, so ADR-0030's redstone-is-the-wire answer still supplies the control side. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Simplebelts's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not."
+      "note": "Factorio's power switch cuts or joins two electrical networks on a control signal. Power Grid's Contactor is that exact device -- its own ponder calls it a heavy-duty relay that 'lets you switch high currents with a lower voltage input'. The LV/MV/HV Switches are rejected because they are toggled by hand or by a kinetic input rather than by a signal, which makes them a lever and not a switch the factory operates. Redstone reaches the Contactor's coil through Power Grid's own Redstone Converter, so ADR-0030's redstone-is-the-wire answer still supplies the control side. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Create's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not."
     },
     "processing-unit": {
       "kind": "item",
@@ -626,11 +626,11 @@
       "kind": "item",
       "target": "powergrid:alarm_bell",
       "source": "borrowed",
-      "note": "ADAPTED, and the weakest of the four. Factorio's programmable speaker plays a chosen sound and raises a named alert on a circuit condition; Power Grid's Alarm Bell rings, once, when powered. The trigger survives -- a condition makes a noise -- and the programmability does not. It is borrowed anyway because the alternative is `not_emitted`, and an alarm that rings on a condition is most of what the row is for in play. `docs/factorio-mechanics.md` carries the notice. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Simplebelts's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not."
+      "note": "ADAPTED, and the weakest of the four. Factorio's programmable speaker plays a chosen sound and raises a named alert on a circuit condition; Power Grid's Alarm Bell rings, once, when powered. The trigger survives -- a condition makes a noise -- and the programmability does not. It is borrowed anyway because the alternative is `not_emitted`, and an alarm that rings on a condition is most of what the row is for in play. `docs/factorio-mechanics.md` carries the notice. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Create's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not."
     },
     "pump": {
       "kind": "item",
-      "target": "simplebelts:mechanical_pump",
+      "target": "create:mechanical_pump",
       "source": "borrowed",
       "note": "As `storage-tank`."
     },
@@ -648,20 +648,20 @@
     },
     "rail": {
       "kind": "item",
-      "target": "simplebelts:track",
+      "target": "create:track",
       "source": "borrowed",
-      "note": "Simplebelts's train track, not `minecraft:rail`: ADR-0017's train row is Simplebelts's network (#108)."
+      "note": "Create's train track, not `minecraft:rail`: ADR-0017's train row is Create's network (#108)."
     },
     "rail-chain-signal": {
       "status": "undecided",
-      "note": "Simplebelts ships one signal block. Whether it can carry Factorio's chain-signal behaviour, or whether chain signals are `excluded` the way underground belts are, is a question for #108 -- and it is not answerable by emitting a second recipe for the same block, which is what the identical ingredient list would produce.",
+      "note": "Create ships one signal block. Whether it can carry Factorio's chain-signal behaviour, or whether chain signals are `excluded` the way underground belts are, is a question for #108 -- and it is not answerable by emitting a second recipe for the same block, which is what the identical ingredient list would produce.",
       "ticket": 108
     },
     "rail-signal": {
       "kind": "item",
-      "target": "simplebelts:track_signal",
+      "target": "create:track_signal",
       "source": "borrowed",
-      "note": "Simplebelts's track signal, placed ON the track rather than spliced into it -- the same affordance as Factorio's, which is also placed beside the rail. It follows its shelf rather than its ingredients (subgroup-owner.json). Simplebelts's own recipe is `railway_casing` + `electron_tube`, and the electron tube is redstone-bound, so on Terra that recipe is unbuildable and this one replaces it (#62, #143)."
+      "note": "Create's track signal, placed ON the track rather than spliced into it -- the same affordance as Factorio's, which is also placed beside the rail. It follows its shelf rather than its ingredients (subgroup-owner.json). Create's own recipe is `railway_casing` + `electron_tube`, and the electron tube is redstone-bound, so on Terra that recipe is unbuildable and this one replaces it (#62, #143)."
     },
     "refined-concrete": {
       "kind": "item",
@@ -688,7 +688,7 @@
       "kind": "item",
       "target": "planetaryfactory:rocket_fuel",
       "source": "authored",
-      "note": "As `low-density-structure`: a solid item, Factorio's own, made from `solid-fuel` and light oil. Distinct from `oritech:rocket_fuel`, the FLUID the GCyR rocket entity burns (#41)."
+      "note": "As `low-density-structure`: a solid item, Factorio's own, made from `solid-fuel` and light oil. Distinct from `gtceu:rocket_fuel`, the FLUID the GCyR rocket entity burns (#41)."
     },
     "rocket-part": {
       "status": "undecided",
@@ -702,7 +702,7 @@
     },
     "selector-combinator": {
       "status": "not_emitted",
-      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Simplebelts's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Simplebelts needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'. It is doubly unemittable: its corpus recipe takes five `decider-combinator`, which is itself `not_emitted`, so a target here would name an ingredient nothing makes."
+      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Create's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'. It is doubly unemittable: its corpus recipe takes five `decider-combinator`, which is itself `not_emitted`, so a target here would name an ingredient nothing makes."
     },
     "shotgun": {
       "status": "undecided",
@@ -724,7 +724,7 @@
       "kind": "item",
       "target": "powergrid:light_fixture",
       "source": "borrowed",
-      "note": "Factorio's small lamp is a single placed, powered light. Power Grid's Light Fixture is the plainest of its lamps and the only one that is just a lamp: `factory_light` is a housing you right-click a bulb into, `growth_lamp` is a crop bulb, and `ceiling_tile_lamp` belongs to the ceiling-tile system. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Simplebelts's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not."
+      "note": "Factorio's small lamp is a single placed, powered light. Power Grid's Light Fixture is the plainest of its lamps and the only one that is just a lamp: `factory_light` is a housing you right-click a bulb into, `growth_lamp` is a crop bulb, and `ceiling_tile_lamp` belongs to the ceiling-tile system. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Create's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not."
     },
     "solar-panel": {
       "kind": "item",
@@ -741,7 +741,7 @@
       "kind": "item",
       "target": "planetaryfactory:solid_fuel",
       "source": "authored",
-      "note": "Oritech ships no solid fuel item and borrowing `minecraft:coal` would have the oil chapter print an ore the pack mines, which ADR-0032's 1:1 stance forbids. Burnable, made from the oil fractions in the Chemical Plant. Feeds `rocket-fuel`."
+      "note": "GregTech ships no solid fuel item and borrowing `minecraft:coal` would have the oil chapter print an ore the pack mines, which ADR-0032's 1:1 stance forbids. Burnable, made from the oil fractions in the Chemical Plant. Feeds `rocket-fuel`."
     },
     "space-platform-foundation": {
       "status": "undecided",
@@ -765,11 +765,11 @@
     },
     "splitter": {
       "status": "native_mechanic",
-      "note": "Simplebelts owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "steam-engine": {
       "status": "not_emitted",
-      "note": "`not_emitted`. Factorio's `steam-engine` is ONE placed entity -- the block that turns steam into electricity. Power Grid's counterpart is a four-part Simplebelts-kinetic MULTIBLOCK (generator housing, induction rotor, commutator, winding), and no one of those parts is the machine: a housing is a shell and a rotor is a rotor. Emitting this row against any single part would put a Factorio machine's name on a component, which is the same objection that made the four combinators `not_emitted` -- a Factorio name on a block that does not do the Factorio thing. The row's CAPABILITY is not dropped: it is step 3 of #101's four-step chain (GT boiler -> Simplebelts Steam Engine (SU) -> the grid mod's generator (W) -> grid) and ADR-0017 still names it. What is dropped is a pack-authored recipe for it; the parts become craftable through Power Grid's own recipes when #172 admits them past ADR-0034's sweep. Decided after #148 closed, which is why this row cites #172 rather than that ticket."
+      "note": "`not_emitted`. Factorio's `steam-engine` is ONE placed entity -- the block that turns steam into electricity. Power Grid's counterpart is a four-part Create-kinetic MULTIBLOCK (generator housing, induction rotor, commutator, winding), and no one of those parts is the machine: a housing is a shell and a rotor is a rotor. Emitting this row against any single part would put a Factorio machine's name on a component, which is the same objection that made the four combinators `not_emitted` -- a Factorio name on a block that does not do the Factorio thing. The row's CAPABILITY is not dropped: it is step 3 of #101's four-step chain (GT boiler -> Create Steam Engine (SU) -> the grid mod's generator (W) -> grid) and ADR-0017 still names it. What is dropped is a pack-authored recipe for it; the parts become craftable through Power Grid's own recipes when #172 admits them past ADR-0034's sweep. Decided after #148 closed, which is why this row cites #172 rather than that ticket."
     },
     "steam-turbine": {
       "status": "undecided",
@@ -790,7 +790,7 @@
     },
     "steel-plate": {
       "kind": "item",
-      "target": "oritech:steel_plate",
+      "target": "gtceu:steel_plate",
       "source": "borrowed",
       "note": "The only surviving alloy on Terra -- iron plus coal, #72. Its `smelting` recipe is 5 plates to 1, which no vanilla shape can express; it rides the count-bearing `planetaryfactory:smelting` type, which #155 landed."
     },
@@ -824,9 +824,9 @@
     },
     "storage-tank": {
       "kind": "item",
-      "target": "simplebelts:fluid_tank",
+      "target": "create:fluid_tank",
       "source": "borrowed",
-      "note": "Simplebelts owns bulk fluid storage on Terra (ADR-0017, #106). FIDELITY NOTE: a Factorio storage tank is one 3x3 unit of a fixed size, while Simplebelts's tanks are stacked into a multiblock whose capacity is however many blocks you place -- so one craft is one block, not one tank. Accepted: the recipe is the corpus's, and the capacity model is Simplebelts's."
+      "note": "Create owns bulk fluid storage on Terra (ADR-0017, #106). FIDELITY NOTE: a Factorio storage tank is one 3x3 unit of a fixed size, while Create's tanks are stacked into a multiblock whose capacity is however many blocks you place -- so one craft is one block, not one tank. Accepted: the recipe is the corpus's, and the capacity model is Create's."
     },
     "submachine-gun": {
       "status": "undecided",
@@ -841,35 +841,35 @@
     },
     "sulfur": {
       "kind": "item",
-      "target": "oritech:sulfur_dust",
+      "target": "gtceu:sulfur_dust",
       "source": "borrowed",
-      "note": "Oritech's dust. Its RECIPE is `pack:chemical_plant` and waits on #107."
+      "note": "GregTech's dust. Its RECIPE is `pack:chemical_plant` and waits on #107."
     },
     "sulfuric-acid": {
       "kind": "fluid",
-      "target": "oritech:sulfuric_acid",
+      "target": "gtceu:sulfuric_acid",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from Oritech. Oritech's acid."
+      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. GregTech's acid."
     },
     "sulfuric-acid-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "train-stop": {
       "kind": "item",
-      "target": "simplebelts:track_station",
+      "target": "create:track_station",
       "source": "borrowed",
-      "note": "Simplebelts's station: the block a train is routed to and scheduled at, which is what a Factorio train stop is. Simplebelts's own recipe is `railway_casing` + a compass and goes with the stock sweep (#143)."
+      "note": "Create's station: the block a train is routed to and scheduled at, which is what a Factorio train stop is. Create's own recipe is `railway_casing` + a compass and goes with the stock sweep (#143)."
     },
     "transport-belt": {
       "kind": "item",
-      "target": "simplebelts:belt_connector",
+      "target": "create:belt_connector",
       "source": "borrowed",
-      "note": "Simplebelts's belt item. ADR-0017 gives Simplebelts item logistics; #93 keeps the recipe on `pack:assembling`."
+      "note": "Create's belt item. ADR-0017 gives Create item logistics; #93 keeps the recipe on `pack:assembling`."
     },
     "underground-belt": {
       "status": "native_mechanic",
-      "note": "Simplebelts owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "uranium-235": {
       "status": "undecided",
@@ -888,7 +888,7 @@
     },
     "uranium-ore": {
       "status": "undecided",
-      "note": "Oritech's uranium ore is on Terra (ADR-0021) but which item the corpus's `uranium-ore` is has no row.",
+      "note": "GregTech's uranium ore is on Terra (ADR-0021) but which item the corpus's `uranium-ore` is has no row.",
       "ticket": 135
     },
     "utility-science-pack": {
@@ -904,7 +904,7 @@
     },
     "water-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Simplebelts's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "wood": {
       "kind": "tag",

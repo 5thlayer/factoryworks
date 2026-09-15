@@ -179,7 +179,7 @@ Researchd's `checkItemPresence` — Factorio's triggers do not consume what they
 does the pack (ADR-0022).
 
 `icon` is a Factorio texture path and is useless as a Minecraft texture. It survives only as a hint
-when picking the `oritech:`/`simplebelts:` item that stands in for the technology.
+when picking the `gtceu:`/`create:` item that stands in for the technology.
 
 `effects` are kept raw, including the ones with no Minecraft analogue — a node worth dropping is a
 decision to make while looking at the tree, not one a script makes silently. The one exception is

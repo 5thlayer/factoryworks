@@ -4,7 +4,7 @@
 `docs/testing/what-to-check.md`'s "cross-file references resolve" claim, for the recipe type that
 makes the furnace ladder expressible.
 
-This exists for one failure in particular, and it is the ticket's headline trap. Oritech's
+This exists for one failure in particular, and it is the ticket's headline trap. GregTech's
 `GTRecipeType.proxyRecipes` converts vanilla `SmeltingRecipe` **specifically**, reading only the
 single vanilla ingredient. A pack recipe class that was assignable to it would have its count
 silently dropped -- `5 iron_plate -> 1 steel_plate` becoming `1 iron_plate -> 1 steel_plate`, with
@@ -39,7 +39,7 @@ PACK_SMELTING = "planetaryfactory:smelting"
 # `ItemStack.getBurnTime(RecipeType.SMELTING)` is fuel bookkeeping and is fine.
 VANILLA_LOOKUPS = (
     "getRecipeFor(RecipeType.SMELTING",
-    "simplebeltsCheck(RecipeType.SMELTING",
+    "createCheck(RecipeType.SMELTING",
     "getAllRecipesFor(RecipeType.SMELTING",
 )
 

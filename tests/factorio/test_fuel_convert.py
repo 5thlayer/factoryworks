@@ -167,8 +167,10 @@ def main():
 
     # The folder and the namespace are one string in two files. A rename in either is a table
     # that loads nothing, in a game that reports no error because an absent fuel is not fuel.
+    # 26.1 replaced the listener's `(Gson, String)` constructor with a codec and a
+    # `FileToIdConverter`; the folder name is still the one string that has to agree.
     listener = (SMELTING / "PFFuel.java").read_text(encoding="utf-8")
-    if f'super(GSON, "{OUT_DIR.name}")' not in listener:
+    if f'FileToIdConverter.json("{OUT_DIR.name}")' not in listener:
         failures.append(
             f"PFFuel does not read the {OUT_DIR.name!r} folder the converter writes"
         )

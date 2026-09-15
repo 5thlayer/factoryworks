@@ -100,7 +100,7 @@ ResearchdEvents.registerResearches((event) => {
       return;
     }
 
-    var research = event.simplebelts(pfId(tech.name));
+    var research = event.create(pfId(tech.name));
 
     if (over.iconPack) {
       research.iconPack(over.iconPack);
