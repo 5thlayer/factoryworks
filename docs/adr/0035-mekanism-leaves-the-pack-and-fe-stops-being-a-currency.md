@@ -30,7 +30,7 @@ that together they leave nothing.
 | Refining, Chemistry | The pack's Oil Refinery and Chemical Plant, ADR-0025 — no Mekanism machine has the two-fluids-in, three-fluids-out shape |
 | Hand-crafting surface | Formulaic Assemblicator cut, `#34` |
 | Uranium fuel chain | The pack registers its own Centrifuge, ADR-0033 and `#135` |
-| HDPE and ethene | Superseded, ADR-0025. Plastic is Factorio's one step on `oritech:polyethylene`; the `c:ethene` tag bridge is dropped |
+| HDPE and ethene | Superseded, ADR-0025. Plastic is Factorio's one step on `gtceu:polyethylene`; the `c:ethene` tag bridge is dropped |
 
 **Three block roles survived**, and this ADR disposes of them: the Energized Smelter, Universal
 Cables, and the Energy Cube with the Induction Matrix.
@@ -92,7 +92,7 @@ touched.** There is no FE network and no FE storage block.
 full stop. The table gets *shorter* — three rows collapse to two — rather than gaining a
 replacement owner, and that is the shape of this whole decision.
 
-**In-area distribution is not left empty**, and it is not handed to Oritech either. It becomes a
+**In-area distribution is not left empty**, and it is not handed to GregTech either. It becomes a
 pack-authored supply-area pole, which is ADR-0036's subject and is a prerequisite of this removal
 rather than a consequence of it. The two were decided in one session and are written as two
 documents because they supersede different tickets; neither ships without the other.
@@ -103,7 +103,7 @@ documents because they supersede different tickets; neither ships without the ot
   furnace, one cable and one battery is the "kept but outclassed" failure ADR-0017 exists to reject,
   applied to a mod instead of a block. It also keeps ~500 blocks and items in JEI that no decision
   names, which is precisely the tail ADR-0034 is trying to shrink.
-- **Hand in-area distribution to Oritech and keep the rest.** Rejected on the capability surface,
+- **Hand in-area distribution to GregTech and keep the rest.** Rejected on the capability surface,
   and the reasoning is ADR-0036's. It also re-admits the voltage-tier ladder `#37` removed entire.
 - **Adopt MekanismGenerators to give the mod a reason to stay.** Rejected twice already — ADR-0033
   refused it for the reactor row, and it brings six generators onto a row Electro owns. Adopting a

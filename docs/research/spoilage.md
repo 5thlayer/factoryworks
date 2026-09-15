@@ -5,7 +5,7 @@ timer has been deleted. No data component, no NBT, no per-stack state of any kin
 
 Read against [Mrbysco/Spoiled](https://github.com/Mrbysco/Spoiled), branch `multi/1.21`, HEAD
 `214e842` ("Increment version [build] [publish]", 2026-06-10); against the pack's own
-`mods/oritech-1.21.1-7.0.2.jar`, `mods/Mekanism-1.21.1-10.7.19.85.jar`, `mods/simplebelts-1.21.1-6.0.10.jar`,
+`mods/gtceu-1.21.1-7.0.2.jar`, `mods/Mekanism-1.21.1-10.7.19.85.jar`, `mods/simplebelts-1.21.1-6.0.10.jar`,
 `mods/integrateddynamics-1.21.1-neoforge-1.34.0.jar` and `mods/kubejs-neoforge-2101.7.1-build.181.jar`;
 and against NeoForge `21.1.248` and vanilla `1.21.1` under `Install/libraries`.
 
@@ -70,7 +70,7 @@ This was investigated directly, because it is the only thing that would rescue a
 - **The mutation sites are scattered, and mods duplicate them.** Averaging must run where counts
   change, and `grow()`/`setCount()` do not know the donor stack, so every call site needs patching.
   Vanilla has ~19 across `AbstractContainerMenu`, `Inventory`, `HopperBlockEntity`, `SimpleContainer`
-  and others. **Oritech alone reimplements the merge arithmetic in 24 classes**, including
+  and others. **GregTech alone reimplements the merge arithmetic in 24 classes**, including
   `ItemNetHandler`, `GTTransferUtils`, `NotifiableItemStackHandler`, `QuantumChestMachine$ItemCache`
   and `ConveyorCover`. AE2 and Create have their own storage layers again.
 - **Two further hazards.** `ItemStack.hashItemAndComponents` backs `ItemStackLinkedSet` and
@@ -119,7 +119,7 @@ then — the expensive part — for **every non-empty slot** calls `SpoilHelper.
 `level.getRecipeManager().getRecipesFor(SPOIL_RECIPE_TYPE, new SingleRecipeInput(stack), level)`.
 
 That is a recipe-manager query per stack per pass, plus a `SingleRecipeInput` allocation, plus a
-registry lookup and a stream over the stack's component map. A mid-game Oritech/AE2 base plausibly
+registry lookup and a stream over the stack's component map. A mid-game GregTech/AE2 base plausibly
 keeps several hundred chunks loaded, which puts this in the six-figures-per-second range.
 
 **The cost driver is that query, not the walking.** Our spoilable set is a handful of items known at
@@ -171,16 +171,16 @@ only bounded. Factorio's spoilage is deterministic; ours is not.
 
 **Yes, natively, in every mod — because freshness is item identity.**
 
-This question was originally scoped to Oritech. Scoping it there was a mistake: resource processing
-in this pack happens across Simplebelts, Mekanism, Oritech and Integrated Dynamics, with multiple
+This question was originally scoped to GregTech. Scoping it there was a mistake: resource processing
+in this pack happens across Simplebelts, Mekanism, GregTech and Integrated Dynamics, with multiple
 optional paths, so any answer that works only in GT would silently bias which path a player picks.
 
 Four sibling items answer it for all of them at once. A recipe that accepts any freshness references
 a **tag** containing all four. A recipe that demands a specific state references the item directly.
 Tags and item IDs work identically in every mod's recipe system, with no integration code anywhere.
 
-For the record, the GT-specific mechanism does exist and is **not needed**: Oritech 7.0.2 ships
-`com.gregtechceu.oritech.api.recipe.ingredient.ExDataComponentIngredient extends
+For the record, the GT-specific mechanism does exist and is **not needed**: GregTech 7.0.2 ships
+`com.gregtechceu.gtceu.api.recipe.ingredient.ExDataComponentIngredient extends
 net.neoforged.neoforge.common.crafting.DataComponentIngredient`, and its lookup tree is
 component-aware via `ItemDataComponentMapIngredient`. The `RecipeCondition` hierarchy is *not* the
 place — every implementation in `common/recipe/condition/` (`BiomeCondition`, `DimensionCondition`,
@@ -199,19 +199,19 @@ Investigated because it determines whether spoilage can deadlock a factory.
 
 | Mod | Extract from an input slot? | Evidence |
 | --- | --- | --- |
-| **Oritech** | **Never** | `NotifiableItemStackHandler.extractItem` → `canCapOutput() ? … : ItemStack.EMPTY`; input handlers built with `IO.IN` |
+| **GregTech** | **Never** | `NotifiableItemStackHandler.extractItem` → `canCapOutput() ? … : ItemStack.EMPTY`; input handlers built with `IO.IN` |
 | **Mekanism** | **Never** externally | `InputInventorySlot` passes `ConstantPredicates.notExternal()` as its `canExtract` |
 | **Create** | Per-machine | Basin, Depot, Deployer yes; Millstone, Saw, Crushing Wheel, Mechanical Crafter no |
 | **Integrated Dynamics** | Always | plain `InvWrapper`, no override |
 
-For Oritech this is absolute: pipes, AE2, SFM, GT's own Conveyor Modules and **even an Item Voiding
+For GregTech this is absolute: pipes, AE2, SFM, GT's own Conveyor Modules and **even an Item Voiding
 Cover** all route through `getItemHandlerCap` and receive `EMPTY`. Mekanism's `INPUT_OUTPUT` side
 setting does not help, because the gate is at the slot, not the side. In both, the only recovery is a
 human opening the GUI or breaking the machine.
 
 There *is* a generic escape hatch, and it needs no Mixins:
 
-- **Oritech:** `NotifiableItemStackHandler.extractItemInternal` / `insertItemInternal` are **public**
+- **GregTech:** `NotifiableItemStackHandler.extractItemInternal` / `insertItemInternal` are **public**
   and delegate straight to `storage` with no IO check; the backing `storage` is a public final field.
   The whole path is public — `MetaMachine.getMachine(level, pos)` → `getTraits()` → filter on the
   public `handlerIO`.
@@ -284,7 +284,7 @@ The 120× spread between bacteria and bioflux is what forces a frequent sweep, a
 | **Shipping Mrbysco/Spoiled unmodified** | Overworld-only (`SpoilHandler.java:42`), so it cannot act on Sapros at all. |
 | **Forking Food Spoilage instead** | **All Rights Reserved**, no public source. Also food-oriented (everything decays to rotten flesh), config-driven rather than datapack-driven, and built on a continuous per-item freshness percentage — the model §1 rules out. Its container-preservation multipliers, the feature that makes it attractive, already exist in Spoiled as `containerModifier` / `itemContainerModifier`. |
 | **Any per-stack freshness value** (component, NBT, timestamp) | Fragments stacks unboundedly, and averaging-on-merge is not implementable (§1). |
-| **A Mixin fork to intercept merging** | ~19 vanilla mutation sites, 24 more in Oritech alone, plus AE2 and Simplebelts; breaks the `hashItemAndComponents` contract; collides with `recipeessentials`. Would work only sometimes. |
+| **A Mixin fork to intercept merging** | ~19 vanilla mutation sites, 24 more in GregTech alone, plus AE2 and Simplebelts; breaks the `hashItemAndComponents` contract; collides with `recipeessentials`. Would work only sometimes. |
 | **A registered `DataComponentType` from KubeJS** | KubeJS 2101.7.1 cannot register component types. Moot now — we store nothing. |
 | **Lazy resolution on access** | The earlier recommendation. There is no machine-boundary hook that generalises beyond GT multiblocks, so a lazily-resolved item would enter a Create or Mekanism recipe unresolved. |
 | **A single probabilistic stage** | Exponential lifetime: unbounded tail, ~63% of items dead before nominal. Four stages give Erlang-4 and halve the spread. |
@@ -301,7 +301,7 @@ The 120× spread between bacteria and bioflux is what forces a frequent sweep, a
 - **Every spoilable material is four registered items plus one tag.** The Sapros spec owes the
   material list, the four state names per material, and the decay target of the final state.
 - **Recipes consuming a spoilable reference the tag**, so they work identically in Create, Mekanism,
-  Oritech and Integrated Dynamics with no integration code.
+  GregTech and Integrated Dynamics with no integration code.
 - **Spoilable recipes are gated to the Biochamber**, a GT multiblock this pack authors.
 - **Clogging is a documented hazard.** A spoiled stack in a machine input jams it, recoverable only
   by hand. This is stated to players, not engineered away.

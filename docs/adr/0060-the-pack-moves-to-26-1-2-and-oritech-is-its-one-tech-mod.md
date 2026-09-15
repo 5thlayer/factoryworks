@@ -22,7 +22,7 @@ This ADR adopts both hypotheses and the version change they make possible.
 | belts, loaders and the splitter | **SimpleBelts, forked by the pack**, which makes it the pack's fourth fork |
 | everything no mod carries at Factorio's numbers | `planetaryfactory_core` |
 
-**Leaving:** Simplebelts, Simplebelts: Power Grid, Modern Industrialization and GCyR. Oritech was already
+**Leaving:** Create, Create: Power Grid, Modern Industrialization and GCyR. GregTech was already
 leaving under ADR-0056.
 
 **Staying:** Researchd and Respoiled, both forks and both ported by the pack. Building Gadgets 2,
@@ -52,7 +52,7 @@ Architectury plugin, a Configured config provider, EMI's Oritech recipe defaults
   Upstream Researchd is still on 1.21.1, and the pack's fork was never submitted upstream, so the
   pack does the port.
 - **Respoiled** upstream has a `multi/26.1` branch, which is a reference for porting the Decay fork.
-- **`planetaryfactory_core`** requires `oritech` and `researchd`. The first leaves under ADR-0056.
+- **`planetaryfactory_core`** requires `gtceu` and `researchd`. The first leaves under ADR-0056.
 
 ## Why Oritech, and not Modern Industrialization
 
@@ -105,7 +105,7 @@ These rulings from the SimpleBelts survey are part of this decision:
   26.1.2 runs.
 - **ADR-0044 is superseded.** Its analysis of the two-dimensional puzzle is kept and cited above. Its
   conclusion, its Create dials and its `maxBeltLength` go.
-- **ADR-0056's chassis clause is superseded.** *Oritech leaves* stands, and so does its list of what
+- **ADR-0056's chassis clause is superseded.** *GregTech leaves* stands, and so does its list of what
   that departure costs. *Modern Industrialization becomes the machine chassis* does not.
 - **ADR-0057 is superseded.** Its account of what unification reaches remains correct history. With
   Create and MI both gone it arbitrates between nothing, and **AlmostUnified leaves**. What replaces it
@@ -117,7 +117,7 @@ These rulings from the SimpleBelts survey are part of this decision:
 - **ADR-0035's energy reasoning is reversed; its removal of Mekanism is not.** FE was demoted because
   nothing distributed it. With Oritech, Power Grid and Simplebelts gone, there is no EU, no volts and no
   rotation, and **FE is the pack's only energy currency**. ADR-0036's pole distributes it once it
-  stops asking for Oritech's capability.
+  stops asking for GregTech's capability.
 - **ADR-0048's rotation clause falls.** Its only argument for a steam engine that emits rotation was
   ADR-0036's choice of Power Grid. The engine emits electricity, which is the Factorio-faithful reading
   ADR-0048 turned down only because of that choice.
@@ -140,7 +140,7 @@ These rulings from the SimpleBelts survey are part of this decision:
 - **Researchd** needs a port onto PDL's 26.1 line.
 - **Respoiled** needs a port with upstream's `multi/26.1` as a reference.
 - **The core** has ten classes on the old item, fluid and energy capability API, which NeoForge 26.1
-  replaced with the transfer API, plus the pole on Oritech's energy capability, plus Minecraft 26.1's
+  replaced with the transfer API, plus the pole on GregTech's energy capability, plus Minecraft 26.1's
   renames everywhere else.
 
 **Every generator and every asset check is written against 1.21.1's data formats.** Recipe

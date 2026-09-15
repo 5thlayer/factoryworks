@@ -14,7 +14,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  *
  * <p>Two fluids rather than one carrying a temperature, because Factorio has exactly two
  * temperatures with exactly two consumers -- see the ADR. Both are {@code planetaryfactory:}, never
- * {@code oritech:steam}: Oritech's own steam machines accept its material, and admitting it would
+ * {@code gtceu:steam}: GregTech's own steam machines accept its material, and admitting it would
  * re-open the power layer #37 removed.
  *
  * <p>{@link #temperature(int)} converts ADR-0048's own Celsius figures (165 °C, 500 °C) to the

@@ -7,11 +7,11 @@ status: accepted
 Slice 1 deleted GCyR's stock bodies — Luna, Mars, Mercury, Venus — by blocking their planet and
 dimension entries with a `pack.mcmeta` filter. Blocks are code-registered, so the filter could not
 touch them: `gcyr:moon_stone`, `gcyr:martian_rock`, `gcyr:mercury_rock` and `gcyr:venus_rock` are
-all still in the registry, each with a Oritech `TagPrefix` already registered against it, ore
+all still in the registry, each with a GregTech `TagPrefix` already registered against it, ore
 variants for every material, and textures.
 
 **Each of the four surface bodies claims one of those stones as its ground.** Ignus takes
-`gcyr:venus_rock`. What that buys is the entire ore-variant tier: a Oritech ore vein places ore by
+`gcyr:venus_rock`. What that buys is the entire ore-variant tier: a GregTech ore vein places ore by
 *material*, and the block that lands in the ground is the variant registered for the stone its
 worldgen layer matches. A body whose terrain is plain `minecraft:stone` generates the Overworld's
 ore blocks; a body on a stone with no registered `TagPrefix` generates nothing at all. Reusing

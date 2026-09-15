@@ -1,5 +1,5 @@
 {
-  "type": "oritech:assembling",
+  "type": "gtceu:assembling",
   "inputs": {
     "item": [
       {
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "oritech:iron_rod"
+            "item": "gtceu:iron_rod"
           },
           "count": 1
         }
@@ -21,7 +21,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "oritech:steel_plate"
+            "item": "gtceu:steel_plate"
           },
           "count": 1
         }

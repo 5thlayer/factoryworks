@@ -1,11 +1,11 @@
 {
   "type": "planetaryfactory:smelting",
   "ingredient": {
-    "item": "oritech:iron_plate"
+    "item": "gtceu:iron_plate"
   },
   "count": 5,
   "result": {
-    "id": "oritech:steel_plate",
+    "id": "gtceu:steel_plate",
     "count": 1
   },
   "cookingtime": 320

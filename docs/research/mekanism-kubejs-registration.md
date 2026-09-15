@@ -7,7 +7,7 @@ Mekanism's machine recipes are plain codec-backed datapack JSON that base KubeJS
 today; new Mekanism Chemicals *are* a hard Java-registry problem that base KubeJS cannot solve, but
 the first-party `kubejs_mekanism` addon (latvian.dev, live on 1.21.1 NeoForge) solves it with a
 `StartupEvents.registry('mekanism:chemical', …)` builder — and the chain needs zero new chemicals
-anyway, because Mekanism's ethylene→HDPE line is keyed on the `c:ethene` *fluid tag*, which a Oritech
+anyway, because Mekanism's ethylene→HDPE line is keyed on the `c:ethene` *fluid tag*, which a GregTech
 fluid can simply join.**
 
 ---
@@ -26,7 +26,7 @@ Jars read:
 | Jar | Where | Version |
 | --- | --- | --- |
 | `Mekanism-1.21.1-10.7.19.85.jar` | pack `mods/` | Mekanism 10.7.19.85 |
-| `oritech-1.21.1-7.0.2.jar` | pack `mods/` | Oritech 7.0.2 |
+| `gtceu-1.21.1-7.0.2.jar` | pack `mods/` | GregTech 7.0.2 |
 | `kubejs-neoforge-2101.7.1-build.181.jar` | pack `mods/` | KubeJS 2101.7.1-build.181 |
 | `gcyr-1.21.1-0.2.4+gt7.0.2-src.jar` | pack `mods/` | GCyR 0.2.4 |
 | `kubejs-mekanism-neoforge-2101.1.6-build.6.jar` | Modrinth CDN, `sY2Fy24K` | KubeJS Mekanism 2101.1.6-build.6 |
@@ -79,10 +79,10 @@ hand-rolled `createCustom` + `new Chemical(ChemicalBuilder.builder(…))` is *ar
 right shape. **Do not build it.** The addon below is the same mechanism, written by the KubeJS author,
 with the texture/tint/attribute plumbing already correct.
 
-Note the contrast with this pack's own recorded failure for `oritech:material`
-(`kubejs/startup_scripts/materials.js`): Oritech closes its material window during `CommonInit`,
+Note the contrast with this pack's own recorded failure for `gtceu:material`
+(`kubejs/startup_scripts/materials.js`): GregTech closes its material window during `CommonInit`,
 *before* KubeJS's startup scripts are dispatched. Mekanism does not — chemicals are a
-`DeferredRegister` on `RegisterEvent`, which is exactly where KubeJS hooks. **The oritech:material
+`DeferredRegister` on `RegisterEvent`, which is exactly where KubeJS hooks. **The gtceu:material
 lesson does not transfer to mekanism:chemical.**
 
 ### The addon: KubeJS Mekanism, latvian.dev
@@ -243,34 +243,34 @@ So **1a is technically available**. It is simply no longer necessary.
 
 ## 4. What already exists, and what the HDPE line actually eats
 
-### Oritech 7.0.2 fluids the chain can reuse
+### GregTech 7.0.2 fluids the chain can reuse
 
-Oritech registers a material's fluid under the bare material name when the requested storage key *is*
+GregTech registers a material's fluid under the bare material name when the requested storage key *is*
 that material's primary key, and only prefixes `liquid_` / postfixes `_gas` otherwise —
 `FluidStorageKeys.prefixedRegisteredName` returns the concatenation only when
 `property.getPrimaryKey() != key` [verified]. Every fluid below is declared with `.liquid()` or
-`.gas()` as its sole state in `com.gregtechceu.oritech.data.material.UnknownCompositionMaterials` /
+`.gas()` as its sole state in `com.gregtechceu.gtceu.data.material.UnknownCompositionMaterials` /
 `OrganicChemistryMaterials` [verified], so each registers under its plain id:
 
 | Fluid | Id | State |
 | --- | --- | --- |
-| Oil | `oritech:oil` | liquid |
-| Raw Oil | `oritech:raw_oil` | liquid |
-| Naphtha | `oritech:naphtha` | liquid |
-| Light Fuel | `oritech:light_fuel` | liquid |
-| Heavy Fuel | `oritech:heavy_fuel` | liquid |
-| Refinery Gas | `oritech:refinery_gas` | gas |
-| Ethylene | `oritech:ethylene` | gas |
+| Oil | `gtceu:oil` | liquid |
+| Raw Oil | `gtceu:raw_oil` | liquid |
+| Naphtha | `gtceu:naphtha` | liquid |
+| Light Fuel | `gtceu:light_fuel` | liquid |
+| Heavy Fuel | `gtceu:heavy_fuel` | liquid |
+| Refinery Gas | `gtceu:refinery_gas` | gas |
+| Ethylene | `gtceu:ethylene` | gas |
 
 Plus the whole cracked/sulfuric family — `sulfuric_naphtha`, `lightly_/severely_steam_cracked_*`,
 `lightly_/severely_hydro_cracked_*`, `steam_cracked_ethylene`, `hydro_cracked_ethylene` — 653
-`material.oritech.*` lang keys in total, including `light_oil`, `heavy_oil`, `diesel`, `benzene`,
-`toluene`, `phenol`, `polyethylene`, `dimethylhydrazine` [verified, `assets/oritech/lang/en_us.json`].
+`material.gtceu.*` lang keys in total, including `light_oil`, `heavy_oil`, `diesel`, `benzene`,
+`toluene`, `phenol`, `polyethylene`, `dimethylhydrazine` [verified, `assets/gtceu/lang/en_us.json`].
 
-**There is no "kerosene" in Oritech.** Light Fuel is the fraction that plays that role. Any spec text
+**There is no "kerosene" in GregTech.** Light Fuel is the fraction that plays that role. Any spec text
 saying "kerosene" needs to say Light Fuel or invent a display name.
 
-**Oritech tags none of these into `c:`** — its `data/c/tags/fluid/` contains only `potion.json`
+**GregTech tags none of these into `c:`** — its `data/c/tags/fluid/` contains only `potion.json`
 [verified]. So joining `c:ethene` is a tag file this pack writes; nothing upstream does it.
 
 ### Kapton-K and its precursors: already registered, in GCyR
@@ -292,7 +292,7 @@ PyromelliticDianhydride + Oxydianiline         -> KaptonK
 
 **Nothing in that chain needs registering.** Both the GCyR materials
 (`Nitrochlorobenzene`, `Dimethylformamide`, `PyromelliticDianhydride`, `Oxydianiline`,
-`OxydianilineSludge`, `KaptonK`) and the Oritech precursors (`Chlorobenzene`, `NitricAcid`,
+`OxydianilineSludge`, `KaptonK`) and the GregTech precursors (`Chlorobenzene`, `NitricAcid`,
 `CarbonMonoxide`, `Dimethylamine`, `Durene`, `AminoPhenol`, `PotassiumCarbonate`) exist in the
 installed jars. Option 1a's "register the fractions" was a premise about *Mekanism-side* chemicals,
 not about Kapton-K, and it dissolves either way.
@@ -317,11 +317,11 @@ Downstream, unchanged: `enriching/hdpe_sheet.json` = 3 pellets → 1 `mekanism:h
 is a *fluid*, matched by **tag**, and its chemical input is oxygen — which the pack already has.
 Substrate is the only item, and it is renewable from bio fuel today.
 
-So `oritech:ethylene` needs one four-line datapack tag file to feed Mekanism's stock HDPE line:
+So `gtceu:ethylene` needs one four-line datapack tag file to feed Mekanism's stock HDPE line:
 
 ```json
 // kubejs/data/c/tags/fluid/ethene.json
-{ "replace": false, "values": ["oritech:ethylene"] }
+{ "replace": false, "values": ["gtceu:ethylene"] }
 ```
 
 and — separately, if the pack wants the *chemical* `mekanism:ethene` reachable from GT ethylene for
@@ -336,7 +336,7 @@ same tag. **Zero registration. Zero new mods.**
 
 The question #40 was posed to answer — "is CraftTweaker required?" — has turned out to have a cleaner
 answer than either option assumed: **CraftTweaker is not required for 1a either.** Kapton-K and all
-seven steps of its precursor chain are already registered by GCyR and Oritech, and Mekanism's machine
+seven steps of its precursor chain are already registered by GCyR and GregTech, and Mekanism's machine
 recipes are datapack JSON that base KubeJS can already write. What 1a would have bought — CrT's
 `mekanismcontent` chemical registration — is available to KubeJS through a first-party addon, and is
 not needed by the chain we want.
@@ -348,9 +348,9 @@ So the decision reduces to the *design* trade #39 already framed, decided on reg
 **Registration surface: none.**
 
 - No new mod. No new Mekanism Chemical. No new fluid. No source edit.
-- One datapack tag file putting `oritech:ethylene` into `c:ethene`, and Mekanism's stock
+- One datapack tag file putting `gtceu:ethylene` into `c:ethene`, and Mekanism's stock
   `reaction/substrate/ethene_oxygen.json` and `rotary/ethene.json` accept it as-is [verified].
-- Pack-authored Mekanism recipes to get from `oritech:oil` to ethylene are ordinary
+- Pack-authored Mekanism recipes to get from `gtceu:oil` to ethylene are ordinary
   `mekanism:reaction` / `mekanism:evaporating` JSON — writable **today** through base KubeJS's
   `UnknownRecipeSchema` passthrough, and writable *nicely* by dropping in
   `kubejs-mekanism-neoforge-2101.1.6-build.6.jar`, whose dependency ranges this pack already

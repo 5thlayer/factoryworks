@@ -1,6 +1,6 @@
 # DRAFT — not filed
 
-Target: `OritechCEu/Oritech-Modern`, issue. Needs approval before filing: it posts to a third
+Target: `GregTechCEu/GregTech-Modern`, issue. Needs approval before filing: it posts to a third
 party's tracker under the maintainer's GitHub account.
 
 Duplicate check: not yet redone for this framing. The earlier search was for the sound-event
@@ -13,9 +13,9 @@ symptom, which was the wrong search. Search for `TO_REGISTER`, `actuallyRegister
 
 ### Summary
 
-When any addon is present, Oritech loses most of its own registrations: sound events, recipe types,
+When any addon is present, GregTech loses most of its own registrations: sound events, recipe types,
 recipe serializers and recipe categories never reach their registries. Nothing throws and nothing
-is logged. The first visible failure is world creation aborting on `oritech:sus`, far from the cause.
+is logged. The first visible failure is world creation aborting on `gtceu:sus`, far from the cause.
 
 ### Mechanism
 
@@ -37,38 +37,38 @@ on the first event only that registry's rows land. `clear()` then discards every
 entries for registries whose `RegisterEvent` has not fired yet are gone, with no error.
 
 `CommonInit.onRegister` makes it worse: it runs at `NORMAL` on that same first event, ahead of the
-`LOW` drain, so `GTSoundEntries.init()` iterates a still-empty `oritech:sound` registry and creates
+`LOW` drain, so `GTSoundEntries.init()` iterates a still-empty `gtceu:sound` registry and creates
 no `SoundEvent`s.
 
 ### Evidence
 
-Instrumented from an addon, logging `isFrozen`, the queue size, and whether `oritech:sus` is
+Instrumented from an addon, logging `isFrozen`, the queue size, and whether `gtceu:sus` is
 registered, at `HIGHEST`/`LOWEST` on every `RegisterEvent`. With the addon loaded:
 
 ```
-HIGHEST registry=oritech:element        isFrozen=false queued=224 susRegistered=false
-LOWEST  registry=oritech:element        isFrozen=false queued=0   susRegistered=false
+HIGHEST registry=gtceu:element        isFrozen=false queued=224 susRegistered=false
+LOWEST  registry=gtceu:element        isFrozen=false queued=0   susRegistered=false
 HIGHEST registry=minecraft:sound_event isFrozen=false queued=0  susRegistered=false
 ```
 
-224 entries queued before the first event; all drained on `oritech:element`, where only element rows
+224 entries queued before the first event; all drained on `gtceu:element`, where only element rows
 can land; the queue is empty by the time `minecraft:sound_event` fires. Logging the rows at drain
 time shows what is lost:
 
 ```
-event=oritech:element rows=[oritech:recipe_category=61 oritech:chance_logic=5
+event=gtceu:element rows=[gtceu:recipe_category=61 gtceu:chance_logic=5
                           minecraft:recipe_type=61 minecraft:recipe_serializer=57
-                          oritech:sound=40]
+                          gtceu:sound=40]
 ```
 
-With every addon registration disabled, the queue is empty at the first event and `oritech:sus`
+With every addon registration disabled, the queue is empty at the first event and `gtceu:sus`
 registers normally — the addon is not doing anything unusual, it is only filling the queue.
 
 ### Consequences downstream
 
-`data/oritech/jukebox_song/sus.json` references `oritech:sus`, and datapack registries resolve
+`data/gtceu/jukebox_song/sus.json` references `gtceu:sus`, and datapack registries resolve
 strictly at world load, so world creation aborts with `Failed to get element
-ResourceKey[minecraft:sound_event / oritech:sus]`. A datapack override does not help: 1.21.1's
+ResourceKey[minecraft:sound_event / gtceu:sus]`. A datapack override does not help: 1.21.1's
 `RegistryDataLoader` parses every pack's copy, so the mod's own file still fails. Later, recipe
 generation fails on `Unregistered holder ... Direct{GTRecipeSerializer}` because the serializer was
 discarded too.
@@ -87,5 +87,5 @@ of surfacing as an unrelated crash.
 
 ### Environment
 
-Oritech 7.0.2, Minecraft 1.21.1, NeoForge 21.1.248, addon: Gregicality Rocketry (1.21.1 branch).
+GregTech 7.0.2, Minecraft 1.21.1, NeoForge 21.1.248, addon: Gregicality Rocketry (1.21.1 branch).
 Workaround in use: a mixin on `onUnfreeze` in our own build.

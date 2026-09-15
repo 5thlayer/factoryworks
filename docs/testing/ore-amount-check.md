@@ -71,9 +71,9 @@ the alphabet does not have is a block that drops nothing. The check walks blocks
 texture for all forty, asserts the lang keys, and cross-reads the drop table out of
 `OreResource.java` so the Java and the JSON cannot disagree.
 
-It also asserts every ore block is in **`c:ores`**, which is not cosmetic: Oritech's `MinerLogic`
+It also asserts every ore block is in **`c:ores`**, which is not cosmetic: GregTech's `MinerLogic`
 scans that tag to decide what a drill may take, so a pack ore block outside it is invisible to
-`oritech:lv_miner` — the failure ADR-0041 gates its whole worldgen half on.
+`gtceu:lv_miner` — the failure ADR-0041 gates its whole worldgen half on.
 
 ## The fields fit
 
@@ -86,8 +86,8 @@ The ore blocks' loot tables are **empty on purpose** — a table that paid out w
 blow up a thousand-unit block for one free item, which is ADR-0041's rejected "vandalise a patch
 for one ore" wearing TNT. `OreMining.drop` is the only payout, and it is metered.
 
-Oritech's `MinerLogic` produces its output *through the loot table*, so until #105 builds the rigs
-a `oritech:lv_miner` pointed at a pack ore block grinds it to stone and pays nothing. That is not a
+GregTech's `MinerLogic` produces its output *through the loot table*, so until #105 builds the rigs
+a `gtceu:lv_miner` pointed at a pack ore block grinds it to stone and pays nothing. That is not a
 regression the empty table introduced so much as one it made honest: the same miner previously
 destroyed the whole block for a single item, because it calls `destroyBlock` rather than drawing a
 unit. Both readings are wrong, and only #105 — which owns the drills and is what ADR-0041 unblocks
@@ -97,5 +97,5 @@ block to see.
 ## What still needs a world
 
 Whether the stages render, whether the Jade line agrees with what the block actually pays, whether
-`oritech:lv_miner` mines a pack ore block, and whether rung-0 pacing feels right. All four are
+`gtceu:lv_miner` mines a pack ore block, and whether rung-0 pacing feels right. All four are
 one launch, and none of them is a static check.

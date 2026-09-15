@@ -32,15 +32,15 @@
   },
   "machines": {
     "assembling": {
-      "recipe_type": "oritech:assembling",
-      "note": "ADR-0026's Assembling Machine 1/2/3, one recipe type across the three tiers. The id is Oritech's namespace, not the pack's: `GTRecipeTypes.register` runs through Oritech's registrate, which owns it (#73, machines.js)."
+      "recipe_type": "gtceu:assembling",
+      "note": "ADR-0026's Assembling Machine 1/2/3, one recipe type across the three tiers. The id is GregTech's namespace, not the pack's: `GTRecipeTypes.register` runs through GregTech's registrate, which owns it (#73, machines.js)."
     },
     "chemical_plant": {
-      "recipe_type": "oritech:chemical_plant",
-      "note": "ADR-0025's Chemical Plant, one tier, single block (#107, machines.js). The id is Oritech's namespace, not the pack's, for the same reason `assembling` is. Registered at (2, 1, 2, 1) -- the corpus's envelope, not ADR-0025's original (2, 1, 2, 2), which was the Factorio entity's second output fluid box and no recipe's."
+      "recipe_type": "gtceu:chemical_plant",
+      "note": "ADR-0025's Chemical Plant, one tier, single block (#107, machines.js). The id is GregTech's namespace, not the pack's, for the same reason `assembling` is. Registered at (2, 1, 2, 1) -- the corpus's envelope, not ADR-0025's original (2, 1, 2, 2), which was the Factorio entity's second output fluid box and no recipe's."
     },
     "oil_refinery": {
-      "recipe_type": "oritech:oil_refinery",
+      "recipe_type": "gtceu:oil_refinery",
       "note": "ADR-0025's Oil Refinery, one tier, multiblock (#107, machines.js). Registered at (0, 0, 2, 3): the corpus holds basic and advanced oil processing and no liquefaction recipe, so the item slots ADR-0025 gave it would be unfillable. Adding coal liquefaction is #12's, and widens this to (2, 0, 2, 3)."
     },
     "smelting": {
@@ -49,7 +49,7 @@
     },
     "centrifuge": {
       "recipe_type": null,
-      "note": "ADR-0033. Uranium processing and nuclear fuel reprocessing; Kovarex when the post-launch map reaches it. #135 registers it, and the id will be `oritech:`.",
+      "note": "ADR-0033. Uranium processing and nuclear fuel reprocessing; Kovarex when the post-launch map reaches it. #135 registers it, and the id will be `gtceu:`.",
       "blocked_by": 135
     },
     "rocket_silo": {

@@ -50,22 +50,22 @@ is below the destination's (`RocketEntity.java:422`).
 
 ## What GCyR hard-codes, and why it does not bind us
 
-Three Java-side lists enumerate GCyR's four stock bodies, and together they are what lets Oritech
+Three Java-side lists enumerate GCyR's four stock bodies, and together they are what lets GregTech
 generate ore on a body:
 
 1. `common/worldgen/GCYRWorldGenLayers.java:15-18` — one `SimpleWorldGenLayer` per dimension,
    binding a stone block and a dimension `ResourceKey`. GT ore veins target a worldgen layer.
-2. `common/data/GCYRDimensionMarkers.java:20-31` — a marker block and a Oritech `DimensionMarker` per
+2. `common/data/GCYRDimensionMarkers.java:20-31` — a marker block and a GregTech `DimensionMarker` per
    body, used to show which dimension a vein belongs to.
 3. `GCYRGTAddon.java:44-50` — `TagPrefix.oreTagPrefix` per body, the per-body ore block variants,
    with matching lang in `data/lang/LangHandler.java:12-14`.
 
-GCyR writes these in Java because it is a mod. **The pack does not have to** — Oritech 7.0.2 exposes
-all three registries to KubeJS, verified against `mods/oritech-1.21.1-7.0.2.jar`:
+GCyR writes these in Java because it is a mod. **The pack does not have to** — GregTech 7.0.2 exposes
+all three registries to KubeJS, verified against `mods/gtceu-1.21.1-7.0.2.jar`:
 
 | Registry | KubeJS entry point |
 | --- | --- |
-| Worldgen layer | `OritechStartupEvents.WORLD_GEN_LAYERS` → `WorldGenLayerKubeEvent.simplebelts(name, builder)`, builder taking `targets(...)` and `dimensions([...])` |
+| Worldgen layer | `GregTechStartupEvents.WORLD_GEN_LAYERS` → `WorldGenLayerKubeEvent.simplebelts(name, builder)`, builder taking `targets(...)` and `dimensions([...])` |
 | Dimension marker | `GTRegistries.DIMENSION_MARKER_REGISTRY`, registered through `BuilderTypeRegistry.addDefault` in `GTKubeJSPlugin` with `DimensionMarkerBuilder` (`iconSupplier`, `tier`, `overrideName`) |
 | Ore tag prefix | `integration/kjs/builders/prefix/OreTagPrefixBuilder` and `TagPrefixBuilder` |
 
@@ -121,16 +121,16 @@ dimensions it already had — only a fresh world answers the question.
 
 Defining Ignus, Electro, Sapros, Gelida and Atlantis — their planet entries, dimensions, worldgen,
 skies, solar system, rocket tiers, fuel costs and display names — is datapack and resource pack work
-in this repo, and giving them Oritech ore generation is KubeJS startup-script work. Dropping the stock
+in this repo, and giving them GregTech ore generation is KubeJS startup-script work. Dropping the stock
 bodies is a zipped datapack in `kubejs/data/` carrying a `pack.mcmeta` filter. Nothing in this slice
 needs a change to the fork.
 
 ## Second use: stripping the Nether and the End (#16)
 
-The same mechanism removes Oritech's own worldgen from the two vanilla dimensions ADR-0007 keeps
-but empties: `packs/remove-nether-end-worldgen/` blocks namespace `oritech`, the twelve Nether veins,
-the six End veins and `bedrock_fluid/nether_natural_gas_deposit.json`. `oritech:lava_deposit` is
-deliberately *not* blocked — `kubejs/data/oritech/oritech/bedrock_fluid/lava_deposit.json` already
+The same mechanism removes GregTech's own worldgen from the two vanilla dimensions ADR-0007 keeps
+but empties: `packs/remove-nether-end-worldgen/` blocks namespace `gtceu`, the twelve Nether veins,
+the six End veins and `bedrock_fluid/nether_natural_gas_deposit.json`. `gtceu:lava_deposit` is
+deliberately *not* blocked — `kubejs/data/gtceu/gtceu/bedrock_fluid/lava_deposit.json` already
 re-filters it to Ignus, and a block on that path would take the override down with the mod's file,
 since the filter applies to every pack below the zip, loose `kubejs/data` included.
 

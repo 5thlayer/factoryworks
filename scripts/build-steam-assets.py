@@ -82,7 +82,7 @@ BOILER_LANG = {
     f"tooltip.{NAMESPACE}.boiler.steam": "Steam: %s / %s mB",
 }
 
-# The two fluids ADR-0048 registers. Both `planetaryfactory:`, never `oritech:steam` -- see the ADR.
+# The two fluids ADR-0048 registers. Both `planetaryfactory:`, never `gtceu:steam` -- see the ADR.
 FLUIDS = {
     "steam": "Steam",
     "superheated_steam": "Superheated Steam",

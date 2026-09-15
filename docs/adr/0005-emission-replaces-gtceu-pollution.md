@@ -2,12 +2,12 @@
 status: accepted
 ---
 
-# Emission is ours, because Oritech Modern has no pollution
+# Emission is ours, because GregTech Modern has no pollution
 
 The design's hazard loop is Factorio's: the factory produces something noxious, and the noxious
 thing attracts an attack. The original draft assigned that to "GT:M's native chunk-based pollution
-system". No such system exists — `oritech-1.21.1-7.0.2.jar` contains not one class or resource
-matching `pollut`. Chunk pollution belongs to Oritech 5 Unofficial and to GT:CE, neither of which
+system". No such system exists — `gtceu-1.21.1-7.0.2.jar` contains not one class or resource
+matching `pollut`. Chunk pollution belongs to GregTech 5 Unofficial and to GT:CE, neither of which
 is this mod.
 
 We build it ourselves, as **Emission**: a per-chunk score accumulated from the EU/t draw of running
@@ -26,7 +26,7 @@ placement is irrelevant and emission is a counter that only goes up.
   Dormant Siege systems along with the Sapros organics chain that feeds them — which is most of the
   reason Sapros exists.
 - **Score dirty recipe outputs instead of power draw.** More expressive and better-targeted, at the
-  cost of tagging every recipe in a Oritech pack, with a permanent maintenance burden as recipes
+  cost of tagging every recipe in a GregTech pack, with a permanent maintenance burden as recipes
   change. Power draw is a coarser proxy that costs nothing to maintain.
 - **Per-outpost totals with no spatial component.** Cheaper to compute and it makes the score a
   progress bar rather than a reason to think about where things go.
@@ -44,4 +44,4 @@ planet-appropriate consequence — those consequences are named in the GDD but n
 which is the largest open question the model leaves behind.
 
 The term is **Emission**, not pollution, precisely so that nobody reading the scripts assumes a
-Oritech feature is behind it.
+GregTech feature is behind it.

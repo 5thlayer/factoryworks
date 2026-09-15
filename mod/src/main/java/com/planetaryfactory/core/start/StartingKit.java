@@ -47,7 +47,7 @@ public final class StartingKit {
      */
     public static final List<Entry> POCKET = List.of(
             new Entry("ftbquests:book", 1),
-            new Entry("oritech:prospector.lv", 1),
+            new Entry("gtceu:prospector.lv", 1),
             new Entry("planetaryfactory:stone_furnace", 1),
             new Entry("planetaryfactory:burner_mining_drill", 1),
             new Entry("planetaryfactory:engineers_iron_pick", 1));
@@ -60,8 +60,8 @@ public final class StartingKit {
      * back to hand-mining, and is deliberately not more than that.
      */
     public static final List<Entry> HOLD = List.of(
-            new Entry("oritech:iron_plate", 8),
-            new Entry("oritech:copper_plate", 8),
+            new Entry("gtceu:iron_plate", 8),
+            new Entry("gtceu:copper_plate", 8),
             new Entry("minecraft:coal", 8));
 
     /** Everything granted, pocket first, in the order it lands in the inventory. */

@@ -5,9 +5,9 @@ supersedes: [90]
 
 # One mod owns each capability on Terra, and the losing block is recipe-removed
 
-Terra runs two tech mods in series on one ladder — Oritech and Simplebelts — plus Simplebelts: Electro
+Terra runs two tech mods in series on one ladder — GregTech and Simplebelts — plus Simplebelts: Electro
 Energetics for the grid, and each ships a full-stack answer to mining, moving, processing
-and powering. *Amended by ADR-0035: this read "three tech mods … Oritech, Simplebelts, Mekanism".
+and powering. *Amended by ADR-0035: this read "three tech mods … GregTech, Simplebelts, Mekanism".
 Mekanism left the pack after every row below that named it had been taken back one at a time; the
 rule this ADR states is what took them. Two tech mods is the count on this ladder; ADR-0035's "three
 mods plus the grid" counts GCyR, which owns rockets rather than a rung.* Left alone, that is two
@@ -46,9 +46,9 @@ crafting surface named too. Late is not an argument for shipping something nobod
 
 | Capability | Owner | The losing blocks |
 | --- | --- | --- |
-| Extraction (ore) | **Oritech** | Simplebelts Mechanical Drill **cut**; Mekanism Digital Miner **cut** |
-| Extraction (fluid) | **Oritech** — Fluid Drilling Rig, **rung 2** (was rung 4; moved with the oil chapter, ADR-0025) | — |
-| Mining automation | **The pack — both rungs, amended again by ADR-0043.** Oritech owns **no solid extraction on Terra**; its fluid rig is untouched. Both rigs are `planetaryfactory_core` blocks reading the corpus's own drill prototypes, because `oritech:lv_miner` cannot hold the pack's ore model: it deletes an ore block whole whatever amount it held and takes its drops from a loot table Terra's ore blocks deliberately leave empty, so it would destroy a field and pay out nothing. Terra's ladder is two rigs; the third is Vulcanus's Big Mining Drill, that body's puzzle, and it arrives as a corpus row rather than as code. *This row read "**Oritech** — the electric ladder only, amended by ADR-0040. `electric-mining-drill` is `oritech:lv_miner` at rung 1. Rung 0's burner drill is pack-authored and the LP Steam Miner leaves the pack", and before that "**Oritech** — LP Steam Miner (rung 0) → Basic Ore Drilling Rig → Advanced, one rig per rung, each granted by a science tier"* | as above, and **Oritech's miners buy nothing that is left**: under ADR-0034's sweep they are already uncraftable, and taking them out of the game entirely is #198 |
+| Extraction (ore) | **GregTech** | Simplebelts Mechanical Drill **cut**; Mekanism Digital Miner **cut** |
+| Extraction (fluid) | **GregTech** — Fluid Drilling Rig, **rung 2** (was rung 4; moved with the oil chapter, ADR-0025) | — |
+| Mining automation | **The pack — both rungs, amended again by ADR-0043.** GregTech owns **no solid extraction on Terra**; its fluid rig is untouched. Both rigs are `planetaryfactory_core` blocks reading the corpus's own drill prototypes, because `gtceu:lv_miner` cannot hold the pack's ore model: it deletes an ore block whole whatever amount it held and takes its drops from a loot table Terra's ore blocks deliberately leave empty, so it would destroy a field and pay out nothing. Terra's ladder is two rigs; the third is Vulcanus's Big Mining Drill, that body's puzzle, and it arrives as a corpus row rather than as code. *This row read "**GregTech** — the electric ladder only, amended by ADR-0040. `electric-mining-drill` is `gtceu:lv_miner` at rung 1. Rung 0's burner drill is pack-authored and the LP Steam Miner leaves the pack", and before that "**GregTech** — LP Steam Miner (rung 0) → Basic Ore Drilling Rig → Advanced, one rig per rung, each granted by a science tier"* | as above, and **GregTech's miners buy nothing that is left**: under ADR-0034's sweep they are already uncraftable, and taking them out of the game entirely is #198 |
 | ~~Ore processing~~ | **Row deleted by ADR-0032** — ore smelts 1:1 and no block in the pack multiplies it, so there is no capability between extraction and smelting to own. This row read "**Create** at rung 0 (Crushing Wheels, Millstone); **Mekanism** from rung 1 (enrichment → 5x)" | Mekanism's Purification, Injection, Washer and Crystallizer **recipe-removed**; Create's and Mekanism's ore recipes removed; GT's ore-processing line was already removed (`#37`) |
 | Power generation (steam, solar) | **Create: Power Grid** — *amended by #101, then by #104, then by #148; this row read "**Create** generates first (Steam Engine, rung 0); **Mekanism** generates at scale as FE"*. Create's Steam Engine is the prime mover and emits SU, not electricity; the **Alternator** is what makes power. Solar is the grid mod's outright. **#104 struck the Mekanism clause as a mistake of fact**: the pack installs base Mekanism, which registers **no generator block at all** — every generator and the Industrial Turbine live in MekanismGenerators, the jar ADR-0033 refused *for this row*. Terra's chain is four steps, not three: **GT boiler → Create Steam Engine (SU) → Power Grid generation multiblock (W) → grid**. *#148: the third step was Electro's Alternator, one block; Power Grid's counterpart is a Create-kinetic multiblock — rotor, winding, housing, commutator — in exactly the same place in the chain* | GT's power layer removed entire. **No Mekanism generator is recipe-removed, because none exists** — the default below removes a *losing block*, and Mekanism supplies none here |
 | Power generation (superheated steam) | **The pack** (ADR-0033) — a registered Nuclear Reactor and Steam Turbine on a GT chassis. Named for the fluid, not for fission: Terra's reactor and Ignus's acid neutralisation are the same row | **MekanismGenerators not adopted** — it brings six other generators onto the row above; GT's own Steam Turbines stay removed with the rest of its power layer (`#37`) |
@@ -65,15 +65,15 @@ crafting surface named too. Late is not an argument for shipping something nobod
 | Assembly | **The pack** — three registered Assembling Machines on a GT chassis (ADR-0026) | GT's stock Assembler and its whole recipe corpus removed |
 | Hand-crafting surface | **The pack** — the Personal Assembler, a panel on the inventory screen (`#90`, `#95`) | vanilla Crafting Table, Crafting on a Stick and CraftingTweaks **cut**; Sophisticated Backpacks' Crafting Upgrade and AE2's terminals recipe-removed; **Create's Mechanical Crafter and Mekanism's Formulaic Assemblicator cut** — *amended by `#34`, which supersedes `#90`'s decision to keep the two executors* |
 
-Oritech is left with exactly extraction, plus the fluid rig that is extraction by another name.
+GregTech is left with exactly extraction, plus the fluid rig that is extraction by another name.
 Nothing was added to its share, and **the Assembly row has since left it** (ADR-0026): the stock
 Assembler carried a circuit slot, a voltage ladder and several hundred recipes the pack does not
-want, and KubeJS's `GTRecipeBuilder` could not author against it. The chassis is still Oritech's;
+want, and KubeJS's `GTRecipeBuilder` could not author against it. The chassis is still GregTech's;
 the capability is the pack's.
 
 **Three rows now name "the pack" rather than a mod, and that is a fourth answer this table did not
-originally admit.** ADR-0025 registers an Oil Refinery and a Chemical Plant through Oritech's KubeJS
-machine builders — a Oritech *chassis*, not a Oritech capability, in the same way Launch Terminals
+originally admit.** ADR-0025 registers an Oil Refinery and a Chemical Plant through GregTech's KubeJS
+machine builders — a GregTech *chassis*, not a GregTech capability, in the same way Launch Terminals
 and Drop Hatches already are. The rule the table enforces is unchanged: exactly one owner per
 capability, and the losing block recipe-removed. What changed is that for one capability the owner
 is a block this pack registers, because no installed mod can express the recipe shape Factorio needs.
@@ -81,13 +81,13 @@ is a block this pack registers, because no installed mod can express the recipe 
 **Plant Oil and Transformer Oil keep their one-way rule below, and ADR-0025 adds its mirror:**
 lubricant must not become an input to anything grid-side.
 
-## ~~The extraction ladder is Oritech's end to end~~ ~~Oritech owns the electric ladder~~ Oritech owns no solid extraction
+## ~~The extraction ladder is GregTech's end to end~~ ~~GregTech owns the electric ladder~~ GregTech owns no solid extraction
 
 > **Amended by ADR-0040, and again by ADR-0043.** ADR-0040 made rung 0's burner drill
-> `planetaryfactory_core`'s and left Oritech the electric rig. ADR-0043 took that one too: the
-> override list for making `oritech:lv_miner` fit the pack's ore model *is* the class, and a second
+> `planetaryfactory_core`'s and left GregTech the electric rig. ADR-0043 took that one too: the
+> override list for making `gtceu:lv_miner` fit the pack's ore model *is* the class, and a second
 > extraction mechanism on the same blocks contradicts ADR-0041 outright. **Both rigs are the
-> pack's; Oritech keeps only the fluid rig.** The headings below are kept as written for
+> pack's; GregTech keeps only the fluid rig.** The headings below are kept as written for
 > provenance.
 
 LP Steam Miner at rung 0, Basic Ore Drilling Rig, Advanced Ore Drilling Rig — one rig per rung, each
@@ -176,13 +176,13 @@ oil chapter**, or the grid silently gates rung 2.
 
 ## This costs the four-facts doctrine, knowingly
 
-The decision to remove Oritech's power layer entire cut GT literacy to four facts for a
-Factorio-literate, Oritech-naive audience. Running Electro at defaults installs **more** electrical
+The decision to remove GregTech's power layer entire cut GT literacy to four facts for a
+Factorio-literate, GregTech-naive audience. Running Electro at defaults installs **more** electrical
 modelling than what was deleted — transformers included, the same block class GT lost.
 
 The doctrine is therefore **spent, not exempted**: it was about the pack's total literacy, and moving
 the tax between mods does not dodge it. What justifies paying it is **audience perception rather than
-literacy volume**. A pack that reads as "the full Oritech tech tree" carries a reputational cost that
+literacy volume**. A pack that reads as "the full GregTech tech tree" carries a reputational cost that
 a pack reading as "Create plus a friendly electricity addon" does not — same complexity, different
 sticker, and the sticker is what the audience reads first. Removing GT's power layer and adopting
 Electro's are the same decision made twice.
@@ -198,8 +198,8 @@ Electro's are the same decision made twice.
 - **Keep the losing block craftable but outclassed.** Kept only as a per-block exception. *The
   example this bullet used to give — Create's fluid pipes, kept for hand-placed local runs — is void
   since #101 gave Create the row outright; the exception itself stands.*
-- **Give Oritech the whole stack and use Simplebelts and Mekanism as decoration.** Rejected — it inverts
-  the pack's design. Oritech is instrumental (GCyR needs it, its miners are good, it is a cheap
+- **Give GregTech the whole stack and use Simplebelts and Mekanism as decoration.** Rejected — it inverts
+  the pack's design. GregTech is instrumental (GCyR needs it, its miners are good, it is a cheap
   chassis for custom machines), not the spine.
 
 ## Amended by #93: ownership binds the block, not the recipe

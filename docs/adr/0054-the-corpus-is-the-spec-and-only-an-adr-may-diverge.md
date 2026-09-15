@@ -55,7 +55,7 @@ time because the session had treated a document as binding that its author had n
 - `config/gcyr.yaml`'s `enableOxygen: true` was treated as a constraint. It is an upstream
   default the pack has never decided on, and one line.
 - **ADR-0005 rejected per-entity emission** — "score dirty recipe outputs instead of power draw"
-  — on the ground that it would cost "tagging every recipe in a Oritech pack, with a permanent
+  — on the ground that it would cost "tagging every recipe in a GregTech pack, with a permanent
   maintenance burden". `emissions_per_minute` is in the dump. The extraction pipeline that makes
   that cost zero was built *after* ADR-0005, and the ADR still carries `status: accepted` for a
   subsystem nobody has played. ADR-0042 would call it `provisional`; #181 is the audit that has

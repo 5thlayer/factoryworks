@@ -1,5 +1,5 @@
 {
-  "type": "oritech:assembling",
+  "type": "gtceu:assembling",
   "inputs": {
     "item": [
       {
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "oritech:iron_plate"
+            "item": "gtceu:iron_plate"
           },
           "count": 1
         }

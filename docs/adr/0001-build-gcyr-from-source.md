@@ -2,12 +2,12 @@
 status: accepted
 ---
 
-# GCyR is built from source, and Oritech 7.x is the anchor
+# GCyR is built from source, and GregTech 7.x is the anchor
 
 The released `gcyr-1.21.1-0.2.4.jar` (Sep 2024) is the newest published 1.21.1 build and it is
-permanently incompatible with Oritech 7.x: its `@GTAddon` annotation carries no `value`, so
-`AddonFinder.getInstances` NPEs, Oritech fails construction, and the whole pack dies during mod
-loading. We anchor on Oritech 7.x and build GCyR ourselves from the upstream `1.21.1` branch, where
+permanently incompatible with GregTech 7.x: its `@GTAddon` annotation carries no `value`, so
+`AddonFinder.getInstances` NPEs, GregTech fails construction, and the whole pack dies during mod
+loading. We anchor on GregTech 7.x and build GCyR ourselves from the upstream `1.21.1` branch, where
 the port to the 7.x API — including `@GTAddon(GCYR.MOD_ID)` — has been carried far enough to
 compile but has never been released or confirmed working.
 
@@ -18,8 +18,8 @@ compile but has never been released or confirmed working.
   (`MaterialEvent`, `MaterialRegistryEvent`, `IMaterialRegistryManager`, `UnificationEntry`), the
   registry system (`GTRegistry` and its inner classes) and ore worldgen (`GTOreDefinition`,
   `GTOres`). Fixing the annotation only moves the failure from an NPE to `NoClassDefFoundError`.
-- **Downgrade Oritech to 1.4.4.** Genuinely viable and cheaper today — gcyr is the only mod in the
-  pack that declares a `oritech` dependency at all, so nothing else objects. Rejected because it
+- **Downgrade GregTech to 1.4.4.** Genuinely viable and cheaper today — gcyr is the only mod in the
+  pack that declares a `gtceu` dependency at all, so nothing else objects. Rejected because it
   pins the pack two majors behind before any of the design is implemented, and every future GT
   addon targets 7.x.
 - **Drop GCyR for Stellaris.** Stellaris is the standing fallback if the build proves impossible;
@@ -37,7 +37,7 @@ forks has advanced it past that point.
 
 **Outcome: this worked.** The build succeeds and the pack launches. Two `build.gradle` changes were
 needed and no source changes at all; they live in our fork at `adamico/gcyr`, branch `1.21.1`,
-commit `3434a0a`. Oritech now constructs, and the resulting jar references 124 oritech classes with
+commit `3434a0a`. GregTech now constructs, and the resulting jar references 124 gtceu classes with
 none missing from 7.0.2 — against 133 referenced and 20 missing for the published release. The jar
 is installed as `mods/gcyr-1.21.1-0.2.4+gt7.0.2-src.jar`; the broken release is parked in
 `mods/.replaced/`, outside the mods scan.
@@ -51,15 +51,15 @@ exception is gone, though the bindings themselves still need writing.
 **Amended after world-creation testing.** "The pack launches" was as far as this went at the time,
 and launching turned out not to mean working: world creation still failed, for reasons unrelated to
 the build. Two further defects had to be fixed before the pack reached a world. The pack's KubeJS
-was 2101.7.2-build.368 while Oritech 7.0.2 compiles against 2101.7.1-build.181, which moved
+was 2101.7.2-build.368 while GregTech 7.0.2 compiles against 2101.7.1-build.181, which moved
 `ServerEvents` between packages — GT's recipe generation died on `NoClassDefFoundError`, so KubeJS
-is now downgraded and `kubejs-simplebelts` removed, its only 1.21.1 build requiring 7.2+. And Oritech
+is now downgraded and `kubejs-simplebelts` removed, its only 1.21.1 build requiring 7.2+. And GregTech
 discards its own registrations whenever an addon is loaded, which is ADR-0003. Neither is a
 consequence of building GCyR from source; both were waiting behind the launch crash.
 
-Two risks flagged at the time of writing have since been cleared. `oritech 7.1.0-SNAPSHOT` does
-resolve from `maven.oritech.com`, but we pin the build to `7.0.2` instead so it matches the jar
-actually installed in the pack. The apparent ldlib mismatch was not one: oritech 7.0.2's own POM
+Two risks flagged at the time of writing have since been cleared. `gtceu 7.1.0-SNAPSHOT` does
+resolve from `maven.gtceu.com`, but we pin the build to `7.0.2` instead so it matches the jar
+actually installed in the pack. The apparent ldlib mismatch was not one: gtceu 7.0.2's own POM
 declares `com.lowdragmc.ldlib:ldlib-neoforge-1.21.1:1.0.35.a`, exactly what the branch pins — the
 `ldlib2-…-2.2.35-all.jar` in `mods/` is the same library under its runtime versioning.
 

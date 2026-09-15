@@ -11,7 +11,7 @@ electricity, and poles carry it. Steam is a **real, pipeable, buffered fluid** w
 and that is not decoration — it is what makes power a production chain rather than a slider, and
 what lets a nuclear reactor at 500 °C reuse the same pipes and a different consumer.
 
-The ledger has recorded a four-step adaptation of that chain since `#101`: *Oritech's boiler,
+The ledger has recorded a four-step adaptation of that chain since `#101`: *GregTech's boiler,
 Create's Steam Engine, Power Grid's generation multiblock, the pack's Steam Turbine.* Grilled
 2026-09-08, **the second step of that chain does not exist**.
 
@@ -19,7 +19,7 @@ Create's Steam Engine, Power Grid's generation multiblock, the pack's Steam Turb
 
 - **Create has no steam fluid.** Its boiler is a Fluid Tank multiblock holding **water**, heated by
   Blaze Burners; `create.boiler.*` is a heat level and a water input rate. The Steam Engine mounts
-  on that tank and emits rotation. It cannot consume a steam fluid from a pipe, from Oritech's
+  on that tank and emits rotation. It cannot consume a steam fluid from a pipe, from GregTech's
   boiler or from anything else. The ledger's "a Create Steam Engine turns that steam into rotation"
   was never implementable.
 - **Power Grid never touches steam either.** Its generator is not a fixed multiblock but a built
@@ -35,8 +35,8 @@ high-temperature steam, which ADR-0033's reactor emits and only the Steam Turbin
 rather than one fluid carrying a temperature, because Factorio has exactly two temperatures with
 exactly two consumers, and a registry entry expresses that without inventing per-bucket state.
 
-They are `planetaryfactory:`, not Oritech's. This **corrects the ledger's claim that superheated
-steam is "its own GT material"**: `oritech:steam` is not inert — Oritech's own steam machines accept
+They are `planetaryfactory:`, not GregTech's. This **corrects the ledger's claim that superheated
+steam is "its own GT material"**: `gtceu:steam` is not inert — GregTech's own steam machines accept
 it, and admitting it re-opens the power layer `#37` removed. The pack's Steam Turbine is already
 pack-authored (ADR-0033); a pack machine is authored against a pack fluid.
 
@@ -75,7 +75,7 @@ assembly → pole → machines**, and the pack owns its first two steps and its 
 **The mod takes a Create compile-time dependency.** Rotation has no capability path; a generating
 kinetic block extends Create's own class. ADR-0043 avoided this dependency and ADR-0044 kept Create's
 belts without needing it. It is taken here knowingly, as the `create-*.jar` line in
-`mod/build.gradle`'s `compileOnly fileTree` — the same shape as Oritech's and Researchd's.
+`mod/build.gradle`'s `compileOnly fileTree` — the same shape as GregTech's and Researchd's.
 
 **`offshore-pump` becomes `not_emitted`.** *(Amended by ADR-0050, which reverses this: the
 Mechanical Pump is a pipe-network block and does not extract from the world, so the pump is

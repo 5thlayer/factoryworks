@@ -31,7 +31,7 @@ logistics row. There is one scenario, called S2 here:
 | machines, fluids | Oritech |
 | everything else | `planetaryfactory_core` |
 
-**Leaves:** Simplebelts entirely. Simplebelts: Power Grid, GCyR, Modern Industrialization and Oritech were already gone.
+**Leaves:** Create entirely. Create: Power Grid, GCyR, Modern Industrialization and GregTech were already gone.
 **Minecraft version:** 26.1.2. That version is only reachable because Create leaves: Create has no
 26.1.2 build, so keeping it for trains would pin the pack to 1.21.1.
 
@@ -199,7 +199,7 @@ leaves the belt network, however many splitters it passes through.
 **How the power arrives.** The fork adds an FE buffer to `ChuteBlockEntity` and exposes
 `Capabilities.Energy.BLOCK` on it. The core's Supply Area Pole already powers *every* position in its
 area that answers an energy capability (`SupplyAreaPoleBlockEntity#container`, `:207-222`). Today it
-asks for Oritech's `GTCapability.CAPABILITY_ENERGY_CONTAINER`, which leaves with Oritech. Once it
+asks for GregTech's `GTCapability.CAPABILITY_ENERGY_CONTAINER`, which leaves with GregTech. Once it
 asks for FE, it powers loaders with no wiring and no further core code.
 
 ### 6. Every tick of movement resends the whole belt
@@ -264,7 +264,7 @@ the old API:
 - `mining/rig/RigBlockEntity`, `mining/rig/RigItemHandler`
 - `smelting/FurnaceItemHandler`, `smelting/FurnaceSlots`
 
-The Supply Area Pole is on Oritech's energy API as well (fact 5).
+The Supply Area Pole is on GregTech's energy API as well (fact 5).
 
 The core has **no Create compile dependency**. `RigBlockEntity:289-293` and `RigSlots:51` mention
 `DirectBeltInputBehaviour` only in comments that say why it isn't called. So Create's departure
@@ -362,7 +362,7 @@ What pf2612 already runs is **proven to load together**. The rest is what adopti
 | FTB Quests | yes | added after that world load. |
 | AE2, Sophisticated Backpacks | no | **leave**: neither is faithful to Factorio (ADR-0060). |
 | Almost Unified, Tree Harvester, ProbeJS | no | **leave**: with two tech mods none of them does any work for the pack (ADR-0060). |
-| **`planetaryfactory_core`** | no | ours. 16,800 lines. Ten classes on the old capability API, plus the pole on Oritech's (fact 9), plus Minecraft 26.1's renames across everything else. |
+| **`planetaryfactory_core`** | no | ours. 16,800 lines. Ten classes on the old capability API, plus the pole on GregTech's (fact 9), plus Minecraft 26.1's renames across everything else. |
 | **Researchd** (fork) | no | ours to port. Upstream `Porting-Dead-Mods/Researchd` `main` is 1.21.1. Its only required dependency, Porting Dead Libs, targets 26.1 on `main` (1.1.16). |
 | **Respoiled** (fork) | no | ours to port. Upstream has a `multi/26.1` branch to port against. |
 
@@ -385,7 +385,7 @@ What pf2612 already runs is **proven to load together**. The rest is what adopti
   - the two-wide splitter and merger
   - the loader's FE buffer and per-item charge on tiers 2 to 4
   - the loader's researched grab size
-- **Core**: the pole asks for FE instead of Oritech's capability. That is already owed to Oritech's
+- **Core**: the pole asks for FE instead of GregTech's capability. That is already owed to GregTech's
   departure, and it is all the loader's power needs.
 - **Postponed**: the tap.
 - **Excluded**: undergrounds and lanes, argued from the medium. Swing-arm reach and the long-handed

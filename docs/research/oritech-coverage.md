@@ -69,7 +69,7 @@ Every Oritech block speaks its own `api.energy.EnergyApi`, bridged to NeoForge's
 is per machine and configurable: `BasicMachineConfig.energyPerTick`, `FurnaceConfig.energyPerTick`,
 `CentrifugeConfig.energyPerTick` and so on in `init/OritechConfig.java`, all `long` with no useful
 ceiling. So **every Factorio wattage is reachable by config** — given one constant the pack does not
-yet have: **joules per FE**. `core/energy/EnergyLedger.java` holds only `FE_PER_EU = 4`, Oritech's
+yet have: **joules per FE**. `core/energy/EnergyLedger.java` holds only `FE_PER_EU = 4`, GregTech's
 ratio, which the hypothesis deletes. Every "Native at Factorio's kW" cell below is conditional on that
 constant being chosen once.
 
@@ -97,7 +97,7 @@ recipe type whose serializer carries two fluids. That is Java either way.
 `block/base/entity/MachineBlockEntity.java` `getRecipe()` keeps `currentRecipe` while it still
 matches, and otherwise asks `level.getRecipeManager().getRecipeFor(type, input, level)` — the **first**
 match. If that first match cannot output (`canOutputRecipe`), the machine idles; it does not try the
-next candidate. Nothing is dropped at load, unlike Oritech's trie (#236), but ambiguity is settled by
+next candidate. Nothing is dropped at load, unlike GregTech's trie (#236), but ambiguity is settled by
 recipe order.
 
 ADR-0056's answer is **output-slot locking**: the lock refuses a rival recipe's product. Oritech has no
@@ -194,7 +194,7 @@ Ledger verdicts are today's. **Level** is the cheapest that closes every gap in 
 
 | mechanic | ledger today | Oritech has | level | gap, and what closes it |
 | --- | --- | --- | --- | --- |
-| **Resource patches and finite ore** — the patch | `shipped` | Resource Nodes; `ResourceNodeFeature` | **Core** (ADR-0020, 0041, 0045) | There is nothing in the nodes to reuse. Each one is a bare `new Block(ofFullCopy(BEDROCK))` (`init/BlockContent.java:328-358`) with no block entity and no state, so it cannot hold an amount. The amount is the core's `OreBlock` plus `OreDelta`, and that stays. `ResourceNodeFeature` places a bowl on bedrock under a surface boulder, with each block replaced at random `nodeOreChance`. ADR-0045 wants a solid surface disc, one block deep, at Factorio's spacing, so the feature is the wrong shape and no config fixes that. **Oritech's departure orphans a layer here.** The outfield patches are Oritech ore veins today (`kubejs/data/oritech/oritech/ore_vein/*.json`), so a core feature has to replace them. `core/worldgen/TerraStartingArea.java` already places the starting area. |
+| **Resource patches and finite ore** — the patch | `shipped` | Resource Nodes; `ResourceNodeFeature` | **Core** (ADR-0020, 0041, 0045) | There is nothing in the nodes to reuse. Each one is a bare `new Block(ofFullCopy(BEDROCK))` (`init/BlockContent.java:328-358`) with no block entity and no state, so it cannot hold an amount. The amount is the core's `OreBlock` plus `OreDelta`, and that stays. `ResourceNodeFeature` places a bowl on bedrock under a surface boulder, with each block replaced at random `nodeOreChance`. ADR-0045 wants a solid surface disc, one block deep, at Factorio's spacing, so the feature is the wrong shape and no config fixes that. **GregTech's departure orphans a layer here.** The outfield patches are GregTech ore veins today (`kubejs/data/gtceu/gtceu/ore_vein/*.json`), so a core feature has to replace them. `core/worldgen/TerraStartingArea.java` already places the starting area. |
 | **Resource patches and finite ore** — the extractor on it | `shipped` | Deep Drill (`DeepDrillEntity`) | **Java** (see the electric drill) | The drill is reusable where the node is not: it *reads* the blocks under it and never breaks them, so fact 7 does not apply. As shipped it never depletes anything, because `craftResult` is private and only runs a recipe. A subclass draws each unit from the core's ore amount instead. |
 | **Manual mining** | `adapted` | Hand Drill, Chainsaw, Promethium tools | **Shape-only** (ADR-0039) | Charge-based tools against an indestructible two-tier pick. Core keeps the Engineer's Pick. |
 | **Trees and wood** | `adapted` | Tree Cutter (`TreefellerBlockEntity`) | **Shape-only** (ADR-0051) | A felling machine Factorio has none of, harvesting log-by-log; ADR-0051's tree is one entity. Unadmitted (fact 8). |
@@ -312,7 +312,7 @@ Counting the headline rows Oritech touches at all, cheapest level after splits:
 
 **The finding in one line:** Oritech carries the energy layer, the module system and most machine
 bodies, but no Factorio machine *as shipped*. It needs output locking, fixed per-tier speeds and a
-placement gesture, and each of those is one subclass. The hypothesis trades Oritech/MI's recipe
+placement gesture, and each of those is one subclass. The hypothesis trades GregTech/MI's recipe
 chassis for Oritech's machine chassis. It does not remove the core's Java; it moves it onto Oritech's
 base classes. It **unblocks** Modules and beacons and reopens the reactor neighbour bonus.
 
@@ -322,14 +322,14 @@ three to Java, and fact 9 is why. A ruling then moved the pumpjack to Native, wi
 What stays core is **data a block must hold**: an ore amount. So does lava, by ruling: it goes
 through the Offshore Pump, which is Factorio's entity for it. Oritech has no block that holds a quantity. What moves is the
 **machine body**, which Oritech has for every one of the four. Two consequences sit outside Oritech:
-- Oritech's departure orphans the outfield ore veins and Terra's crude deposit. The veins need a
+- GregTech's departure orphans the outfield ore veins and Terra's crude deposit. The veins need a
   core placer. Crude goes to Oritech's springs.
 - Power Grid's departure takes ADR-0048's only argument for a rotation-emitting steam engine with it.
 
 ## Out of scope, noted
 
 - **Item layer.** 23 of 166 `data/pack/item-map.json` rows target a mod the hypothesis removes (16
-  `oritech:`, 7 `powergrid:`); 95 rows have no target yet. The item layer is cosmetic and delegable to the
+  `gtceu:`, 7 `powergrid:`); 95 rows have no target yet. The item layer is cosmetic and delegable to the
   core; mapping it is a follow-on if the pivot is argued.
 - **Corpus note, unrelated to Oritech.** `data/factorio/recipe.json` contains no `probability` key
   anywhere, though `scripts/factorio-recipe-extract.py:160-170` says it keeps one. `uranium-processing`

@@ -21,8 +21,8 @@ the replacement chassis, and its API is a different shape — `rearth.oritech`, 
 | `core/machine/SimpleMachine.java` | The chassis under every single-block machine the pack registers — `SimpleTieredMachine` minus the programmed-circuit configurator and the charger slot. Both removals are GregTech-specific and neither idiom exists in Oritech. | #262 |
 | `core/assembler/RuntimeHandRecipes.java` | The Personal Assembler's hand set, read off the recipe manager by filtering `GTRecipe`s on `factorio_category: crafting`. The filter is right; the recipe class it filters is gone. | #262 |
 | `core/research/client/IdleMachineLockNote.java` | Why an idle machine is idle, searched out of GregTech's recipe trie with `RecipeHelper.matchContents`. Blocked twice over — it also needs Researchd. #251 already owns a Jade provider saying why a machine is doing nothing. | #251 |
-| `core/mixin/oritech/RecipeLogicMixin.java` | The research lock's refusal, injected into `RecipeLogic.matchRecipe`. | #262 |
-| `core/mixin/oritech/RecipeLogicStatusMixin.java` | The idle note's three-times-a-frame hook into the machine screen. | #251 |
+| `core/mixin/gtceu/RecipeLogicMixin.java` | The research lock's refusal, injected into `RecipeLogic.matchRecipe`. | #262 |
+| `core/mixin/gtceu/RecipeLogicStatusMixin.java` | The idle note's three-times-a-frame hook into the machine screen. | #251 |
 
 Both mixins named GregTech classes by target string, so their entries left
 `planetaryfactory_core.mixins.json` with them: a mixin naming a class that is not on the classpath

@@ -16,9 +16,9 @@ Our commit with all three fixes: `adamico/gcyr@b258df8`.
 ### Context
 
 The 1.21.1 branch compiles but several registrations were never reconnected after the port, so the
-mod loads with most of its content missing. This was masked by a Oritech bug — GT discards its
+mod loads with most of its content missing. This was masked by a GregTech bug — GT discards its
 pending-registration queue, taking the duplicate registration with it — so the symptoms only appear
-once GT registers correctly. Filed separately against Oritech-Modern.
+once GT registers correctly. Filed separately against GregTech-Modern.
 
 ### 1. Recipe types are registered twice
 
@@ -38,7 +38,7 @@ Both target `BuiltInRegistries.RECIPE_TYPE`. With GT's queue honoured this throw
 
 `GCYRRecipeConditions.init()` is referenced only from a commented-out 1.20-era handler in
 `GCYR.java`, so `gcyr:dyson_sphere` and `gcyr:orbit` are never registered. Any recipe using them
-fails to serialise with `Unregistered holder in ResourceKey[minecraft:root / oritech:recipe_condition]`.
+fails to serialise with `Unregistered holder in ResourceKey[minecraft:root / gtceu:recipe_condition]`.
 
 ### 3. Machines, dimension markers and sounds never register
 
@@ -51,21 +51,21 @@ therefore unbound; loading a world fails with
 
 Sounds initialise safely in the constructor. The GT-dependent ones do not:
 
-- **Not in the constructor.** Machine definitions read Oritech's casing blocks, which do not exist
-  yet — `NullPointerException: null key in entry: null=oritech:block/casings/solid/...`.
-- **Not in `gtInitComplete()`.** Despite the javadoc ("This runs after Oritech has set up its
-  content"), `CommonInit.init` calls it from Oritech's *constructor*, before GT registers anything;
-  putting machine init there makes Oritech itself fail construction. The javadoc is worth correcting
-  upstream in Oritech-Modern.
-- **On the first `RegisterEvent`,** with a once-guard. Oritech is constructed before GCyR, so its
+- **Not in the constructor.** Machine definitions read GregTech's casing blocks, which do not exist
+  yet — `NullPointerException: null key in entry: null=gtceu:block/casings/solid/...`.
+- **Not in `gtInitComplete()`.** Despite the javadoc ("This runs after GregTech has set up its
+  content"), `CommonInit.init` calls it from GregTech's *constructor*, before GT registers anything;
+  putting machine init there makes GregTech itself fail construction. The javadoc is worth correcting
+  upstream in GregTech-Modern.
+- **On the first `RegisterEvent`,** with a once-guard. GregTech is constructed before GCyR, so its
   content exists by then, and this is still ahead of the vanilla block registry, so the machines
   register normally.
 
 ### Verification
 
-With these three fixes and the Oritech workaround, the pack reaches a world: 39324 recipes, no
+With these three fixes and the GregTech workaround, the pack reaches a world: 39324 recipes, no
 registry errors, GCyR machines bound, GT worldgen present. Tested on Minecraft 1.21.1, NeoForge
-21.1.248, Oritech 7.0.2, KubeJS 2101.7.1-build.181.
+21.1.248, GregTech 7.0.2, KubeJS 2101.7.1-build.181.
 
 ### Also worth fixing
 

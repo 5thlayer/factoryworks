@@ -129,7 +129,7 @@ is loud rather than silent.
 ### 7. The tail, which is not decided at all
 
 The manifest is 111 entries. Across every ADR and every closed ticket, the mods whose recipes are
-decided are Oritech, Simplebelts, Mekanism, Electro, GCyR, AE2 (terminals), Sophisticated Backpacks (the
+decided are GregTech, Simplebelts, Mekanism, Electro, GCyR, AE2 (terminals), Sophisticated Backpacks (the
 Crafting Upgrade), Crafting on a Stick and CraftingTweaks — nine. **Building Gadgets is explicitly
 kept** (ADR-0025 leans on it for the refinery), and its recipe is a shaped one. So are Akashic Tome's,
 Carry On's, the gravestone's, the elevator's, the backpacks' own.
@@ -321,7 +321,7 @@ Two documents also still assert the opposite of `#90`, and both are tracked file
 expected to trust:
 
 - `docs/gdd.md` §5: *"The crafting grid, workbenches and portable crafting stay intact"*, and
-  *"Policy: follow Oritech's stock recipe-type assignments, re-authoring only for the pack's own items"*
+  *"Policy: follow GregTech's stock recipe-type assignments, re-authoring only for the pack's own items"*
   — which is the premise this ADR reverses, stated as policy. The same section says nineteen lines
   later that the Assembler covers the components *"which have nowhere to go once the crafting grid is
   removed"*. §5 contradicts itself.

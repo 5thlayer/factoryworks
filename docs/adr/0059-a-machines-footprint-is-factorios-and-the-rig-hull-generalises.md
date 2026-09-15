@@ -52,11 +52,11 @@ footprint alone.)
 
 ## The Oil Refinery is not an MI multiblock
 
-#107 registered it as a Oritech multiblock at `(0, 0, 2, 3)`. MI's multiblocks are shapes, casings
+#107 registered it as a GregTech multiblock at `(0, 0, 2, 3)`. MI's multiblocks are shapes, casings
 and hatches — a different registration path and the longest pole in the migration — and the
 refinery's envelope has **no item slots at all**, so the multiblock was buying visual mass rather
 than capability. Under this rule it gets the mass anyway: a 5x5 hulled single placement. Whether it
-earns a real multiblock hull later is its own argument, and ADR-0025's version of it was Oritech's
+earns a real multiblock hull later is its own argument, and ADR-0025's version of it was GregTech's
 idiom, which is leaving.
 
 ## Scope, and what is deferred

@@ -13,11 +13,11 @@
 //
 // The two blocks a pickaxe meets on Electro.
 //
-// Neither is a Oritech ore block, and that is the point: Electro registers no ore
+// Neither is a GregTech ore block, and that is the point: Electro registers no ore
 // veins (ADR-0009), so everything hand-mineable there is a plain block placed by a
 // feature or a structure. Both drop through a datapack loot table under
-// `kubejs/data/planetaryfactory/loot_table/blocks/`, which names Oritech's material
-// dust by tag rather than by item id — Oritech registers material items in code, and
+// `kubejs/data/planetaryfactory/loot_table/blocks/`, which names GregTech's material
+// dust by tag rather than by item id — GregTech registers material items in code, and
 // a tag is the handle that does not depend on guessing its naming scheme.
 //
 // Both textures are placeholders reusing GCyR's Martian blocks, per the art decision:
@@ -166,8 +166,8 @@ StartupEvents.registry('block', (event) => {
 // Sapros's stromatolites: the only metal on the body, and not an ore.
 //
 // A stromatolite is a plain block placed by a feature across both marshlands, hand-mined
-// with a pickaxe for iron or copper *bacteria* plus stone. Sapros registers no Oritech ore
-// veins (ADR-0016), so nothing here is a Oritech ore block and nothing here smelts: the
+// with a pickaxe for iron or copper *bacteria* plus stone. Sapros registers no GregTech ore
+// veins (ADR-0016), so nothing here is a GregTech ore block and nothing here smelts: the
 // bacteria become metal by spoiling, which is the Decay engine's job (#17). Until #17 ships
 // Sapros's metal is unobtainable, and that is the design rather than a bug -- a table here
 // that dropped ore directly would delete the mechanic the body exists to carry.

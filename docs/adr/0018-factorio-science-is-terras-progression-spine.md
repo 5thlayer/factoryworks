@@ -6,7 +6,7 @@ supersedes: [55]
 # Factorio science is Terra's progression spine, and Researchd is the lab
 
 Terra runs three tech mods in series plus a grid mod, and every one of them ships its own
-progression. Oritech's is a voltage ladder, Simplebelts's is a build-complexity curve, Mekanism's is a
+progression. GregTech's is a voltage ladder, Simplebelts's is a build-complexity curve, Mekanism's is a
 processing-factor ladder. Left as they are, the pack has three ladders and no spine, and a
 Factorio-literate player — the audience this pack is for — recognises none of them.
 
@@ -64,9 +64,9 @@ takes the fourth slot, with its vanilla recipe discarded.
 **Terra's science packs are inert items.** Sapros's science pack decays; that is where the
 buffer-as-liability puzzle belongs, and it is specified with Sapros.
 
-## Oritech is instrumental, not the ladder
+## GregTech is instrumental, not the ladder
 
-Oritech is in the pack because GCyR requires it, because its miners are good, and because it is a
+GregTech is in the pack because GCyR requires it, because its miners are good, and because it is a
 cheap chassis for custom machines. It is **not** the progression. Create and Mekanism sit *in
 series* on the same ladder, never as a parallel escape from it — ADR-0017 enforces that block by
 block.
@@ -91,7 +91,7 @@ Two consequences bind every recipe author:
 The gate is **Researchd's Research Lab multiblock** (`#45`): research packs are items, the Lab
 accepts them by pipe and consumes them unattended, and unlocking fires `unlock_recipe` effects.
 FTB Quests keeps the book and the reward surface and **stops being the gate** — which supersedes the
-Oritech `RecipeCondition` approach of `#36` entirely.
+GregTech `RecipeCondition` approach of `#36` entirely.
 
 Two rules ride on this:
 
@@ -108,13 +108,13 @@ and refused**.
 
 ## The pacing figure
 
-**20–25 hours** from spawn to first launch, for a Factorio-literate, Oritech-naive player following
+**20–25 hours** from spawn to first launch, for a Factorio-literate, GregTech-naive player following
 the book. It is a figure to **check the beat sheet against**, never a knob to tune costs with. A
 beat sheet that lands far outside it has the wrong number of beats, not the wrong prices.
 
 ## Considered Options
 
-- **Oritech's voltage ladder as the spine.** Rejected: it inverts the pack's design, and the
+- **GregTech's voltage ladder as the spine.** Rejected: it inverts the pack's design, and the
   audience does not read voltage tiers as progression. It also makes Create and Mekanism decoration.
 - **Two ladders — science for unlocks, mod tiers for capability.** Rejected: the player then has two
   progressions to track and the cheaper one wins. The rung *is* the capability.

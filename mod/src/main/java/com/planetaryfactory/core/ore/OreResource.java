@@ -14,7 +14,7 @@ package com.planetaryfactory.core.ore;
  * arrival.
  *
  * <p><b>Which mod's item, is whichever one exists.</b> GregTech registers no raw ore for a
- * material vanilla already covers, so {@code oritech:raw_iron} and {@code oritech:raw_copper} are not
+ * material vanilla already covers, so {@code gtceu:raw_iron} and {@code gtceu:raw_copper} are not
  * items and never were. Naming them here cost every iron and copper draw its payout in silence,
  * because an unregistered id resolves to air rather than throwing. Iron and copper pay vanilla's
  * raw ore; uranium, which vanilla has no raw item for, pays GregTech's.
@@ -26,7 +26,7 @@ public enum OreResource {
     IRON("iron", "minecraft:raw_iron"),
     COPPER("copper", "minecraft:raw_copper"),
     COAL("coal", "minecraft:coal"),
-    URANIUM("uranium", "oritech:raw_uranium"),
+    URANIUM("uranium", "gtceu:raw_uranium"),
     /** The fifth resource. A visually distinct ore, so a patch never reads as marked-up ground. */
     STONE("stone", "minecraft:cobblestone");
 

@@ -27,7 +27,7 @@ expectations, three separate defects surfaced in it, and all three are the same 
 - It justified the burner drill as standing on existing ground: "the mod already registers blocks,
   block entities and menus — the supply-area pole, **the furnace ladder**, the trees". There is no
   furnace. Nothing in `mod/src/main/java` or `kubejs/startup_scripts` registers one.
-- It assigned rung 1 to `oritech:lv_miner` and reasoned at length about `nativeEUToFE` wrapping. That
+- It assigned rung 1 to `gtceu:lv_miner` and reasoned at length about `nativeEUToFE` wrapping. That
   block deletes an ore block whole into cobblestone off its loot table, which contradicts ADR-0041 —
   accepted *after* ADR-0040 — and would have left stale `OreDelta` entries behind every mined
   position.
