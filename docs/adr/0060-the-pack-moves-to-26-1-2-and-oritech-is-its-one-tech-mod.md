@@ -111,6 +111,13 @@ These rulings from the SimpleBelts survey are part of this decision:
   Create and MI both gone it arbitrates between nothing, and **AlmostUnified leaves**. What replaces it
   is ADR-0017's own rule: the item-layer decision names one supplier per part and recipe-removes the
   others.
+- **ADR-0029's EU scale falls; its derivation stands.** With GregTech gone there is no voltage
+  ladder to anchor `32 / 420_000` on, and a machine's draw is its Factorio `energy_usage` at this
+  ADR's rate of 100 J to the FE. The Electric Furnace, the one machine that had been given a number
+  under the old scale, re-derives from the same 180 kW to **90 FE/t** and buffers one steel craft at
+  14,400 FE (#266). What is unchanged is the rule ADR-0029 exists for -- the number comes from the
+  machine's own prototype, not from a scalar somebody chose -- along with its `excluded` idle draw.
+
 - **ADR-0017's table is amended row by row.** Item logistics goes to the fork and Railcraft, fluid
   logistics to Oritech, power generation to Oritech plus the pack's engine, and the machine chassis to
   Oritech. The rule itself is unchanged, and it is the reason for this ADR's one-tech-mod choice.
