@@ -240,6 +240,23 @@ the compiler catches a backslide first. Source-text for the reason the guard che
 `RegisterCapabilitiesEvent` is a NeoForge type and the test source set has no NeoForge on it by
 design. Whether a pipe placed against a Boiler moves steam is a world load.
 
+### FE face check
+
+`tests/pack/test_energy_faces.py` is one layer in from the capability-registration check: that one
+asserts the furnace and the pole *have* an `Energy` face, and this one asserts the face does
+anything when a pole inserts into it. The failure shipped (#266) — the furnace's `insert` was
+`return 0`, carried over from the EU buffer where refusing insertion kept a GregTech cable and
+ADR-0036's pole from meeting at one block. With FE the pack's one currency there is no second route
+to refuse, and the line only meant the Electric Furnace could never be powered by the one thing
+built to power it, with nothing thrown and nothing logged. The other half is the snapshot: the pole
+measures a machine's room with an insert it then **aborts**, so a face that takes energy without
+journalling keeps a probe's worth every tick and runs on power nobody spent.
+`core/energy/LongSnapshotJournal` is where that rule is spelled, and it is asserted to be spelled
+once, the way `GuardedResourceHandler` is. Source-text for the same reason: `SnapshotJournal` and
+`TransactionContext` are NeoForge types and the test source set has no NeoForge by design. The
+arithmetic under the faces is `FurnaceEnergyBufferTest` and `EnergyLedgerTest`. Whether a pole
+placed beside an Electric Furnace lights it is a world load.
+
 ### Offshore Pump check
 
 `tests/pack/test_pump_assets.py` asserts the one block water enters the factory through (#213,

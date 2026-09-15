@@ -1,7 +1,6 @@
 package com.planetaryfactory.core.energy;
 
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
-import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 /**
@@ -14,17 +13,19 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
  * <p>The ledger is the state and the journal is how a transaction is undone. NeoForge's transfer
  * API lets a caller open a transaction, insert, and then abort -- which is how the pole's own tick
  * measures a machine's room -- so an insert has to be revertible rather than immediately final.
- * {@link SnapshotJournal} is the API's own answer: it takes the snapshot on the first touch at each
- * depth and hands it back on an abort. Doing this by hand is what the removed close-callback
- * version was, and it could not see nested transactions at all.
+ * {@link com.planetaryfactory.core.energy.LongSnapshotJournal} is that undo, and it is shared with
+ * the furnace's face so the rule is spelled once. Doing this by hand is what the removed
+ * close-callback version was, and it could not see nested transactions at all.
  */
 public final class PoleEnergyStorage implements EnergyHandler {
 
     private final SupplyAreaPoleBlockEntity pole;
-    private final LedgerJournal journal = new LedgerJournal();
+    private final LongSnapshotJournal journal;
 
     PoleEnergyStorage(SupplyAreaPoleBlockEntity pole) {
         this.pole = pole;
+        this.journal = new LongSnapshotJournal(
+                () -> pole.ledger().storedFe(), pole.ledger()::setStoredFe, pole::setChanged);
     }
 
     @Override
@@ -52,25 +53,5 @@ public final class PoleEnergyStorage implements EnergyHandler {
     @Override
     public int extract(int amount, TransactionContext transaction) {
         return 0;
-    }
-
-    private class LedgerJournal extends SnapshotJournal<Long> {
-
-        @Override
-        protected Long createSnapshot() {
-            return pole.ledger().storedFe();
-        }
-
-        @Override
-        protected void revertToSnapshot(Long snapshot) {
-            pole.ledger().setStoredFe(snapshot);
-        }
-
-        @Override
-        protected void onRootCommit(Long originalState) {
-            if (pole.ledger().storedFe() != originalState) {
-                pole.setChanged();
-            }
-        }
     }
 }

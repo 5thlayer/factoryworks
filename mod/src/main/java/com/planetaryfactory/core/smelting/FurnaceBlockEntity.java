@@ -5,9 +5,9 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
-import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import com.planetaryfactory.core.PFBlockEntities;
+import com.planetaryfactory.core.energy.LongSnapshotJournal;
 import com.planetaryfactory.core.recipes.PFRecipes;
 import com.planetaryfactory.core.recipes.SmeltingRecipe;
 
@@ -132,6 +132,8 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
         }
         this.tier = furnace.tier();
         this.energy = new FurnaceEnergyBuffer(tier.bufferFe());
+        this.journal = new LongSnapshotJournal(
+                energy::getEnergyStored, energy::setStoredFe, this::setChanged);
     }
 
     public FurnaceTier tier() {
@@ -341,25 +343,9 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
         }
     };
 
-    private final SnapshotJournal<Long> journal = new SnapshotJournal<>() {
-
-        @Override
-        protected Long createSnapshot() {
-            return energy.getEnergyStored();
-        }
-
-        @Override
-        protected void revertToSnapshot(Long snapshot) {
-            energy.setStoredFe(snapshot);
-        }
-
-        @Override
-        protected void onRootCommit(Long originalState) {
-            if (energy.getEnergyStored() != originalState) {
-                setChanged();
-            }
-        }
-    };
+    // Assigned in the constructor rather than here, because the buffer it journals is sized from
+    // the tier and so does not exist until the constructor has read the block state.
+    private final LongSnapshotJournal journal;
 
     // -- the container --------------------------------------------------------------------------
 

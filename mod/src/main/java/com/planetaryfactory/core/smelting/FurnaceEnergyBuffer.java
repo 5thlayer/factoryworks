@@ -10,11 +10,10 @@ package com.planetaryfactory.core.smelting;
  * {@link net.neoforged.neoforge.transfer.energy.EnergyHandler}, held by the block entity so the
  * arithmetic here stays Minecraft-free.
  *
- * <p><b>Insertion is not restricted to the pole any more, and does not need to be.</b> The
- * ambiguity the old EU buffer refused a cable for -- two routes in, and no rule for which drains
- * first -- does not arise when both routes carry the same currency into the same buffer. What the
- * buffer still refuses is extraction: energy delivered to a furnace is spent there, never pulled
- * back out into the grid.
+ * <p><b>Anything carrying FE may fill it, and nothing may empty it.</b> Two routes in need no
+ * rule for which drains first while both carry the same currency into the same buffer, so the
+ * refusal the EU buffer kept against a cable buys nothing here. Extraction stays refused: energy
+ * delivered to a furnace is spent there, never pulled back out into the grid.
  *
  * <p>Pure: no Minecraft types.
  */
@@ -42,13 +41,8 @@ public final class FurnaceEnergyBuffer {
 
     /** Takes what fits and reports it, which is what the pole debits itself by. */
     public long addEnergy(long fe) {
-        return changeEnergy(fe);
-    }
-
-    /** Moves the buffer either way, clamped, and reports what actually moved. */
-    public long changeEnergy(long delta) {
         long before = storedFe;
-        storedFe = Math.max(0L, Math.min(capacityFe, storedFe + delta));
+        storedFe = Math.min(capacityFe, storedFe + Math.max(0L, fe));
         return storedFe - before;
     }
 

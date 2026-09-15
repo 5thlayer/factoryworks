@@ -53,12 +53,4 @@ class FurnaceEnergyBufferTest {
         assertEquals(0L, buffer.getEnergyStored());
         assertEquals(14_400L, buffer.getEnergyCanBeInserted());
     }
-
-    @Test
-    void changeEnergyMovesBothWaysAndReportsWhatMoved() {
-        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(100L);
-        assertEquals(40L, buffer.changeEnergy(40L));
-        assertEquals(-40L, buffer.changeEnergy(-90L));
-        assertEquals(0L, buffer.getEnergyStored());
-    }
 }
