@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.client.renderer.RenderPipelines;
 
 /**
  * The Boiler's screen (#224): a fuel gauge and two tank gauges, in the shape the furnace ladder set.
@@ -52,10 +53,10 @@ public class BoilerScreen extends AbstractContainerScreen<BoilerMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         int left = leftPos;
         int top = topPos;
-        graphics.blit(BACKGROUND, left, top, 0, 0, imageWidth, imageHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, left, top, 0.0F, 0.0F, imageWidth, imageHeight, 256, 256);
 
         // Vanilla's sheet draws an input recess at 55,16 and an output one at 112,30. The Boiler
         // has neither: water arrives through a pipe and steam leaves through one.
@@ -83,18 +84,16 @@ public class BoilerScreen extends AbstractContainerScreen<BoilerMenu> {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
-        super.render(graphics, mouseX, mouseY, partialTick);
-        renderTooltip(graphics, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (over(mouseX, mouseY, FUEL_Y)) {
-            graphics.renderComponentTooltip(font, fuelTooltip(), mouseX, mouseY);
+            graphics.setComponentTooltipForNextFrame(font, fuelTooltip(), mouseX, mouseY);
         } else if (over(mouseX, mouseY, WATER_Y)) {
-            graphics.renderComponentTooltip(font, List.of(Component.translatable(
+            graphics.setComponentTooltipForNextFrame(font, List.of(Component.translatable(
                     "tooltip.planetaryfactory.boiler.water", menu.water(), menu.waterCapacity())),
                     mouseX, mouseY);
         } else if (over(mouseX, mouseY, STEAM_Y)) {
-            graphics.renderComponentTooltip(font, List.of(Component.translatable(
+            graphics.setComponentTooltipForNextFrame(font, List.of(Component.translatable(
                     "tooltip.planetaryfactory.boiler.steam", menu.steam(), menu.steamCapacity())),
                     mouseX, mouseY);
         }

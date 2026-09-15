@@ -1,9 +1,8 @@
 package com.planetaryfactory.core.compat;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec2;
-import snownee.jade.api.ui.IElement;
-import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.api.ui.Element;
+import snownee.jade.api.ui.JadeUI;
 
 /**
  * How this pack's Jade tooltips put an icon and its figure on one line (#199, #209).
@@ -28,20 +27,20 @@ final class JadeLayout {
     private static final int GAP = 4;
 
     /** A figure dropped to the icon's centre line, with its leading gap already in place. */
-    static void appendFigure(snownee.jade.api.ITooltip tooltip, IElementHelper elements, Component text) {
-        tooltip.append(elements.spacer(GAP, 0));
-        tooltip.append(elements.text(text).translate(new Vec2(0F, ICON_HEIGHT / 2F - TEXT_HEIGHT / 2F)));
+    static void appendFigure(snownee.jade.api.ITooltip tooltip, Component text) {
+        tooltip.append(JadeUI.spacer(GAP, 0));
+        tooltip.append(JadeUI.text(text).offset(0, (int) ((ICON_HEIGHT - TEXT_HEIGHT) / 2F)));
     }
 
     /** An element opening a new line, gapped from whatever came before it on that line. */
-    static void appendSpaced(snownee.jade.api.ITooltip tooltip, IElementHelper elements, IElement element) {
-        tooltip.append(elements.spacer(GAP, 0));
+    static void appendSpaced(snownee.jade.api.ITooltip tooltip, Element element) {
+        tooltip.append(JadeUI.spacer(GAP, 0));
         tooltip.append(element);
     }
 
     /** One icon-and-figure line: an icon, a gap, and the number that goes with it. */
-    static void line(snownee.jade.api.ITooltip tooltip, IElementHelper elements, IElement icon, Component text) {
+    static void line(snownee.jade.api.ITooltip tooltip, Element icon, Component text) {
         tooltip.add(icon);
-        appendFigure(tooltip, elements, text);
+        appendFigure(tooltip, text);
     }
 }

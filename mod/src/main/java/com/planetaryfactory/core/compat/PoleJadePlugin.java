@@ -84,13 +84,13 @@ public class PoleJadePlugin implements IWailaPlugin {
             if (!data.contains(MACHINES)) {
                 return;
             }
-            int machines = data.getInt(MACHINES);
+            int machines = data.getIntOr(MACHINES, 0);
             tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.machines",
                     machines));
             if (machines == 0) {
                 return;
             }
-            long demanded = data.getLong(DEMANDED);
+            long demanded = data.getLongOr(DEMANDED, 0L);
             if (demanded == 0L) {
                 // Machines are in range and none of them wants anything: they are full, or idle.
                 // Reporting "0 / 0 EU/t" here would read as a fault rather than as a quiet factory.
@@ -98,7 +98,7 @@ public class PoleJadePlugin implements IWailaPlugin {
                 return;
             }
             tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.supply",
-                    data.getLong(DELIVERED), demanded));
+                    data.getLongOr(DELIVERED, 0L), demanded));
         }
 
         @Override

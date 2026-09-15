@@ -15,6 +15,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
+import net.minecraft.commands.arguments.item.ItemInput;
 
 /**
  * The one crossing between an Assembler item key and an {@code ItemStack} (ADR-0052).
@@ -82,7 +83,7 @@ public final class ItemKeys {
      */
     public static ItemStack toStack(String key, int count, HolderLookup.Provider registries) {
         try {
-            ItemParser.ItemResult parsed = new ItemParser(registries).parse(new StringReader(key));
+            ItemInput parsed = new ItemParser(registries).parse(new StringReader(key));
             return new ItemStack(parsed.item(), count, parsed.components());
         } catch (Exception failure) {
             return ItemStack.EMPTY;

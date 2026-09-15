@@ -92,18 +92,32 @@ after a fresh clone, where the pack will otherwise start with two saplings missi
 `./gradlew :planetaryfactory_core:build` builds without installing. The first run downloads and
 decompiles Minecraft and takes a few minutes; later runs are seconds.
 
-Requires **JDK 21**. On this repo's macOS setup that is Homebrew's, and the usual macOS locations
-are empty, so the toolchain has to be pointed at explicitly:
+Requires **JDK 25** and **ModDevGradle 2.0.147** (the plugin version in `mod/build.gradle`; 2.0.107
+carries no NeoForm runtime for 26.1 and fails before javac with `Function for step preProcessJar has
+invalid tool: null`). 25 is not a preference: Minecraft 26.1.2 and every 26.1 mod jar in `mods/` are
+compiled to class file version 69.
+
+On this repo's macOS setup the JDK is Homebrew's and the usual macOS locations are empty, so Gradle
+has to be told where it is. Registering it once is better than prefixing every command, because the
+toolchain is resolved per build rather than from `JAVA_HOME`:
 
 ```sh
-JAVA_HOME=/opt/homebrew/opt/openjdk@21 ./gradlew :planetaryfactory_core:installToPack
+brew install openjdk@25
+echo 'org.gradle.java.installations.paths=/opt/homebrew/opt/openjdk@25' >> ~/.gradle/gradle.properties
 ```
+
+`./gradlew -q javaToolchains` lists what Gradle can see. Optionally, to put it on `java_home` as
+well: `sudo ln -sfn /opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-25.jdk`.
 
 ## Version pinning
 
-`gradle.properties` pins Minecraft `1.21.1` and NeoForge `21.1.248` to match the pack. Both are
+`gradle.properties` pins Minecraft `26.1.2` and NeoForge `26.1.2.109` to match the pack. Both are
 also written into the mod's dependency ranges, so a mismatched jar refuses to load rather than
 crashing obscurely. When the pack's NeoForge build moves, move `neoforge_version` with it.
+
+There is no Parchment block. ParchmentMC has published no mappings for 26.1 -- its newest data is
+`parchment-1.21.9` -- so naming one fails the build rather than silently falling back. Restore the
+block in `mod/build.gradle`, and the two `parchment_*` keys here, when a 26.1 release exists.
 
 ## Tests
 

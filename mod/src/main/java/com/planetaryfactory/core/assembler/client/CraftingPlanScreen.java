@@ -66,21 +66,21 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
     protected void init() {
         super.init();
         Button start = Button.builder(Component.translatable("planetaryfactory_core.assembler.start"),
-                        b -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(new PlanStartPacket(menu.display().planId())))
+                        b -> net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new PlanStartPacket(menu.display().planId())))
                 .bounds(leftPos + imageWidth - 150, topPos + imageHeight - 26, 70, 20).build();
         start.active = menu.display().complete();
         addRenderableWidget(start);
         addRenderableWidget(Button.builder(Component.translatable("planetaryfactory_core.assembler.back"),
-                        b -> net.neoforged.neoforge.network.PacketDistributor.sendToServer(new OpenPanelPacket()))
+                        b -> net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new OpenPanelPacket()))
                 .bounds(leftPos + imageWidth - 76, topPos + imageHeight - 26, 70, 20).build());
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         hovered = ItemStack.EMPTY;
-        super.render(graphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (!hovered.isEmpty()) {
-            graphics.renderTooltip(font, hovered, mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, hovered, mouseX, mouseY);
         }
     }
 
@@ -105,7 +105,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
                     && display.toCraft().isEmpty()
                     && display.missing().isEmpty()
                     && display.locked().isEmpty();
-            graphics.drawString(font,
+            graphics.text(font,
                     Component.translatable(nothingToShow
                                     ? "planetaryfactory_core.assembler.unplannable"
                                     : "planetaryfactory_core.assembler.incomplete")
@@ -116,7 +116,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
 
     private void column(GuiGraphicsExtractor graphics, int x, String key, List<ItemAmount> amounts,
             ChatFormatting colour, int mouseX, int mouseY) {
-        graphics.drawString(font,
+        graphics.text(font,
                 Component.translatable("planetaryfactory_core.assembler." + key).withStyle(colour),
                 x, topPos + 22, 0xFFFFFF, false);
         int y = topPos + 34;
@@ -126,15 +126,15 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
             // their own inventory. The name is one hover away, from vanilla's own tooltip, so
             // nothing is lost -- including the id, which F3+H puts back for anyone who wants it.
             ItemStack stack = itemStack(amount.item());
-            graphics.renderItem(stack, x, y);
-            graphics.drawString(font, "x " + amount.count(), x + 20, y + 5, 0xCCCCCC, false);
+            graphics.item(stack, x, y);
+            graphics.text(font, "x " + amount.count(), x + 20, y + 5, 0xCCCCCC, false);
             if (!stack.isEmpty() && mouseX >= x && mouseX < x + 16 && mouseY >= y && mouseY < y + 16) {
                 hovered = stack;
             }
             y += ROW_HEIGHT;
         }
         if (amounts.size() > MAX_LINES) {
-            graphics.drawString(font,
+            graphics.text(font,
                     Component.translatable("planetaryfactory_core.assembler.and_more",
                             amounts.size() - MAX_LINES),
                     x, y, 0x888888, false);

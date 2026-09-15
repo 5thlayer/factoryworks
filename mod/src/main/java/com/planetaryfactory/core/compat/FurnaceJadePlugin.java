@@ -17,7 +17,7 @@ import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
 import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
-import snownee.jade.api.ui.IElementHelper;
+import snownee.jade.api.ui.JadeUI;
 
 /**
  * What a furnace is doing right now, on the HUD (#155).
@@ -76,15 +76,12 @@ public class FurnaceJadePlugin implements IWailaPlugin {
 
     private static void put(CompoundTag tag, String key, ItemStack stack, BlockAccessor accessor) {
         if (!stack.isEmpty()) {
-            tag.put(key, stack.save(accessor.getLevel().registryAccess()));
+            JadeStacks.put(tag, key, stack, accessor);
         }
     }
 
     private static ItemStack read(CompoundTag tag, String key, BlockAccessor accessor) {
-        return tag.contains(key)
-                ? ItemStack.parse(accessor.getLevel().registryAccess(), tag.getCompound(key))
-                        .orElse(ItemStack.EMPTY)
-                : ItemStack.EMPTY;
+        return JadeStacks.read(tag, key, accessor);
     }
 
     private static final IBlockComponentProvider TOOLTIP = new IBlockComponentProvider() {
@@ -94,8 +91,7 @@ public class FurnaceJadePlugin implements IWailaPlugin {
             if (!data.contains(PROGRESS)) {
                 return;
             }
-            IElementHelper elements = IElementHelper.get();
-            ItemStack input = read(data, INPUT, accessor);
+                        ItemStack input = read(data, INPUT, accessor);
             ItemStack output = read(data, OUTPUT, accessor);
 
             // One line, read left to right the way the item moves: what goes in, how far along,
@@ -105,13 +101,13 @@ public class FurnaceJadePlugin implements IWailaPlugin {
             // the font at 8, so an appended figure sits on the icon's top edge, and appended
             // elements butt straight up against each other. The rig's tooltip has the same shape
             // and the same gap, so the two machines read the same (#209).
-            tooltip.add(end(elements, input));
-            JadeLayout.appendFigure(tooltip, elements, progress(data));
-            JadeLayout.appendSpaced(tooltip, elements, end(elements, output));
+            tooltip.add(end(input));
+            JadeLayout.appendFigure(tooltip, progress(data));
+            JadeLayout.appendSpaced(tooltip, end(output));
 
             if (data.contains(CAPACITY)) {
                 tooltip.add(Component.translatable("tooltip.planetaryfactory.furnace.jade.energy",
-                        data.getInt(ENERGY), data.getInt(CAPACITY)));
+                        data.getIntOr(ENERGY, 0), data.getIntOr(CAPACITY, 0)));
             }
         }
 
@@ -125,15 +121,15 @@ public class FurnaceJadePlugin implements IWailaPlugin {
      * One end of the line. An empty slot is a dash rather than a blank: the whole point of the
      * line is telling starved from backed up, and a gap where an item should be says neither.
      */
-    private static snownee.jade.api.ui.IElement end(IElementHelper elements, ItemStack held) {
+    private static snownee.jade.api.ui.Element end(ItemStack held) {
         return held.isEmpty()
-                ? elements.text(Component.translatable("tooltip.planetaryfactory.furnace.jade.empty"))
-                : elements.item(held);
+                ? JadeUI.text(Component.translatable("tooltip.planetaryfactory.furnace.jade.empty"))
+                : JadeUI.item(held);
     }
 
     private static Component progress(CompoundTag data) {
-        int duration = data.getInt(DURATION);
-        int progress = data.getInt(PROGRESS);
+        int duration = data.getIntOr(DURATION, 0);
+        int progress = data.getIntOr(PROGRESS, 0);
         if (duration <= 0) {
             return Component.translatable("tooltip.planetaryfactory.furnace.jade.idle");
         }

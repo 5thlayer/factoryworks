@@ -38,8 +38,8 @@ public final class SmeltingEmiPlugin implements EmiPlugin {
         for (FurnaceTier tier : FurnaceTier.values()) {
             registry.addWorkstation(SMELTING, EmiStack.of(PFBlocks.furnace(tier).get()));
         }
-        registry.getRecipeManager()
-                .getAllRecipesFor(PFRecipes.SMELTING_TYPE.get())
+        registry.getRecipeMap()
+                .byType(PFRecipes.SMELTING_TYPE.get())
                 .forEach(holder -> registry.addRecipe(new SmeltingEmiRecipe(SMELTING, holder)));
     }
 }

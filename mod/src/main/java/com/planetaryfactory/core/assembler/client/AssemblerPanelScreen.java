@@ -10,6 +10,8 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 
 /**
  * The Personal Assembler panel: the queue above, the player's own inventory below.
@@ -49,31 +51,31 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
             // says nothing is happening for as long as a transport belt spends crafting iron gears,
             // which is most of its life.
             int textY = y + 5;
-            graphics.renderItem(itemStack(entry.rootItem()), leftPos + 9, y + 2);
+            graphics.item(itemStack(entry.rootItem()), leftPos + 9, y + 2);
             int after = leftPos + 27;
-            graphics.drawString(font, "x" + entry.amount(), after, textY, 0xFFFFFF, false);
+            graphics.text(font, "x" + entry.amount(), after, textY, 0xFFFFFF, false);
             after += font.width("x" + entry.amount()) + 6;
             if (entry.hasStep()) {
-                graphics.drawString(font, ">", after, textY, 0x777777, false);
-                graphics.renderItem(itemStack(entry.stepItem()), after + 8, y + 2);
-                graphics.drawString(font, "x" + entry.stepAmount(), after + 26, textY, 0xCCCCCC, false);
+                graphics.text(font, ">", after, textY, 0x777777, false);
+                graphics.item(itemStack(entry.stepItem()), after + 8, y + 2);
+                graphics.text(font, "x" + entry.stepAmount(), after + 26, textY, 0xCCCCCC, false);
             }
             if (entry.steps() > 1) {
                 Component of = Component.literal((entry.step() + 1) + "/" + entry.steps());
-                graphics.drawString(font, of, cancelLeft() - font.width(of) - 4, textY, 0x999999, false);
+                graphics.text(font, of, cancelLeft() - font.width(of) - 4, textY, 0x999999, false);
             }
             int cancelX = cancelLeft();
             graphics.fill(cancelX, y + 2, cancelX + CANCEL_SIZE, y + 2 + CANCEL_SIZE, 0xFF5A2B2B);
-            graphics.drawString(font, "x", cancelX + 4, y + 4, 0xFFDDDD, false);
+            graphics.text(font, "x", cancelX + 4, y + 4, 0xFFDDDD, false);
             y += ROW_HEIGHT;
             index++;
         }
         if (AssemblerQueueView.entries().isEmpty()) {
-            graphics.drawString(font,
+            graphics.text(font,
                     Component.translatable("planetaryfactory_core.assembler.queue_empty").withStyle(ChatFormatting.GRAY),
                     leftPos + 10, topPos + ROWS_TOP + 4, 0xAAAAAA, false);
         } else if (AssemblerQueueView.blocked()) {
-            graphics.drawString(font,
+            graphics.text(font,
                     Component.translatable("planetaryfactory_core.assembler.paused").withStyle(ChatFormatting.GOLD),
                     leftPos + 8, topPos + AssemblerPanelMenu.PLAYER_INVENTORY_Y - 12, 0xFFAA00, false);
         }
@@ -88,14 +90,14 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
      * the game, which is what every other screen does with it.
      */
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         if (minecraft != null && minecraft.player != null
-                && minecraft.options.keyInventory.matches(keyCode, scanCode)) {
+                && minecraft.options.keyInventory.matches(event)) {
             onClose();
             minecraft.setScreen(new InventoryScreen(minecraft.player));
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     private int cancelLeft() {
@@ -103,18 +105,20 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        if (event.button() == 0) {
             int index = (int) ((mouseY - topPos - ROWS_TOP) / ROW_HEIGHT);
             int rowTop = topPos + ROWS_TOP + index * ROW_HEIGHT;
             boolean onCancel = mouseX >= cancelLeft() && mouseX <= cancelLeft() + CANCEL_SIZE
                     && mouseY >= rowTop + 2 && mouseY <= rowTop + 2 + CANCEL_SIZE;
             if (onCancel && index >= 0 && index < AssemblerQueueView.entries().size()) {
-                net.neoforged.neoforge.network.PacketDistributor.sendToServer(
+                net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(
                         new PlanCancelPacket(AssemblerQueueView.entries().get(index).planId()));
                 return true;
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 }
