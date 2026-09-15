@@ -41,7 +41,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "simplebelts:track_station"
+            "item": "create:track_station"
           },
           "count": 1
         }

@@ -96,11 +96,11 @@ but the cost is that discovery is the opening's only job.
 mechanical belts. Every block on this list is pack-authored.
 
 *This list read "LP Solid Boiler, LP Steam Miner, the vanilla Furnace as Stone Furnace (`#91`)", and
-then "Simplebelts's Steam Engine as prime mover". ADR-0040 deleted the LP Steam Miner and ADR-0043 made
+then "Create's Steam Engine as prime mover". ADR-0040 deleted the LP Steam Miner and ADR-0043 made
 both rungs of the drill ladder the pack's; ADR-0047 and `#155` made the furnace ladder the pack's
 rather than a re-skinned vanilla block; and ADR-0048 made Terra's steam two pack-owned fluids on a
 pack-authored chain, which took the boiler off Oritech and the engine off Simplebelts. **Simplebelts's Steam
-Engine could never have held that slot**: Simplebelts has no steam fluid, and its engine mounts on a
+Engine could never have held that slot**: Create has no steam fluid, and its engine mounts on a
 water-filled Fluid Tank rather than consuming steam from a pipe. The rewrite lands with `#190`;
 `#193` is the ticket that made the first of these true in the game.*
 
@@ -125,7 +125,7 @@ argument for rung 1, made by the game rather than by the book.
 
 **Granted**: Power Grid's **generator assembly** and the FE grid, Assembling Machine I, **steel** (ADR-0039), and — off `steel-processing`, at no pack cost — **`steel-axe` and the Engineer's Steel Pick**, which halves seconds-per-ore from 2.0 to 1.0.
 
-**Why the grid arrives here**: the generator assembly turns Simplebelts's rotation into watts (`#92`,
+**Why the grid arrives here**: the generator assembly turns Create's rotation into watts (`#92`,
 superseded on mechanism by ADR-0048 — it is a built assembly of Stator, Armature, Commutator and
 Generator Clutch, not Electro's single-block Alternator), and
 Assembling Machine I is FE-native (`#37`) — the grid arrives with its first customer and not one
@@ -152,7 +152,7 @@ tier that can drink it. This is the machine's visible shape, not a hidden gate.
 
 The long chapter. Two things happen at once: movement at scale, and oil.
 
-**Granted**: Simplebelts 6 package logistics (`#28`), rail and trains, the Oil Refinery, the Chemical
+**Granted**: Create 6 package logistics (`#28`), rail and trains, the Oil Refinery, the Chemical
 Plant, solid fuel, sulfur, sulfuric acid, plastic, the red circuit (ADR-0025, `#125`), the Steel
 Furnace (`#91`).
 

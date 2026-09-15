@@ -55,7 +55,7 @@ manager's own `byName` map, after the datapack entries have been decoded:
 if (this.registry.equals(ResearchdRegistries.RESEARCH_KEY)) {
     Map<ResourceLocation, Research> kubeJSResearches = KubeJSCompat.getKubeJSResearches();
     for (Map.Entry<ResourceLocation, Research> entry : kubeJSResearches.entrySet()) {
-        builder.put(ResourceKey.simplebelts(this.registry, entry.getKey()), (T) entry.getValue());
+        builder.put(ResourceKey.create(this.registry, entry.getKey()), (T) entry.getValue());
     }
     Researchd.LOGGER.info("Loaded {} KubeJS researches", kubeJSResearches.size());
 }

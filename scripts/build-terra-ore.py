@@ -5,7 +5,7 @@ Terra had four ore systems and three of them were invisible to prospecting, to d
 to the miner ladder. This closes the three that remain -- Mekanism's left with the mod
 (ADR-0035), and its six worldgen toggles with it:
 
-- **Vanilla and Simplebelts** die by construction: Terra's palette biomes are authored by
+- **Vanilla and Create** die by construction: Terra's palette biomes are authored by
   scripts/build-terra-worldgen.py with an empty `underground_ores` step, and they are
   deliberately *not* members of `#minecraft:is_overworld`, which is the tag every biome
   modifier in the jar set targets.
@@ -178,7 +178,7 @@ def main():
         # The material side is what all four other veins use, and it is closed to stone twice
         # over. `oritech:stone` is a real material but Oritech registers no surface rock for it --
         # "No surface rock registered for material stone", thrown while loading registries, which
-        # reaches a player as a world that will not simplebelts. And every one of the 36 materials that
+        # reaches a player as a world that will not create. And every one of the 36 materials that
         # does have a rock is an *ore* material, so borrowing one would put a hint naming the
         # wrong resource on top of a stone patch.
         #
@@ -223,7 +223,7 @@ def main():
     print("wrote packs/remove-terra-cut-veins/pack.mcmeta (%d veins blocked)" % len(cut))
 
     # The tag Oritech's surviving veins are scoped to. It exists because Terra's palette
-    # biomes are not in #minecraft:is_overworld -- which is what keeps Simplebelts's and vanilla's
+    # biomes are not in #minecraft:is_overworld -- which is what keeps Create's and vanilla's
     # biome-modifier ore off the planet.
     tag = os.path.join(PF, "tags", "worldgen", "biome", "terra.json")
     os.makedirs(os.path.dirname(tag), exist_ok=True)

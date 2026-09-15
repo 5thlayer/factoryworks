@@ -98,7 +98,7 @@ randomized layout and patch sizes. Two things are settled here.
 > and `cassiterite` are in Terra's `forbidden_ore_veins`. Three fields ship, not five.
 
 ~~**The materials: iron, copper, zinc, tin and coal.**~~ The set is chosen to bootstrap the three things
-the opening needs — brass for Simplebelts, bronze for steam, and an LV miner — and it maps onto veins
+the opening needs — brass for Create, bronze for steam, and an LV miner — and it maps onto veins
 Terra already registers: `oritech:iron`, `oritech:copper`, `planetaryfactory:sphalerite`,
 `oritech:cassiterite`, `oritech:coal`. Nothing new is registered for it.
 
@@ -270,7 +270,7 @@ zinc and tin are cut with it, so the five above are drawn from a pool that no lo
 Uranium exists on Terra but is deliberately excluded from the starting area, as Factorio excludes it.
 
 This is not the playtest tuning the section anticipated: the pool changed, not the judgement about
-which of it belongs at spawn. The bootstrap targets named above — brass for Simplebelts, bronze for steam
+which of it belongs at spawn. The bootstrap targets named above — brass for Create, bronze for steam
 — are casualties of that cut and are re-specified elsewhere; they are not an argument for keeping
 the materials. Everything else here stands, including that the patches are spawn-pinned veins and
 that membership does not vary by seed.

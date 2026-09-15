@@ -16,9 +16,9 @@ and decides where an entire Factorio system lives — so it is recorded here and
 ## The decision
 
 **The pack has Factorio's circuit network, `adapted`, and it is supplied by vanilla redstone plus
-Simplebelts's redstone line. No mod is missing and none is wanted.**
+Create's redstone line. No mod is missing and none is wanted.**
 
-Vanilla supplies the wire, the comparator, the repeater and the observer. **Simplebelts ships its own
+Vanilla supplies the wire, the comparator, the repeater and the observer. **Create ships its own
 redstone layer on top** — Redstone Link, Powered Latch, Pulse Repeater, Threshold Switch, Stockpile
 Switch, Smart Observer, Display Link and Nixie Tubes — which between them cover most of what
 Factorio's combinators, lamps and display panels exist to do.
@@ -53,12 +53,12 @@ them. It is tracked as `#119`, and the row stays `adapted` whatever the answer.
 
 **Whether the combinator recipes are emitted is the other axis.** ADR-0028 keeps the ledger and
 `subgroup-owner.json` from reading each other, and this is the case that shows why: a mechanic
-supplied by vanilla and Simplebelts needs no emitted recipe to exist, so `logistics/circuit-network`
+supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network`
 staying `not_emitted` would contradict nothing here. That routing decision remains
 `subgroup-owner.json`'s to take.
 
 **Circuit-controlled inserters and belts stay `unargued`**, because they depend on `#102`'s answer
-about whether Simplebelts's Mechanical Arm is Factorio's inserter. Nothing here presumes it.
+about whether Create's Mechanical Arm is Factorio's inserter. Nothing here presumes it.
 
 ## Consequences
 

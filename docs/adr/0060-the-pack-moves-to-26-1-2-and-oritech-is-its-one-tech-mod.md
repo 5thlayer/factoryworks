@@ -8,7 +8,7 @@ supersedes: [28, 148, 178]
 Two surveys, `docs/research/oritech-coverage.md` and `docs/research/simplebelts-coverage.md`, each
 priced a hypothesis without deciding it. The first asked what Oritech could carry if the machines were
 its. The second asked what SimpleBelts could carry if Simplebelts's belts went. Together they found that the
-pack could lose Simplebelts entirely. **And once Simplebelts goes, nothing ties the pack to Minecraft 1.21.1.**
+pack could lose Create entirely. **And once Create goes, nothing ties the pack to Minecraft 1.21.1.**
 This ADR adopts both hypotheses and the version change they make possible.
 
 ## The rule
@@ -42,7 +42,7 @@ there. A fork taken from the 1.21.1 line would start on a frozen branch.
 
 **The probe says the move is real.** `../pf2612` loads Oritech 2.0.0-exp6, SimpleBelts 2.0.0-exp1,
 Railcraft Reborn 1.4.3, Building Gadgets 2, FTB Filter System, FTB Quests and KubeJS 8.0.6 together. A
-world was simplebeltsd in it on 2026-09-11 (human). The log shows four errors, none fatal: KubeJS's
+world was created in it on 2026-09-11 (human). The log shows four errors, none fatal: KubeJS's
 Architectury plugin, a Configured config provider, EMI's Oritech recipe defaults, and a data map naming
 `oritech:fluxite`.
 
@@ -73,18 +73,18 @@ survey rebuilds in a subclass: first match plus output locking (its fact 3).
 
 ## Why a SimpleBelts fork, and not Simplebelts's belts
 
-ADR-0044 kept Simplebelts because the puzzle Factorio's belt carries is mostly two-dimensional, and that
+ADR-0044 kept Create because the puzzle Factorio's belt carries is mostly two-dimensional, and that
 argument still holds. **Undergrounds and lanes stay `excluded`, argued from the medium.** What changed
-is that the other claims the belt makes become *reachable*, which Simplebelts's RPM-driven belt never
+is that the other claims the belt makes become *reachable*, which Create's RPM-driven belt never
 managed:
 
 - **Throughput becomes a known number.** The fork's belts are set to carry 15 / 30 / 45 / 60 items/s,
-  which is Factorio's own figure. ADR-0044 deferred the throughput budget to play because Simplebelts's
+  which is Factorio's own figure. ADR-0044 deferred the throughput budget to play because Create's
   items-per-entry was "whatever the upstream inserter happened to hand over". The fork clamps that at
   one item per entry plus the researched bonus.
 - **The belt holds 512 items per 64 blocks**, Factorio's number, so the belt as buffer is restored.
 - **Splitters build balancers.** The fork adds a two-wide splitter and merger, so a balancer is
-  constructed out of splitters, which Simplebelts's one-block Brass Tunnel never allowed.
+  constructed out of splitters, which Create's one-block Brass Tunnel never allowed.
 - **`logistics-2`, `logistics-3` and `turbo-transport-belt` buy something again**, namely the belt
   tiers.
 
@@ -104,11 +104,11 @@ These rulings from the SimpleBelts survey are part of this decision:
 - **ADR-0023 has nothing left to pin.** ADR-0056 already expired its constraint, and KubeJS 8 is what
   26.1.2 runs.
 - **ADR-0044 is superseded.** Its analysis of the two-dimensional puzzle is kept and cited above. Its
-  conclusion, its Simplebelts dials and its `maxBeltLength` go.
+  conclusion, its Create dials and its `maxBeltLength` go.
 - **ADR-0056's chassis clause is superseded.** *Oritech leaves* stands, and so does its list of what
   that departure costs. *Modern Industrialization becomes the machine chassis* does not.
 - **ADR-0057 is superseded.** Its account of what unification reaches remains correct history. With
-  Simplebelts and MI both gone it arbitrates between nothing, and **AlmostUnified leaves**. What replaces it
+  Create and MI both gone it arbitrates between nothing, and **AlmostUnified leaves**. What replaces it
   is ADR-0017's own rule: the item-layer decision names one supplier per part and recipe-removes the
   others.
 - **ADR-0017's table is amended row by row.** Item logistics goes to the fork and Railcraft, fluid
@@ -130,7 +130,7 @@ These rulings from the SimpleBelts survey are part of this decision:
   not replaced: Factorio has no mass package logistics. `#28`'s cut list granted it at rung 2, and
   `docs/spec/terra-progression.md`'s Rung 2 is amended to match by #257.
 
-`#148` chose Simplebelts: Power Grid and `#178` answered "no" to Factorio belts; both are contradicted.
+`#148` chose Create: Power Grid and `#178` answered "no" to Factorio belts; both are contradicted.
 `#102` is open and is left to the frontier: its answer becomes *the loader*.
 
 ## What it costs
@@ -150,8 +150,8 @@ are re-derived, not carried over.
 
 **Several lines are deleted outright, not ported:**
 
-- the Simplebelts kinetic recipe line (`simplebelts-recipe-convert.py`, `data/pack/simplebelts-substitutions.json`,
-  `test_simplebelts_recipes.py`)
+- the Create kinetic recipe line (`create-recipe-convert.py`, `data/pack/create-substitutions.json`,
+  `test_create_recipes.py`)
 - the Power Grid recipe line (`powergrid-recipe-convert.py`, `data/pack/grid-substitutions.json`,
   `test_grid_recipes.py`)
 - the GCyR fork, with its ADR-0001/0003 build and patch
@@ -234,9 +234,9 @@ are re-derived, not carried over.
   decision does not require the version change. Rejected because nothing requires staying either: both
   mods develop on 26.1.2, the belt fork would start from a frozen line, and the pack is pre-release,
   so no world depends on the old version.
-- **Keep Simplebelts for belts and trains, on 1.21.1** (ADR-0044 and ADR-0056 as written). Rejected on the
+- **Keep Create for belts and trains, on 1.21.1** (ADR-0044 and ADR-0056 as written). Rejected on the
   belt argument above. A throughput nobody can compute, no buffer and no constructed balancer are
-  defects the fork closes, and Railcraft Reborn carries trains without Simplebelts.
+  defects the fork closes, and Railcraft Reborn carries trains without Create.
 - **Move to 26.1.2 with MI as the chassis, if MI's port lands.** Rejected on ADR-0017's rule: a second
   full-stack tech mod beside Oritech restarts the row-by-row attrition ADR-0035 records.
 

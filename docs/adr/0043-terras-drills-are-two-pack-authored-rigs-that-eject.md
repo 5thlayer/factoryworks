@@ -61,7 +61,7 @@ the player gets right or wrong, and it is what they will recognise.
 The order of attempts on that tile:
 
 1. **An item handler** — `Capabilities.ItemHandler.BLOCK`. This covers the pack's furnace, a chest,
-   a vanilla hopper, and every Simplebelts block that answers the capability.
+   a vanilla hopper, and every Create block that answers the capability.
 2. **Otherwise it stalls**, holding output in a small internal buffer and burning no fuel. A
    mis-faced drill stops rather than voiding ore — under an amount model, overflow that vanishes
    destroys a finite resource — and rather than looking like it works.
@@ -71,7 +71,7 @@ ground", defended as "Factorio's own behaviour and its one-item-per-tile rule". 
 that defence fail.** The one-item-per-tile rule is real but governs items already lying on the
 ground; no Factorio machine ejects to the ground when its output is blocked, and a blocked drill
 fills its output and halts. Rule 2's other stated ground — keeping a logistics path open with no
-Simplebelts dependency — went with ADR-0044 keeping Simplebelts's belts. So **rules 1 and 3 were the whole
+Create dependency — went with ADR-0044 keeping Create's belts. So **rules 1 and 3 were the whole
 mechanic**, and what looked like a fallback in a chain is backpressure: it is also what ADR-0041
 needs, since a stall preserves a finite resource where a spill destroys it. #182 raised this and is
 where the argument is written out; #105 owned the call and #193 made it. **A broken rig pays back
@@ -91,10 +91,10 @@ the mining areas below extracted rather than typed.*
 *The buffer's size is the pack's, not Factorio's: one stack. This ADR asked for "a small internal
 buffer" and did not size it, and there is no corpus figure to read.*
 
-**Simplebelts's `DirectBeltInputBehaviour` is deliberately not called, and the mod takes no Simplebelts
+**Create's `DirectBeltInputBehaviour` is deliberately not called, and the mod takes no Create
 dependency.** A bare horizontal belt does answer `Capabilities.ItemHandler.BLOCK`, so rule 1 will
-feed one, and a Simplebelts funnel, which answers no item handler, is reachable only by rule 2. Both are
-accepted for now because the prior question is open: whether this pack should ship Simplebelts's belts at
+feed one, and a Create funnel, which answers no item handler, is reachable only by rule 2. Both are
+accepted for now because the prior question is open: whether this pack should ship Create's belts at
 all, or Factorio's own. That is #178, and this ADR is not the place to answer it.
 
 *Corrected by ADR-0044, on two counts. **The paragraph above read that rule 1 feeds a belt "including
@@ -110,7 +110,7 @@ confirmed**: no funnel class appears among the jar's capability registrations, a
 `content/logistics/funnel/` references `Capabilities` nowhere — so ADR-0040's named answer to a drill
 that does not push is unreachable, along with chute, depot, brass tunnel, saw, millstone, basin and
 item drain. That, not the insertion direction, is why the `DirectBeltInputBehaviour` call is worth
-making. **#178 is now answered** — ADR-0044 keeps Simplebelts's belts — so the call is no longer waiting on
+making. **#178 is now answered** — ADR-0044 keeps Create's belts — so the call is no longer waiting on
 anything.*
 
 ## Both rigs draw their overlay on the ore
@@ -234,7 +234,7 @@ Oritech wrapping FE does not.
   `unargued` sub-rules are closed.
 - **#27's "automated mining — proposed as GT's, at the first tier"** and **#37's premise that
   Oritech is in the pack partly "for its miners"** are both false as stated; both are back-linked.
-- **Three tickets are filed** by this decision: #178 (Factorio belts versus Simplebelts belts), #179
+- **Three tickets are filed** by this decision: #178 (Factorio belts versus Create belts), #179
   (buried veins versus flat discs) and #180 (the universal `R` rotate verb).
 - **This ADR is `provisional`** under ADR-0042. Nobody has placed either rig.
 
@@ -254,7 +254,7 @@ Oritech wrapping FE does not.
 - **A single-block rig with the areas rounded to 1×1 and 5×5.** Cheapest, and it costs the burner
   drill its entire justification: ADR-0040 put it in the starting pocket because "a burner drill
   covers four tiles and beats hands even at 0.25 items/s".
-- **Take the Simplebelts dependency and call `DirectBeltInputBehaviour`.** Correct in isolation — it is
+- **Take the Create dependency and call `DirectBeltInputBehaviour`.** Correct in isolation — it is
   one line in `mod/build.gradle`'s `compileOnly fileTree` — and deferred only because the belt
   question above it is open.
 - **A no-GUI rig**, fuelled by right-clicking with coal in hand and read through Jade. Genuinely

@@ -100,7 +100,7 @@ It checks three things, because none alone is enough:
    index (see below), so `refresh` cannot see these at all.
 
 A failing run restores the tree, so a failed check never leaves the manifest half-updated — and it
-deletes only metafiles that *this run* simplebeltsd, never one you wrote and have not committed yet.
+deletes only metafiles that *this run* created, never one you wrote and have not committed yet.
 `--fix` rewrites the manifest but will neither conjure a missing jar nor silently adopt a stray one,
 so MISSING and STRAY fail even under `--fix`.
 

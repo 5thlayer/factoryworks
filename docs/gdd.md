@@ -18,12 +18,12 @@ is the pack's subject. **None of them is.**
 Exactly one mod owns each capability (ADR-0017), and this list says which. No mod on it is the
 ladder — the ladder is Factorio's science packs (ADR-0018).
 
-- **Simplebelts 6.0.10** — Item logistics and fluid handling entire: belts, chutes, trains, filtering,
+- **Create 6.0.10** — Item logistics and fluid handling entire: belts, chutes, trains, filtering,
   pipes, pumps, tanks and bulk storage, plus the Steam Engine that is Terra's first prime mover
   (ADR-0017 as amended by `#101`). Pinned; see ADR-0017 for why the pin is harder than the declared
   range says.
-- **Simplebelts: Power Grid 0.6.1** — The electrical grid: point-to-point catenary wire, a generation
-  multiblock on Simplebelts kinetics (rotor, winding, housing, commutator), a real-PV Solar Panel, the
+- **Create: Power Grid 0.6.1** — The electrical grid: point-to-point catenary wire, a generation
+  multiblock on Create kinetics (rotor, winding, housing, commutator), a real-PV Solar Panel, the
   Battery the pack borrows as Factorio's accumulator, and the two one-way bridge blocks that are the
   boundary between grid and machine — Device Connector grid→FE, FE Inverter FE→grid (`#46`, swapped
   in by `#148`). It solves a nodal circuit with Ohm's law, so voltage sag and blown fuses are real
@@ -45,15 +45,15 @@ ladder — the ladder is Factorio's science packs (ADR-0018).
   surface, and gates nothing.
 - **KubeJS 2101.7.1-build.181** — Scripting glue: the pack's own machines and recipe types, emission
   tracking, flight simulation, planetary arrival. Pinned to the build Oritech 7.0.2 compiles against;
-  `kubejs-simplebelts` is not installed.
+  `kubejs-create` is not installed.
 - **`planetaryfactory_core`** — The pack's own mod, for mechanism no other mod supplies (ADR-0015).
-- **Pre-AE2 logistics — Simplebelts, and nothing else.** Simplebelts owns item logistics, bulk item storage
+- **Pre-AE2 logistics — Create, and nothing else.** Create owns item logistics, bulk item storage
   and fluid handling alike — pipes and pumps for moving, tanks for storing (ADR-0017 as amended by
   `#101`). The dedicated routing mods — Modular Routers, Integrated Dynamics, LaserIO, XNet, SFM,
   Pipez, Flux Networks, Functional Storage and Sophisticated Storage — are cut from the pack, because one mod
   owns each capability and a substitute routing idiom is a straight bypass of the ladder. Only two
   routing capabilities are gated rather than cut: **AE2**, unlocked at endgame once every planet's
-  puzzle is done, and **Simplebelts 6's package logistics**, granted at the `logistic` science rung.
+  puzzle is done, and **Create 6's package logistics**, granted at the `logistic` science rung.
 
 **Mekanism is out of the pack, jars and all.** ADR-0035 removed it: fifteen months of amendments
 took back all seven of its ADR-0017 rows one at a time, and nothing was left underneath. `#146`
@@ -75,7 +75,7 @@ Latin and Greek, supplied by lang files only (ADR-0004).
 | Terra | `overworld` | `minecraft:overworld` | Standard starter loop | Basic extraction, first automation, first rockets and the Orbital Starter Kit. The only body with Illager raids. |
 | Terra Orbit | `overworld_orbit` | GCyR stock | Orbital logistics | Asteroid chunks (ice, carbon) processed into Space Science. Where the first Platform is established. |
 | Ignus | `vulcanus` | New, based on GCyR's `venus` | Thermal and fluid processing | Tungsten, infinite lava extraction, molten metal solidification, strict slag management. |
-| Electro | `fulgora` | New | Recycling and electricity | No natural ores. Simplebelts crushers process generated ruins for scrap. Solar and lightning power. |
+| Electro | `fulgora` | New | Recycling and electricity | No natural ores. Create crushers process generated ruins for scrap. Solar and lightning power. |
 | Sapros | `gleba` | New | Organics and spoilage | Agricultural automation under spoilage time limits. Sole source of Cryo-Pods. |
 | Gelida | `aquilo` | New | Cryogenics and heat management | Fluids freeze without active heating; ammonia chemistry; every process needs a thermal budget. |
 | Atlantis | `shattered_planet` | New, orbit-only | Endgame destination | Reached only via an established Platform. Mechanics deliberately deferred — see §7. |
@@ -311,7 +311,7 @@ applied in order:
 1. **An existing Oritech material.** Always preferred, and this one *is* about Oritech: the
    material system is the pack's material registry, and it supplies dusts, plates, fluids, ore
    variants and recipe integration for free.
-2. **An item an installed mod already registers**, where the material system has none — Simplebelts's,
+2. **An item an installed mod already registers**, where the material system has none — Create's,
    Electro's or GCyR's alike, chosen for having the item rather than for owning anything.
 3. **A material the pack declares itself**, only where the puzzle depends on the thing existing
    separately from anything that already exists. It is declared as

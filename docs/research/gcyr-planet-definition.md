@@ -107,14 +107,14 @@ also carry the filter: `GeneratedData.PACK_META` is built from a `pack` object h
 `pack_format` and the description "KubeJS Pack", with no room for a `filter` key.
 
 Confirmed by observation (slice 1, `remove-stock-bodies.zip`): vanilla applies a pack's filter only
-to packs below it in the list, and the zip does sort above GCyR's mod pack. On a world simplebeltsd with
+to packs below it in the list, and the zip does sort above GCyR's mod pack. On a world created with
 the filter in place, `gcyr:luna`, `gcyr:mars` and `gcyr:mercury` — surfaces, orbits and dimension
 types alike — are absent from the live `dimension` and `dimension_type` registries, while
 `gcyr:venus`, `gcyr:venus_orbit` and `gcyr:overworld_orbit` survive.
 
 Read the registries without a human by launching with `--quickPlaySingleplayer "<world>"` and
 querying KubeJS's local web server: `/api/registries/minecraft/dimension/keys`. Note that the
-dimension list is persisted per world, so a save simplebeltsd before a filter change keeps the
+dimension list is persisted per world, so a save created before a filter change keeps the
 dimensions it already had — only a fresh world answers the question.
 
 ## Consequence for the pack

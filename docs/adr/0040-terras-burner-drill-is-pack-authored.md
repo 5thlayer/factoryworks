@@ -86,7 +86,7 @@ arrives with the thing that powers it.
 
 Factorio's defining drill behaviour is that output drops straight onto a belt with no inserter.
 GT miners mine to an internal inventory and push nothing, and the pack-authored drill does the
-same. The player places a Simplebelts funnel.
+same. The player places a Create funnel.
 
 Recorded as `excluded` on the ledger's Mining drills row with the funnel named in the notice. It is
 a genuine loss of Factorio feel. The alternative — a rig that auto-pushes into an adjacent belt —

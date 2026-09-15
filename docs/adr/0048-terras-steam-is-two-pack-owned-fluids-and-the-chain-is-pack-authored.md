@@ -12,19 +12,19 @@ and that is not decoration — it is what makes power a production chain rather 
 what lets a nuclear reactor at 500 °C reuse the same pipes and a different consumer.
 
 The ledger has recorded a four-step adaptation of that chain since `#101`: *Oritech's boiler,
-Simplebelts's Steam Engine, Power Grid's generation multiblock, the pack's Steam Turbine.* Grilled
+Create's Steam Engine, Power Grid's generation multiblock, the pack's Steam Turbine.* Grilled
 2026-09-08, **the second step of that chain does not exist**.
 
 ## Three facts from the jars
 
-- **Simplebelts has no steam fluid.** Its boiler is a Fluid Tank multiblock holding **water**, heated by
-  Blaze Burners; `simplebelts.boiler.*` is a heat level and a water input rate. The Steam Engine mounts
+- **Create has no steam fluid.** Its boiler is a Fluid Tank multiblock holding **water**, heated by
+  Blaze Burners; `create.boiler.*` is a heat level and a water input rate. The Steam Engine mounts
   on that tank and emits rotation. It cannot consume a steam fluid from a pipe, from Oritech's
-  boiler or from anything else. The ledger's "a Simplebelts Steam Engine turns that steam into rotation"
+  boiler or from anything else. The ledger's "a Create Steam Engine turns that steam into rotation"
   was never implementable.
 - **Power Grid never touches steam either.** Its generator is not a fixed multiblock but a built
   assembly — a Stator of Coils strung on Shafts, an Armature of Rotors, a Commutator and a
-  Generator Clutch — coupled to a Simplebelts kinetic network through the Clutch, needing an excitation
+  Generator Clutch — coupled to a Create kinetic network through the Clutch, needing an excitation
   current or self-excitation with a Rheostat. **Rotation in, volts out**, and nothing else.
 - **The gap is therefore steam → rotation**, and no installed mod spans it.
 
@@ -47,7 +47,7 @@ already share, and it replaces the `boiler` row's LP Solid Boiler. There is no s
 reaches 500 °C through the heat exchanger, and ADR-0033 already decided the reactor emits
 superheated steam directly with no heat layer, so `heat-exchanger` stays where `#135` has it.
 
-**One steam engine**, pack-authored: low-temperature steam in, **Simplebelts rotation out**. Not
+**One steam engine**, pack-authored: low-temperature steam in, **Create rotation out**. Not
 electricity.
 
 ## Why rotation and not electricity, which is what Factorio does
@@ -72,14 +72,14 @@ assembly → pole → machines**, and the pack owns its first two steps and its 
 
 ## What this costs
 
-**The mod takes a Simplebelts compile-time dependency.** Rotation has no capability path; a generating
-kinetic block extends Simplebelts's own class. ADR-0043 avoided this dependency and ADR-0044 kept Simplebelts's
-belts without needing it. It is taken here knowingly, as the `simplebelts-*.jar` line in
+**The mod takes a Create compile-time dependency.** Rotation has no capability path; a generating
+kinetic block extends Create's own class. ADR-0043 avoided this dependency and ADR-0044 kept Create's
+belts without needing it. It is taken here knowingly, as the `create-*.jar` line in
 `mod/build.gradle`'s `compileOnly fileTree` — the same shape as Oritech's and Researchd's.
 
 **`offshore-pump` becomes `not_emitted`.** *(Amended by ADR-0050, which reverses this: the
 Mechanical Pump is a pipe-network block and does not extract from the world, so the pump is
-pack-authored after all. The steam chain below is unaffected.)* Simplebelts's Mechanical Pump against a vanilla water source is
+pack-authored after all. The steam chain below is unaffected.)* Create's Mechanical Pump against a vanilla water source is
 the water half, and there is no Factorio entity to author. `pumpjack` is unaffected — it is oil, and
 stays on its own shelf.
 
@@ -87,7 +87,7 @@ stays on its own shelf.
 says rung 0 is "burner and kinetic, and not one watt anywhere", with steam becoming rotation that
 "powers machines, not a grid", and the grid arriving at rung 1 with its first customer. That survives
 intact — what changes is that all three of rung 0's named blocks (LP Solid Boiler, LP Steam Miner,
-Simplebelts's Steam Engine) are now pack-authored or deleted. The player meets Power Grid's excitation
+Create's Steam Engine) are now pack-authored or deleted. The player meets Power Grid's excitation
 and rheostat at rung 1 with the book in hand, not in the first hour.
 
 **Rung 0's budget is not adjusted on this account.** A player fluent in Factorio reaches electricity

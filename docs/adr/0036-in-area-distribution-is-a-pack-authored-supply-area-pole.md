@@ -11,7 +11,7 @@ boundary — the grid ends where the machines begin — and the cables were the 
 
 **In-area distribution becomes a Factorio supply-area pole, registered in `planetaryfactory_core`.**
 A block that scans a radius and pushes EU into every `IEnergyContainer` inside it. **The
-transmission mod becomes Simplebelts: Power Grid**, replacing Simplebelts: Electro Energetics, gated on one
+transmission mod becomes Create: Power Grid**, replacing Create: Electro Energetics, gated on one
 bench test.
 
 ## Why a pole and not a cable
@@ -100,7 +100,7 @@ features it happened to have: **brownout propagation and a wire-tier ladder are 
 requirements**; everything else negotiable. Power Grid passes both, richly.
 
 `powergrid` by patryk3211 — https://modrinth.com/mod/power-grid,
-https://github.com/patryk3211/PowerGrid. Not *Simplebelts: Powerplantgrid*, which is an addon to it, and
+https://github.com/patryk3211/PowerGrid. Not *Create: Powerplantgrid*, which is an addon to it, and
 not marvin-roesch/PowerGrid, which is dead and unrelated. **1.21.1 is NeoForge-only**; 0.6.1
 published 2026-08-26.
 
@@ -113,7 +113,7 @@ What it brings that Electro did not:
   rather than a config number.
 - Grounding rods that scale with buried block count, fuse holders, overheating,
   `explosiveDeconstruction`, entity electrocution.
-- **Generation is a Simplebelts-kinetic multiblock** — rotor, winding, housing, commutator — plus a
+- **Generation is a Create-kinetic multiblock** — rotor, winding, housing, commutator — plus a
   real-PV Solar Panel. It stands exactly where Electro's Alternator stands in ADR-0017's chain,
   Steam Engine → SU → grid, so the chain that `#101` fixed survives the swap intact.
 
@@ -130,7 +130,7 @@ drawing through a Device Connector in a live world, without the crash in
 [issue #1021](https://github.com/patryk3211/PowerGrid/issues/1021). The pole prototype *is* that
 bench test.
 
-**The Simplebelts pin does not lift.** Power Grid declares `[6.0.9,6.1.0)` as `type = "required"` and its
+**The Create pin does not lift.** Power Grid declares `[6.0.9,6.1.0)` as `type = "required"` and its
 `powergrid.mixins.json` is `"required": true` with `defaultRequire: 1`, so a 6.0.x patch that
 refactors the internals it mixes into still satisfies the range and aborts startup — the same trap
 ADR-0017 recorded for Electro. Accepted as a side effect. It was never a goal and never a tiebreaker.
@@ -213,7 +213,7 @@ avoids. An extension's block entity holds an empty ledger that nothing reads.
   choosing where the footprint sits, and a support check would break placing a pole on a legitimate
   platform.
 - **Breaking any segment drops the column above it, base included** -- chains, scaffolding and
-  Simplebelts's belts all behave this way, so the muscle memory exists.
+  Create's belts all behave this way, so the muscle memory exists.
 
 **The FE capability registers on the block, not on the block entity.** Power Grid's
 `BridgeElectricBehaviourImpl.makeFEHandler` -- read by disassembly, not assumed -- does

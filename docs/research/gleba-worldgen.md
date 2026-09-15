@@ -71,7 +71,7 @@ next reader knows it was seen and deliberately deferred, rather than missed.
 
 Yumako and Jellystem are **real trees with structure**, not tall crops. On Gleba they are planted
 from seeds and harvested by agricultural towers, and harvesting is destructive — the trees are not
-an infinitely standing crop. The pack's equivalent is saplings plus a Simplebelts tree farm, which is why
+an infinitely standing crop. The pack's equivalent is saplings plus a Create tree farm, which is why
 a first-class `SaplingBlock` and `TreeGrower` are needed and why the pack acquired a mod for them
 (ADR-0014).
 

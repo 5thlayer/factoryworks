@@ -14,7 +14,7 @@ The default in force until now was the author's, and it was never decided: it ac
 tickets ruled the circuit tiers' ingredient lists "recipe iteration, the dev's own"
 ([`#55`](https://github.com/adamico/planetary-factory/issues/55),
 [`#62`](https://github.com/adamico/planetary-factory/issues/62)), and both did so while assuming the
-circuits had to be re-based onto mod items — Simplebelts's Electron Tube, Mekanism's Control Circuit —
+circuits had to be re-based onto mod items — Create's Electron Tube, Mekanism's Control Circuit —
 each of which is redstone-bound, and redstone is on ADR-0021's cut list. The premise was a dead end,
 not a preference, and `#125` found the corpus's own ladder closes cleanly on Terra's four ores plus
 oil:
@@ -44,7 +44,7 @@ win over the extracted data.
   closed tickets asserting a ruling made under a false premise, and would have produced a
   hand-authored circuit ladder chasing a redstone substitute Factorio never needed.
 - **The corpus authors everything, no overrides.** Purest, and unshippable: barrelling is a free
-  Simplebelts mechanic (ADR-0017), twelve `*-barrel` recipes would duplicate it, and five categories are
+  Create mechanic (ADR-0017), twelve `*-barrel` recipes would duplicate it, and five categories are
   deliberately unrouted. Departures exist; the question is only whether they are recorded.
 - **Per-recipe judgement, as now, but written down.** Indistinguishable in practice from the status
   quo — with no stated default, "written down" is whatever the session remembers to write.

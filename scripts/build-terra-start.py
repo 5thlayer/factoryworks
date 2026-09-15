@@ -251,7 +251,7 @@ SCATTER = 7
 
 # The hub's water pool (ADR-0050, issue #212).
 #
-# Simplebelts's water wheel is the pack's only rotational source before the burner line, and ADR-0050
+# Create's water wheel is the pack's only rotational source before the burner line, and ADR-0050
 # refuses a bucket -- so rung 0 power is "dig a channel from water", and until the water is in the
 # hub that is an unbounded walk ADR-0049's traversal budget has no room for. The pool ships with
 # the opening rather than being found.

@@ -37,7 +37,7 @@ on the first event only that registry's rows land. `clear()` then discards every
 entries for registries whose `RegisterEvent` has not fired yet are gone, with no error.
 
 `CommonInit.onRegister` makes it worse: it runs at `NORMAL` on that same first event, ahead of the
-`LOW` drain, so `GTSoundEntries.init()` iterates a still-empty `oritech:sound` registry and simplebeltss
+`LOW` drain, so `GTSoundEntries.init()` iterates a still-empty `oritech:sound` registry and creates
 no `SoundEvent`s.
 
 ### Evidence

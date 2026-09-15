@@ -20,7 +20,7 @@
 //
 // Four of ADR-0034's seven exception classes need no entry, and that is not an oversight:
 //
-//   - `native_mechanic` (#93): Simplebelts's Spout and Item Drain key on `IFluidHandlerItem`, so the
+//   - `native_mechanic` (#93): Create's Spout and Item Drain key on `IFluidHandlerItem`, so the
 //     eighteen barrel fill/empty rows were never recipes. Nothing to keep, nothing to remove,
 //     and authoring one would duplicate a free mechanic.
 //   - The 2x2 inventory grid: not recipe-removable, and #140's, not this sweep's. #140 shipped
@@ -34,7 +34,7 @@ var RECIPE_SURVIVORS = [
   {
     surface: 'assembling',
     type: 'oritech:assembling',
-    why: "ADR-0026's Assembling Machine 1/2/3, one recipe type across the three tiers. ADR-0031: the corpus authors every recipe it contains, and #87 emits them. This row also carries Simplebelts: Power Grid's line -- #172 re-authors the 80 recipes the mod ships on surfaces nothing in the pack executes onto this surface rather than admitting a mod, which ADR-0034 refuses."
+    why: "ADR-0026's Assembling Machine 1/2/3, one recipe type across the three tiers. ADR-0031: the corpus authors every recipe it contains, and #87 emits them. This row also carries Create: Power Grid's line -- #172 re-authors the 80 recipes the mod ships on surfaces nothing in the pack executes onto this surface rather than admitting a mod, which ADR-0034 refuses."
   },
   {
     surface: 'oil_refinery',
