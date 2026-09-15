@@ -27,17 +27,28 @@ StartupEvents.registry('item', event => {
   // `scripts/factorio-recipe-convert.py` into `kubejs/data/planetaryfactory/recipe/`.
 
   // Common
+  //
+  // The three tiers borrow Railcraft's circuit sprites, which are one PCB silhouette in four
+  // board colours. That is what makes them right here and the GTCEu processors they replace
+  // wrong: Factorio's green, red and blue circuits are the same object three times, and
+  // `quantum_processor_assembly`, `wetware_processor_assembly` and `crystal_processor_assembly`
+  // were three unrelated designs that never read as a ladder. Railcraft's fourth, yellow
+  // `signal_circuit`, is deliberately unused -- Factorio has three tiers.
+  //
+  // A texture is referenced out of the installed jar, not copied into this repo. ADR-0026's
+  // machines already borrow this way; #234 is writing down why that differs from committing a
+  // derived sprite, and nothing here is redistributed.
   event.create('planetaryfactory:electronic_circuit')
     .displayName('Electronic Circuit')
-    .texture('oritech:item/quantum_processor_assembly')
+    .texture('railcraft:item/receiver_circuit')
 
   event.create('planetaryfactory:advanced_circuit')
     .displayName('Advanced Circuit')
-    .texture('oritech:item/wetware_processor_assembly')
+    .texture('railcraft:item/controller_circuit')
 
   event.create('planetaryfactory:processing_unit')
     .displayName('Processing Unit')
-    .texture('oritech:item/crystal_processor_assembly')
+    .texture('railcraft:item/radio_circuit')
 
   // Plastic authors for the same reason: it gates rung 2 (ADR-0025), and a rung-boundary row
   // authors rather than borrows. Its recipe is the Chemical Plant's and arrives with #107.
