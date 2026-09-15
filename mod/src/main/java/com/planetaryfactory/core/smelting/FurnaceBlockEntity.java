@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import com.planetaryfactory.core.PFBlockEntities;
 import com.planetaryfactory.core.recipes.PFRecipes;
@@ -37,7 +38,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  *
  * <p>One block entity type and three blocks pointing at it, the way the four supply-area poles
  * share one. Everything that differs between tiers is on {@link FurnaceTier}: speed, whether there
- * is a fuel slot, and how much EU a tick costs.
+ * is a fuel slot, and how much FE a tick costs.
  *
  * <p>The arithmetic and the routing rules live in {@link FurnaceTier}, {@link FurnaceSlots},
  * {@link FurnaceCycle} and {@link FurnaceEnergyBuffer}, none of which touch Minecraft -- this
@@ -49,7 +50,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
     public static final int DATA_PROGRESS = 0;
     public static final int DATA_DURATION = 1;
     // Both burner tiers and the Electric one report through DATA_ENERGY: since ADR-0047 they
-    // hold the same kind of thing -- a buffer, in joules or in EU -- and the screen draws it with
+    // hold the same kind of thing -- a buffer, in joules or in FE -- and the screen draws it with
     // the same gauge. Two widgets for one quantity would say a burner and an Electric furnace
     // hold interchangeable stuff, which is a worse lie than the flame it replaces.
     public static final int DATA_ENERGY = 2;
@@ -90,7 +91,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
                     if (tier.burnsFuel()) {
                         fuel.load(value, fuel.lastLitJoules());
                     } else {
-                        energy.setStoredEu(value);
+                        energy.setStoredFe(value);
                     }
                 }
                 case DATA_ENERGY_CAPACITY -> {
@@ -124,13 +125,13 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
         super(PFBlockEntities.FURNACE.get(), pos, state);
         if (!(state.getBlock() instanceof FurnaceBlock furnace)) {
             // Silently defaulting would ship a mis-tiered furnace: an Electric one with a fuel
-            // slot and no EU draw, working just well enough that nobody looks at the block.
+            // slot and no FE draw, working just well enough that nobody looks at the block.
             throw new IllegalStateException(
                     "furnace block entity on " + state.getBlock() + " at " + pos
                             + ", which is not a furnace");
         }
         this.tier = furnace.tier();
-        this.energy = new FurnaceEnergyBuffer(tier.bufferEu());
+        this.energy = new FurnaceEnergyBuffer(tier.bufferFe());
     }
 
     public FurnaceTier tier() {
@@ -155,7 +156,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
             // the input has gone, since progress on a smelt nobody asked for is a free head start.
             //
             // NOTHING BURNS DOWN HERE. A furnace waiting on a full output spends no joules and
-            // no EU -- the lit coal is already spent, but what it banked is not, and a stall that
+            // no FE -- the lit coal is already spent, but what it banked is not, and a stall that
             // quietly drained the buffer would make backpressure cost the player the fuel it was
             // meant to save. That is the same rule the output side keeps under ADR-0041.
             if (cycle.idle(found.isPresent())) {
@@ -179,7 +180,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
     }
 
     /**
-     * Pays for one tick: 4,500 J from the fuel buffer on the two burner tiers, 13 EU on the
+     * Pays for one tick: 4,500 J from the fuel buffer on the two burner tiers, 90 FE on the
      * Electric one.
      *
      * <p>Both burners draw the same 90 kW, which is Factorio's own arrangement and the reason the
@@ -189,7 +190,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
      */
     private boolean pay() {
         if (!tier.burnsFuel()) {
-            return energy.drawTick(tier.euPerTick());
+            return energy.drawTick(tier.fePerTick());
         }
         long perTick = tier.joulesPerTick();
         if (fuel.drawTick(perTick)) {
@@ -298,7 +299,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
     // -- the energy face ------------------------------------------------------------------------
 
     /**
-     * GregTech's container face, and the whole of what ADR-0036's pole talks to.
+     * The FE face, and the whole of what ADR-0036's pole talks to.
      *
      * <p>Null on the two burner tiers, so a pole does not count a Stone Furnace as a machine it is
      * failing to power.
@@ -321,12 +322,42 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
 
         @Override
         public int insert(int amount, TransactionContext transaction) {
-            return 0; // The pole is the boundary: a GT cable run gets nothing.
+            if (amount <= 0) {
+                return 0;
+            }
+            // Snapshot before the mutation, unconditionally. The pole's own tick measures this
+            // furnace's room with an insert inside a transaction it then aborts, so an insert that
+            // took effect immediately would leave a probe's worth of FE behind every tick -- an
+            // Electric Furnace that ran on nothing.
+            journal.updateSnapshots(transaction);
+            return (int) energy.addEnergy(amount);
         }
 
         @Override
         public int extract(int amount, TransactionContext transaction) {
+            // Energy delivered to a furnace is spent there. A drainable buffer would let a grid
+            // pull back what it had just pushed, which is a loop with no mechanic in it.
             return 0;
+        }
+    };
+
+    private final SnapshotJournal<Long> journal = new SnapshotJournal<>() {
+
+        @Override
+        protected Long createSnapshot() {
+            return energy.getEnergyStored();
+        }
+
+        @Override
+        protected void revertToSnapshot(Long snapshot) {
+            energy.setStoredFe(snapshot);
+        }
+
+        @Override
+        protected void onRootCommit(Long originalState) {
+            if (energy.getEnergyStored() != originalState) {
+                setChanged();
+            }
         }
     };
 
@@ -404,7 +435,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
         cycle.setProgress(input.getIntOr("Progress", 0));
         duration = input.getIntOr("Duration", 0);
         fuel.load(input.getLongOr("FuelJoules", 0L), input.getLongOr("FuelLitJoules", 0L));
-        energy.setStoredEu(input.getLongOr("Energy", 0L));
+        energy.setStoredFe(input.getLongOr("Energy", 0L));
     }
 
     @Override

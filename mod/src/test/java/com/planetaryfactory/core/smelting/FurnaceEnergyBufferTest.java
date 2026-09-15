@@ -8,48 +8,50 @@ import org.junit.jupiter.api.Test;
 
 /**
  * The Electric tier's buffer, which is what ADR-0036's supply-area pole water-fills against
- * (#147, #155). The pole reads {@code getEnergyCanBeInserted()} and pays with {@code addEnergy}.
+ * (#147, #155, #266). It holds FE since ADR-0060, and the pole's FE face is the only thing that
+ * reads {@code getEnergyCanBeInserted()} and pays with {@code addEnergy}.
  */
 class FurnaceEnergyBufferTest {
 
     @Test
     void anEmptyBufferAsksForOneWholeCraft() {
-        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(2080L);
-        assertEquals(2080L, buffer.getEnergyCanBeInserted());
+        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(14_400L);
+        assertEquals(14_400L, buffer.getEnergyCanBeInserted());
         assertEquals(0L, buffer.getEnergyStored());
     }
 
     @Test
     void itTakesOnlyWhatFits() {
-        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(2080L);
-        assertEquals(2000L, buffer.addEnergy(2000L));
-        assertEquals(80L, buffer.addEnergy(500L));
-        assertEquals(2080L, buffer.getEnergyStored());
+        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(14_400L);
+        assertEquals(14_000L, buffer.addEnergy(14_000L));
+        assertEquals(400L, buffer.addEnergy(500L));
+        assertEquals(14_400L, buffer.getEnergyStored());
         assertEquals(0L, buffer.getEnergyCanBeInserted());
     }
 
     @Test
     void aTickIsDrawnOnlyIfItIsWhollyThere() {
-        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(2080L);
-        buffer.addEnergy(20L);
-        assertTrue(buffer.drawTick(13L));
-        assertEquals(7L, buffer.getEnergyStored());
-        assertFalse(buffer.drawTick(13L), "a partial tick is not a tick; the smelt waits");
-        assertEquals(7L, buffer.getEnergyStored());
+        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(14_400L);
+        buffer.addEnergy(100L);
+        assertTrue(buffer.drawTick(90L));
+        assertEquals(10L, buffer.getEnergyStored());
+        assertFalse(buffer.drawTick(90L), "a partial tick is not a tick; the smelt waits");
+        assertEquals(10L, buffer.getEnergyStored());
     }
 
     /**
-     * The pole is the boundary (ADR-0036), so a GT cable run cannot feed this block: two ways to
-     * power one machine is an ambiguity about which drains first, for no mechanic.
+     * An aborted insert has to be undoable, which on this side is a stored value put back. The
+     * pole measures a machine's room by inserting inside a transaction it then aborts, so a
+     * buffer that could not be restored would collect a probe's worth of free FE every tick.
      */
     @Test
-    void aCableIsRefused() {
-        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(2080L);
-        assertEquals(0L, buffer.acceptFromNetwork());
+    void aStoredValueCanBePutBack() {
+        FurnaceEnergyBuffer buffer = new FurnaceEnergyBuffer(14_400L);
+        long before = buffer.getEnergyStored();
+        buffer.addEnergy(5_000L);
+        buffer.setStoredFe(before);
         assertEquals(0L, buffer.getEnergyStored());
-        assertFalse(buffer.inputsEnergy());
-        assertEquals(0L, buffer.inputVoltage());
-        assertEquals(0L, buffer.inputAmperage());
+        assertEquals(14_400L, buffer.getEnergyCanBeInserted());
     }
 
     @Test

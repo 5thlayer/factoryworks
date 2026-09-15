@@ -73,7 +73,7 @@ public class FurnaceMenu extends AbstractContainerMenu {
     }
 
     /**
-     * How full the buffer is, 0..1 -- joules on the burners, EU on the Electric tier.
+     * How full the buffer is, 0..1 -- joules on the burners, FE on the Electric tier.
      *
      * <p>One question for all three tiers since ADR-0047: they hold the same kind of thing and
      * the screen draws it with the same gauge. What the gauge fills to differs -- a burner's is
@@ -85,7 +85,7 @@ public class FurnaceMenu extends AbstractContainerMenu {
         return capacity <= 0 ? 0F : Math.min(1F, data.get(FurnaceBlockEntity.DATA_ENERGY) / (float) capacity);
     }
 
-    /** What is in the buffer: joules on the burners, EU on the Electric tier. */
+    /** What is in the buffer: joules on the burners, FE on the Electric tier. */
     public int energyStored() {
         return data.get(FurnaceBlockEntity.DATA_ENERGY);
     }
@@ -96,8 +96,8 @@ public class FurnaceMenu extends AbstractContainerMenu {
     }
 
     /** What one tick of smelting costs, which is the number that turns a buffer into a duration. */
-    public long euPerTick() {
-        return tier.euPerTick();
+    public long fePerTick() {
+        return tier.fePerTick();
     }
 
     /** The same number for a burner: 4,500 J, both tiers, from the machine's own 90 kW. */

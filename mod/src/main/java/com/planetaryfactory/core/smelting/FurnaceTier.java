@@ -16,9 +16,10 @@ import java.util.Locale;
  * it, and the block divides -- so {@code steel-plate} emits at 320 ticks and is observed at 320 on
  * Stone, 160 on the other two.
  *
- * <p>The Electric tier's draw is ADR-0029's constant applied to its own {@code energy_usage}:
- * 180 kW * 32/420_000, truncated the way that ADR's table truncates. Idle draw is not modelled;
- * ADR-0029 records the 6 kW as {@code excluded}.
+ * <p>The Electric tier's draw is its own {@code energy_usage} at ADR-0060's rate, 1 FE = 100 J:
+ * 180 kW is 9,000 J of work per tick and so 90 FE/t. ADR-0029's EU scale left with GregTech, and
+ * with one currency in the pack there is no conversion at this boundary to defend. Idle draw is
+ * not modelled; ADR-0029 records the 6 kW as {@code excluded}.
  *
  * <p><b>Fuel has no tier rule either, because both burners draw the same 90 kW.</b> ADR-0047:
  * a burner holds a buffer in joules, lighting an item banks its whole {@code fuel_value}, and a
@@ -50,9 +51,13 @@ public enum FurnaceTier {
     /** Minecraft's tick rate, which is Factorio's too -- the divisor turning watts into joules. */
     private static final long TICKS_PER_SECOND = 20L;
 
-    /** ADR-0029's scale: LV's 32 EU/t anchored on the Oil Refinery's 420 kW. */
-    private static final long EU_PER_TICK_NUMERATOR = 32L;
-    private static final long EU_PER_TICK_DENOMINATOR = 420_000L;
+    /**
+     * ADR-0060's rate: one FE is a hundred joules.
+     *
+     * <p>The same constant the rest of the port converts Factorio's wattages at, so the Electric
+     * Furnace sits on the same scale as the Boiler that feeds it rather than on a scale of its own.
+     */
+    private static final long JOULES_PER_FE = 100L;
 
     /** The reference craft the buffer is sized on: steel-plate, 16 s in the corpus. */
     private static final int STEEL_PLATE_TICKS = 320;
@@ -85,7 +90,7 @@ public enum FurnaceTier {
     /**
      * Joules drawn from the fuel buffer per tick of operation, and zero on the Electric tier.
      *
-     * <p>Derived the way {@link #euPerTick()} is -- from the machine's own {@code energy_usage}
+     * <p>Derived the way {@link #fePerTick()} is -- from the machine's own {@code energy_usage}
      * rather than from a committed conversion constant, so a Factorio change that moved the draw
      * fails a check instead of drifting (ADR-0047).
      */
@@ -93,19 +98,19 @@ public enum FurnaceTier {
         return burnsFuel ? BURNER_WATTS / TICKS_PER_SECOND : 0L;
     }
 
-    /** EU drawn per tick of operation, and zero on the two burner tiers. */
-    public long euPerTick() {
-        return burnsFuel ? 0L : ELECTRIC_WATTS * EU_PER_TICK_NUMERATOR / EU_PER_TICK_DENOMINATOR;
+    /** FE drawn per tick of operation, and zero on the two burner tiers. */
+    public long fePerTick() {
+        return burnsFuel ? 0L : ELECTRIC_WATTS / TICKS_PER_SECOND / JOULES_PER_FE;
     }
 
     /**
      * The buffer the supply-area pole fills, sized at one whole steel craft.
      *
-     * <p>Bigger buys nothing -- the pole tops it up every tick it has EU -- and smaller would stall
+     * <p>Bigger buys nothing -- the pole tops it up every tick it has FE -- and smaller would stall
      * a craft that had already started against a pole that was merely busy elsewhere.
      */
-    public long bufferEu() {
-        return euPerTick() * durationTicks(STEEL_PLATE_TICKS);
+    public long bufferFe() {
+        return fePerTick() * durationTicks(STEEL_PLATE_TICKS);
     }
 
     /** The registry path, e.g. {@code stone_furnace}. */

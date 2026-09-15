@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.RenderPipelines;
  * The furnace screen (#155): one horizontal gauge, top right, on all three tiers.
  *
  * <p>The flame the burners used to draw is gone with ADR-0047. A burner holds a buffer in joules
- * exactly as the Electric tier holds one in EU, so it gets the same widget; two widgets for one
+ * exactly as the Electric tier holds one in FE, so it gets the same widget; two widgets for one
  * quantity would say the two tiers hold interchangeable stuff. What differs is the refill
  * economy -- a burner's gauge is filled by hand, one item at a time -- and that is legible from
  * the fuel slot beside it rather than from a second kind of picture.
@@ -30,7 +30,7 @@ public class FurnaceScreen extends AbstractContainerScreen<FurnaceMenu> {
     private static final Identifier BURN_PROGRESS =
             Identifier.withDefaultNamespace("container/furnace/burn_progress");
 
-    /** The gauge's colours: GregTech's own energy yellow over an empty slate. */
+    /** The gauge's colours: an energy yellow over an empty slate. */
     private static final int ENERGY_FULL = 0xFFFFD84D;
     private static final int ENERGY_EMPTY = 0xFF3A3A3A;
 
@@ -127,18 +127,18 @@ public class FurnaceScreen extends AbstractContainerScreen<FurnaceMenu> {
     }
 
     /**
-     * What GregTech's own machines put on the same hover, in the same order: what is in the buffer,
-     * and what it costs to run.
+     * What is in the buffer, and what it costs to run, in that order.
      *
-     * <p>The draw rate is the half that makes the buffer legible. 2080 EU means nothing on its own;
-     * 2080 EU at 13 EU/t is the length of one steel plate, which is the number the buffer was
-     * actually sized to (ADR-0036) -- a pole that goes quiet mid-smelt still finishes the item.
+     * <p>The draw rate is the half that makes the buffer legible. 14,400 FE means nothing on its
+     * own; 14,400 FE at 90 FE/t is the length of one steel plate, which is the number the buffer
+     * was actually sized to (ADR-0036) -- a pole that goes quiet mid-smelt still finishes the
+     * item.
      */
     private List<Component> energyTooltip() {
         return List.of(
                 Component.translatable("tooltip.planetaryfactory.furnace.energy",
                         menu.energyStored(), menu.energyCapacity()),
-                Component.translatable("tooltip.planetaryfactory.furnace.usage", menu.euPerTick())
+                Component.translatable("tooltip.planetaryfactory.furnace.usage", menu.fePerTick())
                         .withStyle(net.minecraft.ChatFormatting.GRAY));
     }
 }

@@ -22,7 +22,7 @@ public final class FurnaceCycle {
     /**
      * Advances one tick of a smelt that can run. A furnace that cannot calls {@link #idle} instead.
      *
-     * @param powered whether this tick's fuel or EU was actually paid
+     * @param powered whether this tick's fuel or FE was actually paid
      * @return true exactly on the tick the craft completes, at which point progress is back to zero
      */
     public boolean tick(boolean powered, int durationTicks) {

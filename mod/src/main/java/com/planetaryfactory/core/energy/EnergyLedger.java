@@ -8,12 +8,10 @@ package com.planetaryfactory.core.energy;
  * second currency left to meet at this boundary. What remains is a buffer that respects a
  * capacity and does not invent energy.
  *
- * <p><b>EU has not left the mod, only this class.</b> {@link
- * com.planetaryfactory.core.smelting.FurnaceTier} still states the Electric tier's draw in EU and
- * {@code FurnaceScreen} still renders it, because ADR-0029 anchored that ladder on GregTech's
- * voltage scale and re-deriving it is #266's job, not this port's. Read literally, the two files
- * disagree; the honest reading is that the pole's side of the boundary is converted and the
- * furnace's side is not yet.
+ * <p><b>EU has left the mod entirely as of #266.</b> {@link
+ * com.planetaryfactory.core.smelting.FurnaceTier} states the Electric tier's draw in FE, derived
+ * from the same {@code energy_usage} as before at ADR-0060's rate of 100 J to the FE, so both
+ * sides of this boundary now count the same thing and nothing converts.
  *
  * <p>How big the books are allowed to get is not this class's business -- it takes a capacity and
  * respects it. {@code SupplyAreaPoleBlockEntity.BUFFER_FE} owns that number and the argument for it.

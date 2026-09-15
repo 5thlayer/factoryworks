@@ -45,8 +45,8 @@ public final class EnergyShare {
         while (pot > 0L && outstanding > 0) {
             long cut = pot / outstanding;
             if (cut == 0L) {
-                // Fewer EU left than there are machines wanting them. An equal cut is impossible,
-                // so the remainder goes one EU at a time rather than evaporating.
+                // Fewer FE left than there are machines wanting them. An equal cut is impossible,
+                // so the remainder goes one FE at a time rather than evaporating.
                 for (int i = 0; i < demands.length && pot > 0L; i++) {
                     if (!satisfied[i]) {
                         grants[i]++;
