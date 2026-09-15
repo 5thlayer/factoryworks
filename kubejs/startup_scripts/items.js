@@ -80,20 +80,27 @@ StartupEvents.registry('item', event => {
   // Factorio's battery is a crafting INTERMEDIATE, not a placed power store: Oritech's batteries
   // are tiered chargeable hulls and Electro's capacitor is a different thing, so borrowing either
   // would put an EU container inside a recipe that wants lead and acid. No tier suffix -- there is
-  // one battery, and a ladder that never arrives costs nothing to leave unnamed.
+  // one battery, and a ladder that never arrives costs nothing to leave unnamed. The sprite is
+  // still Oritech's, which is the distinction throughout this file: borrowing an item would put
+  // that mod's behaviour in the recipe, borrowing its texture puts only the picture there.
+  // `basic_battery` rather than `advanced_battery` because the two are a colour pair and this
+  // item has no second tier to spend the purple one on.
   event.create('planetaryfactory:battery')
     .displayName('Battery')
-    .texture('oritech:item/lv_lithium_battery')
+    .texture('oritech:item/basic_battery')
 
   // The engine units author because no installed mod ships Factorio's engine as one item, and
-  // they feed recipes the pack wants. ADR-0031's author case at its plainest: no borrow candidate.
+  // they feed recipes the pack wants. ADR-0031's author case at its plainest: no borrow candidate
+  // for the item. The two sprites are borrowed, and from different mods on purpose -- Railcraft's
+  // `charge_motor` is plain grey steel and Oritech's `motor` is wound in copper, so the pair reads
+  // mechanical-then-electric in the order Factorio's ladder does.
   event.create('planetaryfactory:engine_unit')
     .displayName('Engine Unit')
-    .texture('oritech:item/lv_electric_motor')
+    .texture('railcraft:item/charge_motor')
 
   event.create('planetaryfactory:electric_engine_unit')
     .displayName('Electric Engine Unit')
-    .texture('oritech:item/hv_electric_motor')
+    .texture('oritech:item/motor')
 
   // Sapros
   event.create('planetaryfactory:yumako_fresh')
