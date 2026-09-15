@@ -27,7 +27,7 @@ StartupEvents.registry('block', (event) => {
   // Loose rubble in and around the ruins, and the whole of a player's early scrap
   // income. Soft and shovel-mineable on purpose: arriving on Electro with nothing is
   // the situation this block exists to rescue.
-  event.simplebelts('planetaryfactory:scrap_pile')
+  event.create('planetaryfactory:scrap_pile')
     .displayName('Scrap Pile')
     .texture('gcyr:block/mars_regolith')
     .gravelSoundType()
@@ -38,7 +38,7 @@ StartupEvents.registry('block', (event) => {
 
   // Lightning-fused glass on the barren interior plateaus, and the only hand-mined
   // source of holmium in the pack.
-  event.simplebelts('planetaryfactory:fulgorite')
+  event.create('planetaryfactory:fulgorite')
     .displayName('Fulgorite')
     .texture('gcyr:block/martian_rock')
     .glassSoundType()
@@ -59,7 +59,7 @@ StartupEvents.registry('block', (event) => {
   //
   // 36 and 54 slots: a real progression above vanilla's 27, under the six-row ceiling, with the
   // wreck's own 9x5 hold sitting between them.
-  event.simplebelts('planetaryfactory:iron_chest')
+  event.create('planetaryfactory:iron_chest')
     .displayName('Iron Chest')
     .texture('oritech:block/casings/solid/machine_casing_solid_steel')
     .hardness(2.5)
@@ -71,7 +71,7 @@ StartupEvents.registry('block', (event) => {
       be.rightClickOpensInventory('inventory');
     });
 
-  event.simplebelts('planetaryfactory:steel_chest')
+  event.create('planetaryfactory:steel_chest')
     .displayName('Steel Chest')
     .texture('oritech:block/casings/solid/machine_casing_clean_stainless_steel')
     .hardness(3)
@@ -99,7 +99,7 @@ StartupEvents.registry('block', (event) => {
 // from a sapling. Yumako's fruit is in the canopy and Jellynut is in the trunk, so the two
 // still come off different blocks -- but neither tree is a standing crop you return to.
 StartupEvents.registry('block', (event) => {
-  event.simplebelts('planetaryfactory:yumako_log')
+  event.create('planetaryfactory:yumako_log')
     .displayName('Yumako Log')
     .texture('planetaryfactory:block/yumako_log')
     .soundType('wood')
@@ -112,7 +112,7 @@ StartupEvents.registry('block', (event) => {
     .tagItem('minecraft:logs')
     .tagItem('minecraft:logs_that_burn');
 
-  event.simplebelts('planetaryfactory:yumako_leaves')
+  event.create('planetaryfactory:yumako_leaves')
     .displayName('Yumako Leaves')
     .texture('planetaryfactory:block/yumako_leaves')
     .soundType('grass')
@@ -125,7 +125,7 @@ StartupEvents.registry('block', (event) => {
     .tagBlock('minecraft:mineable/hoe')
     .tagItem('minecraft:leaves');
 
-  event.simplebelts('planetaryfactory:jellystem_stem')
+  event.create('planetaryfactory:jellystem_stem')
     .displayName('Jellystem Stem')
     .texture('planetaryfactory:block/jellystem_stem')
     .soundType('wood')
@@ -138,7 +138,7 @@ StartupEvents.registry('block', (event) => {
     .tagItem('minecraft:logs')
     .tagItem('minecraft:logs_that_burn');
 
-  event.simplebelts('planetaryfactory:jellystem_leaves')
+  event.create('planetaryfactory:jellystem_leaves')
     .displayName('Jellystem Leaves')
     .texture('planetaryfactory:block/jellystem_leaves')
     .soundType('grass')
@@ -165,7 +165,7 @@ StartupEvents.registry('block', (event) => {
 // trees'. The two differ only in tint, which is deliberate: what a player reads off the block
 // is which metal, and the shape is the same organism either way.
 StartupEvents.registry('block', (event) => {
-  event.simplebelts('planetaryfactory:iron_stromatolite')
+  event.create('planetaryfactory:iron_stromatolite')
     .displayName('Iron Stromatolite')
     .texture('planetaryfactory:block/iron_stromatolite')
     .soundType('stone')
@@ -174,7 +174,7 @@ StartupEvents.registry('block', (event) => {
     .requiresTool(false)
     .tagBlock('minecraft:mineable/pickaxe');
 
-  event.simplebelts('planetaryfactory:copper_stromatolite')
+  event.create('planetaryfactory:copper_stromatolite')
     .displayName('Copper Stromatolite')
     .texture('planetaryfactory:block/copper_stromatolite')
     .soundType('stone')

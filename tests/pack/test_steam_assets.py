@@ -17,9 +17,9 @@ Three things are asserted, and each fails in a different way:
     1 000 mB bucket of steam is the twentyfold dose that ADR rejects, and it hands the player a
     hand-carry route around the Boiler-pipe-Engine chain rung 0 exists to teach. Asserted as an
     absence rather than left undone, because a bucket is the obvious thing to add back.
-  - **That neither fluid is a GT material.** ADR-0048's central point: `oritech:steam` is not inert,
+  - **That neither fluid is a GT material.** ADR-0048's central point: `gtceu:steam` is not inert,
     and nothing here may reach for it. Checked by grepping the fluid registration source for the
-    string, since a static check cannot ask Oritech's own registry what accepted it.
+    string, since a static check cannot ask GregTech's own registry what accepted it.
 
 What this file cannot assert is that the fluid actually renders in a tank -- that is a
 `IClientFluidTypeExtensions` wiring fact, a world/client load, not a static one; see the ticket's
@@ -157,11 +157,11 @@ def check_no_bucket(lang, failures):
             failures.append(f"{model} exists, but {fluid_name} has no bucket")
 
 
-def check_not_oritech_steam(failures):
-    """ADR-0048's central point: oritech:steam is not inert, so nothing here may reach for it.
+def check_not_gtceu_steam(failures):
+    """ADR-0048's central point: gtceu:steam is not inert, so nothing here may reach for it.
 
     Only *code* is checked, not prose: this file's own docstrings and the classes' javadoc are
-    allowed to name `oritech:steam` when explaining what must not be used, so block comments and
+    allowed to name `gtceu:steam` when explaining what must not be used, so block comments and
     line comments are stripped before the search.
     """
     for path in (PF_FLUID_TYPES, PF_FLUIDS):
@@ -171,10 +171,10 @@ def check_not_oritech_steam(failures):
         source = path.read_text(encoding="utf-8")
         code = re.sub(r"/\*.*?\*/", "", source, flags=re.DOTALL)
         code = re.sub(r"//.*", "", code)
-        if "oritech" in code.lower():
+        if "gtceu" in code.lower():
             failures.append(
-                f"{path.relative_to(ROOT)} mentions oritech outside a comment -- ADR-0048 is "
-                "explicit that these are planetaryfactory: fluids, never Oritech's own steam"
+                f"{path.relative_to(ROOT)} mentions gtceu outside a comment -- ADR-0048 is "
+                "explicit that these are planetaryfactory: fluids, never GregTech's own steam"
             )
 
 
@@ -194,7 +194,7 @@ def main():
     check_corpus(failures)
     check_assets(lang, failures)
     check_no_bucket(lang, failures)
-    check_not_oritech_steam(failures)
+    check_not_gtceu_steam(failures)
 
     if failures:
         print(f"FAIL {len(failures)}:")
@@ -203,7 +203,7 @@ def main():
         return 1
     print("ok   steam chain: boiler, steam-engine and both Factorio fluid rows extracted, "
           "both pack fluids named, "
-          "no bucket, neither is oritech:steam")
+          "no bucket, neither is gtceu:steam")
     return 0
 
 

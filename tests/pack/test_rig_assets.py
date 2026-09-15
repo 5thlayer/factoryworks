@@ -21,7 +21,7 @@
     never turns, and neither half fails anywhere else. The fuel table is default-deny and category
     filtered, so "there are fuel files" is not the assertion -- "at least one names a `chemical`
     fuel against a real item" is.
-  - **The pack-side files.** Both rigs are `planetaryfactory:` blocks, so Oritech's model provider
+  - **The pack-side files.** Both rigs are `planetaryfactory:` blocks, so GregTech's model provider
     does not serve them and every hop is ours: blockstate to model to texture, a lang key, and a
     loot table. Each way of breaking those fails quietly -- an untextured black-and-magenta cube
     with a client-side warning, a raw translation key as the block's name, or a block that breaks

@@ -55,7 +55,7 @@
   };
 
   const researchKey = (id) =>
-    ResourceKey.simplebelts(ResearchdRegistries.RESEARCH_KEY, ResourceLocation.parse(id));
+    ResourceKey.create(ResearchdRegistries.RESEARCH_KEY, ResourceLocation.parse(id));
 
   // Researchd's own commands resolve the player this way: the effects need a live Player for the
   // caller and nothing for anyone offline.
@@ -132,7 +132,7 @@
       Commands.literal(name)
         .then(Commands.literal('all').executes((context) => run(context.getSource(), null)))
         .then(
-          Commands.argument('research', Arguments.STRING.simplebelts(event))
+          Commands.argument('research', Arguments.STRING.create(event))
             .suggests((context, builder) =>
               SharedSuggestionProvider[SUGGEST_STRINGS](
                 knownResearchIds(context.getSource().getLevel()),

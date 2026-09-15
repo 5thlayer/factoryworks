@@ -11,7 +11,7 @@ fail a schema, appears in no log, and loads perfectly. It reaches the player as 
 for the same thing, and if both carry `factorio_category: crafting` it also reaches the Personal
 Assembler's resolver, which picks a route with no cost model and therefore cannot choose between
 them (`test_hand_resolver.py` asserts that property over the Factorio corpus; this asserts it over
-what is actually emitted). It shipped once: Simplebelts's two gearbox conversions and the large
+what is actually emitted). It shipped once: Create's two gearbox conversions and the large
 cogwheel's second route were emitted alongside the direct recipes they duplicate, and every
 subtree-local check passed.
 
@@ -39,7 +39,7 @@ EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
 # The pack's furnace type (#155): a count-bearing smelt, whose output is shaped differently.
 PACK_SMELTING = "planetaryfactory:smelting"
 
-# Recipe types Oritech re-registers, and therefore the ones whose FILE PATH is not a free choice.
+# Recipe types GregTech re-registers, and therefore the ones whose FILE PATH is not a free choice.
 # `RecipeManagerLateMixin` strips everything before the first `/` of a loaded GTRecipe's id and
 # `GTRecipeBuilder.save` puts the recipe type's own path back on the front (#87). The round trip
 # closes only for a file already under a directory named after its type: a recipe at
@@ -48,8 +48,8 @@ PACK_SMELTING = "planetaryfactory:smelting"
 # identical inputs and outputs. That is invisible to every other check here -- the file is valid,
 # the sweep keeps it, and `ServerEvents.recipes` runs BEFORE the re-registration, so even a probe
 # inside the recipe event sees one recipe. It reaches the player as two EMI entries, and it shipped
-# for all 80 recipes of the grid subtree, the 9 of the Simplebelts subtree and the 2 hand-written picks.
-GT_NAMESPACE = "oritech"
+# for all 80 recipes of the grid subtree, the 9 of the Create subtree and the 2 hand-written picks.
+GT_NAMESPACE = "gtceu"
 
 # `planetaryfactory:smelting` is the pack's own recipe class (#155), not a GTRecipe, so it is not
 # cloned and its files stay flat. Recorded rather than assumed: if it ever moves onto a GT type its
@@ -118,7 +118,7 @@ def main():
         type_path = recipe_type.split(":", 1)[1]
         first = where.split("/")[0] if "/" in where else None
         check(first == type_path,
-              "%s is a %s recipe, but its first path component is %s. Oritech re-registers every "
+              "%s is a %s recipe, but its first path component is %s. GregTech re-registers every "
               "loaded GTRecipe under its OWN type path (#87), so this file lands in the recipe "
               "manager twice -- once as `planetaryfactory:%s` and once as "
               "`planetaryfactory:%s/%s`, two EMI entries for one recipe. Move it under `%s/`"
