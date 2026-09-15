@@ -195,6 +195,20 @@ ADR has overridden. Run `scripts/adr-backlink-check.sh` after committing an ADR 
 key — it needs an authenticated `gh`, so it is not part of any offline check. See
 `docs/agents/domain.md`.
 
+### Transfer-face check
+
+`tests/pack/test_transfer_guards.py` asserts every item and fluid face in the mod is reachable by
+both of the transfer API's overloads. NeoForge states `insert` and `extract` twice -- once naming a
+slot, once meaning "anywhere it fits" -- and `DelegatingResourceHandler` forwards the second pair
+straight to its delegate, so a subclass that refuses a slot is simply not consulted by a caller
+that does not name one. Every face here is a refusal (the furnace, the Boiler and the rig refuse
+extraction from what they are burning; the pump refuses insertion; the Boiler's fluid face refuses
+each direction on a different tank), so all five are built on
+`core/transfer/GuardedResourceHandler`, which overrides both slot-less methods to loop back
+through itself. The check is the rule that `DelegatingResourceHandler` is named once, inside the
+guard. It is a source-text check because NeoForge is deliberately off the unit-test classpath.
+Whether a pipe actually respects the refusal is a world load.
+
 ### Offshore Pump check
 
 `tests/pack/test_pump_assets.py` asserts the one block water enters the factory through (#213,

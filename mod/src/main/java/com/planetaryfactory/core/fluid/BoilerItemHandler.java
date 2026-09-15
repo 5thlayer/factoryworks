@@ -1,11 +1,19 @@
 package com.planetaryfactory.core.fluid;
 
-import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import com.planetaryfactory.core.transfer.GuardedResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class BoilerItemHandler extends DelegatingResourceHandler<ItemResource> {
+/**
+ * The Boiler's one item face (#224), returned for every {@code Direction} and for the null side.
+ *
+ * <p>Fuel in and nothing out, which is {@link BoilerSlots}' whole rule: every slot refuses
+ * extraction, because a Boiler holds only the fuel it is burning and letting a funnel take that
+ * back is pulling the coal out from under it mid-tick. Direction never changes what happens here;
+ * the item does.
+ */
+public class BoilerItemHandler extends GuardedResourceHandler<ItemResource> {
     private final BoilerBlockEntity blockEntity;
 
     public BoilerItemHandler(BoilerBlockEntity blockEntity) {
