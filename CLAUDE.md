@@ -108,12 +108,16 @@ plate smelts name `ftbmaterials:` items (ADR-0061), so FTB Materials and the FTB
 are on the dev runtime classpath and are the one foreign mod the server loads; stone brick is still
 the only smelt under test.
 
-What is there is `EnergyFaceTests` (#271), and only what a JVM test cannot reach: that a pole's
+What is there is `EnergyFaceTests` (#271) and `ElectricNetworkTests` (#280), and only what a JVM
+test cannot reach: that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
 transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
-starved one freezes where it stood. Each was checked against the defect it exists for: dropping
+starved one freezes where it stood; and that power crosses a wire between linked poles, stops
+beyond reach, and stops again when the link is broken. Each was checked against the defect it exists for: dropping
 the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
-furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red.
+furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red; making no
+two poles link, never rebuilding the network, and never dropping a broken pole each turn a network
+test red.
 `tests/pack/test_energy_faces.py` and `tests/pack/test_capability_registration.py` are the static
 half and read source text, so they cannot see any of those three.
 
@@ -273,9 +277,9 @@ genuinely wants no face records an empty tuple, which is then a decision somebod
 `ITEM_FACES` is asserted by *counting* `event.registerItem` calls rather than by matching their
 shape, because the next one will be spelled differently and a shape-matching regex would let it
 past — which is the failure the table exists to catch. Four assertions are the pack's own rather
-than generic plumbing — the pole answers on the **block** rather than the block entity type (a
-segment mid-column is an address a connector may be attached to, and an entity-bound registration
-answers only on the base), each of the three **ladders** registers for every tier off its own
+than generic plumbing — the pole has **no** face (ADR-0062), so what is asserted instead is that
+`ElectricNetworks::onLevelTick` is wired, the one line without which no pole moves energy; each of
+the **ladders** registers for every tier off its own
 enum (a loop over fewer ships the remaining tiers inert, and the face assertion cannot see it
 because the spelling is still there), the rig's **parts** answer as well as its anchor (which
 corner holds the anchor is not visible, so a hopper under the wrong one finds nothing), and the
@@ -291,7 +295,7 @@ design. Whether a pipe placed against a Boiler moves steam is a world load.
 ### FE face check
 
 `tests/pack/test_energy_faces.py` is one layer in from the capability-registration check: that one
-asserts the furnace and the pole *have* an `Energy` face, and this one asserts the face does
+asserts the furnace *has* an `Energy` face, and this one asserts the face does
 anything when a pole inserts into it. The failure shipped (#266) — the furnace's `insert` was
 `return 0`, carried over from the EU buffer where refusing insertion kept a GregTech cable and
 ADR-0036's pole from meeting at one block. With FE the pack's one currency there is no second route

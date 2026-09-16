@@ -1,6 +1,5 @@
 package com.planetaryfactory.core;
 
-import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerBlockEntity;
@@ -18,8 +17,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.capabilities.IBlockCapabilityProvider;
-import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -93,7 +90,6 @@ public final class PFBlockEntities {
     }
 
     static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        registerPoleCapabilities(event);
         registerFurnaceCapabilities(event);
         registerRigCapabilities(event);
         registerPumpCapabilities(event);
@@ -136,51 +132,6 @@ public final class PFBlockEntities {
                         blockEntity instanceof BoilerBlockEntity boiler
                                 ? new BoilerItemHandler(boiler) : null,
                 PFBlocks.BOILER.get());
-    }
-
-    /**
-     * The pole's FE face, exposed on every segment of every tier.
-     *
-     * <p>This is the entire grid-to-machine boundary, and ADR-0036's arrangement: no mod internals
-     * are touched on either side and there is no separate placeable converter. The connector that
-     * feeds it was Power Grid's bridge block, which left the pack with ADR-0060; what supplies the
-     * pole now is #266's to settle. The face is a plain FE capability either way, which is the
-     * point of putting the boundary here rather than inside a mod.
-     *
-     * <p>Registered against the <em>block</em> rather than the block entity type, because a pole is
-     * a column and a connector may be attached to any segment of it. That is not a courtesy to one
-     * mod's lookup: a caller doing the ordinary
-     * {@code level.getCapability(Capabilities.Energy.BLOCK, pos.relative(facing), ...)} never asks
-     * whether the target has a block entity, so every segment has to answer for the base or the
-     * connection silently is not one.
-     *
-     * <p>What comes back is the <em>base's own</em> {@link
-     * com.planetaryfactory.core.energy.PoleEnergyStorage}. Nothing is transported up or down the
-     * column: a segment is an address, not a conduit, and once the lookup has resolved the segments
-     * are not in the path at all. A segment with no base below it -- an orphan mid-collapse -- has
-     * no storage to name, so it answers null and the connector treats it as not connected.
-     */
-    private static void registerPoleCapabilities(RegisterCapabilitiesEvent event) {
-        // Spelled once and handed to both registrations below. Resolving a segment to its base is
-        // the rule the whole column arrangement rests on, and a second copy of it is a second
-        // place to fix when it changes, with nothing checking the two still agree.
-        IBlockCapabilityProvider<EnergyHandler, Direction> baseStorage =
-                (level, pos, state, blockEntity, side) -> {
-                    BlockPos base = PoleColumn.baseOf(level, pos);
-                    if (base == null) {
-                        return null;
-                    }
-                    return level.getBlockEntity(base)
-                            instanceof SupplyAreaPoleBlockEntity pole ? pole.feSide() : null;
-                };
-        for (PoleTier tier : PoleTier.values()) {
-            event.registerBlock(Capabilities.Energy.BLOCK, baseStorage, PFBlocks.pole(tier).get());
-        }
-        // And the creative pole (#272), which is not on the ladder the loop walks. Its face is the
-        // shipped one -- it is the ledger behind the face that differs -- and without this line the
-        // dev tool built to make an energy face testable would have no energy face, which is the
-        // inert-machine failure this whole method exists to avoid.
-        event.registerBlock(Capabilities.Energy.BLOCK, baseStorage, PFBlocks.CREATIVE_POLE.get());
     }
 
     /**

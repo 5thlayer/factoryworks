@@ -34,13 +34,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * <p>Minecraft builds a block entity from the blockstate alone, with no view of the block below, so
  * an extension gets one whether or not it has any use for it. The column's rule is therefore that
  * only the base's is ticked or consulted: {@link SupplyAreaPoleBlock#getTicker} gates on
- * {@link #isBase}, and the capability provider resolves through {@link #baseOf}. An extension's
- * block entity holds an empty ledger that nothing reads.
- *
- * <p>One consequence is worth knowing rather than defending against: placing a pole directly
- * <em>beneath</em> a standing one turns the standing one into an extension, stranding whatever its
- * ledger had buffered. That is at most one tick of FE, and the alternative -- refusing the
- * placement, or migrating the buffer -- costs more understanding than the energy is worth.
+ * {@link #isBase}, so an extension never reports to its network and never scans. Placing a pole
+ * directly <em>beneath</em> a standing one makes that one an extension; the network drops it on the
+ * next tick and links the new base instead. A pole holds no energy, so nothing is stranded.
  */
 public final class PoleColumn {
 

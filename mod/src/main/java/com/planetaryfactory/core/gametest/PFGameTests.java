@@ -70,7 +70,9 @@ public final class PFGameTests {
     private static void onRegisterTests(RegisterGameTestsEvent event) {
         Holder<TestEnvironmentDefinition<?>> environment =
                 event.registerEnvironment(ENVIRONMENT, new TestEnvironmentDefinition.AllOf(List.of()));
-        EnergyFaceTests.register(new Registrar(event, environment));
+        Registrar registrar = new Registrar(event, environment);
+        EnergyFaceTests.register(registrar);
+        ElectricNetworkTests.register(registrar);
     }
 
     /** What a test file is handed: a name, a tick budget and a body. */

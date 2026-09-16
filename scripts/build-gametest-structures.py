@@ -23,10 +23,13 @@ STRUCTURES = os.path.join(
 
 DATA_VERSION = 4790  # 26.1.2, world_version in the client jar's version.json.
 
-# Seven blocks square, which is the small pole's 5x5 supply area with a block of margin on each
-# side, so nothing a test places sits on the structure's own edge. Five tall: the floor, and four
-# blocks of headroom, which covers the pole's +-2 vertical reach from a machine standing on it.
-SIZE = (7, 5, 7)
+# Seven deep, which is the small pole's 5x5 supply area with a block of margin on each side, so
+# nothing a test places sits on the structure's own edge. Twenty-three wide, for the network tests
+# (#280): a creative pole's 18x18 area, a small pole wired to it seven blocks east, and a machine
+# in the small pole's area but outside the creative one's -- so power reaching it can only have
+# crossed the wire. Five tall: the floor, and four blocks of headroom, which covers the pole's +-2
+# vertical reach from a machine standing on it.
+SIZE = (23, 5, 7)
 FLOOR = "minecraft:stone"
 
 
