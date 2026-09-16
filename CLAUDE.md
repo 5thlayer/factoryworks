@@ -377,6 +377,32 @@ hand-edited; re-run the converter. A Factorio name with no item-map row is a har
 runs the converter's `--check`; the recipe *shape* needs one world load. See
 `docs/testing/recipe-conversion-check.md`.
 
+### 26.1 data-format check
+
+`tests/pack/test_data_formats.py` is the check kind #273 exists to add. Every generator here has a
+`--check` that re-runs the generator and diffs its own output — self-consistent by construction and
+blind to a shape Minecraft rejects — and every asset-hop check walks blockstate to model to texture
+without asking whether the game reads any of them. This one asserts the shape **the game parses**,
+against no generator, over every live tree at once, so a format landing in a subtree nobody thought
+about still fails here. It holds four shapes: that every `models/item/X.json` has an
+`assets/<ns>/items/X.json` pointing at it (26.1 resolves an item's model through that definition,
+and a missing one is the black-and-magenta missing model in inventory, hand and EMI with nothing in
+any log — the pack shipped the port with fifteen item models and zero definitions), that no
+definition is an orphan, that every ingredient in every live recipe is a string rather than 1.21.1's
+object, and that no namespace holds a pre-1.21.2 plural directory (`loot_tables/`, `tags/items/`),
+which the game does not walk at all. The `gtceu:` recipe subtrees and `kubejs:oil_refinery` are
+recorded deferrals, not silent skips: they are dead with ADR-0060 and re-derived with the machine
+chassis (#262).
+
+`scripts/build-item-definitions.py` is the definitions' single owner — one generator rather than a
+line in each asset generator, because a definition is not a decision about the Boiler or the rig but
+the same three fields mechanically derived from the model beside it, and half the pack's item models
+are hand-written with no generator to add the line to. An item wanting a tint, a range dispatch or a
+condition stops being this script's and becomes its subject generator's. Run its `--check` (the test
+does) after adding any item model. Whether the emitted files actually load is a datapack-load run
+with zero `Couldn't parse data file` lines; nothing reads the log today, and that is the rest of
+#273.
+
 ### Emitted smelt shape check
 
 `tests/factorio/test_smelting_shape.py` asserts the four emitted `planetaryfactory:smelting`
