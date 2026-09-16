@@ -141,6 +141,9 @@ is not on its classpath. That is what keeps the split honest: logic that drifts 
 that does need a `Level` lives in `ResearchLocks`, holds no rules of its own, and is checked by a
 human in-game.
 
-The subproject is also configured with a `gameTestServer` run, so NeoForge GameTest is available the
-moment this mod grows behaviour that needs a server — a capability the pack's sibling-clone mods
-(GCyR, `respoiled`) do not have. Nothing trips that trigger today.
+The subproject also carries a headless NeoForge GameTest run — `./gradlew
+:planetaryfactory_core:runGameTestServer` from the repo root — which the pack's sibling-clone mods
+(GCyR, `respoiled`) have no equivalent of. The tests live in `core/gametest/`, in the **main**
+source set: a GameTest is code the running game loads, so it cannot live in the Minecraft-free
+test source set described above. What is there is only what a JVM test cannot reach; see
+`docs/testing/what-to-check.md`.

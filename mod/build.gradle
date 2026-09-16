@@ -7,6 +7,10 @@ version = mod_version
 group = maven_group
 base.archivesName = mod_id
 
+// Where `gameTestPack` assembles the datapack the GameTest run is handed. Declared up here
+// because the run configuration below reads it.
+def gameTestPacks = layout.buildDirectory.dir('gametest/packs')
+
 // Minecraft 26.1.2 and every 26.1 mod jar in `mods/` are compiled to class file version 69,
 // which is Java 25. Building on 21 cannot read them.
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
@@ -24,7 +28,15 @@ neoForge {
         server { server(); programArgument '--nogui' }
         gameTestServer {
             type = 'gameTestServer'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // 26.1 dropped `neoforge.enabledGameTestNamespaces`; with no `--tests` selector the
+            // server runs every registered test, which here is the mod's own plus vanilla's
+            // `minecraft:always_pass`.
+            //
+            // The pack's datapack is not on this server's classpath -- the GameTest world is
+            // vanilla plus the mod jar -- so the one thing a smelt test needs that the jar does
+            // not carry is handed over as a datapack. See the `gameTestPack` task.
+            programArgument '--packs'
+            programArgument gameTestPacks.get().asFile.absolutePath
         }
     }
 
@@ -72,6 +84,41 @@ repositories {
 tasks.named('test', Test).configure {
     useJUnitPlatform()
     testLogging { events 'failed' }
+}
+
+// The datapack the GameTests run against (#271).
+//
+// A GameTest server loads vanilla's data plus what is in the mod jar, and the pack's recipes are
+// neither: they are generated files under `kubejs/`, read by a KubeJS that is not installed here.
+// Copying them into a datapack is what lets `planetaryfactory:smelting` be checked against the
+// recipe the pack actually ships rather than against a fixture written to pass.
+//
+// Only the four top-level recipe files are taken. Three of them still name `gtceu:` results and
+// will not load (#273) -- that is the state CLAUDE.md records, and stone brick is deliberately the
+// one smelt a test can use until the item map is rewritten.
+
+tasks.register('gameTestPack', Sync) {
+    description = 'Assembles the datapack the GameTests run against, from the pack\'s own recipes.'
+    into gameTestPacks.map { it.dir('planetaryfactory') }
+    from(rootProject.file('kubejs/data/planetaryfactory/recipe')) {
+        include '*.json'
+        into 'data/planetaryfactory/recipe'
+    }
+    doLast {
+        // 101 is 26.1's DATA_PACK_FORMAT_MAJOR. A pack declaring the wrong one still loads, but it
+        // loads with a warning that reads exactly like a real incompatibility.
+        new File(destinationDir, 'pack.mcmeta').text = """{
+  "pack": {
+    "pack_format": 101,
+    "description": "Planetary Factory: the pack recipes the GameTests run against"
+  }
+}
+"""
+    }
+}
+
+tasks.matching { it.name in ['prepareGameTestServerRun', 'runGameTestServer'] }.configureEach {
+    dependsOn tasks.named('gameTestPack')
 }
 
 // `neoforge.mods.toml` is the one place a version string has to be interpolated;

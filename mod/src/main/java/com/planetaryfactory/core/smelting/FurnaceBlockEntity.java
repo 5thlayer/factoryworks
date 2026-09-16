@@ -232,7 +232,7 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
 
     /** The stall rule: no room for the result means the smelt does not start at all. */
     private boolean fitsOutput(SmeltingRecipe smelt) {
-        ItemStack result = smelt.result();
+        ItemStack result = smelt.resultStack();
         ItemStack output = items.get(FurnaceSlots.OUTPUT);
         return FurnaceSlots.fitsOutput(
                 output.getCount(),

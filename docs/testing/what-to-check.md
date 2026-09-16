@@ -131,8 +131,29 @@ Minecraft. They get nothing.
 2. is not inherited unchanged from a vanilla superclass; **and**
 3. cannot be reached from a plain JVM unit test without a server.
 
-The supply-area pole (ADR-0036, `#147`) is the first thing in the pack to trip all three, and
-**the harness is `#156`** — which is what this section has always said happens at this moment.
+The supply-area pole (ADR-0036, `#147`) is the first thing in the pack to trip all three, and the
+harness was stood up for it in `#271`, on the smaller subject the 26.1.2 port left behind: the FE
+faces the pole and the Electric Furnace meet on. (`#156` was the original harness ticket; it was
+closed *not planned*, and `#271` replaced it rather than waiting on it.)
+
+**Running it:** `./gradlew :planetaryfactory_core:runGameTestServer`, from the repo root. It is
+headless, it needs no display and no human, and it fails the command when a test fails. It runs
+every registered test — there is no namespace filter in 26.1 — which is the mod's own plus
+vanilla's `minecraft:always_pass`.
+
+It is **not** part of any batch, for the same reason no other check here is: this repo has no
+aggregate check runner, and every check is a command a person or an agent runs against the thing
+it owns. What makes this one different in kind is that it builds the mod, resolves the Minecraft
+artifacts and boots a server — seconds rather than milliseconds — so it belongs to a change that
+touched mechanism, not to a docs edit. Run it after editing anything under `core/energy/`,
+`core/smelting/` or `core/gametest/`.
+
+**Where the tests live:** `mod/src/main/java/com/planetaryfactory/core/gametest/`, in the *main*
+source set rather than the test one, because a GameTest is code the game loads. `PFGameTests`
+registers them; a test body is a method taking a `GameTestHelper`. They stand on a generated stone
+platform, `scripts/build-gametest-structures.py`. The pack's recipes are not in the mod jar, so the
+run is handed the four emitted smelts as a datapack, assembled by the `gameTestPack` Gradle task —
+which is how a GameTest can assert against the recipe the pack ships rather than a fixture.
 
 The shape of that decision generalises, so it is worth stating once. Most of what looked like
 in-world behaviour was arithmetic that had no business needing a server, and it was written to be
@@ -141,8 +162,9 @@ Minecraft-free classes with unit tests. What was genuinely left over — that a 
 finds a machine, and that inserting energy makes it run — is the part a GameTest exists for.
 **Split first, then check what remains**; the residue is usually much smaller than the feature.
 
-Nothing else in the pack trips all three. The rest of the mod content satisfies (1) and fails (2),
-which is why declining to test it was the right call.
+The Boiler (`#224`) now trips all three as well, and has no GameTest yet. That is a gap rather
+than a decision, and it is filed rather than absorbed into the harness ticket. The rest of the mod
+content satisfies (1) and fails (2), which is why declining to test it was the right call.
 
 ### This looks or feels right
 

@@ -4,6 +4,7 @@ import com.planetaryfactory.core.assembler.AssemblerTicker;
 import com.planetaryfactory.core.assembler.client.AssemblerClient;
 import com.planetaryfactory.core.crafting.client.InventoryGridBlank;
 import com.planetaryfactory.core.felling.TreeFelling;
+import com.planetaryfactory.core.gametest.PFGameTests;
 import com.planetaryfactory.core.fluid.PFFluidTypes;
 import com.planetaryfactory.core.fluid.PFFluids;
 import com.planetaryfactory.core.fluid.WaterConservation;
@@ -53,6 +54,11 @@ public final class PlanetaryFactoryCore {
         PFBlockEntities.register(modBus);
         PFWorldgen.register(modBus);
         PFRecipes.register(modBus);
+        // The GameTests and the one registry entry they need (#271). The test-instance TYPE is
+        // registered unconditionally and so does ship in the production jar -- a registry entry
+        // has to exist on every side that might decode one. The tests themselves do not: the
+        // event that asks for them fires only on a run with game tests enabled.
+        PFGameTests.register(modBus);
         // Terra's two pack-owned steam fluids (#223, ADR-0048). Fluid types before fluids before
         // blocks before items, matching the order BuiltInRegistries declares those registries in --
         // see PFFluids' own javadoc for why that order is load-bearing here.

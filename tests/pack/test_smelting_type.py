@@ -18,8 +18,8 @@ way `tests/factorio/test_recipe_convert.py` reads `PFBlocks.java` for the same r
 
 Two of #155's acceptance criteria are deliberately NOT here, and that is a recorded decision rather
 than an omission: the count-bearing `matches` and the serializer's JSON/network round trip both
-need `Ingredient` and `ItemStack`, which means Minecraft on the classpath. They land as GameTests
-with the harness in #156. What can be checked without a world is checked here.
+need `Ingredient` and `ItemStack`, which means Minecraft on the classpath. The harness for that
+exists as of #271; those two tests have not been written. What can be checked without a world is checked here.
 """
 
 import json
@@ -67,6 +67,27 @@ class SmeltingType(unittest.TestCase):
                          "drops it desyncs the client's recipe book from the server's recipe")
         self.assertIn("input.item().getCount() >= count", source,
                       "matching has to need the whole count, or the smelt is not m:n")
+
+    def test_the_result_is_a_template_rather_than_a_stack(self):
+        # 26.1 binds an item's data components during the same datapack load that reads the
+        # recipes, and `ItemStack.CODEC` refuses an item whose components are not bound yet:
+        #
+        #     Couldn't parse data file 'planetaryfactory:stone_brick':
+        #       Item minecraft:stone_bricks does not have components yet
+        #
+        # One ERROR line at load and the recipe is then absent from the manager -- the same
+        # reading the ingredient shape cost (#273, tests/factorio/test_smelting_shape.py), and it
+        # killed every pack smelt on a clean world load, not only the three naming `gtceu:` items.
+        # Vanilla's own cooking recipes moved to `ItemStackTemplate` for this reason. The emitted
+        # JSON is unchanged either way, which is exactly why nothing in the data checks can see it.
+        source = RECIPE.read_text(encoding="utf-8")
+        self.assertIn("ItemStackTemplate result", source,
+                      "the result has to be a template: an ItemStack cannot be decoded at the "
+                      "point a datapack load reads recipes")
+        self.assertRegex(source, r'ItemStackTemplate\.CODEC\.fieldOf\("result"\)',
+                         "the JSON codec has to read the result as a template")
+        self.assertNotRegex(source, r'ItemStack\.CODEC\.fieldOf\("result"\)',
+                            "ItemStack.CODEC on the result is the failure this test exists for")
 
     def test_nothing_in_the_mod_reads_vanillas_smelting_type_for_recipes(self):
         # ADR-0034's sweep leaves vanilla `minecraft:smelting` with no live recipe, so a read of it

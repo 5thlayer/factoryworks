@@ -64,7 +64,8 @@ from the installed jar. Re-run it after a GregTech update; the check above fails
 
 That the Pick mines a given block class, that GregTech accepts it as a wrench, that Simplebelts does, and
 that the flat second an ore feels right in the hand (2.0s was tried first, and did not). The first three are a world load — ADR-0039's
-GameTests, which #165 names and which this repo has no GameTest harness for yet. The last is a human
+GameTests, which #165 names and which nobody has written; the harness they would run on exists as
+of #271 (`./gradlew :planetaryfactory_core:runGameTestServer`), so what is missing is the tests. The last is a human
 on delivery, in the Terra Slice run.
 
 The arithmetic half — that Factorio's stated seconds survive Minecraft's break-time formula — is
