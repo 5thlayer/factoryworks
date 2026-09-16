@@ -213,14 +213,14 @@ autocrafting shape, simplified:
 1. The inventory is open, so the panel is open. EMI offers **Fill Recipe** only for the screen
    currently open, so there is no craft-from-anywhere path.
 2. In EMI: search the item, `R` for its recipes, choose one, press **`+` Fill Recipe**.
-3. **Select Amount** — `x1`, `x5`, `all`, and a typed field. `all` is the largest count whose complete
-   plan the player's inventory covers.
-4. **Crafting Plan** — the whole tree, flattened: `To Craft` for intermediates it will make, `Missing`
-   for what must be mined or smelted, `Locked` for what the team has not researched.
-5. **Start**, refused unless the plan is complete.
+3. **Crafting Plan**, opened for one craft, with the cursor already on `+1`. It shows the whole tree
+   flattened: `To Craft` for intermediates it will make, `Missing` for what must be mined or
+   smelted, and `Locked` for what the team has not researched.
+4. **`+1`, `+5` or `all`** queues that many at once. A button is greyed out when the inventory can't
+   cover its count, and the plan updates in place while the dialog stays open (ADR-0064).
 
-Start takes the plan's entire raw cost at once and flattens it into an ordered list of crafts; the
-plan is never re-resolved. Plans run **serially**, at speed 1 with durations `energy_required × 20`
+Each press takes the whole raw cost at once and flattens the plan into an ordered list of crafts.
+A queued plan is never re-resolved. Plans run **serially**, at speed 1 with durations `energy_required × 20`
 unmodified (ADR-0029) — the slowness is the serial queue, not a multiplier. A finished craft that
 cannot fit in the inventory **pauses the head and stops the queue**; nothing is dropped. Cancelling
 takes the plan as its unit and refunds its remaining reservation plus any intermediates already made.

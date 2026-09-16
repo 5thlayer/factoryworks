@@ -27,7 +27,8 @@ Applied Energistics 2's autocrafting shape, simplified: an amount dialog, then a
 intermediate and every shortfall, then a single commitment. Refined Storage (MIT) is the readable
 implementation of the resolver; AE2 is a UX model only, being LGPLv3 with CC BY-NC-SA art.
 
-The full flow, and the only route in:
+The full flow, and the only route in. Steps 3–5 are replaced by ADR-0064: Fill Recipe opens the
+Crafting Plan directly and each of `+1`, `+5` and `all` queues at once.
 
 1. The inventory is open, so the Assembler panel is open — EMI offers **Fill Recipe** only for the
    screen currently open, so there is no craft-from-anywhere path.

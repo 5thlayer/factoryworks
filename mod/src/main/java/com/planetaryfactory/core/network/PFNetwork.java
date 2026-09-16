@@ -10,19 +10,19 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 /**
  * The Personal Assembler's round trip (ADR-0038, #160).
  *
- * <p>Five of the eight packets go client-to-server, which is the shape the ADR demands: the plan is
- * server truth, so the client asks and the server decides. The other two go back: the queue's
- * display view, and the set of recipe ids the Assembler can plan at all -- and nothing about a plan
- * crosses in that direction except what is drawn.
+ * <p>Four of the seven Assembler packets go client-to-server, which is the shape the ADR demands: the
+ * plan is server truth, so the client asks and the server decides. The other three go back: the open
+ * Crafting Plan re-resolved, the queue's display view, and the set of recipe ids the Assembler can
+ * plan at all -- and nothing about a plan crosses in that direction except what is drawn.
  *
- * <p>There is no plan-result packet, because plan-result is the Crafting Plan menu's own opening
- * data -- the server opens the dialog, so the answer and the screen arrive together and cannot get
- * out of order.
+ * <p>The first plan is the Crafting Plan menu's own opening data, so the answer and the screen arrive
+ * together. Every later one is {@code PlanUpdatePacket}, because the dialog stays up while the queue
+ * it feeds spends the inventory under it (#287).
  */
 public final class PFNetwork {
 
     /** Bumped when a payload's shape changes; clients on the old shape are refused, not confused. */
-    private static final String VERSION = "3";
+    private static final String VERSION = "4";
 
     private PFNetwork() {
     }
@@ -30,10 +30,10 @@ public final class PFNetwork {
     public static void register(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(VERSION);
         registrar.playToServer(OpenPanelPacket.TYPE, OpenPanelPacket.STREAM_CODEC, OpenPanelPacket::handle);
-        registrar.playToServer(SelectAmountPacket.TYPE, SelectAmountPacket.STREAM_CODEC, SelectAmountPacket::handle);
-        registrar.playToServer(PlanRequestPacket.TYPE, PlanRequestPacket.STREAM_CODEC, PlanRequestPacket::handle);
-        registrar.playToServer(PlanStartPacket.TYPE, PlanStartPacket.STREAM_CODEC, PlanStartPacket::handle);
+        registrar.playToServer(FillRecipePacket.TYPE, FillRecipePacket.STREAM_CODEC, FillRecipePacket::handle);
+        registrar.playToServer(PlanCraftPacket.TYPE, PlanCraftPacket.STREAM_CODEC, PlanCraftPacket::handle);
         registrar.playToServer(PlanCancelPacket.TYPE, PlanCancelPacket.STREAM_CODEC, PlanCancelPacket::handle);
+        registrar.playToClient(PlanUpdatePacket.TYPE, PlanUpdatePacket.STREAM_CODEC, PlanUpdatePacket::handle);
         registrar.playToClient(QueueSyncPacket.TYPE, QueueSyncPacket.STREAM_CODEC, QueueSyncPacket::handle);
         registrar.playToClient(HandRecipeSetPacket.TYPE, HandRecipeSetPacket.STREAM_CODEC, HandRecipeSetPacket::handle);
         // Not the Assembler's: a data pack is server truth, and the fuel table has to reach a

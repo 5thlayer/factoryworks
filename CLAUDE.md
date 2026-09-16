@@ -215,8 +215,13 @@ category-`crafting` recipes resolve to plans bottoming out in the 21 known leave
 hand recipes (the resolver picks a route with no cost model), and there are no cycles. It reads
 `data/factorio/recipe.json` and fails the day a regeneration adds a recipe nothing hand-makes.
 
+`CraftButtonsTest` is the Crafting Plan's one rule (#287, ADR-0064): a press queues at once, so a lit
+`+1`, `+5` or `all` is a promise the inventory covers it, and the ceiling is the resolver's
+`largestAffordable` rather than anything the screen counts.
+
 Run them after editing anything under `core/assembler/` or after re-extracting the corpus. Whether
-EMI's Fill Recipe reaches the panel and a plan delivers is a world load, not a static check.
+EMI's Fill Recipe opens the plan with the cursor on `+1`, a press queues, and a plan delivers is a
+world load, not a static check.
 
 ### Starting-area geometry check
 

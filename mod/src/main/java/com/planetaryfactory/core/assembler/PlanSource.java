@@ -34,8 +34,8 @@ public interface PlanSource {
     ResolvedPlan resolve(ServerPlayer player, Identifier recipe, int amount);
 
     /**
-     * The largest count whose complete plan the inventory covers -- Select Amount's {@code all}, so
-     * that {@code all} can never produce a plan that Start then refuses.
+     * The largest count whose complete plan the inventory covers -- the Crafting Plan's {@code all},
+     * so a lit {@code all} can never queue a plan the inventory then refuses (ADR-0064).
      */
     int largestAffordable(ServerPlayer player, Identifier recipe);
 

@@ -2,7 +2,7 @@ package com.planetaryfactory.core.compat.emi;
 
 import com.planetaryfactory.core.assembler.AssemblerPanelMenu;
 import com.planetaryfactory.core.assembler.HandRecipeSet;
-import com.planetaryfactory.core.network.SelectAmountPacket;
+import com.planetaryfactory.core.network.FillRecipePacket;
 import dev.emi.emi.api.recipe.EmiPlayerInventory;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
@@ -88,16 +88,16 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
     }
 
     /**
-     * Asks the server for Select Amount and gets out of EMI's way.
+     * Asks the server for the Crafting Plan and gets out of EMI's way.
      *
-     * <p>{@code context.getAmount()} is {@code 1} on a click and {@code Integer.MAX_VALUE} on a
-     * shift-click -- Factorio's one-and-all, arriving for free.
+     * <p>{@code context.getAmount()} is not sent: the plan opens on one craft whatever the click, and
+     * the dialog's own {@code +1}, {@code +5} and {@code all} decide how many are queued (#287).
      */
     @Override
     public boolean craft(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
         Identifier id = recipe.getId();
         if (id == null) return false;
-        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new SelectAmountPacket(id, context.getAmount()));
+        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new FillRecipePacket(id));
         return true;
     }
 }

@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 /**
  * A menu that exists to be a dialog: no slots, and valid wherever the player is.
  *
- * <p>Select Amount and the Crafting Plan are both this. They are menus rather than client screens
- * because a plan is server truth (ADR-0038), not because they hold anything -- so the two overrides
+ * <p>The Crafting Plan is this. It is a menu rather than a client screen
+ * because a plan is server truth (ADR-0038), not because it holds anything -- so the two overrides
  * {@code AbstractContainerMenu} demands are the same answer twice, and are given here once.
  */
 public abstract class DialogMenu extends AbstractContainerMenu {

@@ -40,7 +40,6 @@ public final class AssemblerClient {
 
     private static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(PFMenus.ASSEMBLER_PANEL.get(), AssemblerPanelScreen::new);
-        event.register(PFMenus.SELECT_AMOUNT.get(), SelectAmountScreen::new);
         event.register(PFMenus.CRAFTING_PLAN.get(), CraftingPlanScreen::new);
     }
 }

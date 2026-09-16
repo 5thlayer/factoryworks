@@ -2,9 +2,8 @@ package com.planetaryfactory.core.assembler;
 
 import com.planetaryfactory.core.PFAttachments;
 import com.planetaryfactory.core.network.PFNetwork;
+import com.planetaryfactory.core.network.PlanUpdatePacket;
 import com.planetaryfactory.core.network.QueueSyncPacket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -21,16 +20,6 @@ import net.minecraft.world.entity.player.Player;
  */
 public final class PersonalAssembler {
 
-    /**
-     * The plan each player is currently looking at, between the Crafting Plan opening and Start.
-     *
-     * <p>Deliberately not persisted. A pending plan is an open dialog, not a commitment: nothing has
-     * been paid for until Start, so a plan that outlived a logout would be a dialog with no screen
-     * and a reservation nobody took. The queue is the thing that persists, and it does so on the
-     * player's data attachment.
-     */
-    private static final Map<UUID, CraftingPlan> PENDING = new HashMap<>();
-
     private PersonalAssembler() {
     }
 
@@ -40,7 +29,6 @@ public final class PersonalAssembler {
 
     /** Opens the panel. This is the tab on the inventory screen, and EMI's precondition. */
     public static void openPanel(ServerPlayer player) {
-        PENDING.remove(player.getUUID());
         player.openMenu(new SimpleMenuProvider(
                 (id, inventory, who) -> new AssemblerPanelMenu(id, inventory),
                 Component.translatable("planetaryfactory_core.assembler.panel")));
@@ -48,74 +36,65 @@ public final class PersonalAssembler {
     }
 
     /**
-     * Step 3: Select Amount, with the count EMI's button asked for as its starting value and the
-     * resolver's {@code all} beside it.
+     * EMI's {@code + Fill Recipe}: the Crafting Plan for one craft, and the ceiling beside it (#287).
+     *
+     * <p>Opening queues nothing. The plan shown is the price of the next {@code +1}, so a stray click
+     * on EMI's button spends nothing, and the plan is still never empty on arrival.
      */
-    public static void openSelectAmount(ServerPlayer player, Identifier recipe, int amount) {
-        PENDING.remove(player.getUUID());
-        int all = PlanSource.ACTIVE.largestAffordable(player, recipe);
-        // A resolver with an `all` clamps to it. One without -- nothing is affordable -- must not
-        // clamp against the zero, because that would land every request on 1 and make a shift-click
-        // and a plain click, Factorio's one-and-all and the one thing this packet carries, arrive
-        // indistinguishable. It is capped at what the resolver will plan for so the field shows a
-        // number rather than Integer.MAX_VALUE.
-        int initial = all > 0
-                ? Math.max(1, Math.min(amount, all))
-                : Math.min(Math.max(1, amount), PlanResolver.MAX_CRAFTS);
+    public static void openPlan(ServerPlayer player, Identifier recipe) {
+        PlanView view = planView(player, recipe);
         player.openMenu(
                 new SimpleMenuProvider(
-                        (id, inventory, who) -> new SelectAmountMenu(id, inventory, recipe, initial, all),
-                        Component.translatable("planetaryfactory_core.assembler.select_amount")),
+                        (id, inventory, who) -> new CraftingPlanMenu(id, inventory, view.display(), view.all()),
+                        Component.translatable("planetaryfactory_core.assembler.plan")),
                 buffer -> {
-                    Identifier.STREAM_CODEC.encode(buffer, recipe);
-                    buffer.writeVarInt(initial);
-                    buffer.writeVarInt(all);
+                    PlanDisplay.STREAM_CODEC.encode(buffer, view.display());
+                    buffer.writeVarInt(view.all());
                 });
+        sync(player);
     }
 
     /**
-     * Step 4: resolve, and open the Crafting Plan on the result. The plan-result is the dialog's own
-     * opening data, so the answer and the screen arrive together.
+     * {@code +1}, {@code +5} or {@code all}: resolve that many and queue it in the same step (#287).
+     *
+     * <p>Resolved here rather than trusted from the dialog, because a packet is not a button: the
+     * count may be stale or invented. An incomplete plan queues nothing, and so does one whose
+     * reservation the inventory can no longer cover. Either way the dialog stays up and is re-sent,
+     * so what the player sees is the inventory as it now is.
      */
-    public static void openPlan(ServerPlayer player, Identifier recipe, int amount) {
-        // Clamped to what the resolver will plan for, so an over-large typed count comes back as a
-        // plan the player can read rather than as an empty dialog with no reason on it. A packet
-        // arrives from wherever it likes, and the field it comes from accepts any number of digits.
+    public static boolean craft(ServerPlayer player, Identifier recipe, int amount) {
         int wanted = Math.min(Math.max(1, amount), PlanResolver.MAX_CRAFTS);
         PlanSource.ResolvedPlan resolved = PlanSource.ACTIVE.resolve(player, recipe, wanted);
+        boolean queued = false;
         if (resolved.complete()) {
-            PENDING.put(player.getUUID(), resolved.plan());
-        } else {
-            PENDING.remove(player.getUUID());
+            AssemblerQueue queue = queueOf(player);
+            queued = queue.enqueue(resolved.plan(), new InventoryPlayerItems(player.getInventory()));
+            if (queued) player.setData(PFAttachments.ASSEMBLER_QUEUE.get(), queue);
         }
-        player.openMenu(
-                new SimpleMenuProvider(
-                        (id, inventory, who) -> new CraftingPlanMenu(id, inventory, resolved.display()),
-                        Component.translatable("planetaryfactory_core.assembler.plan")),
-                buffer -> PlanDisplay.STREAM_CODEC.encode(buffer, resolved.display()));
+        sync(player);
+        refreshPlan(player);
+        return queued;
     }
 
     /**
-     * Step 5: Start, which pays for the whole plan at once and appends it.
+     * Re-sends the open Crafting Plan, if one is open.
      *
-     * <p>Refused unless a complete plan is pending, which is the same refusal the dialog makes --
-     * asserted again here because a packet is not a button and arrives from wherever it likes.
+     * <p>Called after a press and on the queue's sync cadence: a queue under way spends and returns
+     * items, and a lit {@code +5} that the inventory stopped covering would be a promise broken.
      */
-    public static boolean start(ServerPlayer player, UUID planId) {
-        CraftingPlan plan = PENDING.get(player.getUUID());
-        if (plan == null || !plan.id().equals(planId)) return false;
-        AssemblerQueue queue = queueOf(player);
-        boolean started = queue.enqueue(plan, new InventoryPlayerItems(player.getInventory()));
-        if (!started) {
-            // The inventory changed between the dialog and the click. The plan stays pending and the
-            // dialog stays open, so the player sees what they were looking at rather than a screen
-            // that closed and a craft that never happened.
-            return false;
-        }
-        PENDING.remove(player.getUUID());
-        player.setData(PFAttachments.ASSEMBLER_QUEUE.get(), queue);
-        openPanel(player);
-        return true;
+    public static void refreshPlan(ServerPlayer player) {
+        if (!(player.containerMenu instanceof CraftingPlanMenu menu)) return;
+        PlanView view = planView(player, menu.display().recipe());
+        PFNetwork.sendToPlayer(player, new PlanUpdatePacket(menu.containerId, view.display(), view.all()));
+    }
+
+    /** What the dialog shows, resolved one way for the open and every update so the two cannot drift. */
+    private static PlanView planView(ServerPlayer player, Identifier recipe) {
+        return new PlanView(PlanSource.ACTIVE.resolve(player, recipe, 1).display(),
+                PlanSource.ACTIVE.largestAffordable(player, recipe));
+    }
+
+    private record PlanView(PlanDisplay display, int all) {
     }
 
     /**
@@ -146,10 +125,5 @@ public final class PersonalAssembler {
     /** Sends the queue's display view. The plan itself never crosses. */
     public static void sync(ServerPlayer player) {
         PFNetwork.sendToPlayer(player, QueueSyncPacket.of(queueOf(player)));
-    }
-
-    /** A pending plan belongs to a session, not to a save. */
-    public static void forget(ServerPlayer player) {
-        PENDING.remove(player.getUUID());
     }
 }
