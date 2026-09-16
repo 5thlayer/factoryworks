@@ -86,23 +86,47 @@ tasks.named('test', Test).configure {
     testLogging { events 'failed' }
 }
 
-// The datapack the GameTests run against (#271).
+// The datapack the GameTests run against (#271), and the one every emitted data file is loaded
+// by (#273).
 //
-// A GameTest server loads vanilla's data plus what is in the mod jar, and the pack's recipes are
-// neither: they are generated files under `kubejs/`, read by a KubeJS that is not installed here.
+// A GameTest server loads vanilla's data plus what is in the mod jar, and the pack's data is
+// neither: it is generated files under `kubejs/`, read by a KubeJS that is not installed here.
 // Copying them into a datapack is what lets `planetaryfactory:smelting` be checked against the
-// recipe the pack actually ships rather than against a fixture written to pass.
+// recipe the pack actually ships rather than against a fixture written to pass -- and what lets
+// `scripts/check-datapack-load.py` watch the game read every one of them.
 //
-// Only the four top-level recipe files are taken. Three of them still name `gtceu:` results and
-// will not load (#273) -- that is the state CLAUDE.md records, and stone brick is deliberately the
-// one smelt a test can use until the item map is rewritten.
+// The live subtrees only. `gtceu/`, `gt_materials/`, `gcyr/` and the three GregTech recipe
+// subtrees name registries and recipe types that left with ADR-0060: they would fail here for a
+// reason #273 has already deferred to the machine chassis (#262), which is a permanently red
+// check rather than a signal.
 
 tasks.register('gameTestPack', Sync) {
-    description = 'Assembles the datapack the GameTests run against, from the pack\'s own recipes.'
+    description = 'Assembles the datapack the GameTests run against, from the pack\'s own data.'
     into gameTestPacks.map { it.dir('planetaryfactory') }
     from(rootProject.file('kubejs/data/planetaryfactory/recipe')) {
         include '*.json'
         into 'data/planetaryfactory/recipe'
+    }
+    from(rootProject.file('kubejs/data/planetaryfactory/loot_table')) {
+        into 'data/planetaryfactory/loot_table'
+    }
+    from(rootProject.file('kubejs/data/planetaryfactory/fuel')) {
+        into 'data/planetaryfactory/fuel'
+    }
+    from(rootProject.file('kubejs/data/planetaryfactory/tags')) {
+        into 'data/planetaryfactory/tags'
+    }
+    from(rootProject.file('kubejs/data/planetaryfactory/worldgen')) {
+        into 'data/planetaryfactory/worldgen'
+    }
+    from(rootProject.file('kubejs/data/planetaryfactory/structure')) {
+        into 'data/planetaryfactory/structure'
+    }
+    from(rootProject.file('kubejs/data/c/tags')) {
+        into 'data/c/tags'
+    }
+    from(rootProject.file('kubejs/data/minecraft/tags')) {
+        into 'data/minecraft/tags'
     }
     doLast {
         // 101 is 26.1's DATA_PACK_FORMAT_MAJOR. A pack declaring the wrong one still loads, but it
@@ -110,7 +134,7 @@ tasks.register('gameTestPack', Sync) {
         new File(destinationDir, 'pack.mcmeta').text = """{
   "pack": {
     "pack_format": 101,
-    "description": "Planetary Factory: the pack recipes the GameTests run against"
+    "description": "Planetary Factory: the pack data the GameTests run against"
   }
 }
 """
