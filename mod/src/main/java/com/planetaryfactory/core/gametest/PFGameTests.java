@@ -73,6 +73,7 @@ public final class PFGameTests {
         Registrar registrar = new Registrar(event, environment);
         EnergyFaceTests.register(registrar);
         ElectricNetworkTests.register(registrar);
+        HandSetTests.register(registrar);
     }
 
     /** What a test file is handed: a name, a tick budget and a body. */

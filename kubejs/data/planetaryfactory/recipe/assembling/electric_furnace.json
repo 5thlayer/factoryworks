@@ -1,47 +1,25 @@
 {
-  "type": "gtceu:assembling",
-  "inputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:steel_plate"
-          },
-          "count": 10
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "item": "planetaryfactory:advanced_circuit"
-          },
-          "count": 5
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "item": "minecraft:stone_bricks"
-          },
-          "count": 10
-        }
-      }
-    ]
-  },
-  "outputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "planetaryfactory:electric_furnace"
-          },
-          "count": 1
-        }
-      }
-    ]
-  },
-  "duration": 100,
-  "data": {
-    "factorio_category": "crafting"
-  }
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 10
+    },
+    {
+      "ingredient": "planetaryfactory:advanced_circuit",
+      "count": 5
+    },
+    {
+      "ingredient": "minecraft:stone_bricks",
+      "count": 10
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:electric_furnace",
+      "count": 1
+    }
+  ],
+  "time": 100
 }

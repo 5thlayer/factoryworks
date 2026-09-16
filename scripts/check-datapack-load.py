@@ -53,6 +53,23 @@ EXPECTED = {
         "drops `planetaryfactory:iron_bacteria_fresh` (KubeJS, harness) AND `gcyr:mercury_rock`, "
         "whose mod left with ADR-0060 -- a real dangling drop, found by this check. The palette "
         "is #258's; what a stromatolite drops instead is Sapros content (#23)",
+    # #279: `planetaryfactory:assembling` recipes naming an item `kubejs/startup_scripts/` registers.
+    # The shape is the pack's and loads -- every recipe here parses to the field that names the
+    # missing item, and the other 19 assembling recipes load clean.
+    "planetaryfactory:assembling/advanced_circuit":
+        "names `planetaryfactory:advanced_circuit` and `plastic_bar`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/electric_furnace":
+        "names `planetaryfactory:advanced_circuit`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/electronic_circuit":
+        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/iron_chest":
+        "names `planetaryfactory:iron_chest`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/low_density_structure":
+        "names `planetaryfactory:low_density_structure` and `plastic_bar`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/steel_chest":
+        "names `planetaryfactory:steel_chest`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/substation":
+        "names `planetaryfactory:advanced_circuit`, registered by KubeJS. Harness, not pack",
     "planetaryfactory:blocks/copper_stromatolite":
         "drops `planetaryfactory:copper_bacteria_fresh` (KubeJS, harness) AND `gcyr:mercury_rock` "
         "-- the same dangling drop (#258, #23)",

@@ -1,49 +1,27 @@
 {
-  "type": "gtceu:assembling",
-  "inputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "minecraft:stone_bricks"
-          },
-          "count": 5
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "tag": "c:raw_materials/iron"
-          },
-          "count": 1
-        }
-      }
-    ],
-    "fluid": [
-      {
-        "content": {
-          "ingredient": {
-            "fluid": "minecraft:water"
-          },
-          "amount": 100
-        }
-      }
-    ]
-  },
-  "outputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "minecraft:gray_concrete"
-          },
-          "count": 10
-        }
-      }
-    ]
-  },
-  "duration": 200,
-  "data": {
-    "factorio_category": "crafting-with-fluid"
-  }
+  "type": "planetaryfactory:assembling",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:stone_bricks",
+      "count": 5
+    },
+    {
+      "ingredient": "#c:raw_materials/iron",
+      "count": 1
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "minecraft:water",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:gray_concrete",
+      "count": 10
+    }
+  ],
+  "time": 200
 }

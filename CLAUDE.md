@@ -101,15 +101,17 @@ GameTest server loads vanilla plus the mod jar, and the pack's recipes, loot tab
 biomes are generated files a KubeJS that is not installed here would read. That is what lets a
 smelt be asserted against the recipe the pack ships rather than against a fixture written to pass,
 and it is what `scripts/check-datapack-load.py` watches the game read. The dead subtrees are
-excluded by name — `gtceu/`, `gt_materials/`, `gcyr/` and the three GregTech recipe subtrees name
-registries that left with ADR-0060, and are re-derived against the chassis (#258) and the item
-alphabet #275 decides -- FTB Materials' intermediates against Oritech's and Railcraft's, by the converter (#279). The
+excluded by name — `gtceu/`, `gt_materials/` and `gcyr/` name registries that left with ADR-0060,
+and are re-derived against the chassis (#258). Every emitted recipe is loaded, subtrees included,
+since #279 put the converter on `planetaryfactory:assembling`. The
 plate smelts name `ftbmaterials:` items (ADR-0061), so FTB Materials and the FTB Library it requires
 are on the dev runtime classpath and are the one foreign mod the server loads; stone brick is still
 the only smelt under test.
 
-What is there is `EnergyFaceTests` (#271) and `ElectricNetworkTests` (#280), and only what a JVM
-test cannot reach: that a pole's
+What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280) and `HandSetTests` (#279),
+and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
+the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
+(forcing the graph empty turns it red); that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
 transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
 starved one freezes where it stood; and that power crosses a wire between linked poles, stops
@@ -378,13 +380,18 @@ is never evidence for `excluded` here — and it places nothing on a progression
 
 ### Recipe conversion
 
-`scripts/factorio-recipe-convert.py` turns the extracted corpus into GregTech recipe JSON under
-`kubejs/data/planetaryfactory/recipe/`, reading five committed data files: the corpus, the category
+`scripts/factorio-recipe-convert.py` turns the extracted corpus into `planetaryfactory:assembling`
+and `planetaryfactory:smelting` recipe JSON under `kubejs/data/planetaryfactory/recipe/` (#279), reading five committed data files: the corpus, the category
 map, the subgroup owners, `data/pack/item-map.json` and `data/pack/recipe-overrides.json`. Nothing is
 decided in the script — a decision is a diff to a design document. Generated output is never
 hand-edited; re-run the converter. A Factorio name with no item-map row is a hard failure, while an
-`undecided` row is a recorded skip. `tests/factorio/test_recipe_convert.py` is the static check and
-runs the converter's `--check`; the recipe *shape* needs one world load. See
+`undecided` row is a recorded skip. So is a row carrying `blocked_by`, the ticket that makes its
+target loadable — a machine #277 has not chosen, a Researchd item #251 has not ported — and a machine
+whose `recipe_type` is still null (the Chemical Plant and Oil Refinery, on #277). `--awaited` prints
+those deferred recipes by the id they will load under, which is how the research-unlock,
+science-pack and duplication checks tell a deferral from a typo.
+`tests/factorio/test_recipe_convert.py` is the static check and runs the converter's `--check`; the
+recipe *shape* is `scripts/check-datapack-load.py`'s. See
 `docs/testing/recipe-conversion-check.md`.
 
 ### 26.1 data-format check
@@ -400,9 +407,9 @@ and a missing one is the black-and-magenta missing model in inventory, hand and 
 any log — the pack shipped the port with fifteen item models and zero definitions), that no
 definition is an orphan, that every ingredient in every live recipe is a string rather than 1.21.1's
 object, and that no namespace holds a pre-1.21.2 plural directory (`loot_tables/`, `tags/items/`),
-which the game does not walk at all. The `gtceu:` recipe subtrees and `kubejs:oil_refinery` are
-recorded deferrals, not silent skips: they are dead with ADR-0060 and re-derived against the chassis #258
-names and the item alphabet #275 decides, by the converter #279 re-targets.
+which the game does not walk at all. `kubejs:oil_refinery` is a recorded deferral, not a silent skip:
+it is dead with ADR-0060 and re-derived against the chassis #258 names. A sized ingredient
+(`{"ingredient": ..., "count": n}`) is read through to the string inside it.
 
 `scripts/build-item-definitions.py` is the definitions' single owner — one generator rather than a
 line in each asset generator, because a definition is not a decision about the Boiler or the rig but
@@ -481,9 +488,8 @@ line at datapack load and the recipe is then absent from the manager, which reac
 furnace that holds the item, holds power and never smelts. It shipped that way through the port and
 cost #266's in-world check. `test_recipe_convert.py` could not see it: it runs the converter's
 `--check`, which re-runs the converter and compares the output to what the converter would emit —
-self-consistent by construction and blind to a shape Minecraft rejects. The GT subtrees carry the
-same stale shape and are deliberately **not** asserted here; they are `gtceu:` types, dead wholesale
-since ADR-0060, and belong to #273 with the rest of the format re-derivation. Run it after any
+self-consistent by construction and blind to a shape Minecraft rejects. The assembling recipes'
+shape is `test_data_formats.py`'s and `check-datapack-load.py`'s. Run it after any
 converter change. A KubeJS reload is enough to see the fix in a running game — no restart.
 
 ### Stock-recipe sweep
@@ -504,25 +510,15 @@ removed the right things in a running game is a world load, not a static check.
 subtree and one input table, which is the right shape for "did this converter do its job" and blind
 to the question none of them can ask: whether two converters, or one converter twice, made the same
 item. Two routes to one block fails no schema, appears in no log and loads perfectly — it reaches
-the player as two EMI entries for the same thing, and if both are `factorio_category: crafting` the
+the player as two EMI entries for the same thing, and if both are `category: crafting` the
 Personal Assembler's resolver has no cost model to choose between them. It shipped once, when
 Create's two gearbox conversions and the large cogwheel's second route were emitted alongside the
 direct recipes they duplicate and every subtree-local check passed. One item legitimately has a
 second route: solid fuel, which Factorio makes from each of its three oils, and that is a row
-with its reason.
-
-It also holds the **file-path invariant**, which is the other way one recipe becomes two entries and
-the one nothing else can see: a GT recipe's first path component must equal its recipe type's path.
-GregTech re-registers every loaded GTRecipe — `RecipeManagerLateMixin` strips everything before the
-first `/` of the id and `GTRecipeBuilder.save` puts the type's path back on (#87, stated in full in
-`factorio-recipe-convert.py`'s `emitted_path`) — so `recipe/grid/copper_coil.json` lands in the
-manager as BOTH `planetaryfactory:grid/copper_coil` and `planetaryfactory:assembling/copper_coil`.
-The file is valid, the sweep keeps it, and `ServerEvents.recipes` runs BEFORE the re-registration,
-so even a probe inside the recipe event sees one recipe; only EMI shows the two. That is why
-the hand-written `pack/` sits INSIDE `assembling/` — the Factorio converter had the rule from #87
-and the other subtrees did not, so it shipped 91 duplicate entries. `planetaryfactory:smelting`
-is the pack's own class, not a GTRecipe, so its four recipes are not cloned and stay flat; that
-exemption is `FLAT_TYPES`, recorded rather than assumed.
+with its reason — all three of whose routes the converter currently holds back on #277, which the
+check reads from the converter's `--awaited` rather than calling the row stale. The file-path
+invariant it used to hold existed because GregTech re-registered every GTRecipe under its type's
+path (#87); the pack's own types are re-registered by nothing, and the rule left with GregTech (#279).
 
 Run it after any converter change. It does not assert the routes are balanced; costing is a
 decision.
@@ -535,7 +531,7 @@ prototype. `tests/factorio/test_pack_recipes.py` is what holds them, since every
 is checked against the corpus and these are checked against nothing otherwise — that the
 converter still lists `pack` as foreign, which its own check reads from it rather than restating (a
 run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
-`recipe_survivors.js` admits and carry `factorio_category: crafting` so the Personal Assembler
+`recipe_survivors.js` admits and carry `category: crafting` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
 has its model, texture, lang key, the two wrench tags that carry the dismantle verb and the block
 tag the jar asks for by name. The Iron Pick's sprite is vanilla's own and the Steel Pick's is
@@ -556,13 +552,14 @@ installed jars (the pack's own via its lang and KubeJS's `event.create`, vanilla
 when present), that no row names a mod ADR-0060 removed, that the seven material-form rows are
 `ftbmaterials:`, and that no emitted recipe or item tag names a `c:` tag more than one installed jar
 populates -- with AlmostUnified gone, `#c:ingots/steel` accepts three items and is not a decision.
-The rows #277 (machines, blocks, oil fluids) and #251 (Researchd) own sit in `DEFERRED`; a stale entry
+The rows #277 (machines, blocks, oil fluids) and #251 (Researchd) own sit in `DEFERRED`, and each
+must carry `blocked_by` with that ticket so the converter emits nothing naming it; a stale entry
 fails, so delete one as its row resolves. Run it after editing the item map or re-running a converter.
 
 ### Research unlock check
 
 `tests/factorio/test_research_unlocks.py` asserts every recipe id a research grants is a recipe the
-pack emits. Researchd gates by recipe id and a recipe's id follows its type, so re-surfacing a
+pack emits, or one the converter's `--awaited` holds back on a ticket. Researchd gates by recipe id and a recipe's id follows its type, so re-surfacing a
 recipe leaves the research locked to an id nothing emits — with no error, no failed recipe and no
 log line, reaching the player as a research that unlocks nothing. Run it after editing
 `researchd.js` or after re-running the converter. It is the second half of #97; the first half —

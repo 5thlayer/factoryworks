@@ -20,10 +20,9 @@ files agree with each other:
   - every emitted recipe's ingredients and results resolve through the item map, and its `type`
     is a recipe type this pack registers
 
-WHAT IT CANNOT PROVE is that the recipe SHAPE is right: GregTech's codec is Java, the ids of
-GregTech's generated material items exist only in a loaded registry, and a wrong shape NPEs at
-datapack load rather than reporting anything readable. That is ADR-0026's second check -- one
-world load with the generated recipes in place -- and it needs a human.
+WHAT IT CANNOT PROVE is that the recipe SHAPE is right: `AssemblingRecipe`'s codec is Java, and a
+wrong shape is one ERROR line at datapack load and a recipe absent from the manager. That is
+`scripts/check-datapack-load.py`, which loads every emitted recipe on a GameTest server (#279).
 
 Usage: tests/factorio/test_recipe_convert.py
 """
@@ -52,16 +51,13 @@ RIG_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/mining/rig/RigTie
 # and it is the only type the three furnace tiers read.
 PACK_SMELTING = "planetaryfactory:smelting"
 
-# The namespaces an item-map target may live in: this pack, the game, and the three mods whose
-# capabilities ADR-0017 puts on Terra. Mekanism is deliberately absent -- ADR-0035 takes it out
-# of the pack, so a row pointing at it would be a row written against a mod that is leaving.
-NAMESPACES = {"minecraft", "planetaryfactory", "gtceu", "create", "powergrid",
-              # GregTech's multiblock builder lands in `kubejs:`, not `gtceu:` -- the tiered
-              # builder and the multiblock builder disagree about the namespace, which is why
-              # the Oil Refinery's id differs from the Chemical Plant's (#107, machines.js).
-              "kubejs",
-              # `c:` is the common tag namespace, which belongs to no mod and is how a row
-              # survives Almost Unified deciding which mod's item the player actually holds.
+# The namespaces a LIVE item-map target may live in: this pack, the game, and FTB Materials, which
+# owns the material forms (ADR-0061). Whether a target actually resolves against the installed jars
+# is `tests/pack/test_item_map.py`'s question; this is the coarser one of whether the row names a mod
+# the pack ships at all. A row naming a mod ADR-0060 removed passes only while it is `blocked_by`
+# the ticket that re-targets it (#277, #251), and no emitted recipe may name one.
+NAMESPACES = {"minecraft", "planetaryfactory", "ftbmaterials",
+              # `c:` is the common tag namespace, which belongs to no mod.
               "c",
               # Researchd owns the research-pack item; `planetary_factory:` (an underscore) is the
               # id space its packs are declared in, and is not this pack's item namespace.
@@ -85,9 +81,9 @@ def mod_registered_blocks():
     anchor's own item and never held -- so a row naming one would be a row naming something a
     player cannot have.
     """
-    blocks = set(re.findall(r'BLOCKS\.register\("([a-z0-9_]+)"',
+    blocks = set(re.findall(r'BLOCKS\.register(?:Block)?\("([a-z0-9_]+)"',
                             (PF_BLOCKS).read_text(encoding="utf-8")))
-    tiers = re.findall(r"^\s{4}([A-Z][A-Z_]*)\(\d+\)[,;]",
+    tiers = re.findall(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]",
                        POLE_TIER.read_text(encoding="utf-8"), re.MULTILINE)
     blocks |= {f"{tier.lower()}_electric_pole" for tier in tiers}
     furnaces = re.findall(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]",
@@ -109,7 +105,7 @@ def mod_registered_items():
     that is to weaken the check, which is the one thing it must not do.
     """
     return {f"planetaryfactory:{name}" for name in re.findall(
-        r'ITEMS\.register(?:SimpleItem)?\(\s*"([a-z0-9_]+)"', PF_ITEMS.read_text(encoding="utf-8"))}
+        r'ITEMS\.register(?:SimpleItem|Item)?\(\s*"([a-z0-9_]+)"', PF_ITEMS.read_text(encoding="utf-8"))}
 
 
 def first_party_items():
@@ -129,13 +125,6 @@ def first_party_items():
     assert items, "the KubeJS startup scripts register nothing -- has `event.create(` been renamed?"
     items |= mod_registered_blocks()
     items |= mod_registered_items()
-    machines = (STARTUP / "machines.js").read_text()
-    for name in re.findall(r"event\.create\('([a-z0-9_]+)'\)", machines):
-        # KJSTieredMachineBuilder registers through GregTech's registrate, so the ids come out
-        # `gtceu:<tier>_<name>` -- the namespace and the tier prefix are both unreachable from
-        # the script, which is why they are reconstructed here rather than read.
-        for tier in re.findall(r"GTValues\.([A-Z]+)", machines.split(".tiers(", 1)[1].split(")", 1)[0]):
-            items.add(f"gtceu:{tier.lower()}_{name}")
     return items
 
 
@@ -174,18 +163,15 @@ def check_item_map(items, corpus, failures):
             failures.append(f"{name} has source {row.get('source')!r} -- ADR-0031's rule has two")
         target = row.get("target", "")
         namespace = target.split(":", 1)[0]
-        if namespace not in NAMESPACES:
+        if namespace not in NAMESPACES and "blocked_by" not in row:
             failures.append(f"{name} maps onto {target}, whose namespace the pack does not ship")
         for component, value in (row.get("components") or {}).items():
             for id_ in (component, value):
-                if id_.split(":", 1)[0] not in NAMESPACES:
+                if id_.split(":", 1)[0] not in NAMESPACES and "blocked_by" not in row:
                     failures.append(f"{name} names {id_}, whose namespace the pack does not ship")
         if "blocked_by" in row:
             if not isinstance(row["blocked_by"], int):
                 failures.append(f"{name} has blocked_by {row['blocked_by']!r}, not a ticket number")
-            if row.get("source") != "authored":
-                failures.append(f"{name} is blocked_by a ticket but is not authored -- a borrowed "
-                                "item exists already, so nothing can be waiting on it")
         if row.get("source") == "authored" and namespace != "planetaryfactory":
             failures.append(f"{name} is authored but maps onto {target}")
         if namespace == "planetaryfactory" and row.get("kind") == "item" \
@@ -196,12 +182,9 @@ def check_item_map(items, corpus, failures):
         # register a furnace with a fuel slot or a chunk-charting block, so without this the map
         # could not record a decision the mod has not caught up with -- and the alternative,
         # leaving the row `undecided`, would say nobody had decided rather than nobody had built.
-        if "blocked_by" in row and target in registered:
+        if "blocked_by" in row and namespace == "planetaryfactory" and target in registered:
             failures.append(f"{name} is blocked_by #{row['blocked_by']} and is already "
                             "registered -- drop the field, the ticket landed")
-        if target.startswith("gtceu:") and row.get("kind") == "item" \
-                and target.endswith("_assembling_machine") and target not in registered:
-            failures.append(f"{name} maps onto {target}, which machines.js does not register")
 
 
 def check_overrides(overrides, corpus, failures):
@@ -216,7 +199,8 @@ def check_overrides(overrides, corpus, failures):
 def check_emitted(items, recipe_types, failures):
     """Every emitted recipe resolves through the item map and onto a recipe type that exists.
 
-    Two shapes reach this directory: GregTech's, and vanilla's furnace for the 1:1 smelts (#91).
+    Two shapes reach this directory: `planetaryfactory:assembling` (#279) and the pack's furnace
+    type (#155).
     """
     targets = {row["target"] for row in items.values() if "target" in row}
     # A `blocked_by` row is decided but its item is not registered yet -- it arrives with a
@@ -245,8 +229,7 @@ def check_emitted(items, recipe_types, failures):
             continue
         recipe = json.loads(path.read_text())
         if recipe.get("type") == PACK_SMELTING:
-            named = [recipe["ingredient"].get("item") or recipe["ingredient"].get("tag"),
-                     recipe["result"]["id"]]
+            named = [recipe["ingredient"].removeprefix("#"), recipe["result"]["id"]]
             for target in named:
                 resolves(path, "the recipe", target)
             if not isinstance(recipe.get("cookingtime"), int) or recipe["cookingtime"] <= 0:
@@ -256,22 +239,26 @@ def check_emitted(items, recipe_types, failures):
             # is the failure #155 registered a type of its own to make impossible.
             if not isinstance(recipe.get("count"), int) or recipe["count"] <= 0:
                 failures.append(f"{path.name} has count {recipe.get('count')!r}")
-            if "tag" in recipe["ingredient"] and recipe["result"]["id"].startswith("#"):
-                failures.append(f"{path.name} has a tag as its result")
             continue
         if recipe.get("type") not in recipe_types:
             failures.append(f"{path.name} has type {recipe.get('type')!r}, which is not registered")
-        if not isinstance(recipe.get("duration"), int) or recipe["duration"] <= 0:
-            failures.append(f"{path.name} has duration {recipe.get('duration')!r}")
-        for field in ("inputs", "outputs"):
-            for capability, contents in recipe.get(field, {}).items():
-                for entry in contents:
-                    ingredient = entry["content"]["ingredient"]
-                    target = ingredient.get("item") or ingredient.get("tag") \
-                        or ingredient.get("fluid") or ingredient.get("items")
-                    resolves(path, field, target)
-                    if capability == "fluid" and "fluid" not in ingredient:
-                        failures.append(f"{path.name}: a fluid content holds {ingredient}")
+        if not isinstance(recipe.get("time"), int) or recipe["time"] <= 0:
+            failures.append(f"{path.name} has time {recipe.get('time')!r}")
+        if not recipe.get("category"):
+            failures.append(f"{path.name} carries no Factorio category, so no hand set can read it")
+        for field in ("ingredients", "fluid_ingredients"):
+            for entry in recipe.get(field, []):
+                ingredient = entry["ingredient"]
+                target = ingredient["items"] if isinstance(ingredient, dict) \
+                    else ingredient.removeprefix("#")
+                resolves(path, field, target)
+                if not isinstance(entry.get("count" if field == "ingredients" else "amount"), int):
+                    failures.append(f"{path.name}: {field} entry {entry} has no count")
+        for field in ("results", "fluid_results"):
+            for entry in recipe.get(field, []):
+                resolves(path, field, entry["id"])
+                if str(entry["id"]).startswith("#"):
+                    failures.append(f"{path.name} has a tag as its result")
 
 
 def main():

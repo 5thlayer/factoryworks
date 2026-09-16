@@ -1,47 +1,25 @@
 {
-  "type": "gtceu:assembling",
-  "inputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:steel_plate"
-          },
-          "count": 2
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:copper_plate"
-          },
-          "count": 20
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "item": "planetaryfactory:plastic_bar"
-          },
-          "count": 5
-        }
-      }
-    ]
-  },
-  "outputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "planetaryfactory:low_density_structure"
-          },
-          "count": 1
-        }
-      }
-    ]
-  },
-  "duration": 300,
-  "data": {
-    "factorio_category": "crafting"
-  }
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 2
+    },
+    {
+      "ingredient": "ftbmaterials:copper_plate",
+      "count": 20
+    },
+    {
+      "ingredient": "planetaryfactory:plastic_bar",
+      "count": 5
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:low_density_structure",
+      "count": 1
+    }
+  ],
+  "time": 300
 }

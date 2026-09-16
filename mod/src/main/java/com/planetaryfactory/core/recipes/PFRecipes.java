@@ -11,10 +11,10 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * The pack's own recipe types, which currently means {@code planetaryfactory:smelting} and
- * nothing else (#155).
+ * The pack's own recipe types: {@code planetaryfactory:smelting} (#155) and
+ * {@code planetaryfactory:assembling} (#279, see {@link AssemblingRecipe}).
  *
- * <p>It is the only type the three furnace tiers read. Vanilla's {@code minecraft:smelting} is not
+ * <p>Smelting is the only type the three furnace tiers read. Vanilla's {@code minecraft:smelting} is not
  * read alongside it: ADR-0034's sweep removes every vanilla smelting recipe, so a dual read would
  * have no live consumer and would mean a recipe carrying vanilla's cook time and getting no tier
  * scaling. All four corpus smelting recipes are on this type, and anything re-admitted later is
@@ -36,6 +36,15 @@ public final class PFRecipes {
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SmeltingRecipe>> SMELTING_SERIALIZER =
             SERIALIZERS.register(SMELTING, SmeltingRecipe::serializer);
+
+    public static final String ASSEMBLING = "assembling";
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> ASSEMBLING_TYPE =
+            TYPES.register(ASSEMBLING, () -> RecipeType.simple(
+                    Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, ASSEMBLING)));
+
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AssemblingRecipe>> ASSEMBLING_SERIALIZER =
+            SERIALIZERS.register(ASSEMBLING, AssemblingRecipe::serializer);
 
     private PFRecipes() {
     }

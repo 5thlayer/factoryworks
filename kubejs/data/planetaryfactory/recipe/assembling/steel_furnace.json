@@ -1,39 +1,21 @@
 {
-  "type": "gtceu:assembling",
-  "inputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:steel_plate"
-          },
-          "count": 6
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "item": "minecraft:stone_bricks"
-          },
-          "count": 10
-        }
-      }
-    ]
-  },
-  "outputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "planetaryfactory:steel_furnace"
-          },
-          "count": 1
-        }
-      }
-    ]
-  },
-  "duration": 60,
-  "data": {
-    "factorio_category": "crafting"
-  }
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 6
+    },
+    {
+      "ingredient": "minecraft:stone_bricks",
+      "count": 10
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:steel_furnace",
+      "count": 1
+    }
+  ],
+  "time": 60
 }

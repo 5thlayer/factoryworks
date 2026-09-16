@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Convert the extracted Factorio recipes into pack recipe JSON (ADR-0026, #87).
+"""Convert the extracted Factorio recipes into pack recipe JSON (ADR-0026, #87, #279).
 
-Reads five committed inputs and writes GregTech recipe JSON. Nothing here decides anything:
+Reads five committed inputs and writes recipe JSON on the pack's own types. Nothing here decides anything:
 every judgement lives in one of the data files, so a decision is reviewed as a diff to a
 design document rather than as a diff to a script.
 
@@ -13,8 +13,8 @@ design document rather than as a diff to a script.
 
 THE CONVERSION RULE (#126, rewriting ADR-0025's table). Nothing is scaled. Item counts transfer
 1:1, one Factorio fluid unit is one millibucket, and `energy_required` seconds become ticks at
-x 20. `crafting_speed` belongs to the machine and `EUt` is set at registration (ADR-0029), so
-neither appears in an emitted recipe.
+x 20. `crafting_speed` and power belong to the machine (ADR-0029), so neither appears in an
+emitted recipe.
 
 WHAT STOPS A RECIPE BEING EMITTED, in the order it is checked:
 
@@ -28,9 +28,12 @@ WHAT STOPS A RECIPE BEING EMITTED, in the order it is checked:
 A Factorio name with NO item-map row at all is none of these: it is a HARD FAILURE (#72), because
 a name nobody has looked at must never be quietly skipped.
 
-Usage: scripts/factorio-recipe-convert.py [--check] [--quiet]
-  --check  write nothing; exit non-zero if the emitted files on disk differ from what would be
-           written. Generated output is never hand-edited (ADR-0026), and this is what says so.
+Usage: scripts/factorio-recipe-convert.py [--check] [--quiet] [--awaited]
+  --check    write nothing; exit non-zero if the emitted files on disk differ from what would be
+             written. Generated output is never hand-edited (ADR-0026), and this is what says so.
+  --awaited  write nothing; print, as JSON, every recipe skipped only because a ticket has not
+             landed (4 and the item-map `blocked_by` rows), keyed by the id it WILL load under.
+             A check that asserts an id is emitted reads this to tell a typo from a deferral.
 """
 import argparse
 import json
@@ -53,11 +56,8 @@ OUT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe"
 # next to those recipes: KubeJS validates every file name under `kubejs/` and rejects an
 # uppercase letter with an error that stops a world loading, so a README beside them is not
 # an option -- the documentation for that subtree lives here and in `docs/`.
-# Each is a path RELATIVE TO OUT_DIR, and each sits under `assembling/` rather than beside it --
-# see `emitted_path` below. Every one of these subtrees holds `gtceu:assembling` recipes, so a file
-# directly under `pack/` would be re-registered by GregTech under `assembling/<name>` and appear
-# twice. Nesting them inside `assembling/` closes that round trip, which is why these are
-# two-part paths and not directory names.
+# Each is a path RELATIVE TO OUT_DIR, and each sits under `assembling/` because its recipes are
+# `planetaryfactory:assembling` ones -- see `emitted_path` below.
 FOREIGN_SUBTREES = ("assembling/pack", "assembling/sapling")
 
 
@@ -90,10 +90,14 @@ PACK_SMELTING = "planetaryfactory:smelting"
 # Factorio's `crafting` / `advanced-crafting` / `crafting-with-fluid` all collapse to one
 # machine, and the Personal Assembler needs the distinction back: it is a filtered view of the
 # Assembling Machine's recipes, not a machine with a recipe type (#125's decision 6, CONTEXT.md).
-# So the source category rides on the emitted recipe, in GregTech's own `data` compound -- not
+# So the source category rides on the emitted recipe as a field of the type's own codec -- not
 # as an item tag, and not by having the Personal Assembler read `data/factorio/recipe.json` at
 # runtime, which would make a regenerable build input into a shipped runtime asset.
-SOURCE_CATEGORY_KEY = "factorio_category"
+SOURCE_CATEGORY_KEY = "category"
+
+# The pack's assembling type (#279). GregTech's `gtceu:assembling` left with ADR-0060, and every
+# recipe on it was a file nothing read. Its codec is `AssemblingRecipe` in `planetaryfactory_core`.
+PACK_ASSEMBLING = "planetaryfactory:assembling"
 
 
 def load(path):
@@ -119,29 +123,21 @@ def process_of(recipe, subgroups):
     return process
 
 
-def content(entry, row):
-    """One GregTech `Content`: a NeoForge SizedIngredient or SizedFluidIngredient.
+def ingredient_of(row):
+    """A 26.1 item `Ingredient`: a bare id, a `#`-prefixed tag, or NeoForge's custom-ingredient map.
 
-    `chance`, `maxChance` and `tierChanceBoost` are all `optionalFieldOf` on Content's codec and
-    every Factorio recipe is deterministic, so they are left off rather than written as defaults.
+    `Ingredient.CODEC` is NeoForge's `Codec.xor` of vanilla's string form and a map dispatched on
+    `neoforge:ingredient_type`. 1.21.1's `{"item": ...}` object is neither, and fails at datapack
+    load with one ERROR line and the recipe absent from the manager (#266).
     """
-    if row["kind"] == "fluid":
-        return {"content": {"ingredient": {"fluid": row["target"]}, "amount": entry["amount"]}}
     if row.get("components"):
         # NeoForge's DataComponentIngredient: one item told apart by the components it carries.
         # The science packs are the case -- one `researchd:research_pack` item, four variants.
-        ingredient = {"type": "neoforge:components", "items": row["target"],
-                      "components": row["components"]}
-    elif row["kind"] == "tag":
-        ingredient = {"tag": row["target"]}
-    else:
-        ingredient = {"item": row["target"]}
-    return {"content": {"ingredient": ingredient, "count": entry["amount"]}}
-
-
-def capability_of(row):
-    """GregTech keys its capability maps by the capability's own name."""
-    return "fluid" if row["kind"] == "fluid" else "item"
+        return {"neoforge:ingredient_type": "neoforge:components", "items": row["target"],
+                "components": row["components"]}
+    if row["kind"] == "tag":
+        return "#" + row["target"]
+    return row["target"]
 
 
 def convert_smelting(recipe, items, override):
@@ -168,38 +164,49 @@ def convert_smelting(recipe, items, override):
     }
 
 
-def convert(recipe, recipe_type, items, override):
-    """One GTRecipe as JSON.
+def convert(recipe, items, override):
+    """One `planetaryfactory:assembling` recipe (#279).
 
-    The shape is read off `GTRecipeSerializer`'s codec in GregTech 7.0.2: `type` and `duration` are
-    the only required fields, every capability map is `optionalFieldOf`, and the capability keys
-    are the recipe capabilities' own names (`item`, `fluid`). ADR-0026 exists because a wrong
-    shape NPEs in the codec at datapack load rather than reporting anything readable, so this
-    writes the minimum the codec asks for and nothing speculative.
+    The shape is `AssemblingRecipe.CODEC`'s, which composes NeoForge's own codecs rather than
+    inventing any: an item ingredient is `SizedIngredient.NESTED_CODEC` (`ingredient` + `count`), a
+    fluid one `SizedFluidIngredient.CODEC` (`ingredient` + `amount`), an item result
+    `ItemStackTemplate.CODEC` (`id` + `count`) and a fluid result `FluidStackTemplate.CODEC` (`id` +
+    `amount`). Every list is optional, so a recipe with no fluid writes no fluid key.
     """
-    out = {"type": recipe_type}
-    for field, entries in (("inputs", recipe["ingredients"]), ("outputs", recipe["results"])):
-        caps = {}
-        for entry in entries:
-            row = items[entry["name"]]
-            caps.setdefault(capability_of(row), []).append(content(entry, row))
-        if caps:
-            out[field] = caps
-    out["duration"] = override.get("duration", round(recipe["energy_required"] * 20))
-    out["data"] = {SOURCE_CATEGORY_KEY: recipe["category"]}
+    out = {"type": PACK_ASSEMBLING, SOURCE_CATEGORY_KEY: recipe["category"]}
+    sides = {"ingredients": [], "fluid_ingredients": [], "results": [], "fluid_results": []}
+    for entry in recipe["ingredients"]:
+        row = items[entry["name"]]
+        if row["kind"] == "fluid":
+            sides["fluid_ingredients"].append({"ingredient": row["target"],
+                                               "amount": entry["amount"]})
+        else:
+            sides["ingredients"].append({"ingredient": ingredient_of(row),
+                                         "count": entry["amount"]})
+    for entry in recipe["results"]:
+        row = items[entry["name"]]
+        if row["kind"] == "fluid":
+            sides["fluid_results"].append({"id": row["target"], "amount": entry["amount"]})
+        else:
+            result = {"id": row["target"], "count": entry["amount"]}
+            if row.get("components"):
+                result["components"] = row["components"]
+            sides["results"].append(result)
+    for field, entries in sides.items():
+        if entries:
+            out[field] = entries
+    out["time"] = override.get("duration", round(recipe["energy_required"] * 20))
     return out
 
 
 def emitted_path(recipe_type, name):
-    """Where a GregTech recipe's file has to sit, which is not a free choice (#87).
+    """`<type path>/<name>`, which is also the recipe's id and therefore what research unlocks.
 
-    GregTech re-registers every GTRecipe the datapack loaded: `RecipeManagerLateMixin` strips
-    everything before the first `/` of the id's path and `GTRecipeBuilder.save` puts the recipe
-    type's own path back on the front. The round trip closes only for a file already under a
-    directory named after its recipe type -- a flat `recipe/copper_cable.json` is loaded as
-    `planetaryfactory:copper_cable` and re-registered as `planetaryfactory:assembling/copper_cable`,
-    leaving BOTH ids in the recipe manager with identical inputs and outputs. Vanilla types are
-    not GTRecipes, are not cloned, and stay flat.
+    #87 made this a rule rather than a habit: GregTech re-registered every GTRecipe under its type's
+    path, so a file anywhere else loaded twice. The pack's own type is not re-registered by
+    anything, so the directory is no longer load-bearing for duplication -- it is kept because
+    `researchd.js` unlocks `planetaryfactory:assembling/<name>` and the foreign subtrees sit inside
+    it.
     """
     return "%s/%s" % (recipe_type.split(":", 1)[1], name.replace("-", "_"))
 
@@ -219,6 +226,8 @@ def main():
     parser.add_argument("--check", action="store_true",
                         help="write nothing; fail if the emitted files differ")
     parser.add_argument("--quiet", action="store_true")
+    parser.add_argument("--awaited", action="store_true",
+                        help="print the recipes waiting on a ticket, as JSON, and write nothing")
     args = parser.parse_args()
 
     recipes = load("data/factorio/recipe.json")
@@ -233,6 +242,16 @@ def main():
     failures = []
 
     emitted, skipped = {}, []
+    # Recipe id -> the tickets it waits on and the items it will make. Only the two skips that
+    # resolve by a ticket landing; an `undecided` row or an override is a decision, not a wait.
+    awaiting = {}
+
+    def await_(name, machine, tickets, recipe):
+        awaiting["planetaryfactory:%s/%s" % (machine, name.replace("-", "_"))] = {
+            "tickets": sorted(tickets),
+            "results": sorted(items[e["name"]]["target"] for e in recipe["results"]
+                              if "target" in items.get(e["name"], {})),
+        }
     for recipe in recipes:
         name = recipe["name"]
         override = overrides.get(name, {})
@@ -257,6 +276,8 @@ def main():
             ticket = machines[machine].get("blocked_by")
             skipped.append((name, "machine not registered",
                             f"{machine}" + (f", #{ticket}" if ticket else ", no ticket")))
+            if ticket:
+                await_(name, machine, [ticket], recipe)
             continue
 
         recipe = apply_override(recipe, override)
@@ -278,8 +299,9 @@ def main():
                 break
         if blocked:
             continue
-        # A `blocked_by` row is DECIDED -- it has a target and a source -- but its item is not
-        # registered yet, because it arrives with a `planetaryfactory_core` ticket. Emitting a
+        # A `blocked_by` row has a target the game cannot load yet: a first-party item that
+        # arrives with a `planetaryfactory_core` ticket, or a borrowed one whose mod is not on
+        # 26.1.2 (#277, #251). Emitting a
         # recipe against it produces JSON that names an item nothing registers, and KubeJS fails
         # to read the recipe at WORLD LOAD rather than at conversion time: an error in a log,
         # nothing craftable, and no clue pointing back here. The static check already tolerates
@@ -291,6 +313,7 @@ def main():
             skipped.append((name, "item not registered yet",
                             ", ".join(awaited) + " — "
                             + ", ".join(f"#{t}" for t in tickets)))
+            await_(name, machine, tickets, recipe)
             continue
         on_tag = [e["name"] for e in recipe["results"] if items[e["name"]]["kind"] == "tag"]
         if on_tag:
@@ -303,13 +326,20 @@ def main():
         if recipe_type == PACK_SMELTING:
             emitted[name.replace("-", "_")] = convert_smelting(recipe, items, override)
         else:
-            emitted[emitted_path(recipe_type, name)] = convert(recipe, recipe_type, items,
-                                                              override)
+            if recipe_type != PACK_ASSEMBLING:
+                failures.append(f"{name}: recipe type {recipe_type} has no emitter -- "
+                                "category-map.json names a type this converter cannot shape")
+                continue
+            emitted[emitted_path(recipe_type, name)] = convert(recipe, items, override)
 
     if failures:
         for failure in failures:
             print("FAIL " + failure)
         return 1
+
+    if args.awaited:
+        print(json.dumps(awaiting, indent=2, sort_keys=True))
+        return 0
 
     if args.check:
         written = {p.relative_to(OUT_DIR).with_suffix("").as_posix(): json.loads(p.read_text())

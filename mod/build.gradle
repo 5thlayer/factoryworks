@@ -111,16 +111,16 @@ tasks.named('test', Test).configure {
 // recipe the pack actually ships rather than against a fixture written to pass -- and what lets
 // `scripts/check-datapack-load.py` watch the game read every one of them.
 //
-// The live subtrees only. `gtceu/`, `gt_materials/`, `gcyr/` and the three GregTech recipe
-// subtrees name registries and recipe types that left with ADR-0060: they would fail here for a
-// reason #273 has already deferred to the chassis and the item alphabet (#258, #275), a permanently red
-// check rather than a signal.
+// The live subtrees only. `gtceu/`, `gt_materials/` and `gcyr/` name registries that left with
+// ADR-0060: they would fail here for a reason #273 has already deferred to the chassis (#258), a
+// permanently red check rather than a signal. Every recipe is loaded, subtrees included: #279
+// re-targeted the converter onto `planetaryfactory:assembling`, and a recipe nothing loads is the
+// failure #87 never got to see.
 
 tasks.register('gameTestPack', Sync) {
     description = 'Assembles the datapack the GameTests run against, from the pack\'s own data.'
     into gameTestPacks.map { it.dir('planetaryfactory') }
     from(rootProject.file('kubejs/data/planetaryfactory/recipe')) {
-        include '*.json'
         into 'data/planetaryfactory/recipe'
     }
     from(rootProject.file('kubejs/data/planetaryfactory/loot_table')) {
