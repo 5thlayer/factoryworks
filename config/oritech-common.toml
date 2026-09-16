@@ -222,7 +222,7 @@
 			# Range: > 0
 			steamToRfRatio = 1
 			#When enabled, the steam engine stops when energy storage is full
-			stopOnEnergyFull = false
+			stopOnEnergyFull = true
 			#When enabled, the steam engine stops when the water tank is full. Must be pumped out to resume.
 			stopOnWaterFull = true
 			#Steam capacity of steam-boiler generators and the steam engine, in buckets

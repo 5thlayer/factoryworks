@@ -62,10 +62,13 @@ dependencies {
     //
     // Jade's jar ships with a capital J, so the pattern carries both spellings rather than relying
     // on a case-insensitive filesystem to paper over it.
+    //
+    // GeckoLib because the Steam Engine mixin (#282) extends Oritech's machine base class, which
+    // implements GeckoLib's `GeoBlockEntity`; javac needs the supertype to resolve the hierarchy.
     compileOnly fileTree(
             dir: rootProject.file('mods'),
             include: ['oritech-*.jar', 'researchd-*.jar', 'emi-*.jar', 'jei-*.jar',
-                      'Jade-*.jar', 'jade-*.jar'])
+                      'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar'])
     // FTB Materials, and the library it requires, on every dev run's classpath -- the GameTest server
     // included. ADR-0061 gives the item layer to FTB Materials, so the pack's emitted smelts name
     // `ftbmaterials:` items, and a server that is only vanilla plus this jar rejects all three at

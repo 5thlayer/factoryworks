@@ -360,6 +360,20 @@ after editing `core/fluid/`, `scripts/build-steam-assets.py` or the corpus. Whet
 boils water is a world load, and its GameTests are #274 — which also carries the one thing no
 static check here can reach: that the fluid face's two refusals are the right way round, per tank.
 
+### Steam Engine check
+
+Oritech's Steam Engine is the pack's engine (#282, ADR-0062), and a mixin
+(`core/mixin/oritech/SteamEngineEntityMixin`) replaces its `tickMaster` and `setupMaster` whole.
+`SteamEngineSpecTest` under `./gradlew :planetaryfactory_core:test` is the arithmetic, read from
+`SteamChainCorpus`: one engine at speed 7 burns 30 mB/s and makes 450 FE/t **over whole ticks** --
+Oritech's `(long)` cast floors 1.5 mB/t to 1, so the spec carries the fraction -- rows are linear, no
+water returns, and the tank and FE buffer are 200 mB and 450 FE per engine in the row. The mixin
+targets were read off the installed 2.0.0-exp6 jar with `javap`, not the 1.21.1 source clone, and
+its config is `required: false` because Oritech is an optional dependency: a renamed target is a
+warning in the log and an uncalibrated engine, not a crash. Whether an engine chains, skips a
+neighbour already answering to a live master, and is pulled by a pole is a world load, and #292's
+GameTest. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
+
 ### Enemy corpus check
 
 `tests/factorio/test_enemy_extract.py` holds the eighth extractor's output — the units,

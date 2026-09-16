@@ -1,5 +1,7 @@
 {
-  "__comment": "The blocks an Electric Network pulls FE from as generators (ADR-0062). The tag, not the block's energy face, decides the role: a face that allows extraction is not enough, or any battery or machine would be drained. Empty until the Steam Engine (#282) lands; a TagKey whose JSON is missing resolves to an empty tag silently, so the file ships empty rather than absent.",
+  "__comment": "The blocks an Electric Network pulls FE from as generators (ADR-0062). The tag, not the block's energy face, decides the role: a face that allows extraction is not enough, or any battery or machine would be drained. Oritech's Steam Engine is the pack's engine (#282); a TagKey whose JSON is missing resolves to an empty tag silently, so the file ships rather than being absent.",
   "replace": false,
-  "values": []
+  "values": [
+    "oritech:steam_engine"
+  ]
 }

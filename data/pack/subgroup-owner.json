@@ -265,10 +265,10 @@
     },
     "production/energy": {
       "owner": "split",
-      "reason": "Half this shelf is the nuclear chapter, deferred to #89. The rest is settled: ADR-0017's Power generation row, as amended by #101 and #148, gives the grid mod steam and solar, and #92's question -- what turns rung-0 steam into electricity -- is answered by Power Grid's generation multiblock (Electro's Alternator until the swap). `steam-engine` is `not_emitted` for a reason that is about SHAPE and not about ownership: the row is still the grid mod's, but Factorio's steam engine is one placed entity and Power Grid's generator is a four-part multiblock, so there is no single item for the row to name. `solar-panel` is the contrast -- one block in both games, so it transcribes.",
+      "reason": "Half this shelf is the nuclear chapter, deferred to #89. The rest is settled: ADR-0017's Power generation row, as amended by #101 and #148, gives the grid mod steam and solar, and #92's question -- what turns rung-0 steam into electricity -- is answered by Power Grid's generation multiblock (Electro's Alternator until the swap). `steam-engine` is Oritech's Steam Engine (ADR-0062, #282), crafted from Factorio's recipe on the Personal Assembler; the Power Grid reading below is superseded. `solar-panel` is the contrast -- one block in both games, so it transcribes.",
       "per_recipe": {
         "boiler": "gregtech / pack:assembling",
-        "steam-engine": "not_emitted",
+        "steam-engine": "oritech / pack:assembling",
         "solar-panel": "powergrid / pack:assembling",
         "accumulator": "powergrid / pack:assembling",
         "heat-exchanger": "not_emitted",

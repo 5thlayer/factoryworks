@@ -1,0 +1,177 @@
+package com.planetaryfactory.core.mixin.oritech;
+
+import com.planetaryfactory.core.fluid.SteamChainCorpus;
+import com.planetaryfactory.core.fluid.SteamEngineSpec;
+import java.util.Optional;
+import java.util.Set;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import rearth.oritech.block.base.entity.MultiblockGeneratorBlockEntity;
+import rearth.oritech.block.entity.MachineCoreEntity;
+import rearth.oritech.block.entity.generators.SteamEngineEntity;
+import rearth.oritech.config.OritechConfig;
+import rearth.oritech.init.BlockEntitiesContent;
+import rearth.oritech.util.Geometry;
+
+/**
+ * Oritech's Steam Engine, calibrated to Factorio (#282, ADR-0062).
+ *
+ * <p>Oritech's shape is kept on purpose: chaining, the fill-driven speed and the efficiency curve.
+ * Two of its methods are replaced whole, because each change reaches into the middle of one.
+ *
+ * <ul>
+ *   <li><b>{@code tickMaster}</b> burns and makes what {@link SteamEngineSpec} says, with the half
+ *       millibucket carried rather than floored, returns no water, and sizes the row's tank and FE
+ *       buffer to the row on every tick.
+ *   <li><b>{@code setupMaster}</b> is Oritech's scan with one more stop: an engine already answering
+ *       to another live master is a boundary, not a slave. Oritech let two masters that received
+ *       steam before either scanned both claim the empty engines between them, counting each twice.
+ * </ul>
+ *
+ * <p>Both were read off the installed 2.0.0-exp6 jar, not the 1.21.1 source clone; the signatures
+ * differ. Extends Oritech's base class only so the protected members it inherits are reachable.
+ */
+@Mixin(SteamEngineEntity.class)
+public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEntity {
+
+    /** Oritech's scan reach along the engine's facing axis, as its jar states it. */
+    @Unique
+    private static final int PLANETARYFACTORY$CHAIN_REACH = 20;
+
+    @Shadow
+    @Final
+    private Set<SteamEngineEntity> slaves;
+
+    @Shadow
+    public SteamEngineEntity.SteamEngineSyncPacket clientStats;
+
+    @Shadow
+    private float getSteamProcessingSpeed() {
+        throw new AssertionError();
+    }
+
+    @Shadow
+    private float getSteamEnergyEfficiency(float speed) {
+        throw new AssertionError();
+    }
+
+    @Shadow
+    private void spawnParticles() {
+        throw new AssertionError();
+    }
+
+    @Unique
+    private SteamEngineSpec planetaryfactory$spec;
+
+    @Unique
+    private SteamEngineSpec.Carry planetaryfactory$carry = SteamEngineSpec.Carry.NONE;
+
+    protected SteamEngineEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state,
+            int energyPerTick) {
+        super(type, pos, state, energyPerTick);
+    }
+
+    @Unique
+    private SteamEngineSpec planetaryfactory$spec() {
+        if (planetaryfactory$spec == null) {
+            planetaryfactory$spec = SteamEngineSpec.fromCorpus(SteamChainCorpus.get(),
+                    speed -> getSteamEnergyEfficiency((float) speed));
+        }
+        return planetaryfactory$spec;
+    }
+
+    /** A lone engine's tank is Factorio's from the moment it exists, before any steam reaches it. */
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void planetaryfactory$sizeAlone(BlockPos pos, BlockState state, CallbackInfo ci) {
+        planetaryfactory$sizeTo(1);
+    }
+
+    @Unique
+    private void planetaryfactory$sizeTo(int rowLength) {
+        SteamEngineSpec spec = planetaryfactory$spec();
+        ((FluidStacksCapacityAccessor) boilerStorage).planetaryfactory$setCapacity(
+                spec.tankCapacity(rowLength));
+        energyStorage.setCapacity(spec.bufferCapacity(rowLength));
+    }
+
+    @Inject(method = "tickMaster", at = @At("HEAD"), cancellable = true)
+    private void planetaryfactory$tickMaster(CallbackInfo ci) {
+        ci.cancel();
+        int rowLength = slaves.size() + 1;
+        planetaryfactory$sizeTo(rowLength);
+
+        if (energyStorage.getAmountAsLong() >= energyStorage.getCapacityAsLong()
+                && OritechConfig.generators.steamEngineData.stopOnEnergyFull.get()) {
+            return;
+        }
+        currentRecipe = findActiveRecipe();
+        if (currentRecipe.isEmpty()) {
+            return;
+        }
+
+        SteamEngineSpec spec = planetaryfactory$spec();
+        float speed = getSteamProcessingSpeed();
+        SteamEngineSpec.Tick asked = spec.request(speed, rowLength, planetaryfactory$carry);
+        ResourceHandler<FluidResource> input = boilerStorage.getInputContainer();
+        SteamEngineSpec.Tick made;
+        try (Transaction transaction = Transaction.openRoot()) {
+            int drawn = asked.steam() > 0
+                    ? input.extract(input.getResource(0), asked.steam(), transaction)
+                    : 0;
+            made = spec.burn(drawn, speed, asked.carry());
+            energyStorage.internalInsert(made.energy(), transaction);
+            transaction.commit();
+        }
+        planetaryfactory$carry = made.carry();
+
+        clientStats = new SteamEngineEntity.SteamEngineSyncPacket(worldPosition, speed,
+                getSteamEnergyEfficiency(speed), made.energy(), made.steam(), slaves.size());
+        spawnParticles();
+        lastWorkedAt = level.getGameTime();
+        progress.set((int) (speed * 100.0F));
+    }
+
+    @Inject(method = "setupMaster", at = @At("HEAD"), cancellable = true)
+    private void planetaryfactory$setupMaster(CallbackInfo ci) {
+        ci.cancel();
+        SteamEngineEntity self = (SteamEngineEntity) (Object) this;
+        slaves.clear();
+        for (int direction = -1; direction <= 1; direction += 2) {
+            for (int step = 1; step <= PLANETARYFACTORY$CHAIN_REACH; step++) {
+                BlockPos at = new BlockPos(Geometry.offsetToWorldPosition(getFacing(),
+                        new Vec3i(step * direction, 0, 0), worldPosition));
+                Optional<MachineCoreEntity> core =
+                        level.getBlockEntity(at, BlockEntitiesContent.MACHINE_CORE.get());
+                if (core.isPresent() && core.get().getCachedController() != null) {
+                    at = core.get().getControllerPos();
+                }
+                Optional<SteamEngineEntity> found =
+                        level.getBlockEntity(at, BlockEntitiesContent.STEAM_ENGINE.get());
+                if (found.isEmpty()) {
+                    break;
+                }
+                SteamEngineEntity engine = found.get();
+                if (!engine.isAssembled(engine.getBlockState())
+                        || !engine.boilerStorage.getInStack().isEmpty()
+                        || (engine.inSlaveMode() && engine.master != self)) {
+                    break;
+                }
+                slaves.add(engine);
+                engine.masterHeartbeat = level.getGameTime();
+                engine.master = self;
+            }
+        }
+    }
+}

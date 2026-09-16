@@ -221,7 +221,7 @@ _Avoid_: Create's Steam Engine, Oritech's steam engine, alternator, turbine
 
 
 **Master Engine**:
-The one **Steam Engine** in a row that burns the row's steam and holds its charge; every other engine in the row is chained to it and only mirrors its speed.
+A **Steam Engine** holding steam, which burns and holds the charge for itself and the empty engines beside it in its row; those only mirror its speed. It is not chosen: the first engine of a row to receive steam becomes one, and steam piped into any other engine of its row reaches its tank. A pole that reaches any engine of the row reaches its Master Engine.
 _Avoid_: master/slave, lead engine, chain head
 
 **Electric Network**:

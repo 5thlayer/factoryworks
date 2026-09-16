@@ -16,10 +16,9 @@ import java.nio.charset.StandardCharsets;
  * classpath resource rather than a datapack file, loaded once, so the numbers exist before any
  * world does.
  *
- * <p><b>The Boiler reads it; the Steam Engine does not exist yet.</b> #224 landed the first half
- * of the chain, so the target temperature, the fuel draw and both fluid boxes now have a consumer
- * -- {@link BoilerSpec} through {@link BoilerBlockEntity}. The Steam Engine's own fields are still
- * unconsumed and stay exposed for #225 to pick up.
+ * <p><b>Both halves of the chain read it.</b> The Boiler through {@link BoilerSpec} (#224), and
+ * Oritech's Steam Engine through {@link SteamEngineSpec}, which a mixin puts in place of the
+ * engine's own arithmetic (#282, ADR-0062).
  *
  * <p>The {@code fluids} rows are #224's addition and are Factorio's fluid prototypes rather than
  * this pack's: the Boiler's rate is a temperature rise paid for at <em>steam's</em> heat capacity,
@@ -113,6 +112,23 @@ public final class SteamChainCorpus {
     /** How much steam the Steam Engine draws per Factorio tick. */
     public double steamEngineFluidUsagePerTick() {
         return steamEngine.get("fluid_usage_per_tick").getAsDouble();
+    }
+
+    /** The Steam Engine's full output, in watts. Factorio's 900 kW, derived from its steam draw. */
+    public double steamEngineMaxPowerOutput() {
+        return steamEngine.get("max_power_output").getAsDouble();
+    }
+
+    /** The Steam Engine's steam box, in Factorio units and so in millibuckets. */
+    public int steamEngineFluidBoxVolume() {
+        for (com.google.gson.JsonElement box : steamEngine.getAsJsonArray("fluid_boxes")) {
+            JsonObject row = box.getAsJsonObject();
+            if ("input".equals(row.get("production_type").getAsString())) {
+                return row.get("volume").getAsInt();
+            }
+        }
+        throw new IllegalStateException(
+                "the steam-engine row has no input fluid box -- re-run scripts/build-steam-assets.py");
     }
 
     /**
