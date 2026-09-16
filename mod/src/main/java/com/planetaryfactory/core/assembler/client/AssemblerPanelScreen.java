@@ -40,22 +40,20 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
         int index = 0;
         for (QueueSyncPacket.Entry entry : AssemblerQueueView.entries()) {
             graphics.fill(leftPos + 6, y, leftPos + imageWidth - 6, y + ROW_HEIGHT - 2, ROW);
-            // The plan on the left, the step under way on the right. A row naming only the plan
-            // says nothing is happening for as long as a transport belt spends crafting iron gears,
-            // which is most of its life.
+            // Factorio's order: the craft under way first, what it is for after it. A step that makes
+            // the plan's own item is named once.
             int textY = y + 5;
-            graphics.item(itemStack(entry.rootItem()), leftPos + 9, y + 2);
-            if (index == 0 && entry.stepIsRoot()) {
-                RadialWipeRenderer.over(graphics, leftPos + 9, y + 2, AssemblerQueueView.liveProgress(entry));
-            }
+            boolean split = entry.hasStep() && !entry.stepIsRoot();
+            String first = split ? entry.stepItem() : entry.rootItem();
+            String firstAmount = "x" + (split ? entry.stepAmount() : entry.amount());
+            graphics.item(itemStack(first), leftPos + 9, y + 2);
+            if (index == 0) RadialWipeRenderer.over(graphics, leftPos + 9, y + 2, AssemblerQueueView.liveProgress(entry));
             int after = leftPos + 27;
-            graphics.text(font, "x" + entry.amount(), after, textY, 0xFFFFFFFF, false);
-            after += font.width("x" + entry.amount()) + 6;
-            if (entry.hasStep() && !entry.stepIsRoot()) {
-                graphics.text(font, ">", after, textY, 0xFF777777, false);
-                graphics.item(itemStack(entry.stepItem()), after + 8, y + 2);
-                if (index == 0) RadialWipeRenderer.over(graphics, after + 8, y + 2, AssemblerQueueView.liveProgress(entry));
-                graphics.text(font, "x" + entry.stepAmount(), after + 26, textY, 0xFFCCCCCC, false);
+            graphics.text(font, firstAmount, after, textY, 0xFFFFFFFF, false);
+            after += font.width(firstAmount) + 6;
+            if (split) {
+                graphics.item(itemStack(entry.rootItem()), after, y + 2);
+                graphics.text(font, "x" + entry.amount(), after + 18, textY, 0xFFCCCCCC, false);
             }
             int cancelX = cancelLeft();
             graphics.fill(cancelX, y + 2, cancelX + CANCEL_SIZE, y + 2 + CANCEL_SIZE, 0xFF5A2B2B);
