@@ -44,10 +44,11 @@ GRADLE = ["./gradlew", ":planetaryfactory_core:runGameTestServer", "--rerun-task
 EXPECTED = {
     "planetaryfactory:copper_plate":
         "names `gtceu:copper_plate`. The item map still targets GregTech, which left with "
-        "ADR-0060. What the row should name instead is #275's, against the alphabet Oritech and Railcraft now split between them; the converter that reads it is #87's",
+        "ADR-0060. `ftbmaterials:copper_plate` is what the pack installed FTB Materials for; "
+        "which row names it is #275's decision, and the converter that reads it is #87's",
     "planetaryfactory:iron_plate":
-        "names `gtceu:iron_plate`. Oritech ships no iron plate at all -- Railcraft owns the plate "
-        "line, which is the decision #275 exists for",
+        "names `gtceu:iron_plate`. The item map holds no `ftbmaterials:` row at all yet, which "
+        "is the rewrite #275 exists for",
     "planetaryfactory:steel_plate":
         "names `gtceu:steel_plate` and `gtceu:iron_plate` -- the item map's rewrite (#275)",
     "planetaryfactory:blocks/yumako_log":
