@@ -420,6 +420,25 @@ to date, print no log, and the check would pass having loaded nothing. Like the 
 in no batch; run it after a converter change, after editing `gameTestPack`, or after any edit to
 `kubejs/data/`.
 
+### Load-time codec check
+
+`tests/pack/test_load_codecs.py` is the other direction of the 26.1 format work (#273): the data
+checks assert the shape of the files the pack *emits*, and this one asserts the codecs in the jar
+that *read* them. The trap is `ItemStack.CODEC`, which in 26.1 is
+`Item.CODEC_WITH_BOUND_COMPONENTS`, and an item's components are bound during the same datapack
+load that reads the recipes -- so a stack decoded there fails with `Item ... does not have
+components yet`, one ERROR line, and the file is then absent from its manager. The emitted JSON is
+identical either way, which is why `test_data_formats.py` and `test_smelting_shape.py` are blind to
+it by construction, and a KubeJS `/reload` rebinds first, so it is a bug that exists only on a
+clean world load. It shipped once, on all four smelts, and #271's GameTest server found it.
+The rule is swept both ways: no class carrying a load-time registration (`RecipeSerializer`,
+`SimpleJsonResourceReloadListener`, `AddServerReloadListenersEvent`) may name a stack codec, and
+every other use is an `ALLOWED` entry with its reason -- one today, Jade's tooltip transport, which
+runs on a live server long after binding. A stale entry fails too. Source-text for the reason
+`test_smelting_type.py` is: the test source set has no Minecraft, so `ItemStackTemplate` is not
+nameable from a JVM test. Run it after adding a reload listener, a recipe serializer or any codec
+that decodes an item.
+
 ### Emitted smelt shape check
 
 `tests/factorio/test_smelting_shape.py` asserts the four emitted `planetaryfactory:smelting`
