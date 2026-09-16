@@ -103,7 +103,7 @@ smelt be asserted against the recipe the pack ships rather than against a fixtur
 and it is what `scripts/check-datapack-load.py` watches the game read. The dead subtrees are
 excluded by name — `gtceu/`, `gt_materials/`, `gcyr/` and the three GregTech recipe subtrees name
 registries that left with ADR-0060, and are re-derived against the chassis (#258) and the item
-alphabet Oritech and Railcraft split between them (#275), by the converter (#87). Three of the four smelts still name `gtceu:` results and
+alphabet #275 decides -- FTB Materials' intermediates against Oritech's and Railcraft's, by the converter (#87). Three of the four smelts still name `gtceu:` results and
 do not load, which is why stone brick is the only smelt under test.
 
 What is there is `EnergyFaceTests` (#271), and only what a JVM test cannot reach: that a pole's

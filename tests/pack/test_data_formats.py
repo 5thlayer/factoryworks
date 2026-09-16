@@ -63,8 +63,8 @@ DATA_ROOTS = (
 )
 
 # The recipe types the machine chassis owns, deferred rather than asserted here: #258 names the
-# chassis, #275 decides the item alphabet Oritech and Railcraft split between them, and #87 owns
-# the converter that reads both.
+# chassis, #275 decides the item alphabet -- FTB Materials' intermediates against Oritech's and
+# Railcraft's overlapping ones -- and #87 owns the converter that reads both.
 DEFERRED_RECIPE_NAMESPACES = ("gtceu:",)
 
 # Item models left behind by a registration ADR-0060 removed. Named rather than skipped by shape,
