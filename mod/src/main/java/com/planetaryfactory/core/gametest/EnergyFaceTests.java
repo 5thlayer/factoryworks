@@ -17,7 +17,7 @@ import net.minecraft.world.item.Items;
  *
  * <h2>Why these three and no others</h2>
  *
- * <p>The arithmetic on both sides is already checked on a plain JVM -- {@code EnergyLedgerTest},
+ * <p>The arithmetic on both sides is already checked on a plain JVM -- {@code NetworkBalanceTest},
  * {@code EnergyShareTest}, {@code SupplyAreaTest}, {@code FurnaceEnergyBufferTest},
  * {@code FurnaceCycleTest}. The pack's two static checks
  * ({@code tests/pack/test_capability_registration.py}, {@code tests/pack/test_energy_faces.py})
@@ -28,9 +28,10 @@ import net.minecraft.world.item.Items;
  *
  * <h2>The layout</h2>
  *
- * <p>A small pole, and an Electric Furnace one block east of it: {@code dx = 1}, inside the
+ * <p>A pole, and an Electric Furnace one block east of it: {@code dx = 1}, inside the
  * small pole's 5x5 supply area with room to spare. The platform is stone at relative y 0, so
- * both stand at y 1.
+ * both stand at y 1. A pole holds no energy (ADR-0062), so "fed" means a creative pole, which is an
+ * unlimited generator on its network, and "unfed" means a small pole with no generator in reach.
  */
 final class EnergyFaceTests {
 
@@ -119,13 +120,12 @@ final class EnergyFaceTests {
      * without journalling its buffer keeps a probe's worth every tick -- a furnace running on
      * power nobody spent, at a rate nothing displays.
      *
-     * <p>So: a pole with an empty ledger, ticked. It has nothing to give, and the probe still
-     * runs. The furnace must still hold zero, and the demand it reported must be the whole buffer.
+     * <p>So: a small pole with no generator on its network, ticked. It has nothing to give, and the
+     * probe still runs. The furnace must still hold zero, and the demand it reported must be the whole buffer.
      */
     private static void probeLeavesNothing(GameTestHelper helper) {
         place(helper);
         helper.startSequence()
-                .thenExecute(() -> pole(helper).ledger().setStoredFe(0L))
                 .thenIdle(45)
                 .thenExecute(() -> {
                     long stored = stored(helper);
@@ -144,20 +144,16 @@ final class EnergyFaceTests {
     /**
      * Filling it makes it smelt, and starving it stops the smelt where it stood.
      *
-     * <p>The drain is measured on the <em>pole's</em> ledger rather than on the furnace's buffer.
-     * Both block entities tick in the same game tick and their order is an implementation detail
-     * of the chunk's block entity list, so the furnace's stored FE is 90 higher or lower depending
-     * on which went first. The pole's ledger has no such ambiguity: in the steady state it pays
-     * for exactly what the furnace burned, once per tick.
+     * <p>Fed by a creative pole, then cut off by swapping it for a small pole with nothing to give.
      */
     private static void poweredFurnaceSmelts(GameTestHelper helper) {
-        place(helper);
+        helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
+        helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
         long[] window = new long[1];
         int[] progressMark = new int[1];
         helper.startSequence()
                 .thenExecute(() -> {
                     furnace(helper).setItem(FurnaceSlots.INPUT, new ItemStack(Items.COBBLESTONE, 64));
-                    pole(helper).ledger().setStoredFe(pole(helper).ledger().capacityFe());
                 })
                 // The grid half: a fed pole makes the furnace produce. 32 ticks is the stone brick
                 // smelt at the Electric tier (64 cooking ticks over a crafting speed of 2), and
@@ -177,7 +173,7 @@ final class EnergyFaceTests {
                 // furnace's stored FE reads 90 higher or lower depending on which went first.
                 // Ten ticks' worth, so the buffer cannot run out inside the window.
                 .thenExecute(() -> {
-                    pole(helper).ledger().setStoredFe(0L);
+                    helper.setBlock(POLE, PFBlocks.pole(PoleTier.SMALL).get());
                     setStored(helper, FE_PER_TICK * 10L);
                     window[0] = stored(helper);
                     progressMark[0] = progress(helper);

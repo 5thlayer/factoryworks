@@ -40,7 +40,7 @@ ASSETS = ROOT / "kubejs/assets/planetaryfactory"
 DATA = ROOT / "kubejs/data/planetaryfactory"
 
 # `SMALL(5),` -- the enum constant and its Factorio supply size.
-TIER_RE = re.compile(r"^\s{4}([A-Z][A-Z_]*)\((\d+)\)[,;]", re.MULTILINE)
+TIER_RE = re.compile(r"^\s{4}([A-Z][A-Z_]*)\((\d+)(?:, [\d.]+)?\)[,;]", re.MULTILINE)
 
 
 def registered_tiers():

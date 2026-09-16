@@ -23,14 +23,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.server.level.ServerLevel;
 
 /**
- * A Factorio electric pole (ADR-0036): it supplies every machine standing in its area, and there is
- * no network behind it.
+ * A Factorio electric pole (ADR-0036, ADR-0062): it supplies every machine standing in its area, and
+ * it links to every pole within wire reach into one Electric Network.
  *
- * <p>That absence is the whole design. No graph, no propagation, no merge and split on placement,
- * no topology persisted across chunk unloads -- which is where a cable mod's cost actually lives.
- * A pole is a position, a radius and a tick. What the pack gets for that is Factorio's own
- * mechanic rather than an approximation: place a pole, and everything inside its supply area is
- * powered.
+ * <p>The network is recomputed from the poles standing rather than stored -- no propagation, no
+ * topology persisted across chunk unloads. {@link ElectricNetworks} has the why.
  *
  * <p>One class serves all three tiers; they differ by the {@link PoleTier} handed to the
  * constructor and by nothing else.
@@ -39,8 +36,7 @@ import net.minecraft.server.level.ServerLevel;
  *
  * <p>A pole stands as tall as the player builds it, up to {@link PoleColumn#MAX_SEGMENTS}, and the
  * supply area is measured at the base whatever the height. {@link PoleColumn} has the why. This
- * class owns the three world-facing consequences: extending a column, breaking one, and keeping the
- * FE capability answering correctly while either happens.
+ * class owns the two world-facing consequences: extending a column and breaking one.
  */
 public class SupplyAreaPoleBlock extends Block implements EntityBlock {
 
@@ -118,7 +114,6 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
         }
-        invalidateColumn(level, next);
         return InteractionResult.SUCCESS;
     }
 
@@ -139,41 +134,6 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
         if (level.getBlockState(above).is(this)) {
             level.destroyBlock(above, true);
         }
-        // Everything that was standing on this base is now standing on nothing, so whatever a
-        // connector resolved through it has to be looked up again.
-        invalidateColumn(level, pos);
-    }
-
-    /**
-     * Re-resolve the FE capability for every segment of this column.
-     *
-     * <p>NeoForge caches block capabilities per position, and invalidates them automatically only
-     * where a block entity changes. An extension has no block entity of its own worth reading -- its
-     * capability is the <em>base's</em>, handed out by the provider in {@code PFBlockEntities} --
-     * so nothing invalidates it when the base appears or goes. Without this, a Device Connector goes
-     * on holding a handler into a block entity that is no longer there, and does it silently.
-     */
-    static void invalidateColumn(Level level, BlockPos pos) {
-        if (level.isClientSide()) {
-            return;
-        }
-        BlockPos base = PoleColumn.baseOf(level, pos);
-        BlockPos from = base != null ? base : pos;
-        for (int i = 0; i < PoleColumn.MAX_SEGMENTS; i++) {
-            BlockPos segment = from.above(i);
-            level.invalidateCapabilities(segment);
-        }
-        // The block below a base may have been one a moment ago.
-        level.invalidateCapabilities(from.below());
-    }
-
-    @Override
-    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState,
-                           boolean movedByPiston) {
-        super.onPlace(state, level, pos, oldState, movedByPiston);
-        // Placing a pole directly beneath a standing one makes that one an extension, which changes
-        // where its capability resolves. See PoleColumn for why the stranded buffer is accepted.
-        invalidateColumn(level, pos);
     }
 
     @Override

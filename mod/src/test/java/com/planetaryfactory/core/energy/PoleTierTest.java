@@ -34,6 +34,15 @@ class PoleTierTest {
     }
 
     @Test
+    void theWireReachesAreFactoriosOwn() {
+        // electric-pole.*.maximum_wire_distance in the data-raw dump. Poles are not in the
+        // extracted corpus, so these are pinned the way the supply areas above are.
+        assertEquals(7.5, PoleTier.SMALL.wireReach());
+        assertEquals(9.0, PoleTier.MEDIUM.wireReach());
+        assertEquals(18.0, PoleTier.SUBSTATION.wireReach());
+    }
+
+    @Test
     void everyTierHasTheSameVerticalBand() {
         for (PoleTier tier : PoleTier.values()) {
             assertEquals(PoleTier.VERTICAL_RADIUS, tier.verticalRadius());

@@ -733,11 +733,11 @@ Sub-rules:
 - **Power poles have a supply area** — `planned`. The core's pole, three tiers at 5x5, 7x7 and
   18x18, Factorio's own numbers. It was `shipped` on GregTech's energy capability and is ported to
   NeoForge's transfer API with the rest of the core.
-- **Power poles have a wire reach** — `adapted`. Oritech's pole reaches 1–32 blocks, the big
-  electric pole's 32 read out of the Factorio dump, and carries 18,000 FE/t: one full steam block.
-  Factorio's wire has no throughput cap and its big pole also supplies a 4x4 area; neither is
-  reproduced. The small and medium poles' shorter reaches do not exist separately, because the
-  core's poles do not wire to each other.
+- **Power poles have a wire reach** — `shipped` (#280, ADR-0062). The core's poles link to every
+  pole within the shorter of the two reaches -- 7.5, 9 and 18 blocks, Factorio's own -- and every
+  linked pole is one network with one balance: generators first, accumulators second, only generator
+  surplus charges. Reach is measured in three dimensions, which Factorio has no need to. The wire is
+  not yet drawn (#281). Oritech's transmission pole leaves the power path with #284.
 - **Transformers between voltage levels** — `excluded`. `by-consequence` of having no voltage.
 - **The power graph as a diagnostic surface** — `unargued`, no verdict.
 

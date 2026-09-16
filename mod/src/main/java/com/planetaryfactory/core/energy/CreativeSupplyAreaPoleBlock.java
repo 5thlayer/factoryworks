@@ -3,13 +3,12 @@ package com.planetaryfactory.core.energy;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 /**
- * A supply-area pole whose ledger is always full: the dev tool an energy face is checked with
+ * A supply-area pole that is also an unlimited generator for its network: the dev tool an energy face is checked with
  * (#272).
  *
  * <p>Place it, place a machine beside it, read Jade. Without it, checking "does the Electric
  * Furnace draw 90 FE/t" by hand means first building a working power chain, because the shipped
- * pole is insert-only and its buffer is one tick of ADR-0060's transmission rate -- so a two-block
- * test would depend on most of the port.
+ * pole generates nothing -- so a two-block test would depend on a working steam chain.
  *
  * <h2>It is a subclass, not a fourth {@link PoleTier}</h2>
  *
@@ -22,9 +21,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
  * pole.
  *
  * <p>Everything else is inherited and stays shared: the column, the scan, the water-fill
- * rationing, the Jade line and the per-tick push. What is being tested has to be the thing that
- * ships, so the only difference is which ledger {@link SupplyAreaPoleBlockEntity} builds -- and
- * that is decided from the blockstate rather than from here, because Minecraft rebuilds a block
+ * rationing, the Jade line and the network it links into. What is being tested has to be the thing
+ * that ships, so the only difference is that {@link ElectricNetworks} counts it as a generator --
+ * and that is decided from the blockstate rather than from here, because Minecraft rebuilds a block
  * entity from the type when a chunk loads and never asks the block again.
  *
  * <h2>It ships</h2>

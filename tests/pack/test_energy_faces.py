@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Assert the mod's two FE faces take energy, and journal it so an aborted probe leaves none.
+"""Assert the mod's FE faces take energy, and journal it so an aborted probe leaves none.
 
 `docs/testing/what-to-check.md`'s "cross-file references resolve" claim, for the half of an energy
 face that `tests/pack/test_capability_registration.py` cannot see. That check asserts the furnace
-and the pole *have* an `Energy` face; this one asserts the face does something when a pole inserts
+*has* an `Energy` face (a pole has none since ADR-0062); this one asserts the face does something when a pole inserts
 into it.
 
 The failure it exists to catch shipped (#266). The furnace's face was carried over from the EU
@@ -29,7 +29,7 @@ same reason `GuardedResourceHandler` is in `test_transfer_guards.py`.
 It cannot be a Java unit test: `SnapshotJournal` and `TransactionContext` are NeoForge types and
 the mod's test source set has no NeoForge on its classpath by design (`mod/build.gradle`). The
 arithmetic under the faces is Minecraft-free and is held by `FurnaceEnergyBufferTest` and
-`EnergyLedgerTest`.
+`NetworkBalanceTest`.
 """
 
 import pathlib
@@ -46,11 +46,10 @@ COMMENTS = re.compile(r"/\*.*?\*/|//[^\n]*", re.DOTALL)
 # that the mod's own `LongSnapshotJournal`, which every face names, is not read as a second copy.
 SNAPSHOT_JOURNAL = re.compile(r"(?<!Long)\bSnapshotJournal\b")
 
-# The two FE faces, and the buffer call each one's insert has to reach. Listed rather than
+# The FE faces, and the buffer call each one's insert has to reach. Listed rather than
 # discovered: a third machine that takes power arrives with a row here, or it is answered "no face
 # to check" by a scan that found nothing.
 FE_FACES = {
-    "energy/PoleEnergyStorage.java": "receiveFe(",
     "smelting/FurnaceBlockEntity.java": "addEnergy(",
 }
 

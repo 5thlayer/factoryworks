@@ -54,7 +54,9 @@ COMMENTS = re.compile(r"/\*.*?\*/|//[^\n]*", re.DOTALL)
 # a new machine and assert nothing. A type that genuinely wants no face records an empty tuple,
 # which is then a decision somebody wrote down.
 FACES = {
-    "supply_area_pole": ("registerPoleCapabilities", ("Energy",)),
+    # No face (ADR-0062): a pole holds no energy and nothing feeds it. Its network pulls from
+    # generators where they stand, and that path is held by the listener assertion below.
+    "supply_area_pole": (None, ()),
     "furnace": ("registerFurnaceCapabilities", ("Item", "Energy")),
     "rig": ("registerRigCapabilities", ("Item",)),
     "rig_part": ("registerRigCapabilities", ("Item",)),
@@ -68,19 +70,15 @@ FACES = {
 # somewhere in the method. The pack has shipped a ladder tier with no face exactly once, and it
 # read as "the Electric Furnace ignores hoppers".
 LADDERS = {
-    "registerPoleCapabilities": "PoleTier.values()",
     "registerFurnaceCapabilities": "FurnaceTier.values()",
     "registerRigCapabilities": "RigTier.values()",
 }
 
 # Blocks that get a face without being a row in any ladder enum. FACES above is keyed by block
 # entity *type*, and a block reusing an existing type needs no row there -- which is exactly how a
-# face can go missing with every check in this repo still green. The creative pole (#272) reuses
-# `supply_area_pole`, so deleting its one `registerBlock` line would leave it inert: it places,
-# ticks, renders, and no pole, pipe or connector ever powers it.
-UNLADDERED_BLOCKS = {
-    "registerPoleCapabilities": ("PFBlocks.CREATIVE_POLE",),
-}
+# face can go missing with every check in this repo still green. Empty since the creative pole's
+# face went with every pole's (ADR-0062); kept so the next such block has a row to land in.
+UNLADDERED_BLOCKS = {}
 
 # The Barrel's face is on the item rather than a block, so it is registered in `PFItems` and no
 # block-side assertion sees it. Listed for the same reason FACES is: a second item capability
@@ -150,6 +148,8 @@ class CapabilityRegistration(unittest.TestCase):
 
     def test_every_recorded_face_is_registered_on_the_transfer_api(self):
         for entity, (method, kinds) in sorted(FACES.items()):
+            if method is None:
+                continue
             body = method_body(self.source, method)
             with self.subTest(entity=entity):
                 self.assertIsNotNone(body, f"{method} has gone; {entity} exposes nothing")
@@ -164,7 +164,7 @@ class CapabilityRegistration(unittest.TestCase):
         # exist, and it compiles just as quietly.
         entry = method_body(self.source, "registerCapabilities")
         self.assertIsNotNone(entry, "PFBlockEntities.registerCapabilities has gone")
-        for method in sorted({method for method, _ in FACES.values()}):
+        for method in sorted({method for method, _ in FACES.values() if method}):
             with self.subTest(method=method):
                 self.assertIn(f"{method}(event)", entry)
 
@@ -196,15 +196,11 @@ class CapabilityRegistration(unittest.TestCase):
                                   "own; without one it is inert, and neither FACES nor LADDERS "
                                   "above can see that it is missing")
 
-    def test_the_pole_answers_on_the_block_rather_than_the_block_entity(self):
-        # A pole is a column and a connector may be attached to any segment of it. A caller doing
-        # the ordinary `level.getCapability(..., pos.relative(facing), ...)` never asks whether the
-        # target has a block entity, so a registration bound to the block entity type answers only
-        # on the base and every other segment is silently not a connection.
-        body = method_body(self.source, "registerPoleCapabilities")
-        self.assertIsNotNone(body)
-        self.assertIn("event.registerBlock(", body)
-        self.assertNotIn("registerBlockEntity", body)
+    def test_the_electric_network_settle_is_wired_to_the_game_bus(self):
+        # A pole has no face, so FACES cannot see its path. Every pole moves energy only through
+        # the level tick ElectricNetworks listens on (ADR-0062), and dropping that one line leaves
+        # every pole in the pack placing, scanning and powering nothing, with nothing logged.
+        self.assertIn("ElectricNetworks::onLevelTick", code_of(CORE))
 
     def test_the_rig_part_forwards_to_its_anchor(self):
         # Three quarters of a 2x2 is part, and which corner holds the anchor is not visible. A

@@ -77,4 +77,44 @@ public final class EnergyShare {
 
         return grants;
     }
+
+    /**
+     * Splits {@code total} across {@code weights} in proportion to each, never granting more than a
+     * weight, with the integer remainder handed out by largest fractional part so no FE is lost.
+     * {@code total} must not exceed the sum of the weights.
+     *
+     * @return a share per weight, index-aligned with the input
+     */
+    public static long[] proportional(long total, long[] weights) {
+        long[] shares = new long[weights.length];
+        long sum = 0L;
+        for (long w : weights) {
+            sum += Math.max(0L, w);
+        }
+        if (total <= 0L || sum <= 0L) {
+            return shares;
+        }
+        total = Math.min(total, sum);
+        long given = 0L;
+        double[] remainders = new double[weights.length];
+        for (int i = 0; i < weights.length; i++) {
+            long w = Math.max(0L, weights[i]);
+            double exact = (double) total * w / sum;
+            shares[i] = Math.min(w, (long) Math.floor(exact));
+            remainders[i] = exact - shares[i];
+            given += shares[i];
+        }
+        while (given < total) {
+            int best = -1;
+            for (int i = 0; i < weights.length; i++) {
+                if (shares[i] < Math.max(0L, weights[i]) && (best < 0 || remainders[i] > remainders[best])) {
+                    best = i;
+                }
+            }
+            shares[best]++;
+            remainders[best] = -1.0;
+            given++;
+        }
+        return shares;
+    }
 }

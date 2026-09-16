@@ -18,9 +18,10 @@ import java.util.Locale;
  *
  * <p>The big pole is dropped. Its supply area is 4x4 -- <em>smaller</em> than the medium pole's --
  * because in Factorio it buys wire reach instead, 30 tiles against 9. The pack has no reach to
- * sell: Power Grid owns transmission with catenary whose span is a property of the wire, not of the
- * pole it hangs on, so a big pole here would be a strictly worse medium pole with no compensating
- * axis. Fidelity to the prototype loses to a tier that would only ever be a trap. See
+ * sell: at the time, Power Grid owned transmission with catenary whose span was a property of the
+ * wire, so a big pole here would be a strictly worse medium pole with no compensating
+ * axis. (ADR-0062 has since given reach a price -- poles link into one network by it -- but the
+ * big pole's 32 buys a span the substation's 18 already covers at rung 0's scale.) Fidelity to the prototype loses to a tier that would only ever be a trap. See
  * {@code data/pack/item-map.json} for the row that records it, and ADR-0036 for the decision.
  *
  * <h2>Even-sided areas on an odd-sized block</h2>
@@ -31,9 +32,9 @@ import java.util.Locale;
  * {@link SupplyArea}.
  */
 public enum PoleTier {
-    SMALL(5),
-    MEDIUM(7),
-    SUBSTATION(18);
+    SMALL(5, 7.5),
+    MEDIUM(7, 9.0),
+    SUBSTATION(18, 18.0);
 
     /**
      * How far up and down a pole supplies, for every tier.
@@ -47,9 +48,20 @@ public enum PoleTier {
     public static final int VERTICAL_RADIUS = 2;
 
     private final int supplySize;
+    private final double wireReach;
 
-    PoleTier(int supplySize) {
+    PoleTier(int supplySize, double wireReach) {
         this.supplySize = supplySize;
+        this.wireReach = wireReach;
+    }
+
+    /**
+     * How far this pole links to another, in blocks, exactly as Factorio's
+     * {@code maximum_wire_distance} states it. Two poles link when they are within the shorter
+     * of their two reaches (ADR-0062).
+     */
+    public double wireReach() {
+        return wireReach;
     }
 
     /** The side of the supply square in blocks, exactly as Factorio states it. */
