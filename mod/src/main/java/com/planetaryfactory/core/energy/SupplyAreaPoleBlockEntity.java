@@ -63,8 +63,7 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
      * What the network did on the last tick, for the Jade line and for nothing else. Not persisted
      * and not synced: Jade asks the server when a player looks.
      */
-    private long lastDeliveredFe;
-    private long lastDemandedFe;
+    private NetworkReading lastReading = NetworkReading.NONE;
 
     public SupplyAreaPoleBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.SUPPLY_AREA_POLE.get(), pos, state);
@@ -108,12 +107,17 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
 
     /** FE the pole's network handed to consumers on the last tick. */
     public long deliveredFePerTick() {
-        return lastDeliveredFe;
+        return lastReading.delivered();
     }
 
     /** FE the pole's network was asked for on the last tick, whether or not it was there. */
     public long demandedFePerTick() {
-        return lastDemandedFe;
+        return lastReading.demanded();
+    }
+
+    /** The pole's network as it stood after the last tick (#285). Jade reads this. */
+    public NetworkReading networkReading() {
+        return lastReading;
     }
 
     List<BlockPos> consumers() {
@@ -128,9 +132,8 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
         return accumulators;
     }
 
-    void recordNetworkTick(long delivered, long demanded) {
-        lastDeliveredFe = delivered;
-        lastDemandedFe = demanded;
+    void recordNetworkTick(NetworkReading reading) {
+        lastReading = reading;
     }
 
     private void scan(Level level) {

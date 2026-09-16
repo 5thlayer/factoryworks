@@ -185,34 +185,52 @@ public final class ElectricNetworks {
         // difference rather than destroying it. A source that gives less than its probe promised
         // cannot cover the tick, and the whole tick is aborted rather than creating energy.
         long delivered = 0L;
+        long produced = 0L;
+        long charged = 0L;
+        long discharged = 0L;
         try (Transaction transaction = Transaction.open(null)) {
             for (int i = 0; i < consumers.size(); i++) {
                 delivered += insert(consumers.get(i), plan.consumerGrants()[i], transaction);
             }
-            long owed = delivered;
             for (int i = 0; i < accumulators.size(); i++) {
-                owed += insert(accumulators.get(i), plan.accumulatorCharges()[i], transaction);
+                charged += insert(accumulators.get(i), plan.accumulatorCharges()[i], transaction);
             }
+            long owed = delivered + charged;
             for (int i = 0; i < creative && owed > 0L; i++) {
-                owed -= Math.min(owed, plan.generatorDraws()[i]);
+                long drawn = Math.min(owed, plan.generatorDraws()[i]);
+                produced += drawn;
+                owed -= drawn;
             }
             for (int i = 0; i < generators.size() && owed > 0L; i++) {
-                owed -= extract(generators.get(i),
+                long drawn = extract(generators.get(i),
                         Math.min(owed, plan.generatorDraws()[creative + i]), transaction);
+                produced += drawn;
+                owed -= drawn;
             }
             for (int i = 0; i < accumulators.size() && owed > 0L; i++) {
-                owed -= extract(accumulators.get(i),
+                long drawn = extract(accumulators.get(i),
                         Math.min(owed, plan.accumulatorDischarges()[i]), transaction);
+                discharged += drawn;
+                owed -= drawn;
             }
             if (owed == 0L) {
                 transaction.commit();
             } else {
-                delivered = 0L;
+                delivered = produced = charged = discharged = 0L;
             }
         }
 
+        // Read after the transaction closes, so an aborted tick reads what is really stored.
+        long stored = 0L;
+        long capacity = 0L;
+        for (EnergyHandler accumulator : accumulators) {
+            stored += accumulator.getAmountAsLong();
+            capacity += accumulator.getCapacityAsLong();
+        }
+        NetworkReading reading = new NetworkReading(produced, delivered, demanded, charged,
+                discharged, stored, capacity, accumulators.size(), network.size());
         for (SupplyAreaPoleBlockEntity pole : network) {
-            pole.recordNetworkTick(delivered, demanded);
+            pole.recordNetworkTick(reading);
         }
     }
 
