@@ -79,10 +79,10 @@ final class AssemblerHud implements GuiLayer {
             String item = entry.hasStep() ? entry.stepItem() : entry.rootItem();
             int count = entry.hasStep() ? entry.stepAmount() : entry.amount();
             graphics.item(PlanItems.stack(item), left, y);
-            graphics.text(font, "x" + count, left + 20, y + 4, 0xFFFFFF, true);
+            graphics.text(font, "x" + count, left + 20, y + 4, 0xFFFFFFFF, true);
             if (entry.steps() > 1) {
                 Component of = Component.literal((entry.step() + 1) + "/" + entry.steps());
-                graphics.text(font, of, left + WIDTH - font.width(of), y + 4, 0x999999, true);
+                graphics.text(font, of, left + WIDTH - font.width(of), y + 4, 0xFF999999, true);
             }
             int filled = (int) (WIDTH * Math.max(0.0f, Math.min(1.0f, entry.progress())));
             boolean pausedHead = index == 0 && AssemblerQueueView.blocked();
@@ -92,7 +92,7 @@ final class AssemblerHud implements GuiLayer {
         if (entries.size() > shown) {
             Component more = Component.translatable(
                     "planetaryfactory_core.assembler.and_more", entries.size() - shown);
-            graphics.text(font, more, left, top - 12, 0x999999, true);
+            graphics.text(font, more, left, top - 12, 0xFF999999, true);
         }
     }
 }
