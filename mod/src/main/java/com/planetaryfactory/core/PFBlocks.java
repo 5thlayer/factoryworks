@@ -8,6 +8,7 @@ import com.planetaryfactory.core.ore.OreBlock;
 import com.planetaryfactory.core.ore.OreResource;
 import com.planetaryfactory.core.smelting.FurnaceBlock;
 import com.planetaryfactory.core.smelting.FurnaceTier;
+import com.planetaryfactory.core.energy.CreativeSupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
 import com.planetaryfactory.core.fluid.BoilerBlock;
 import com.planetaryfactory.core.fluid.OffshorePumpBlock;
@@ -24,13 +25,16 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * The blocks the mod itself registers: the two saplings and the four supply-area poles.
+ * The blocks the mod itself registers: the two saplings, the pole blocks, the furnace and rig
+ * ladders, the Boiler and the pump.
  *
- * <p>The four supply-area poles are here too (ADR-0036). They are mechanism -- a block entity
- * that scans and pushes energy -- so ADR-0015 puts them in the mod rather than in KubeJS, while
- * their models, textures and names stay data in the pack like everything else.
+ * <p>The supply-area poles are here (ADR-0036) -- the three tiers and the creative pole (#272),
+ * which is one block beside the ladder rather than a row in it. They are mechanism -- a block
+ * entity that scans and pushes energy -- so ADR-0015 puts them in the mod rather than in KubeJS,
+ * while their models, textures and names stay data in the pack like everything else.
  *
  * <p>Everything else the trees are made of -- logs, leaves, stems, fruit -- is registered by
  * {@code kubejs/startup_scripts/blocks.js}, into this same namespace. The boundary is ADR-0015;
@@ -100,6 +104,18 @@ public final class PFBlocks {
         }
     }
 
+    /**
+     * The creative pole (#272): a supply-area pole with a ledger that is always full, so an energy
+     * face can be checked by hand without first building a power chain.
+     *
+     * <p>Registered beside the ladder rather than in it. {@link PoleTier} is Factorio's footprint
+     * ladder and three loops walk it; a creative row would reach the item map, the recipe sweep and
+     * the mechanic ledger, none of which have a row to give a dev tool.
+     */
+    public static final DeferredHolder<Block, CreativeSupplyAreaPoleBlock> CREATIVE_POLE =
+            BLOCKS.registerBlock(CreativeSupplyAreaPoleBlock.BLOCK_NAME,
+                    CreativeSupplyAreaPoleBlock::new);
+
     static {
         for (FurnaceTier tier : FurnaceTier.values()) {
             FURNACES.put(tier, BLOCKS.registerBlock(tier.blockName(),
@@ -135,9 +151,14 @@ public final class PFBlocks {
         return POLES.get(tier);
     }
 
-    /** The four pole blocks, for the block entity type that serves all of them. */
+    /**
+     * Every pole block, for the block entity type that serves all of them -- the three tiers and
+     * the creative pole, which is one too and would have no block entity at all if it were left
+     * out of this set.
+     */
     public static Set<Block> poleBlocks() {
-        return POLES.values().stream().map(DeferredHolder::get).collect(Collectors.toUnmodifiableSet());
+        return Stream.concat(POLES.values().stream(), Stream.of(CREATIVE_POLE))
+                .map(DeferredHolder::get).collect(Collectors.toUnmodifiableSet());
     }
 
     public static DeferredHolder<Block, FurnaceBlock> furnace(FurnaceTier tier) {

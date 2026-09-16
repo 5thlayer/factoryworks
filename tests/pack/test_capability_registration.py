@@ -73,6 +73,15 @@ LADDERS = {
     "registerRigCapabilities": "RigTier.values()",
 }
 
+# Blocks that get a face without being a row in any ladder enum. FACES above is keyed by block
+# entity *type*, and a block reusing an existing type needs no row there -- which is exactly how a
+# face can go missing with every check in this repo still green. The creative pole (#272) reuses
+# `supply_area_pole`, so deleting its one `registerBlock` line would leave it inert: it places,
+# ticks, renders, and no pole, pipe or connector ever powers it.
+UNLADDERED_BLOCKS = {
+    "registerPoleCapabilities": ("PFBlocks.CREATIVE_POLE",),
+}
+
 # The Barrel's face is on the item rather than a block, so it is registered in `PFItems` and no
 # block-side assertion sees it. Listed for the same reason FACES is: a second item capability
 # arriving later would otherwise be answered "none".
@@ -175,6 +184,17 @@ class CapabilityRegistration(unittest.TestCase):
                               "this ladder's face has to be registered for every tier -- a loop "
                               "over fewer ships the remaining tiers inert, and nothing else here "
                               "can see it")
+
+    def test_every_unladdered_block_has_its_own_registration(self):
+        for method, blocks in sorted(UNLADDERED_BLOCKS.items()):
+            body = method_body(self.source, method)
+            self.assertIsNotNone(body)
+            for block in blocks:
+                with self.subTest(method=method, block=block):
+                    self.assertIn(block, body,
+                                  "a block outside the ladder loop needs a registration of its "
+                                  "own; without one it is inert, and neither FACES nor LADDERS "
+                                  "above can see that it is missing")
 
     def test_the_pole_answers_on_the_block_rather_than_the_block_entity(self):
         # A pole is a column and a connector may be attached to any segment of it. A caller doing

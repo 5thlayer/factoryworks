@@ -295,3 +295,32 @@ arrive through, so the pole calls `addEnergy` and the question does not arise.
   spent again rather than re-earned — recorded here so the next reader sees the running total.
 - **The block-level cut list is still not decided**, and now applies to a different mod's ~80 blocks.
   ADR-0017's "adopt whole, cut as necessary" holds, and the cutting still waits on hands-on play.
+
+## Amended by #272, on a pole that is not a tier
+
+Three tiers ship, and a fourth pole block does: `creative_electric_pole`, whose ledger is always
+full. It is a dev tool, and it is recorded here because "separate block, not a fourth enum row" is
+a decision with a live alternative rather than an implementation detail.
+
+**The tier ladder stays Factorio's.** `PoleTier` is a footprint ladder taken from the prototypes,
+and three loops walk `PoleTier.values()` — the block registry, the capability registration and the
+item registry. A creative row in it would be a non-Factorio entry in a corpus-derived ladder, and
+it would reach `data/pack/item-map.json`, the stock-recipe sweep and `docs/factorio-mechanics.md`,
+none of which has a row to give a tool that exists to make a capability testable by hand. So the
+creative pole is a subclass of `SupplyAreaPoleBlock` wearing the substation's 18x18, sharing the
+one block entity type, and differing in exactly one thing: which `EnergyLedger` the block entity
+builds, decided from the blockstate rather than from the block, because a chunk load rebuilds a
+block entity from the registered type and never asks the block again.
+
+**What it exists for.** The shipped pole is insert-only and its buffer is one tick of ADR-0060's
+transmission rate, so checking an energy face by hand — does the Electric Furnace actually draw its
+90 FE/t — meant first building a working power chain, which made a two-block test depend on most of
+the port. #271's GameTests now cover the Electric Furnace's half of that headlessly; the creative
+pole is what makes every *other* FE face checkable the moment it lands, before it has a GameTest.
+
+**It ships, uncraftable.** Creative tab and `/give`, no recipe emitted and none admitted by the
+sweep — the arrangement vanilla's creative-only blocks have, and cheaper than a debug gate whose
+only subject is a player who has already opened the creative menu. Its sprite is the substation's,
+recoloured pink by `scripts/build-creative-pole-texture.py`, and its tooltip says the buffer never
+empties: a dev tool indistinguishable from a shipped block is one that gets left in a world, where
+it powers a factory that then reads as self-sufficient.

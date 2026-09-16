@@ -18,6 +18,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.IBlockCapabilityProvider;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -158,19 +161,26 @@ public final class PFBlockEntities {
      * no storage to name, so it answers null and the connector treats it as not connected.
      */
     private static void registerPoleCapabilities(RegisterCapabilitiesEvent event) {
+        // Spelled once and handed to both registrations below. Resolving a segment to its base is
+        // the rule the whole column arrangement rests on, and a second copy of it is a second
+        // place to fix when it changes, with nothing checking the two still agree.
+        IBlockCapabilityProvider<EnergyHandler, Direction> baseStorage =
+                (level, pos, state, blockEntity, side) -> {
+                    BlockPos base = PoleColumn.baseOf(level, pos);
+                    if (base == null) {
+                        return null;
+                    }
+                    return level.getBlockEntity(base)
+                            instanceof SupplyAreaPoleBlockEntity pole ? pole.feSide() : null;
+                };
         for (PoleTier tier : PoleTier.values()) {
-            event.registerBlock(
-                    Capabilities.Energy.BLOCK,
-                    (level, pos, state, blockEntity, side) -> {
-                        BlockPos base = PoleColumn.baseOf(level, pos);
-                        if (base == null) {
-                            return null;
-                        }
-                        return level.getBlockEntity(base)
-                                instanceof SupplyAreaPoleBlockEntity pole ? pole.feSide() : null;
-                    },
-                    PFBlocks.pole(tier).get());
+            event.registerBlock(Capabilities.Energy.BLOCK, baseStorage, PFBlocks.pole(tier).get());
         }
+        // And the creative pole (#272), which is not on the ladder the loop walks. Its face is the
+        // shipped one -- it is the ledger behind the face that differs -- and without this line the
+        // dev tool built to make an energy face testable would have no energy face, which is the
+        // inert-machine failure this whole method exists to avoid.
+        event.registerBlock(Capabilities.Energy.BLOCK, baseStorage, PFBlocks.CREATIVE_POLE.get());
     }
 
     /**

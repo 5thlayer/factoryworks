@@ -16,9 +16,13 @@ package com.planetaryfactory.core.energy;
  * <p>How big the books are allowed to get is not this class's business -- it takes a capacity and
  * respects it. {@code SupplyAreaPoleBlockEntity.BUFFER_FE} owns that number and the argument for it.
  *
+ * <p>Not final, for one subclass: {@link InfiniteEnergyLedger}, the creative pole's books (#272).
+ * Every method it overrides is one whose answer a full-forever buffer changes, and nothing here
+ * branches on which of the two it is.
+ *
  * <p>Pure: no Minecraft types, so the mod's Minecraft-free test source set can hold it to account.
  */
-public final class EnergyLedger {
+public class EnergyLedger {
 
     private final long capacityFe;
     private long storedFe;

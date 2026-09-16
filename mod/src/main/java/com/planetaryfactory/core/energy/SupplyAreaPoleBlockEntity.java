@@ -62,8 +62,10 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
      */
     private static final long BUFFER_FE = 18_000L;
 
-    private final EnergyLedger ledger = new EnergyLedger(BUFFER_FE);
-    private final PoleEnergyStorage feSide = new PoleEnergyStorage(this);
+    private final EnergyLedger ledger;
+    // Built in the constructor, after the ledger: a field initialiser runs before the constructor
+    // body, and the storage reads the ledger on the way in.
+    private final PoleEnergyStorage feSide;
 
     private List<BlockPos> receivers = List.of();
     private int sinceRescan = RESCAN_INTERVAL;
@@ -83,6 +85,13 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
 
     public SupplyAreaPoleBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.SUPPLY_AREA_POLE.get(), pos, state);
+        // Read off the blockstate rather than handed in by the block. The block's
+        // `newBlockEntity` is only one of the two routes here -- a chunk load rebuilds a block
+        // entity from the registered type, which knows nothing about which of the four pole blocks
+        // it is standing on -- so a creative pole built any other way would come back ordinary.
+        this.ledger = state.getBlock() instanceof CreativeSupplyAreaPoleBlock
+                ? new InfiniteEnergyLedger() : new EnergyLedger(BUFFER_FE);
+        this.feSide = new PoleEnergyStorage(this);
     }
 
     public EnergyLedger ledger() {
