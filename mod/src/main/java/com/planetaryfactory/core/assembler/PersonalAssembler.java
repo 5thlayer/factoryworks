@@ -36,10 +36,11 @@ public final class PersonalAssembler {
     }
 
     /**
-     * EMI's {@code + Fill Recipe}: the Crafting Plan for one craft, and the ceiling beside it (#287).
+     * The Crafting Plan for one craft, and the ceiling beside it: what a middle-click on EMI's
+     * {@code + Fill Recipe} asks for, and what a request the inventory does not cover gets (ADR-0065).
      *
-     * <p>Opening queues nothing. The plan shown is the price of the next {@code +1}, so a stray click
-     * on EMI's button spends nothing, and the plan is still never empty on arrival.
+     * <p>Opening queues nothing. The plan shown is the price of the next {@code +1}, so it is never
+     * empty on arrival.
      */
     public static void openPlan(ServerPlayer player, Identifier recipe) {
         PlanView view = planView(player, recipe);
@@ -52,6 +53,20 @@ public final class PersonalAssembler {
                     buffer.writeVarInt(view.all());
                 });
         sync(player);
+    }
+
+    /**
+     * EMI's {@code + Fill Recipe} on the Assembler's screen: queue what was asked, or show why not
+     * (#288, ADR-0065).
+     *
+     * <p>The count is decided here from the resolver's ceiling, never taken from the client. A request
+     * the inventory does not cover -- including a Missing leaf or a Locked recipe, which afford
+     * nothing -- opens the Crafting Plan, and so does a queue that loses a race with the inventory.
+     */
+    public static void fill(ServerPlayer player, Identifier recipe, FillRequest request) {
+        int count = request.queueCount(PlanSource.ACTIVE.largestAffordable(player, recipe));
+        if (count > 0 && craft(player, recipe, count)) return;
+        openPlan(player, recipe);
     }
 
     /**

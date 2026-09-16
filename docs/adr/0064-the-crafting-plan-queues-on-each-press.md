@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: accepted, in part superseded by ADR-0065
 ---
 
 # The Crafting Plan queues on each press, with no Select Amount and no Start

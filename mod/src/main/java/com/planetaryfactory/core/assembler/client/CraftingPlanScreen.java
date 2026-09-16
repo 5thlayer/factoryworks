@@ -1,6 +1,5 @@
 package com.planetaryfactory.core.assembler.client;
 
-import com.mojang.blaze3d.platform.Window;
 import com.planetaryfactory.core.assembler.AssemblerQueueView;
 import com.planetaryfactory.core.assembler.CraftButtons;
 import com.planetaryfactory.core.assembler.CraftingPlanMenu;
@@ -10,14 +9,12 @@ import com.planetaryfactory.core.network.PlanCraftPacket;
 import com.planetaryfactory.core.network.QueueSyncPacket;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * The Crafting Plan: what one craft spends, makes and cannot get, three buttons that queue, and the
@@ -71,14 +68,6 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
     private Button five;
     private Button all;
 
-    /**
-     * Whether the cursor has been put on {@code +1} yet.
-     *
-     * <p>{@code init} runs again on every resize, and a cursor that jumped back each time the window
-     * changed size would be taken from the player rather than handed to them.
-     */
-    private boolean warped;
-
     public CraftingPlanScreen(CraftingPlanMenu menu, Inventory inventory, Component title) {
         // Wider than the panel: four columns of item names at 3-space-per-character do not fit in its
         // width, and a name that elides is a name the player cannot shop for.
@@ -100,10 +89,6 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
                         b -> onClose())
                 .bounds(leftPos + imageWidth - 76, y, 70, 20).build());
         refreshButtons();
-        if (!warped) {
-            warped = true;
-            warpCursorTo(one.getX() + one.getWidth() / 2, one.getY() + one.getHeight() / 2);
-        }
     }
 
     private void craft(int amount) {
@@ -116,24 +101,6 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
         one.active = buttons.one();
         five.active = buttons.five();
         all.active = buttons.all();
-    }
-
-    /**
-     * Puts the pointer on a GUI-space point, so one click queues the first craft (#287).
-     *
-     * <p>GLFW takes window coordinates, which the GUI scale divides. Moving the OS cursor is not
-     * enough on its own: GLFW reports no motion for a warp, so {@code MouseHandler} would keep the
-     * old position until the mouse moved, and a click without moving would land where the cursor
-     * used to be. The two fields are opened by {@code META-INF/accesstransformer.cfg} for this.
-     */
-    private static void warpCursorTo(int guiX, int guiY) {
-        Minecraft minecraft = Minecraft.getInstance();
-        Window window = minecraft.getWindow();
-        double x = guiX * (double) window.getScreenWidth() / window.getGuiScaledWidth();
-        double y = guiY * (double) window.getScreenHeight() / window.getGuiScaledHeight();
-        GLFW.glfwSetCursorPos(window.handle(), x, y);
-        minecraft.mouseHandler.xpos = x;
-        minecraft.mouseHandler.ypos = y;
     }
 
     @Override

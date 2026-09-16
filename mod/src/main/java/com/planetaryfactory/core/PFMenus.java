@@ -13,7 +13,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 /**
- * The Personal Assembler's two menus (ADR-0038, ADR-0064).
+ * The Personal Assembler's two menus (ADR-0038, ADR-0064, ADR-0065).
  *
  * <p>Two and not one. The panel is the surface EMI's Fill Recipe keys on; the Crafting Plan is a
  * dialog the <em>server</em> opens, because a plan is server truth -- it reads the inventory and the
