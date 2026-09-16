@@ -97,7 +97,7 @@ tasks.named('test', Test).configure {
 //
 // The live subtrees only. `gtceu/`, `gt_materials/`, `gcyr/` and the three GregTech recipe
 // subtrees name registries and recipe types that left with ADR-0060: they would fail here for a
-// reason #273 has already deferred to the chassis ADR-0060 names (#258, #87), a permanently red
+// reason #273 has already deferred to the chassis and the item alphabet (#258, #275), a permanently red
 // check rather than a signal.
 
 tasks.register('gameTestPack', Sync) {

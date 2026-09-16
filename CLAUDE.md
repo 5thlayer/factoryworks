@@ -102,8 +102,8 @@ biomes are generated files a KubeJS that is not installed here would read. That 
 smelt be asserted against the recipe the pack ships rather than against a fixture written to pass,
 and it is what `scripts/check-datapack-load.py` watches the game read. The dead subtrees are
 excluded by name — `gtceu/`, `gt_materials/`, `gcyr/` and the three GregTech recipe subtrees name
-registries that left with ADR-0060, and are re-derived against Oritech (#258) by the converter
-(#87). Three of the four smelts still name `gtceu:` results and
+registries that left with ADR-0060, and are re-derived against the chassis (#258) and the item
+alphabet Oritech and Railcraft split between them (#275), by the converter (#87). Three of the four smelts still name `gtceu:` results and
 do not load, which is why stone brick is the only smelt under test.
 
 What is there is `EnergyFaceTests` (#271), and only what a JVM test cannot reach: that a pole's
@@ -396,7 +396,7 @@ definition is an orphan, that every ingredient in every live recipe is a string 
 object, and that no namespace holds a pre-1.21.2 plural directory (`loot_tables/`, `tags/items/`),
 which the game does not walk at all. The `gtceu:` recipe subtrees and `kubejs:oil_refinery` are
 recorded deferrals, not silent skips: they are dead with ADR-0060 and re-derived against the chassis #258
-names, by the converter and item map #87 owns.
+names and the item alphabet #275 decides, by the converter #87 owns.
 
 `scripts/build-item-definitions.py` is the definitions' single owner — one generator rather than a
 line in each asset generator, because a definition is not a decision about the Boiler or the rig but
