@@ -216,7 +216,7 @@ Terra's rung 0 pack-authored machine that burns solid fuel to turn water into **
 _Avoid_: LP Solid Boiler, heater, steam generator
 
 **Steam Engine**:
-The pack's rung 0 generator: it burns **Steam** into its own charge, faster the fuller its steam tank, stops when that charge is full, and gives most of the steam back as water. Engines placed in a row chain behind one **Master Engine**. It has no wire; it joins an **Electric Network** by standing inside a **Supply Area Pole**'s area.
+The pack's rung 0 generator: it burns **Steam** into its own charge, faster the fuller its steam tank, and stops when that charge is full; the steam is spent, not returned as water. Engines placed in a row chain behind one **Master Engine**. It has no wire; it joins an **Electric Network** by standing inside a **Supply Area Pole**'s area.
 _Avoid_: Create's Steam Engine, Oritech's steam engine, alternator, turbine
 
 
