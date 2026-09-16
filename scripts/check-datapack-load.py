@@ -44,11 +44,11 @@ GRADLE = ["./gradlew", ":planetaryfactory_core:runGameTestServer", "--rerun-task
 EXPECTED = {
     "planetaryfactory:copper_plate":
         "names `gtceu:copper_plate`. The item map still targets GregTech, which left with "
-        "ADR-0060; it is rewritten with the machine chassis (#262)",
+        "ADR-0060. The map and the converter that reads it are #87's, against the chassis #258 names",
     "planetaryfactory:iron_plate":
-        "names `gtceu:iron_plate` -- the item map's rewrite (#262)",
+        "names `gtceu:iron_plate` -- the item map's rewrite (#87)",
     "planetaryfactory:steel_plate":
-        "names `gtceu:steel_plate` and `gtceu:iron_plate` -- the item map's rewrite (#262)",
+        "names `gtceu:steel_plate` and `gtceu:iron_plate` -- the item map's rewrite (#87)",
     "planetaryfactory:blocks/yumako_log":
         "drops `planetaryfactory:yumako_log`, registered by KubeJS, which a GameTest server does "
         "not load. Harness, not pack",
@@ -58,10 +58,11 @@ EXPECTED = {
         "drops `planetaryfactory:jellynut_fresh`, a KubeJS-registered item. Harness, not pack",
     "planetaryfactory:blocks/iron_stromatolite":
         "drops `planetaryfactory:iron_bacteria_fresh` (KubeJS, harness) AND `gcyr:mercury_rock`, "
-        "whose mod left with ADR-0060 -- a real dangling drop, found by this check, owned by #262",
+        "whose mod left with ADR-0060 -- a real dangling drop, found by this check. The palette "
+        "is #258's; what a stromatolite drops instead is Sapros content (#23)",
     "planetaryfactory:blocks/copper_stromatolite":
         "drops `planetaryfactory:copper_bacteria_fresh` (KubeJS, harness) AND `gcyr:mercury_rock` "
-        "-- the same dangling drop (#262)",
+        "-- the same dangling drop (#258, #23)",
 }
 
 # The line the game prints per rejected file, and the two ways a whole registry can fail to load
