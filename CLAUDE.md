@@ -96,11 +96,14 @@ before any mod is loaded.
 Two seams are the harness's own rather than generic plumbing. The tests stand on a **generated**
 stone platform (`scripts/build-gametest-structures.py`), for the reason `build-terra-start.py`
 exists: a committed `.nbt` nobody can regenerate is a binary with no source. And the run is handed
-the pack's four emitted smelts **as a datapack** — the `gameTestPack` Gradle task — because a
-GameTest server loads vanilla plus the mod jar, and the pack's recipes are generated files a
-KubeJS that is not installed here would read. That is what lets a smelt be asserted against the
-recipe the pack ships rather than against a fixture written to pass. Three of the four still name
-`gtceu:` results and do not load (#273), which is why stone brick is the only smelt under test.
+the pack's live data tree **as a datapack** — the `gameTestPack` Gradle task — because a
+GameTest server loads vanilla plus the mod jar, and the pack's recipes, loot tables, tags and
+biomes are generated files a KubeJS that is not installed here would read. That is what lets a
+smelt be asserted against the recipe the pack ships rather than against a fixture written to pass,
+and it is what `scripts/check-datapack-load.py` watches the game read. The dead subtrees are
+excluded by name — `gtceu/`, `gt_materials/`, `gcyr/` and the three GregTech recipe subtrees name
+registries that left with ADR-0060 (#262). Three of the four smelts still name `gtceu:` results and
+do not load, which is why stone brick is the only smelt under test.
 
 What is there is `EnergyFaceTests` (#271), and only what a JVM test cannot reach: that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
@@ -402,6 +405,19 @@ condition stops being this script's and becomes its subject generator's. Run its
 does) after adding any item model. Whether the emitted files actually load is a datapack-load run
 with zero `Couldn't parse data file` lines; nothing reads the log today, and that is the rest of
 #273.
+
+`scripts/check-datapack-load.py` is that in-world half, and the only check here that reads a log.
+It runs the GameTest server — which `gameTestPack` now hands the pack's whole live data tree, not
+just the four smelts — and asserts the game did not reject any of it. A rejected file is one ERROR
+line at load and then an entry absent from its manager, which is the exact shape of #266's evening.
+It is also the only check that can see whether the **ids inside** a file name anything: it found
+`gcyr:mercury_rock`, a perfectly shaped stromatolite drop, naming an item whose mod left with
+ADR-0060 and passing every static check in the repo. Every rejection the log may hold is in
+`EXPECTED` with the ticket that owns it, and an entry that stops appearing fails too — a stale one
+is a guard nobody re-armed. `--rerun-tasks` is not optional: Gradle would otherwise call the run up
+to date, print no log, and the check would pass having loaded nothing. Like the GameTest run it is
+in no batch; run it after a converter change, after editing `gameTestPack`, or after any edit to
+`kubejs/data/`.
 
 ### Emitted smelt shape check
 
