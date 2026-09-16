@@ -56,6 +56,15 @@ public class SupplyAreaPoleItem extends BlockItem {
         tooltip.accept(Component.translatable("tooltip.planetaryfactory.pole.wireless")
                 .withStyle(ChatFormatting.GRAY));
 
+        // And, for the creative pole, the one thing that makes it not the substation it is wearing
+        // the footprint of. A dev tool that looks like a shipped block is one a player can leave in
+        // a world and then read a self-sufficient factory off; the pink sprite says it at a
+        // distance and this says it in the hand.
+        if (getBlock() instanceof CreativeSupplyAreaPoleBlock) {
+            tooltip.accept(Component.translatable("tooltip.planetaryfactory.pole.creative")
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+
         // That height does not move the area, and how to add height. One line for both, because
         // they are the same fact from two sides: the column exists so the wire can go up, and the
         // footprint stays on the ground while it does. Saying only the first would replace an

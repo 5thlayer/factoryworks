@@ -25,10 +25,13 @@ have to be asserted absent by name.
 import json
 import pathlib
 import re
+import sys
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 POLE_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/PoleTier.java"
+CREATIVE_POLE = ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/CreativeSupplyAreaPoleBlock.java"
+TEXTURE_SCRIPT = ROOT / "scripts/build-creative-pole-texture.py"
 TRANSLATING_SOURCES = (
     ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/SupplyAreaPoleItem.java",
     ROOT / "mod/src/main/java/com/planetaryfactory/core/compat/PoleJadePlugin.java",
@@ -46,6 +49,21 @@ def registered_tiers():
     if not tiers:
         raise AssertionError(f"no pole tiers parsed out of {POLE_TIER} -- has the enum moved?")
     return {name.lower() + "_electric_pole": int(size) for name, size in tiers}
+
+
+def creative_pole_name():
+    """The creative pole's registry path, read out of the block rather than typed here.
+
+    It is a pole -- one block, one block entity type, the same five files -- but deliberately not a
+    `PoleTier`, since the tier ladder is Factorio's own footprints (ADR-0036) and a dev tool has no
+    row in it (#272). So it is read from its own source and folded into the same hops below: left
+    out, its blockstate, models, lang key and loot table would be asserted by nothing at all.
+    """
+    source = CREATIVE_POLE.read_text(encoding="utf-8")
+    found = re.search(r'BLOCK_NAME\s*=\s*"([a-z_]+)"', source)
+    if not found:
+        raise AssertionError(f"no BLOCK_NAME parsed out of {CREATIVE_POLE} -- has it moved?")
+    return found.group(1)
 
 
 def translatable_calls(source):
@@ -86,6 +104,9 @@ def translatable_calls(source):
 class PoleAssets(unittest.TestCase):
     def setUp(self):
         self.tiers = registered_tiers()
+        # Every block that ships a pole's file set: the tiers, plus the creative pole, which has no
+        # supply size of its own to assert because it wears the substation's.
+        self.poles = sorted(set(self.tiers) | {creative_pole_name()})
 
     def test_the_three_shipped_tiers_are_registered(self):
         self.assertEqual(
@@ -117,7 +138,7 @@ class PoleAssets(unittest.TestCase):
         self.assertNotIn("block.planetaryfactory.big_electric_pole", lang)
 
     def test_every_pole_has_a_blockstate_naming_a_model_that_exists(self):
-        for name in self.tiers:
+        for name in self.poles:
             with self.subTest(pole=name):
                 blockstate = ASSETS / "blockstates" / f"{name}.json"
                 self.assertTrue(blockstate.is_file(), f"{blockstate} is missing")
@@ -129,7 +150,7 @@ class PoleAssets(unittest.TestCase):
                     self.assertTrue(path.is_file(), f"{blockstate} names {model}, which is missing")
 
     def test_every_model_names_textures_that_exist(self):
-        for name in self.tiers:
+        for name in self.poles:
             for kind in ("block", "item"):
                 with self.subTest(pole=name, model=kind):
                     path = ASSETS / "models" / kind / f"{name}.json"
@@ -141,7 +162,7 @@ class PoleAssets(unittest.TestCase):
                         self.assertTrue(png.is_file(), f"{path} names {texture}, which is missing")
 
     def test_the_item_model_resolves_to_a_model_that_exists(self):
-        for name in self.tiers:
+        for name in self.poles:
             with self.subTest(pole=name):
                 model = json.loads(
                     (ASSETS / "models" / "item" / f"{name}.json").read_text(encoding="utf-8"))
@@ -152,14 +173,14 @@ class PoleAssets(unittest.TestCase):
 
     def test_every_pole_is_named(self):
         lang = json.loads((ASSETS / "lang" / "en_us.json").read_text(encoding="utf-8"))
-        for name in self.tiers:
+        for name in self.poles:
             with self.subTest(pole=name):
                 key = f"block.planetaryfactory.{name}"
                 self.assertIn(key, lang, f"{key} has no translation, so the block shows its key")
                 self.assertTrue(lang[key].strip(), f"{key} is blank")
 
     def test_every_pole_drops_itself(self):
-        for name in self.tiers:
+        for name in self.poles:
             with self.subTest(pole=name):
                 path = DATA / "loot_table" / "blocks" / f"{name}.json"
                 self.assertTrue(path.is_file(), f"{path} is missing, so the pole breaks into nothing")
@@ -200,6 +221,41 @@ class PoleAssets(unittest.TestCase):
                         f"{key} takes {lang[key].count('%s')} arguments, "
                         f"{source.name} passes {count}",
                     )
+
+    def test_the_creative_poles_sprite_is_the_derived_one_and_is_current(self):
+        """The pink sprite is generated from the substation's, so it can go stale (#272).
+
+        It is the only thing that tells the two blocks apart in a world, and the substation's art
+        is the input: redraw that and this file is silently the old pole, in the old colour, at the
+        old pixel count. Running the generator's own `--check` is how every other derived asset
+        here is held.
+        """
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, str(TEXTURE_SCRIPT), "--check"],
+            capture_output=True, text=True)
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+
+    def test_the_creative_pole_is_not_a_tier(self):
+        # The ladder is Factorio's footprints and three loops walk it; a creative row would reach
+        # the item map, the recipe sweep and docs/factorio-mechanics.md, none of which have a row
+        # to give a dev tool. Asserted rather than assumed, because "add it to the enum" is the
+        # obvious next edit and it is the wrong one.
+        self.assertNotIn(creative_pole_name(), self.tiers)
+        self.assertIn("extends SupplyAreaPoleBlock",
+                      CREATIVE_POLE.read_text(encoding="utf-8"),
+                      "the creative pole has to be the shipped pole with a different ledger, or "
+                      "what it is used to test is not what ships")
+
+    def test_the_creative_pole_is_craftable_nowhere(self):
+        # It ships (a creative building tool, like vanilla's creative-only blocks), so the only
+        # thing keeping it out of survival is the absence of a recipe. A converter run that learned
+        # to emit one would be silent.
+        recipes = sorted(
+            path.relative_to(ROOT).as_posix()
+            for path in (DATA / "recipe").rglob("*.json")
+            if creative_pole_name() in path.read_text(encoding="utf-8"))
+        self.assertEqual([], recipes, "the creative pole must have no recipe anywhere")
 
 
 if __name__ == "__main__":

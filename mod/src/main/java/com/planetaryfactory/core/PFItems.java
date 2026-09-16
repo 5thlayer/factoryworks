@@ -1,5 +1,6 @@
 package com.planetaryfactory.core;
 
+import com.planetaryfactory.core.energy.CreativeSupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.smelting.FurnaceTier;
 import com.planetaryfactory.core.energy.SupplyAreaPoleItem;
@@ -93,6 +94,11 @@ public final class PFItems {
             FUNCTIONAL.add(ITEMS.registerItem(PFBlocks.pole(tier).getId().getPath(),
                     props -> new SupplyAreaPoleItem(PFBlocks.pole(tier).get(), props)));
         }
+        // The creative pole (#272), in the tab beside the poles it imitates and craftable nowhere:
+        // no recipe is emitted for it and the sweep admits none, which is what keeps a dev tool out
+        // of survival.
+        FUNCTIONAL.add(ITEMS.registerItem(CreativeSupplyAreaPoleBlock.BLOCK_NAME,
+                props -> new SupplyAreaPoleItem(PFBlocks.CREATIVE_POLE.get(), props)));
         for (FurnaceTier tier : FurnaceTier.values()) {
             FUNCTIONAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.furnace(tier)));
         }
