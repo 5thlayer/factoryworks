@@ -50,8 +50,8 @@ The wreck is `#100` and `#134`: indestructible, habitable, one cargo hold, and y
 
 | # | Beat | Surface |
 | --- | --- | --- |
-| 1 | Wake up inside the wreck. The book is in your inventory; its tooltip points at the panel. | — |
-| 2 | Open the panel. The Personal Assembler is already there. Craft one thing, badly, slowly. | Personal Assembler |
+| 1 | Wake up inside the wreck. The book is in your inventory; its tooltip points at the inventory. | — |
+| 2 | Open the inventory. The Personal Assembler is already there. Craft one thing, badly, slowly. | Personal Assembler |
 | 3 | Leave. Three ore fields are visible from the door. | — |
 | 4 | Place the Stone Furnace and the Burner Mining Drill from your pocket, the drill facing the furnace. First plates. | hand |
 | 5 | Chart the outfield with the prospector; read the map. | prospector |
@@ -81,7 +81,7 @@ it is not a dead save. There is no axe, no shovel and no shears; there is no sec
 Nothing in the hold is otherwise unobtainable. It removes the pre-tool grind; it does not seed a
 tier. The moment the hold contains a green circuit, rung 0 stops being taught.
 
-**Beat 2 is the one to playtest first.** The entire pack rests on a player finding a panel that
+**Beat 2 is the one to playtest first.** The entire pack rests on a player finding a crafting surface that
 nobody handed them. `#95` chose that deliberately — there is nothing to grant and nothing to lose —
 but the cost is that discovery is the opening's only job.
 

@@ -5,8 +5,6 @@
   "planetaryfactory_core.recipe_viewer.locked_by": "Complete: %s",
   "planetaryfactory_core.recipe_viewer.locked_by_unknown": "The research that unlocks it is unknown",
   "planetaryfactory_core.assembler.panel": "Personal Assembler",
-  "planetaryfactory_core.assembler.tab": "Assembler",
-  "planetaryfactory_core.assembler.tab.tooltip": "Your crafting queue. Open it, then pick a recipe in EMI.",
   "planetaryfactory_core.assembler.queue_empty": "Nothing queued",
   "planetaryfactory_core.assembler.paused": "Paused: no room for the finished craft",
   "planetaryfactory_core.assembler.all": "all",
@@ -22,7 +20,9 @@
   "planetaryfactory_core.assembler.incomplete": "Not enough to craft one",
   "planetaryfactory_core.assembler.close": "Close",
   "planetaryfactory_core.assembler.locked_plan": "Research is needed before this can be crafted",
+  "planetaryfactory_core.assembler.cancel.left": "Left-click: cancel 1",
+  "planetaryfactory_core.assembler.cancel.right": "Right-click: cancel 5",
+  "planetaryfactory_core.assembler.cancel.shift": "Shift + click: cancel all",
   "planetaryfactory_core.assembler.and_more": "... and %s more",
-  "planetaryfactory_core.assembler.unplannable": "The Assembler cannot plan this recipe",
-  "key.planetaryfactory_core.assembler": "Open Personal Assembler"
+  "planetaryfactory_core.assembler.unplannable": "The Assembler cannot plan this recipe"
 }

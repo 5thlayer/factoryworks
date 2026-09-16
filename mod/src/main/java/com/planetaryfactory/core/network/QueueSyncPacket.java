@@ -18,7 +18,7 @@ import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
- * The queue as the panel draws it: enough to show what is being made and how far along, and nothing
+ * The queue as the inventory screen draws it: enough to show what is being made and how far along, and nothing
  * else.
  *
  * <p>Not the plans themselves. The steps, the reservation and the buffer are all server truth, and a
@@ -27,7 +27,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public record QueueSyncPacket(List<Entry> entries, boolean blocked) implements CustomPacketPayload {
 
     /**
-     * One plan, as a row on the panel.
+     * One plan, as a row of the queue.
      *
      * <p>{@code amount} and {@code stepAmount} are what is still to be made, so a row reads x12, x11,
      * x10 as crafts finish rather than holding its starting count until the end.

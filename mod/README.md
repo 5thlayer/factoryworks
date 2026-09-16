@@ -27,10 +27,9 @@ API in this pack exposes:
   research (issue #79). The answer is derived from the machine's current contents at the moment of
   asking and never stored; ADR-0027 is why the refusal cannot speak for itself, and #76 is what the
   stored alternative costs.
-- **The Personal Assembler** — the panel, its two server-opened dialogs, the packets between them
-  and the serial queue behind all three (ADR-0038, #160). The panel carries the player's own
-  inventory, so it stands in for the inventory screen while it is open, a key opens it straight from the world and
-  the inventory key leaves it for the inventory rather than for the world, and a read-only GUI layer
+- **The Personal Assembler** — the inventory screen (ADR-0066): the queue drawn in the removed grid's
+  area with click-to-cancel, the server-opened Crafting Plan, the packets and the serial queue behind
+  them (ADR-0038, #160, #290), and a read-only GUI layer
   repeats the queue beside the hotbar — the queue runs with every screen shut, so needing to stop
   playing to see it was the opposite of what a background queue is for. It is here for the bluntest reason in
   ADR-0015's table: KubeJS cannot register a `MenuType` or a `Screen` on 1.21.1 at all (#96). The
@@ -45,7 +44,7 @@ API in this pack exposes:
   its own (#161). A recipe's input is an `Ingredient` — a count of any one of several items — and
   not a single id, because the pack emits tag ingredients and AlmostUnified rewrites plain item
   ingredients into unified tags at load; a resolver reading only the first match refuses plans the
-  crafting grid accepts. EMI's fill button reaches the panel from `compat/emi`, implementing `EmiRecipeHandler`
+  crafting grid accepts. EMI's fill button reaches the inventory screen from `compat/emi`, implementing `EmiRecipeHandler`
   directly rather than `StandardRecipeHandler`, whose default `canCraft` would grey the button out
   precisely when the plan has something to say. Which recipes get a button is the other question:
   the hand set's ids are synced to the client on datapack sync, so a furnace recipe never offers a

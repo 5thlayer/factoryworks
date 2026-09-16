@@ -51,7 +51,7 @@ public final class RuntimePlanSource implements PlanSource {
     }
 
     /**
-     * What the plan is for, named for the panel's queue row.
+     * What the plan is for, named for the queue's row.
      *
      * <p>Read back off the graph rather than carried through the resolver: the resolver plans by
      * recipe and a recipe knows its own first output, so passing the item alongside would be two

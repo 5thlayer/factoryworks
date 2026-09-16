@@ -11,6 +11,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -21,8 +22,8 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
  * queue running underneath (#287).
  *
  * <p>There is no Start and no Cancel. {@code +1}, {@code +5} and {@code all} each queue at once, the
- * plan re-resolves in place as the inventory is spent, and cancelling stays on the panel, which
- * already lists the queue. Close leaves the queue running.
+ * plan re-resolves in place as the inventory is spent, and cancelling stays on the inventory
+ * screen, which already lists the queue. Close leaves the queue running.
  *
  * <p>{@code Locked} is its own column beside {@code Missing} because the two ask different things of
  * the player: research one, mine the other.
@@ -57,7 +58,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
      */
     private ItemStack hovered = ItemStack.EMPTY;
 
-    /** Queue rows drawn under the plan; the panel shows the rest. */
+    /** Queue rows drawn under the plan; the inventory screen shows the rest. */
     private static final int QUEUE_ROWS = 3;
 
     private static final int QUEUE_TOP = 156;
@@ -69,7 +70,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
     private Button all;
 
     public CraftingPlanScreen(CraftingPlanMenu menu, Inventory inventory, Component title) {
-        // Wider than the panel: four columns of item names at 3-space-per-character do not fit in its
+        // Wide: four columns of item names at 3-space-per-character do not fit in an inventory's
         // width, and a name that elides is a name the player cannot shop for.
         super(menu, inventory, title, 340, 270);
     }
@@ -89,6 +90,15 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
                         b -> onClose())
                 .bounds(leftPos + imageWidth - 76, y, 70, 20).build());
         refreshButtons();
+    }
+
+    /** Back to the inventory screen, where the queue and Fill Recipe are (#290), not to the world. */
+    @Override
+    public void onClose() {
+        super.onClose();
+        if (minecraft != null && minecraft.player != null) {
+            minecraft.setScreen(new InventoryScreen(minecraft.player));
+        }
     }
 
     private void craft(int amount) {
@@ -149,7 +159,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
     /**
      * The first few queued plans, so a press can be watched running without leaving the dialog.
      *
-     * <p>No cancel here: the panel owns that, and a cancel beside three buttons that queue would be
+     * <p>No cancel here: the inventory screen owns that, and a cancel beside three buttons that queue would be
      * one misclick from refunding what was just paid for.
      */
     private void renderQueue(GuiGraphicsExtractor graphics) {

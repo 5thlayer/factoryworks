@@ -26,4 +26,9 @@ public record CraftingPlan(UUID id, String rootItem, int amount, List<ItemAmount
         rawCost = List.copyOf(rawCost);
         steps = List.copyOf(steps);
     }
+
+    /** The same plan under another id: a row re-resolved by a partial cancel keeps its own (#290). */
+    public CraftingPlan withId(UUID newId) {
+        return new CraftingPlan(newId, rootItem, amount, rawCost, steps);
+    }
 }

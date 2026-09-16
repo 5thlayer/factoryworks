@@ -7,6 +7,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.network.chat.Component;
 
@@ -16,13 +17,13 @@ import net.minecraft.network.chat.Component;
  *
  * <p>The queue keeps going with every screen shut -- that is the point of a queue rather than a
  * crafting grid (ADR-0038) -- and until this existed the only way to see it was to stop playing and
- * open the panel, which is the opposite of what a background queue is for.
+ * open a screen, which is the opposite of what a background queue is for.
  *
  * <p>Read-only, and not because interaction was hard: the cursor is held by the camera while the
- * HUD is up, so a button here would be a button nothing can press. Cancelling stays on the panel,
- * where the pointer is.
+ * HUD is up, so a button here would be a button nothing can press. Cancelling is on the inventory
+ * screen, where the pointer is, and this hides while that screen is open.
  *
- * <p>It draws {@link AssemblerQueueView}, the same client copy the panel draws, which the server
+ * <p>It draws {@link AssemblerQueueView}, the same client copy the inventory screen draws, which the server
  * re-syncs four times a second whether or not a screen is open.
  */
 final class AssemblerHud implements GuiLayer {
@@ -57,6 +58,8 @@ final class AssemblerHud implements GuiLayer {
     public void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
         Minecraft client = Minecraft.getInstance();
         if (client.options.hideGui || client.player == null) return;
+        // The inventory screen draws the queue itself, where it can be clicked (#290).
+        if (client.screen instanceof InventoryScreen) return;
         List<QueueSyncPacket.Entry> entries = AssemblerQueueView.entries();
         if (entries.isEmpty()) return;
 
@@ -70,19 +73,7 @@ final class AssemblerHud implements GuiLayer {
         for (int index = 0; index < shown; index++) {
             QueueSyncPacket.Entry entry = entries.get(index);
             int y = top + index * ROW_HEIGHT;
-            // Factorio's order: the craft under way first, what it is for after it. A step that makes
-            // the plan's own item is named once.
-            boolean split = entry.hasStep() && !entry.stepIsRoot();
-            String first = split ? entry.stepItem() : entry.rootItem();
-            String firstAmount = "x" + (split ? entry.stepAmount() : entry.amount());
-            graphics.item(PlanItems.stack(first), left, y);
-            if (index == 0) RadialWipeRenderer.over(graphics, left, y, AssemblerQueueView.liveProgress(entry));
-            graphics.text(font, firstAmount, left + 18, y + 4, 0xFFFFFFFF, true);
-            if (split) {
-                int after = left + 18 + font.width(firstAmount) + 4;
-                graphics.item(PlanItems.stack(entry.rootItem()), after, y);
-                graphics.text(font, "x" + entry.amount(), after + 18, y + 4, 0xFFCCCCCC, true);
-            }
+            QueueRow.draw(graphics, font, entry, index == 0, left, y, 0xFFFFFFFF, true);
         }
         if (entries.size() > shown) {
             Component more = Component.translatable(

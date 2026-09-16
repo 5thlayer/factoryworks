@@ -74,17 +74,26 @@ public final class QueuedPlan {
      * craft because a recipe can make more than one of its item.
      */
     public int remainingAmount() {
-        String root = plan.steps().isEmpty() ? "" : plan.steps().getLast().recipe();
         long total = 0;
-        long left = 0;
-        for (int i = 0; i < plan.steps().size(); i++) {
-            CraftStep step = plan.steps().get(i);
-            if (!step.recipe().equals(root)) continue;
-            total += step.crafts();
-            if (i > stepIndex) left += step.crafts();
-            if (i == stepIndex) left += step.crafts() - craftsDone;
+        for (CraftStep step : plan.steps()) {
+            if (step.recipe().equals(rootRecipe())) total += step.crafts();
         }
-        return total == 0 ? 0 : (int) (plan.amount() * left / total);
+        return total == 0 ? 0 : (int) ((long) plan.amount() * remainingRootCrafts() / total);
+    }
+
+    /** How many crafts of the row's final recipe are still to run: what a cancel counts in (#290). */
+    public int remainingRootCrafts() {
+        int left = 0;
+        for (int i = stepIndex; i < plan.steps().size(); i++) {
+            CraftStep step = plan.steps().get(i);
+            if (!step.recipe().equals(rootRecipe())) continue;
+            left += step.crafts() - (i == stepIndex ? craftsDone : 0);
+        }
+        return left;
+    }
+
+    private String rootRecipe() {
+        return plan.steps().isEmpty() ? "" : plan.steps().getLast().recipe();
     }
 
     /** What the current step still has to make of its first output, or 0 once the last step is done. */

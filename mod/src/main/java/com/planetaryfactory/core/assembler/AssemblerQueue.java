@@ -28,6 +28,9 @@ import java.util.UUID;
  */
 public final class AssemblerQueue {
 
+    /** A cancel count meaning the whole row. */
+    public static final int ALL = Integer.MAX_VALUE;
+
     private final List<QueuedPlan> entries = new ArrayList<>();
     private boolean blocked;
 
@@ -79,12 +82,7 @@ public final class AssemblerQueue {
      */
     public boolean enqueue(CraftingPlan plan, PlayerItems items) {
         ItemBag cost = ItemBag.ofAmounts(plan.rawCost());
-        for (ItemAmount owed : cost.amounts()) {
-            if (items.count(owed.item()) < owed.count()) return false;
-        }
-        for (ItemAmount owed : cost.amounts()) {
-            items.take(owed.item(), owed.count());
-        }
+        if (!take(plan, items)) return false;
         QueuedPlan tail = entries.isEmpty() ? null : entries.get(entries.size() - 1);
         if (tail != null && makesTheSameThing(tail.plan(), plan)) {
             entries.set(entries.size() - 1, tail.extendedBy(plan, cost));
@@ -149,6 +147,22 @@ public final class AssemblerQueue {
      * nothing (ADR-0038).
      */
     public CancelResult cancel(UUID planId, PlayerItems items) {
+        return cancel(planId, ALL, items, (recipe, crafts, id) -> Optional.empty());
+    }
+
+    /**
+     * Cancels {@code crafts} of a row's final item, or the whole row when that is all of it (#290).
+     *
+     * <p>A row is a resolved plan, and the crafts left over after a cancel need a plan of their own:
+     * how many gears three belts want is the resolver's question, not the queue's. So the row is
+     * refunded whole and {@code replan} resolves what is left against the refunded inventory, which
+     * reuses the intermediates already made and re-takes what the rest costs. The row keeps its id and
+     * its place, and the craft under way keeps its progress when the new plan starts on the same
+     * recipe. A row whose refund did not all fit is cancelled whole, since the dropped part can no
+     * longer pay for the rest; a row the resolver cannot plan again is left exactly as it was.
+     */
+    public CancelResult cancel(UUID planId, int crafts, PlayerItems items, Replanner replan) {
+        if (crafts <= 0) return new CancelResult(false, List.of());
         for (int i = 0; i < entries.size(); i++) {
             QueuedPlan entry = entries.get(i);
             if (!entry.plan().id().equals(planId)) continue;
@@ -158,9 +172,44 @@ public final class AssemblerQueue {
             }
             entries.remove(i);
             if (i == 0) blocked = false;
+            int keep = entry.remainingRootCrafts() - crafts;
+            if (keep <= 0 || !notReturned.isEmpty()) {
+                return new CancelResult(true, List.copyOf(notReturned));
+            }
+            CraftStep under = entry.currentStep();
+            Optional<CraftingPlan> rest = replan.plan(entry.plan().steps().getLast().recipe(), keep, planId)
+                    .filter(plan -> take(plan, items));
+            if (rest.isEmpty()) {
+                // The rest could not be planned again: put the row back as it was, refund and all.
+                for (ItemAmount held : entry.held()) items.take(held.item(), held.count());
+                entries.add(i, entry);
+                return new CancelResult(false, List.of());
+            }
+            CraftingPlan plan = rest.get();
+            boolean sameCraft = i == 0 && under != null && !plan.steps().isEmpty()
+                    && plan.steps().getFirst().recipe().equals(under.recipe());
+            entries.add(i, new QueuedPlan(plan, ItemBag.ofAmounts(plan.rawCost()), 0, 0,
+                    sameCraft ? entry.progressTicks() : 0));
             return new CancelResult(true, List.copyOf(notReturned));
         }
         return new CancelResult(false, List.of());
+    }
+
+    /** Takes a plan's raw cost, or nothing when the inventory does not cover all of it. */
+    private static boolean take(CraftingPlan plan, PlayerItems items) {
+        for (ItemAmount owed : plan.rawCost()) {
+            if (items.count(owed.item()) < owed.count()) return false;
+        }
+        for (ItemAmount owed : plan.rawCost()) {
+            items.take(owed.item(), owed.count());
+        }
+        return true;
+    }
+
+    /** Resolves {@code crafts} of a recipe against the inventory, as a plan carrying {@code id}. */
+    @FunctionalInterface
+    public interface Replanner {
+        Optional<CraftingPlan> plan(String recipe, int crafts, UUID id);
     }
 
     /**

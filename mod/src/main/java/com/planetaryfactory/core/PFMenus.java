@@ -1,6 +1,5 @@
 package com.planetaryfactory.core;
 
-import com.planetaryfactory.core.assembler.AssemblerPanelMenu;
 import com.planetaryfactory.core.assembler.CraftingPlanMenu;
 import com.planetaryfactory.core.fluid.BoilerMenu;
 import com.planetaryfactory.core.mining.rig.RigMenu;
@@ -13,9 +12,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 /**
- * The Personal Assembler's two menus (ADR-0038, ADR-0064, ADR-0065).
+ * The menus (ADR-0038, ADR-0064, ADR-0065).
  *
- * <p>Two and not one. The panel is the surface EMI's Fill Recipe keys on; the Crafting Plan is a
+ * <p>The Assembler has one of its own. EMI's Fill Recipe keys on the inventory screen (ADR-0066); the Crafting Plan is a
  * dialog the <em>server</em> opens, because a plan is server truth -- it reads the inventory and the
  * team's research, and each press takes the reservation off the back of it.
  *
@@ -26,10 +25,6 @@ public final class PFMenus {
 
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, PlanetaryFactoryCore.NAMESPACE);
-
-    /** No opening data: the panel shows the queue, and the queue is synced separately. */
-    public static final Supplier<MenuType<AssemblerPanelMenu>> ASSEMBLER_PANEL =
-            MENUS.register("assembler_panel", () -> new MenuType<>(AssemblerPanelMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
 
     public static final Supplier<MenuType<CraftingPlanMenu>> CRAFTING_PLAN =
             MENUS.register("assembler_crafting_plan", () -> IMenuTypeExtension.create(CraftingPlanMenu::new));
@@ -54,7 +49,7 @@ public final class PFMenus {
      * The Boiler's menu (#224). One, not a ladder: ADR-0048 authors one boiler tier.
      *
      * <p>No opening data -- there is nothing about a Boiler the client cannot read off the
-     * container data, which is why this one is a plain {@code MenuType} the way the panel is.
+     * container data, which is why this one is a plain {@code MenuType}.
      */
     public static final Supplier<MenuType<BoilerMenu>> BOILER =
             MENUS.register("boiler", () -> new MenuType<>(BoilerMenu::new,

@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * Where a Crafting Plan comes from: the resolver seam, which is #161's to fill.
  *
- * <p>#160 owns the panel, the two dialog menus, the packets and the queue, and deliberately not the
+ * <p>#160 owned the panel (gone with ADR-0066), the dialog menus, the packets and the queue, and deliberately not the
  * resolver -- so this interface is the line between the two tickets. {@link #ACTIVE} is what the
  * server calls, and #161's whole edit to this file was to point it at {@code RuntimePlanSource}
  * instead of {@link Unresolved}; nothing outside it had to move.
