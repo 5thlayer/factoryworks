@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: accepted, scope amended by ADR-0066
 supersedes: [287]
 ---
 

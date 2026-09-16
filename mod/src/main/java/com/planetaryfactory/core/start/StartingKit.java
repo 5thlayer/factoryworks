@@ -42,7 +42,7 @@ public final class StartingKit {
      * The pocket: the tools, one each.
      *
      * <p>The book is here even though its <em>content</em> is a separate ticket -- beat 1 is "the
-     * book is in your inventory; its tooltip points at the panel", so a book that arrives later
+     * book is in your inventory; its tooltip points at the inventory", so a book that arrives later
      * costs the beat rather than merely the content.
      */
     public static final List<Entry> POCKET = List.of(

@@ -4,6 +4,7 @@ import com.planetaryfactory.core.PFAttachments;
 import com.planetaryfactory.core.network.PFNetwork;
 import com.planetaryfactory.core.network.PlanUpdatePacket;
 import com.planetaryfactory.core.network.QueueSyncPacket;
+import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -25,14 +26,6 @@ public final class PersonalAssembler {
 
     public static AssemblerQueue queueOf(Player player) {
         return player.getData(PFAttachments.ASSEMBLER_QUEUE.get());
-    }
-
-    /** Opens the panel. This is the tab on the inventory screen, and EMI's precondition. */
-    public static void openPanel(ServerPlayer player) {
-        player.openMenu(new SimpleMenuProvider(
-                (id, inventory, who) -> new AssemblerPanelMenu(id, inventory),
-                Component.translatable("planetaryfactory_core.assembler.panel")));
-        sync(player);
     }
 
     /**
@@ -113,13 +106,21 @@ public final class PersonalAssembler {
     }
 
     /**
-     * Cancels a plan and refunds its buffer. Anything that will not fit goes to the player the way
-     * a closed container's contents do -- a cancellation is their own action, unlike a finished
-     * craft, which pauses rather than drops.
+     * Cancels {@code crafts} of a row's final item and refunds their share (#290). What is left is
+     * re-resolved against the refunded inventory, so the intermediates already made are used again.
+     * Anything that will not fit goes to the player the way a closed container's contents do -- a
+     * cancellation is their own action, unlike a finished craft, which pauses rather than drops.
      */
-    public static boolean cancel(ServerPlayer player, UUID planId) {
+    public static boolean cancel(ServerPlayer player, UUID planId, int crafts) {
         AssemblerQueue queue = queueOf(player);
-        AssemblerQueue.CancelResult result = queue.cancel(planId, new InventoryPlayerItems(player.getInventory()));
+        AssemblerQueue.CancelResult result = queue.cancel(planId, crafts,
+                new InventoryPlayerItems(player.getInventory()),
+                (recipe, left, id) -> {
+                    Identifier parsed = Identifier.tryParse(recipe);
+                    if (parsed == null) return Optional.empty();
+                    return Optional.ofNullable(PlanSource.ACTIVE.resolve(player, parsed, left).plan())
+                            .map(plan -> plan.withId(id));
+                });
         if (!result.cancelled()) return false;
         for (ItemAmount leftover : result.notReturned()) {
             player.getInventory().placeItemBackInInventory(ItemKeys.toStack(leftover, player.registryAccess()));

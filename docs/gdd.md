@@ -199,7 +199,7 @@ puzzle belongs to that body and is specified with it, not here.
 
 ### The Personal Assembler
 
-A permanent panel on the vanilla inventory screen, and the player's only hand-crafting surface. The
+The vanilla inventory screen itself (ADR-0066), and the player's only hand-crafting surface. The
 crafting grid is gone and every fluid-free `crafting` recipe reaches the Assembler instead (`#88`,
 `#95`). It is not an item — there is nothing to craft, nothing to lose and nothing to grant.
 Hand-crafting stops being how you *produce* long before it stops being available, which is a pacing
@@ -210,7 +210,7 @@ whose ingredients you lack and the sub-crafts are queued for you — and that, n
 separates the hand from an assembling machine. The interaction is Applied Energistics 2's
 autocrafting shape, simplified:
 
-1. The inventory is open, so the panel is open. EMI offers **Fill Recipe** only for the screen
+1. The inventory is open, so the Assembler is open. EMI offers **Fill Recipe** only for the screen
    currently open, so there is no craft-from-anywhere path.
 2. In EMI: search the item, `R` for its recipes, choose one, press **`+` Fill Recipe**.
 3. **Crafting Plan**, opened for one craft, with the cursor already on `+1`. It shows the whole tree
@@ -232,7 +232,7 @@ data attachment, ticked server-side and surviving logout. KubeJS cannot do this 
 ScreenJS is dead (`#96`, ADR-0015). The screen is a vanilla `AbstractContainerScreen`, not FTB
 Library, which is All Rights Reserved with a CLA and no KubeJS screen binding.
 
-**EMI is a hard requirement of the pack.** The panel has no recipe browser of its own — a client-side
+**EMI is a hard requirement of the pack.** The Assembler has no recipe browser of its own — a client-side
 mod is load-bearing for a core verb, which is acceptable in a curated pack with a fixed manifest and
 is recorded here so it does not read as an accident later. JEI stays; EMI being the transfer target
 does not displace it. The **2x2 grid is removed**, server-guarded, and the vanilla recipe book goes

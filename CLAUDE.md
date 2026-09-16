@@ -220,7 +220,9 @@ hand recipes (the resolver picks a route with no cost model), and there are no c
 `largestAffordable` rather than anything the screen counts. `FillRequestTest` is EMI's Fill Recipe on
 the Assembler's screen (#288, ADR-0065): left queues 1, right 5, Shift all, middle opens the plan, and
 a request the ceiling does not cover queues nothing -- five never becomes three -- so the server opens
-the plan instead.
+the plan instead. `CancelClickTest` is a click on a queue icon on the inventory screen
+(#290, ADR-0066): left cancels 1, right 5, Shift all; a partial cancel re-resolves the rest of the row,
+which `AssemblerQueueTest` asserts keeps its id, place and the craft under way's progress.
 
 Run them after editing anything under `core/assembler/` or after re-extracting the corpus. Whether
 each mouse button reaches the handler on the Assembler's screen, Fill Recipe is unchanged on every

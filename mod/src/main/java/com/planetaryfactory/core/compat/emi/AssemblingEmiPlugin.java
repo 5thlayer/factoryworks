@@ -17,7 +17,7 @@ import net.minecraft.world.item.Items;
  * category its recipes are in no viewer at all -- and the Personal Assembler's Fill Recipe button is
  * drawn on a recipe EMI shows, so an unshown hand recipe is also an unplannable one.
  *
- * <p>No workstation. The Assembling Machine is #277's, and the Personal Assembler is a panel rather
+ * <p>No workstation. The Assembling Machine is #277's, and the Personal Assembler is the inventory screen rather
  * than a block; the icon is a stand-in until the machine exists.
  */
 @EmiEntrypoint

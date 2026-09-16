@@ -10,8 +10,8 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 /**
- * The client half of the Personal Assembler: which screen each of the three menus opens, and the tab
- * that reaches the first of them.
+ * The client half of the Personal Assembler: the Crafting Plan's screen, the queue on the inventory
+ * screen and the queue beside the hotbar.
  *
  * <p>Called only on the client, from {@code PlanetaryFactoryCore}, so nothing here is loaded on a
  * dedicated server.
@@ -24,11 +24,9 @@ public final class AssemblerClient {
     public static void register(IEventBus modBus) {
         modBus.addListener(AssemblerClient::registerScreens);
         modBus.addListener(AssemblerClient::registerHud);
-        modBus.addListener(AssemblerKeys::register);
-        NeoForge.EVENT_BUS.addListener(InventoryAssemblerTab::onScreenInit);
-        NeoForge.EVENT_BUS.addListener(InventoryAssemblerTab::onScreenRender);
-        NeoForge.EVENT_BUS.addListener(AssemblerKeys::onClientTick);
-        NeoForge.EVENT_BUS.addListener(AssemblerKeys::onScreenKey);
+        NeoForge.EVENT_BUS.addListener(InventoryQueue::onRender);
+        NeoForge.EVENT_BUS.addListener(InventoryQueue::onTooltip);
+        NeoForge.EVENT_BUS.addListener(InventoryQueue::onClick);
     }
 
     /** Above the hotbar in draw order, so the queue is not painted under it. */
@@ -39,7 +37,6 @@ public final class AssemblerClient {
     }
 
     private static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(PFMenus.ASSEMBLER_PANEL.get(), AssemblerPanelScreen::new);
         event.register(PFMenus.CRAFTING_PLAN.get(), CraftingPlanScreen::new);
     }
 }

@@ -259,11 +259,11 @@ One unit of mining work against an ore block: it consumes one unit of the block'
 _Avoid_: mining tick, drill cycle, swing
 
 **Personal Assembler**:
-The permanent panel on the inventory screen that is the player's only hand-crafting surface. It is a surface, not a machine, and has no recipe type of its own: it runs the **Assembling Machine**'s recipes that Factorio marks hand-craftable — first category `crafting`, minus the eleven Factorio withholds (`#88`) — at speed 1, serially (ADR-0029). It **replaces** the crafting grid, which the pack removes (`#90`), and crafts nothing by hand directly: every craft is a **Crafting Plan** (ADR-0038). The panel is always present and always full: it is taught by the opening, never granted by it (`#100`).
+The player's inventory screen, as the player's only hand-crafting surface. It is a surface, not a machine, and has no recipe type of its own: it runs the **Assembling Machine**'s recipes that Factorio marks hand-craftable — first category `crafting`, minus the eleven Factorio withholds (`#88`) — at speed 1, serially (ADR-0029). It **replaces** the crafting grid, which the pack removes (`#90`), and crafts nothing by hand directly: every craft is a **Crafting Plan** (ADR-0038). It is always present: it is taught by the opening, never granted by it (`#100`).
 _Avoid_: hand crafter, personal crafter, portable crafter
 
 **Crafting Plan**:
-The resolved, flattened tree of crafts the Personal Assembler produces when an amount is chosen, and the unit in which the player commits, cancels and is refunded. It names every intermediate it will make, every ingredient the player lacks and every recipe the team has not researched; it is paid for in full when it starts and is never re-resolved (ADR-0038).
+The resolved, flattened tree of crafts the Personal Assembler produces when an amount is chosen, and the unit in which the player commits and is refunded. It names every intermediate it will make, every ingredient the player lacks and every recipe the team has not researched; it is paid for in full when it starts and is never re-resolved (ADR-0038).
 _Avoid_: crafting job, batch, order
 
 **Assembler queue**:

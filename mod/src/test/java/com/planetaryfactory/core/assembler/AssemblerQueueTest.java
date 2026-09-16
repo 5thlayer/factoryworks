@@ -461,4 +461,138 @@ class AssemblerQueueTest {
         assertEquals(Map.of(green, 6), items.contents());
         assertTrue(queue.isEmpty());
     }
+
+    /** Re-resolves a gear row the way the server's resolver would, under the row's own id. */
+    private static final AssemblerQueue.Replanner GEARS = (recipe, crafts, id) -> java.util.Optional.of(
+            new CraftingPlan(id, GEAR, crafts, List.of(new ItemAmount(IRON, 2 * crafts)),
+                    List.of(new CraftStep(recipe, List.of(new ItemAmount(IRON, 2 * crafts)),
+                            List.of(new ItemAmount(GEAR, crafts)), 2, crafts))));
+
+    @Test
+    void cancellingOneOfARowRefundsOneCraftAndKeepsTheRest() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 10);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan five = gearPlan("five", 5);
+        queue.enqueue(five, items);
+
+        queue.cancel(five.id(), 1, items, GEARS);
+
+        assertEquals(2, items.count(IRON));
+        assertEquals(1, queue.entries().size());
+        assertEquals(4, queue.entries().get(0).remainingAmount());
+        assertEquals(five.id(), queue.entries().get(0).plan().id(), "the row keeps its id");
+    }
+
+    @Test
+    void cancellingMoreThanIsLeftCancelsWhatIsThere() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 6);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan three = gearPlan("three", 3);
+        queue.enqueue(three, items);
+        tick(queue, items, 2); // one gear made
+
+        queue.cancel(three.id(), 5, items, GEARS);
+
+        assertTrue(queue.isEmpty());
+        assertEquals(1, items.count(GEAR));
+        assertEquals(4, items.count(IRON));
+    }
+
+    @Test
+    void aPartlyCancelledRowKeepsItsPlaceInTheQueue() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 20);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(beltPlan(), items);
+        CraftingPlan gears = gearPlan("gears", 3);
+        queue.enqueue(gears, items);
+
+        queue.cancel(gears.id(), 1, items, GEARS);
+
+        assertEquals(2, queue.entries().size());
+        assertEquals(gears.id(), queue.entries().get(1).plan().id());
+        assertEquals(2, queue.entries().get(1).remainingAmount());
+    }
+
+    @Test
+    void theCraftUnderWayKeepsItsProgressWhenLaterCraftsAreCancelled() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 10);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan five = gearPlan("five", 5);
+        queue.enqueue(five, items);
+        tick(queue, items, 1);
+
+        queue.cancel(five.id(), 1, items, GEARS);
+
+        assertEquals(1, queue.entries().get(0).progressTicks());
+    }
+
+    @Test
+    void aRowThatCannotBeReplannedIsLeftAsItWas() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 10);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan five = gearPlan("five", 5);
+        queue.enqueue(five, items);
+        tick(queue, items, 1);
+        QueuedPlan before = queue.entries().get(0);
+
+        AssemblerQueue.CancelResult result = queue.cancel(five.id(), 1, items, (recipe, crafts, id) -> java.util.Optional.empty());
+
+        assertFalse(result.cancelled());
+        assertEquals(List.of(before), queue.entries());
+        assertEquals(0, items.count(IRON));
+    }
+
+    @Test
+    void aCountOfZeroCancelsNothing() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 10);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan five = gearPlan("five", 5);
+        queue.enqueue(five, items);
+        tick(queue, items, 1);
+
+        assertFalse(queue.cancel(five.id(), 0, items, GEARS).cancelled());
+        assertEquals(1, queue.entries().get(0).progressTicks());
+    }
+
+    @Test
+    void cancellingPartOfAMergedRowKeepsTheRestAsOneRow() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 12);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan five = gearPlan("five", 5);
+        queue.enqueue(five, items);
+        queue.enqueue(gearPlan("one", 1), items);
+        tick(queue, items, 2); // one gear made
+
+        queue.cancel(five.id(), 2, items, GEARS);
+
+        assertEquals(1, items.count(GEAR));
+        assertEquals(4, items.count(IRON), "two unmade gears, two plates each");
+        assertEquals(1, queue.entries().size());
+        assertEquals(3, queue.entries().get(0).remainingAmount());
+    }
+
+    @Test
+    void aPartialCancelReusesTheIntermediatesAlreadyMade() {
+        // Two belt crafts: the gear for the first is made, then one belt craft is cancelled. The rest is
+        // planned again against the refund, which holds that gear, so no second gear is made.
+        CraftStep gears = new CraftStep("gear", List.of(new ItemAmount(IRON, 4)), List.of(new ItemAmount(GEAR, 2)), 2, 2);
+        CraftStep belts = new CraftStep("belt", List.of(new ItemAmount(GEAR, 2), new ItemAmount(IRON, 2)),
+                List.of(new ItemAmount(BELT, 4)), 2, 2);
+        CraftingPlan two = new CraftingPlan(UUID.nameUUIDFromBytes("belts".getBytes()), BELT, 4,
+                List.of(new ItemAmount(IRON, 6)), List.of(gears, belts));
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 6);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(two, items);
+        tick(queue, items, 2); // one gear made
+        AssemblerQueue.Replanner fromHeldGear = (recipe, crafts, id) -> java.util.Optional.of(
+                new CraftingPlan(id, BELT, 2, List.of(new ItemAmount(GEAR, 1), new ItemAmount(IRON, 1)),
+                        List.of(new CraftStep(recipe, List.of(new ItemAmount(GEAR, 1), new ItemAmount(IRON, 1)),
+                                List.of(new ItemAmount(BELT, 2)), 2, crafts))));
+
+        queue.cancel(two.id(), 1, items, fromHeldGear);
+
+        assertEquals(0, items.count(GEAR), "the made gear went back into the row");
+        assertEquals(3, items.count(IRON), "six reserved, two spent on the gear, one re-taken");
+        assertEquals(2, queue.entries().get(0).remainingAmount());
+    }
 }

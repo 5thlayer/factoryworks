@@ -1,6 +1,5 @@
 package com.planetaryfactory.core.compat.emi;
 
-import com.planetaryfactory.core.assembler.AssemblerPanelMenu;
 import com.planetaryfactory.core.assembler.FillRequest;
 import com.planetaryfactory.core.assembler.HandRecipeSet;
 import com.planetaryfactory.core.network.FillRecipePacket;
@@ -17,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
@@ -43,7 +43,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
  * recipe screen after every craft, and the player would reopen it to queue the next one. False
  * skips the {@code setScreen} and EMI's button sound with it, so the sound is played here.
  */
-public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<AssemblerPanelMenu> {
+public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<InventoryMenu> {
 
     /**
      * The player's stacks, built here rather than asked for.
@@ -54,11 +54,11 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
      * which is this method. It only reaches {@code new EmiPlayerInventory(player)} when no handler is
      * registered at all, so it works everywhere except inside a handler.
      *
-     * <p>It crashes the moment the panel opens, not on a button press: EMI builds the inventory to
+     * <p>It crashes the moment the inventory opens, not on a button press: EMI builds the inventory to
      * work out what is craftable as soon as a screen with a handler comes up.
      */
     @Override
-    public EmiPlayerInventory getInventory(AbstractContainerScreen<AssemblerPanelMenu> screen) {
+    public EmiPlayerInventory getInventory(AbstractContainerScreen<InventoryMenu> screen) {
         Player player = Minecraft.getInstance().player;
         return player == null ? new EmiPlayerInventory(List.of()) : new EmiPlayerInventory(player);
     }
@@ -92,7 +92,7 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
      * {@link #supportsRecipe}'s question, and a different one.
      */
     @Override
-    public boolean canCraft(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
+    public boolean canCraft(EmiRecipe recipe, EmiCraftContext<InventoryMenu> context) {
         return true;
     }
 
@@ -103,7 +103,7 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
      * screen and nowhere else.
      */
     @Override
-    public List<ClientTooltipComponent> getTooltip(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
+    public List<ClientTooltipComponent> getTooltip(EmiRecipe recipe, EmiCraftContext<InventoryMenu> context) {
         return List.of("left", "right", "shift", "middle").stream()
                 .map(key -> ClientTooltipComponent.create(
                         Component.translatable("planetaryfactory_core.assembler.fill." + key).getVisualOrderText()))
@@ -117,11 +117,11 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
      * {@link FillClick}; EMI reports Shift itself, as an amount of {@code Integer.MAX_VALUE}. Whether the
      * inventory covers the request is the server's call, and it opens the plan when it does not.
      *
-     * <p>Only a request for the plan returns true and hands the screen back to the panel; a queueing
+     * <p>Only a request for the plan returns true and hands the screen back to the inventory; a queueing
      * click returns false so EMI's recipe screen stays open for the next one (see the class doc).
      */
     @Override
-    public boolean craft(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
+    public boolean craft(EmiRecipe recipe, EmiCraftContext<InventoryMenu> context) {
         Identifier id = recipe.getId();
         if (id == null) return false;
         FillRequest request = FillRequest.of(FillClick.button(), context.getAmount() == Integer.MAX_VALUE);

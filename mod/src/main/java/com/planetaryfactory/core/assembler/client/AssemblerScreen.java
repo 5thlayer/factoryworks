@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 /**
- * What the Assembler's three screens share: a flat panel, a title, and no texture.
+ * What the Assembler's screens share: a flat panel, a title, and no texture.
  *
  * <p>Drawn from fills rather than from a sprite sheet because the jar's only asset is its lang file
  * (see {@code mod/README.md}) -- and because what the Assembler looks like is #161's to settle, so a

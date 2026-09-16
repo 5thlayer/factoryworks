@@ -29,7 +29,6 @@ public final class PFNetwork {
 
     public static void register(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(VERSION);
-        registrar.playToServer(OpenPanelPacket.TYPE, OpenPanelPacket.STREAM_CODEC, OpenPanelPacket::handle);
         registrar.playToServer(FillRecipePacket.TYPE, FillRecipePacket.STREAM_CODEC, FillRecipePacket::handle);
         registrar.playToServer(PlanCraftPacket.TYPE, PlanCraftPacket.STREAM_CODEC, PlanCraftPacket::handle);
         registrar.playToServer(PlanCancelPacket.TYPE, PlanCancelPacket.STREAM_CODEC, PlanCancelPacket::handle);

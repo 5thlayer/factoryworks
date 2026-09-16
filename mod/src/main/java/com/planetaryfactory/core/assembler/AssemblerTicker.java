@@ -11,10 +11,10 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  * Runs every player's queue, screen open or not.
  *
  * <p>That is the point of a queue rather than a crafting grid: the plan was paid for at Start, so it
- * keeps going while the player walks away, and it is still going when they come back. The panel is a
+ * keeps going while the player walks away, and it is still going when they come back. The inventory screen is a
  * view of it, never the thing driving it.
  *
- * <p>The panel is re-synced on a slow beat rather than every tick. A progress bar does not need
+ * <p>The queue is re-synced on a slow beat rather than every tick. A progress bar does not need
  * twenty updates a second, and the queue's own truth is on the server either way.
  */
 public final class AssemblerTicker {
