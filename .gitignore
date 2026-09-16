@@ -125,6 +125,7 @@ build/
 # the Gradle project -- `bin/main` and `bin/test` beside Gradle's `mod/build/classes`. Duplicate
 # class files, never a source of truth, and regenerated on the next import.
 mod/bin/
+.eclipse/
 
 # Where a `run*` Gradle task puts its working directory: the GameTest run's throwaway universe
 # (#271), and the config the server writes on first start. Both are regenerated per run.
