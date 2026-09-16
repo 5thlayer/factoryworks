@@ -52,7 +52,6 @@ final class AssemblerHud implements GuiLayer {
      */
     private static final int CLEAR_OF_OFFHAND = 32;
 
-    private static final int BACKDROP = 0x90101010;
 
     @Override
     public void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
@@ -66,26 +65,23 @@ final class AssemblerHud implements GuiLayer {
         int left = graphics.guiWidth() / 2 - HOTBAR_HALF_WIDTH - CLEAR_OF_OFFHAND - WIDTH;
         int bottom = graphics.guiHeight() - (HOTBAR_HEIGHT - ROW_HEIGHT) / 2 - ROW_HEIGHT;
         int top = bottom - (shown - 1) * ROW_HEIGHT;
-        graphics.fill(left - 3, top - 3, left + WIDTH + 3, bottom + ROW_HEIGHT - 1, BACKDROP);
 
         Font font = client.font;
         for (int index = 0; index < shown; index++) {
             QueueSyncPacket.Entry entry = entries.get(index);
             int y = top + index * ROW_HEIGHT;
-            // The row the panel draws: the plan on the left, the step under way after it. A row naming
-            // only the step says nothing about what the queue is for.
-            graphics.item(PlanItems.stack(entry.rootItem()), left, y);
-            if (index == 0 && entry.stepIsRoot()) {
-                RadialWipeRenderer.over(graphics, left, y, AssemblerQueueView.liveProgress(entry));
-            }
-            String amount = "x" + entry.amount();
-            graphics.text(font, amount, left + 18, y + 4, 0xFFFFFFFF, true);
-            if (entry.hasStep() && !entry.stepIsRoot()) {
-                int after = left + 18 + font.width(amount) + 4;
-                graphics.text(font, ">", after, y + 4, 0xFF777777, true);
-                graphics.item(PlanItems.stack(entry.stepItem()), after + 8, y);
-                if (index == 0) RadialWipeRenderer.over(graphics, after + 8, y, AssemblerQueueView.liveProgress(entry));
-                graphics.text(font, "x" + entry.stepAmount(), after + 26, y + 4, 0xFFCCCCCC, true);
+            // Factorio's order: the craft under way first, what it is for after it. A step that makes
+            // the plan's own item is named once.
+            boolean split = entry.hasStep() && !entry.stepIsRoot();
+            String first = split ? entry.stepItem() : entry.rootItem();
+            String firstAmount = "x" + (split ? entry.stepAmount() : entry.amount());
+            graphics.item(PlanItems.stack(first), left, y);
+            if (index == 0) RadialWipeRenderer.over(graphics, left, y, AssemblerQueueView.liveProgress(entry));
+            graphics.text(font, firstAmount, left + 18, y + 4, 0xFFFFFFFF, true);
+            if (split) {
+                int after = left + 18 + font.width(firstAmount) + 4;
+                graphics.item(PlanItems.stack(entry.rootItem()), after, y);
+                graphics.text(font, "x" + entry.amount(), after + 18, y + 4, 0xFFCCCCCC, true);
             }
         }
         if (entries.size() > shown) {
