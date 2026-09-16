@@ -5,6 +5,8 @@ supersedes: [172]
 
 # GregTech wins the item layer, and unification replaces rather than broadens
 
+> **Superseded by ADR-0061.** FTB Materials owns the item layer; this record is kept for its reasoning.
+
 ADR-0017 settled which mod owns each *capability* — a table of blocks, one owner per rung. It said
 almost nothing about which mod owns each *item*, beyond one paragraph: "Almost Unified stays,
 restricted to raw materials. Ores, ingots, dusts, plates and gems unify. **Recipe types do not.**"

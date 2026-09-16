@@ -3,7 +3,7 @@
   "ingredient": "#c:raw_materials/iron",
   "count": 1,
   "result": {
-    "id": "gtceu:iron_plate",
+    "id": "ftbmaterials:iron_plate",
     "count": 1
   },
   "cookingtime": 64

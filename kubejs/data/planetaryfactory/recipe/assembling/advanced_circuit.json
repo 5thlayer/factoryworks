@@ -21,7 +21,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "powergrid:wire"
+            "item": "ftbmaterials:copper_wire"
           },
           "count": 4
         }

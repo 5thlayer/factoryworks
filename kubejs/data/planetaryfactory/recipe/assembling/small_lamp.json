@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "powergrid:wire"
+            "item": "ftbmaterials:copper_wire"
           },
           "count": 3
         }
@@ -21,7 +21,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_plate"
+            "item": "ftbmaterials:iron_plate"
           },
           "count": 1
         }

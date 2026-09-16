@@ -5,12 +5,9 @@ import java.util.List;
 /**
  * One of a recipe's demands: {@code count} of any one of {@code items}.
  *
- * <p>A recipe's ingredient is a choice, not an item. Two things in this pack make it one, and both
- * are ordinary rather than exceptional: the converter emits tag ingredients where Factorio's name
- * has no single Minecraft answer ({@code wooden_chest} eats {@code #minecraft:planks}), and
- * AlmostUnified rewrites plain item ingredients into unified tags at load, so a recipe whose emitted
- * JSON says {@code gtceu:iron_plate} accepts {@code create:iron_sheet} in the running game. A
- * resolver that read only the first match would refuse a plan the crafting grid would have accepted,
+ * <p>A recipe's ingredient is a choice, not an item: the converter emits tag ingredients where
+ * Factorio's name has no single Minecraft answer ({@code wooden_chest} eats
+ * {@code #minecraft:planks}), and a tag matches several items. A resolver that read only the first match would refuse a plan the crafting grid would have accepted,
  * which is exactly what it did before this type existed.
  *
  * <p>Outputs stay {@link ItemAmount}: a recipe result is one concrete item, and there is nothing to

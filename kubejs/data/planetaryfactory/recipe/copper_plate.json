@@ -3,7 +3,7 @@
   "ingredient": "#c:raw_materials/copper",
   "count": 1,
   "result": {
-    "id": "gtceu:copper_plate",
+    "id": "ftbmaterials:copper_plate",
     "count": 1
   },
   "cookingtime": 64

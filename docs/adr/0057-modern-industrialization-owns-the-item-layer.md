@@ -4,6 +4,8 @@ status: accepted
 
 # Modern Industrialization owns the item layer, and unification arbitrates one supplier
 
+> **Superseded by ADR-0061.** FTB Materials owns the item layer; this record is kept for its reasoning.
+
 ADR-0053 gave the item layer to GregTech. ADR-0056 takes GregTech out of the pack and says nothing
 about the item layer at all, which leaves twelve unified tags with no winner named and 153 emitted
 recipes pointing at `gtceu:` items that will not exist. This ADR supplies the replacement.
