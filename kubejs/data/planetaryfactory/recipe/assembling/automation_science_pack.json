@@ -5,7 +5,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:copper_plate"
+            "item": "ftbmaterials:copper_plate"
           },
           "count": 1
         }
@@ -13,7 +13,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_gear"
+            "item": "ftbmaterials:iron_gear"
           },
           "count": 1
         }

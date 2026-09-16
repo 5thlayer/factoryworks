@@ -47,6 +47,11 @@ neoForge {
     }
 }
 
+configurations {
+    devRunMods
+    runtimeClasspath.extendsFrom devRunMods
+}
+
 // Compile-time jars are taken from `mods/` rather than from a maven, so the build stays offline and
 // always compiles against exactly the jars the pack ships.
 dependencies {
@@ -61,6 +66,17 @@ dependencies {
             dir: rootProject.file('mods'),
             include: ['oritech-*.jar', 'researchd-*.jar', 'emi-*.jar', 'jei-*.jar',
                       'Jade-*.jar', 'jade-*.jar'])
+    // FTB Materials, and the library it requires, on every dev run's classpath -- the GameTest server
+    // included. ADR-0061 gives the item layer to FTB Materials, so the pack's emitted smelts name
+    // `ftbmaterials:` items, and a server that is only vanilla plus this jar rejects all three at
+    // datapack load (`scripts/check-datapack-load.py`). This is the one foreign mod the harness
+    // loads, and it is here because the pack's data names its items, not because the mod calls it.
+    //
+    // On `runtimeClasspath` only, through its own configuration: `runtimeOnly` would also land on
+    // `test`'s classpath, making `mods/` an input of a task `installToPack` writes into.
+    devRunMods fileTree(
+            dir: rootProject.file('mods'),
+            include: ['ftb-materials-*.jar', 'ftb-library-neoforge-*.jar'])
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather
     // than a Minecraft type, so the Assembler's attachment codec can be round-tripped on a plain
     // JVM -- which is what ADR-0038's "round-trip the data attachment" asks for. Minecraft itself

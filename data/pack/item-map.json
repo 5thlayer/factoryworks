@@ -9,6 +9,11 @@
     "boundary or a mod's competing line would give a parallel escape -- then author it first-party",
     "and recipe-remove the competitor. The circuits author because they carry progression;",
     "`copper-cable` borrows because it carries none. That rule makes most rows transcription.",
+    "THE MATERIAL FORMS ARE FTB MATERIALS' (ADR-0061). Every plate, gear, rod, wire, dust and",
+    "ingot in ADR-0021's alphabet borrows from `ftbmaterials:`; a tech mod supplies machines, not",
+    "material forms. Railcraft Reborn and Oritech each ship a competing line and AlmostUnified left",
+    "with ADR-0060, so a shared `c:` tag now resolves to two or three items: a row on a material",
+    "form names the ITEM, never the tag. `tests/pack/test_item_map.py` is the guard.",
     "",
     "THE INPUT ALPHABET IS CLOSED (#124, amending ADR-0021). Terra's four ores -- iron, copper,",
     "coal, uranium -- plus its stone and what its surface grows are the whole input alphabet for",
@@ -204,9 +209,9 @@
     },
     "copper-cable": {
       "kind": "item",
-      "target": "powergrid:wire",
+      "target": "ftbmaterials:copper_wire",
       "source": "borrowed",
-      "note": "ADR-0031 names this row: cable carries no progression, so it borrows. Moved with the mod by #148. Power Grid ships five wires -- `wire`, `copper_cord`, `insulated_copper_wire`, `iron_wire`, `golden_wire` -- and this row takes the plainest, because a row that carries no progression must not pick a rung on someone else's ladder. `wire` is Power Grid's own Copper Wire."
+      "note": "ADR-0031 names this row: cable carries no progression, so it borrows. ADR-0061 moves the borrow to FTB Materials' `copper_wire`, which is the wire form of the alphabet's copper rather than a rung on a tech mod's ladder -- the problem the old `powergrid:wire` target had, where five wires existed and this row had to pick one."
     },
     "copper-ore": {
       "kind": "tag",
@@ -216,9 +221,9 @@
     },
     "copper-plate": {
       "kind": "item",
-      "target": "gtceu:copper_plate",
+      "target": "ftbmaterials:copper_plate",
       "source": "borrowed",
-      "note": "As `iron-plate`."
+      "note": "As `iron-plate` (ADR-0061)."
     },
     "crude-oil": {
       "kind": "fluid",
@@ -413,9 +418,9 @@
     },
     "iron-gear-wheel": {
       "kind": "item",
-      "target": "gtceu:iron_gear",
+      "target": "ftbmaterials:iron_gear",
       "source": "borrowed",
-      "note": "GregTech's gear prefix on Iron. A gear carries no progression and GT's line is not a parallel escape, so it borrows (ADR-0031). That the prefix is generated for Iron in GTCEu 7.0.2 is a registry fact, so the world-load check is what confirms it."
+      "note": "FTB Materials' gear form (ADR-0061). A gear carries no progression and FTB Materials ships no ladder to escape onto -- it has no machines at all -- so it borrows (ADR-0031)."
     },
     "iron-ore": {
       "kind": "tag",
@@ -425,15 +430,15 @@
     },
     "iron-plate": {
       "kind": "item",
-      "target": "gtceu:iron_plate",
+      "target": "ftbmaterials:iron_plate",
       "source": "borrowed",
-      "note": "GregTech's material item. ADR-0032: ore smelts 1:1 to plate, no ingot step."
+      "note": "FTB Materials' plate form (ADR-0061: the intermediates are FTB Materials', not a tech mod's). ADR-0032: ore smelts 1:1 to plate, no ingot step. Was `gtceu:iron_plate` until ADR-0060 took GregTech out, at which point this row's smelt was rejected at datapack load."
     },
     "iron-stick": {
       "kind": "item",
-      "target": "gtceu:iron_rod",
+      "target": "ftbmaterials:iron_rod",
       "source": "borrowed",
-      "note": "GregTech's rod prefix on Iron -- Factorio's iron stick. As `iron-gear-wheel`."
+      "note": "FTB Materials' rod form -- Factorio's iron stick. As `iron-gear-wheel` (ADR-0061)."
     },
     "lab": {
       "kind": "item",
@@ -790,9 +795,9 @@
     },
     "steel-plate": {
       "kind": "item",
-      "target": "gtceu:steel_plate",
+      "target": "ftbmaterials:steel_plate",
       "source": "borrowed",
-      "note": "The only surviving alloy on Terra -- iron plus coal, #72. Its `smelting` recipe is 5 plates to 1, which no vanilla shape can express; it rides the count-bearing `planetaryfactory:smelting` type, which #155 landed."
+      "note": "The only surviving alloy on Terra -- iron plus coal, #72. FTB Materials' plate form (ADR-0061); note that FTB Materials also ships a `steel_ingot`, and this row is deliberately the PLATE, because ADR-0032 removed the ingot step from Terra's chain entirely. Its `smelting` recipe is 5 plates to 1, which no vanilla shape can express; it rides the count-bearing `planetaryfactory:smelting` type, which #155 landed."
     },
     "stone": {
       "kind": "item",
@@ -841,9 +846,9 @@
     },
     "sulfur": {
       "kind": "item",
-      "target": "gtceu:sulfur_dust",
+      "target": "ftbmaterials:sulfur_dust",
       "source": "borrowed",
-      "note": "GregTech's dust. Its RECIPE is `pack:chemical_plant` and waits on #107."
+      "note": "FTB Materials' dust form (ADR-0061). Its RECIPE is `pack:chemical_plant` and waits on #107."
     },
     "sulfuric-acid": {
       "kind": "fluid",

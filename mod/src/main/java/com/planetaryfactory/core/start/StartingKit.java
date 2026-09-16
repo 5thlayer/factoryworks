@@ -60,8 +60,8 @@ public final class StartingKit {
      * back to hand-mining, and is deliberately not more than that.
      */
     public static final List<Entry> HOLD = List.of(
-            new Entry("gtceu:iron_plate", 8),
-            new Entry("gtceu:copper_plate", 8),
+            new Entry("ftbmaterials:iron_plate", 8),
+            new Entry("ftbmaterials:copper_plate", 8),
             new Entry("minecraft:coal", 8));
 
     /** Everything granted, pocket first, in the order it lands in the inventory. */

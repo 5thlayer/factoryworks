@@ -1,9 +1,9 @@
 {
   "type": "planetaryfactory:smelting",
-  "ingredient": "gtceu:iron_plate",
+  "ingredient": "ftbmaterials:iron_plate",
   "count": 5,
   "result": {
-    "id": "gtceu:steel_plate",
+    "id": "ftbmaterials:steel_plate",
     "count": 1
   },
   "cookingtime": 320

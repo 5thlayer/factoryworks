@@ -239,16 +239,14 @@ class PlanResolverTest {
      * refusing the plan because the first match is not the one in the inventory is the bug that
      * reached a player as "the Assembler cannot craft this recipe" with a full bag of iron ingots.
      *
-     * <p>The two ids are the pack's own, with one caveat worth stating rather than hiding:
-     * `item-map.json` still maps `iron-plate` to `gtceu:iron_plate`, and GregTech is no longer
-     * installed. So that row is a target the pack *names* and does not resolve, which is
-     * ADR-0060's unfinished item-map work rather than this test's. The vanilla ingot is real.
-     * Both are arbitrary to every assertion here: the resolver takes items as strings.
+     * <p>The two ids are the pack's own: `item-map.json` maps `iron-plate` to
+     * `ftbmaterials:iron_plate` (ADR-0061), and the vanilla ingot is real. Both are arbitrary to
+     * every assertion here: the resolver takes items as strings.
      */
     private static RecipeGraph unifiedGraph() {
         return RecipeGraph.builder()
                 .add(new HandRecipe("gear",
-                        List.of(new Ingredient(List.of("gtceu:iron_plate", "minecraft:iron_ingot"), 2)),
+                        List.of(new Ingredient(List.of("ftbmaterials:iron_plate", "minecraft:iron_ingot"), 2)),
                         List.of(new ItemAmount("gear", 1)), 10))
                 .build();
     }
@@ -268,12 +266,12 @@ class PlanResolverTest {
         // Two entries naming the same item would each pass the queue's per-entry buffer check and
         // then together over-consume it, so the step's inputs are merged by item.
         PlanResolver.Resolution resolution = new PlanResolver(unifiedGraph(), Set.of()::contains)
-                .resolve("gear", 2, have("gtceu:iron_plate", 3, "minecraft:iron_ingot", 5));
+                .resolve("gear", 2, have("ftbmaterials:iron_plate", 3, "minecraft:iron_ingot", 5));
 
         assertTrue(resolution.complete());
         List<ItemAmount> inputs = resolution.steps().get(0).inputs();
         assertEquals(inputs.size(), asMap(inputs).size(), "an item named twice in one step: " + inputs);
-        assertEquals(Map.of("gtceu:iron_plate", 3, "minecraft:iron_ingot", 1), asMap(inputs));
+        assertEquals(Map.of("ftbmaterials:iron_plate", 3, "minecraft:iron_ingot", 1), asMap(inputs));
     }
 
     @Test
@@ -282,7 +280,7 @@ class PlanResolverTest {
                 .resolve("gear", 1, have());
 
         assertFalse(resolution.complete());
-        assertEquals(Map.of("gtceu:iron_plate", 2), asMap(resolution.missing()));
+        assertEquals(Map.of("ftbmaterials:iron_plate", 2), asMap(resolution.missing()));
     }
 
     @Test

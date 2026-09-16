@@ -103,8 +103,10 @@ smelt be asserted against the recipe the pack ships rather than against a fixtur
 and it is what `scripts/check-datapack-load.py` watches the game read. The dead subtrees are
 excluded by name — `gtceu/`, `gt_materials/`, `gcyr/` and the three GregTech recipe subtrees name
 registries that left with ADR-0060, and are re-derived against the chassis (#258) and the item
-alphabet #275 decides -- FTB Materials' intermediates against Oritech's and Railcraft's, by the converter (#87). Three of the four smelts still name `gtceu:` results and
-do not load, which is why stone brick is the only smelt under test.
+alphabet #275 decides -- FTB Materials' intermediates against Oritech's and Railcraft's, by the converter (#87). The
+plate smelts name `ftbmaterials:` items (ADR-0061), so FTB Materials and the FTB Library it requires
+are on the dev runtime classpath and are the one foreign mod the server loads; stone brick is still
+the only smelt under test.
 
 What is there is `EnergyFaceTests` (#271), and only what a JVM test cannot reach: that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
@@ -541,6 +543,17 @@ that Factorio's seconds survive Minecraft's break-time formula — is `MiningSpe
 `./gradlew :planetaryfactory_core:test`. Whether the Pick mines every block class, dismantles a GT
 machine and satisfies Create's wrench is a world load. See
 `docs/testing/hand-written-recipe-check.md`.
+
+### Item map check
+
+`tests/pack/test_item_map.py` holds ADR-0061: FTB Materials owns every material form, and a tech
+mod supplies machines. It asserts every `data/pack/item-map.json` target resolves against the
+installed jars (the pack's own via its lang and KubeJS's `event.create`, vanilla via the client jar
+when present), that no row names a mod ADR-0060 removed, that the seven material-form rows are
+`ftbmaterials:`, and that no emitted recipe or item tag names a `c:` tag more than one installed jar
+populates -- with AlmostUnified gone, `#c:ingots/steel` accepts three items and is not a decision.
+The rows #277 (machines, blocks, oil fluids) and #251 (Researchd) own sit in `DEFERRED`; a stale entry
+fails, so delete one as its row resolves. Run it after editing the item map or re-running a converter.
 
 ### Research unlock check
 

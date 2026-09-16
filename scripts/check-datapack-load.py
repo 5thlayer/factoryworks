@@ -39,18 +39,9 @@ GRADLE = ["./gradlew", ":planetaryfactory_core:runGameTestServer", "--rerun-task
 
 # A rejection the log is allowed to contain, and why. Two kinds, deliberately not merged: a defect
 # this repo owns and has deferred, and an id that only a KubeJS-installed game has. The GameTest
-# server is vanilla plus the mod jar, so KubeJS's `StartupEvents.registry` items do not exist on it
-# -- that is the harness, not the pack, and saying so is the whole reason the reasons are here.
+# server is vanilla, the mod jar and FTB Materials (ADR-0061), so KubeJS's
+# `StartupEvents.registry` items do not exist on it -- that is the harness, not the pack, and saying so is the whole reason the reasons are here.
 EXPECTED = {
-    "planetaryfactory:copper_plate":
-        "names `gtceu:copper_plate`. The item map still targets GregTech, which left with "
-        "ADR-0060. `ftbmaterials:copper_plate` is what the pack installed FTB Materials for; "
-        "which row names it is #275's decision, and the converter that reads it is #87's",
-    "planetaryfactory:iron_plate":
-        "names `gtceu:iron_plate`. The item map holds no `ftbmaterials:` row at all yet, which "
-        "is the rewrite #275 exists for",
-    "planetaryfactory:steel_plate":
-        "names `gtceu:steel_plate` and `gtceu:iron_plate` -- the item map's rewrite (#275)",
     "planetaryfactory:blocks/yumako_log":
         "drops `planetaryfactory:yumako_log`, registered by KubeJS, which a GameTest server does "
         "not load. Harness, not pack",

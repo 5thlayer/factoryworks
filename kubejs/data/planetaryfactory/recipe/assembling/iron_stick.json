@@ -5,7 +5,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_plate"
+            "item": "ftbmaterials:iron_plate"
           },
           "count": 1
         }
@@ -17,7 +17,7 @@
       {
         "content": {
           "ingredient": {
-            "item": "gtceu:iron_rod"
+            "item": "ftbmaterials:iron_rod"
           },
           "count": 2
         }
