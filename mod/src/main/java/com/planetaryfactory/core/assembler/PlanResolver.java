@@ -76,8 +76,8 @@ public final class PlanResolver {
     }
 
     /**
-     * Select Amount's {@code all}: the largest count whose plan is complete, so {@code all} can
-     * never produce a plan Start then refuses (ADR-0038).
+     * The Crafting Plan's {@code all}: the largest count whose plan is complete, so {@code all}
+     * can never queue a plan the inventory then refuses (ADR-0064).
      *
      * <p>Found by doubling and then bisecting rather than by dividing the inventory through the
      * recipe, because a chain's cost is not linear in the count -- a recipe making two at a time

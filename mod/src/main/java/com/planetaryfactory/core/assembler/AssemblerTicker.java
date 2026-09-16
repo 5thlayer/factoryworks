@@ -27,6 +27,11 @@ public final class AssemblerTicker {
 
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        // The dialog re-resolves on the queue's cadence whether or not the queue is running: the
+        // player can pick items up with it open, and a +5 the inventory newly covers should light.
+        if (player.containerMenu instanceof CraftingPlanMenu && player.tickCount % SYNC_INTERVAL_TICKS == 0) {
+            PersonalAssembler.refreshPlan(player);
+        }
         AssemblerQueue queue = PersonalAssembler.queueOf(player);
         boolean wasEmpty = queue.isEmpty();
         PersonalAssembler.tick(player);
@@ -60,12 +65,5 @@ public final class AssemblerTicker {
     private static void sendHandRecipes(ServerPlayer player) {
         PFNetwork.sendToPlayer(player,
                 HandRecipeSetPacket.of(RuntimeHandRecipes.graph(player.level()).ids()));
-    }
-
-    /** A pending plan is an open dialog, and an open dialog does not survive a logout. */
-    public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            PersonalAssembler.forget(player);
-        }
     }
 }

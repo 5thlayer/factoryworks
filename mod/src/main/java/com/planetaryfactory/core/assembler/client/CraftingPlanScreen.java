@@ -1,39 +1,43 @@
 package com.planetaryfactory.core.assembler.client;
 
+import com.mojang.blaze3d.platform.Window;
+import com.planetaryfactory.core.assembler.AssemblerQueueView;
+import com.planetaryfactory.core.assembler.CraftButtons;
 import com.planetaryfactory.core.assembler.CraftingPlanMenu;
 import com.planetaryfactory.core.assembler.ItemAmount;
 import com.planetaryfactory.core.assembler.PlanDisplay;
-import com.planetaryfactory.core.network.OpenPanelPacket;
-import com.planetaryfactory.core.network.PlanStartPacket;
+import com.planetaryfactory.core.network.PlanCraftPacket;
+import com.planetaryfactory.core.network.QueueSyncPacket;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import org.lwjgl.glfw.GLFW;
 
 /**
- * The Crafting Plan: what the plan spends, what it makes, what it cannot get, and one commitment
- * (ADR-0038 steps 4 and 5).
+ * The Crafting Plan: what one craft spends, makes and cannot get, three buttons that queue, and the
+ * queue running underneath (#287).
+ *
+ * <p>There is no Start and no Cancel. {@code +1}, {@code +5} and {@code all} each queue at once, the
+ * plan re-resolves in place as the inventory is spent, and cancelling stays on the panel, which
+ * already lists the queue. Close leaves the queue running.
  *
  * <p>{@code Locked} is its own column beside {@code Missing} because the two ask different things of
  * the player: research one, mine the other.
- *
- * <p>What fills the three lists is #161's. This screen is the frame, and it is already honest about
- * the empty case -- Start is refused on any incomplete plan, which is the state every plan is in
- * until the resolver lands.
  */
 public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> {
 
     /**
      * Consume, To Craft, Missing, Locked.
      *
-     * <p>Consume comes first because it is what Start spends. ADR-0038 has Start pay the whole raw
-     * cost in one go, so the list of what leaves the inventory is the one the player is actually
-     * being asked to agree to -- reading it after the list of what arrives puts the price after the
-     * purchase.
+     * <p>Consume comes first because it is what a press spends. ADR-0038 pays the whole raw cost in
+     * one go, so the list of what leaves the inventory is the one the player is actually being asked
+     * to agree to -- reading it after the list of what arrives puts the price after the purchase.
      */
     private static final int COLUMN = 4;
 
@@ -56,28 +60,86 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
      */
     private ItemStack hovered = ItemStack.EMPTY;
 
+    /** Queue rows drawn under the plan; the panel shows the rest. */
+    private static final int QUEUE_ROWS = 3;
+
+    private static final int QUEUE_TOP = 156;
+
+    private static final int BAR = 0xFF4FA84F;
+
+    private Button one;
+    private Button five;
+    private Button all;
+
+    /**
+     * Whether the cursor has been put on {@code +1} yet.
+     *
+     * <p>{@code init} runs again on every resize, and a cursor that jumped back each time the window
+     * changed size would be taken from the player rather than handed to them.
+     */
+    private boolean warped;
+
     public CraftingPlanScreen(CraftingPlanMenu menu, Inventory inventory, Component title) {
-        // Wider than the other two dialogs: four columns of item names at 3-space-per-character do
-        // not fit in the panel's width, and a name that elides is a name the player cannot shop for.
-        super(menu, inventory, title, 340, 190);
+        // Wider than the panel: four columns of item names at 3-space-per-character do not fit in its
+        // width, and a name that elides is a name the player cannot shop for.
+        super(menu, inventory, title, 340, 270);
     }
 
     @Override
     protected void init() {
         super.init();
-        Button start = Button.builder(Component.translatable("planetaryfactory_core.assembler.start"),
-                        b -> net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new PlanStartPacket(menu.display().planId())))
-                .bounds(leftPos + imageWidth - 150, topPos + imageHeight - 26, 70, 20).build();
-        start.active = menu.display().complete();
-        addRenderableWidget(start);
-        addRenderableWidget(Button.builder(Component.translatable("planetaryfactory_core.assembler.back"),
-                        b -> net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new OpenPanelPacket()))
-                .bounds(leftPos + imageWidth - 76, topPos + imageHeight - 26, 70, 20).build());
+        int y = topPos + imageHeight - 26;
+        one = addRenderableWidget(Button.builder(Component.literal("+1"), b -> craft(1))
+                .bounds(leftPos + 8, y, 36, 20).build());
+        five = addRenderableWidget(Button.builder(Component.literal("+5"), b -> craft(5))
+                .bounds(leftPos + 48, y, 36, 20).build());
+        all = addRenderableWidget(Button.builder(Component.translatable("planetaryfactory_core.assembler.all"),
+                        b -> craft(menu.buttons().allCount()))
+                .bounds(leftPos + 88, y, 40, 20).build());
+        addRenderableWidget(Button.builder(Component.translatable("planetaryfactory_core.assembler.close"),
+                        b -> onClose())
+                .bounds(leftPos + imageWidth - 76, y, 70, 20).build());
+        refreshButtons();
+        if (!warped) {
+            warped = true;
+            warpCursorTo(one.getX() + one.getWidth() / 2, one.getY() + one.getHeight() / 2);
+        }
+    }
+
+    private void craft(int amount) {
+        ClientPacketDistributor.sendToServer(new PlanCraftPacket(menu.display().recipe(), amount));
+    }
+
+    /** Read off the menu every frame, since a {@code PlanUpdatePacket} can change it at any time. */
+    private void refreshButtons() {
+        CraftButtons buttons = menu.buttons();
+        one.active = buttons.one();
+        five.active = buttons.five();
+        all.active = buttons.all();
+    }
+
+    /**
+     * Puts the pointer on a GUI-space point, so one click queues the first craft (#287).
+     *
+     * <p>GLFW takes window coordinates, which the GUI scale divides. Moving the OS cursor is not
+     * enough on its own: GLFW reports no motion for a warp, so {@code MouseHandler} would keep the
+     * old position until the mouse moved, and a click without moving would land where the cursor
+     * used to be. The two fields are opened by {@code META-INF/accesstransformer.cfg} for this.
+     */
+    private static void warpCursorTo(int guiX, int guiY) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Window window = minecraft.getWindow();
+        double x = guiX * (double) window.getScreenWidth() / window.getGuiScaledWidth();
+        double y = guiY * (double) window.getScreenHeight() / window.getGuiScaledHeight();
+        GLFW.glfwSetCursorPos(window.handle(), x, y);
+        minecraft.mouseHandler.xpos = x;
+        minecraft.mouseHandler.ypos = y;
     }
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         hovered = ItemStack.EMPTY;
+        refreshButtons();
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (!hovered.isEmpty()) {
             graphics.setTooltipForNextFrame(font, hovered, mouseX, mouseY);
@@ -93,24 +155,63 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
         column(graphics, leftPos + 8 + 2 * width, "missing", display.missing(), ChatFormatting.RED, mouseX, mouseY);
         column(graphics, leftPos + 8 + 3 * width, "locked", display.locked(), ChatFormatting.GOLD, mouseX, mouseY);
         if (!display.complete()) {
-            // Its own line above the buttons, not beside them: the reason a plan cannot start is a
-            // translated sentence of unknown width, and sharing the row with Start and Back means
-            // the longest translation is the one that gets cut in half.
+            // Its own line above the buttons, not beside them: the reason a plan cannot be queued is
+            // a translated sentence of unknown width, and sharing the row with the buttons means the
+            // longest translation is the one that gets cut in half.
             //
             // Three empty columns is not "you are short of something" -- it is the resolver saying
             // it could not read the recipe at all, which happens to one carrying a tag ingredient,
             // a fluid or a chanced output. Telling the player they are missing nothing while
-            // refusing to start would be the worst of both.
+            // refusing to queue would be the worst of both.
             boolean nothingToShow = display.consume().isEmpty()
                     && display.toCraft().isEmpty()
                     && display.missing().isEmpty()
                     && display.locked().isEmpty();
+            // Locked before short: research is the fix there, and "not enough" would send the player
+            // mining for an item no amount of mining lets them craft.
+            String reason = nothingToShow ? "unplannable"
+                    : display.locked().isEmpty() ? "incomplete" : "locked_plan";
             graphics.text(font,
-                    Component.translatable(nothingToShow
-                                    ? "planetaryfactory_core.assembler.unplannable"
-                                    : "planetaryfactory_core.assembler.incomplete")
+                    Component.translatable("planetaryfactory_core.assembler." + reason)
                             .withStyle(ChatFormatting.RED),
                     leftPos + 8, topPos + imageHeight - 38, 0xFFFF5555, false);
+        }
+        renderQueue(graphics);
+    }
+
+    /**
+     * The first few queued plans, so a press can be watched running without leaving the dialog.
+     *
+     * <p>No cancel here: the panel owns that, and a cancel beside three buttons that queue would be
+     * one misclick from refunding what was just paid for.
+     */
+    private void renderQueue(GuiGraphicsExtractor graphics) {
+        int y = topPos + QUEUE_TOP;
+        graphics.text(font,
+                Component.translatable("planetaryfactory_core.assembler.panel").withStyle(ChatFormatting.GRAY),
+                leftPos + 8, y, 0xFFAAAAAA, false);
+        y += 12;
+        List<QueueSyncPacket.Entry> entries = AssemblerQueueView.entries();
+        if (entries.isEmpty()) {
+            graphics.text(font,
+                    Component.translatable("planetaryfactory_core.assembler.queue_empty").withStyle(ChatFormatting.GRAY),
+                    leftPos + 10, y + 4, 0xFFAAAAAA, false);
+            return;
+        }
+        int trackWidth = imageWidth - 16;
+        for (QueueSyncPacket.Entry entry : entries.subList(0, Math.min(QUEUE_ROWS, entries.size()))) {
+            graphics.item(itemStack(entry.rootItem()), leftPos + 8, y);
+            graphics.text(font, "x" + entry.amount(), leftPos + 28, y + 5, 0xFFFFFFFF, false);
+            int barLeft = leftPos + 60;
+            int barWidth = (int) ((trackWidth - 52) * Math.max(0.0f, Math.min(1.0f, entry.progress())));
+            graphics.fill(barLeft, y + 7, leftPos + 8 + trackWidth, y + 9, ROW);
+            graphics.fill(barLeft, y + 7, barLeft + barWidth, y + 9, BAR);
+            y += ROW_HEIGHT;
+        }
+        if (entries.size() > QUEUE_ROWS) {
+            graphics.text(font,
+                    Component.translatable("planetaryfactory_core.assembler.and_more", entries.size() - QUEUE_ROWS),
+                    leftPos + 8, y, 0xFF888888, false);
         }
     }
 

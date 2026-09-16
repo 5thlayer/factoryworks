@@ -67,3 +67,6 @@ modId = "jei"
 type = "optional"
 ordering = "AFTER"
 side = "CLIENT"
+
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"

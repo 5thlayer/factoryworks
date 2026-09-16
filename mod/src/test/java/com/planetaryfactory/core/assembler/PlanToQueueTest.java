@@ -68,7 +68,7 @@ class PlanToQueueTest {
 
     @Test
     void everyStepOfEveryAffordablePlanIsFedByWhatCameBeforeIt() {
-        // largestAffordable is the count Select Amount's `all` puts in front of the player, so it is
+        // largestAffordable is the count the Crafting Plan's `all` puts in front of the player, so it is
         // the count most likely to sit exactly on the edge of the reservation. Walking every one of
         // them is what shows the resolver's rounding never leaves a step short.
         PlanResolver resolver = new PlanResolver(GRAPH, Set.of()::contains);
