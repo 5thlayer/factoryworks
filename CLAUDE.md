@@ -420,6 +420,33 @@ to date, print no log, and the check would pass having loaded nothing. Like the 
 in no batch; run it after a converter change, after editing `gameTestPack`, or after any edit to
 `kubejs/data/`.
 
+### Client asset check
+
+`scripts/check-client-assets.py` is the client half of #273's in-world work (#276), and the only
+check here that can see whether anything the pack ships actually **renders**. Every other asset
+check is file-to-file — `test_data_formats.py` walks definition → model, the asset-hop checks walk
+blockstate → model → texture — and all of them assert the files name each other, never that the
+game accepts them. `check-datapack-load.py` and the GameTest harness cannot help: both are
+**server** runs, and a model, a texture, a blockstate and an item model definition are read by a
+client neither of them starts.
+
+NeoForge 26.1.2.109 has no client test harness — `neoforge/gametest/` is server-side — so this is
+the real client, booted by `scripts/launch.py`'s headless context (imported, not reimplemented),
+stopped when the log goes quiet for fifteen seconds with `blocks.png-atlas` created, and killed by
+process group because `launch.py` is a Python parent holding a Java child. The allowlist rule is
+`check-datapack-load.py`'s: every complaint about this namespace is an `EXPECTED` entry with its
+ticket, an unlisted one fails, and a stale one fails too. The eleven today are seven models naming
+departed `gtceu:`/`gcyr:` textures (#258) and the four steam fluids (#189). Other mods' namespaces
+are not scanned; they are not ours to fix.
+
+One blind spot is **measured rather than assumed**: a missing item model definition — the
+fifteen-item failure the ticket was filed over — is logged nowhere at all. Deleting
+`assets/planetaryfactory/items/boiler.json` produced a log with zero occurrences of `boiler` while
+the item rendered as the checkerboard. That half stays with `test_data_formats.py`, and the two are
+complementary by measurement. Whether the Boiler's texture is the *right* texture is not claimed
+here. It is in no batch; run it after editing any model, blockstate, texture or definition. See
+`docs/testing/client-asset-check.md`.
+
 ### Load-time codec check
 
 `tests/pack/test_load_codecs.py` is the other direction of the 26.1 format work (#273): the data
