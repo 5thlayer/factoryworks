@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import rearth.oritech.block.base.entity.MultiblockGeneratorBlockEntity;
 import rearth.oritech.block.entity.MachineCoreEntity;
 import rearth.oritech.block.entity.generators.SteamEngineEntity;
@@ -33,7 +34,9 @@ import rearth.oritech.util.Geometry;
  *
  * <ul>
  *   <li><b>{@code tickMaster}</b> burns and makes what {@link SteamEngineSpec} says, with the half
- *       millibucket carried rather than floored, returns no water, and sizes the row's tank and FE
+ *       millibucket carried rather than floored, returns no water -- #282's
+ *       "Returned water is 0" holds because no insert exists, so there is no number to test --
+ *       burns only what the FE buffer has room for, and sizes the row's tank and FE
  *       buffer to the row on every tick.
  *   <li><b>{@code setupMaster}</b> is Oritech's scan with one more stop: an engine already answering
  *       to another live master is a boundary, not a slave. Oritech let two masters that received
@@ -46,9 +49,15 @@ import rearth.oritech.util.Geometry;
 @Mixin(SteamEngineEntity.class)
 public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEntity {
 
-    /** Oritech's scan reach along the engine's facing axis, as its jar states it. */
-    @Unique
-    private static final int PLANETARYFACTORY$CHAIN_REACH = 20;
+    /** Oritech's scan reach along the engine's facing axis, read from its class, not restated. */
+    @Shadow
+    @Final
+    private static int MAX_CHAIN_SIZE;
+
+    /** Oritech's top speed; a tank holding more than a shrunken row's capacity would exceed it. */
+    @Shadow
+    @Final
+    private static int MAX_SPEED;
 
     @Shadow
     @Final
@@ -92,6 +101,16 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
         return planetaryfactory$spec;
     }
 
+    /**
+     * The FE buffer Oritech's own resize path reads. {@code updateEnergyContainer} runs on load and
+     * on every addon change and sets the capacity from here, so answering Oritech's config would undo
+     * the per-row size. {@code slaves} is still null while the super constructor calls this.
+     */
+    @Inject(method = "getDefaultCapacity", at = @At("HEAD"), cancellable = true)
+    private void planetaryfactory$defaultCapacity(CallbackInfoReturnable<Long> cir) {
+        cir.setReturnValue(planetaryfactory$spec().bufferCapacity(slaves == null ? 1 : slaves.size() + 1));
+    }
+
     /** A lone engine's tank is Factorio's from the moment it exists, before any steam reaches it. */
     @Inject(method = "<init>", at = @At("RETURN"))
     private void planetaryfactory$sizeAlone(BlockPos pos, BlockState state, CallbackInfo ci) {
@@ -122,8 +141,9 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
         }
 
         SteamEngineSpec spec = planetaryfactory$spec();
-        float speed = getSteamProcessingSpeed();
-        SteamEngineSpec.Tick asked = spec.request(speed, rowLength, planetaryfactory$carry);
+        float speed = Math.min(getSteamProcessingSpeed(), MAX_SPEED);
+        long room = energyStorage.getCapacityAsLong() - energyStorage.getAmountAsLong();
+        SteamEngineSpec.Request asked = spec.request(speed, rowLength, planetaryfactory$carry, room);
         ResourceHandler<FluidResource> input = boilerStorage.getInputContainer();
         SteamEngineSpec.Tick made;
         try (Transaction transaction = Transaction.openRoot()) {
@@ -135,6 +155,10 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
             transaction.commit();
         }
         planetaryfactory$carry = made.carry();
+        if (made.steam() <= 0) {
+            // Oritech's own early return: a tick that burnt nothing neither animates nor counts as work.
+            return;
+        }
 
         clientStats = new SteamEngineEntity.SteamEngineSyncPacket(worldPosition, speed,
                 getSteamEnergyEfficiency(speed), made.energy(), made.steam(), slaves.size());
@@ -149,7 +173,7 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
         SteamEngineEntity self = (SteamEngineEntity) (Object) this;
         slaves.clear();
         for (int direction = -1; direction <= 1; direction += 2) {
-            for (int step = 1; step <= PLANETARYFACTORY$CHAIN_REACH; step++) {
+            for (int step = 1; step <= MAX_CHAIN_SIZE; step++) {
                 BlockPos at = new BlockPos(Geometry.offsetToWorldPosition(getFacing(),
                         new Vec3i(step * direction, 0, 0), worldPosition));
                 Optional<MachineCoreEntity> core =
