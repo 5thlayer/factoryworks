@@ -145,19 +145,31 @@ def boot():
         finally:
             # The whole process group: `launch.py` is a python parent holding the java child, and
             # killing only the parent leaves a headless Minecraft running with nobody watching it.
-            with_pg = os.getpgid(proc.pid)
-            os.killpg(with_pg, signal.SIGTERM)
+            # Guarded because the group is already gone when the client died on its own, and an
+            # exception raised HERE would replace whatever the body was reporting -- including a
+            # real failure -- with a ProcessLookupError traceback.
             try:
-                proc.wait(timeout=30)
-            except subprocess.TimeoutExpired:
-                os.killpg(with_pg, signal.SIGKILL)
-    return LOG.read_text(errors="replace") if LOG.exists() else ""
+                group = os.getpgid(proc.pid)
+                os.killpg(group, signal.SIGTERM)
+                try:
+                    proc.wait(timeout=30)
+                except subprocess.TimeoutExpired:
+                    os.killpg(group, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+    return None
 
 
 def main():
     text = boot()
-    if RELOADED not in text:
-        print("FAIL: the client never finished its resource reload -- nothing was asserted.")
+    # `boot` returns the log only on the one path that proves the reload ran and then went quiet.
+    # Every other way out -- the client exiting on its own, the timeout expiring mid-reload -- is a
+    # failure rather than a log to scan: a half-written log can hold the atlas line and simply not
+    # have reached the model that would have failed, which would pass this check having asserted
+    # less than it looked like.
+    if text is None:
+        print(f"FAIL: the client never finished its resource reload within {TIMEOUT}s, or exited "
+              f"early -- nothing was asserted.")
         print(f"      read {LOG}")
         return 1
 
