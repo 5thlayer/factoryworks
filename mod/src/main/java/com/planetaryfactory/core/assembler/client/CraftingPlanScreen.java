@@ -110,7 +110,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
                                     ? "planetaryfactory_core.assembler.unplannable"
                                     : "planetaryfactory_core.assembler.incomplete")
                             .withStyle(ChatFormatting.RED),
-                    leftPos + 8, topPos + imageHeight - 38, 0xFF5555, false);
+                    leftPos + 8, topPos + imageHeight - 38, 0xFFFF5555, false);
         }
     }
 
@@ -118,7 +118,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
             ChatFormatting colour, int mouseX, int mouseY) {
         graphics.text(font,
                 Component.translatable("planetaryfactory_core.assembler." + key).withStyle(colour),
-                x, topPos + 22, 0xFFFFFF, false);
+                x, topPos + 22, 0xFFFFFFFF, false);
         int y = topPos + 34;
         for (ItemAmount amount : amounts.subList(0, Math.min(MAX_LINES, amounts.size()))) {
             // The icon and not the name: four columns of "8 Steel Plate" is more text than the
@@ -127,7 +127,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
             // nothing is lost -- including the id, which F3+H puts back for anyone who wants it.
             ItemStack stack = itemStack(amount.item());
             graphics.item(stack, x, y);
-            graphics.text(font, "x " + amount.count(), x + 20, y + 5, 0xCCCCCC, false);
+            graphics.text(font, "x " + amount.count(), x + 20, y + 5, 0xFFCCCCCC, false);
             if (!stack.isEmpty() && mouseX >= x && mouseX < x + 16 && mouseY >= y && mouseY < y + 16) {
                 hovered = stack;
             }
@@ -137,7 +137,7 @@ public final class CraftingPlanScreen extends AssemblerScreen<CraftingPlanMenu> 
             graphics.text(font,
                     Component.translatable("planetaryfactory_core.assembler.and_more",
                             amounts.size() - MAX_LINES),
-                    x, y, 0x888888, false);
+                    x, y, 0xFF888888, false);
         }
     }
 }

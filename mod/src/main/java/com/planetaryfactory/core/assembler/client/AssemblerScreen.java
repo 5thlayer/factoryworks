@@ -64,6 +64,6 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
     /** The title only. The inherited second label names a player inventory these screens draw themselves. */
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        graphics.text(font, title, 8, 6, 0xFFFFFF, false);
+        graphics.text(font, title, 8, 6, 0xFFFFFFFF, false);
     }
 }

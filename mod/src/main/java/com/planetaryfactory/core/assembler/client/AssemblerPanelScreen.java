@@ -53,31 +53,31 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
             int textY = y + 5;
             graphics.item(itemStack(entry.rootItem()), leftPos + 9, y + 2);
             int after = leftPos + 27;
-            graphics.text(font, "x" + entry.amount(), after, textY, 0xFFFFFF, false);
+            graphics.text(font, "x" + entry.amount(), after, textY, 0xFFFFFFFF, false);
             after += font.width("x" + entry.amount()) + 6;
             if (entry.hasStep()) {
-                graphics.text(font, ">", after, textY, 0x777777, false);
+                graphics.text(font, ">", after, textY, 0xFF777777, false);
                 graphics.item(itemStack(entry.stepItem()), after + 8, y + 2);
-                graphics.text(font, "x" + entry.stepAmount(), after + 26, textY, 0xCCCCCC, false);
+                graphics.text(font, "x" + entry.stepAmount(), after + 26, textY, 0xFFCCCCCC, false);
             }
             if (entry.steps() > 1) {
                 Component of = Component.literal((entry.step() + 1) + "/" + entry.steps());
-                graphics.text(font, of, cancelLeft() - font.width(of) - 4, textY, 0x999999, false);
+                graphics.text(font, of, cancelLeft() - font.width(of) - 4, textY, 0xFF999999, false);
             }
             int cancelX = cancelLeft();
             graphics.fill(cancelX, y + 2, cancelX + CANCEL_SIZE, y + 2 + CANCEL_SIZE, 0xFF5A2B2B);
-            graphics.text(font, "x", cancelX + 4, y + 4, 0xFFDDDD, false);
+            graphics.text(font, "x", cancelX + 4, y + 4, 0xFFFFDDDD, false);
             y += ROW_HEIGHT;
             index++;
         }
         if (AssemblerQueueView.entries().isEmpty()) {
             graphics.text(font,
                     Component.translatable("planetaryfactory_core.assembler.queue_empty").withStyle(ChatFormatting.GRAY),
-                    leftPos + 10, topPos + ROWS_TOP + 4, 0xAAAAAA, false);
+                    leftPos + 10, topPos + ROWS_TOP + 4, 0xFFAAAAAA, false);
         } else if (AssemblerQueueView.blocked()) {
             graphics.text(font,
                     Component.translatable("planetaryfactory_core.assembler.paused").withStyle(ChatFormatting.GOLD),
-                    leftPos + 8, topPos + AssemblerPanelMenu.PLAYER_INVENTORY_Y - 12, 0xFFAA00, false);
+                    leftPos + 8, topPos + AssemblerPanelMenu.PLAYER_INVENTORY_Y - 12, 0xFFFFAA00, false);
         }
     }
 
