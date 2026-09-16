@@ -44,11 +44,12 @@ GRADLE = ["./gradlew", ":planetaryfactory_core:runGameTestServer", "--rerun-task
 EXPECTED = {
     "planetaryfactory:copper_plate":
         "names `gtceu:copper_plate`. The item map still targets GregTech, which left with "
-        "ADR-0060. The map and the converter that reads it are #87's, against the chassis #258 names",
+        "ADR-0060. What the row should name instead is #275's, against the alphabet Oritech and Railcraft now split between them; the converter that reads it is #87's",
     "planetaryfactory:iron_plate":
-        "names `gtceu:iron_plate` -- the item map's rewrite (#87)",
+        "names `gtceu:iron_plate`. Oritech ships no iron plate at all -- Railcraft owns the plate "
+        "line, which is the decision #275 exists for",
     "planetaryfactory:steel_plate":
-        "names `gtceu:steel_plate` and `gtceu:iron_plate` -- the item map's rewrite (#87)",
+        "names `gtceu:steel_plate` and `gtceu:iron_plate` -- the item map's rewrite (#275)",
     "planetaryfactory:blocks/yumako_log":
         "drops `planetaryfactory:yumako_log`, registered by KubeJS, which a GameTest server does "
         "not load. Harness, not pack",
