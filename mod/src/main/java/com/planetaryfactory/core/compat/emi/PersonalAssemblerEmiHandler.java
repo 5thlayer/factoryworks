@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.compat.emi;
 
 import com.planetaryfactory.core.assembler.AssemblerPanelMenu;
+import com.planetaryfactory.core.assembler.FillRequest;
 import com.planetaryfactory.core.assembler.HandRecipeSet;
 import com.planetaryfactory.core.network.FillRecipePacket;
 import dev.emi.emi.api.recipe.EmiPlayerInventory;
@@ -10,6 +11,8 @@ import dev.emi.emi.api.recipe.handler.EmiRecipeHandler;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -31,8 +34,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
  *
  * <p>{@code craft()} sends and returns. It opens no screen, because {@code
  * EmiRecipeFiller.performFill} calls {@code Minecraft.setScreen(handledScreen)} the moment it
- * returns true -- anything opened synchronously here loses that race. The server opens the dialog
- * instead, which is what the ADR wanted anyway for reasons that have nothing to do with EMI.
+ * returns true -- anything opened synchronously here loses that race. The server queues, or
+ * opens the Crafting Plan when the request cannot be queued (ADR-0065).
  */
 public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<AssemblerPanelMenu> {
 
@@ -88,16 +91,32 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
     }
 
     /**
-     * Asks the server for the Crafting Plan and gets out of EMI's way.
+     * Names the four clicks under EMI's own "Fill Recipe" line, or the shortcut cannot be discovered.
      *
-     * <p>{@code context.getAmount()} is not sent: the plan opens on one craft whatever the click, and
-     * the dialog's own {@code +1}, {@code +5} and {@code all} decide how many are queued (#287).
+     * <p>EMI asks this only of the handler for the open screen, so the lines appear on the Assembler's
+     * screen and nowhere else.
+     */
+    @Override
+    public List<ClientTooltipComponent> getTooltip(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
+        return List.of("left", "right", "shift", "middle").stream()
+                .map(key -> ClientTooltipComponent.create(
+                        Component.translatable("planetaryfactory_core.assembler.fill." + key).getVisualOrderText()))
+                .toList();
+    }
+
+    /**
+     * Sends the recipe and what the click asked for, and gets out of EMI's way (#288, ADR-0065).
+     *
+     * <p>Left queues one, right five, Shift all, middle opens the Crafting Plan. The button comes from
+     * {@link FillClick}; EMI reports Shift itself, as an amount of {@code Integer.MAX_VALUE}. Whether the
+     * inventory covers the request is the server's call, and it opens the plan when it does not.
      */
     @Override
     public boolean craft(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
         Identifier id = recipe.getId();
         if (id == null) return false;
-        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new FillRecipePacket(id));
+        FillRequest request = FillRequest.of(FillClick.button(), context.getAmount() == Integer.MAX_VALUE);
+        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new FillRecipePacket(id, request));
         return true;
     }
 }

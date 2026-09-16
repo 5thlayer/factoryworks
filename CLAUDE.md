@@ -217,11 +217,14 @@ hand recipes (the resolver picks a route with no cost model), and there are no c
 
 `CraftButtonsTest` is the Crafting Plan's one rule (#287, ADR-0064): a press queues at once, so a lit
 `+1`, `+5` or `all` is a promise the inventory covers it, and the ceiling is the resolver's
-`largestAffordable` rather than anything the screen counts.
+`largestAffordable` rather than anything the screen counts. `FillRequestTest` is EMI's Fill Recipe on
+the Assembler's screen (#288, ADR-0065): left queues 1, right 5, Shift all, middle opens the plan, and
+a request the ceiling does not cover queues nothing -- five never becomes three -- so the server opens
+the plan instead.
 
 Run them after editing anything under `core/assembler/` or after re-extracting the corpus. Whether
-EMI's Fill Recipe opens the plan with the cursor on `+1`, a press queues, and a plan delivers is a
-world load, not a static check.
+each mouse button reaches the handler on the Assembler's screen, Fill Recipe is unchanged on every
+other screen, and a plan delivers is a world load, not a static check.
 
 ### Starting-area geometry check
 

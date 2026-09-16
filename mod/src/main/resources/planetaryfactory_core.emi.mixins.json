@@ -2,7 +2,7 @@
   "required": false,
   "package": "com.planetaryfactory.core.mixin.emi",
   "compatibilityLevel": "JAVA_25",
-  "client": [],
+  "client": ["RecipeFillButtonWidgetMixin"],
   "injectors": {
     "defaultRequire": 1
   }

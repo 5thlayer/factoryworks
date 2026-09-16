@@ -5,7 +5,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
- * The Crafting Plan: the one dialog between EMI's {@code + Fill Recipe} and the queue (#287).
+ * The Crafting Plan: the dialog EMI's {@code + Fill Recipe} opens on a middle-click, or when what was
+ * asked for cannot be queued (#287, ADR-0065).
  *
  * <p>The plan itself never comes here. What the client gets is a {@link PlanDisplay} for one craft
  * and the resolver's {@code largestAffordable}, which decides which of {@code +1}, {@code +5} and
