@@ -63,8 +63,11 @@ builder produces.
 
 **The trigger to reinstate is the migration's world load**, at which point the machine set is fixed
 and the hops come back as ONE generic check enumerating every block the mod registers, not as five.
-Until then a missing texture reaches a player, and that is a known, dated cost rather than an
-oversight.
+Until then a missing texture no longer reaches a player unseen: `scripts/check-client-assets.py`
+(#276) catches an unresolved texture, model or blockstate variant against the running client rather
+than against a directory listing, which is what those five walkers were doing and is why the
+reinstatement is a generic check and not five. What it does not catch is a missing item model
+definition, which is logged nowhere — that hop keeps its static walker.
 
 ### This is emitted into a world
 
@@ -74,6 +77,16 @@ placed. The check is a launch into a fresh world that asserts against what the g
 loaded and, for biomes, actually located. **It has no harness on 26.1.2:** `scripts/worldgen-check.py`
 asserted GregTech's vein, deposit and layer registries through a GregTech-era KubeJS dump, and it
 left with GregTech (ADR-0060). The kind stands; the harness is rebuilt when a body next needs it.
+
+**The client is a second world, and it has a harness (#276).** The paragraph above is about the
+server: a registry that loaded is not a world that contains anything. The mirror claim is that a
+registered block is not a block anybody can see, and it is read by a client that no server run
+starts. `scripts/check-client-assets.py` boots the pack's real client headless, waits for the
+resource reload, and asserts the asset manager complained about none of this pack's models,
+blockstates, textures or fluids except an allowlisted gap. It is the check kind for *this renders
+at all*; **this looks or feels right** stays human on delivery, and one failure is measured to be
+invisible to it — a missing item model definition is logged nowhere, so that half stays static in
+`tests/pack/test_data_formats.py`. See `docs/testing/client-asset-check.md`.
 
 **A fixture row is unconditional.** Every body-level worldgen fact gets one — there is no
 judgement call about whether a given vein is important enough. The launch happens regardless and
