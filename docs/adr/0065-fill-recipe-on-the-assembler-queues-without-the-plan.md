@@ -20,8 +20,10 @@ buttons do, and queues it only if the inventory covers the count. **all** is com
 
 **A craft that cannot start opens the Crafting Plan.** That covers a count the inventory can't cover,
 a Missing leaf and a Locked recipe, and the plan names the reason. A request for 5 never becomes 3;
-only Shift means "as many as possible". A queue that succeeds gives no feedback beyond EMI's button
-sound and the queue updating.
+only Shift means "as many as possible". A queue that succeeds gives no feedback beyond the button
+sound and the queue updating, and **EMI's recipe screen stays open**, so the next craft is one more
+click. EMI closes that screen whenever the handler reports a craft, so a queueing click reports none
+and plays the sound itself.
 
 **Scope.** Nothing about EMI's Fill Recipe changes on any other screen. EMI calls the pack's handler
 only for `AssemblerPanelMenu` and only for recipes in the hand set. Everywhere else EMI's own

@@ -189,6 +189,114 @@ class AssemblerQueueTest {
         assertTrue(queue.isEmpty());
     }
 
+    private static CraftingPlan gearPlan(String name, int gears) {
+        return new CraftingPlan(
+                UUID.nameUUIDFromBytes(name.getBytes()),
+                GEAR,
+                gears,
+                List.of(new ItemAmount(IRON, 2 * gears)),
+                List.of(new CraftStep("gear", List.of(new ItemAmount(IRON, 2 * gears)),
+                        List.of(new ItemAmount(GEAR, gears)), 2, gears)));
+    }
+
+    @Test
+    void queueingTheSameItemAgainGrowsTheLastRowInsteadOfAddingOne() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 12);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan five = gearPlan("five", 5);
+        queue.enqueue(five, items);
+
+        queue.enqueue(gearPlan("one", 1), items);
+
+        assertEquals(1, queue.entries().size());
+        assertEquals(6, queue.entries().get(0).plan().amount());
+        assertEquals(five.id(), queue.entries().get(0).plan().id(), "the row keeps its id, so its cancel still reaches it");
+        assertEquals(0, items.count(IRON), "both reservations are taken");
+    }
+
+    @Test
+    void aMergedRowCraftsAndDeliversEverythingBothPlansAskedFor() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 12);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(gearPlan("five", 5), items);
+        tick(queue, items, 3); // part-way into the second gear
+
+        queue.enqueue(gearPlan("one", 1), items);
+        tick(queue, items, 20);
+
+        assertEquals(6, items.count(GEAR));
+        assertTrue(queue.isEmpty());
+    }
+
+    @Test
+    void cancellingAMergedRowRefundsWhatIsLeftOfBoth() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 12);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan five = gearPlan("five", 5);
+        queue.enqueue(five, items);
+        queue.enqueue(gearPlan("one", 1), items);
+        tick(queue, items, 2); // one gear made
+
+        queue.cancel(five.id(), items);
+
+        assertEquals(1, items.count(GEAR));
+        assertEquals(10, items.count(IRON));
+        assertTrue(queue.isEmpty());
+    }
+
+    @Test
+    void onlyTheLastRowGrowsSoTheOrderThePlayerQueuedInIsKept() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 20);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(gearPlan("gears", 2), items);
+        queue.enqueue(beltPlan(), items);
+
+        queue.enqueue(gearPlan("more gears", 1), items);
+
+        assertEquals(3, queue.entries().size(), "a gear behind a belt is a new row, not a jump ahead of it");
+    }
+
+    @Test
+    void theRowCountsDownAsEachCraftFinishes() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 24);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(gearPlan("twelve", 12), items);
+        QueuedPlan row = queue.entries().get(0);
+        assertEquals(12, row.remainingAmount());
+        assertEquals(12, row.remainingStepAmount());
+
+        tick(queue, items, 2);
+        row = queue.entries().get(0);
+        assertEquals(11, row.remainingAmount(), "x12 -> x11 after one craft");
+        assertEquals(11, row.remainingStepAmount());
+
+        tick(queue, items, 4);
+        assertEquals(9, queue.entries().get(0).remainingAmount());
+    }
+
+    @Test
+    void aMergedRowCountsDownAcrossBothPlans() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 12);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(gearPlan("five", 5), items);
+        queue.enqueue(gearPlan("one", 1), items);
+
+        tick(queue, items, 10); // the five are made; the one is not started
+        QueuedPlan row = queue.entries().get(0);
+        assertEquals(1, row.remainingAmount());
+        assertEquals(1, row.remainingStepAmount());
+    }
+
+    @Test
+    void anIntermediateStepDoesNotCountDownTheRow() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 3);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(beltPlan(), items);
+
+        tick(queue, items, 2); // the gear is made, the belt is not
+        assertEquals(2, queue.entries().get(0).remainingAmount(), "no belt exists yet");
+    }
+
     @Test
     void cancellingRefundsTheRemainingReservationAndTheIntermediatesAlreadyMade() {
         TestPlayerItems items = new TestPlayerItems().with(IRON, 3);
@@ -256,8 +364,10 @@ class AssemblerQueueTest {
         TestPlayerItems items = new TestPlayerItems(1, 64).with(IRON, 4);
         AssemblerQueue queue = new AssemblerQueue();
         CraftingPlan first = gearPlan();
+        // A different item, so it is a second row rather than more of the first.
         CraftingPlan second = new CraftingPlan(
-                UUID.randomUUID(), GEAR, 1, List.of(new ItemAmount(IRON, 2)), List.of(gearStep()));
+                UUID.randomUUID(), "iron_stick", 1, List.of(new ItemAmount(IRON, 2)),
+                List.of(new CraftStep("stick", List.of(new ItemAmount(IRON, 2)), List.of(new ItemAmount("iron_stick", 1)), 2)));
         queue.enqueue(first, items);
         queue.enqueue(second, items);
         items.give("stone", 64);

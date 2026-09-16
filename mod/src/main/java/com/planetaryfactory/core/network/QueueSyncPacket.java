@@ -29,6 +29,9 @@ public record QueueSyncPacket(List<Entry> entries, boolean blocked) implements C
     /**
      * One plan, as a row on the panel.
      *
+     * <p>{@code amount} and {@code stepAmount} are what is still to be made, so a row reads x12, x11,
+     * x10 as crafts finish rather than holding its starting count until the end.
+     *
      * <p>{@code stepItem} and {@code stepAmount} are what the plan is making <em>now</em>, which is
      * not usually what the plan is for: a queued transport belt spends most of its life crafting
      * iron gears, and a row naming only the belt says nothing is happening for the whole of it. It
@@ -42,9 +45,10 @@ public record QueueSyncPacket(List<Entry> entries, boolean blocked) implements C
             int stepAmount,
             int step,
             int steps,
-            float progress) {
+            float progress,
+            float progressPerTick) {
 
-        /** Written out by hand: eight components, and {@code StreamCodec.composite} stops at six. */
+        /** Written out by hand: nine components, and {@code StreamCodec.composite} stops at six. */
         public static final StreamCodec<ByteBuf, Entry> STREAM_CODEC = StreamCodec.of(
                 (buffer, entry) -> {
                     UUIDUtil.STREAM_CODEC.encode(buffer, entry.planId());
@@ -55,6 +59,7 @@ public record QueueSyncPacket(List<Entry> entries, boolean blocked) implements C
                     ByteBufCodecs.VAR_INT.encode(buffer, entry.step());
                     ByteBufCodecs.VAR_INT.encode(buffer, entry.steps());
                     ByteBufCodecs.FLOAT.encode(buffer, entry.progress());
+                    ByteBufCodecs.FLOAT.encode(buffer, entry.progressPerTick());
                 },
                 buffer -> new Entry(
                         UUIDUtil.STREAM_CODEC.decode(buffer),
@@ -64,7 +69,13 @@ public record QueueSyncPacket(List<Entry> entries, boolean blocked) implements C
                         ByteBufCodecs.VAR_INT.decode(buffer),
                         ByteBufCodecs.VAR_INT.decode(buffer),
                         ByteBufCodecs.VAR_INT.decode(buffer),
+                        ByteBufCodecs.FLOAT.decode(buffer),
                         ByteBufCodecs.FLOAT.decode(buffer)));
+
+        /** Whether the step under way makes the plan's own item, so the row names it once. */
+        public boolean stepIsRoot() {
+            return hasStep() && stepItem.equals(rootItem);
+        }
 
         /** Whether there is a step under way to name. */
         public boolean hasStep() {
@@ -92,12 +103,13 @@ public record QueueSyncPacket(List<Entry> entries, boolean blocked) implements C
             entries.add(new Entry(
                     entry.plan().id(),
                     entry.plan().rootItem(),
-                    entry.plan().amount(),
+                    entry.remainingAmount(),
                     making == null ? "" : making.item(),
-                    making == null ? 0 : making.count(),
+                    entry.remainingStepAmount(),
                     index,
                     steps.size(),
-                    entry.progress()));
+                    entry.progress(),
+                    entry.progressPerTick()));
         }
         return new QueueSyncPacket(List.copyOf(entries), queue.isBlocked());
     }

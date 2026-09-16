@@ -11,9 +11,11 @@ import dev.emi.emi.api.recipe.handler.EmiRecipeHandler;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -36,6 +38,10 @@ import net.neoforged.neoforge.network.PacketDistributor;
  * EmiRecipeFiller.performFill} calls {@code Minecraft.setScreen(handledScreen)} the moment it
  * returns true -- anything opened synchronously here loses that race. The server queues, or
  * opens the Crafting Plan when the request cannot be queued (ADR-0065).
+ *
+ * <p>That same {@code setScreen} is why a queueing click returns <b>false</b>: true would close EMI's
+ * recipe screen after every craft, and the player would reopen it to queue the next one. False
+ * skips the {@code setScreen} and EMI's button sound with it, so the sound is played here.
  */
 public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<AssemblerPanelMenu> {
 
@@ -110,6 +116,9 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
      * <p>Left queues one, right five, Shift all, middle opens the Crafting Plan. The button comes from
      * {@link FillClick}; EMI reports Shift itself, as an amount of {@code Integer.MAX_VALUE}. Whether the
      * inventory covers the request is the server's call, and it opens the plan when it does not.
+     *
+     * <p>Only a request for the plan returns true and hands the screen back to the panel; a queueing
+     * click returns false so EMI's recipe screen stays open for the next one (see the class doc).
      */
     @Override
     public boolean craft(EmiRecipe recipe, EmiCraftContext<AssemblerPanelMenu> context) {
@@ -117,6 +126,8 @@ public final class PersonalAssemblerEmiHandler implements EmiRecipeHandler<Assem
         if (id == null) return false;
         FillRequest request = FillRequest.of(FillClick.button(), context.getAmount() == Integer.MAX_VALUE);
         net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new FillRecipePacket(id, request));
-        return true;
+        if (request == FillRequest.PLAN) return true;
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+        return false;
     }
 }
