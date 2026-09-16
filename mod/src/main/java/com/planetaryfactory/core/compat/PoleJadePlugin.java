@@ -1,9 +1,11 @@
 package com.planetaryfactory.core.compat;
 
 import com.planetaryfactory.core.PlanetaryFactoryCore;
+import com.planetaryfactory.core.energy.NetworkReading;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,7 +27,10 @@ import snownee.jade.api.config.IPluginConfig;
  * area is measured at the base. This is the other half: the two numbers that can only be read from
  * a running pole, at the moment a player is standing in front of one asking why a machine is dark.
  *
- * <p>They are chosen to separate the only two failure modes a player cannot otherwise tell apart.
+ * <p>Below those, the pole's whole Electric Network as Factorio's hover summary shows it (#285):
+ * satisfaction, production, consumption and accumulators. The graphs over time are #286.
+ *
+ * <p>The first two are chosen to separate the only two failure modes a player cannot otherwise tell apart.
  * <strong>Out of range</strong> reads as a machine count that does not include the machine in
  * question. <strong>Underfed</strong> reads as a count that does, with delivery below demand.
  * Without both, those two look identical -- a machine that is not running -- and the pack has no
@@ -49,6 +54,13 @@ public class PoleJadePlugin implements IWailaPlugin {
     private static final String MACHINES = "PoleMachines";
     private static final String DELIVERED = "PoleDelivered";
     private static final String DEMANDED = "PoleDemanded";
+    private static final String PRODUCED = "NetProduced";
+    private static final String CHARGED = "NetCharged";
+    private static final String DISCHARGED = "NetDischarged";
+    private static final String STORED = "NetStored";
+    private static final String CAPACITY = "NetCapacity";
+    private static final String ACCUMULATORS = "NetAccumulators";
+    private static final String POLES = "NetPoles";
 
     /**
      * The numbers live on the server, so they have to be asked for.
@@ -66,9 +78,17 @@ public class PoleJadePlugin implements IWailaPlugin {
                     instanceof SupplyAreaPoleBlockEntity pole)) {
                 return;
             }
+            NetworkReading reading = pole.networkReading();
             tag.putInt(MACHINES, pole.machineCount());
-            tag.putLong(DELIVERED, pole.deliveredFePerTick());
-            tag.putLong(DEMANDED, pole.demandedFePerTick());
+            tag.putLong(DELIVERED, reading.delivered());
+            tag.putLong(DEMANDED, reading.demanded());
+            tag.putLong(PRODUCED, reading.produced());
+            tag.putLong(CHARGED, reading.charged());
+            tag.putLong(DISCHARGED, reading.discharged());
+            tag.putLong(STORED, reading.stored());
+            tag.putLong(CAPACITY, reading.capacity());
+            tag.putInt(ACCUMULATORS, reading.accumulators());
+            tag.putInt(POLES, reading.poles());
         }
 
         @Override
@@ -84,21 +104,32 @@ public class PoleJadePlugin implements IWailaPlugin {
             if (!data.contains(MACHINES)) {
                 return;
             }
-            int machines = data.getIntOr(MACHINES, 0);
+            NetworkReading reading = new NetworkReading(
+                    data.getLongOr(PRODUCED, 0L), data.getLongOr(DELIVERED, 0L),
+                    data.getLongOr(DEMANDED, 0L), data.getLongOr(CHARGED, 0L),
+                    data.getLongOr(DISCHARGED, 0L), data.getLongOr(STORED, 0L),
+                    data.getLongOr(CAPACITY, 0L), data.getIntOr(ACCUMULATORS, 0),
+                    data.getIntOr(POLES, 0));
             tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.machines",
-                    machines));
-            if (machines == 0) {
-                return;
+                    data.getIntOr(MACHINES, 0)));
+            tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.poles",
+                    reading.poles()));
+            int satisfaction = reading.satisfactionPercent();
+            // Factorio's colours: full is green, short is yellow, nothing is red.
+            ChatFormatting colour = satisfaction >= 100 ? ChatFormatting.GREEN
+                    : satisfaction > 0 ? ChatFormatting.YELLOW : ChatFormatting.RED;
+            tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.satisfaction",
+                    Component.literal(satisfaction + "%").withStyle(colour)));
+            tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.production",
+                    reading.produced()));
+            tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.consumption",
+                    reading.delivered(), reading.demanded()));
+            if (reading.hasAccumulators()) {
+                long flow = reading.accumulatorFlow();
+                tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.accumulators",
+                        reading.stored(), reading.capacity(),
+                        (flow > 0L ? "+" : "") + flow));
             }
-            long demanded = data.getLongOr(DEMANDED, 0L);
-            if (demanded == 0L) {
-                // Machines are in range and none of them wants anything: they are full, or idle.
-                // Reporting "0 / 0 FE/t" here would read as a fault rather than as a quiet factory.
-                tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.idle"));
-                return;
-            }
-            tooltip.add(Component.translatable("tooltip.planetaryfactory.pole.jade.supply",
-                    data.getLongOr(DELIVERED, 0L), demanded));
         }
 
         @Override
