@@ -22,7 +22,8 @@ condition -- is a decision, and it stops being this script's and becomes its sub
 
 The one exclusion is recorded in DEFERRED: `kubejs:oil_refinery` is the GregTech multiblock whose
 registration left with ADR-0060, so its leftover model names an item that no longer exists. It is
-re-derived with the machine chassis (#262) and given a definition then, not now.
+re-derived with the machine chassis Oritech replaces it with (#258) and given a
+definition then, not now.
 
 Usage:
 
@@ -45,7 +46,7 @@ ASSET_ROOTS = (
 # `<namespace>:<id>` pairs whose item model is a leftover rather than a live item. Listed rather
 # than skipped silently, so a stale model is a recorded deferral instead of an invisible one.
 DEFERRED = {
-    "kubejs:oil_refinery": "the GregTech multiblock's registration left with ADR-0060 (#262)",
+    "kubejs:oil_refinery": "the GregTech multiblock's registration left with ADR-0060; Oritech is the chassis (#258)",
 }
 
 

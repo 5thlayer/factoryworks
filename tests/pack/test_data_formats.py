@@ -34,8 +34,9 @@ WHAT IT CHECKS.
 
 WHAT IT IS NOT. It does not check the `gtceu:` recipe subtrees. Those carry the stale ingredient
 shape too, but GregTech left with ADR-0060 and they are dead wholesale rather than mis-shaped --
-they are re-derived with whatever replaces the machine chassis (#262), and asserting their shape
-here would be a permanently red check for a reason this file does not own. `kubejs/parked/` is
+they are re-derived against the chassis ADR-0060 names, which is #258's decision and #87's
+converter, and asserting their shape here would be a permanently red check for a reason this file
+does not own. `kubejs/parked/` is
 excluded for the same reason: nothing loads it.
 
 It cannot tell whether an id RESOLVES; that is a running server, and the cheap version of it -- a
@@ -61,13 +62,14 @@ DATA_ROOTS = (
     ROOT / "mod/src/main/resources/data",
 )
 
-# The recipe types the machine chassis owns, deferred to #262 rather than asserted here.
+# The recipe types the machine chassis owns, deferred to #258 (which names Oritech as the
+# chassis) and #87 (which owns the converter and the item map) rather than asserted here.
 DEFERRED_RECIPE_NAMESPACES = ("gtceu:",)
 
 # Item models left behind by a registration ADR-0060 removed. Named rather than skipped by shape,
 # so the day the chassis lands the entry is deleted and the definition is asserted like any other.
 DEFERRED_ITEM_MODELS = {
-    "kubejs:oil_refinery": "the GregTech multiblock's registration left with ADR-0060 (#262)",
+    "kubejs:oil_refinery": "the GregTech multiblock's registration left with ADR-0060 (#258)",
 }
 
 # Where an ingredient can appear in a recipe the pack emits. A value under one of these keys is a
