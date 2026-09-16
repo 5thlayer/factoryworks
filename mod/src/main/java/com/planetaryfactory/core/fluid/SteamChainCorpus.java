@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.fluid;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -121,7 +122,7 @@ public final class SteamChainCorpus {
 
     /** The Steam Engine's steam box, in Factorio units and so in millibuckets. */
     public int steamEngineFluidBoxVolume() {
-        for (com.google.gson.JsonElement box : steamEngine.getAsJsonArray("fluid_boxes")) {
+        for (JsonElement box : steamEngine.getAsJsonArray("fluid_boxes")) {
             JsonObject row = box.getAsJsonObject();
             if ("input".equals(row.get("production_type").getAsString())) {
                 return row.get("volume").getAsInt();

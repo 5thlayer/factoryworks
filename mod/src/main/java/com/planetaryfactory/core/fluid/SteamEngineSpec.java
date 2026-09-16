@@ -27,12 +27,6 @@ public final class SteamEngineSpec {
     /** Where Oritech's efficiency curve peaks, and where the prototype's rates are met exactly. */
     public static final double PEAK_SPEED = 7.0;
 
-    /**
-     * Oritech returns 90% of spent steam as water; the pack returns none (ADR-0062). The Offshore
-     * Pump never runs dry (ADR-0050), so a return would only add a stall on a full water tank.
-     */
-    public static final int WATER_RETURNED = 0;
-
     private static final int FACTORIO_TICKS_PER_SECOND = 60;
     private static final int MINECRAFT_TICKS_PER_SECOND = 20;
 
@@ -67,7 +61,11 @@ public final class SteamEngineSpec {
         public static final Carry NONE = new Carry(0.0, 0.0);
     }
 
-    /** What one tick burns and makes, in whole units, and what it leaves owed. */
+    /** What a row draws from its tank this tick, in whole millibuckets, and what it leaves owed. */
+    public record Request(int steam, Carry carry) {
+    }
+
+    /** What one tick burnt and made, in whole units, and what it leaves owed. */
     public record Tick(int steam, long energy, Carry carry) {
     }
 
@@ -81,11 +79,31 @@ public final class SteamEngineSpec {
         return Math.round(energyPerTickAtPeak) * rowLength;
     }
 
-    /** How much steam a row asks for this tick, before anything is drawn from the tank. */
-    public Tick request(double speed, int rowLength, Carry carry) {
+    /**
+     * How much steam a row asks for this tick, before anything is drawn from the tank.
+     *
+     * <p>{@code energyRoom} is what the FE buffer can still take. The buffer is one tick of output,
+     * so a pole that drew less than that last tick leaves less room than a full burn makes, and the
+     * request is cut to what fits: steam burnt into a full buffer is steam spent for nothing. A cut
+     * request owes no fraction forward, or an engine held back for a minute would owe a burst.
+     */
+    public Request request(double speed, int rowLength, Carry carry, long energyRoom) {
         double exact = steamPerTickAtPeak * (speed / PEAK_SPEED) * rowLength + carry.steam();
         int whole = (int) Math.floor(exact + EPSILON);
-        return new Tick(whole, 0L, new Carry(Math.max(0.0, exact - whole), carry.energy()));
+        double perUnit = energyPerUnit(speed);
+        int fits = perUnit <= 0.0
+                ? whole
+                : (int) Math.floor((energyRoom - carry.energy()) / perUnit + EPSILON);
+        if (fits < whole) {
+            return new Request(Math.max(0, fits), new Carry(0.0, carry.energy()));
+        }
+        return new Request(whole, new Carry(Math.max(0.0, exact - whole), carry.energy()));
+    }
+
+    /** What one millibucket is worth at {@code speed}, in FE. */
+    private double energyPerUnit(double speed) {
+        double ratio = efficiency.applyAsDouble(speed) / efficiency.applyAsDouble(PEAK_SPEED);
+        return energyPerTickAtPeak / steamPerTickAtPeak * ratio;
     }
 
     /**
@@ -95,16 +113,14 @@ public final class SteamEngineSpec {
      * energy is owed on what was burnt, not on what was wanted.
      */
     public Tick burn(int steam, double speed, Carry carry) {
-        double perUnitAtPeak = energyPerTickAtPeak / steamPerTickAtPeak;
-        double ratio = efficiency.applyAsDouble(speed) / efficiency.applyAsDouble(PEAK_SPEED);
-        double exact = steam * perUnitAtPeak * ratio + carry.energy();
+        double exact = steam * energyPerUnit(speed) + carry.energy();
         long whole = (long) Math.floor(exact + EPSILON);
         return new Tick(steam, whole, new Carry(carry.steam(), Math.max(0.0, exact - whole)));
     }
 
     /** {@link #request} then {@link #burn}, when the tank covers the whole request. */
-    public Tick tick(double speed, int rowLength, Carry carry) {
-        Tick asked = request(speed, rowLength, carry);
+    public Tick tick(double speed, int rowLength, Carry carry, long energyRoom) {
+        Request asked = request(speed, rowLength, carry, energyRoom);
         return burn(asked.steam(), speed, asked.carry());
     }
 }

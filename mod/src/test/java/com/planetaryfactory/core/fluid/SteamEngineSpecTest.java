@@ -32,7 +32,7 @@ class SteamEngineSpecTest {
         long steam = 0;
         long energy = 0;
         for (int t = 0; t < ticks; t++) {
-            SteamEngineSpec.Tick tick = SPEC.tick(speed, rowLength, carry);
+            SteamEngineSpec.Tick tick = SPEC.tick(speed, rowLength, carry, Long.MAX_VALUE);
             steam += tick.steam();
             energy += tick.energy();
             carry = tick.carry();
@@ -77,9 +77,23 @@ class SteamEngineSpecTest {
     }
 
     @Test
-    @DisplayName("no steam comes back as water")
-    void noWaterReturn() {
-        assertEquals(0, SteamEngineSpec.WATER_RETURNED);
+    @DisplayName("a buffer with no room burns no steam")
+    void fullBufferBurnsNothing() {
+        SteamEngineSpec.Request asked = SPEC.request(SteamEngineSpec.PEAK_SPEED, 1,
+                new SteamEngineSpec.Carry(0.5, 0.0), 0L);
+        assertEquals(0, asked.steam());
+    }
+
+    @Test
+    @DisplayName("a buffer with partial room burns only the steam whose energy fits")
+    void partialRoomCutsTheBurn() {
+        // 300 FE a millibucket at the peak: 450 FE of room takes one, not the two a carry asks for.
+        SteamEngineSpec.Request asked = SPEC.request(SteamEngineSpec.PEAK_SPEED, 1,
+                new SteamEngineSpec.Carry(0.5, 0.0), 450L);
+        assertEquals(1, asked.steam());
+        SteamEngineSpec.Tick made = SPEC.burn(asked.steam(), SteamEngineSpec.PEAK_SPEED, asked.carry());
+        assertTrue(made.energy() <= 450L);
+        assertEquals(0.0, asked.carry().steam());
     }
 
     @Test
