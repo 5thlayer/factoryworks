@@ -18,11 +18,11 @@ import java.util.function.Predicate;
  * {@link RecipeGraph} is the seam on the recipe side and {@link ItemBag} on the inventory side;
  * {@code RuntimePlanSource} is the only thing that knows how to fill either from a server.
  *
- * <p><b>Crafts of one node batch into one step.</b> Twenty gears is a single {@link CraftStep} with
- * twenty times the inputs, outputs and duration, not twenty steps. The plan is persisted on a player
- * attachment and a large plan would otherwise be tens of thousands of near-identical records; what
- * is lost is delivery partway through a batch, which ADR-0038 never promised -- the plan is the unit
- * throughout.
+ * <p><b>Crafts of one node share one step.</b> Twenty gears is a single {@link CraftStep} with
+ * twenty times the inputs and outputs and a count of twenty, not twenty steps: the plan is persisted
+ * on a player attachment and a large plan would otherwise be tens of thousands of near-identical
+ * records. The duration stays one craft's, and the queue still runs and delivers each of the twenty
+ * on its own (#289).
  */
 public final class PlanResolver {
 
@@ -159,13 +159,12 @@ public final class PlanResolver {
                 surplus.add(output.item(), made);
                 toCraft.add(output.item(), made);
             }
-            steps.add(new CraftStep(recipe.id(), spent.amounts(), outputs, recipe.durationTicks() * n));
+            steps.add(new CraftStep(recipe.id(), spent.amounts(), outputs, recipe.durationTicks(), n));
             return true;
         }
 
         /** Whether scaling this recipe by {@code n} would put any quantity past an {@code int}. */
         private boolean overflows(HandRecipe recipe, int n) {
-            if ((long) recipe.durationTicks() * n > Integer.MAX_VALUE) return true;
             for (Ingredient input : recipe.inputs()) {
                 if ((long) input.count() * n > Integer.MAX_VALUE) return true;
             }

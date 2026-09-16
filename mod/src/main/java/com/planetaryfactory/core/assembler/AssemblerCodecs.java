@@ -37,7 +37,8 @@ public final class AssemblerCodecs {
                     Codec.STRING.fieldOf("recipe").forGetter(CraftStep::recipe),
                     ITEM_AMOUNT.listOf().fieldOf("inputs").forGetter(CraftStep::inputs),
                     ITEM_AMOUNT.listOf().fieldOf("outputs").forGetter(CraftStep::outputs),
-                    Codec.INT.fieldOf("duration_ticks").forGetter(CraftStep::durationTicks))
+                    Codec.INT.fieldOf("duration_ticks").forGetter(CraftStep::durationTicks),
+                    Codec.INT.optionalFieldOf("crafts", 1).forGetter(CraftStep::crafts))
             .apply(instance, CraftStep::new));
 
     public static final Codec<CraftingPlan> CRAFTING_PLAN = RecordCodecBuilder.create(instance -> instance.group(
@@ -54,6 +55,7 @@ public final class AssemblerCodecs {
                     CRAFTING_PLAN.fieldOf("plan").forGetter(QueuedPlan::plan),
                     BUFFER.fieldOf("buffer").forGetter(QueuedPlan::buffer),
                     Codec.INT.fieldOf("step").forGetter(QueuedPlan::stepIndex),
+                    Codec.INT.optionalFieldOf("crafts_done", 0).forGetter(QueuedPlan::craftsDone),
                     Codec.INT.fieldOf("progress").forGetter(QueuedPlan::progressTicks))
             .apply(instance, QueuedPlan::restored));
 
