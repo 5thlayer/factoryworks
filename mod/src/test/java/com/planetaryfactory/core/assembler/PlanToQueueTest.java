@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * the queue can actually run to the end.
  *
  * <p>It is asserted here because neither side can assert it alone, and because the failure is
- * invisible from either. {@code QueuedPlan.completeStep} throws when the buffer cannot feed a step,
+ * invisible from either. {@code QueuedPlan.completeCraft} throws when the buffer cannot feed a craft,
  * which is the right answer to a resolver bug and a terrible thing to discover from a crash report:
  * the reservation would already have been taken and the player's items would be inside a plan that
  * cannot finish.

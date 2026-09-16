@@ -66,6 +66,24 @@ class AssemblerCodecsTest {
     }
 
     @Test
+    void aBatchPartWayThroughKeepsItsCraftCountAcrossTheRoundTrip() {
+        CraftStep gears = new CraftStep(
+                "gear", List.of(new ItemAmount("iron_plate", 6)), List.of(new ItemAmount("iron_gear", 3)), 10, 3);
+        CraftingPlan plan = new CraftingPlan(UUID.fromString("6f1b1e5e-0000-4000-8000-00000000beef"),
+                "iron_gear", 3, List.of(new ItemAmount("iron_plate", 6)), List.of(gears));
+        TestPlayerItems items = new TestPlayerItems().with("iron_plate", 6);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(plan, items);
+        for (int i = 0; i < 15; i++) queue.tick(items); // one gear made, the second half-way
+
+        JsonElement written = AssemblerCodecs.QUEUE.encodeStart(JsonOps.INSTANCE, queue).result().orElseThrow();
+        AssemblerQueue restored = decode(AssemblerCodecs.QUEUE, written);
+
+        assertEquals(queue.entries(), restored.entries());
+        assertEquals(1, restored.entries().get(0).craftsDone());
+    }
+
+    @Test
     void theBufferSurvivesWithIt() {
         AssemblerQueue queue = midPlanQueue();
 

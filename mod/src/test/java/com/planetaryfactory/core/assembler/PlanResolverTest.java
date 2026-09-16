@@ -93,12 +93,13 @@ class PlanResolverTest {
     }
 
     @Test
-    void craftsOfOneRecipeBatchIntoOneStepThatTakesProportionallyLonger() {
+    void craftsOfOneRecipeShareOneStepButKeepTheirOwnDuration() {
         PlanResolver.Resolution resolution = resolver().resolve("gear", 3, have("plate", 6));
 
         assertEquals(1, resolution.steps().size());
         CraftStep step = resolution.steps().get(0);
-        assertEquals(30, step.durationTicks());
+        assertEquals(3, step.crafts());
+        assertEquals(10, step.durationTicks(), "the duration is one craft's, not the batch's (#289)");
         assertEquals(Map.of("plate", 6), asMap(step.inputs()));
         assertEquals(Map.of("gear", 3), asMap(step.outputs()));
     }

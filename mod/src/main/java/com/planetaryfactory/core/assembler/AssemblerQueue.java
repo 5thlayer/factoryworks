@@ -39,7 +39,7 @@ public final class AssemblerQueue {
         AssemblerQueue queue = new AssemblerQueue();
         for (QueuedPlan entry : entries) {
             queue.entries.add(QueuedPlan.restored(
-                    entry.plan(), entry.buffer(), entry.stepIndex(), entry.progressTicks()));
+                    entry.plan(), entry.buffer(), entry.stepIndex(), entry.craftsDone(), entry.progressTicks()));
         }
         return queue;
     }
@@ -84,7 +84,7 @@ public final class AssemblerQueue {
         for (ItemAmount owed : cost.amounts()) {
             items.take(owed.item(), owed.count());
         }
-        entries.add(new QueuedPlan(plan, cost, 0, 0));
+        entries.add(new QueuedPlan(plan, cost, 0, 0, 0));
         return true;
     }
 
@@ -111,7 +111,7 @@ public final class AssemblerQueue {
         }
         head.advanceTick();
         if (head.progressTicks() >= head.currentStep().durationTicks()) {
-            head.completeStep();
+            head.completeCraft();
             if (!deliver(head, items)) {
                 blocked = true;
                 return;
@@ -155,8 +155,10 @@ public final class AssemblerQueue {
         ItemBag needed = new ItemBag();
         List<CraftStep> steps = entry.plan().steps();
         for (int i = entry.stepIndex(); i < steps.size(); i++) {
-            for (ItemAmount input : steps.get(i).inputs()) {
-                needed.add(input.item(), input.count());
+            CraftStep step = steps.get(i);
+            int done = i == entry.stepIndex() ? entry.craftsDone() : 0;
+            for (ItemAmount input : step.inputs()) {
+                needed.add(input.item(), step.remaining(input.count(), done));
             }
         }
         boolean allDelivered = true;

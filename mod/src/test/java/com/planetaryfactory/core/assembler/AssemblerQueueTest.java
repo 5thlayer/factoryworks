@@ -117,6 +117,78 @@ class AssemblerQueueTest {
         assertEquals(1, items.count(GEAR), "what no remaining step needs goes to the player at once");
     }
 
+    /** Three gears as one step: six plates in, three gears out, two ticks a gear. */
+    private static CraftingPlan threeGearPlan() {
+        return new CraftingPlan(
+                UUID.nameUUIDFromBytes("three gears".getBytes()),
+                GEAR,
+                3,
+                List.of(new ItemAmount(IRON, 6)),
+                List.of(new CraftStep("gear", List.of(new ItemAmount(IRON, 6)), List.of(new ItemAmount(GEAR, 3)), 2, 3)));
+    }
+
+    @Test
+    void eachCraftOfABatchDeliversWhenItsOwnDurationElapses() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 6);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(threeGearPlan(), items);
+
+        tick(queue, items, 2);
+        assertEquals(1, items.count(GEAR), "the first gear arrives after one craft's time, not three (#289)");
+
+        tick(queue, items, 2);
+        assertEquals(2, items.count(GEAR));
+
+        tick(queue, items, 2);
+        assertEquals(3, items.count(GEAR));
+        assertTrue(queue.isEmpty());
+    }
+
+    @Test
+    void theProgressBarIsTheCurrentCraftsNotTheBatchs() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 6);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(threeGearPlan(), items);
+
+        tick(queue, items, 3); // one gear done, the second half-way
+        assertEquals(0.5f, queue.entries().get(0).progress());
+    }
+
+    @Test
+    void cancellingMidBatchRefundsTheInputsOfTheCraftsNotYetMade() {
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 6);
+        AssemblerQueue queue = new AssemblerQueue();
+        CraftingPlan plan = threeGearPlan();
+        queue.enqueue(plan, items);
+        tick(queue, items, 2);
+
+        queue.cancel(plan.id(), items);
+
+        assertEquals(1, items.count(GEAR));
+        assertEquals(4, items.count(IRON), "two crafts unmade, two plates each");
+    }
+
+    @Test
+    void anInputThatDoesNotDivideEvenlyIsStillSpentExactlyOnce() {
+        // Two plates of one kind and one of another over two crafts: a tag ingredient drawn from two
+        // items. Each craft takes its share, and the batch as a whole takes exactly what it reserved.
+        String copper = "copper_plate";
+        CraftStep step = new CraftStep("mix",
+                List.of(new ItemAmount(IRON, 3), new ItemAmount(copper, 1)), List.of(new ItemAmount(GEAR, 2)), 1, 2);
+        CraftingPlan plan = new CraftingPlan(UUID.nameUUIDFromBytes("mix".getBytes()), GEAR, 2,
+                List.of(new ItemAmount(IRON, 3), new ItemAmount(copper, 1)), List.of(step));
+        TestPlayerItems items = new TestPlayerItems().with(IRON, 3).with(copper, 1);
+        AssemblerQueue queue = new AssemblerQueue();
+        queue.enqueue(plan, items);
+
+        tick(queue, items, 3);
+
+        assertEquals(2, items.count(GEAR));
+        assertEquals(0, items.count(IRON));
+        assertEquals(0, items.count(copper));
+        assertTrue(queue.isEmpty());
+    }
+
     @Test
     void cancellingRefundsTheRemainingReservationAndTheIntermediatesAlreadyMade() {
         TestPlayerItems items = new TestPlayerItems().with(IRON, 3);
