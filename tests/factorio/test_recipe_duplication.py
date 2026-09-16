@@ -8,18 +8,23 @@ none of them can ask -- whether two converters, or one converter twice, made the
 
 The failure is quiet in the way that matters. Two routes to one block is not an error, does not
 fail a schema, appears in no log, and loads perfectly. It reaches the player as two entries in EMI
-for the same thing, and if both carry `factorio_category: crafting` it also reaches the Personal
+for the same thing, and if both carry `category: crafting` it also reaches the Personal
 Assembler's resolver, which picks a route with no cost model and therefore cannot choose between
 them (`test_hand_resolver.py` asserts that property over the Factorio corpus; this asserts it over
 what is actually emitted). It shipped once: Create's two gearbox conversions and the large
 cogwheel's second route were emitted alongside the direct recipes they duplicate, and every
 subtree-local check passed.
 
+It used to hold a file-path invariant as well: GregTech re-registered every loaded GTRecipe under its
+type's own path, so a file anywhere else loaded twice (#87). The pack's own types are re-registered
+by nothing, and that rule left with GregTech (#279).
+
 WHAT IT ASSERTS
 
   - every item emitted by more than one recipe is named in `MULTI_ROUTE` with the reason it earns
     a second route. Anything else is a duplicate
-  - a `MULTI_ROUTE` row that no longer has two routes is removed. A row nobody reads is a rule a
+  - a `MULTI_ROUTE` row that no longer has two routes is removed, unless the converter is holding
+    its routes back until a ticket lands (`--awaited`). A row nobody reads is a rule a
     converter change left behind, and it would silently re-admit a duplicate later
   - at most one route per item is hand-craftable, wherever the routes come from
 
@@ -31,6 +36,7 @@ Usage: tests/factorio/test_recipe_duplication.py
 """
 import collections
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -38,23 +44,6 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
 # The pack's furnace type (#155): a count-bearing smelt, whose output is shaped differently.
 PACK_SMELTING = "planetaryfactory:smelting"
-
-# Recipe types GregTech re-registers, and therefore the ones whose FILE PATH is not a free choice.
-# `RecipeManagerLateMixin` strips everything before the first `/` of a loaded GTRecipe's id and
-# `GTRecipeBuilder.save` puts the recipe type's own path back on the front (#87). The round trip
-# closes only for a file already under a directory named after its type: a recipe at
-# `recipe/grid/copper_coil.json` loads as `planetaryfactory:grid/copper_coil` and is re-registered
-# as `planetaryfactory:assembling/copper_coil`, leaving BOTH ids in the recipe manager with
-# identical inputs and outputs. That is invisible to every other check here -- the file is valid,
-# the sweep keeps it, and `ServerEvents.recipes` runs BEFORE the re-registration, so even a probe
-# inside the recipe event sees one recipe. It reaches the player as two EMI entries, and it shipped
-# for all 80 recipes of the grid subtree, the 9 of the Create subtree and the 2 hand-written picks.
-GT_NAMESPACE = "gtceu"
-
-# `planetaryfactory:smelting` is the pack's own recipe class (#155), not a GTRecipe, so it is not
-# cloned and its files stay flat. Recorded rather than assumed: if it ever moves onto a GT type its
-# four recipes start duplicating, and this line is where someone will look.
-FLAT_TYPES = {"planetaryfactory:smelting"}
 
 # Items an emitted recipe is allowed to make twice, and why. A row here is a DECISION: it says the
 # second route earns its EMI entry. The default is one route per item, because under ADR-0034's
@@ -74,21 +63,21 @@ def check(condition, message):
         failures.append(message)
 
 
-def ingredient_name(entry):
-    if "item" in entry:
-        return entry["item"]
-    if "tag" in entry:
-        return "#" + entry["tag"]
-    return None
-
-
 def outputs_of(recipe):
     """The item names a recipe produces. Fluids are out of scope -- nothing duplicates one."""
     if recipe.get("type") == PACK_SMELTING:
         return [recipe["result"]["id"]]
-    names = [ingredient_name(entry["content"]["ingredient"])
-             for entry in recipe.get("outputs", {}).get("item", [])]
-    return [name for name in names if name is not None]
+    return [entry["id"] for entry in recipe.get("results", [])]
+
+
+def awaited_results():
+    """Item -> how many routes to it the converter is holding back until a ticket lands."""
+    run = subprocess.run([sys.executable, str(ROOT / "scripts/factorio-recipe-convert.py"),
+                          "--awaited"], capture_output=True, text=True, check=True)
+    counts = collections.Counter()
+    for waiting in json.loads(run.stdout).values():
+        counts.update(waiting["results"])
+    return counts
 
 
 def main():
@@ -100,33 +89,13 @@ def main():
     for path in sorted(EMITTED.rglob("*.json")):
         recipe = json.loads(path.read_text())
         where = path.relative_to(EMITTED).as_posix()
-        hand = recipe.get("data", {}).get("factorio_category") == "crafting"
+        hand = recipe.get("category") == "crafting"
         for item in outputs_of(recipe):
             routes[item].append((where, hand))
 
     total = sum(len(paths) for paths in routes.values())
 
-    # The file-path invariant. This is the duplicate nothing else can see.
-    for path in sorted(EMITTED.rglob("*.json")):
-        recipe = json.loads(path.read_text())
-        recipe_type = recipe.get("type", "")
-        where = path.relative_to(EMITTED).as_posix()
-        if recipe_type in FLAT_TYPES:
-            continue
-        if not recipe_type.startswith(GT_NAMESPACE + ":"):
-            continue
-        type_path = recipe_type.split(":", 1)[1]
-        first = where.split("/")[0] if "/" in where else None
-        check(first == type_path,
-              "%s is a %s recipe, but its first path component is %s. GregTech re-registers every "
-              "loaded GTRecipe under its OWN type path (#87), so this file lands in the recipe "
-              "manager twice -- once as `planetaryfactory:%s` and once as "
-              "`planetaryfactory:%s/%s`, two EMI entries for one recipe. Move it under `%s/`"
-              % (where, recipe_type,
-                 "`%s`" % first if first else "absent (the file is flat)",
-                 where.rsplit(".json", 1)[0],
-                 type_path, where.split("/")[-1].rsplit(".json", 1)[0],
-                 type_path))
+    awaited = awaited_results()
 
     for item, paths in sorted(routes.items()):
         if len(paths) > 1:
@@ -141,12 +110,12 @@ def main():
         check(len(hands) <= 1,
               "`%s` has %d hand recipes (%s). The Personal Assembler's resolver picks a route "
               "with no cost model, so it cannot choose between them -- at most one route per "
-              "item may carry `factorio_category: crafting`"
+              "item may carry `category: crafting`"
               % (item, len(hands), ", ".join(hands)))
 
     for item, why in sorted(MULTI_ROUTE.items()):
         found = len(routes.get(item, []))
-        check(found > 1,
+        check(found > 1 or found + awaited[item] > 1,
               "MULTI_ROUTE names `%s`, which %s. The row decides nothing now, and left in place "
               "it would silently re-admit a duplicate later. Its reason was: %s"
               % (item,

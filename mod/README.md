@@ -40,8 +40,8 @@ API in this pack exposes:
   rather than Minecraft's for exactly that reason; `InventoryPlayerItems` is the single class where an
   item id becomes an `ItemStack`. `PlanResolver` fills a plan and is Minecraft-free by the same
   rule, so chain-crafting — the one genuinely hard thing in the Assembler — is unit-tested; the
-  graph it plans over is read off the loaded recipes by `RuntimeHandRecipes`, keyed on the
-  `factorio_category` the converter stamps, because ADR-0038 gives the Assembler no recipe type of
+  graph it plans over is read off the loaded `planetaryfactory:assembling` recipes by
+  `RuntimeHandRecipes`, keyed on the `category` the converter stamps (#279), because ADR-0038 gives the Assembler no recipe type of
   its own (#161). A recipe's input is an `Ingredient` — a count of any one of several items — and
   not a single id, because the pack emits tag ingredients and AlmostUnified rewrites plain item
   ingredients into unified tags at load; a resolver reading only the first match refuses plans the

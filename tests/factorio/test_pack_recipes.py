@@ -17,7 +17,7 @@ What fails quietly without it:
     #165 describes: nothing can be mined at all.
   - a recipe landing on a surface `recipe_survivors.js` does not name, so ADR-0034's sweep removes
     it on load with no error.
-  - dropping `factorio_category: crafting`, which is the entire definition of the Personal
+  - dropping `category: crafting`, which is the entire definition of the Personal
     Assembler's hand set (`RuntimeHandRecipes`). The recipe survives, is craftable in a machine the
     player cannot build yet, and rung 0 is a dead end.
   - a file under `kubejs/` whose name carries an uppercase letter. KubeJS validates every name it
@@ -137,12 +137,11 @@ def survivor_types():
 
 
 def items_of(recipe, side):
-    out = []
-    for entry in recipe.get(side, {}).get("item", []):
-        ingredient = entry["content"]["ingredient"]
-        out.append((ingredient.get("item") or "#" + ingredient["tag"],
-                    entry["content"].get("count", 1)))
-    return out
+    """`(item or #tag, count)` pairs off a `planetaryfactory:assembling` recipe (#279)."""
+    if side == "inputs":
+        return [(entry["ingredient"], entry.get("count", 1))
+                for entry in recipe.get("ingredients", [])]
+    return [(entry["id"], entry.get("count", 1)) for entry in recipe.get("results", [])]
 
 
 def texture_resolves(item, layer):
@@ -215,7 +214,7 @@ def check_saplings():
         check(recipe["type"] in types.values(),
               "%s is type %r, which recipe_survivors.js does not admit -- ADR-0034's sweep removes "
               "it on load with no error" % (where, recipe["type"]))
-        check(recipe.get("data", {}).get("factorio_category") == HAND_CATEGORY,
+        check(recipe.get("category") == HAND_CATEGORY,
               "%s is not category %r, so the Personal Assembler will not plan it and a sapling "
               "needs a machine the player has no reason to have built" % (where, HAND_CATEGORY))
         check(items_of(recipe, "outputs") == [("minecraft:%s" % name, 1)],
@@ -270,7 +269,7 @@ def main():
         check(recipe["type"] in types.values(),
               "%s is type %r, which recipe_survivors.js does not admit -- ADR-0034's sweep removes "
               "it on load with no error" % (where, recipe["type"]))
-        check(recipe.get("data", {}).get("factorio_category") == HAND_CATEGORY,
+        check(recipe.get("category") == HAND_CATEGORY,
               "%s is not category %r, so the Personal Assembler will not plan it and rung 0 has no "
               "route to a pick" % (where, HAND_CATEGORY))
         outputs = items_of(recipe, "outputs")

@@ -213,11 +213,14 @@ class ItemMapTargetsResolve(unittest.TestCase):
         self.rows = json.loads(ITEM_MAP.read_text(encoding="utf-8"))["items"]
         self.assertTrue(jar_lang(), "no jar in mods/ ships a lang file -- run packwiz first")
 
-    def targets(self):
-        """The rows that name a target at all, minus the ones the map itself records as blocked."""
+    def targets(self, include_blocked=False):
+        """The rows that name a target at all, minus -- by default -- the ones the map records as
+        blocked."""
         for name, row in self.rows.items():
             # A tag row is not a registered thing; its half is NoIngredientRidesAContestedTag.
-            if "target" not in row or "blocked_by" in row or row.get("kind") == "tag":
+            if "target" not in row or row.get("kind") == "tag":
+                continue
+            if "blocked_by" in row and not include_blocked:
                 continue
             yield name, row["target"]
 
@@ -234,13 +237,28 @@ class ItemMapTargetsResolve(unittest.TestCase):
                 "manager (ADR-0061)" % (name, target))
 
     def test_no_deferral_is_stale(self):
-        unresolved = {name for name, target in self.targets() if not resolves(target)}
+        unresolved = {name for name, target in self.targets(include_blocked=True)
+                      if not resolves(target)}
         for name in sorted(DEFERRED):
             self.assertIn(name, self.rows, "DEFERRED names %r, which is not an item-map row" % name)
             self.assertIn(
                 name, unresolved,
                 "row %r is listed as deferred (%s) but its target resolves now. Delete the entry "
                 "-- a stale one is a guard nobody re-armed" % (name, DEFERRED[name]))
+
+    def test_every_deferral_is_blocked_by_its_ticket(self):
+        """A deferred row carries `blocked_by`, which is what makes the converter skip it (#279).
+
+        Without the field the converter emits a recipe naming the dead id, and the game rejects it
+        at load -- one ERROR line and a recipe absent from its manager.
+        """
+        for name, reason in sorted(DEFERRED.items()):
+            ticket = int(re.search(r"#(\d+) owns", reason).group(1))
+            self.assertEqual(
+                self.rows.get(name, {}).get("blocked_by"), ticket,
+                "item-map row %r is deferred to #%d but does not say `\"blocked_by\": %d`, so the "
+                "converter emits recipes naming a target no installed jar registers"
+                % (name, ticket, ticket))
 
     def test_no_row_names_a_mod_adr_0060_removed(self):
         """The namespaces are named outright, because a removed mod's id resolving is impossible.

@@ -11,6 +11,11 @@ changing a recipe's surface changes its id and leaves the research holding a loc
 emits. There is no error and no log line -- the player receives a research that unlocks nothing.
 That is why it is asserted here rather than left to a world load.
 
+An unlock naming a recipe the converter holds back only until a ticket lands -- a machine #277 has
+not registered, an item whose mod is not on 26.1.2 -- is a recorded DEFERRAL rather than a failure,
+counted in the output. It will load under exactly that id when the ticket lands, and it is read from
+the converter's `--awaited`, so a typo is still a failure (#279).
+
   - every `unlocks` entry in `researchd.js` resolves to a recipe under
     `kubejs/data/planetaryfactory/recipe/`
   - a declaration this parser cannot read is a failure, not a skip. A silently unparsed `unlocks`
@@ -30,7 +35,9 @@ recipes and 0 unresolved research names.
 
 Usage: tests/factorio/test_research_unlocks.py
 """
+import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -57,6 +64,17 @@ def emitted_ids():
     for path in sorted(EMITTED.rglob("*.json")):
         ids.add("%s:%s" % (EMITTED_NAMESPACE, path.relative_to(EMITTED).with_suffix("").as_posix()))
     return ids
+
+
+def awaited_ids():
+    """The recipes the converter skips only until a ticket lands, keyed by the id they will load as.
+
+    Read from the converter rather than restated, so a deferral is whatever the data files say is
+    waiting and nothing this check decided (#279).
+    """
+    run = subprocess.run([sys.executable, str(ROOT / "scripts/factorio-recipe-convert.py"),
+                          "--awaited"], capture_output=True, text=True, check=True)
+    return json.loads(run.stdout)
 
 
 def balanced(text, start, opener, closer):
@@ -137,10 +155,14 @@ def main():
     check(bool(recipes), "no emitted recipes found -- has the converter been run?")
 
     declared = declarations()
-    locks = 0
+    awaited = awaited_ids()
+    locks = deferred = 0
     for name, ids in declared:
         for recipe_id in ids:
             locks += 1
+            if recipe_id in awaited:
+                deferred += 1
+                continue
             check(recipe_id in recipes,
                   "research `%s` unlocks `%s`, which the pack does not emit -- Researchd gates by "
                   "recipe id and a lock on a missing id fails silently, unlocking nothing (#97)"
@@ -151,8 +173,8 @@ def main():
     if failures:
         print("\n%d failure(s)" % len(failures))
         return 1
-    print("ok: %d research declaration(s), %d unlock(s), %d emitted recipe(s)"
-          % (len(declared), locks, len(recipes)))
+    print("ok: %d research declaration(s), %d unlock(s), %d emitted recipe(s), %d unlock(s) "
+          "deferred on a ticket" % (len(declared), locks, len(recipes), deferred))
     return 0
 
 

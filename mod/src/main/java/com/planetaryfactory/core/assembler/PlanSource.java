@@ -22,12 +22,10 @@ public interface PlanSource {
     /**
      * The resolver in force.
      *
-     * <p>Back to {@link Unresolved} for the 26.1.2 port. #161's {@code RuntimePlanSource} asked
-     * Researchd whether a recipe was blocked and asked {@code RuntimeHandRecipes} for the graph, and
-     * both dependencies are gone until #260 and #262 land -- see
-     * {@code docs/port/blocked-removals-26.1.2.md}. This is the one line that has to move back.
+     * <p>{@code RuntimePlanSource}, restored by #279 once the hand set had a recipe type to read
+     * again. It plans with no research locks until #260 ports Researchd.
      */
-    PlanSource ACTIVE = new Unresolved();
+    PlanSource ACTIVE = new RuntimePlanSource();
 
     /**
      * Resolves {@code amount} of a recipe against what the player has and what their team has

@@ -32,12 +32,9 @@ WHAT IT CHECKS.
     renamed to the singular before 26.1. A datapack directory the game does not know is not an
     error either: it is simply never walked, and every file under it is absent.
 
-WHAT IT IS NOT. It does not check the `gtceu:` recipe subtrees. Those carry the stale ingredient
-shape too, but GregTech left with ADR-0060 and they are dead wholesale rather than mis-shaped --
-they are re-derived against the chassis ADR-0060 names (#258) and the item alphabet #275 decides,
-by the converter #279 re-targets, and asserting their shape here would be a permanently red check for a
-reason this file does not own. `kubejs/parked/` is
-excluded for the same reason: nothing loads it.
+WHAT IT IS NOT. `kubejs/parked/` is excluded: nothing loads it. The `gtceu:` recipe subtrees it
+used to defer were deleted when #279 re-targeted the converter onto `planetaryfactory:assembling`,
+and a `gtceu:` recipe appearing again fails here like any other stale shape.
 
 It cannot tell whether an id RESOLVES; that is a running server, and the cheap version of it -- a
 datapack load with zero `Couldn't parse data file` lines -- is #273's remaining half.
@@ -62,10 +59,6 @@ DATA_ROOTS = (
     ROOT / "mod/src/main/resources/data",
 )
 
-# The recipe types the machine chassis owns, deferred rather than asserted here: #258 names the
-# chassis, #275 decides the item alphabet -- FTB Materials' intermediates against Oritech's and
-# Railcraft's overlapping ones -- and #279 owns the converter that reads both.
-DEFERRED_RECIPE_NAMESPACES = ("gtceu:",)
 
 # Item models left behind by a registration ADR-0060 removed. Named rather than skipped by shape,
 # so the day the chassis lands the entry is deleted and the definition is asserted like any other.
@@ -169,6 +162,14 @@ def ingredient_strings(value, where, key):
         for item in value:
             ingredient_strings(item, where, key)
         return
+    if isinstance(value, dict) and "ingredient" in value:
+        # NeoForge's sized ingredient, `{"ingredient": ..., "count"|"amount": n}` -- the list
+        # entries of `planetaryfactory:assembling` (#279). The count is beside the ingredient.
+        ingredient_strings(value["ingredient"], where, key)
+        return
+    if isinstance(value, dict) and "neoforge:ingredient_type" in value:
+        # NeoForge's custom-ingredient map, the other half of its `Codec.xor` with the string.
+        return
     if isinstance(value, dict) and key == "key":
         # A shaped recipe's `key` is a map of symbol to ingredient, not an ingredient itself.
         for symbol, ingredient in value.items():
@@ -202,8 +203,6 @@ def check_recipe_ingredients():
             for path in sorted((namespace / "recipe").rglob("*.json")):
                 recipe = json.loads(path.read_text())
                 recipe_type = recipe.get("type", "")
-                if recipe_type.startswith(DEFERRED_RECIPE_NAMESPACES):
-                    continue
                 total += 1
                 where = path.relative_to(ROOT).as_posix()
                 check(recipe_type != "",

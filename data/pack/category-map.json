@@ -32,16 +32,18 @@
   },
   "machines": {
     "assembling": {
-      "recipe_type": "gtceu:assembling",
-      "note": "ADR-0026's Assembling Machine 1/2/3, one recipe type across the three tiers. The id is GregTech's namespace, not the pack's: `GTRecipeTypes.register` runs through GregTech's registrate, which owns it (#73, machines.js)."
+      "recipe_type": "planetaryfactory:assembling",
+      "note": "ADR-0026's Assembling Machine 1/2/3 and the Personal Assembler's hand set, on the pack's own `planetaryfactory:assembling` (#279). One type across the three Factorio categories, each recipe carrying its `category`, so ADR-0038's hand set stays a predicate over this type rather than a type of its own. Its GregTech type left with ADR-0060; the pack's type is what `RuntimeHandRecipes` reads today, and the Assembling Machine block #277 decides is to read the same type rather than bring its own."
     },
     "chemical_plant": {
-      "recipe_type": "gtceu:chemical_plant",
-      "note": "ADR-0025's Chemical Plant, one tier, single block (#107, machines.js). The id is GregTech's namespace, not the pack's, for the same reason `assembling` is. Registered at (2, 1, 2, 1) -- the corpus's envelope, not ADR-0025's original (2, 1, 2, 2), which was the Factorio entity's second output fluid box and no recipe's."
+      "recipe_type": null,
+      "note": "ADR-0025's Chemical Plant. Its `gtceu:chemical_plant` type left with ADR-0060; #277 decides the block (the proposal is Oritech's centrifuge) and with it the recipe type and its JSON shape.",
+      "blocked_by": 277
     },
     "oil_refinery": {
-      "recipe_type": "gtceu:oil_refinery",
-      "note": "ADR-0025's Oil Refinery, one tier, multiblock (#107, machines.js). Registered at (0, 0, 2, 3): the corpus holds basic and advanced oil processing and no liquefaction recipe, so the item slots ADR-0025 gave it would be unfillable. Adding coal liquefaction is #12's, and widens this to (2, 0, 2, 3)."
+      "recipe_type": null,
+      "note": "ADR-0025's Oil Refinery. Its `gtceu:oil_refinery` type left with ADR-0060; #277 decides the block (the proposal is `oritech:refinery`) and with it the recipe type and its JSON shape.",
+      "blocked_by": 277
     },
     "smelting": {
       "recipe_type": "planetaryfactory:smelting",

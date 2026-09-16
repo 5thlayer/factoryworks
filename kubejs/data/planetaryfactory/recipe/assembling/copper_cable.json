@@ -1,31 +1,17 @@
 {
-  "type": "gtceu:assembling",
-  "inputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:copper_plate"
-          },
-          "count": 1
-        }
-      }
-    ]
-  },
-  "outputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:copper_wire"
-          },
-          "count": 2
-        }
-      }
-    ]
-  },
-  "duration": 10,
-  "data": {
-    "factorio_category": "crafting"
-  }
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:copper_plate",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "id": "ftbmaterials:copper_wire",
+      "count": 2
+    }
+  ],
+  "time": 10
 }

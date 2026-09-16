@@ -10,12 +10,16 @@ Assembler: no plan, no `Missing`, no locked entry, and nothing wrong with the re
 The key is now the id together with the component patch, so the refusal is gone and the recipes are
 admitted. What is checkable here, with no game launch:
 
-  - `automation_science_pack` and `chemical_science_pack` are emitted, carry `factorio_category:
+  - `automation_science_pack` and `chemical_science_pack` are emitted, carry `category:
     crafting`, and so are in the hand set. Those two by name: whether logistic and production are
     hand-craftable is the corpus and #25's ladder talking, not this
   - every component-bearing output in the hand set is REPRESENTABLE as a key -- one item, a patch
     that is a flat map of component id to value. An output the key format cannot name is refused at
     the graph, which is the same "recipe missing from the Assembler" this ticket was
+
+A science pack the converter holds back until a ticket lands -- Researchd is not on 26.1.2 yet, and
+#251 owns its port -- is reported as deferred rather than failed, read from the converter's
+`--awaited`. The component-shape assertions then have nothing to read, and say so (#279).
 
 WHAT IT CANNOT PROVE is that the `RecipeGraph` admits them: that is a running server, and its
 absence of a refusal line is the human-on-delivery check. The identity itself is asserted in
@@ -24,6 +28,7 @@ absence of a refusal line is the human-on-delivery check. The identity itself is
 Usage: tests/factorio/test_science_packs.py
 """
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -52,23 +57,35 @@ def hand_recipes():
     found = {}
     for path in sorted(EMITTED.rglob("*.json")):
         recipe = json.loads(path.read_text())
-        if (recipe.get("data") or {}).get("factorio_category") != HAND_CATEGORY:
+        if recipe.get("category") != HAND_CATEGORY:
             continue
         found[path.stem] = (path, recipe)
     return found
 
 
 def outputs(recipe):
-    for entry in (recipe.get("outputs") or {}).get("item") or []:
-        yield (entry.get("content") or {}).get("ingredient") or {}
+    """A `planetaryfactory:assembling` recipe's item results: `{id, count, components?}`."""
+    yield from recipe.get("results") or []
+
+
+def awaited_ids():
+    """The recipes the converter skips only until a ticket lands, keyed by recipe id."""
+    run = subprocess.run([sys.executable, str(ROOT / "scripts/factorio-recipe-convert.py"),
+                          "--awaited"], capture_output=True, text=True, check=True)
+    return json.loads(run.stdout)
 
 
 def main():
     recipes = hand_recipes()
-    check(recipes, "no emitted recipe carries factorio_category: %s -- re-run the converter"
+    check(recipes, "no emitted recipe carries category: %s -- re-run the converter"
                    % HAND_CATEGORY)
 
+    awaited = awaited_ids()
+    deferred = [name for name in REQUIRED if name not in recipes
+                and "planetaryfactory:assembling/%s" % name in awaited]
     for name in REQUIRED:
+        if name in deferred:
+            continue
         check(name in recipes,
               "`%s` is not in the hand set: the Personal Assembler cannot plan it, and #222 is "
               "exactly the recipe being absent from the Assembler with nothing wrong with the "
@@ -76,7 +93,7 @@ def main():
         if name not in recipes:
             continue
         path, recipe = recipes[name]
-        items = [out.get("items") or out.get("item") for out in outputs(recipe)]
+        items = [out.get("id") for out in outputs(recipe)]
         check(SCIENCE_PACK_ITEM in items,
               "%s no longer outputs %s (%s) -- if the pack moved off Researchd's componentised item "
               "this check is asserting the wrong thing" % (path.name, SCIENCE_PACK_ITEM, items))
@@ -92,10 +109,10 @@ def main():
             if components is None:
                 continue
             componentised += 1
-            check(isinstance(out.get("items"), str),
-                  "%s names a component-bearing output with `items` = %r: a plan cannot promise an "
+            check(isinstance(out.get("id"), str),
+                  "%s names a component-bearing output with `id` = %r: a plan cannot promise an "
                   "item it cannot name, so this is refused at the graph"
-                  % (path.name, out.get("items")))
+                  % (path.name, out.get("id")))
             check(isinstance(components, dict) and components,
                   "%s carries an empty or non-map component patch (%r)" % (path.name, components))
             for component, value in (components or {}).items():
@@ -106,7 +123,7 @@ def main():
                       "%s sets `%s` to null; a removal is a different thing and the converter emits "
                       "none" % (path.name, component))
 
-    check(componentised >= len(REQUIRED),
+    check(componentised >= len(REQUIRED) - len(deferred),
           "found %d component-bearing output(s) in the hand set, expected at least the %d science "
           "packs" % (componentised, len(REQUIRED)))
 
@@ -115,8 +132,9 @@ def main():
     if failures:
         print("\n%d failure(s)" % len(failures))
         return 1
-    print("ok: %d hand recipe(s) emitted, %d component-bearing output(s), both science packs present"
-          % (len(recipes), componentised))
+    print("ok: %d hand recipe(s) emitted, %d component-bearing output(s), %d science pack(s) "
+          "deferred on a ticket (%s)" % (len(recipes), componentised, len(deferred),
+                                         ", ".join(deferred) or "none"))
     return 0
 
 

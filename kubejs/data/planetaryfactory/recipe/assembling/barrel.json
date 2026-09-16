@@ -1,31 +1,17 @@
 {
-  "type": "gtceu:assembling",
-  "inputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:steel_plate"
-          },
-          "count": 1
-        }
-      }
-    ]
-  },
-  "outputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "planetaryfactory:barrel"
-          },
-          "count": 1
-        }
-      }
-    ]
-  },
-  "duration": 20,
-  "data": {
-    "factorio_category": "crafting"
-  }
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:barrel",
+      "count": 1
+    }
+  ],
+  "time": 20
 }

@@ -1,39 +1,21 @@
 {
-  "type": "gtceu:assembling",
-  "inputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "tag": "minecraft:logs"
-          },
-          "count": 1
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:copper_wire"
-          },
-          "count": 2
-        }
-      }
-    ]
-  },
-  "outputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "planetaryfactory:small_electric_pole"
-          },
-          "count": 2
-        }
-      }
-    ]
-  },
-  "duration": 10,
-  "data": {
-    "factorio_category": "crafting"
-  }
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "#minecraft:logs",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:copper_wire",
+      "count": 2
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:small_electric_pole",
+      "count": 2
+    }
+  ],
+  "time": 10
 }

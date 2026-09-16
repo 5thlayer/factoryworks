@@ -1,47 +1,25 @@
 {
-  "type": "gtceu:assembling",
-  "inputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:iron_rod"
-          },
-          "count": 4
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:steel_plate"
-          },
-          "count": 2
-        }
-      },
-      {
-        "content": {
-          "ingredient": {
-            "item": "ftbmaterials:copper_wire"
-          },
-          "count": 2
-        }
-      }
-    ]
-  },
-  "outputs": {
-    "item": [
-      {
-        "content": {
-          "ingredient": {
-            "item": "planetaryfactory:medium_electric_pole"
-          },
-          "count": 1
-        }
-      }
-    ]
-  },
-  "duration": 10,
-  "data": {
-    "factorio_category": "crafting"
-  }
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_rod",
+      "count": 4
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 2
+    },
+    {
+      "ingredient": "ftbmaterials:copper_wire",
+      "count": 2
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:medium_electric_pole",
+      "count": 1
+    }
+  ],
+  "time": 10
 }
