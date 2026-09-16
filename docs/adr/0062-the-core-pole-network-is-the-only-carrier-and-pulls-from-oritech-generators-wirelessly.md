@@ -39,8 +39,8 @@ stops at when full (`stopOnEnergyFull`). A mixin makes three changes:
   finite. Ours is not: the Offshore Pump draws from one source block forever (ADR-0050). The return
   would move one pump from twenty Boilers to about two hundred and add a silent stall on a full water
   tank, to solve a problem the pack does not have. Returned water is zero and ADR-0050 stands.
-- `planetaryfactory:steam` joins Oritech's steam tag, and the engine's recipe is generated from
-  `SteamChainCorpus`.
+- `planetaryfactory:steam` replaces Oritech's steam in `c:steam`, and the engine's recipe is emitted by the recipe converter
+  from the `steam-engine` item-map row; Oritech's own crafting recipe is swept.
 
 **Why no subclass, against ADR-0060's rule.** Oritech's chaining looks neighbours up by
 `BlockEntitiesContent.STEAM_ENGINE_ENTITY` and keeps its slave set private. A core block entity type
@@ -56,7 +56,14 @@ This replaces ADR-0060's "the core's accumulator" and restores that one storage 
 - The Steam Engine's footprint is Oritech's hull, not Factorio's 3×5.
 - The accumulator is 1×3, not Factorio's 2×2.
 - The engine holds an FE buffer and burns into it, where Factorio's burns only what the network
-  draws. With the stop on a full buffer, an unloaded engine still burns no steam.
+  draws. The buffer is one tick of output, 450 FE per engine in the row, so it hides no outage;
+  with the stop on a full buffer, an unloaded engine still burns no steam.
+- The engine's steam tank is 200 mB per engine in the row, Factorio's own fluid box, not Oritech's
+  8,000 mB. Tank size decides only how fast the fill-driven speed settles, not where: 8,000 mB took
+  about three minutes for one engine and hid an outage for as long.
+- Oritech lets two masters that receive steam before either scans both claim the empty engines
+  between them, counting those twice. The mixin skips an engine already answering to a live master,
+  so every engine counts once.
 
 ## Consequences
 

@@ -34,7 +34,8 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 # took the mod out of the pack, and this set is what catches a stale `owner` string left behind.
 # `electro` is not one either: #148 swapped Create: Electro Energetics for Create: Power Grid, and
 # the token is `powergrid` -- the mod id, which `electro` never was.
-MODS = {"gregtech", "create", "powergrid", "pack"}
+# `oritech` owns one row: its Steam Engine is the pack's engine (ADR-0062, #282).
+MODS = {"gregtech", "create", "powergrid", "oritech", "pack"}
 
 # Terminal values: not a machine, and deliberately so. `undecided` means ADR-0017 has no row
 # for the capability -- a decision nobody has taken, not an oversight. `undecided:smelting` was
