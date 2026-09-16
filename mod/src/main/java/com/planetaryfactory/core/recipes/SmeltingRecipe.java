@@ -9,6 +9,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
@@ -38,7 +39,7 @@ import net.minecraft.world.level.Level;
  * <p>{@code cookingtime} is Factorio's {@code energy_required * 20} with no speed divisor in it
  * (ADR-0029); the block applies its own {@code crafting_speed}.
  */
-public record SmeltingRecipe(Ingredient ingredient, int count, ItemStack result, int cookingTime)
+public record SmeltingRecipe(Ingredient ingredient, int count, ItemStackTemplate result, int cookingTime)
         implements Recipe<SingleRecipeInput> {
 
     /** Long enough to be visible, short enough not to be a gate. Vanilla's own default. */
@@ -62,7 +63,18 @@ public record SmeltingRecipe(Ingredient ingredient, int count, ItemStack result,
 
     @Override
     public ItemStack assemble(SingleRecipeInput input) {
-        return result.copy();
+        return result.create();
+    }
+
+    /**
+     * The result as a stack, for the callers that need to measure it rather than hand it over.
+     *
+     * <p>Every call builds a new one. {@link ItemStackTemplate#create()} is the only way to read a
+     * count and a max stack size off a template, and a cached stack would be a mutable field on a
+     * record the recipe manager shares between the furnace and the recipe viewer.
+     */
+    public ItemStack resultStack() {
+        return result.create();
     }
 
     /**
@@ -120,7 +132,15 @@ public record SmeltingRecipe(Ingredient ingredient, int count, ItemStack result,
                     // ingredient still fails to load rather than becoming a free recipe.
                     Ingredient.CODEC.fieldOf("ingredient").forGetter(SmeltingRecipe::ingredient),
                     ExtraCodecs.POSITIVE_INT.optionalFieldOf("count", 1).forGetter(SmeltingRecipe::count),
-                    ItemStack.CODEC.fieldOf("result").forGetter(SmeltingRecipe::result),
+                    // A template, not an ItemStack, and the difference is load-bearing rather
+                    // than stylistic: 26.1 binds an item's data components during the same
+                    // datapack load that reads the recipes, and ItemStack.CODEC refuses an item
+                    // whose components are not bound yet -- "Item minecraft:stone_bricks does not
+                    // have components yet", one ERROR line and no recipe in the manager. Vanilla's
+                    // own cooking recipes moved to ItemStackTemplate for this reason. The JSON is
+                    // unchanged: the template reads the same {id, count, components} object, and
+                    // a bare id string as well.
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter(SmeltingRecipe::result),
                     Codec.INT.optionalFieldOf("cookingtime", DEFAULT_COOKING_TIME)
                                 .forGetter(SmeltingRecipe::cookingTime))
                     .apply(instance, SmeltingRecipe::new));
@@ -129,7 +149,7 @@ public record SmeltingRecipe(Ingredient ingredient, int count, ItemStack result,
             StreamCodec.composite(
                     Ingredient.CONTENTS_STREAM_CODEC, SmeltingRecipe::ingredient,
                     ByteBufCodecs.VAR_INT, SmeltingRecipe::count,
-                    ItemStack.STREAM_CODEC, SmeltingRecipe::result,
+                    ItemStackTemplate.STREAM_CODEC, SmeltingRecipe::result,
                     ByteBufCodecs.VAR_INT, SmeltingRecipe::cookingTime,
                     SmeltingRecipe::new);
 

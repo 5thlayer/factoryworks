@@ -126,6 +126,10 @@ build/
 # class files, never a source of truth, and regenerated on the next import.
 mod/bin/
 
+# Where a `run*` Gradle task puts its working directory: the GameTest run's throwaway universe
+# (#271), and the config the server writes on first start. Both are regenerated per run.
+mod/run/
+
 .probe
 kubejs/config/probe-settings.json
 

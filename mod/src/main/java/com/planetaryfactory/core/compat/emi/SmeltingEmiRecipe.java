@@ -32,7 +32,7 @@ public class SmeltingEmiRecipe extends BasicEmiRecipe {
         SmeltingRecipe recipe = holder.value();
         this.cookingTime = recipe.cookingTime();
         this.inputs = List.of(EmiIngredient.of(recipe.ingredient(), recipe.count()));
-        this.outputs = List.of(EmiStack.of(recipe.result()));
+        this.outputs = List.of(EmiStack.of(recipe.resultStack()));
     }
 
     @Override

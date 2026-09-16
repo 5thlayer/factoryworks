@@ -77,7 +77,49 @@ deliberately does not have. The arithmetic and the rules are
 Minecraft-free unit tests under `mod/src/test/java/com/planetaryfactory/core/smelting/`: the
 per-tier duration, the 90 FE/t draw and its buffer, the unsided routing by item, and the stall —
 a blocked output starts no smelt, burns no fuel and voids nothing (ADR-0041). Whether the three
-blocks smelt in a running game is a world load, and its GameTests land with #156.
+blocks smelt in a running game is a world load; the Electric tier's half of that landed with
+#271's GameTests, and the two burner tiers' has not.
+
+### GameTest harness
+
+`./gradlew :planetaryfactory_core:runGameTestServer` from the repo root is the pack's only check
+that loads a world. It is headless, needs no display and no human, and fails the command when a
+test fails. The tests are in `mod/src/main/java/com/planetaryfactory/core/gametest/`, in the
+**main** source set — a GameTest is code the game loads, so it cannot live in the Minecraft-free
+test source set. 26.1 has no `@GameTestHolder` and no `neoforge.enabledGameTestNamespaces`: a test
+is an entry in the `test_instance` datapack registry, registered through NeoForge's
+`RegisterGameTestsEvent`, and with no `--tests` selector every registered test runs.
+`PFGameTestInstance` is the shape that event has no answer for — vanilla's `function` instance
+resolves a `Consumer` out of the `test_function` registry, which is populated during `Bootstrap`,
+before any mod is loaded.
+
+Two seams are the harness's own rather than generic plumbing. The tests stand on a **generated**
+stone platform (`scripts/build-gametest-structures.py`), for the reason `build-terra-start.py`
+exists: a committed `.nbt` nobody can regenerate is a binary with no source. And the run is handed
+the pack's four emitted smelts **as a datapack** — the `gameTestPack` Gradle task — because a
+GameTest server loads vanilla plus the mod jar, and the pack's recipes are generated files a
+KubeJS that is not installed here would read. That is what lets a smelt be asserted against the
+recipe the pack ships rather than against a fixture written to pass. Three of the four still name
+`gtceu:` results and do not load (#273), which is why stone brick is the only smelt under test.
+
+What is there is `EnergyFaceTests` (#271), and only what a JVM test cannot reach: that a pole's
+scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
+transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
+starved one freezes where it stood. Each was checked against the defect it exists for: dropping
+the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
+furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red.
+`tests/pack/test_energy_faces.py` and `tests/pack/test_capability_registration.py` are the static
+half and read source text, so they cannot see any of those three.
+
+Two decisions are recorded rather than assumed. The platform generator has a `--check`, like every
+other generator here, but **no test file owns it**: the template has no corpus, no tuning dial and
+no input to go stale against, so the `--check` is the whole of the guard. And the GameTest run is
+in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
+boots a server, so it is run against a change that touched mechanism. Run it after editing
+anything under `core/energy/`, `core/smelting/` or `core/gametest/`.
+
+The Boiler trips the same three GameTest conditions and has none yet; that is a gap, filed rather
+than absorbed here.
 
 ### Felling check
 
