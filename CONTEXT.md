@@ -216,9 +216,17 @@ Terra's rung 0 pack-authored machine that burns solid fuel to turn water into **
 _Avoid_: LP Solid Boiler, heater, steam generator
 
 **Steam Engine**:
-The pack-authored machine that consumes **Steam** and emits Create rotation. It is the pack's rung 0 prime mover and it generates no electricity: rotation becomes volts one rung later, at Create: Power Grid's generator assembly (ADR-0048).
-_Avoid_: Create's Steam Engine, generator, alternator, turbine
+The pack's rung 0 generator: it burns **Steam** into its own charge, faster the fuller its steam tank, stops when that charge is full, and gives most of the steam back as water. Engines placed in a row chain behind one **Master Engine**. It has no wire; it joins an **Electric Network** by standing inside a **Supply Area Pole**'s area.
+_Avoid_: Create's Steam Engine, Oritech's steam engine, alternator, turbine
 
+
+**Master Engine**:
+The one **Steam Engine** in a row that burns the row's steam and holds its charge; every other engine in the row is chained to it and only mirrors its speed.
+_Avoid_: master/slave, lead engine, chain head
+
+**Electric Network**:
+Every **Supply Area Pole** joined to another within wire reach, plus every generator, accumulator and machine standing in any of their areas. One balance of supply and demand; there is no second carrier.
+_Avoid_: grid, power net, FE network
 
 **Offshore Pump**:
 The pack-authored block that is the **only** origin of water on any body: placed against one natural water source block, it emits 1,200 mB/s and needs no power, both Factorio's own figures (ADR-0050). ADR-0048 had written it off; that call is reversed, because Create's Mechanical Pump moves fluid between pipes and never touches world water.
