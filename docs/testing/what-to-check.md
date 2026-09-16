@@ -162,8 +162,8 @@ Minecraft-free classes with unit tests. What was genuinely left over — that a 
 finds a machine, and that inserting energy makes it run — is the part a GameTest exists for.
 **Split first, then check what remains**; the residue is usually much smaller than the feature.
 
-The Boiler (`#224`) now trips all three as well, and has no GameTest yet. That is a gap rather
-than a decision, and it is filed rather than absorbed into the harness ticket. The rest of the mod
+The Boiler (`#224`) now trips all three as well, and its GameTests are `#274` — filed rather than
+absorbed into the harness ticket. The rest of the mod
 content satisfies (1) and fails (2), which is why declining to test it was the right call.
 
 ### This looks or feels right
