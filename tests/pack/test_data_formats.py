@@ -35,7 +35,7 @@ WHAT IT CHECKS.
 WHAT IT IS NOT. It does not check the `gtceu:` recipe subtrees. Those carry the stale ingredient
 shape too, but GregTech left with ADR-0060 and they are dead wholesale rather than mis-shaped --
 they are re-derived against the chassis ADR-0060 names (#258) and the item alphabet #275 decides,
-by the converter #87 owns, and asserting their shape here would be a permanently red check for a
+by the converter #279 re-targets, and asserting their shape here would be a permanently red check for a
 reason this file does not own. `kubejs/parked/` is
 excluded for the same reason: nothing loads it.
 
@@ -64,7 +64,7 @@ DATA_ROOTS = (
 
 # The recipe types the machine chassis owns, deferred rather than asserted here: #258 names the
 # chassis, #275 decides the item alphabet -- FTB Materials' intermediates against Oritech's and
-# Railcraft's overlapping ones -- and #87 owns the converter that reads both.
+# Railcraft's overlapping ones -- and #279 owns the converter that reads both.
 DEFERRED_RECIPE_NAMESPACES = ("gtceu:",)
 
 # Item models left behind by a registration ADR-0060 removed. Named rather than skipped by shape,

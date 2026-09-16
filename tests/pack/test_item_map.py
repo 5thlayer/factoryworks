@@ -53,7 +53,7 @@ VANILLA = pathlib.Path(
         "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
 
 # The `kubejs/data` subtrees that ADR-0060 left dead. They name registries that went with GregTech
-# and GCyR and are re-derived against the chassis (#258) by the converter (#87); scanning them for
+# and GCyR and are re-derived against the chassis (#258) by the converter (#279); scanning them for
 # contested tags would be asserting against files nobody intends to load.
 DEAD_SUBTREES = ("gtceu", "gt_materials", "gcyr")
 
