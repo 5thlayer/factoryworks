@@ -30,6 +30,7 @@ Usage: tests/pack/test_boiler_assets.py
 """
 
 import json
+import re
 import pathlib
 import subprocess
 import sys
@@ -136,9 +137,15 @@ def check_item_map(failures):
 
 
 def check_registered(failures):
-    """That the mod registers the id the row names. A row naming nothing is an empty slot."""
+    """That the mod registers the id the row names. A row naming nothing is an empty slot.
+
+    Both spellings are accepted. `DeferredRegister.Blocks` offers `register` and `registerBlock`
+    and the Boiler moved from one to the other; a matcher pinned to a single spelling reported a
+    registered block as missing, which is the same false reading in the opposite direction from
+    the one this function exists to catch.
+    """
     source = PF_BLOCKS.read_text(encoding="utf-8")
-    if f'BLOCKS.register("{BLOCK}"' not in source:
+    if not re.search(rf'BLOCKS\.register(?:Block)?\("{re.escape(BLOCK)}"', source):
         failures.append(
             f"{PF_BLOCKS.relative_to(ROOT)} does not register {BLOCK_ID} -- the item-map row "
             "names a block that does not exist"

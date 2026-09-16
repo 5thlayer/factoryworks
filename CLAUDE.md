@@ -118,7 +118,7 @@ in no batch — this repo has no aggregate runner, and this is the one check tha
 boots a server, so it is run against a change that touched mechanism. Run it after editing
 anything under `core/energy/`, `core/smelting/` or `core/gametest/`.
 
-The Boiler trips the same three GameTest conditions and has none yet; that is a gap, filed rather
+The Boiler trips the same three GameTest conditions and has none yet; that is #274, filed rather
 than absorbed here.
 
 ### Felling check
@@ -335,8 +335,8 @@ which GregTech's model provider does not serve for a `planetaryfactory:` block, 
 item-map row is `authored` and names the block the mod registers rather than the LP Solid Boiler it
 replaces, and a **second, independent derivation** of the 60 mB/s straight from the corpus. Run both
 after editing `core/fluid/`, `scripts/build-steam-assets.py` or the corpus. Whether a placed Boiler
-boils water is a world load, and — unlike the furnace ladder's, which are filed on #156 — no
-GameTest is filed for it yet; that is a gap rather than a decision.
+boils water is a world load, and its GameTests are #274 — which also carries the one thing no
+static check here can reach: that the fluid face's two refusals are the right way round, per tank.
 
 ### Enemy corpus check
 
