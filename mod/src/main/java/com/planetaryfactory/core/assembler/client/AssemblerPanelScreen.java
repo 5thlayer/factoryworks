@@ -28,8 +28,6 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
     private static final int ROW_HEIGHT = 22;
     private static final int ROWS_TOP = 20;
     private static final int CANCEL_SIZE = 12;
-    private static final int BAR = 0xFF4FA84F;
-    private static final int BAR_BLOCKED = 0xFFB05030;
 
     public AssemblerPanelScreen(AssemblerPanelMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 176, 186);
@@ -42,27 +40,22 @@ public final class AssemblerPanelScreen extends AssemblerScreen<AssemblerPanelMe
         int index = 0;
         for (QueueSyncPacket.Entry entry : AssemblerQueueView.entries()) {
             graphics.fill(leftPos + 6, y, leftPos + imageWidth - 6, y + ROW_HEIGHT - 2, ROW);
-            int trackWidth = imageWidth - 16 - CANCEL_SIZE - 2;
-            int barWidth = (int) (trackWidth * Math.max(0.0f, Math.min(1.0f, entry.progress())));
-            boolean isPausedHead = index == 0 && AssemblerQueueView.blocked();
-            graphics.fill(leftPos + 8, y + ROW_HEIGHT - 6, leftPos + 8 + barWidth, y + ROW_HEIGHT - 4,
-                    isPausedHead ? BAR_BLOCKED : BAR);
             // The plan on the left, the step under way on the right. A row naming only the plan
             // says nothing is happening for as long as a transport belt spends crafting iron gears,
             // which is most of its life.
             int textY = y + 5;
             graphics.item(itemStack(entry.rootItem()), leftPos + 9, y + 2);
+            if (index == 0 && entry.stepIsRoot()) {
+                RadialWipeRenderer.over(graphics, leftPos + 9, y + 2, AssemblerQueueView.liveProgress(entry));
+            }
             int after = leftPos + 27;
             graphics.text(font, "x" + entry.amount(), after, textY, 0xFFFFFFFF, false);
             after += font.width("x" + entry.amount()) + 6;
-            if (entry.hasStep()) {
+            if (entry.hasStep() && !entry.stepIsRoot()) {
                 graphics.text(font, ">", after, textY, 0xFF777777, false);
                 graphics.item(itemStack(entry.stepItem()), after + 8, y + 2);
+                if (index == 0) RadialWipeRenderer.over(graphics, after + 8, y + 2, AssemblerQueueView.liveProgress(entry));
                 graphics.text(font, "x" + entry.stepAmount(), after + 26, textY, 0xFFCCCCCC, false);
-            }
-            if (entry.steps() > 1) {
-                Component of = Component.literal((entry.step() + 1) + "/" + entry.steps());
-                graphics.text(font, of, cancelLeft() - font.width(of) - 4, textY, 0xFF999999, false);
             }
             int cancelX = cancelLeft();
             graphics.fill(cancelX, y + 2, cancelX + CANCEL_SIZE, y + 2 + CANCEL_SIZE, 0xFF5A2B2B);

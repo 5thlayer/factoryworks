@@ -69,7 +69,8 @@ public final class AssemblerQueue {
     }
 
     /**
-     * Start: takes the plan's whole raw cost and appends it.
+     * Start: takes the plan's whole raw cost and appends it, or grows the last row when it makes the
+     * same thing.
      *
      * <p>Returns false and takes nothing when the inventory does not cover the cost. That is a
      * belt-and-braces refusal rather than a case the player can reach -- the plan dialog refuses an
@@ -84,8 +85,27 @@ public final class AssemblerQueue {
         for (ItemAmount owed : cost.amounts()) {
             items.take(owed.item(), owed.count());
         }
-        entries.add(new QueuedPlan(plan, cost, 0, 0, 0));
+        QueuedPlan tail = entries.isEmpty() ? null : entries.get(entries.size() - 1);
+        if (tail != null && makesTheSameThing(tail.plan(), plan)) {
+            entries.set(entries.size() - 1, tail.extendedBy(plan, cost));
+        } else {
+            entries.add(new QueuedPlan(plan, cost, 0, 0, 0));
+        }
         return true;
+    }
+
+    /**
+     * Whether a new plan joins the last row rather than starting its own: the same item, by the same
+     * final recipe, as Factorio grows the last matching entry of its hand-craft queue.
+     *
+     * <p>Only the last row, so the order the player queued in is never rearranged. Joining is safe
+     * because the steps run front to back against the plan's own buffer, and the new plan was
+     * resolved against an inventory the row's reservation had already left.
+     */
+    private static boolean makesTheSameThing(CraftingPlan row, CraftingPlan plan) {
+        return row.rootItem().equals(plan.rootItem())
+                && !row.steps().isEmpty() && !plan.steps().isEmpty()
+                && row.steps().getLast().recipe().equals(plan.steps().getLast().recipe());
     }
 
     /**

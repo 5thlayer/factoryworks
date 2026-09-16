@@ -36,7 +36,7 @@ final class AssemblerHud implements GuiLayer {
     private static final int MAX_ROWS = 5;
 
     private static final int ROW_HEIGHT = 20;
-    private static final int WIDTH = 96;
+    private static final int WIDTH = 132;
 
     /** Vanilla's hotbar: 182 wide, centred, its top 22 pixels off the bottom. */
     private static final int HOTBAR_HALF_WIDTH = 91;
@@ -53,8 +53,6 @@ final class AssemblerHud implements GuiLayer {
     private static final int CLEAR_OF_OFFHAND = 32;
 
     private static final int BACKDROP = 0x90101010;
-    private static final int BAR = 0xFF4FA84F;
-    private static final int BAR_BLOCKED = 0xFFB05030;
 
     @Override
     public void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
@@ -74,20 +72,21 @@ final class AssemblerHud implements GuiLayer {
         for (int index = 0; index < shown; index++) {
             QueueSyncPacket.Entry entry = entries.get(index);
             int y = top + index * ROW_HEIGHT;
-            // What is being made now, falling back to what the plan is for on a plan whose last step
-            // has finished and is waiting for room to deliver.
-            String item = entry.hasStep() ? entry.stepItem() : entry.rootItem();
-            int count = entry.hasStep() ? entry.stepAmount() : entry.amount();
-            graphics.item(PlanItems.stack(item), left, y);
-            graphics.text(font, "x" + count, left + 20, y + 4, 0xFFFFFFFF, true);
-            if (entry.steps() > 1) {
-                Component of = Component.literal((entry.step() + 1) + "/" + entry.steps());
-                graphics.text(font, of, left + WIDTH - font.width(of), y + 4, 0xFF999999, true);
+            // The row the panel draws: the plan on the left, the step under way after it. A row naming
+            // only the step says nothing about what the queue is for.
+            graphics.item(PlanItems.stack(entry.rootItem()), left, y);
+            if (index == 0 && entry.stepIsRoot()) {
+                RadialWipeRenderer.over(graphics, left, y, AssemblerQueueView.liveProgress(entry));
             }
-            int filled = (int) (WIDTH * Math.max(0.0f, Math.min(1.0f, entry.progress())));
-            boolean pausedHead = index == 0 && AssemblerQueueView.blocked();
-            graphics.fill(left, y + 17, left + WIDTH, y + 18, 0xFF303030);
-            graphics.fill(left, y + 17, left + filled, y + 18, pausedHead ? BAR_BLOCKED : BAR);
+            String amount = "x" + entry.amount();
+            graphics.text(font, amount, left + 18, y + 4, 0xFFFFFFFF, true);
+            if (entry.hasStep() && !entry.stepIsRoot()) {
+                int after = left + 18 + font.width(amount) + 4;
+                graphics.text(font, ">", after, y + 4, 0xFF777777, true);
+                graphics.item(PlanItems.stack(entry.stepItem()), after + 8, y);
+                if (index == 0) RadialWipeRenderer.over(graphics, after + 8, y, AssemblerQueueView.liveProgress(entry));
+                graphics.text(font, "x" + entry.stepAmount(), after + 26, y + 4, 0xFFCCCCCC, true);
+            }
         }
         if (entries.size() > shown) {
             Component more = Component.translatable(

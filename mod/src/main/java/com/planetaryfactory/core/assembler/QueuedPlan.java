@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.assembler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -65,6 +66,41 @@ public final class QueuedPlan {
         return stepIndex < plan.steps().size() ? plan.steps().get(stepIndex) : null;
     }
 
+    /**
+     * How much of the plan's {@code amount} is still to be made, counting down one craft at a time.
+     *
+     * <p>Counted over the steps that make the root -- one on a fresh plan, several on a row that grew
+     * (#288) -- so crafting an intermediate leaves it unchanged. Proportional rather than one per
+     * craft because a recipe can make more than one of its item.
+     */
+    public int remainingAmount() {
+        String root = plan.steps().isEmpty() ? "" : plan.steps().getLast().recipe();
+        long total = 0;
+        long left = 0;
+        for (int i = 0; i < plan.steps().size(); i++) {
+            CraftStep step = plan.steps().get(i);
+            if (!step.recipe().equals(root)) continue;
+            total += step.crafts();
+            if (i > stepIndex) left += step.crafts();
+            if (i == stepIndex) left += step.crafts() - craftsDone;
+        }
+        return total == 0 ? 0 : (int) (plan.amount() * left / total);
+    }
+
+    /** What the current step still has to make of its first output, or 0 once the last step is done. */
+    public int remainingStepAmount() {
+        CraftStep step = currentStep();
+        if (step == null || step.outputs().isEmpty()) return 0;
+        return step.remaining(step.outputs().get(0).count(), craftsDone);
+    }
+
+    /** How far {@link #progress()} moves per tick while running, so a client can draw between syncs. */
+    public float progressPerTick() {
+        CraftStep step = currentStep();
+        if (step == null || step.durationTicks() <= 0) return 0.0f;
+        return 1.0f / step.durationTicks();
+    }
+
     /** Zero to one, for a progress bar; one when there is nothing left to craft. */
     public float progress() {
         CraftStep step = currentStep();
@@ -109,6 +145,22 @@ public final class QueuedPlan {
             stepIndex++;
             craftsDone = 0;
         }
+    }
+
+    /**
+     * This row with another plan's steps appended and its reservation added to the buffer, keeping the
+     * row's id and how far it has got. The amount and raw cost are summed so the row reads, and
+     * refunds, as one plan.
+     */
+    QueuedPlan extendedBy(CraftingPlan more, ItemBag reservation) {
+        ItemBag cost = ItemBag.ofAmounts(plan.rawCost());
+        for (ItemAmount owed : more.rawCost()) cost.add(owed.item(), owed.count());
+        List<CraftStep> steps = new ArrayList<>(plan.steps());
+        steps.addAll(more.steps());
+        ItemBag held = buffer.copy();
+        for (ItemAmount owed : reservation.amounts()) held.add(owed.item(), owed.count());
+        return new QueuedPlan(new CraftingPlan(plan.id(), plan.rootItem(), plan.amount() + more.amount(),
+                cost.amounts(), steps), held, stepIndex, craftsDone, progressTicks);
     }
 
     /** Everything the plan is holding, as a list that survives the bag being changed. */

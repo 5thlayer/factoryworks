@@ -27,6 +27,8 @@ abstract class AssemblerScreen<T extends AbstractContainerMenu> extends Abstract
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        // The world dims behind the panel as it does behind the inventory; skipping super left it bright.
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
         graphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, PANEL);
         renderPanel(graphics, mouseX, mouseY);
     }
