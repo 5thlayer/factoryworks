@@ -65,4 +65,14 @@ class PoleWiringClickTest {
         }
         assertEquals(PoleWiring.AUTO_WIRES + 1, wires.all().size());
     }
+
+    /** The slack wire's red tint asks this before the click, so it must agree with the click. */
+    @Test
+    void refusesAgreesWithTheClick() {
+        PoleLinks.Pole a = small(0, 0, 0);
+        for (PoleLinks.Pole target : new PoleLinks.Pole[] {a, small(7, 0, 0), small(8, 0, 0)}) {
+            boolean refused = PoleWiring.click(a, target, new WireSet()) == PoleWiring.Click.REFUSED;
+            assertEquals(refused, PoleWiring.refuses(a, target));
+        }
+    }
 }

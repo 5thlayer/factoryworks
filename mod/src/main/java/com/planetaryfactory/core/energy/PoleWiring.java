@@ -24,12 +24,17 @@ public final class PoleWiring {
     private PoleWiring() {
     }
 
+    /** Whether a second click on {@code target} would be refused; the slack wire turns red on it. */
+    public static boolean refuses(PoleLinks.Pole anchor, PoleLinks.Pole target) {
+        return !pos(anchor).equals(pos(target)) && !PoleLinks.linked(anchor, target);
+    }
+
     /** Applies the Pick's second click, on {@code target}, to the wire set. */
     public static Click click(PoleLinks.Pole anchor, PoleLinks.Pole target, WireSet wires) {
         if (pos(anchor).equals(pos(target))) {
             return Click.CANCELLED;
         }
-        if (!PoleLinks.linked(anchor, target)) {
+        if (refuses(anchor, target)) {
             return Click.REFUSED;
         }
         if (wires.contains(pos(anchor), pos(target))) {
