@@ -125,9 +125,23 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
      * structure the player thinks of as one object. Recursion is via {@code destroyBlock}, which
      * re-enters here for the block above, so the column unwinds one segment at a time.
      */
+    /** A placed base wires itself (ADR-0068). */
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState,
+                           boolean movedByPiston) {
+        super.onPlace(state, level, pos, oldState, movedByPiston);
+        if (level instanceof ServerLevel server && !oldState.is(this)) {
+            LevelWires.of(server).placed(server, pos);
+        }
+    }
+
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
                                                boolean movedByPiston) {
+        // A base's wires go with it; an extension holds none (ADR-0068).
+        if (!level.getBlockState(pos.below()).is(this)) {
+            LevelWires.of(level).broken(level, pos);
+        }
         // 26.1 calls this only when the block is genuinely gone, so the old
         // `!state.is(newState.getBlock())` guard is the caller's job now.
         BlockPos above = pos.above();

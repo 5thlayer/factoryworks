@@ -17,12 +17,13 @@ import java.util.WeakHashMap;
 /**
  * Every Electric Network in a level, and the tick that settles them (ADR-0062).
  *
- * <h2>No stored topology</h2>
+ * <h2>Networks follow the stored wires</h2>
  *
  * <p>A pole reports itself every tick it runs. A pole that did not report -- broken, unloaded, or
- * turned into a column extension -- is dropped at the level tick, and any change to the set of poles
- * rebuilds the networks from {@link PoleLinks}. Placing and breaking need no hooks of their own,
- * and a merge and a split are the same recomputation.
+ * turned into a column extension -- is dropped at the level tick. Any change to the set of poles,
+ * or a wire made or cut ({@link LevelWires}), rebuilds the networks from the wires between the poles
+ * standing (ADR-0068, superseding ADR-0062's "no stored topology"). A merge and a split are still
+ * the same recomputation.
  *
  * <h2>One settlement per network</h2>
  *
@@ -64,6 +65,11 @@ public final class ElectricNetworks {
             dirty = true;
         }
         lastReport.put(pos, pole.getLevel().getGameTime());
+    }
+
+    /** A wire was made or cut: the networks are rebuilt on the next level tick. */
+    void wiresChanged() {
+        dirty = true;
     }
 
     /** The poles linked into the same network as this one, itself included. */
@@ -112,7 +118,7 @@ public final class ElectricNetworks {
             }
         }
         if (dirty) {
-            rebuild();
+            rebuild(level);
             dirty = false;
         }
         for (List<SupplyAreaPoleBlockEntity> network : networks) {
@@ -120,13 +126,13 @@ public final class ElectricNetworks {
         }
     }
 
-    private void rebuild() {
+    private void rebuild(Level level) {
         List<SupplyAreaPoleBlockEntity> all = new ArrayList<>(poles.values());
         List<PoleLinks.Pole> shapes = new ArrayList<>(all.size());
         for (SupplyAreaPoleBlockEntity pole : all) {
             shapes.add(pole.shape());
         }
-        int[] ids = PoleLinks.networks(shapes);
+        int[] ids = PoleLinks.networks(shapes, LevelWires.of((net.minecraft.server.level.ServerLevel) level).wires().all());
         List<List<SupplyAreaPoleBlockEntity>> built = new ArrayList<>();
         for (int i = 0; i < all.size(); i++) {
             while (built.size() <= ids[i]) {
