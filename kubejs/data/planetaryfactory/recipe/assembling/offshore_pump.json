@@ -1,0 +1,21 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "oritech:fluid_pipe",
+      "count": 3
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 2
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:offshore_pump",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

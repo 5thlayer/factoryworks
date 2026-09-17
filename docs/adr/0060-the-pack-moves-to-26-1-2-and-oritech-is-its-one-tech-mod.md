@@ -211,7 +211,8 @@ are re-derived, not carried over.
   reproduced. Oritech's energy pipes, Enderic Laser and storage blocks are recipe-removed. **An
   underpowered machine stops rather than slowing**, which is Oritech's own behaviour, and
   ADR-0036's brownout requirement is dropped rather than built.
-- **Energy storage is the core's accumulator**, at Factorio's 5 MJ and 300 kW, which is 50,000 FE
+- *(Amended by ADR-0067: the accumulator is Oritech's Large Energy Storage, at Oritech's capacity.)*
+  **Energy storage is the core's accumulator**, at Factorio's 5 MJ and 300 kW, which is 50,000 FE
   at 150 FE/t. Oritech's smallest store is twenty times that and would retire the puzzle.
 - **Machines are core subclasses of Oritech's.** An Oritech machine with a Factorio counterpart
   becomes a `planetaryfactory_core` subclass that reuses Oritech's model. Assemblers, chemical

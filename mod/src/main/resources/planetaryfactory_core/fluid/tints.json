@@ -1,0 +1,14 @@
+{
+  "oritech:still_diesel": {
+    "color": "#681F59",
+    "factorio": "petroleum-gas"
+  },
+  "oritech:still_heavy_oil": {
+    "color": "#BE6700",
+    "factorio": "heavy-oil"
+  },
+  "oritech:still_sulfuric_acid": {
+    "color": "#FFCC1E",
+    "factorio": "sulfuric-acid"
+  }
+}

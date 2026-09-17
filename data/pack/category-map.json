@@ -33,17 +33,17 @@
   "machines": {
     "assembling": {
       "recipe_type": "planetaryfactory:assembling",
-      "note": "ADR-0026's Assembling Machine 1/2/3 and the Personal Assembler's hand set, on the pack's own `planetaryfactory:assembling` (#279). One type across the three Factorio categories, each recipe carrying its `category`, so ADR-0038's hand set stays a predicate over this type rather than a type of its own. Its GregTech type left with ADR-0060; the pack's type is what `RuntimeHandRecipes` reads today, and the Assembling Machine block #277 decides is to read the same type rather than bring its own."
+      "note": "ADR-0026's Assembling Machine 1/2/3 and the Personal Assembler's hand set, on the pack's own `planetaryfactory:assembling` (#279). One type across the three Factorio categories, each recipe carrying its `category`, so ADR-0038's hand set stays a predicate over this type rather than a type of its own. Its GregTech type left with ADR-0060; the pack's type is what `RuntimeHandRecipes` reads today, and the Assembling Machine block #258 builds is to read the same type rather than bring its own."
     },
     "chemical_plant": {
       "recipe_type": null,
-      "note": "ADR-0025's Chemical Plant. Its `gtceu:chemical_plant` type left with ADR-0060; #277 decides the block (the proposal is Oritech's centrifuge) and with it the recipe type and its JSON shape.",
-      "blocked_by": 277
+      "note": "ADR-0025's Chemical Plant. Its `gtceu:chemical_plant` type left with ADR-0060; #277 decided the block is a core subclass (`planetaryfactory:chemical_plant`, ADR-0060); #258 builds it, and with it the recipe type and its JSON shape.",
+      "blocked_by": 258
     },
     "oil_refinery": {
       "recipe_type": null,
-      "note": "ADR-0025's Oil Refinery. Its `gtceu:oil_refinery` type left with ADR-0060; #277 decides the block (the proposal is `oritech:refinery`) and with it the recipe type and its JSON shape.",
-      "blocked_by": 277
+      "note": "ADR-0025's Oil Refinery. Its `gtceu:oil_refinery` type left with ADR-0060; #277 decided the block is a core subclass of `oritech:refinery` (`planetaryfactory:oil_refinery`, ADR-0060); #258 builds it, and with it the recipe type and its JSON shape.",
+      "blocked_by": 258
     },
     "smelting": {
       "recipe_type": "planetaryfactory:smelting",

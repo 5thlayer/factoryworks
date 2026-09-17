@@ -1,0 +1,21 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 2
+    },
+    {
+      "ingredient": "planetaryfactory:battery",
+      "count": 5
+    }
+  ],
+  "results": [
+    {
+      "id": "oritech:large_storage",
+      "count": 1
+    }
+  ],
+  "time": 200
+}

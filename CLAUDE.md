@@ -360,6 +360,21 @@ after editing `core/fluid/`, `scripts/build-steam-assets.py` or the corpus. Whet
 boils water is a world load, and its GameTests are #274 — which also carries the one thing no
 static check here can reach: that the fluid face's two refusals are the right way round, per tank.
 
+### Fluid colour check
+
+The oil fluids are Oritech's, drawn in Factorio's colours (#277, ADR-0067). A fluid's colour is its
+sprite times a tint, and Oritech's tint is a constructor argument that NeoForge refuses to register
+twice, so `core/mixin/oritech/FluidModelContentMixin` swaps it for the one `FluidTintCorpus` reads
+out of `planetaryfactory_core/fluid/tints.json`. `scripts/build-fluid-tints.py` writes that file from
+Factorio's `base_color` (in `data/factorio/fluid.json`) and each sprite's average, read from the
+Oritech jar. It retints only where Oritech's colour misses by more than 0.15. The sprite and tint
+per Oritech fluid were read off the jar with `javap` and are the one typed table.
+`tests/pack/test_fluid_tints.py` runs the `--check`, recomputes each borrowed fluid's drawn colour
+against Factorio's, and asserts the mixin is on the client side of the Oritech config.
+`FluidTintCorpusTest` covers the parse. Run both after editing a fluid row in the item map,
+re-extracting the corpus, or updating Oritech. Whether the colours read right in a running client
+is a human check on delivery.
+
 ### Steam Engine check
 
 Oritech's Steam Engine is the pack's engine (#282, ADR-0062), and a mixin
