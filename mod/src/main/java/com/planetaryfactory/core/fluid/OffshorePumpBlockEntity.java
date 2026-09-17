@@ -3,6 +3,11 @@ package com.planetaryfactory.core.fluid;
 import com.planetaryfactory.core.PFBlockEntities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -42,6 +47,14 @@ public class OffshorePumpBlockEntity extends BlockEntity {
         }
     };
 
+    private static final String TAG_FLUID = "Fluid";
+
+    /**
+     * What the pump was sited on (#256), recorded once at placement and saved with the block. Water
+     * until told otherwise, which is what every pump placed before #256 was pumping.
+     */
+    private String fluid = "minecraft:water";
+
     public OffshorePumpBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.OFFSHORE_PUMP.get(), pos, state);
     }
@@ -55,10 +68,33 @@ public class OffshorePumpBlockEntity extends BlockEntity {
         int room = buffer.getCapacityAsInt(0, FluidResource.EMPTY) - buffer.getAmountAsInt(0);
         if (room > 0) {
             try (Transaction tx = Transaction.openRoot()) {
-                buffer.insert(FluidResource.of(getBlockState().getValue(OffshorePumpBlock.FLUID).fluid()), room, tx);
+                buffer.insert(FluidResource.of(pumped()), room, tx);
                 tx.commit();
             }
         }
+    }
+
+    /** Records the site's fluid. {@link OffshorePumpItem} calls this once, right after placing. */
+    public void setFluid(String fluid) {
+        this.fluid = fluid;
+        setChanged();
+    }
+
+    /** The recorded fluid, or nothing at all if its mod has left the pack since. */
+    private Fluid pumped() {
+        return BuiltInRegistries.FLUID.getValue(Identifier.parse(fluid));
+    }
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putString(TAG_FLUID, fluid);
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        fluid = input.getStringOr(TAG_FLUID, "minecraft:water");
     }
 
     /**

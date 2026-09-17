@@ -51,18 +51,13 @@ TEXTURES = {
 
 FACINGS = {"north": 0, "east": 90, "south": 180, "west": 270}
 
-# What the pump was sited on (#256). A state rather than a second look: both render the same model.
-FLUIDS = ("water", "lava")
-
 # The refusal message (ADR-0050): a pump that places and then silently produces nothing reaches
 # the player as a dead factory three machines later. It lives in the pack's lang file beside the
 # block name rather than in the mod's, because it names the block and reads as part of it.
 BLOCK_LANG = {
     f"block.{NAMESPACE}.{BLOCK_NAME}": DISPLAY_NAME,
     f"message.{NAMESPACE}.{BLOCK_NAME}.no_source":
-        "An Offshore Pump must touch still water or lava. Flowing fluid is not a source.",
-    f"message.{NAMESPACE}.{BLOCK_NAME}.mixed_source":
-        "An Offshore Pump cannot touch both water and lava.",
+        "An Offshore Pump must touch a still source of a pumpable fluid.",
 }
 
 # Every field the mod reads off the row. A corpus regeneration that drops one is a hard failure
@@ -99,10 +94,8 @@ def pump_from_corpus():
 def blockstate(model_name):
     return {
         "variants": {
-            f"facing={facing},fluid={fluid}":
-                ({"model": model_name} if y == 0 else {"model": model_name, "y": y})
+            f"facing={facing}": ({"model": model_name} if y == 0 else {"model": model_name, "y": y})
             for facing, y in FACINGS.items()
-            for fluid in FLUIDS
         }
     }
 

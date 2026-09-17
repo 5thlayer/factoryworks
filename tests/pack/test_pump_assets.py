@@ -60,9 +60,9 @@ EXPECTED_PUMPING_SPEED = 20
 # `Component.translatable(NO_SOURCE_KEY)` resolves to whatever the constant holds -- so the constant
 # is what gets read, not the call.
 REFUSAL_KEY_RE = re.compile(r'[A-Z_]+_KEY\s*=\s*"([a-z_.]+)"')
-# Two refusals since #256: no admitted source, and water beside lava. Counted so that one silently
-# dropping from the item fails here rather than leaving that verdict to render nothing.
-REFUSAL_KEY_COUNT = 2
+# One refusal: no pumpable source. Counted so that a second refusal added to the item without a
+# lang entry, or the one there silently renamed, fails here.
+REFUSAL_KEY_COUNT = 1
 
 
 def resolves(path):
@@ -148,7 +148,7 @@ def check_refusal_message(lang, failures):
     if len(keys) != REFUSAL_KEY_COUNT:
         failures.append(
             f"{len(keys)} refusal keys parsed out of {PUMP_ITEM.relative_to(ROOT)}, expected "
-            f"{REFUSAL_KEY_COUNT} (no source, mixed source) -- has a constant moved, or has a "
+            f"{REFUSAL_KEY_COUNT} (no source) -- has a constant moved, or has a "
             "refusal stopped saying anything?"
         )
     for key in keys:
