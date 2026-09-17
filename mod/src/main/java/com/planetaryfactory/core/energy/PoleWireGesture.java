@@ -64,8 +64,13 @@ public final class PoleWireGesture {
             }
             case CANCELLED -> pick.remove(PFDataComponents.PENDING_WIRE.get());
             // The end stays held: a refusal changes nothing, the held end included.
-            // Not DISPENSER_FAIL: it plays random/click, the same file as TRIPWIRE_ATTACH.
-            case REFUSED -> play(server, base, SoundEvents.CRAFTER_FAIL);
+            // Not DISPENSER_FAIL: it plays random/click, the same file as TRIPWIRE_ATTACH. Played at
+            // the player, not the pole: vanilla attenuates the crafter's fail over 3 blocks, and a
+            // pole beyond wire reach is always further than that.
+            case REFUSED -> {
+                Vec3 at = context.getPlayer() != null ? context.getPlayer().position() : context.getClickLocation();
+                server.playSound(null, at.x, at.y, at.z, SoundEvents.CRAFTER_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
         }
         return InteractionResult.SUCCESS_SERVER;
     }
