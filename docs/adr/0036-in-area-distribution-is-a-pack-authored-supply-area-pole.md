@@ -328,3 +328,19 @@ only subject is a player who has already opened the creative menu. Its sprite is
 recoloured pink by `scripts/build-creative-pole-texture.py`, and its tooltip says the buffer never
 empties: a dev tool indistinguishable from a shipped block is one that gets left in a world, where
 it powers a factory that then reads as self-sufficient.
+
+## Amended by #312, on what a column costs
+
+**A column is one pole, however tall it is.** Raising a placed pole by right-clicking it with its
+own tier consumes nothing. The height is a *wiring* decision — it is what lifts the wire clear of
+the ground and the build, and the reason #147 gave the pole a height at all — not a quantity to
+balance. Charging a pole per segment made raising one punishing enough in play that poles were left
+short, which is the opposite of what the height exists for.
+
+**Only a base drops a pole**, and that is the half that makes the first one safe. A segment carries
+no loot, so breaking a column pays back exactly the one item it cost. Without it, extending for free
+and breaking the top segment back off is a pole duplicator, and it would read as ordinary play rather
+than as an exploit. The two are one decision and are checked together, in `PoleColumnCostTests`.
+
+**`MAX_SEGMENTS` is untouched.** It was always an ergonomics number — the whole pole is workable from
+the ground it stands on — and never a price.
