@@ -328,12 +328,16 @@ Sub-rules:
   load. Vanilla's 3x1x1 trench turns two buckets into unlimited water anywhere, which is water
   creation and defeats every siting constraint above it.
 - **Buckets** — `excluded`. ADR-0050 refuses a 1,000 mB hand container beside ADR-0037's 50 mB barrel.
-  Rung 0 reaches water by digging a channel from the hub pool, not by carrying it.
-- **Water in the starting area** — `shipped` (#212). `scripts/build-terra-start.py` puts a pool in
-  the hub itself — the hub's own blocks, one deep and flush with the ground, not a fifth jigsaw
-  child that vanilla could drop silently. Factorio starts the player beside water and the pack has
-  no bucket, so without it rung 0's water wheel waits on an unbounded walk ADR-0049's traversal
-  budget has no room for. `tests/worldgen/test_start_geometry.py` asserts the pool's presence.
+  Rung 0 reaches water by pumping or digging a channel from the hub pool, not by carrying it.
+- **Water in the starting area** — `shipped` (#212, restored #313). `scripts/build-terra-start.py`
+  puts a pool in the hub itself — the hub's own blocks, one deep and flush with the ground, not a
+  fifth jigsaw child that vanilla could drop silently. Factorio starts the player beside water and
+  the pack has no bucket, so under the rule above water is not something rung 0 can make but a
+  *place* it has to find, and without the pool that is an unbounded walk ADR-0049's traversal budget
+  has no room for. It was argued for Create's water wheel; Create left with ADR-0060 and what the
+  pool now sites is the Offshore Pump, and behind it the Boiler.
+  `tests/worldgen/test_start_geometry.py` asserts the pool's presence — but not the opening's, which
+  the 26.1.2 move parked whole until #313.
 - **Placed flowing water** — `planned`. A pack outlet block maintaining flowing water from a pipe, for
   contraptions tidier than a dug channel. Safe without any tracking because what it places is never a
   source. Lands after the pump and pipes.
