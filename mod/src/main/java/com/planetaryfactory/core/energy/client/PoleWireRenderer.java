@@ -51,10 +51,6 @@ public final class PoleWireRenderer
     /** Just under the top face of the top segment, where Factorio hangs its wire off the pole's head. */
     private static final double ATTACH_HEIGHT = 0.9;
 
-    /** Vanilla's leash segment count and width, so the slack reads as the same wire. */
-    private static final int STEPS = 24;
-    private static final float LEASH_WIDTH = 0.05F;
-
     /** In first person the slack ends just ahead of and below the eye, where it stays in view. */
     private static final double FIRST_PERSON_REACH = 0.8;
     private static final double FIRST_PERSON_DROP = 0.4;
@@ -259,46 +255,8 @@ public final class PoleWireRenderer
         if (slack != null) {
             Tint tint = state.tint;
             collector.submitCustomGeometry(poseStack, RenderTypes.leash(),
-                    (pose, buffer) -> drawSlack(pose.pose(), buffer, slack, tint));
+                    (pose, buffer) -> WireGeometry.draw(pose.pose(), buffer, slack, tint.r, tint.g, tint.b, 1.0F));
         }
-    }
-
-    /** Vanilla's {@code LeashFeatureRenderer} geometry, with the colour chosen here. */
-    private static void drawSlack(Matrix4f poseIn, VertexConsumer buffer, EntityRenderState.LeashState leash,
-            Tint tint) {
-        Matrix4f pose = new Matrix4f(poseIn).translate((float) leash.offset.x, (float) leash.offset.y,
-                (float) leash.offset.z);
-        float dx = (float) (leash.end.x - leash.start.x);
-        float dy = (float) (leash.end.y - leash.start.y);
-        float dz = (float) (leash.end.z - leash.start.z);
-        float horizontal = (float) Math.sqrt(dx * dx + dz * dz);
-        float offsetFactor = horizontal == 0.0F ? 0.0F : LEASH_WIDTH / 2.0F / horizontal;
-        float dxOff = dz * offsetFactor;
-        float dzOff = dx * offsetFactor;
-        for (int k = 0; k <= STEPS; k++) {
-            slackVertices(buffer, pose, dx, dy, dz, LEASH_WIDTH, dxOff, dzOff, k, false, leash, tint);
-        }
-        for (int k = STEPS; k >= 0; k--) {
-            slackVertices(buffer, pose, dx, dy, dz, 0.0F, dxOff, dzOff, k, true, leash, tint);
-        }
-    }
-
-    private static void slackVertices(VertexConsumer buffer, Matrix4f pose, float dx, float dy, float dz,
-            float fudge, float dxOff, float dzOff, int k, boolean backwards, EntityRenderState.LeashState leash,
-            Tint tint) {
-        float progress = k / (float) STEPS;
-        int block = (int) (leash.startBlockLight + (leash.endBlockLight - leash.startBlockLight) * progress);
-        int sky = (int) (leash.startSkyLight + (leash.endSkyLight - leash.startSkyLight) * progress);
-        int light = LightCoordsUtil.pack(block, sky);
-        float shade = k % 2 == (backwards ? 1 : 0) ? 0.7F : 1.0F;
-        float r = tint.r * shade;
-        float g = tint.g * shade;
-        float b = tint.b * shade;
-        float x = dx * progress;
-        float y = dy > 0.0F ? dy * progress * progress : dy - dy * (1.0F - progress) * (1.0F - progress);
-        float z = dz * progress;
-        buffer.addVertex(pose, x - dxOff, y + fudge, z + dzOff).setColor(r, g, b, 1.0F).setLight(light);
-        buffer.addVertex(pose, x + dxOff, y + LEASH_WIDTH - fudge, z - dzOff).setColor(r, g, b, 1.0F).setLight(light);
     }
 
     /** A wire leaves the frustum long after the pole that draws it does. */
@@ -323,10 +281,6 @@ public final class PoleWireRenderer
     }
 
     private static Vec3 attachPoint(Level level, BlockPos base) {
-        BlockPos top = PoleColumn.topOf(level, base);
-        if (top == null) {
-            top = base;
-        }
-        return new Vec3(top.getX() + 0.5, top.getY() + ATTACH_HEIGHT, top.getZ() + 0.5);
+        return WireGeometry.attachPoint(level, base);
     }
 }

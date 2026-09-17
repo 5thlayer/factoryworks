@@ -45,6 +45,18 @@ public final class PoleWiring {
         return Click.WIRED;
     }
 
+    /**
+     * The wires the Placement Preview draws for a held pole (#298): the same
+     * {@link #onPlace} the server runs, asked of a hypothetical pole at the aimed spot, and nothing
+     * where the placement only grows a column, since a column that grew adds no wire (#309).
+     *
+     * @param joinsAColumn the placement would extend or join a standing column rather than start one
+     */
+    public static List<PoleLinks.Pole> wouldAdd(PoleLinks.Pole placed, Collection<PoleLinks.Pole> standing,
+                                                WireSet wires, boolean joinsAColumn) {
+        return joinsAColumn ? List.of() : onPlace(placed, standing, wires);
+    }
+
     /** The standing poles a newly placed pole wires itself to. */
     public static List<PoleLinks.Pole> onPlace(PoleLinks.Pole placed, Collection<PoleLinks.Pole> standing,
                                                WireSet wires) {
