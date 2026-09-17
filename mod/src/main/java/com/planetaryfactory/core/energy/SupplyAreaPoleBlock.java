@@ -5,8 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import com.planetaryfactory.core.placement.PlacementPlan;
+import com.planetaryfactory.core.placement.Placements;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -88,28 +90,30 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
                                               BlockPos pos, Player player, InteractionHand hand,
                                               BlockHitResult hit) {
-        if (!(stack.getItem() instanceof BlockItem item) || !item.getBlock().equals(this)) {
-            // Includes the empty hand. Removing the top segment bare-handed would be the natural
-            // inverse of this, and is deliberately absent: breaking is already how blocks come off,
-            // and a bare-hand interaction that deletes part of a build loses substations to
-            // misclicks.
+        if (!(stack.getItem() instanceof SupplyAreaPoleItem item)) {
+            // Includes the empty hand and every other item, which must fall through to their own
+            // placement. Removing the top segment bare-handed would be the natural inverse of this,
+            // and is deliberately absent: breaking is already how blocks come off, and a bare-hand
+            // interaction that deletes part of a build loses substations to misclicks.
             return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
-        BlockPos top = PoleColumn.topOf(level, pos);
-        if (top == null || PoleColumn.height(level, pos) >= PoleColumn.MAX_SEGMENTS) {
+        // The column rule is asked for, not restated (ADR-0069): this executes the same plan the
+        // preview draws, so the two cannot disagree about where a segment lands or whether one
+        // may. A different tier is refused here rather than falling through, which would set a
+        // second, separate pole against the side of this column looking exactly like the extension
+        // the player asked for.
+        PlacementPlan plan = Placements.planFor(item, new BlockPlaceContext(level, player, hand, stack, hit));
+        if (plan == null || plan.isRefused() || plan.blocks().size() != 1) {
             return InteractionResult.CONSUME;
         }
-        BlockPos next = top.above();
-        if (!level.getBlockState(next).canBeReplaced()) {
-            return InteractionResult.CONSUME;
-        }
+        PlacementPlan.Placed segment = plan.blocks().getFirst();
 
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
-        level.setBlockAndUpdate(next, defaultBlockState());
-        level.playSound(null, next, getSoundType(state, level, next, player).getPlaceSound(),
+        level.setBlockAndUpdate(segment.pos(), segment.state());
+        level.playSound(null, segment.pos(), getSoundType(state, level, segment.pos(), player).getPlaceSound(),
                 net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);

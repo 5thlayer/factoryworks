@@ -65,5 +65,9 @@ true, and suppressing it would be a second render hook for a problem nobody has 
   what placing actually does -- because a plan that disagrees with placement is the defect this
   decision exists to prevent, and it is server-side and so within a GameTest's reach. Whether the
   preview draws correctly is a human check on delivery.
+- The hook is `SubmitCustomGeometryEvent`, not `RenderLevelStageEvent.AfterTranslucentBlocks`. 26.1
+  moved level rendering behind the submit-node collector and that event hands out no collector;
+  NeoForge's own answer is the submit event, and the translucent render type still puts the quads in
+  the translucent pass. Still no mixin, which is what this decision was about.
 - Not included: a preview for other mods' blocks, fast replace (a different-tier pole aimed at a pole
   stays refused), and rotating a preview before placing.

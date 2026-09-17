@@ -596,15 +596,16 @@ once every planet's puzzle is done — it is not a logistic-robot analogue and i
 ### Building by hand: placement preview and fast replace
 
 - **verdict**: `planned`
-- **notice**: nothing yet; a held block shows nothing before it is placed, and a pole or furnace of
-  another tier cannot be placed over one to upgrade it.
+- **notice**: a held pack block draws translucent where placing would put it and red where placing
+  would be refused (#297); the wires and supply area drawn on top of it, and fast replace, are not
+  here yet, so a pole or furnace of another tier still cannot be placed over one to upgrade it.
 - **where**: all bodies
 - **via**: `pack`
 - **owner**: #297, #298, #299
 
 Sub-rules:
 
-- **A held block previews where it lands, red where refused** — `planned`, #297. The pack's term
+- **A held block previews where it lands, red where refused** — `shipped`, #297. The pack's term
   is **Placement Preview**, not ghost: a ghost is the excluded robot-built entity under
   [Construction robots and blueprints](#construction-robots-and-blueprints).
 - **A held pole previews the wires it would add** — `planned`, #298.

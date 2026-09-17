@@ -5,7 +5,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
+
+import com.planetaryfactory.core.placement.PlacementPlan;
+import com.planetaryfactory.core.placement.Placements;
+import com.planetaryfactory.core.placement.PlansPlacement;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -29,7 +38,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
  * <p>The live half -- how many machines are actually in the area, and whether they are being fed --
  * cannot come from an item and belongs to the Jade line instead.
  */
-public class SupplyAreaPoleItem extends BlockItem {
+public class SupplyAreaPoleItem extends BlockItem implements PlansPlacement {
 
     public SupplyAreaPoleItem(Block block, Item.Properties properties) {
         super(block, properties);
@@ -37,6 +46,50 @@ public class SupplyAreaPoleItem extends BlockItem {
 
     private PoleTier tier() {
         return ((SupplyAreaPoleBlock) getBlock()).tier();
+    }
+
+    /**
+     * The pole's plan (#297, ADR-0069): ordinary placement, except where the aim lands on a pole,
+     * where the column rule takes over.
+     *
+     * <p><b>The extension shows the real result</b>, not the spot vanilla would have chosen. A pole
+     * aimed at any segment of a same-tier column previews the segment that would land on
+     * <em>top</em>, because that is what {@link SupplyAreaPoleBlock#useItemOn} does -- clicking the
+     * base raises a pole past the player's own reach, and a preview drawn beside the base would
+     * describe a placement the pack does not perform.
+     *
+     * <p>All three of the column's refusals draw at the position the segment was headed for, which
+     * is the only place a refusal about a column means anything.
+     */
+    @Override
+    public @Nullable PlacementPlan plan(BlockPlaceContext context) {
+        Level level = context.getLevel();
+        BlockPos aimed = Placements.aimedPos(context);
+        BlockState aimedState = level.getBlockState(aimed);
+        if (!(aimedState.getBlock() instanceof SupplyAreaPoleBlock)) {
+            return Placements.vanillaPlan(this, context);
+        }
+        if (!aimedState.is(getBlock())) {
+            // Not fast replace (ADR-0069): a different tier aimed at a column is refused outright,
+            // and is drawn at the segment the player was plainly asking for.
+            BlockPos top = PoleColumn.topOf(level, aimed);
+            BlockPos at = top == null ? aimed.above() : top.above();
+            return PlacementPlan.refused(at, getBlock().defaultBlockState(),
+                    PlacementPlan.Refusal.WRONG_TIER);
+        }
+        BlockPos top = PoleColumn.topOf(level, aimed);
+        if (top == null) {
+            return Placements.vanillaPlan(this, context);
+        }
+        BlockPos next = top.above();
+        BlockState segment = getBlock().defaultBlockState();
+        if (PoleColumn.height(level, aimed) >= PoleColumn.MAX_SEGMENTS) {
+            return PlacementPlan.refused(next, segment, PlacementPlan.Refusal.COLUMN_FULL);
+        }
+        if (!level.getBlockState(next).canBeReplaced()) {
+            return PlacementPlan.refused(next, segment, PlacementPlan.Refusal.BLOCKED_TOP);
+        }
+        return PlacementPlan.accepted(next, segment);
     }
 
     @Override

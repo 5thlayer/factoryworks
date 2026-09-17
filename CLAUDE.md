@@ -131,10 +131,45 @@ other generator here, but **no test file owns it**: the template has no corpus, 
 no input to go stale against, so the `--check` is the whole of the guard. And the GameTest run is
 in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
 boots a server, so it is run against a change that touched mechanism. Run it after editing
-anything under `core/energy/`, `core/smelting/` or `core/gametest/`.
+anything under `core/energy/`, `core/smelting/`, `core/placement/` or `core/gametest/`.
 
 The Boiler trips the same three GameTest conditions and has none yet; that is #274, filed rather
 than absorbed here.
+
+### Placement plan check
+
+Placement is computed as a **plan** and executed separately (#297, ADR-0069): a `PlacementPlan` is
+the positions a held item would fill, the blockstate at each, and a refusal or none. The preview
+draws a plan and the click executes one, so the two cannot drift -- a preview that lies is worse
+than none, because a player builds against it. `core/placement/Placements` is the one entry point
+and the vanilla plan (deferring to `BlockPlaceContext` for facing, replaceable blocks and state
+survival); only an item whose placement is *not* vanilla's implements `PlansPlacement` -- the pole's
+column, the rig's footprint, the pump's dry site.
+
+`gametest/PlacementPlanTests` is the check ADR-0069 asks for by name, and the only one that can
+exist: ask each item for a plan, then use the block the way a player does, then hold the world to
+what the plan promised. An accepted plan must have put **every** block down in the state it named; a
+refused plan must have changed **nothing**, which is read before the gesture as well as after,
+because "nothing changed" is not the same claim as "the positions are empty". Both halves are load-
+bearing -- the preview's two failure modes are promising a placement that does not happen and
+refusing one that does. Ten tests, each checked against the defect it exists for: forcing the pole
+to the vanilla plan turns four red, forcing the rig's footprint to always fit turns one red,
+flattening the rig to a single layer turns two more, dropping the pump's water question turns one,
+and giving up on the wrong-tier column walk turns the last. Three fixtures are load-bearing rather
+than arbitrary -- the wrong-tier column is three tall because on a one-tall column "the top of the
+column" and "just above the block I hit" are the same block, the rig's size is compared against
+`RigGeometry`'s own footprint rather than a floor, and the rig's obstruction sits a block *up*,
+where a player cannot see it. The geometry underneath stays Minecraft-free (`RigGeometry`,
+`PoleColumn`) and is unit-tested there.
+
+Run it after editing anything under `core/placement/`, and re-run `scripts/check-datapack-load.py`
+too when the platform moves, since the same server reads it.
+
+The platform grew from five blocks tall to seven so a column can reach `MAX_SEGMENTS`; re-run
+`scripts/build-gametest-structures.py` if it moves again. Whether the preview **draws** correctly is
+a human check on delivery -- no check here claims it, and `PlacementPreview` is on
+`SubmitCustomGeometryEvent` rather than the `RenderLevelStageEvent` ADR-0069 names, because 26.1's
+collector pipeline is reached through the former.
 
 ### Felling check
 
