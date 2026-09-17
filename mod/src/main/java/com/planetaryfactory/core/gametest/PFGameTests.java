@@ -74,6 +74,7 @@ public final class PFGameTests {
         Registrar registrar = new Registrar(event, environment);
         EnergyFaceTests.register(registrar);
         ElectricNetworkTests.register(registrar);
+        PoleWireTests.register(registrar);
         HandSetTests.register(registrar);
         // Oritech is optional, and the class names its types, so it is not even loaded without it.
         if (ModList.get().isLoaded("oritech")) {
