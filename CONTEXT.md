@@ -232,6 +232,10 @@ _Avoid_: grid, power net, FE network
 A connection between two **Supply Area Pole**s that makes them one **Electric Network**. Only a wire joins poles: two poles within reach of each other but not wired are not connected. A wire can only exist between poles within wire reach. Placing a pole adds wires on its own, and the player adds or cuts one by hand with the **Engineer's Pick**. A wire belongs to its two poles and goes when either pole is broken — a column losing or gaining a segment, base included, is not a broken pole, and keeps its wires.
 _Avoid_: link, cable, connection
 
+**Placement Plan**:
+What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole.
+_Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state
+
 **Placement Preview**:
 What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused, and, for a pole, the wires it would add. It shows what placing would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
