@@ -103,6 +103,15 @@ Rejected alongside it: **filling the box's top face**, which reads as the obviou
 wrong question. It makes the extent easier to read and says nothing about which machines are in the
 band, and the top face sits at base+3, a plane above the player's head.
 
+**Open: whether the box is still worth drawing.** The second human check found the outlines so much
+more legible that the box itself reads as near-redundant -- which is the honest consequence of the
+amendment, since the outlines answer the question the box was being asked. It is **kept for now**,
+deliberately and not by omission: the box is the only thing that shows reach over ground with no
+machines on it yet, which is the placement case the ticket was filed for, and that case is the
+hardest to judge from a session in a base that is already built. Revisit once the pole has been
+placed from scratch a few times; if the box is still dead weight then, dropping it is a smaller
+change than adding it was -- one call site each in the preview and the pole's renderer.
+
 ## Considered options
 
 **A 2D overlay draped per column**, resting on the highest block in each column, which is how #158
