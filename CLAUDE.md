@@ -103,8 +103,8 @@ plate smelts name `ftbmaterials:` items (ADR-0061), so FTB Materials and the FTB
 are on the dev runtime classpath and are the one foreign mod the server loads; stone brick is still
 the only smelt under test.
 
-What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279) and
-`SteamEngineNetworkTests` (#292, registered only when Oritech is loaded),
+What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
+`BoilerTests` (#274) and `SteamEngineNetworkTests` (#292, registered only when Oritech is loaded),
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
 (forcing the graph empty turns it red); that a pole's
@@ -126,10 +126,8 @@ other generator here, but **no test file owns it**: the template has no corpus, 
 no input to go stale against, so the `--check` is the whole of the guard. And the GameTest run is
 in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
 boots a server, so it is run against a change that touched mechanism. Run it after editing
-anything under `core/energy/`, `core/smelting/`, `core/placement/` or `core/gametest/`.
-
-The Boiler trips the same three GameTest conditions and has none yet; that is #274, filed rather
-than absorbed here.
+anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/placement/` or
+`core/gametest/`.
 
 ### Placement plan check
 
@@ -397,8 +395,18 @@ which GregTech's model provider does not serve for a `planetaryfactory:` block, 
 item-map row is `authored` and names the block the mod registers rather than the LP Solid Boiler it
 replaces, and a **second, independent derivation** of the 60 mB/s straight from the corpus. Run both
 after editing `core/fluid/`, `scripts/build-steam-assets.py` or the corpus. Whether a placed Boiler
-boils water is a world load, and its GameTests are #274 — which also carries the one thing no
-static check here can reach: that the fluid face's two refusals are the right way round, per tank.
+boils water is the third check, `gametest/BoilerTests` (#274), and it is three tests: that a Boiler
+with water, fuel and room makes 3 mB a tick and spends the same water doing it — unit for unit,
+since Factorio's boiler is a temperature change and not a reaction; that the item face takes fuel
+and hands nothing back; and the one thing no static check here can reach, that the fluid face's two
+refusals are the right way round **per tank**. That third one asks all four combinations through
+the capability a pipe would find, on the *slot-less* overloads, with both tanks part full so no
+refusal passes vacuously: swapped, the Boiler accepts steam it cannot use and lets a pipe drain its
+water back out, against ADR-0050's rule that water is extracted and never created. The rate is
+typed rather than read from `BoilerSpec`, the way `EnergyFaceTests`' furnace demand is — reading it
+off the spec would make the test agree with the spec by construction. Each was checked against the
+defect it exists for: swapping the two tank indices, making `BoilerSlots.canExtract` return true,
+and making the cycle convert nothing each turn exactly one of the three red.
 
 ### Fluid colour check
 
