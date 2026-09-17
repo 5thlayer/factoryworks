@@ -57,9 +57,12 @@ COPIED_FIELDS = ("pumping_speed", "energy_source")
 # changed meaning, rather than shipping a new ratio in silence.
 EXPECTED_PUMPING_SPEED = 20
 
-# `Component.translatable(NO_WATER_KEY)` resolves to whatever the constant holds -- so the constant
+# `Component.translatable(NO_SOURCE_KEY)` resolves to whatever the constant holds -- so the constant
 # is what gets read, not the call.
-NO_WATER_KEY_RE = re.compile(r'NO_WATER_KEY\s*=\s*"([a-z_.]+)"')
+REFUSAL_KEY_RE = re.compile(r'[A-Z_]+_KEY\s*=\s*"([a-z_.]+)"')
+# Two refusals since #256: no admitted source, and water beside lava. Counted so that one silently
+# dropping from the item fails here rather than leaving that verdict to render nothing.
+REFUSAL_KEY_COUNT = 2
 
 
 def resolves(path):
@@ -139,13 +142,14 @@ def check_item_map(failures):
 
 
 def check_refusal_message(lang, failures):
-    """The string the item asks for when it refuses a placement."""
+    """The strings the item asks for when it refuses a placement."""
     source = PUMP_ITEM.read_text(encoding="utf-8")
-    keys = NO_WATER_KEY_RE.findall(source)
-    if not keys:
+    keys = REFUSAL_KEY_RE.findall(source)
+    if len(keys) != REFUSAL_KEY_COUNT:
         failures.append(
-            f"no refusal key parsed out of {PUMP_ITEM.relative_to(ROOT)} -- has the constant moved, "
-            "or has the refusal stopped saying anything?"
+            f"{len(keys)} refusal keys parsed out of {PUMP_ITEM.relative_to(ROOT)}, expected "
+            f"{REFUSAL_KEY_COUNT} (no source, mixed source) -- has a constant moved, or has a "
+            "refusal stopped saying anything?"
         )
     for key in keys:
         if not lang.get(key):

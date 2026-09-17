@@ -9,6 +9,8 @@ import com.planetaryfactory.core.PFBlockEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -23,7 +25,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 
 /**
@@ -38,8 +42,8 @@ import net.minecraft.world.level.material.MapColor;
  * <p><b>Sited at placement, not maintained afterwards.</b> {@link OffshorePumpItem} refuses to place
  * where no source adjoins; this block does not then re-check every tick, and a player who drains the
  * pond a pump stands on gets a pump that produces nothing. That is the same bargain Factorio makes,
- * and it is safe here for a reason ADR-0050 spells out: water cannot be created, so a pump can never
- * be talked into a site that was invalid to begin with.
+ * and it is safe here for a reason ADR-0050 spells out: neither water nor lava can be created, so a pump can
+ * never be talked into a site that was invalid to begin with.
  *
  * <p>Facing is cosmetic. The predicate looks at every neighbour, so a pump works
  * whichever way it points; the orientation exists so the player can see which side is against the
@@ -48,6 +52,43 @@ import net.minecraft.world.level.material.MapColor;
 public class OffshorePumpBlock extends BaseEntityBlock {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
+
+    /**
+     * What the pump was sited on (#256), settled at placement. A blockstate property rather than
+     * block entity data, so it survives a save and load with no codec of ours to get wrong.
+     */
+    public static final EnumProperty<PumpedFluid> FLUID = EnumProperty.create("fluid", PumpedFluid.class);
+
+    /** The fluids a pump may emit -- {@link OffshorePumpSiting}'s two admitted verdicts. */
+    public enum PumpedFluid implements StringRepresentable {
+        WATER("water"),
+        LAVA("lava");
+
+        private final String name;
+
+        PumpedFluid(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name;
+        }
+
+        public Fluid fluid() {
+            return this == LAVA ? Fluids.LAVA : Fluids.WATER;
+        }
+
+        /** The fluid a verdict pumps, or null for a refused site. */
+        @Nullable
+        public static PumpedFluid of(OffshorePumpSiting.Verdict verdict) {
+            return switch (verdict) {
+                case WATER -> WATER;
+                case LAVA -> LAVA;
+                case NO_SOURCE, MIXED -> null;
+            };
+        }
+    }
 
     /**
      * A block codec is only read by data generation, which this pack does not run -- present
@@ -63,7 +104,8 @@ public class OffshorePumpBlock extends BaseEntityBlock {
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()
                 .sound(SoundType.METAL));
-        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH)
+                .setValue(FLUID, PumpedFluid.WATER));
     }
 
     /**
@@ -74,7 +116,7 @@ public class OffshorePumpBlock extends BaseEntityBlock {
      * reads as levitating machinery -- but that is a narrowing neither #213 nor the ADR asked for,
      * and a pump sunk into a pond with water above it is a perfectly ordinary thing to build.
      *
-     * <p>{@code FluidState.isSource} is the whole test. It is enough here only because nothing in
+     * <p>{@code FluidState.isSource} plus the fluid's tag is the whole test. It is enough here only because nothing in
      * the pack can create a source -- see {@link OffshorePumpSiting} for why that, and not any
      * property of this method, is what makes it sound.
      */
@@ -84,18 +126,22 @@ public class OffshorePumpBlock extends BaseEntityBlock {
             FluidState fluid = level.getFluidState(pos.relative(direction));
             if (fluid.isEmpty()) {
                 neighbours.add(OffshorePumpSiting.Neighbour.DRY);
-            } else if (fluid.isSource()) {
-                neighbours.add(OffshorePumpSiting.Neighbour.SOURCE);
-            } else {
+            } else if (!fluid.isSource()) {
                 neighbours.add(OffshorePumpSiting.Neighbour.FLOWING);
+            } else if (fluid.is(FluidTags.WATER)) {
+                neighbours.add(OffshorePumpSiting.Neighbour.WATER_SOURCE);
+            } else if (fluid.is(FluidTags.LAVA)) {
+                neighbours.add(OffshorePumpSiting.Neighbour.LAVA_SOURCE);
+            } else {
+                neighbours.add(OffshorePumpSiting.Neighbour.OTHER_SOURCE);
             }
         }
         return neighbours;
     }
 
-    /** Whether a pump may stand here. {@link OffshorePumpItem} is what asks. */
-    public static boolean canSit(BlockGetter level, BlockPos pos) {
-        return OffshorePumpSiting.accepts(neighboursOf(level, pos));
+    /** What a pump here would pump, or why not. {@link OffshorePumpItem} is what asks. */
+    public static OffshorePumpSiting.Verdict siteOf(BlockGetter level, BlockPos pos) {
+        return OffshorePumpSiting.site(neighboursOf(level, pos));
     }
 
     @Override
@@ -105,7 +151,7 @@ public class OffshorePumpBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, FLUID);
     }
 
     @Override

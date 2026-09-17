@@ -5,7 +5,6 @@ import com.planetaryfactory.core.PFBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
@@ -14,7 +13,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * The pump running (#213, ADR-0050): 60 mB of water into a small buffer every tick, for whatever
+ * The pump running (#213, ADR-0050): 60 mB of the fluid it was sited on (#256) into a small buffer every tick, for whatever
  * pipe cares to take it.
  *
  * <p><b>The buffer holds nothing between ticks that matters.</b> It exists because a fluid
@@ -56,7 +55,7 @@ public class OffshorePumpBlockEntity extends BlockEntity {
         int room = buffer.getCapacityAsInt(0, FluidResource.EMPTY) - buffer.getAmountAsInt(0);
         if (room > 0) {
             try (Transaction tx = Transaction.openRoot()) {
-                buffer.insert(FluidResource.of(Fluids.WATER), room, tx);
+                buffer.insert(FluidResource.of(getBlockState().getValue(OffshorePumpBlock.FLUID).fluid()), room, tx);
                 tx.commit();
             }
         }
