@@ -47,6 +47,24 @@ public final class WireSet {
         return wires.contains(pair(a, b));
     }
 
+    /**
+     * Moves every wire at {@code from} to {@code to}: a column whose base changed keeps its wires
+     * (#309). A wire that would now join the column to itself is dropped, and two wires to the same
+     * third pole collapse into one, the set being unordered pairs.
+     */
+    public void rekey(PoleLinks.Pos from, PoleLinks.Pos to) {
+        List<PoleLinks.Wire> moving = wires.stream()
+                .filter(w -> w.a().equals(from) || w.b().equals(from))
+                .toList();
+        for (PoleLinks.Wire wire : moving) {
+            wires.remove(wire);
+            PoleLinks.Pos other = wire.a().equals(from) ? wire.b() : wire.a();
+            if (!other.equals(to)) {
+                add(to, other);
+            }
+        }
+    }
+
     /** Cuts every wire with an end at {@code pole}, which is what breaking it does. */
     public void removeAllOf(PoleLinks.Pos pole) {
         wires.removeIf(w -> w.a().equals(pole) || w.b().equals(pole));
