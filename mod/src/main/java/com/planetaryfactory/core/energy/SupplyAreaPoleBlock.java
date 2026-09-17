@@ -1,6 +1,10 @@
 package com.planetaryfactory.core.energy;
 
 import com.planetaryfactory.core.PFBlockEntities;
+import java.util.List;
+
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -81,6 +85,11 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
      * so the top stays reachable -- if extending also demanded reaching the top, the cap would have
      * had to be smaller still.
      *
+     * <p><b>The pole in hand is not consumed.</b> A column is one pole however tall it is: its height
+     * is a wiring decision, not a cost, and paying a pole per segment was punishing enough in play
+     * that poles were left short. Breaking the column pays back the one item it cost, since a
+     * segment dropped by the cascade carries no loot.
+     *
      * <p>A pole of a <em>different</em> tier does nothing at all, rather than falling through to
      * ordinary placement. Falling through would set a second, separate pole against the side of this
      * column, with its own supply area and its own block entity, and it would look exactly like the
@@ -115,9 +124,10 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
         level.setBlockAndUpdate(segment.pos(), segment.state());
         level.playSound(null, segment.pos(), getSoundType(state, level, segment.pos(), player).getPlaceSound(),
                 net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
-        if (!player.getAbilities().instabuild) {
-            stack.shrink(1);
-        }
+        // The item is not consumed: a column is one pole, however tall, and height is a wiring
+        // decision rather than a cost (ADR-0036). Paying a pole per segment made raising one
+        // punishing enough that players left poles short. The other half of "one pole" is the
+        // teardown below: a broken column pays out exactly the one item it cost.
         return InteractionResult.SUCCESS;
     }
 
@@ -139,6 +149,22 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
         }
     }
 
+    /**
+     * Only a base drops a pole: a column is one item however tall (ADR-0036).
+     *
+     * <p>Without this, extending for free and breaking the top segment back off would be a pole
+     * duplicator, and it would look like ordinary play rather than an exploit. The loot table is the
+     * same one either way; what changes is whether it is asked at all.
+     */
+    @Override
+    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+        BlockPos pos = BlockPos.containing(params.getOptionalParameter(LootContextParams.ORIGIN));
+        if (params.getLevel().getBlockState(pos.below()).is(this)) {
+            return List.of();
+        }
+        return super.getDrops(state, params);
+    }
+
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
                                                boolean movedByPiston) {
@@ -150,7 +176,10 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
         // `!state.is(newState.getBlock())` guard is the caller's job now.
         BlockPos above = pos.above();
         if (level.getBlockState(above).is(this)) {
-            level.destroyBlock(above, true);
+            // Dropped without loot: extending a column costs nothing, so a segment must pay nothing
+            // back, or a tall pole broken is a pole duplicator. The block the player actually broke
+            // pays out through its own loot table, which is the single item the column cost.
+            level.destroyBlock(above, false);
         }
     }
 
