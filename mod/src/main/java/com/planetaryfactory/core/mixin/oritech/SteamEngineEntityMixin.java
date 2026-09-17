@@ -38,7 +38,8 @@ import rearth.oritech.util.Geometry;
  *       millibucket carried rather than floored, returns no water -- #282's
  *       "Returned water is 0" holds because no insert exists, so there is no number to test --
  *       burns only what the FE buffer has room for, and sizes the row's tank and FE
- *       buffer to the row on every tick.
+ *       buffer to the row on every tick. It consults no recipe: the sweep removes Oritech's, and
+ *       the spec already owns everything one would say.
  *   <li><b>{@code setupMaster}</b> is Oritech's scan with one more stop: an engine already answering
  *       to another live master is a boundary, not a slave. Oritech let two masters that received
  *       steam before either scanned both claim the empty engines between them, counting each twice.
@@ -146,10 +147,10 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
                 && OritechConfig.generators.steamEngineData.stopOnEnergyFull.get()) {
             return;
         }
-        currentRecipe = findActiveRecipe();
-        if (currentRecipe.isEmpty()) {
-            return;
-        }
+        // No recipe lookup. Oritech gates the engine on an `oritech:steam_engine` recipe, which
+        // decides nothing SteamEngineSpec does not already decide -- the rate is the spec's and the
+        // tank takes only #c:steam -- and the pack's default-deny sweep removes it, which left a full
+        // tank burning nothing with no line in any log.
 
         SteamEngineSpec spec = planetaryfactory$spec();
         float speed = Math.min(getSteamProcessingSpeed(), MAX_SPEED);
