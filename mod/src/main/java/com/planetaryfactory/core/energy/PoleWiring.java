@@ -16,7 +16,28 @@ public final class PoleWiring {
      */
     public static final int AUTO_WIRES = 5;
 
+    /** What a second click with the Pick did. */
+    public enum Click {
+        WIRED, CUT, CANCELLED, REFUSED
+    }
+
     private PoleWiring() {
+    }
+
+    /** Applies the Pick's second click, on {@code target}, to the wire set. */
+    public static Click click(PoleLinks.Pole anchor, PoleLinks.Pole target, WireSet wires) {
+        if (pos(anchor).equals(pos(target))) {
+            return Click.CANCELLED;
+        }
+        if (!PoleLinks.linked(anchor, target)) {
+            return Click.REFUSED;
+        }
+        if (wires.contains(pos(anchor), pos(target))) {
+            wires.remove(pos(anchor), pos(target));
+            return Click.CUT;
+        }
+        wires.add(pos(anchor), pos(target));
+        return Click.WIRED;
     }
 
     /** The standing poles a newly placed pole wires itself to. */
