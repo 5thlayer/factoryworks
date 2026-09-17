@@ -41,8 +41,8 @@ import java.util.List;
  * is not drawn, so breaking a pole takes its wires with it before the server's resend arrives.
  *
  * <p>While the local player's Pick holds this pole as a pending end, a slack wire also hangs from it
- * to the player's hand, red when the pole under the crosshair would refuse the click
- * ({@link PoleWiring#refuses}). Vanilla's leash colour is fixed, so the slack is drawn here.
+ * to the player's hand. Looking at another pole moves its end to that pole's top, as a preview of
+ * the wire, red when the click would be refused ({@link PoleWiring#refuses}). Vanilla's leash colour is fixed, so the slack is drawn here.
  */
 public final class PoleWireRenderer
         implements BlockEntityRenderer<SupplyAreaPoleBlockEntity, PoleWireRenderer.State> {
@@ -53,6 +53,10 @@ public final class PoleWireRenderer
     /** Vanilla's leash segment count and width, so the slack reads as the same wire. */
     private static final int STEPS = 24;
     private static final float LEASH_WIDTH = 0.05F;
+
+    /** In first person the slack ends just ahead of and below the eye, where it stays in view. */
+    private static final double FIRST_PERSON_REACH = 0.8;
+    private static final double FIRST_PERSON_DROP = 0.4;
 
     public static final class State extends BlockEntityRenderState {
         final List<EntityRenderState.LeashState> wires = new ArrayList<>();
@@ -113,25 +117,39 @@ public final class PoleWireRenderer
                 || !(level.getBlockState(from).getBlock() instanceof SupplyAreaPoleBlock anchorBlock)) {
             return;
         }
-        EntityRenderState.LeashState slack = new EntityRenderState.LeashState();
-        slack.start = start;
-        slack.end = player.getRopeHoldPosition(partialTicks);
-        slack.offset = start.subtract(Vec3.atLowerCornerOf(from));
-        BlockPos startTop = BlockPos.containing(start);
-        BlockPos hand = BlockPos.containing(slack.end);
-        slack.startBlockLight = level.getBrightness(LightLayer.BLOCK, startTop);
-        slack.endBlockLight = level.getBrightness(LightLayer.BLOCK, hand);
-        slack.startSkyLight = level.getBrightness(LightLayer.SKY, startTop);
-        slack.endSkyLight = level.getBrightness(LightLayer.SKY, hand);
-        state.slack = slack;
-        state.refused = false;
-        if (Minecraft.getInstance().hitResult instanceof BlockHitResult hit
+        Minecraft minecraft = Minecraft.getInstance();
+        boolean refused = false;
+        Vec3 end = null;
+        if (minecraft.hitResult instanceof BlockHitResult hit
                 && level.getBlockState(hit.getBlockPos()).getBlock() instanceof SupplyAreaPoleBlock targetBlock) {
             BlockPos base = PoleColumn.baseOf(level, hit.getBlockPos());
             PoleLinks.Pole anchor = new PoleLinks.Pole(from.getX(), from.getY(), from.getZ(), anchorBlock.tier());
             PoleLinks.Pole target = new PoleLinks.Pole(base.getX(), base.getY(), base.getZ(), targetBlock.tier());
-            state.refused = PoleWiring.refuses(anchor, target);
+            refused = PoleWiring.refuses(anchor, target);
+            // Looking at another pole previews the wire itself, ending where it would hang.
+            if (!base.equals(from)) {
+                end = attachPoint(level, base);
+            }
         }
+        if (end == null) {
+            end = minecraft.options.getCameraType().isFirstPerson()
+                    // The rope hold position is at the body, behind the first-person camera.
+                    ? player.getEyePosition(partialTicks).add(player.getViewVector(partialTicks).scale(FIRST_PERSON_REACH))
+                            .add(0.0, -FIRST_PERSON_DROP, 0.0)
+                    : player.getRopeHoldPosition(partialTicks);
+        }
+        EntityRenderState.LeashState slack = new EntityRenderState.LeashState();
+        slack.start = start;
+        slack.end = end;
+        slack.offset = start.subtract(Vec3.atLowerCornerOf(from));
+        BlockPos startTop = BlockPos.containing(start);
+        BlockPos endAt = BlockPos.containing(end);
+        slack.startBlockLight = level.getBrightness(LightLayer.BLOCK, startTop);
+        slack.endBlockLight = level.getBrightness(LightLayer.BLOCK, endAt);
+        slack.startSkyLight = level.getBrightness(LightLayer.SKY, startTop);
+        slack.endSkyLight = level.getBrightness(LightLayer.SKY, endAt);
+        state.slack = slack;
+        state.refused = refused;
     }
 
     @Override
