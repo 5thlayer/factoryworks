@@ -172,6 +172,10 @@ one on a platform above, without a pole quietly powering the floor below through
 deliberately much shallower than the horizontal reach, so the area still reads as a footprint on
 the ground.
 
+*The footprint clause is retired by ADR-0070: the area is drawn as its whole volume, since a 2D
+overlay has to answer "at what height" for every column and every answer is wrong somewhere. The
+sizing argument stands and the number does not change.*
+
 **Every clause of that paragraph assumes the pole stands on the floor it supplies, and #147 found
 that it need not.** A player mounting the pole on a stack of fences -- the obvious way to get a wire
 attachment point up into the air, and the thing Power Grid's catenary invites, since span is

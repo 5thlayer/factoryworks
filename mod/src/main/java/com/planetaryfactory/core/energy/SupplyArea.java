@@ -16,7 +16,31 @@ public final class SupplyArea {
         void accept(int dx, int dy, int dz);
     }
 
+    /**
+     * The area's extent as offsets from the pole's base, inclusive on both ends.
+     *
+     * <p>This is what the <b>Supply Area Box</b> is drawn from (#158, ADR-0070). The overlay shows
+     * the area's whole volume rather than a surface, so the extent is the only thing a renderer
+     * needs -- and it is asked for here rather than recomputed client-side, because the substation's
+     * even-sided offset is exactly the arithmetic that looks right while being half a block wrong.
+     * One source for the box and the scan is what keeps them describing the same region.
+     */
+    public record Bounds(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    }
+
     private SupplyArea() {
+    }
+
+    /**
+     * The box this tier's area occupies, as offsets from the base.
+     *
+     * <p>Exactly the region {@link #forEachOffset} walks and {@link #covers} admits: the area is a
+     * box, so its bounds lose nothing and enclose nothing extra.
+     */
+    public static Bounds bounds(PoleTier tier) {
+        int v = tier.verticalRadius();
+        return new Bounds(tier.minOffset(), -v, tier.minOffset(),
+                tier.maxOffset(), v, tier.maxOffset());
     }
 
     /** Whether a block at this offset from the pole is inside its supply area. */

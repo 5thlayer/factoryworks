@@ -27,9 +27,13 @@ import net.minecraft.world.item.component.TooltipDisplay;
  *
  * <p>Every other way a player learns a machine is missing here. There is no cable to trace, so the
  * shape of the network cannot be read off the world. There is no GUI, so nothing can be inspected.
- * The recipe says nothing about reach. A pole's supply area is invisible by construction -- that
- * invisibility is the mechanic -- which leaves a block whose entire behaviour has to be taken on
- * trust unless it is stated somewhere.
+ * The recipe says nothing about reach. The area itself used to be invisible with it, which left a
+ * block whose entire behaviour had to be taken on trust unless it was stated somewhere.
+ *
+ * <p>The <b>Supply Area Box</b> now shows where the area lands (#158, ADR-0070), so the area is no
+ * longer invisible -- but it is shown only while a pole is held or looked at, and it says nothing
+ * about wireless reach or about the area being measured at the base. Those are still this tooltip's
+ * alone, and the numbers here are what the box is read against.
  *
  * <p>So it is stated here, in three lines, always shown rather than hidden behind Shift. This is
  * not detail a player goes looking for; it is the block's basic contract, and a tooltip nobody
