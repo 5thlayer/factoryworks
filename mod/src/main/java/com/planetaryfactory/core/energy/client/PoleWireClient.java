@@ -22,6 +22,14 @@ public final class PoleWireClient {
         // does, so it has to be registered before the first frame that draws one.
         SupplyAreaBox.register(modBus);
         NeoForge.EVENT_BUS.addListener(com.planetaryfactory.core.energy.ClientWires::onLevelUnload);
+        NeoForge.EVENT_BUS.addListener(PoleWireClient::onLevelUnload);
+    }
+
+    /** The box's machine scan is cached, and a cached answer must not outlive its world. */
+    private static void onLevelUnload(net.neoforged.neoforge.event.level.LevelEvent.Unload event) {
+        if (event.getLevel().isClientSide()) {
+            SuppliedMachines.clear();
+        }
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

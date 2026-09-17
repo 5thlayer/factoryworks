@@ -15,7 +15,9 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
@@ -46,6 +48,18 @@ import org.joml.Vector3f;
  * overlay. The bounds come from {@link SupplyArea#bounds}: the substation's even-sided area takes
  * its extra block on the negative side, and a renderer that centred the box instead would be wrong
  * by half a block on the one tier where it shows.
+ *
+ * <h2>The machines are outlined too</h2>
+ *
+ * <p>The box alone was not readable in a built base: it says where the footprint lands, and a player
+ * reading it wants to know which machines are inside -- a question no box shape can answer, because
+ * membership depends on the band and the box has no face at a machine's height. So every block the
+ * pole reaches is outlined in the same yellow ({@link SuppliedMachines}), which answers it exactly.
+ *
+ * <p>That reverses a limit ADR-0070 first accepted -- "the overlay says where the footprint lands,
+ * not whether a given block is powered" -- and it is reversed on the strength of the human check the
+ * ADR asked for. The outlines are the scan's own answer, not a capability sweep, so they agree with
+ * the network by construction rather than by coincidence.
  *
  * <h2>Edges only, and drawn through terrain</h2>
  *
@@ -78,6 +92,9 @@ public final class SupplyAreaBox {
 
     /** Vanilla's own line width for a world-space outline. */
     private static final float WIDTH = 2.0F;
+
+    /** What a machine whose shape is empty is outlined as. */
+    private static final AABB FULL_BLOCK = new AABB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
 
     /**
      * Vanilla's line pipeline with the depth test passed unconditionally and no depth write.
@@ -131,8 +148,14 @@ public final class SupplyAreaBox {
      * call: the box is the bare offsets and needs no camera. See
      * {@link #drawAt} for a pose sitting at the camera instead.
      */
-    public static void drawAtPose(SubmitNodeCollector collector, PoseStack poseStack, PoleTier tier) {
+    public static void drawAtPose(SubmitNodeCollector collector, PoseStack poseStack, Level level,
+            BlockPos base, PoleTier tier) {
         draw(collector, poseStack, offsets(tier));
+        for (BlockPos machine : SuppliedMachines.around(level, base, tier)) {
+            draw(collector, poseStack, outlineOf(level, machine)
+                    .move(machine.getX() - base.getX(), machine.getY() - base.getY(),
+                            machine.getZ() - base.getZ()));
+        }
     }
 
     /**
@@ -141,9 +164,26 @@ public final class SupplyAreaBox {
      * <p>The placement preview's call: its pose is the level's, so the box carries the world
      * position and the camera offset itself.
      */
-    public static void drawAt(SubmitNodeCollector collector, PoseStack poseStack, Vec3 camera,
-            BlockPos base, PoleTier tier) {
+    public static void drawAt(SubmitNodeCollector collector, PoseStack poseStack, Level level,
+            Vec3 camera, BlockPos base, PoleTier tier) {
         draw(collector, poseStack, around(base, tier).move(-camera.x(), -camera.y(), -camera.z()));
+        for (BlockPos machine : SuppliedMachines.around(level, base, tier)) {
+            draw(collector, poseStack, outlineOf(level, machine)
+                    .move(machine.getX() - camera.x(), machine.getY() - camera.y(),
+                            machine.getZ() - camera.z()));
+        }
+    }
+
+    /**
+     * A machine's own outline, as offsets from its block corner.
+     *
+     * <p>The block's shape rather than a full cube, so a machine that does not fill its block is
+     * outlined where it actually is. A shape can be empty -- and an empty one would draw nothing at
+     * all, which reads as the machine not being reached -- so that falls back to the whole block.
+     */
+    private static AABB outlineOf(Level level, BlockPos pos) {
+        VoxelShape shape = level.getBlockState(pos).getShape(level, pos);
+        return shape.isEmpty() ? FULL_BLOCK : shape.bounds();
     }
 
     /**
