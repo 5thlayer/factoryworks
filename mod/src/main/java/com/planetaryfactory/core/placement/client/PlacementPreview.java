@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
+import com.planetaryfactory.core.energy.PoleColumn;
+import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
+import com.planetaryfactory.core.energy.client.SupplyAreaBox;
 import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.Placements;
 
@@ -101,6 +104,47 @@ public final class PlacementPreview {
             return;
         }
         draw(event, level, plan);
+        drawSupplyArea(event, level, plan);
+    }
+
+    /**
+     * The Supply Area Box for a held pole (#158, ADR-0070), drawn on top of the block itself.
+     *
+     * <p>Anchored at the <em>base</em> of the column the pole would belong to, not at the plan's own
+     * position. For an extension the plan names the new <em>top</em> segment, so a box drawn there
+     * would be wrong by the column's height -- the area is measured at the base whatever the pole's
+     * height (#147).
+     *
+     * <p><b>The walk down only happens when the placement really is an extension</b>, which is when
+     * the block below is that same pole. Asking {@link PoleColumn#baseOf} unconditionally answers
+     * about any pole it finds, of any tier, and the aim does not have to land on one to end up above
+     * one: a snow layer or a plant sitting on a column's top segment is replaceable, so a small pole
+     * aimed at it takes the ordinary vanilla plan and stands on top of a <em>medium</em> column. Its
+     * box would then be drawn at that column's base, two blocks below where the pole would actually
+     * stand -- a preview lying about the one thing this overlay exists to show.
+     *
+     * <p>An extension draws nothing here, because the column it joins is a placed pole the player is
+     * by definition looking at, and its own renderer is already drawing that exact box. Drawing it
+     * again would be two submissions a frame of identical geometry.
+     *
+     * <p>Only a pole draws one, and only an accepted plan: a refused placement puts nothing down, so
+     * there is no area to describe, and the red block already says the placement is refused.
+     */
+    private static void drawSupplyArea(SubmitCustomGeometryEvent event, ClientLevel level, PlacementPlan plan) {
+        if (plan.isRefused()) {
+            return;
+        }
+        for (PlacementPlan.Placed placed : plan.blocks()) {
+            if (!(placed.state().getBlock() instanceof SupplyAreaPoleBlock pole)) {
+                continue;
+            }
+            if (level.getBlockState(placed.pos().below()).is(placed.state().getBlock())) {
+                return;
+            }
+            SupplyAreaBox.drawAt(event.getSubmitNodeCollector(), event.getPoseStack(),
+                    event.getLevelRenderState().cameraRenderState.pos, placed.pos(), pole.tier());
+            return;
+        }
     }
 
     /**

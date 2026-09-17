@@ -42,8 +42,13 @@ public enum PoleTier {
      * <p>Factorio is two-dimensional and so has no answer to take. Two blocks either way covers a
      * machine standing on the pole's own floor, one sunk into it, and one on a platform above,
      * without a pole quietly powering the floor below through the ceiling. It is deliberately much
-     * shallower than the horizontal reach: the supply area should read as a footprint on the
-     * ground, which is how a Factorio player already pictures it.
+     * shallower than the horizontal reach, which is what keeps a pole's reach readable as a
+     * footprint rather than a tower.
+     *
+     * <p>This used to add that the area "should read as a footprint on the ground". That clause is
+     * retired (ADR-0070): the area is drawn as its whole volume, because a 2D overlay has to answer
+     * "at what height" for every column and every answer is wrong somewhere. The number is
+     * unchanged -- the sizing argument above never depended on how the area is shown.
      */
     public static final int VERTICAL_RADIUS = 2;
 

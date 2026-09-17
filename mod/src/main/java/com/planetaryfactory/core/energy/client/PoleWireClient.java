@@ -18,6 +18,9 @@ public final class PoleWireClient {
 
     public static void register(IEventBus modBus) {
         modBus.addListener(PoleWireClient::registerRenderers);
+        // The Supply Area Box (#158): its line pipeline ignores depth, which no stock line type
+        // does, so it has to be registered before the first frame that draws one.
+        SupplyAreaBox.register(modBus);
         NeoForge.EVENT_BUS.addListener(com.planetaryfactory.core.energy.ClientWires::onLevelUnload);
     }
 

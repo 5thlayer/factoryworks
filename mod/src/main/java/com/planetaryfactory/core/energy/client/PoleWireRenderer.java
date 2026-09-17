@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.joml.Matrix4f;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleLinks;
@@ -80,6 +81,8 @@ public final class PoleWireRenderer
         final List<EntityRenderState.LeashState> wires = new ArrayList<>();
         EntityRenderState.@Nullable LeashState slack;
         Tint tint = Tint.HELD;
+        /** The tier whose Supply Area Box to draw, or null when this pole is not the one looked at. */
+        @Nullable PoleTier areaTier;
     }
 
     @Override
@@ -93,10 +96,12 @@ public final class PoleWireRenderer
         BlockEntityRenderer.super.extractRenderState(pole, state, partialTicks, cameraPosition, breakProgress);
         state.wires.clear();
         state.slack = null;
+        state.areaTier = null;
         Level level = pole.getLevel();
         if (level == null || !PoleColumn.isBase(level, pole.getBlockPos())) {
             return;
         }
+        extractSupplyArea(level, pole.getBlockPos(), state);
         BlockPos from = pole.getBlockPos();
         PoleLinks.Pos self = new PoleLinks.Pos(from.getX(), from.getY(), from.getZ());
         Vec3 start = attachPoint(level, from);
@@ -123,6 +128,36 @@ public final class PoleWireRenderer
             state.wires.add(wire);
         }
         extractSlack(level, from, start, partialTicks, state);
+    }
+
+    /**
+     * The Supply Area Box for a placed pole (#158, ADR-0070), drawn only while it is the pole the
+     * local player is looking at.
+     *
+     * <p><b>Only the aimed pole.</b> Drawing every loaded pole's box would carpet a built base in
+     * overlapping wireframes, which is the opposite of legible and is not what Factorio does -- it
+     * shows the area of the pole under the cursor. A pole wired to this one draws nothing either:
+     * "do my two poles cover the gap" is answered by aiming at each in turn.
+     *
+     * <p>Looking at any segment of the column counts, and the box is the base's, the same way the
+     * capability and the Jade line read from the base whatever segment is held against (#147).
+     */
+    private static void extractSupplyArea(Level level, BlockPos base, State state) {
+        Minecraft minecraft = Minecraft.getInstance();
+        // The type is checked as well as the class: a miss is also a BlockHitResult, whose position
+        // is the rounded end of the ray. A pole's collision shape is thin, so a ray can pass beside
+        // one and expire in air inside that same block position -- and the box would then draw while
+        // the player is looking at nothing.
+        if (!(minecraft.hitResult instanceof BlockHitResult hit)
+                || hit.getType() != HitResult.Type.BLOCK
+                || !(level.getBlockState(hit.getBlockPos()).getBlock() instanceof SupplyAreaPoleBlock looked)) {
+            return;
+        }
+        BlockPos lookedBase = PoleColumn.baseOf(level, hit.getBlockPos());
+        if (lookedBase == null || !lookedBase.equals(base)) {
+            return;
+        }
+        state.areaTier = looked.tier();
     }
 
     /**
@@ -202,6 +237,12 @@ public final class PoleWireRenderer
 
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        PoleTier areaTier = state.areaTier;
+        if (areaTier != null) {
+            // This renderer's pose is already at the base's own block, so the box is the bare
+            // offsets -- it must not take the camera a second time.
+            SupplyAreaBox.drawAtPose(collector, poseStack, areaTier);
+        }
         for (EntityRenderState.LeashState wire : state.wires) {
             collector.submitLeash(poseStack, wire);
         }

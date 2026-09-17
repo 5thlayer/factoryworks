@@ -78,6 +78,34 @@ class SupplyAreaTest {
         assertEquals(seen.size(), seen.stream().distinct().count());
     }
 
+    /**
+     * The Supply Area Box (#158, ADR-0070) is drawn from {@link SupplyArea#bounds}, so the bounds
+     * have to be the same region {@link SupplyArea#covers} admits -- lose an offset and the overlay
+     * understates the pole's reach, enclose one it does not cover and the overlay overstates it.
+     *
+     * <p>The rest of the box's numbers are {@link PoleTier}'s and are asserted there; ADR-0070
+     * records that the overlay warrants no check of its own beyond this one.
+     */
+    @Test
+    void theBoundsAreExactlyTheCoveredVolume() {
+        for (PoleTier tier : PoleTier.values()) {
+            SupplyArea.Bounds bounds = SupplyArea.bounds(tier);
+            SupplyArea.forEachOffset(tier, (dx, dy, dz) ->
+                    assertTrue(dx >= bounds.minX() && dx <= bounds.maxX()
+                                    && dy >= bounds.minY() && dy <= bounds.maxY()
+                                    && dz >= bounds.minZ() && dz <= bounds.maxZ(),
+                            tier + " bounds lost a covered offset"));
+            for (int dx = bounds.minX(); dx <= bounds.maxX(); dx++) {
+                for (int dy = bounds.minY(); dy <= bounds.maxY(); dy++) {
+                    for (int dz = bounds.minZ(); dz <= bounds.maxZ(); dz++) {
+                        assertTrue(SupplyArea.covers(tier, dx, dy, dz),
+                                tier + " bounds enclose an uncovered offset");
+                    }
+                }
+            }
+        }
+    }
+
     @Test
     void theSubstationCoversEverythingASmallPoleDoes() {
         SupplyArea.forEachOffset(PoleTier.SMALL, (dx, dy, dz) ->
