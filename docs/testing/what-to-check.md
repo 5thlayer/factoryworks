@@ -50,10 +50,11 @@ do not read the fixture check's "a new body adds data, not code" rule as coverin
 **SUSPENDED for pack machines, until the machine set settles.** ADR-0059 makes a machine's footprint
 Factorio's, which multiplies the blockstate and model count per machine and changes it again every
 time a height row is re-judged. The blockstate/model/texture/lang/loot hop-walking is therefore
-switched off for pack machines for the duration of the Modern Industrialization migration -- it was
-five near-identical hand-written walks across `test_machine_assets.py` (since deleted), `test_furnace_assets.py`,
-`test_boiler_assets.py`, `test_pump_assets.py` and `test_ore_assets.py`, and re-authoring all five on
-every footprint change buys nothing while the shapes are still moving.
+switched off for pack machines while the machine set is still moving -- it is seven near-identical
+hand-written walks across `test_furnace_assets.py`, `test_boiler_assets.py`, `test_pump_assets.py`,
+`test_ore_assets.py`, `test_pole_assets.py`, `test_rig_assets.py` and `test_steam_assets.py`
+(`test_machine_assets.py` has since been deleted), and re-authoring each of them on every footprint
+change buys nothing while the shapes are still moving.
 
 This is a suspension of the mechanical half only. **The judgement assertions stay** -- the ones no
 generic walker could make and which are the reason those files exist: the Boiler's independent
@@ -61,12 +62,16 @@ generic walker could make and which are the reason those files exist: the Boiler
 `OffshorePumpItem`, the ore blocks' `c:ores` membership, each machine's lang key against the id its
 builder produces.
 
-**The trigger to reinstate is the migration's world load**, at which point the machine set is fixed
-and the hops come back as ONE generic check enumerating every block the mod registers, not as five.
+**The trigger to reinstate is #258's chassis re-derivation landing** (#254), at which point the
+machine set is fixed and the hops come back as ONE generic check enumerating every block the mod
+registers, not as seven. The suspension was originally written against the Modern Industrialization
+migration's world load; that migration never happened -- ADR-0060 took the pack to 26.1.2 on Oritech
+instead -- so the trigger is restated rather than met.
+
 Until then a missing texture no longer reaches a player unseen: `scripts/check-client-assets.py`
 (#276) catches an unresolved texture, model or blockstate variant against the running client rather
-than against a directory listing, which is what those five walkers were doing and is why the
-reinstatement is a generic check and not five. What it does not catch is a missing item model
+than against a directory listing, which is what those walkers were doing and is why the
+reinstatement is one generic check and not seven. What it does not catch is a missing item model
 definition, which is logged nowhere — that hop keeps its static walker.
 
 ### This is emitted into a world
