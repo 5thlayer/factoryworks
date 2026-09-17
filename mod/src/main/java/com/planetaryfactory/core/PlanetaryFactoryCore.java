@@ -9,6 +9,7 @@ import com.planetaryfactory.core.fluid.PFFluidTypes;
 import com.planetaryfactory.core.fluid.PFFluids;
 import com.planetaryfactory.core.fluid.WaterConservation;
 import com.planetaryfactory.core.energy.client.PoleWireClient;
+import com.planetaryfactory.core.placement.client.PlacementPreviewClient;
 import com.planetaryfactory.core.fluid.client.BoilerClient;
 import com.planetaryfactory.core.fluid.client.SteamFluidClient;
 import com.planetaryfactory.core.network.PFNetwork;
@@ -109,6 +110,9 @@ public final class PlanetaryFactoryCore {
             BoilerClient.register(modBus);
             // The wire between linked poles (#281); cosmetic, the balance never reads it.
             PoleWireClient.register(modBus);
+            // Factorio's build preview (#297): what placing the held block would do, drawn before
+            // the click. It draws the same plan the click executes, so it cannot drift from it.
+            PlacementPreviewClient.register();
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,
             // so vanilla's intuitions about what burns are wrong in both directions.
             FuelTooltip.register();
