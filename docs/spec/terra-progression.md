@@ -93,7 +93,10 @@ but the cost is that discovery is the opening's only job.
 
 **Granted**: the **Burner Mining Drill** (ADR-0043 / `#105`), the pack's own **Stone Furnace**
 (`#155`), the pack's **Boiler** and the pack's **Steam Engine** as prime mover (ADR-0048 / `#189`),
-mechanical belts. Every block on this list is pack-authored.
+mechanical belts, and the **wooden chest and the barrel** (the core's, ADR-0060). Every block on
+this list is pack-authored. Barrelling is gated by nothing — it is `shipped` as a native mechanic
+(`#93`) — so the barrel is on this rung because it is available from the first minute, not because
+a research hands it over.
 
 *This list read "LP Solid Boiler, LP Steam Miner, the vanilla Furnace as Stone Furnace (`#91`)", and
 then "Create's Steam Engine as prime mover". ADR-0040 deleted the LP Steam Miner and ADR-0043 made
@@ -123,7 +126,9 @@ argument for rung 1, made by the game rather than by the book.
 
 ## Rung 1 — `automation`
 
-**Granted**: Power Grid's **generator assembly** and the FE grid, Assembling Machine I, **steel** (ADR-0039), and — off `steel-processing`, at no pack cost — **`steel-axe` and the Engineer's Steel Pick**, which halves seconds-per-ore from 2.0 to 1.0.
+**Granted**: Power Grid's **generator assembly** and the FE grid, Assembling Machine I, **steel** (ADR-0039), and — off `steel-processing`, at no pack cost — **`steel-axe` and the Engineer's Steel Pick**, which halves seconds-per-ore from 2.0 to 1.0 — and,
+off the same steel, the **iron and steel chests** (the core's, ADR-0060), which is where rung 0's
+single chest stops being enough.
 
 **Why the grid arrives here**: the generator assembly turns Create's rotation into watts (`#92`,
 superseded on mechanism by ADR-0048 — it is a built assembly of Stator, Armature, Commutator and
@@ -131,8 +136,8 @@ Generator Clutch, not Electro's single-block Alternator), and
 Assembling Machine I is FE-native (`#37`) — the grid arrives with its first customer and not one
 rung earlier. This holds whatever `#69` decided about ore multiplication — and ADR-0032 cut it entirely.
 
-**What rung 2 needs it for**: the belt-and-package build-out is an assembly problem, and everything
-past here is assembled.
+**What rung 2 needs it for**: the belt build-out is an assembly problem — a belt costs one item per
+block (ADR-0060) — and everything past here is assembled.
 
 | Beat | Fed by |
 | --- | --- |
@@ -152,22 +157,29 @@ tier that can drink it. This is the machine's visible shape, not a hidden gate.
 
 The long chapter. Two things happen at once: movement at scale, and oil.
 
-**Granted**: Create 6 package logistics (`#28`), rail and trains, the Oil Refinery, the Chemical
-Plant, solid fuel, sulfur, sulfuric acid, plastic, the red circuit (ADR-0025, `#125`), the Steel
-Furnace (`#91`).
+**Granted**: the fork's belt tiers and the splitter, rail and trains, the Oil Refinery,
+the Chemical Plant, solid fuel, sulfur, sulfuric acid, plastic, the red circuit (ADR-0025, `#125`),
+the Steel Furnace (`#91`, registered by the core's furnace ladder since ADR-0060).
 
 **What rung 3 needs it for**: sulfur buys the `chemical` pack. That is the spine rule, stated
 plainly.
 
 | Beat | Fed by |
 | --- | --- |
-| Package logistics. Auto-requesting is Factorio's "logistic robots after belts". | machine |
+| The belt's upper tiers and the splitter. Throughput stops being one number and becomes a choice — `logistics-2` and `logistics-3` each buy a known one (ADR-0060). | machine |
 | Rail and trains. Distance stops being a wall. | machine |
 | The Fluid Drilling Rig taps a bedrock fluid deposit. *Fractions per `#86`.* | machine |
-| Oil Refinery and Chemical Plant. Two new machine idioms in one beat — this is where GT literacy is actually spent. | machine |
+| Oil in the barrel you have had since rung 0. A fluid becomes an item, and the belt and the train can carry it. | machine |
+| Oil Refinery and Chemical Plant. Two new machine idioms in one beat — and the first machines that hold a *player-set* recipe rather than matching on input (ADR-0060), which is the literacy this chapter actually spends. | machine |
 | Solid fuel, and the Steel Furnace that burns it. Fuel throughput becomes a constraint you can feel. | machine |
 | Sulfur → sulfuric acid. | machine |
 | Plastic, and the red circuit it makes. | machine |
+
+**Movement at scale is belts and rail, and that is the whole of it.** ADR-0060 dropped Create 6's
+package logistics and replaces it with nothing: Factorio has no mass package logistics, and
+auto-requesting was never a beat the citation could carry. What is left is the pair Factorio itself
+runs on — a belt whose throughput is a number you choose, and a train for when distance beats the
+belt. The chapter is not thinner for it; it is oil plus rail plus the belt finally having tiers.
 
 **Pantographs are not in Terra's first iteration.** Rail is Factorio's `Railway`, which is red +
 green and lands exactly here; electrified rail is not a Factorio mechanic, so there is no citation
