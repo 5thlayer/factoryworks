@@ -52,13 +52,17 @@ The **Iron Pick** wears `minecraft:item/iron_pickaxe` directly. Vanilla's sprite
 no copy, and the pack is a Factorio pack built in Minecraft — ADR-0039 keeps the opening gesture
 recognisable, and nothing reads as "pickaxe" faster than the one the player already knows.
 
-The **Steel Pick** wears GregTech's Damascus Steel pickaxe, flattened into our namespace by
-`scripts/build-pick-textures.py`. It cannot simply reference GT's art: a GT tool sprite is three
-greyscale layers — handle, head, overlay — that only become a material when GregTech's item-colour
-handler tints them, and that handler never sees an item which is not a GT tool. Referencing them
-would render an uncoloured grey pickaxe. So the script bakes the tint, reading Damascus Steel's own
-value from what GregTech registers (`damascus_steel .color(7237230)`, i.e. `0x6E6E6E`) and the layers
-from the installed jar. Re-run it after a GregTech update; the check above fails if it is not re-run.
+The **Steel Pick** wears `minecraft:item/netherite_pickaxe`, the same kind of direct borrow, decided
+by #241 and applied on #323.
+
+It used to wear GregTech's Damascus Steel pickaxe, flattened into our namespace by
+`scripts/build-pick-textures.py`, because it could not simply reference GT's art: a GT tool sprite is
+three greyscale layers — handle, head, overlay — that only become a material when GregTech's
+item-colour handler tints them, and that handler never sees an item which is not a GT tool.
+Referencing them would render an uncoloured grey pickaxe, so the script baked the tint. GregTech left
+with ADR-0060 and the source left with it. The script and the `--check` this file used to describe
+are deleted rather than re-pointed: there is nothing left to go stale against, so the check now only
+resolves the layer like any other.
 
 ## What it cannot prove
 

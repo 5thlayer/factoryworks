@@ -54,7 +54,6 @@ Usage: tests/factorio/test_pack_recipes.py
 """
 import json
 import re
-import subprocess
 import sys
 import zipfile
 from pathlib import Path
@@ -88,7 +87,6 @@ SURVIVORS = ROOT / "kubejs/server_scripts/recipe_survivors.js"
 # the roots are named rather than `kubejs/` itself.
 SCANNED = (ROOT / "kubejs/data", ROOT / "kubejs/assets")
 CONVERTER = ROOT / "scripts/factorio-recipe-convert.py"
-TEXTURE_BUILDER = ROOT / "scripts/build-pick-textures.py"
 MODS = ROOT / "mods"
 NAMESPACE = "planetaryfactory"
 
@@ -147,12 +145,14 @@ def items_of(recipe, side):
 def texture_resolves(item, layer):
     """That an item model's texture is one that will actually be there at load.
 
-    The two picks are dressed from three different places on purpose, so this cannot be a single
-    equality: the Iron Pick wears vanilla's own `minecraft:item/iron_pickaxe` (nothing to copy), and
-    the Steel Pick wears GTCEu's Damascus Steel pickaxe flattened into our namespace by
-    `scripts/build-pick-textures.py`, because GT's tool art is three greyscale layers that only
-    become a material under GregTech's item-colour handler -- which never sees an item that is not
-    a GT tool.
+    Both picks are dressed from vanilla (#241, on #323): the Iron Pick wears
+    `minecraft:item/iron_pickaxe` and the Steel Pick `minecraft:item/netherite_pickaxe`. The Steel
+    Pick used to wear GTCEu's Damascus Steel pickaxe, flattened into our namespace by a generator,
+    because GT's tool art is three greyscale layers that only become a material under GregTech's
+    item-colour handler -- which never sees an item that is not a GT tool. GregTech left with
+    ADR-0060 and the source left with it, so the sprite is a borrow from Minecraft now and the
+    generator is gone. A foreign namespace is still resolved here rather than assumed, because the
+    pack borrows art from other jars elsewhere and the next layer0 may not be vanilla's.
 
     A texture that is not there renders as the black-and-magenta checkerboard with only a
     client-side warning, so each namespace is resolved where it can be: our own against the file,
@@ -323,16 +323,6 @@ def main():
                   "`%s` has an uppercase letter in its name. KubeJS rejects it -- `Invalid file "
                   "name` -- and that stops a world from loading"
                   % path.relative_to(ROOT).as_posix())
-
-    # The generated half of the Steel Pick's texture. Generated output is never hand-edited here;
-    # a GTCEu update that changed its tool art would otherwise leave the pack showing the old one
-    # with nothing to say so.
-    if check(TEXTURE_BUILDER.is_file(), "scripts/build-pick-textures.py is missing"):
-        built = subprocess.run([sys.executable, str(TEXTURE_BUILDER), "--check"],
-                               capture_output=True, text=True)
-        check(built.returncode == 0,
-              "the Steel Pick's texture is stale against the installed GTCEu jar -- re-run "
-              "scripts/build-pick-textures.py (%s)" % built.stdout.strip())
 
     # The flat-time block tag the jar asks for by name. A tag that does not exist is empty, and an
     # empty one silently reverts every ore to vanilla hardness -- the Factorio number the ADR is
