@@ -26,6 +26,15 @@ column, so adding or removing segments leaves the wire in place and only changes
 from. Breaking a pole deletes its wires. Worlds saved before this decision have no wires, and nothing
 migrates them (the pack is pre-release).
 
+**A column's wires survive a change of base.** The base position is the wire's key, not the column's
+identity, so a segment added below the base or a base broken with segments left above re-keys that
+column's wires to the new base rather than dropping them. Placing a pole under a standing pole of the
+same tier is therefore an extension, and adds no wires of its own: a column that merely grew
+downwards is not a new pole. Where such a placement joins two columns into one, their wire sets
+merge, a wire that would now join the column to itself is dropped, and two wires to the same third
+pole collapse into one — the set is unordered pairs. The merged column may then hold more than five
+wires, which is allowed, since the cap is on what placement *adds*.
+
 **Placement follows Factorio's rule.** A placed pole wires itself to every pole in reach that shares
 no neighbour with it, so it adds no triangles. It adds at most 5 wires this way, taking the nearest
 poles first and breaking ties by position. The rule and the cap come from Factorio's electric-system
