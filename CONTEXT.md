@@ -1,15 +1,14 @@
 # PlanetaryFactory
 
-A Minecraft 1.21.1 / NeoForge modpack that reproduces the progression, production-chain routing and
+A Minecraft 26.1.2 / NeoForge modpack that reproduces the progression, production-chain routing and
 interplanetary scope of Factorio's Space Age expansion.
 
 **Factorio is the subject; the mods are the implementation.** What the pack reproduces, adapts or
 drops is the ledger in `docs/factorio-mechanics.md`, written in Factorio's terms and privileging no
-mod. Which mod owns each capability is ADR-0017's table, and exactly one does: Create owns logistics
-and fluids, Create: Power Grid owns the grid, GregTech owns extraction and lends its machine
-chassis, GCyR owns rockets, planets and orbits, Researchd owns the tech tree, and the pack registers
-its own machines where no installed mod can express Factorio's recipe shape. KubeJS binds them into
-a stationary, automation-first loop.
+mod. Which mod owns each capability is ADR-0017's table, amended by ADR-0060 — read it there rather
+than here, because a copy of it in this file has now gone stale twice, and this file is a glossary
+and nothing else. The pack registers its own machines where no installed mod can express Factorio's
+recipe shape. KubeJS binds them into a stationary, automation-first loop.
 
 No mod is the spine. Naming one where the concept, the Factorio mechanic or another mod's capability
 is what is actually meant is the drift this file exists to prevent (`#94`).
@@ -174,6 +173,20 @@ _Avoid_: fast entity transfer, ctrl-click, quick insert, fast transfer
 **Quick split**:
 Quick transfer at half the magnitude — half the held stack in, or half of what the block will give up out.
 _Avoid_: fast entity split, ctrl-right-click, half stack transfer
+
+### Terra's opening
+
+**Starting area**:
+The structure stamped onto world spawn once per world, and the only place a **starting field** is found: a **hub**, the four fields its connectors deal, and the water pool. It is not placed by worldgen — no Minecraft structure placement can see world spawn, so the pack stamps it when the server reports started (ADR-0019 and its amendment).
+_Avoid_: spawn structure, starting hub, tutorial area, start island
+
+**Hub**:
+The starting area's centre piece, and where the player spawns. It places no terrain block of its own: its job is to hold the four connectors far enough apart that the fields do not land on the same figure every world, and to carry the water pool.
+_Avoid_: spawn platform, base, hub structure
+
+**Water pool**:
+The body of water in the hub, one block deep and flush with the ground. It is the hub's own blocks rather than a fifth field, so vanilla cannot drop it silently. Since water is never created (ADR-0050), it is what makes water a place rung 0 can reach rather than a thing rung 0 must find.
+_Avoid_: pond, lake, starting water, spawn pool
 
 ### Terra's ore
 

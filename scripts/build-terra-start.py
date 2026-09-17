@@ -11,8 +11,9 @@ Three decisions this script encodes, each argued in `docs/adr/0019-*.md` and in 
 **The patches are pack-authored ore blocks, not GregTech's and not a GregTech vein.** ADR-0041
 makes an ore block carry an amount, and GregTech models its material ore blocks at runtime --
 so the blocks here are `planetaryfactory:<resource>_ore`, which carry the amount and the eight
-sprite stages. They still drop GregTech's raw ore and still carry `c:ores`, which is the tag
-GregTech's own Miner scans, so the miner ladder sees these patches exactly as before.
+sprite stages. What a block pays out is `OreResource`'s, and it is vanilla's raw ore for iron and
+copper -- GregTech registered none for a material vanilla already covers, so `gtceu:raw_iron` was
+never an item and naming it cost every draw its payout in silence. The blocks still carry `c:ores`.
 
 **The patch total is Factorio's and the per-block amount is a quotient.** This script writes no
 amount into the templates. It writes the ore blocks; the mod counts what was actually placed at
@@ -26,10 +27,13 @@ sees these patches exactly as it sees a prospected one. A vein also cannot be sp
 GregTech places veins on its own grid (size 6, random offset 24, per ADR-0019's amendment),
 and nothing in that placement can be told "one, here".
 
-**Anchoring is `minecraft:concentric_rings` at distance 0, count 1.** That is the only vanilla
-placement type that puts a bounded number of a structure near the world origin instead of on a
-spread grid, and vanilla's own spawn search starts from the origin on a world whose land biomes
-are everywhere -- so the player and the structure arrive in the same place.
+**Anchoring is not worldgen's at all.** It was `minecraft:concentric_rings` at distance 0, count 1,
+on the reasoning that it is the only vanilla placement type putting a bounded number of a structure
+near the world origin -- but the origin is not spawn, and on a seed whose origin is open ocean the
+ring's biome search fails and the player gets no opening at all, silently. No `StructurePlacement`
+can see world spawn: it is handed a `ChunkGeneratorStructureState` and nothing else, deliberately.
+So `planetaryfactory_core` stamps the start pool onto spawn itself on `ServerStartedEvent`, and this
+script writes no structure and no structure set -- see `TerraStartingArea` and ADR-0019's amendment.
 
 **Randomization is jigsaw, not noise.** The hub carries one connector per resource, each
 pointing at that resource's own single-purpose pool. One pool per resource is what makes the
@@ -38,8 +42,10 @@ size variants inside each pool, the three hub variants and vanilla's rotation of
 layout its variety.
 
 Patch sizing is anchored on ADR-0020's own figure: a small surface patch worked by hand empties
-in about an hour. A mid-size draw here is ~1150 ore blocks across the three patches, which at a
-couple of seconds a block is about that. It is a tuning number, not a discrete choice.
+in about an hour. A mid-size draw here is ~1,170 blocks across iron, copper and coal, which at a
+couple of seconds a block is about that. Stone is the fourth field and sits outside the figure: it
+is ADR-0041's late addition, it is not on the hand-mining path the hour measures, and its own
+mid-size patch adds ~260 on top. It is a tuning number, not a discrete choice.
 
 Run from anywhere; writes into `kubejs/data/planetaryfactory/`.
 """
@@ -251,10 +257,17 @@ SCATTER = 7
 
 # The hub's water pool (ADR-0050, issue #212).
 #
-# Create's water wheel is the pack's only rotational source before the burner line, and ADR-0050
-# refuses a bucket -- so rung 0 power is "dig a channel from water", and until the water is in the
-# hub that is an unbounded walk ADR-0049's traversal budget has no room for. The pool ships with
-# the opening rather than being found.
+# ADR-0050's rule is that water is extracted and transported, never created: source formation is
+# off, no bucket is craftable, and every source block in the world is one worldgen or a structure
+# placed. So water is not a thing rung 0 can make, it is a *place* rung 0 has to find -- and until
+# it is in the hub, finding it is an unbounded walk ADR-0049's traversal budget has no room for.
+# The pool ships with the opening rather than being found.
+#
+# It was argued for Create's water wheel, which was the pack's only rotational source before the
+# burner line. Create left with ADR-0060 and the pool's reason got stronger, not weaker: what it
+# now sites is the Offshore Pump (ADR-0050, #213), the one block water enters the factory through,
+# and behind it the Boiler (ADR-0048, #224). With no pool at spawn rung 0 has no water at all,
+# where before it merely had no rotation.
 #
 # It is *the hub's own blocks*, not a fifth jigsaw child. A child would have to attach through a
 # connector on a hub face, which is where the four ore fields already are, and it would then be
@@ -290,7 +303,7 @@ def build_hub(rng, index, offsets):
 
     The hub places no *terrain* block of its own. Its job is to hold the four connectors far
     enough apart, and at different enough offsets, that the fields do not land on a fixed figure
-    every world -- and, since ADR-0050, to carry the pool rung 0's water wheel is fed from.
+    every world -- and, since ADR-0050, to carry the pool rung 0's Offshore Pump is sited on.
 
     Every connector sits on the hub's own outer face, pointing out of it, and that is not a
     style choice. Vanilla marks the parent's *entire* bounding box occupied the moment a
@@ -388,8 +401,8 @@ def build_datapack(hub_count):
 
     write_json(os.path.join(WORLDGEN, "template_pool", "terra_start.json"), {
         "_comment": "Generated by scripts/build-terra-start.py. Hub variants: the four connectors "
-                    "that decide where the fields land, and the water pool rung 0 is powered "
-                    "from (ADR-0050).",
+                    "that decide where the fields land, and the water pool rung 0's Offshore "
+                    "Pump is sited on (ADR-0050).",
         "fallback": "minecraft:empty",
         "elements": [
             {
@@ -445,29 +458,14 @@ def build_datapack(hub_count):
             ],
         })
 
-    write_json(os.path.join(WORLDGEN, "structure", "terra_starting_area.json"), {
-        "type": "minecraft:jigsaw",
-        "biomes": LAND_BIOMES,
-        "step": "surface_structures",
-        "spawn_overrides": {},
-        # The fields sit on the surface and must not be bearded into a plinth.
-        "terrain_adaptation": "none",
-        "start_pool": "planetaryfactory:terra_start",
-        # The hub, then its three patches: one level of children, so 1. Vanilla gates children
-        # on `maxDepth > 0` and draws from the real pool while `depth != maxDepth`, so at depth
-        # 0 the patches are dealt and at depth 1 only the empty fallback is -- which is what we
-        # want, since a patch carries no connector onward.
-        "size": 1,
-        # Both are dead weight now and are kept only so the structure still reads as a whole:
-        # nothing places this structure through worldgen. `planetaryfactory_core` stamps the
-        # pool onto world spawn instead (see TerraStartingArea), because no StructurePlacement
-        # can see world spawn -- it is handed a ChunkGeneratorStructureState and nothing else.
-        "start_height": {"absolute": 0},
-        "project_start_to_heightmap": "WORLD_SURFACE_WG",
-        # Must clear the furthest patch centre plus its own radius.
-        "max_distance_from_center": 112,
-        "use_expansion_hack": False,
-    })
+    # No `worldgen/structure/terra_starting_area.json` is written, and that is the decision rather
+    # than an omission. `TerraStartingArea` stamps the *pool* onto world spawn and never reads a
+    # structure or a structure set, so a jigsaw structure entry here is registered and consulted by
+    # nothing: every field on it -- the biome list, the step, the start height, the radius -- would
+    # be a second, silently divergent copy of numbers the Java holds, and `/locate` cannot find the
+    # area either way. It shipped that way once, carrying its own `max_distance_from_center: 112`
+    # against the stamper's 128, and a reader who found it would reasonably conclude worldgen
+    # places the opening. See ADR-0019's amendment and issue #313.
 
 
 def main():

@@ -42,9 +42,6 @@ else is not.
 - `tests/factorio/test_pack_recipes.py`, the Steel Pick texture only — its source is GTCEu's tool
   art. Re-running `scripts/build-pick-textures.py` cannot fix it.
 
-One check passes without proving anything: `tests/worldgen/test_start_geometry.py` checks Terra's
-start structure, which is parked, so nothing places it in a world.
-
 `planetaryfactory_core` itself compiles again as of #268, and what that cost is recorded in
 `docs/port/blocked-removals-26.1.2.md`: every class deleted because GregTech left or because the
 Researchd fork is still on 1.21.1, each with the ticket that owns restoring it (#260, then #262,
@@ -268,12 +265,19 @@ other screen, and a plan delivers is a world load, not a static check.
 
 ### Starting-area geometry check
 
-`tests/worldgen/test_start_geometry.py` asserts Terra's starting area can actually deal all three
+`tests/worldgen/test_start_geometry.py` asserts Terra's starting area can actually deal all four
 ore fields: every hub connector sits on the face it points out of, and no two fields overlap each
 other or the hub, for every hub variant against every combination of size variants. Vanilla drops
-an overlapping jigsaw child silently, so this failure ships as "two patches instead of three" on
+an overlapping jigsaw child silently, so this failure ships as "three patches instead of four" on
 some seeds and nothing in a log. Run it after any edit to `scripts/build-terra-start.py`; it reads
 the generated `.nbt` files, so it also catches forgetting to re-run the generator.
+
+It is the only check standing behind the opening, and it cannot see the opening being *absent*:
+the pools, the processor list and the hub's jigsaw names are referenced from
+`TerraStartingArea` by string, with no compiler or test relationship to the datapack. #313 shipped
+with those five files parked, which reached a new world as no hub, no water and no patches, and
+one `No template pool` line at server start. No check was added for it (#313's own decision); the
+symptom is a new world.
 
 ### Ore amount checks
 

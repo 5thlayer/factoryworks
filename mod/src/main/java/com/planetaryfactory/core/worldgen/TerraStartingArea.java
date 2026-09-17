@@ -37,7 +37,7 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.level.dimension.DimensionType;
 
 /**
- * Terra's opening: the hub and its three ore fields, stamped at world spawn.
+ * Terra's opening: the hub, its four ore fields and its water pool, stamped at world spawn.
  *
  * <p>ADR-0019 asks for a <em>spawn-anchored</em> starting area, and vanilla cannot express that.
  * A {@code StructurePlacement} decides which chunks a structure occupies from
@@ -70,7 +70,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 public final class TerraStartingArea {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    /** The hub pool. Its three connectors are what deal the ore fields; see ADR-0019. */
+    /** The hub pool. Its four connectors are what deal the ore fields; see ADR-0019. */
     private static final ResourceKey<StructureTemplatePool> START_POOL = ResourceKey.create(
             Registries.TEMPLATE_POOL,
             Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_start"));
@@ -83,7 +83,7 @@ public final class TerraStartingArea {
     private static final Identifier START_JIGSAW =
             Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_start_hub");
 
-    /** One level of children: the hub, then its three patches. Matches the structure's own size. */
+    /** One level of children: the hub, then its four patches -- iron, copper, coal and stone. */
     private static final int MAX_DEPTH = 1;
 
     /**
@@ -176,7 +176,8 @@ public final class TerraStartingArea {
         List<StructurePiece> pieces = stub.get().getPiecesBuilder().build().pieces();
         // One line per piece. A jigsaw child that is rejected -- for overlapping a sibling, or for
         // reaching outside MAX_DISTANCE_FROM_CENTER -- is dropped silently, so the piece count is
-        // the only signal that the hub dealt fewer than its three fields.
+        // the only signal that the hub dealt fewer than its four fields. A healthy opening
+        // logs five pieces: the hub, and one patch each of iron, copper, coal and stone.
         for (StructurePiece piece : pieces) {
             LOGGER.info("Terra's starting area piece: {} at {}", describe(piece), piece.getBoundingBox());
         }
