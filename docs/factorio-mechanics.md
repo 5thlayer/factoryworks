@@ -757,6 +757,11 @@ Sub-rules:
   linked pole is one network with one balance: generators first, accumulators second, only generator
   surplus charges. Reach is measured in three dimensions, which Factorio has no need to. The wire is
   not yet drawn (#281). Oritech's transmission pole leaves the power path with #284.
+- **Poles wire themselves on placement, and the player adds or cuts wires by hand** — `planned`,
+  #296, ADR-0068. A stored wire, not reach, joins two poles. Placement wires to up to 5 poles in
+  reach that share no neighbour; the Engineer's Pick adds or cuts one wire at a time.
+- **Place a pole with no wires (shift-place)** — `planned`, `unargued`. Left out of #296.
+- **Clear all of a pole's wires at once** — `planned`, `unargued`. Left out of #296.
 - **Transformers between voltage levels** — `excluded`. `by-consequence` of having no voltage.
 - **The power graph as a diagnostic surface** — `unargued`, no verdict.
 
