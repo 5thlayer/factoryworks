@@ -42,7 +42,7 @@ import java.util.List;
  *
  * <p>While the local player's Pick holds this pole as a pending end, a slack wire also hangs from it
  * to the player's hand. Looking at another pole moves its end to that pole's top, as a preview of
- * the wire, green when the click would be accepted and red when it would be refused ({@link PoleWiring#refuses}). Vanilla's leash colour is fixed, so the slack is drawn here.
+ * the wire, green when the click would wire, orange when it would cut and red when it would be refused ({@link PoleWiring#refuses}). Vanilla's leash colour is fixed, so the slack is drawn here.
  */
 public final class PoleWireRenderer
         implements BlockEntityRenderer<SupplyAreaPoleBlockEntity, PoleWireRenderer.State> {
@@ -58,10 +58,11 @@ public final class PoleWireRenderer
     private static final double FIRST_PERSON_REACH = 0.8;
     private static final double FIRST_PERSON_DROP = 0.4;
 
-    /** The slack's colour: vanilla's leash brown while held, green or red over another pole. */
+    /** The slack's colour: vanilla's leash brown while held, green, orange or red over another pole: wire, cut or refused. */
     enum Tint {
         HELD(0.5F, 0.4F, 0.3F),
         ACCEPTED(0.2F, 0.8F, 0.2F),
+        CUT(1.0F, 0.55F, 0.0F),
         REFUSED(0.8F, 0.1F, 0.1F);
 
         final float r;
@@ -101,7 +102,7 @@ public final class PoleWireRenderer
         Vec3 start = attachPoint(level, from);
         for (PoleLinks.Wire stored : ClientWires.wires().all()) {
             // A stored wire's first end sorts first by position, so exactly one end draws it.
-            if (!stored.a().equals(self)) {
+            if (!stored.a().equals(self) || previewsCut(level, stored)) {
                 continue;
             }
             BlockPos to = new BlockPos(stored.b().x(), stored.b().y(), stored.b().z());
@@ -122,6 +123,30 @@ public final class PoleWireRenderer
             state.wires.add(wire);
         }
         extractSlack(level, from, start, partialTicks, state);
+    }
+
+    /**
+     * Whether the local player's held end and looked-at pole are this stored wire: its orange slack
+     * is drawn over it instead, since the two would hang on the same curve and fight for the pixels.
+     */
+    private static boolean previewsCut(Level level, PoleLinks.Wire stored) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null || !(minecraft.hitResult instanceof BlockHitResult hit)
+                || !(level.getBlockState(hit.getBlockPos()).getBlock() instanceof SupplyAreaPoleBlock)) {
+            return false;
+        }
+        GlobalPos pending = minecraft.player.getMainHandItem().get(PFDataComponents.PENDING_WIRE.get());
+        if (pending == null || !pending.dimension().equals(level.dimension())) {
+            return false;
+        }
+        PoleLinks.Pos anchor = pos(pending.pos());
+        PoleLinks.Pos target = pos(PoleColumn.baseOf(level, hit.getBlockPos()));
+        return (stored.a().equals(anchor) && stored.b().equals(target))
+                || (stored.a().equals(target) && stored.b().equals(anchor));
+    }
+
+    private static PoleLinks.Pos pos(BlockPos at) {
+        return new PoleLinks.Pos(at.getX(), at.getY(), at.getZ());
     }
 
     private static void extractSlack(Level level, BlockPos from, Vec3 start, float partialTicks, State state) {
@@ -145,7 +170,13 @@ public final class PoleWireRenderer
             // Looking at another pole previews the wire itself, ending where it would hang.
             if (!base.equals(from)) {
                 end = attachPoint(level, base);
-                tint = PoleWiring.refuses(anchor, target) ? Tint.REFUSED : Tint.ACCEPTED;
+                if (PoleWiring.refuses(anchor, target)) {
+                    tint = Tint.REFUSED;
+                } else if (ClientWires.wires().contains(pos(from), pos(base))) {
+                    tint = Tint.CUT;
+                } else {
+                    tint = Tint.ACCEPTED;
+                }
             }
         }
         if (end == null) {
