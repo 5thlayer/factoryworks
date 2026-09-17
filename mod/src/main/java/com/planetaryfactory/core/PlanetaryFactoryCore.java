@@ -8,6 +8,7 @@ import com.planetaryfactory.core.gametest.PFGameTests;
 import com.planetaryfactory.core.fluid.PFFluidTypes;
 import com.planetaryfactory.core.fluid.PFFluids;
 import com.planetaryfactory.core.fluid.WaterConservation;
+import com.planetaryfactory.core.energy.client.PoleWireClient;
 import com.planetaryfactory.core.fluid.client.BoilerClient;
 import com.planetaryfactory.core.fluid.client.SteamFluidClient;
 import com.planetaryfactory.core.network.PFNetwork;
@@ -105,6 +106,8 @@ public final class PlanetaryFactoryCore {
             // guards against.
             SteamFluidClient.register(modBus);
             BoilerClient.register(modBus);
+            // The wire between linked poles (#281); cosmetic, the balance never reads it.
+            PoleWireClient.register(modBus);
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,
             // so vanilla's intuitions about what burns are wrong in both directions.
             FuelTooltip.register();
