@@ -1,6 +1,17 @@
 package com.planetaryfactory.core.energy.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.planetaryfactory.core.PFDataComponents;
+import com.planetaryfactory.core.energy.PoleWiring;
+import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.world.phys.BlockHitResult;
+import org.joml.Matrix4f;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleLinks;
 import com.planetaryfactory.core.energy.PoleTier;
@@ -28,6 +39,10 @@ import java.util.List;
  * <p>Each base pole draws the stored wires it is the first end of ({@link ClientWires}, ADR-0068),
  * from the top of its column to the top of the other's. A wire whose other end is not a loaded base
  * is not drawn, so breaking a pole takes its wires with it before the server's resend arrives.
+ *
+ * <p>While the local player's Pick holds this pole as a pending end, a slack wire also hangs from it
+ * to the player's hand, red when the pole under the crosshair would refuse the click
+ * ({@link PoleWiring#refuses}). Vanilla's leash colour is fixed, so the slack is drawn here.
  */
 public final class PoleWireRenderer
         implements BlockEntityRenderer<SupplyAreaPoleBlockEntity, PoleWireRenderer.State> {
@@ -35,8 +50,14 @@ public final class PoleWireRenderer
     /** Just under the top face of the top segment, where Factorio hangs its wire off the pole's head. */
     private static final double ATTACH_HEIGHT = 0.9;
 
+    /** Vanilla's leash segment count and width, so the slack reads as the same wire. */
+    private static final int STEPS = 24;
+    private static final float LEASH_WIDTH = 0.05F;
+
     public static final class State extends BlockEntityRenderState {
         final List<EntityRenderState.LeashState> wires = new ArrayList<>();
+        EntityRenderState.@Nullable LeashState slack;
+        boolean refused;
     }
 
     @Override
@@ -49,6 +70,7 @@ public final class PoleWireRenderer
             Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(pole, state, partialTicks, cameraPosition, breakProgress);
         state.wires.clear();
+        state.slack = null;
         Level level = pole.getLevel();
         if (level == null || !PoleColumn.isBase(level, pole.getBlockPos())) {
             return;
@@ -78,6 +100,38 @@ public final class PoleWireRenderer
             wire.slack = true;
             state.wires.add(wire);
         }
+        extractSlack(level, from, start, partialTicks, state);
+    }
+
+    private static void extractSlack(Level level, BlockPos from, Vec3 start, float partialTicks, State state) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+        GlobalPos pending = player.getMainHandItem().get(PFDataComponents.PENDING_WIRE.get());
+        if (pending == null || !pending.dimension().equals(level.dimension()) || !pending.pos().equals(from)
+                || !(level.getBlockState(from).getBlock() instanceof SupplyAreaPoleBlock anchorBlock)) {
+            return;
+        }
+        EntityRenderState.LeashState slack = new EntityRenderState.LeashState();
+        slack.start = start;
+        slack.end = player.getRopeHoldPosition(partialTicks);
+        slack.offset = start.subtract(Vec3.atLowerCornerOf(from));
+        BlockPos startTop = BlockPos.containing(start);
+        BlockPos hand = BlockPos.containing(slack.end);
+        slack.startBlockLight = level.getBrightness(LightLayer.BLOCK, startTop);
+        slack.endBlockLight = level.getBrightness(LightLayer.BLOCK, hand);
+        slack.startSkyLight = level.getBrightness(LightLayer.SKY, startTop);
+        slack.endSkyLight = level.getBrightness(LightLayer.SKY, hand);
+        state.slack = slack;
+        state.refused = false;
+        if (Minecraft.getInstance().hitResult instanceof BlockHitResult hit
+                && level.getBlockState(hit.getBlockPos()).getBlock() instanceof SupplyAreaPoleBlock targetBlock) {
+            BlockPos base = PoleColumn.baseOf(level, hit.getBlockPos());
+            PoleLinks.Pole anchor = new PoleLinks.Pole(from.getX(), from.getY(), from.getZ(), anchorBlock.tier());
+            PoleLinks.Pole target = new PoleLinks.Pole(base.getX(), base.getY(), base.getZ(), targetBlock.tier());
+            state.refused = PoleWiring.refuses(anchor, target);
+        }
     }
 
     @Override
@@ -85,6 +139,50 @@ public final class PoleWireRenderer
         for (EntityRenderState.LeashState wire : state.wires) {
             collector.submitLeash(poseStack, wire);
         }
+        EntityRenderState.LeashState slack = state.slack;
+        if (slack != null) {
+            boolean refused = state.refused;
+            collector.submitCustomGeometry(poseStack, RenderTypes.leash(),
+                    (pose, buffer) -> drawSlack(pose.pose(), buffer, slack, refused));
+        }
+    }
+
+    /** Vanilla's {@code LeashFeatureRenderer} geometry, with the colour chosen here. */
+    private static void drawSlack(Matrix4f poseIn, VertexConsumer buffer, EntityRenderState.LeashState leash,
+            boolean refused) {
+        Matrix4f pose = new Matrix4f(poseIn).translate((float) leash.offset.x, (float) leash.offset.y,
+                (float) leash.offset.z);
+        float dx = (float) (leash.end.x - leash.start.x);
+        float dy = (float) (leash.end.y - leash.start.y);
+        float dz = (float) (leash.end.z - leash.start.z);
+        float horizontal = (float) Math.sqrt(dx * dx + dz * dz);
+        float offsetFactor = horizontal == 0.0F ? 0.0F : LEASH_WIDTH / 2.0F / horizontal;
+        float dxOff = dz * offsetFactor;
+        float dzOff = dx * offsetFactor;
+        for (int k = 0; k <= STEPS; k++) {
+            slackVertices(buffer, pose, dx, dy, dz, LEASH_WIDTH, dxOff, dzOff, k, false, leash, refused);
+        }
+        for (int k = STEPS; k >= 0; k--) {
+            slackVertices(buffer, pose, dx, dy, dz, 0.0F, dxOff, dzOff, k, true, leash, refused);
+        }
+    }
+
+    private static void slackVertices(VertexConsumer buffer, Matrix4f pose, float dx, float dy, float dz,
+            float fudge, float dxOff, float dzOff, int k, boolean backwards, EntityRenderState.LeashState leash,
+            boolean refused) {
+        float progress = k / (float) STEPS;
+        int block = (int) (leash.startBlockLight + (leash.endBlockLight - leash.startBlockLight) * progress);
+        int sky = (int) (leash.startSkyLight + (leash.endSkyLight - leash.startSkyLight) * progress);
+        int light = LightCoordsUtil.pack(block, sky);
+        float shade = k % 2 == (backwards ? 1 : 0) ? 0.7F : 1.0F;
+        float r = (refused ? 0.8F : 0.5F) * shade;
+        float g = (refused ? 0.1F : 0.4F) * shade;
+        float b = (refused ? 0.1F : 0.3F) * shade;
+        float x = dx * progress;
+        float y = dy > 0.0F ? dy * progress * progress : dy - dy * (1.0F - progress) * (1.0F - progress);
+        float z = dz * progress;
+        buffer.addVertex(pose, x - dxOff, y + fudge, z + dzOff).setColor(r, g, b, 1.0F).setLight(light);
+        buffer.addVertex(pose, x + dxOff, y + LEASH_WIDTH - fudge, z - dzOff).setColor(r, g, b, 1.0F).setLight(light);
     }
 
     /** A wire leaves the frustum long after the pole that draws it does. */
