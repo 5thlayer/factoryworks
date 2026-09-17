@@ -4,6 +4,7 @@ import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.energy.NetworkReading;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
+import com.planetaryfactory.core.fluid.PFFluids;
 import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceTier;
 
@@ -158,7 +159,9 @@ final class SteamEngineNetworkTests {
     /** Holds the tank this face reaches at 70 % of its capacity: Oritech's speed 7. */
     private static void topUp(GameTestHelper helper, SteamEngineEntity engine) {
         ResourceHandler<FluidResource> face = engine.getFluidLookup(null);
-        FluidResource steam = SteamEngineEntity.getUsedSteamFluid();
+        // The Boiler's steam, not Oritech's: a test fed Oritech's own fluid passed while the pack's
+        // steam made nothing in game.
+        FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
         long target = face.getCapacityAsLong(0, steam) * 7 / 10;
         long missing = target - face.getAmountAsLong(0);
         if (missing <= 0L) {
