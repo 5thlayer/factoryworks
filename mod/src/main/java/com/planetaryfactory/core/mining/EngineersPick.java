@@ -160,4 +160,17 @@ public final class EngineersPick extends Item {
                             .withStyle(ChatFormatting.DARK_GRAY));
     }
 
+    /** A pole is wired or unwired by hand (#296, ADR-0068); every other block passes. */
+    @Override
+    public net.minecraft.world.InteractionResult useOn(net.minecraft.world.item.context.UseOnContext context) {
+        return com.planetaryfactory.core.energy.PoleWireGesture.useOn(context);
+    }
+
+    /** A held wire end lets go when it stops being held (ADR-0068). */
+    @Override
+    public void inventoryTick(ItemStack stack, net.minecraft.server.level.ServerLevel level,
+                              net.minecraft.world.entity.Entity holder,
+                              net.minecraft.world.entity.@org.jspecify.annotations.Nullable EquipmentSlot slot) {
+        com.planetaryfactory.core.energy.PoleWireGesture.inventoryTick(stack, level, holder, slot);
+    }
 }
