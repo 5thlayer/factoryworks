@@ -88,6 +88,5 @@
   "tooltip.planetaryfactory.boiler.fuel.out": "Out of fuel",
   "tooltip.planetaryfactory.boiler.water": "Water: %s / %s mB",
   "tooltip.planetaryfactory.boiler.steam": "Steam: %s / %s mB",
-  "message.planetaryfactory.offshore_pump.no_source": "An Offshore Pump must touch still water or lava. Flowing fluid is not a source.",
-  "message.planetaryfactory.offshore_pump.mixed_source": "An Offshore Pump cannot touch both water and lava."
+  "message.planetaryfactory.offshore_pump.no_source": "An Offshore Pump must touch a still source of a pumpable fluid."
 }

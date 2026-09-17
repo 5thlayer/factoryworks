@@ -2,6 +2,7 @@ package com.planetaryfactory.core.fluid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -9,8 +10,7 @@ import com.planetaryfactory.core.PFBlockEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -25,9 +25,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 
 /**
@@ -54,43 +52,6 @@ public class OffshorePumpBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     /**
-     * What the pump was sited on (#256), settled at placement. A blockstate property rather than
-     * block entity data, so it survives a save and load with no codec of ours to get wrong.
-     */
-    public static final EnumProperty<PumpedFluid> FLUID = EnumProperty.create("fluid", PumpedFluid.class);
-
-    /** The fluids a pump may emit -- {@link OffshorePumpSiting}'s two admitted verdicts. */
-    public enum PumpedFluid implements StringRepresentable {
-        WATER("water"),
-        LAVA("lava");
-
-        private final String name;
-
-        PumpedFluid(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return name;
-        }
-
-        public Fluid fluid() {
-            return this == LAVA ? Fluids.LAVA : Fluids.WATER;
-        }
-
-        /** The fluid a verdict pumps, or null for a refused site. */
-        @Nullable
-        public static PumpedFluid of(OffshorePumpSiting.Verdict verdict) {
-            return switch (verdict) {
-                case WATER -> WATER;
-                case LAVA -> LAVA;
-                case NO_SOURCE, MIXED -> null;
-            };
-        }
-    }
-
-    /**
      * A block codec is only read by data generation, which this pack does not run -- present
      * because {@link BaseEntityBlock} makes it abstract, the same reason {@code RigBlock} carries
      * one.
@@ -104,8 +65,7 @@ public class OffshorePumpBlock extends BaseEntityBlock {
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()
                 .sound(SoundType.METAL));
-        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH)
-                .setValue(FLUID, PumpedFluid.WATER));
+        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
     /**
@@ -116,7 +76,7 @@ public class OffshorePumpBlock extends BaseEntityBlock {
      * reads as levitating machinery -- but that is a narrowing neither #213 nor the ADR asked for,
      * and a pump sunk into a pond with water above it is a perfectly ordinary thing to build.
      *
-     * <p>{@code FluidState.isSource} plus the fluid's tag is the whole test. It is enough here only because nothing in
+     * <p>{@code FluidState.isSource} plus the fluid's registry id is the whole test. It is enough here only because nothing in
      * the pack can create a source -- see {@link OffshorePumpSiting} for why that, and not any
      * property of this method, is what makes it sound.
      */
@@ -128,19 +88,16 @@ public class OffshorePumpBlock extends BaseEntityBlock {
                 neighbours.add(OffshorePumpSiting.Neighbour.DRY);
             } else if (!fluid.isSource()) {
                 neighbours.add(OffshorePumpSiting.Neighbour.FLOWING);
-            } else if (fluid.is(FluidTags.WATER)) {
-                neighbours.add(OffshorePumpSiting.Neighbour.WATER_SOURCE);
-            } else if (fluid.is(FluidTags.LAVA)) {
-                neighbours.add(OffshorePumpSiting.Neighbour.LAVA_SOURCE);
             } else {
-                neighbours.add(OffshorePumpSiting.Neighbour.OTHER_SOURCE);
+                neighbours.add(OffshorePumpSiting.Neighbour.source(
+                        BuiltInRegistries.FLUID.getKey(fluid.getType()).toString()));
             }
         }
         return neighbours;
     }
 
-    /** What a pump here would pump, or why not. {@link OffshorePumpItem} is what asks. */
-    public static OffshorePumpSiting.Verdict siteOf(BlockGetter level, BlockPos pos) {
+    /** The fluid id a pump here would pump, if any. {@link OffshorePumpItem} is what asks. */
+    public static Optional<String> siteOf(BlockGetter level, BlockPos pos) {
         return OffshorePumpSiting.site(neighboursOf(level, pos));
     }
 
@@ -151,7 +108,7 @@ public class OffshorePumpBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, FLUID);
+        builder.add(FACING);
     }
 
     @Override
