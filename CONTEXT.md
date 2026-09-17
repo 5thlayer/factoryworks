@@ -228,6 +228,10 @@ _Avoid_: master/slave, lead engine, chain head
 Every **Supply Area Pole** joined to another within wire reach, plus every generator, accumulator and machine standing in any of their areas. One balance of supply and demand; there is no second carrier.
 _Avoid_: grid, power net, FE network
 
+**Placement Preview**:
+What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused, and, for a pole, the wires it would add. It shows what placing would do and changes nothing in the world.
+_Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
+
 **Offshore Pump**:
 The pack-authored block that is the **only** origin of water on any body: placed against one natural water source block, it emits 1,200 mB/s and needs no power, both Factorio's own figures (ADR-0050). ADR-0048 had written it off; that call is reversed, because Create's Mechanical Pump moves fluid between pipes and never touches world water.
 _Avoid_: water pump, water extractor, intake, Mechanical Pump
