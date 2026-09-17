@@ -15,6 +15,7 @@ import net.minecraft.gametest.framework.TestEnvironmentDefinition;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Rotation;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -74,6 +75,10 @@ public final class PFGameTests {
         EnergyFaceTests.register(registrar);
         ElectricNetworkTests.register(registrar);
         HandSetTests.register(registrar);
+        // Oritech is optional, and the class names its types, so it is not even loaded without it.
+        if (ModList.get().isLoaded("oritech")) {
+            SteamEngineNetworkTests.register(registrar);
+        }
     }
 
     /** What a test file is handed: a name, a tick budget and a body. */

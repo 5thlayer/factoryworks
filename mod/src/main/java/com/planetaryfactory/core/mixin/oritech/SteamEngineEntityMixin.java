@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.mixin.oritech;
 
+import com.planetaryfactory.core.energy.EnergyOwner;
 import com.planetaryfactory.core.fluid.SteamChainCorpus;
 import com.planetaryfactory.core.fluid.SteamEngineSpec;
 import java.util.Optional;
@@ -43,11 +44,15 @@ import rearth.oritech.util.Geometry;
  *       steam before either scanned both claim the empty engines between them, counting each twice.
  * </ul>
  *
+ * <p>It is also an {@link EnergyOwner} (#292): a slave holds no FE, so a pole that reaches one draws
+ * from its master, wherever the master stands.
+ *
  * <p>Both were read off the installed 2.0.0-exp6 jar, not the 1.21.1 source clone; the signatures
  * differ. Extends Oritech's base class only so the protected members it inherits are reachable.
  */
 @Mixin(SteamEngineEntity.class)
-public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEntity {
+public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEntity
+        implements EnergyOwner {
 
     /** Oritech's scan reach along the engine's facing axis, read from its class, not restated. */
     @Shadow
@@ -90,6 +95,12 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
     protected SteamEngineEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state,
             int energyPerTick) {
         super(type, pos, state, energyPerTick);
+    }
+
+    @Override
+    public BlockPos planetaryfactory$energyOwner() {
+        SteamEngineEntity self = (SteamEngineEntity) (Object) this;
+        return self.inSlaveMode() ? self.master.getBlockPos() : null;
     }
 
     @Unique
@@ -150,7 +161,7 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
             int drawn = asked.steam() > 0
                     ? input.extract(input.getResource(0), asked.steam(), transaction)
                     : 0;
-            made = spec.burn(drawn, speed, asked.carry());
+            made = spec.burn(drawn, speed, asked.carry(), room);
             energyStorage.internalInsert(made.energy(), transaction);
             transaction.commit();
         }

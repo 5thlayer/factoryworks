@@ -108,14 +108,17 @@ plate smelts name `ftbmaterials:` items (ADR-0061), so FTB Materials and the FTB
 are on the dev runtime classpath and are the one foreign mod the server loads; stone brick is still
 the only smelt under test.
 
-What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280) and `HandSetTests` (#279),
+What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279) and
+`SteamEngineNetworkTests` (#292, registered only when Oritech is loaded),
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
 (forcing the graph empty turns it red); that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
 transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
 starved one freezes where it stood; and that power crosses a wire between linked poles, stops
-beyond reach, and stops again when the link is broken. Each was checked against the defect it exists for: dropping
+beyond reach, and stops again when the link is broken. And that a pole reaching only a slave Steam Engine and its
+hull draws the whole row's 1,350 FE/t from the master, once, feeding neither -- `SupplyScanTest` holds
+the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red. Each was checked against the defect it exists for: dropping
 the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
 furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red; making no
 two poles link, never rebuilding the network, and never dropping a broken pole each turn a network
@@ -385,9 +388,10 @@ Oritech's `(long)` cast floors 1.5 mB/t to 1, so the spec carries the fraction -
 water returns, and the tank and FE buffer are 200 mB and 450 FE per engine in the row. The mixin
 targets were read off the installed 2.0.0-exp6 jar with `javap`, not the 1.21.1 source clone, and
 its config is `required: false` because Oritech is an optional dependency: a renamed target is a
-warning in the log and an uncalibrated engine, not a crash. Whether an engine chains, skips a
-neighbour already answering to a live master, and is pulled by a pole is a world load, and #292's
-GameTest. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
+warning in the log and an uncalibrated engine, not a crash. A buffer of one tick's output would
+floor a pole-drained row to whole 300 FE millibuckets (1,200 FE/t for three), so the burn keeps
+the millibucket that starts inside the room and carries its overshoot as energy (#292). That an
+engine chains and is pulled by a pole through a slave and its hull is #292's GameTest. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
 
 ### Enemy corpus check
 

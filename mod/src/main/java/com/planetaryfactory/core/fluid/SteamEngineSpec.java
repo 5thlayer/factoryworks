@@ -84,8 +84,12 @@ public final class SteamEngineSpec {
      *
      * <p>{@code energyRoom} is what the FE buffer can still take. The buffer is one tick of output,
      * so a pole that drew less than that last tick leaves less room than a full burn makes, and the
-     * request is cut to what fits: steam burnt into a full buffer is steam spent for nothing. A cut
-     * request owes no fraction forward, or an engine held back for a minute would owe a burst.
+     * request is cut: steam burnt into a full buffer is steam spent for nothing. The cut keeps every
+     * millibucket whose energy <em>starts</em> inside the room, and {@link #burn} carries the part of
+     * the last one that overshoots. Cutting to what fits whole instead held a row drained dry by a
+     * pole below its rate every tick: a millibucket is 300 FE and the carried half millibucket's
+     * tick never fits (#292). A cut request owes no steam forward, or an engine held back for a
+     * minute would owe a burst.
      */
     public Request request(double speed, int rowLength, Carry carry, long energyRoom) {
         double exact = steamPerTickAtPeak * (speed / PEAK_SPEED) * rowLength + carry.steam();
@@ -93,7 +97,7 @@ public final class SteamEngineSpec {
         double perUnit = energyPerUnit(speed);
         int fits = perUnit <= 0.0
                 ? whole
-                : (int) Math.floor((energyRoom - carry.energy()) / perUnit + EPSILON);
+                : (int) Math.ceil((energyRoom - carry.energy()) / perUnit - EPSILON);
         if (fits < whole) {
             return new Request(Math.max(0, fits), new Carry(0.0, carry.energy()));
         }
@@ -107,20 +111,21 @@ public final class SteamEngineSpec {
     }
 
     /**
-     * What {@code steam} millibuckets actually drawn are worth at {@code speed}.
+     * What {@code steam} millibuckets actually drawn are worth at {@code speed}, of which no more
+     * than {@code energyRoom} is paid out this tick; the rest is owed.
      *
      * <p>Split from {@link #request} because the tank may hold less than was asked for, and the
      * energy is owed on what was burnt, not on what was wanted.
      */
-    public Tick burn(int steam, double speed, Carry carry) {
+    public Tick burn(int steam, double speed, Carry carry, long energyRoom) {
         double exact = steam * energyPerUnit(speed) + carry.energy();
-        long whole = (long) Math.floor(exact + EPSILON);
+        long whole = Math.max(0L, Math.min((long) Math.floor(exact + EPSILON), energyRoom));
         return new Tick(steam, whole, new Carry(carry.steam(), Math.max(0.0, exact - whole)));
     }
 
     /** {@link #request} then {@link #burn}, when the tank covers the whole request. */
     public Tick tick(double speed, int rowLength, Carry carry, long energyRoom) {
         Request asked = request(speed, rowLength, carry, energyRoom);
-        return burn(asked.steam(), speed, asked.carry());
+        return burn(asked.steam(), speed, asked.carry(), energyRoom);
     }
 }
