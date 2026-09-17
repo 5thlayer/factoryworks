@@ -1,11 +1,10 @@
 package com.planetaryfactory.core.energy.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.planetaryfactory.core.energy.ClientPoles;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleLinks;
 import com.planetaryfactory.core.energy.PoleTier;
-import com.planetaryfactory.core.energy.PoleWires;
+import com.planetaryfactory.core.energy.ClientWires;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -21,16 +20,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * The wire between linked poles (#281, ADR-0062): cosmetic, and drawn with vanilla's leash geometry.
+ * The wire between linked poles (#281, ADR-0068): cosmetic, and drawn with vanilla's leash geometry.
  *
- * <p>Each base pole draws the wires {@link PoleWires#drawnBy} gives it, from the top of its column
- * to the top of the other's. Links are re-derived every frame from the poles the client has loaded,
- * so breaking a pole, or turning it into an extension, takes its wires with it on the next frame.
+ * <p>Each base pole draws the stored wires it is the first end of ({@link ClientWires}, ADR-0068),
+ * from the top of its column to the top of the other's. A wire whose other end is not a loaded base
+ * is not drawn, so breaking a pole takes its wires with it before the server's resend arrives.
  */
 public final class PoleWireRenderer
         implements BlockEntityRenderer<SupplyAreaPoleBlockEntity, PoleWireRenderer.State> {
@@ -56,17 +53,18 @@ public final class PoleWireRenderer
         if (level == null || !PoleColumn.isBase(level, pole.getBlockPos())) {
             return;
         }
-        Map<PoleLinks.Pole, BlockPos> bases = new HashMap<>();
-        for (SupplyAreaPoleBlockEntity other : ClientPoles.loadedIn(level)) {
-            BlockPos pos = other.getBlockPos();
-            if (!other.isRemoved() && PoleColumn.isBase(level, pos)) {
-                bases.put(other.shape(), pos);
-            }
-        }
         BlockPos from = pole.getBlockPos();
+        PoleLinks.Pos self = new PoleLinks.Pos(from.getX(), from.getY(), from.getZ());
         Vec3 start = attachPoint(level, from);
-        for (PoleLinks.Pole other : PoleWires.drawnBy(pole.shape(), bases.keySet())) {
-            BlockPos to = bases.get(other);
+        for (PoleLinks.Wire stored : ClientWires.wires().all()) {
+            // A stored wire's first end sorts first by position, so exactly one end draws it.
+            if (!stored.a().equals(self)) {
+                continue;
+            }
+            BlockPos to = new BlockPos(stored.b().x(), stored.b().y(), stored.b().z());
+            if (!level.isLoaded(to) || !PoleColumn.isBase(level, to)) {
+                continue;
+            }
             EntityRenderState.LeashState wire = new EntityRenderState.LeashState();
             wire.start = start;
             wire.end = attachPoint(level, to);

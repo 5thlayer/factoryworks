@@ -98,22 +98,6 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
         return getBlockState().getBlock() instanceof CreativeSupplyAreaPoleBlock;
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        if (level != null && level.isClientSide()) {
-            ClientPoles.add(this);
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        if (level != null && level.isClientSide()) {
-            ClientPoles.remove(this);
-        }
-        super.setRemoved();
-    }
-
     void serverTick() {
         if (level == null || level.isClientSide()) {
             return;

@@ -8,6 +8,11 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 
+import com.planetaryfactory.core.network.PoleWiresPacket;
+import net.minecraft.world.level.ChunkPos;
+import net.neoforged.neoforge.event.level.ChunkWatchEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.resources.Identifier;
@@ -61,7 +66,7 @@ public final class LevelWires extends SavedData {
         }
         PoleWiring.Click click = PoleWiring.click(a, b, wires);
         if (click == PoleWiring.Click.WIRED || click == PoleWiring.Click.CUT) {
-            changed(level);
+            changed(level, anchor, target);
         }
         return click;
     }
@@ -76,16 +81,28 @@ public final class LevelWires extends SavedData {
             return;
         }
         List<PoleLinks.Pole> wired = PoleWiring.onPlace(placed, standingNear(level, pos, placed.tier()), wires);
+        List<BlockPos> touched = new ArrayList<>();
+        touched.add(pos);
         for (PoleLinks.Pole other : wired) {
             wires.add(pos(pos), new PoleLinks.Pos(other.x(), other.y(), other.z()));
+            touched.add(new BlockPos(other.x(), other.y(), other.z()));
         }
-        changed(level);
+        changed(level, touched.toArray(BlockPos[]::new));
     }
 
     /** The base of a pole column at {@code pos} was broken: its wires go with it. */
     public void broken(ServerLevel level, BlockPos pos) {
+        List<BlockPos> touched = new ArrayList<>();
+        touched.add(pos);
+        for (PoleLinks.Wire wire : wires.all()) {
+            if (wire.a().equals(pos(pos))) {
+                touched.add(block(wire.b()));
+            } else if (wire.b().equals(pos(pos))) {
+                touched.add(block(wire.a()));
+            }
+        }
         wires.removeAllOf(pos(pos));
-        changed(level);
+        changed(level, touched.toArray(BlockPos[]::new));
     }
 
     /**
@@ -116,9 +133,29 @@ public final class LevelWires extends SavedData {
         return found;
     }
 
-    private void changed(ServerLevel level) {
+    /** Save, rebuild the networks, and resend each touched chunk's wires to whoever watches it. */
+    private void changed(ServerLevel level, BlockPos... touched) {
         setDirty();
         ElectricNetworks.of(level).wiresChanged();
+        java.util.Set<ChunkPos> chunks = new java.util.LinkedHashSet<>();
+        for (BlockPos p : touched) {
+            chunks.add(ChunkPos.containing(p));
+        }
+        for (ChunkPos chunk : chunks) {
+            PacketDistributor.sendToPlayersTrackingChunk(level, chunk,
+                    new PoleWiresPacket(chunk.x(), chunk.z(), wires.touching(chunk.x(), chunk.z())));
+        }
+    }
+
+    /** A chunk reached a player: send the wires with an end in it. */
+    public static void onChunkSent(ChunkWatchEvent.Sent event) {
+        ChunkPos chunk = event.getPos();
+        List<PoleLinks.Wire> touching = of(event.getLevel()).wires.touching(chunk.x(), chunk.z());
+        PacketDistributor.sendToPlayer(event.getPlayer(), new PoleWiresPacket(chunk.x(), chunk.z(), touching));
+    }
+
+    private static BlockPos block(PoleLinks.Pos p) {
+        return new BlockPos(p.x(), p.y(), p.z());
     }
 
     static PoleLinks.Pos pos(BlockPos p) {

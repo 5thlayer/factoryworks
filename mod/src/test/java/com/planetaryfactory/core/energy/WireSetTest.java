@@ -57,4 +57,33 @@ class WireSetTest {
         assertEquals(1, wires.all().size());
         assertTrue(wires.contains(at(21, 64, 0), at(14, 64, 0)));
     }
+
+    @Test
+    void aChunkCarriesEveryWireWithAnEndInsideIt() {
+        WireSet wires = new WireSet();
+        wires.add(at(1, 64, 1), at(8, 64, 1));      // both ends in chunk (0, 0)
+        wires.add(at(12, 64, 1), at(18, 64, 1));    // crosses into chunk (1, 0)
+        wires.add(at(20, 64, 1), at(26, 64, 1));    // chunk (1, 0) only
+        assertEquals(2, wires.touching(0, 0).size());
+        assertEquals(2, wires.touching(1, 0).size());
+    }
+
+    @Test
+    void replacingAChunksWiresDropsOnesCutWhileItWasUnwatched() {
+        WireSet client = new WireSet();
+        client.add(at(1, 64, 1), at(8, 64, 1));
+        client.add(at(12, 64, 1), at(18, 64, 1));
+        client.add(at(20, 64, 1), at(26, 64, 1));
+        // The server has since cut the first wire and made a new one.
+        WireSet server = new WireSet();
+        server.add(at(12, 64, 1), at(18, 64, 1));
+        server.add(at(2, 64, 2), at(3, 64, 3));
+
+        client.replaceTouching(0, 0, server.touching(0, 0));
+
+        assertFalse(client.contains(at(1, 64, 1), at(8, 64, 1)));
+        assertTrue(client.contains(at(2, 64, 2), at(3, 64, 3)));
+        assertTrue(client.contains(at(20, 64, 1), at(26, 64, 1)));
+        assertEquals(3, client.all().size());
+    }
 }
