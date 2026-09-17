@@ -982,9 +982,9 @@ Sub-rules:
   so its prerequisites are not retyped. Reopens #26 and touches ADR-0018.
 - **Mechanism is first-party; art and possibly logic are delegated** — `unargued`. A research ticket
   specifies which third-party mods supply models, textures and any borrowed behaviour, and what
-  their licenses permit. The `build-pick-textures.py` precedent derives art from a jar the pack
-  already depends on, and that reasoning does not transfer to a mod the pack would install only for
-  its assets.
+  their licenses permit. The Steel Pick's deleted `build-pick-textures.py` was the precedent for
+  deriving art from a jar the pack already depends on, and that reasoning never transferred to a mod
+  the pack would install only for its assets — nor did it survive the jar leaving (#241, #323).
 
 Note that `not_emitted` did **not** settle the shelf even while the row read `excluded`:
 `combat/defensive-structure` is `not_emitted` and #57 still shipped a Radar. That is the proof case

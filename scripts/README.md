@@ -74,7 +74,6 @@ Checks: `tests/pack/test_ore_assets.py`, `tests/factorio/test_resource_extract.p
 
 | Script | Produces |
 |---|---|
-| `build-pick-textures.py` | Engineer's Pick sprites (Iron = vanilla, Steel = flattened GTCEu Damascus) — ADR-0039 |
 | `gen-flora-textures.py` | placeholder 16×16 flora sprites for Sapros's trees (stdlib, meant to be redrawn) |
 | `build-filter-pack.sh` | rebuilds `kubejs/data/<name>.zip` from `packs/<name>/` (pack.mcmeta filter sections) |
 
