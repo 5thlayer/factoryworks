@@ -225,8 +225,12 @@ A **Steam Engine** holding steam, which burns and holds the charge for itself an
 _Avoid_: master/slave, lead engine, chain head
 
 **Electric Network**:
-Every **Supply Area Pole** joined to another within wire reach, plus every generator, accumulator and machine standing in any of their areas. One balance of supply and demand; there is no second carrier.
+Every **Supply Area Pole** joined to another by a **Wire**, directly or through other poles, plus every generator, accumulator and machine standing in any of their areas. One balance of supply and demand; there is no second carrier.
 _Avoid_: grid, power net, FE network
+
+**Wire**:
+A connection between two **Supply Area Pole**s that makes them one **Electric Network**. Only a wire joins poles: two poles within reach of each other but not wired are not connected. A wire can only exist between poles within wire reach. Placing a pole adds wires on its own, and the player adds or cuts one by hand with the **Engineer's Pick**. A wire belongs to its two poles and goes when either pole is broken.
+_Avoid_: link, cable, connection
 
 **Placement Preview**:
 What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused, and, for a pole, the wires it would add. It shows what placing would do and changes nothing in the world.
