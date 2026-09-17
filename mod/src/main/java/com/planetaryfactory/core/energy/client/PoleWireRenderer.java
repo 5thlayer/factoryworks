@@ -42,7 +42,7 @@ import java.util.List;
  *
  * <p>While the local player's Pick holds this pole as a pending end, a slack wire also hangs from it
  * to the player's hand. Looking at another pole moves its end to that pole's top, as a preview of
- * the wire, red when the click would be refused ({@link PoleWiring#refuses}). Vanilla's leash colour is fixed, so the slack is drawn here.
+ * the wire, green when the click would be accepted and red when it would be refused ({@link PoleWiring#refuses}). Vanilla's leash colour is fixed, so the slack is drawn here.
  */
 public final class PoleWireRenderer
         implements BlockEntityRenderer<SupplyAreaPoleBlockEntity, PoleWireRenderer.State> {
@@ -58,10 +58,27 @@ public final class PoleWireRenderer
     private static final double FIRST_PERSON_REACH = 0.8;
     private static final double FIRST_PERSON_DROP = 0.4;
 
+    /** The slack's colour: vanilla's leash brown while held, green or red over another pole. */
+    enum Tint {
+        HELD(0.5F, 0.4F, 0.3F),
+        ACCEPTED(0.2F, 0.8F, 0.2F),
+        REFUSED(0.8F, 0.1F, 0.1F);
+
+        final float r;
+        final float g;
+        final float b;
+
+        Tint(float r, float g, float b) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+        }
+    }
+
     public static final class State extends BlockEntityRenderState {
         final List<EntityRenderState.LeashState> wires = new ArrayList<>();
         EntityRenderState.@Nullable LeashState slack;
-        boolean refused;
+        Tint tint = Tint.HELD;
     }
 
     @Override
@@ -118,17 +135,17 @@ public final class PoleWireRenderer
             return;
         }
         Minecraft minecraft = Minecraft.getInstance();
-        boolean refused = false;
+        Tint tint = Tint.HELD;
         Vec3 end = null;
         if (minecraft.hitResult instanceof BlockHitResult hit
                 && level.getBlockState(hit.getBlockPos()).getBlock() instanceof SupplyAreaPoleBlock targetBlock) {
             BlockPos base = PoleColumn.baseOf(level, hit.getBlockPos());
             PoleLinks.Pole anchor = new PoleLinks.Pole(from.getX(), from.getY(), from.getZ(), anchorBlock.tier());
             PoleLinks.Pole target = new PoleLinks.Pole(base.getX(), base.getY(), base.getZ(), targetBlock.tier());
-            refused = PoleWiring.refuses(anchor, target);
             // Looking at another pole previews the wire itself, ending where it would hang.
             if (!base.equals(from)) {
                 end = attachPoint(level, base);
+                tint = PoleWiring.refuses(anchor, target) ? Tint.REFUSED : Tint.ACCEPTED;
             }
         }
         if (end == null) {
@@ -149,7 +166,7 @@ public final class PoleWireRenderer
         slack.startSkyLight = level.getBrightness(LightLayer.SKY, startTop);
         slack.endSkyLight = level.getBrightness(LightLayer.SKY, endAt);
         state.slack = slack;
-        state.refused = refused;
+        state.tint = tint;
     }
 
     @Override
@@ -159,15 +176,15 @@ public final class PoleWireRenderer
         }
         EntityRenderState.LeashState slack = state.slack;
         if (slack != null) {
-            boolean refused = state.refused;
+            Tint tint = state.tint;
             collector.submitCustomGeometry(poseStack, RenderTypes.leash(),
-                    (pose, buffer) -> drawSlack(pose.pose(), buffer, slack, refused));
+                    (pose, buffer) -> drawSlack(pose.pose(), buffer, slack, tint));
         }
     }
 
     /** Vanilla's {@code LeashFeatureRenderer} geometry, with the colour chosen here. */
     private static void drawSlack(Matrix4f poseIn, VertexConsumer buffer, EntityRenderState.LeashState leash,
-            boolean refused) {
+            Tint tint) {
         Matrix4f pose = new Matrix4f(poseIn).translate((float) leash.offset.x, (float) leash.offset.y,
                 (float) leash.offset.z);
         float dx = (float) (leash.end.x - leash.start.x);
@@ -178,24 +195,24 @@ public final class PoleWireRenderer
         float dxOff = dz * offsetFactor;
         float dzOff = dx * offsetFactor;
         for (int k = 0; k <= STEPS; k++) {
-            slackVertices(buffer, pose, dx, dy, dz, LEASH_WIDTH, dxOff, dzOff, k, false, leash, refused);
+            slackVertices(buffer, pose, dx, dy, dz, LEASH_WIDTH, dxOff, dzOff, k, false, leash, tint);
         }
         for (int k = STEPS; k >= 0; k--) {
-            slackVertices(buffer, pose, dx, dy, dz, 0.0F, dxOff, dzOff, k, true, leash, refused);
+            slackVertices(buffer, pose, dx, dy, dz, 0.0F, dxOff, dzOff, k, true, leash, tint);
         }
     }
 
     private static void slackVertices(VertexConsumer buffer, Matrix4f pose, float dx, float dy, float dz,
             float fudge, float dxOff, float dzOff, int k, boolean backwards, EntityRenderState.LeashState leash,
-            boolean refused) {
+            Tint tint) {
         float progress = k / (float) STEPS;
         int block = (int) (leash.startBlockLight + (leash.endBlockLight - leash.startBlockLight) * progress);
         int sky = (int) (leash.startSkyLight + (leash.endSkyLight - leash.startSkyLight) * progress);
         int light = LightCoordsUtil.pack(block, sky);
         float shade = k % 2 == (backwards ? 1 : 0) ? 0.7F : 1.0F;
-        float r = (refused ? 0.8F : 0.5F) * shade;
-        float g = (refused ? 0.1F : 0.4F) * shade;
-        float b = (refused ? 0.1F : 0.3F) * shade;
+        float r = tint.r * shade;
+        float g = tint.g * shade;
+        float b = tint.b * shade;
         float x = dx * progress;
         float y = dy > 0.0F ? dy * progress * progress : dy - dy * (1.0F - progress) * (1.0F - progress);
         float z = dz * progress;
