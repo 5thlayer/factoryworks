@@ -18,6 +18,11 @@ Three seams, none of which launches the game:
    and its target class is still in the installed jar; without either, the resource is read by
    nothing and every fluid keeps Oritech's colour with no error.
 
+4. **The name is Factorio's too.** Every lang key the Oritech jar names a borrowed fluid under -- the
+   fluid, its fluid type, its bucket and its source block -- is overridden in
+   `kubejs/assets/oritech/lang/en_us.json` to the Factorio name, title-cased as the pack's other
+   renames are. A key left out shows the player "Biofuel" in one tooltip and "Lubricant" in the next.
+
 Whether the colours read right in a running client is a human's on delivery.
 """
 
@@ -34,6 +39,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts/build-fluid-tints.py"
 RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/fluid/tints.json"
 MIXINS = ROOT / "mod/src/main/resources/planetaryfactory_core.oritech.mixins.json"
+LANG = ROOT / "kubejs/assets/oritech/lang/en_us.json"
 MIXIN = "FluidModelContentMixin"
 MIXIN_TARGET = "rearth/oritech/client/init/FluidModelContent.class"
 
@@ -79,6 +85,25 @@ class FluidTints(unittest.TestCase):
         borrowed = set(self.gen.borrowed_fluids().values())
         for target in self.tints:
             self.assertIn(target, borrowed, "tints.json retints %s, which no row borrows" % target)
+
+    def test_every_borrowed_fluid_is_named_as_factorio_names_it(self):
+        with zipfile.ZipFile(self.gen.oritech_jar()) as archive:
+            oritech = json.loads(archive.read("assets/oritech/lang/en_us.json"))
+        overrides = json.loads(LANG.read_text(encoding="utf-8")) if LANG.exists() else {}
+        for name, target in self.gen.borrowed_fluids().items():
+            path = target.split(":", 1)[1]
+            base = path.removeprefix("still_")
+            keys = ["fluid.oritech.%s" % path, "fluid_type.oritech.%s_fluid_type" % base,
+                    "item.oritech.%s_bucket" % path, "block.oritech.%s_block" % path]
+            wanted = name.replace("-", " ").title()
+            for key in keys:
+                if key not in oritech:
+                    continue
+                suffix = " Bucket" if key.startswith("item.") else ""
+                self.assertEqual(
+                    wanted + suffix, overrides.get(key),
+                    "%s is Oritech's %r; the pack borrows it as Factorio's %r, so %s must say so"
+                    % (key, oritech[key], name, LANG.relative_to(ROOT)))
 
     def test_the_mixin_is_wired_on_the_client(self):
         config = json.loads(MIXINS.read_text(encoding="utf-8"))
