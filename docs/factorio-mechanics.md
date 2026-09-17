@@ -60,6 +60,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 | [Inserters](#inserters) | `adapted` | all bodies |
 | [Logistic robots](#logistic-robots) | `excluded` | — |
 | [Construction robots and blueprints](#construction-robots-and-blueprints) | `adapted` | all bodies |
+| [Building by hand: placement preview and fast replace](#building-by-hand-placement-preview-and-fast-replace) | `planned` | all bodies |
 | [Trains](#trains) | `planned` | Terra |
 | [Circuit network](#circuit-network) | `adapted` | all bodies |
 | [Electric network and transmission](#electric-network-and-transmission) | `adapted` | all bodies |
@@ -591,6 +592,25 @@ the separate `ArmInteractionPointType` registry.
 ADR-0017 gives item logistics to Create and cuts the dedicated routing mods, because a substitute
 routing idiom is a straight bypass of the ladder. AE2 is the one gated exception, unlocked at endgame
 once every planet's puzzle is done — it is not a logistic-robot analogue and is not this row.
+
+### Building by hand: placement preview and fast replace
+
+- **verdict**: `planned`
+- **notice**: nothing yet; a held block shows nothing before it is placed, and a pole or furnace of
+  another tier cannot be placed over one to upgrade it.
+- **where**: all bodies
+- **via**: `pack`
+- **owner**: #297, #298, #299
+
+Sub-rules:
+
+- **A held block previews where it lands, red where refused** — `planned`, #297. The pack's term
+  is **Placement Preview**, not ghost: a ghost is the excluded robot-built entity under
+  [Construction robots and blueprints](#construction-robots-and-blueprints).
+- **A held pole previews the wires it would add** — `planned`, #298.
+- **A held pole shows its supply area and those of the poles around it** — `planned`, #158.
+- **Fast replace: placing another tier over a pole or furnace swaps it in place** — `planned`,
+  #299.
 
 ### Construction robots and blueprints
 
