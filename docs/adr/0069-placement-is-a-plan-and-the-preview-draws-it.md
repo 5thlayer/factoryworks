@@ -33,8 +33,14 @@ gesture, so a single blocked part refuses the placement, and the whole footprint
 one part red and the rest translucent would promise a partial placement the game never performs.
 Oritech's multiblocks are not the pack's blocks and get no plan.
 
+**A refusal is any reason placing would fail**, vanilla's as much as the pack's. Where the aim yields
+no target at all there is no plan and nothing is drawn, which is most of vanilla's refusals: the ray
+hits a block and placement simply picks another spot rather than refusing one.
+
 **The preview is drawn, unconditionally, from the client's own plan.** The block's own model at each
-of the plan's positions, translucent, tinted red when the plan is refused, on
+of the plan's positions -- not a wireframe box, which cannot show the facing the plan just decided;
+a box is the fallback only for a block whose model will not render out of context, if one turns up --
+translucent, tinted red when the plan is refused, on
 `RenderLevelStageEvent.AfterTranslucentBlocks` -- the same kind of hook the wire renderer already
 uses, and no mixin. It is shown whenever a previewable item is in the main hand and the aim hits a
 block in reach, as in Factorio, with no keybind and no toggle: a build preview behind a setting is a
