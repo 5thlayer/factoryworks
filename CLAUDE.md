@@ -30,13 +30,11 @@ kind explicitly so that "no check" is a recorded decision. See `docs/testing/wha
 ### Checks the 26.1.2 move broke
 
 The move to 26.1.2 (ADR-0060) took GregTech and GCyR out and parked every body but Terra under
-`kubejs/parked/`. Five checks below fail for that reason alone, and they stay red until the port
+`kubejs/parked/`. Four checks below fail for that reason alone, and they stay red until the port
 track gives each subject a home again. A failure in one of these is expected; a failure anywhere
 else is not.
 
 - `tests/flora/test_flora_data.py` — Sapros's data is parked, so the files it reads are gone.
-- `tests/factorio/test_recipe_convert.py` — reads `kubejs/startup_scripts/machines.js`, which
-  registered GregTech machines and was deleted.
 - `tests/pack/test_furnace_assets.py` — the Electric tier's textures live in the GTCEu jar.
 - `tests/pack/test_starting_kit.py` — the kit names GregTech ids.
 - `tests/factorio/test_pack_recipes.py`, the Steel Pick texture only — its source is GTCEu's tool
