@@ -39,7 +39,6 @@ NAMESPACE = "planetaryfactory"
 # What each pocket entry has to be recognisable as in the spec's "What you start with" bullet. The
 # book is beat 1's own sentence rather than the bullet's, so it is matched against the beat table.
 POCKET_IN_SPEC = {
-    "gtceu:prospector.lv": "prospector",
     "planetaryfactory:stone_furnace": "Stone Furnace",
     "planetaryfactory:burner_mining_drill": "Burner Mining Drill",
     "planetaryfactory:engineers_iron_pick": "Engineer's Iron Pick",
@@ -121,7 +120,14 @@ class StartingKitIds(unittest.TestCase):
                           "player starts with an empty slot and nothing is logged" % item)
 
     def test_the_foreign_pocket_items_exist_in_the_installed_jars(self):
-        """The prospector and the book, against the jars rather than against our own belief."""
+        """The quest book, against the jar rather than against our own belief.
+
+        The prospector used to be the other one. It was `gtceu:prospector.lv` and it is gone: ADR-0056
+        ruled it was never canon, ADR-0045 put every ore patch on the surface so nothing is buried to
+        prospect, and GregTech left with ADR-0060 (#323). This loop is not narrowed to the book --
+        it is the assertion that a foreign id resolves at all, and the next pocket entry borrowed
+        from a jar has to pass it too.
+        """
         for item, _ in self.pocket:
             namespace, _, path = item.partition(":")
             if namespace == NAMESPACE:
