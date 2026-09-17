@@ -1,7 +1,10 @@
 package com.planetaryfactory.core.energy;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Which poles are one Electric Network (ADR-0062).
@@ -17,6 +20,14 @@ public final class PoleLinks {
 
     /** A pole's position and tier. */
     public record Pole(int x, int y, int z, PoleTier tier) {
+    }
+
+    /** A block position, the base of a pole's column. */
+    public record Pos(int x, int y, int z) {
+    }
+
+    /** A stored wire between two poles' bases (ADR-0068). */
+    public record Wire(Pos a, Pos b) {
     }
 
     private PoleLinks() {
@@ -50,6 +61,45 @@ public final class PoleLinks {
                 }
             }
         }
+        int[] ids = new int[n];
+        int[] idOfRoot = new int[n];
+        Arrays.fill(idOfRoot, -1);
+        int next = 0;
+        for (int i = 0; i < n; i++) {
+            int r = root(parent, i);
+            if (idOfRoot[r] < 0) {
+                idOfRoot[r] = next++;
+            }
+            ids[i] = idOfRoot[r];
+        }
+        return ids;
+    }
+
+    /**
+     * A network id per pole, as {@link #networks(List)}, but joined by the stored wires only
+     * (ADR-0068): reach decides which wires may exist, not which poles are joined.
+     */
+    public static int[] networks(List<Pole> poles, Collection<Wire> wires) {
+        int n = poles.size();
+        int[] parent = new int[n];
+        Map<Pos, Integer> index = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            Pole p = poles.get(i);
+            index.put(new Pos(p.x(), p.y(), p.z()), i);
+        }
+        for (Wire wire : wires) {
+            Integer a = index.get(wire.a());
+            Integer b = index.get(wire.b());
+            if (a != null && b != null) {
+                parent[root(parent, a)] = root(parent, b);
+            }
+        }
+        return denseIds(parent);
+    }
+
+    private static int[] denseIds(int[] parent) {
+        int n = parent.length;
         int[] ids = new int[n];
         int[] idOfRoot = new int[n];
         Arrays.fill(idOfRoot, -1);
