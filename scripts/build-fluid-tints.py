@@ -47,6 +47,16 @@ OUT = os.path.join(ROOT, "mod", "src", "main", "resources", "planetaryfactory_co
 # against orange), and catches the three that read as a different fluid (0.4 and more).
 TOLERANCE = 0.15
 
+# A colour chosen over Factorio's `base_color`, and why. Empty is the default; an entry is a
+# decision somebody looked at in game, not a correction to the corpus.
+#
+# petroleum-gas: Factorio's (0.3, 0.1, 0.3) drawn over Oritech's steam sprite, whose highlights are
+# near-white, reads as a bright purple Factorio's pipes never show. Darkened to a near-black purple
+# that still sits apart from crude oil's near-black brown (#277, on review in game).
+TARGET_OVERRIDES = {
+    "petroleum-gas": (0.15, 0.06, 0.16),
+}
+
 # Oritech fluid id -> (sprite under assets/oritech/textures/, tint Oritech registers). Read off
 # `FluidModelContent.registerFluidModels` in oritech-2.0.0-exp6 with `javap -c`.
 ORITECH_MODELS = {
@@ -140,9 +150,12 @@ def borrowed_fluids():
 
 
 def factorio_colours():
-    return {f["name"]: tuple(f["base_color"])
-            for f in json.load(open(FLUID_CORPUS, encoding="utf-8"))["fluids"]
-            if f.get("base_color") is not None}
+    """The colour each fluid is drawn toward: Factorio's `base_color`, or its TARGET_OVERRIDES row."""
+    colours = {f["name"]: tuple(f["base_color"])
+               for f in json.load(open(FLUID_CORPUS, encoding="utf-8"))["fluids"]
+               if f.get("base_color") is not None}
+    colours.update(TARGET_OVERRIDES)
+    return colours
 
 
 def rendered(average, tint):
