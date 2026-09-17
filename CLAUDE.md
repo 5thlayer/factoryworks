@@ -43,15 +43,22 @@ no batch and are not reached by this command; each says above when to run it.
 ### Checks the 26.1.2 move broke
 
 The move to 26.1.2 (ADR-0060) took GregTech and GCyR out and parked every body but Terra under
-`kubejs/parked/`. Four checks below fail for that reason alone, and they stay red until the port
-track gives each subject a home again. A failure in one of these is expected; a failure anywhere
-else is not.
+`kubejs/parked/`. **Two** checks below fail for that reason alone, and each names the ticket that
+owns clearing it. A failure in one of these is expected; a failure anywhere else is not.
 
-- `tests/flora/test_flora_data.py` — Sapros's data is parked, so the files it reads are gone.
-- `tests/pack/test_furnace_assets.py` — the Electric tier's textures live in the GTCEu jar.
-- `tests/pack/test_starting_kit.py` — the kit names GregTech ids.
-- `tests/factorio/test_pack_recipes.py`, the Steel Pick texture only — its source is GTCEu's tool
-  art. Re-running `scripts/build-pick-textures.py` cannot fix it.
+- `tests/flora/test_flora_data.py` — Sapros's data is parked, so the files it reads are gone. Owned
+  by **#23**, and it cannot be cleared before Sapros's flora returns.
+- `tests/pack/test_furnace_assets.py` — the Electric tier's textures live in the GTCEu jar. Owned by
+  **#258**, which re-derives the departed `gtceu:`/`gcyr:` art against the Oritech chassis. The
+  assertion that the textures live *inside the GTCEu jar* is one of the two that make this check the
+  ladder's own, so it is re-speced rather than relaxed — and note the file fails *before* reaching
+  its own subject, so everything past it is unchecked rather than failing.
+
+Two more were on this list and are not any more (#323). `tests/factorio/test_pack_recipes.py` was
+red on the Steel Pick's sprite; #241's decision applied, and both picks now wear vanilla art with no
+generator. `tests/pack/test_starting_kit.py` was red on `gtceu:prospector.lv`; ADR-0056 had already
+ruled the prospector was never canon and ADR-0045 put every ore patch on the surface, so the pocket
+drops it and the charting gesture stays open on #116.
 
 `planetaryfactory_core` itself compiles again as of #268, and what that cost is recorded in
 `docs/port/blocked-removals-26.1.2.md`: every class deleted because GregTech left or because the
@@ -635,11 +642,12 @@ run that forgets deletes them, and the sweep leaves no stock pickaxe to fall bac
 `recipe_survivors.js` admits and carry `category: crafting` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
 has its model, texture, lang key, the two wrench tags that carry the dismantle verb and the block
-tag the jar asks for by name. The Iron Pick's sprite is vanilla's own and the Steel Pick's is
-GTCEu's Damascus Steel pickaxe, flattened by `scripts/build-pick-textures.py` because GT's tool art
-is three greyscale layers that only become a material under a colour handler our item never
-reaches; the check runs that script's `--check`, so a GTCEu update that redrew the art fails rather
-than shipping the old sprite. The tier list is read out of `PickTier.java`. The pick's arithmetic —
+tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
+the Steel Pick's `netherite_pickaxe` (#241, applied on #323). The Steel Pick used to wear GTCEu's
+Damascus Steel pickaxe, flattened by a generator because GT's tool art is three greyscale layers
+that only become a material under a colour handler our item never reaches; GregTech left with
+ADR-0060 and took the source with it, so `scripts/build-pick-textures.py` and its `--check` are
+gone rather than restated. The tier list is read out of `PickTier.java`. The pick's arithmetic —
 that Factorio's seconds survive Minecraft's break-time formula — is `MiningSpeedTest` under
 `./gradlew :planetaryfactory_core:test`. Whether the Pick mines every block class, dismantles a GT
 machine and satisfies Create's wrench is a world load. See

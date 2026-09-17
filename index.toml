@@ -738,7 +738,7 @@ hash = "592e5674bde8b985ec6de0d23cff3cc52b5e641e3a0e14422430bd974d0b1249"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/item/engineers_steel_pick.json"
-hash = "ebb4e66b011a3101b9c4716bea3381a5a81d630fa1ebb9e1f10e21431b0bdf58"
+hash = "b19564d326a2072a8cfd0673a34899ae1af156af62a262f9c2c6cb1e36c0bc50"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/item/jellystem_sapling.json"
@@ -987,10 +987,6 @@ hash = "d7631b76f66fadd80329914d7cb73f386c3815e8c37268ceea25c2c6e597ff26"
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/item/copper_bacteria.png"
 hash = "3e50d0b6f8629688c4ceb0a131cb987121fc413923c6c2a91e8abad1fb9fd02f"
-
-[[files]]
-file = "kubejs/assets/planetaryfactory/textures/item/engineers_steel_pick.png"
-hash = "b131bec5658242e0889560e8042130cddbe80ec10adb9e61041384d07943240c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/item/iron_bacteria.png"
