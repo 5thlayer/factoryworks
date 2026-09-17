@@ -54,7 +54,7 @@ The wreck is `#100` and `#134`: indestructible, habitable, one cargo hold, and y
 | 2 | Open the inventory. The Personal Assembler is already there. Craft one thing, badly, slowly. | Personal Assembler |
 | 3 | Leave. Three ore fields are visible from the door. | — |
 | 4 | Place the Stone Furnace and the Burner Mining Drill from your pocket, the drill facing the furnace. First plates. | hand |
-| 5 | Chart the outfield with the prospector; read the map. | prospector |
+| 5 | Walk out past the starting fields. The outfield's patches are flush with the topsoil and visible on foot. | — |
 | 6 | Drill → belt → Furnace → chest. Something runs while you watch. | machine-fed |
 
 Beat 6 is the twenty-minute mark and the first machine-fed beat in the pack.
@@ -62,9 +62,12 @@ Beat 6 is the twenty-minute mark and the first machine-fed beat in the pack.
 **What you start with.** Factorio's own split — tools in your pockets, materials from the ship
 (`#100`), and Factorio is famously stingy about both.
 
-- **Pocket**: the prospector (ADR-0019), one Stone Furnace, one **Burner Mining Drill**, the
-  **Engineer's Iron Pick** (ADR-0039). *This read "one Furnace, one LP Steam Miner"; ADR-0040
-  deleted that miner and ADR-0043's burner rig took its place (`#193`).* A rig covers four tiles
+- **Pocket**: one Stone Furnace, one **Burner Mining Drill**, the **Engineer's Iron Pick**
+  (ADR-0039). *This read "one Furnace, one LP Steam Miner"; ADR-0040 deleted that miner and
+  ADR-0043's burner rig took its place (`#193`). It also read "the prospector (ADR-0019)", which was
+  `gtceu:prospector.lv`: ADR-0056 ruled it was never canon, ADR-0045 put every ore patch on the
+  surface so nothing is buried to prospect, and GregTech left with ADR-0060. The charting gesture is
+  open on `#116`, and until it is answered beat 5 is walking (`#323`).* A rig covers four tiles
   and beats hands even at 0.25 items/s, which is what earns it a slot in a pocket Factorio is
   famously stingy about.
 - **Hold**: iron plate, copper plate, coal. Single digits, matching freeplay's eight-plate debris

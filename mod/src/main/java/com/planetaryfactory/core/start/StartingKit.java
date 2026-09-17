@@ -44,10 +44,15 @@ public final class StartingKit {
      * <p>The book is here even though its <em>content</em> is a separate ticket -- beat 1 is "the
      * book is in your inventory; its tooltip points at the inventory", so a book that arrives later
      * costs the beat rather than merely the content.
+     *
+     * <p>There is no prospector. It was {@code gtceu:prospector.lv}: ADR-0056 ruled it was never
+     * canon, ADR-0045 put every ore patch on the surface so nothing is buried to prospect, and
+     * GregTech left with ADR-0060 -- which left the entry naming nothing, and an id that names
+     * nothing is a silent empty slot rather than an error. The charting gesture stays open on #116
+     * (#323).
      */
     public static final List<Entry> POCKET = List.of(
             new Entry("ftbquests:book", 1),
-            new Entry("gtceu:prospector.lv", 1),
             new Entry("planetaryfactory:stone_furnace", 1),
             new Entry("planetaryfactory:burner_mining_drill", 1),
             new Entry("planetaryfactory:engineers_iron_pick", 1));
