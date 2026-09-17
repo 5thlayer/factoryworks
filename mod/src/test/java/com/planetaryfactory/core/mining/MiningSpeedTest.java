@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class MiningSpeedTest {
 
-    /** GregTech's ores sit at hardness 3, which is what Terra's three fields are made of. */
+    /** `OreBlock` sets strength 3, which is what every patch on Terra is made of. */
     private static final float ORE_HARDNESS = 3.0f;
 
     private static final float TOLERANCE = 1.0e-4f;
