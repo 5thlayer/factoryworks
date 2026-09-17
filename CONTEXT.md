@@ -177,15 +177,15 @@ _Avoid_: fast entity split, ctrl-right-click, half stack transfer
 ### Terra's opening
 
 **Starting area**:
-The structure stamped onto world spawn once per world, and the only place a **starting field** is found: a **hub**, the four fields its connectors deal, and the water pool. It is not placed by worldgen — no Minecraft structure placement can see world spawn, so the pack stamps it when the server reports started (ADR-0019 and its amendment).
+The structure stamped onto world spawn once per world, and the only place a **starting field** is found: a **hub**, the four fields it deals, and the **water pool**. Anchored to spawn rather than to the world origin, and so not a thing ordinary worldgen places (ADR-0019 and its amendment).
 _Avoid_: spawn structure, starting hub, tutorial area, start island
 
 **Hub**:
-The starting area's centre piece, and where the player spawns. It places no terrain block of its own: its job is to hold the four connectors far enough apart that the fields do not land on the same figure every world, and to carry the water pool.
+The starting area's centre piece, and where the player spawns. It places no terrain of its own: it is what holds the four fields apart and carries the water pool.
 _Avoid_: spawn platform, base, hub structure
 
 **Water pool**:
-The body of water in the hub, one block deep and flush with the ground. It is the hub's own blocks rather than a fifth field, so vanilla cannot drop it silently. Since water is never created (ADR-0050), it is what makes water a place rung 0 can reach rather than a thing rung 0 must find.
+The body of water in the hub, one block deep and flush with the ground. Since water is never created (ADR-0050), it is what makes water somewhere rung 0 already stands rather than somewhere it has to go.
 _Avoid_: pond, lake, starting water, spawn pool
 
 ### Terra's ore
