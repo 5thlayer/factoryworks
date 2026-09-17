@@ -105,6 +105,8 @@ public final class PlacementPreview {
         }
         draw(event, level, plan);
         drawSupplyArea(event, level, plan);
+        PreviewWires.draw(event.getSubmitNodeCollector(), event.getPoseStack(), level,
+                event.getLevelRenderState().cameraRenderState.pos, plan);
     }
 
     /**
