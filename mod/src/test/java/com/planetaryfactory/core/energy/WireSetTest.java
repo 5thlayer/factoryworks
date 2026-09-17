@@ -86,4 +86,51 @@ class WireSetTest {
         assertTrue(client.contains(at(20, 64, 1), at(26, 64, 1)));
         assertEquals(3, client.all().size());
     }
+
+    /** A column that grew downwards or was trimmed from the bottom keeps its wires (#309). */
+    @Test
+    void rekeyingMovesEveryWireOfAPoleToTheNewBase() {
+        WireSet wires = new WireSet();
+        PoleLinks.Pos base = new PoleLinks.Pos(0, 64, 0);
+        PoleLinks.Pos lower = new PoleLinks.Pos(0, 63, 0);
+        PoleLinks.Pos other = new PoleLinks.Pos(5, 64, 0);
+        wires.add(base, other);
+        wires.rekey(base, lower);
+        assertFalse(wires.contains(base, other));
+        assertTrue(wires.contains(lower, other));
+    }
+
+    @Test
+    void rekeyingDropsAWireThatWouldJoinTheColumnToItself() {
+        WireSet wires = new WireSet();
+        PoleLinks.Pos joined = new PoleLinks.Pos(0, 64, 0);
+        PoleLinks.Pos base = new PoleLinks.Pos(0, 63, 0);
+        wires.add(joined, base);
+        wires.rekey(joined, base);
+        assertTrue(wires.all().isEmpty());
+    }
+
+    @Test
+    void rekeyingCollapsesTwoWiresToTheSameThirdPole() {
+        WireSet wires = new WireSet();
+        PoleLinks.Pos joined = new PoleLinks.Pos(0, 64, 0);
+        PoleLinks.Pos base = new PoleLinks.Pos(0, 63, 0);
+        PoleLinks.Pos third = new PoleLinks.Pos(5, 64, 0);
+        wires.add(joined, third);
+        wires.add(base, third);
+        wires.rekey(joined, base);
+        assertEquals(1, wires.all().size());
+        assertTrue(wires.contains(base, third));
+    }
+
+    @Test
+    void rekeyingAPoleWithNoWiresChangesNothing() {
+        WireSet wires = new WireSet();
+        PoleLinks.Pos a = new PoleLinks.Pos(0, 64, 0);
+        PoleLinks.Pos b = new PoleLinks.Pos(5, 64, 0);
+        wires.add(a, b);
+        wires.rekey(new PoleLinks.Pos(9, 64, 9), new PoleLinks.Pos(9, 63, 9));
+        assertEquals(1, wires.all().size());
+        assertTrue(wires.contains(a, b));
+    }
 }
