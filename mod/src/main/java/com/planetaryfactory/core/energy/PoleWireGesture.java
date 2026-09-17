@@ -64,7 +64,8 @@ public final class PoleWireGesture {
             }
             case CANCELLED -> pick.remove(PFDataComponents.PENDING_WIRE.get());
             // The end stays held: a refusal changes nothing, the held end included.
-            case REFUSED -> play(server, base, SoundEvents.DISPENSER_FAIL);
+            // Not DISPENSER_FAIL: it plays random/click, the same file as TRIPWIRE_ATTACH.
+            case REFUSED -> play(server, base, SoundEvents.CRAFTER_FAIL);
         }
         return InteractionResult.SUCCESS_SERVER;
     }
