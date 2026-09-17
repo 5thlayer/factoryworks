@@ -85,9 +85,15 @@ public final class PoleWireGesture {
                 ? ((SupplyAreaPoleBlock) level.getBlockState(anchor).getBlock()).tier()
                 : PoleTier.SMALL;
         PoleLinks.Pole pole = new PoleLinks.Pole(anchor.getX(), anchor.getY(), anchor.getZ(), tier);
-        if (!PendingEnd.stillHeld(pole, holder.getX(), holder.getY(), holder.getZ(),
+        double range = holder instanceof net.minecraft.world.entity.player.Player player
+                ? player.blockInteractionRange() : 0.0;
+        if (!PendingEnd.stillHeld(pole, holder.getX(), holder.getY(), holder.getZ(), range,
                 standing, slot == EquipmentSlot.MAINHAND, sameDimension)) {
             pick.remove(PFDataComponents.PENDING_WIRE.get());
+            // The snap: dropping an end is heard at the player, since nothing else shows it. A
+            // chain's break, so it is none of the made, cut or refused sounds.
+            level.playSound(null, holder.blockPosition(), SoundEvents.CHAIN_BREAK,
+                    SoundSource.PLAYERS, 1.0F, 1.0F);
         }
     }
 
