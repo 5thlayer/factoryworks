@@ -27,6 +27,19 @@ Which check a feature warrants — and whether it warrants one at all — is dec
 feature makes, not ad hoc per ticket. Six claims, six answers, and a content ticket names its check
 kind explicitly so that "no check" is a recorded decision. See `docs/testing/what-to-check.md`.
 
+### Running the Python checks
+
+`uv run --with pytest pytest tests/` runs **every** check under `tests/`, and is the gesture to
+reach for. Most files here are `main()`-style scripts rather than pytest tests, and pytest collects
+nothing from them on its own: `tests/conftest.py` wraps each one as a single test that runs it and
+asserts it exited 0, and fails the run if any `test_*.py` produced no tests at all (#171). Before
+that shim the same command reported green while 25 of 36 files never executed, which is why the
+count guard is there rather than the convention being left to memory. A single script can still be
+run directly — `uv run tests/pack/test_rig_assets.py` — and prints its own line.
+
+The GameTest harness, `scripts/check-datapack-load.py` and `scripts/check-client-assets.py` are in
+no batch and are not reached by this command; each says above when to run it.
+
 ### Checks the 26.1.2 move broke
 
 The move to 26.1.2 (ADR-0060) took GregTech and GCyR out and parked every body but Terra under
