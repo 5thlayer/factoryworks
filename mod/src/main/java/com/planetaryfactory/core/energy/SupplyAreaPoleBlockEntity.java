@@ -33,6 +33,9 @@ import java.util.List;
  * block is tagged {@link #GENERATORS} or {@link #ACCUMULATORS}. The face alone cannot decide it: a
  * machine whose face allows extraction would otherwise be drained as a generator.
  *
+ * <p>The tag read is the energy owner's, not the block's: {@link SupplyScan} resolves a hull block to
+ * its controller and a slave engine to its master first, and keeps each owner once (#292).
+ *
  * <h2>Why the lists are cached</h2>
  *
  * <p>A substation's area is 18x18x5 = 1620 blocks. A capability lookup per block per tick is not
@@ -137,27 +140,36 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
     }
 
     private void scan(Level level) {
-        List<BlockPos> foundConsumers = new ArrayList<>();
-        List<BlockPos> foundGenerators = new ArrayList<>();
-        List<BlockPos> foundAccumulators = new ArrayList<>();
+        List<BlockPos> positions = new ArrayList<>();
         BlockPos origin = getBlockPos();
         SupplyArea.forEachOffset(tier(), (dx, dy, dz) -> {
             BlockPos pos = origin.offset(dx, dy, dz);
-            if (pos.equals(origin) || !level.isLoaded(pos) || handler(level, pos) == null) {
-                return;
-            }
-            BlockState state = level.getBlockState(pos);
-            if (state.is(GENERATORS)) {
-                foundGenerators.add(pos.immutable());
-            } else if (state.is(ACCUMULATORS)) {
-                foundAccumulators.add(pos.immutable());
-            } else {
-                foundConsumers.add(pos.immutable());
+            if (!pos.equals(origin) && level.isLoaded(pos)) {
+                positions.add(pos.immutable());
             }
         });
-        consumers = foundConsumers;
-        generators = foundGenerators;
-        accumulators = foundAccumulators;
+        // Every block stands for its energy owner (#292): a machine's hull for its controller, a
+        // slave engine for its master. The owner may lie outside this area; it is still the one the
+        // network draws, and it is kept once however many of its blocks are in here.
+        SupplyScan.Roles<BlockPos> roles = SupplyScan.classify(positions,
+                pos -> level.isLoaded(pos) && level.getBlockEntity(pos) instanceof EnergyOwner owned
+                        ? owned.planetaryfactory$energyOwner()
+                        : null,
+                pos -> role(level, pos));
+        consumers = roles.consumers();
+        generators = roles.generators();
+        accumulators = roles.accumulators();
+    }
+
+    private SupplyScan.Role role(Level level, BlockPos pos) {
+        if (pos.equals(getBlockPos()) || !level.isLoaded(pos) || handler(level, pos) == null) {
+            return SupplyScan.Role.NONE;
+        }
+        BlockState state = level.getBlockState(pos);
+        if (state.is(GENERATORS)) {
+            return SupplyScan.Role.GENERATOR;
+        }
+        return state.is(ACCUMULATORS) ? SupplyScan.Role.ACCUMULATOR : SupplyScan.Role.CONSUMER;
     }
 
     static EnergyHandler handler(Level level, BlockPos pos) {

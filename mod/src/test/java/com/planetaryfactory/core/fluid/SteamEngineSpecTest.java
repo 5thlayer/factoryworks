@@ -77,6 +77,30 @@ class SteamEngineSpecTest {
     }
 
     @Test
+    @DisplayName("a row drained by a pole every tick still makes N x 450 FE/t (#292)")
+    void drainedBufferSustainsTheRate() {
+        // The buffer is one tick of output and a millibucket is 300 FE, so the tick that burns the
+        // carried half millibucket overshoots the room. Cutting that burn to whole millibuckets
+        // held a row of three at 1,200 FE/t and a lone engine at 300 on a pole that drew it dry.
+        for (int n = 1; n <= 5; n++) {
+            // The first tick owes nothing yet, so it is left out; every tick after it is exact.
+            long room = SPEC.bufferCapacity(n);
+            SteamEngineSpec.Carry carry = SPEC.tick(SteamEngineSpec.PEAK_SPEED, n,
+                    SteamEngineSpec.Carry.NONE, room).carry();
+            long steam = 0;
+            for (int t = 0; t < SECOND; t++) {
+                SteamEngineSpec.Request asked = SPEC.request(SteamEngineSpec.PEAK_SPEED, n, carry, room);
+                SteamEngineSpec.Tick made =
+                        SPEC.burn(asked.steam(), SteamEngineSpec.PEAK_SPEED, asked.carry(), room);
+                assertEquals(450L * n, made.energy(), "tick " + t + " for a row of " + n);
+                steam += made.steam();
+                carry = made.carry();
+            }
+            assertEquals(30L * n, steam, "steam for a row of " + n);
+        }
+    }
+
+    @Test
     @DisplayName("a buffer with no room burns no steam")
     void fullBufferBurnsNothing() {
         SteamEngineSpec.Request asked = SPEC.request(SteamEngineSpec.PEAK_SPEED, 1,
@@ -85,15 +109,17 @@ class SteamEngineSpecTest {
     }
 
     @Test
-    @DisplayName("a buffer with partial room burns only the steam whose energy fits")
+    @DisplayName("a buffer with partial room burns no millibucket whose energy starts past it")
     void partialRoomCutsTheBurn() {
-        // 300 FE a millibucket at the peak: 450 FE of room takes one, not the two a carry asks for.
+        // 300 FE a millibucket at the peak: 250 FE of room takes one, not the two a carry asks for.
         SteamEngineSpec.Request asked = SPEC.request(SteamEngineSpec.PEAK_SPEED, 1,
-                new SteamEngineSpec.Carry(0.5, 0.0), 450L);
+                new SteamEngineSpec.Carry(0.5, 0.0), 250L);
         assertEquals(1, asked.steam());
-        SteamEngineSpec.Tick made = SPEC.burn(asked.steam(), SteamEngineSpec.PEAK_SPEED, asked.carry());
-        assertTrue(made.energy() <= 450L);
         assertEquals(0.0, asked.carry().steam());
+        SteamEngineSpec.Tick made =
+                SPEC.burn(asked.steam(), SteamEngineSpec.PEAK_SPEED, asked.carry(), 250L);
+        assertEquals(250L, made.energy());
+        assertEquals(50.0, made.carry().energy(), 1e-6, "the overshoot is owed, not destroyed");
     }
 
     @Test

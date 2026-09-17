@@ -28,7 +28,8 @@ side = "BOTH"
 
 # Optional, and Researchd is not here at all, because the 26.1.2 port removed every class that
 # touched either mod -- see `docs/port/blocked-removals-26.1.2.md`. Nothing in this jar imports
-# `rearth.oritech` outside `mixin/oritech/`, and the two mixins that named GregTech classes went
+# `rearth.oritech` outside `mixin/oritech/` and one GameTest class registered only when Oritech is
+# loaded, and the two mixins that named GregTech classes went
 # with their targets.
 #
 # These two blocks were `required` and were a load failure rather than a build one, which is the
