@@ -1,17 +1,32 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,fluid=water": {
       "model": "planetaryfactory:block/offshore_pump"
     },
-    "facing=east": {
+    "facing=north,fluid=lava": {
+      "model": "planetaryfactory:block/offshore_pump"
+    },
+    "facing=east,fluid=water": {
       "model": "planetaryfactory:block/offshore_pump",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,fluid=lava": {
+      "model": "planetaryfactory:block/offshore_pump",
+      "y": 90
+    },
+    "facing=south,fluid=water": {
       "model": "planetaryfactory:block/offshore_pump",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,fluid=lava": {
+      "model": "planetaryfactory:block/offshore_pump",
+      "y": 180
+    },
+    "facing=west,fluid=water": {
+      "model": "planetaryfactory:block/offshore_pump",
+      "y": 270
+    },
+    "facing=west,fluid=lava": {
       "model": "planetaryfactory:block/offshore_pump",
       "y": 270
     }

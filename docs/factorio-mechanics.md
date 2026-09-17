@@ -1380,7 +1380,8 @@ Sub-rules:
 
 Sub-rules:
 
-- **Lava is an infinite fluid resource** — `planned`. Needs a mechanism to treat lava as infinite.
+- **Lava is an infinite fluid resource** — `shipped` (#256). The Offshore Pump admits a lava source
+  and pumps lava at its one corpus rate (ADR-0050); what lies on Ignus to pump is the body's work.
 - **Molten metal as a fluid intermediate, and the foundry** — `planned`.
 - **Sulfuric acid geysers, and acid neutralisation to water** — `planned`. Its steam output is the
   second consumer of ADR-0033's **Steam Turbine**, which is why that row is not Terra-only.

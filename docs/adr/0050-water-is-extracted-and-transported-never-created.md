@@ -62,9 +62,32 @@ constraint a **block the player places** rather than a number in a config file.
 - **Power**: none. `energy_source: {"type": "void"}`. The `energy_usage: "60kW"` sitting beside it in
   the corpus has no consumer and is a display figure; it is named here because a future reader will
   find it and assume otherwise.
+- **Fluid** (amended by #256): the pump admits **water and lava**, and emits the fluid it was sited
+  on. See *Lava, and nothing else* below.
 - **Failure**: placement is **refused, with a message**, when no valid source adjoins. A pump that
   places and then silently produces nothing reaches the player as a dead factory three machines
   later, which is the failure mode the vein-indicator check exists to prevent.
+
+## Lava, and nothing else
+
+As first built, the predicate asked only `isSource()` and the pump always emitted water — so a pump
+against *any* source block made unlimited water, from a fluid the rule above never promised to
+conserve. #256 closed that, and Factorio decides the answer: on Vulcanus the offshore pump is what
+draws lava from the lake, unpowered and at the same `pumping_speed`. So:
+
+- **Water and lava are admitted.** A water source pumps water, a lava source pumps lava, at the one
+  corpus rate — it is one entity in Factorio, and nothing new is extracted.
+- **Every other source is refused.** Each planet has its own pumped fluid (heavy oil on Electra,
+  ammoniacal solution on Gelida) and each is its body's decision, not a default. Oil in particular
+  must stay refused: if the pack takes Oritech's finite oil springs, a pump that admitted oil would
+  make finite oil infinite.
+- **Water beside lava is refused**, with its own message. The pump reads all six faces, so the site
+  is reachable, and Factorio has no answer to which it should draw. Refusing is better than picking.
+- **The fluid is settled at placement**, as the site is — a blockstate property, so it survives a
+  save with no codec — and is not re-read while running.
+
+Conservation carries over as far as it holds for water: lava source conversion is off by vanilla
+default and no bucket is craftable, so lava sources are no easier to create than water ones.
 
 ## The ratio, which is the number that means something
 

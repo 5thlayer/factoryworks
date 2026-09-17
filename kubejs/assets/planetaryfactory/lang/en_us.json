@@ -80,7 +80,6 @@
   "tooltip.planetaryfactory.rig.jade.fuel": "Fuel: %s / %s J",
   "tooltip.planetaryfactory.rig.jade.no_ore": "Nothing left to mine",
   "block.planetaryfactory.offshore_pump": "Offshore Pump",
-  "message.planetaryfactory.offshore_pump.no_water": "An Offshore Pump must touch still water. Flowing water is not a source.",
   "fluid_type.planetaryfactory.steam": "Steam",
   "fluid_type.planetaryfactory.superheated_steam": "Superheated Steam",
   "block.planetaryfactory.boiler": "Boiler",
@@ -88,5 +87,7 @@
   "tooltip.planetaryfactory.boiler.fuel.seconds": "%s s at %s J/t",
   "tooltip.planetaryfactory.boiler.fuel.out": "Out of fuel",
   "tooltip.planetaryfactory.boiler.water": "Water: %s / %s mB",
-  "tooltip.planetaryfactory.boiler.steam": "Steam: %s / %s mB"
+  "tooltip.planetaryfactory.boiler.steam": "Steam: %s / %s mB",
+  "message.planetaryfactory.offshore_pump.no_source": "An Offshore Pump must touch still water or lava. Flowing fluid is not a source.",
+  "message.planetaryfactory.offshore_pump.mixed_source": "An Offshore Pump cannot touch both water and lava."
 }
