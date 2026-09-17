@@ -22,7 +22,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public final class PFNetwork {
 
     /** Bumped when a payload's shape changes; clients on the old shape are refused, not confused. */
-    private static final String VERSION = "4";
+    private static final String VERSION = "5";
 
     private PFNetwork() {
     }
@@ -37,6 +37,8 @@ public final class PFNetwork {
         registrar.playToClient(HandRecipeSetPacket.TYPE, HandRecipeSetPacket.STREAM_CODEC, HandRecipeSetPacket::handle);
         // Not the Assembler's: a data pack is server truth, and the fuel table has to reach a
         // client for an item to say what it is worth (ADR-0047).
+        // Not the Assembler's either: the wires a client draws (ADR-0068).
+        registrar.playToClient(PoleWiresPacket.TYPE, PoleWiresPacket.STREAM_CODEC, PoleWiresPacket::handle);
         registrar.playToClient(FuelTablePacket.TYPE, FuelTablePacket.STREAM_CODEC, FuelTablePacket::handle);
     }
 

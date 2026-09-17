@@ -75,6 +75,7 @@ public final class PlanetaryFactoryCore {
         // report and scan; without this line no pole moves any energy at all.
         NeoForge.EVENT_BUS.addListener(com.planetaryfactory.core.energy.ElectricNetworks::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.planetaryfactory.core.energy.ElectricNetworks::onLevelUnload);
+        NeoForge.EVENT_BUS.addListener(com.planetaryfactory.core.energy.LevelWires::onChunkSent);
         // Water is extracted and transported, never created (ADR-0050): re-asserted every server
         // start rather than defaulted once, because a player's own /gamerule toggle would otherwise
         // survive a reload.

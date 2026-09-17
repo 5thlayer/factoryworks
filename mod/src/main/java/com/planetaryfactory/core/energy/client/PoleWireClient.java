@@ -2,7 +2,6 @@ package com.planetaryfactory.core.energy.client;
 
 import com.planetaryfactory.core.PFBlockEntities;
 
-import com.planetaryfactory.core.energy.ClientPoles;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -19,7 +18,7 @@ public final class PoleWireClient {
 
     public static void register(IEventBus modBus) {
         modBus.addListener(PoleWireClient::registerRenderers);
-        NeoForge.EVENT_BUS.addListener(ClientPoles::onLevelUnload);
+        NeoForge.EVENT_BUS.addListener(com.planetaryfactory.core.energy.ClientWires::onLevelUnload);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
