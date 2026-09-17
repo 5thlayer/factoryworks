@@ -83,6 +83,12 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
                         + " at " + getBlockPos() + ", which is not a pole");
     }
 
+    /** This pole as {@link PoleLinks} sees it: where it stands and how far it reaches. */
+    public PoleLinks.Pole shape() {
+        BlockPos p = getBlockPos();
+        return new PoleLinks.Pole(p.getX(), p.getY(), p.getZ(), tier());
+    }
+
     /**
      * Whether this pole is an unlimited generator: the creative pole (#272). Read off the
      * blockstate, because a chunk load rebuilds a block entity from the type and never asks the
@@ -90,6 +96,22 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
      */
     public boolean isCreative() {
         return getBlockState().getBlock() instanceof CreativeSupplyAreaPoleBlock;
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (level != null && level.isClientSide()) {
+            ClientPoles.add(this);
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        if (level != null && level.isClientSide()) {
+            ClientPoles.remove(this);
+        }
+        super.setRemoved();
     }
 
     void serverTick() {

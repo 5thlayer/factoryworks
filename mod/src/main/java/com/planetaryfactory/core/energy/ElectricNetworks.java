@@ -124,8 +124,7 @@ public final class ElectricNetworks {
         List<SupplyAreaPoleBlockEntity> all = new ArrayList<>(poles.values());
         List<PoleLinks.Pole> shapes = new ArrayList<>(all.size());
         for (SupplyAreaPoleBlockEntity pole : all) {
-            BlockPos p = pole.getBlockPos();
-            shapes.add(new PoleLinks.Pole(p.getX(), p.getY(), p.getZ(), pole.tier()));
+            shapes.add(pole.shape());
         }
         int[] ids = PoleLinks.networks(shapes);
         List<List<SupplyAreaPoleBlockEntity>> built = new ArrayList<>();
