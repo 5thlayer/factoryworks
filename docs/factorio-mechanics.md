@@ -733,17 +733,21 @@ and the grid drives**, so the deciding half needs no recipe and the driven half 
 
 - **verdict**: `adapted`
 - **notice**: power reaches a machine in all-or-nothing ticks. A machine short of power stops
-  rather than slowing, and the long-distance pole has no supply area of its own.
+  rather than slowing, and nothing carries FE between areas except a wire between two poles.
 - **where**: all bodies
 - **via**: `planetaryfactory_core`, `oritech`
-- **owner**: ADR-0017 as amended by ADR-0035, ADR-0036 and ADR-0060
+- **owner**: ADR-0017 as amended by ADR-0035, ADR-0036, ADR-0060 and ADR-0062
 
-FE is the pack's only energy currency (ADR-0060), at **1 FE = 100 J**. Two carriers move it. The
-core's **supply-area pole** (ADR-0036) feeds every machine standing in its area, and **Oritech's
-Energy Transmission Pole** carries power between areas in the place of Factorio's big electric pole.
-Oritech's energy pipes and Enderic Laser are recipe-removed, so there is no third route; its Large
-Energy Storage stays, as the accumulator (ADR-0067). *Before ADR-0060 this row was Create: Power Grid's, with voltage drop, wire gauge and a
-brownout model; the mod left with Create.*
+FE is the pack's only energy currency (ADR-0060), at **1 FE = 100 J**. **One** carrier moves it: the
+core's **supply-area pole** (ADR-0036), which feeds every machine standing in its area, and which
+since ADR-0062 reaches other areas by linking to the poles within its wire reach — one network, one
+balance. ADR-0062 supersedes ADR-0060's two-carrier clause, and **Oritech's Energy Transmission
+Pole** left the power path with it (#284): like Oritech's energy pipes and its Enderic Laser, it is
+swept by ADR-0034's default-deny (`recipes.js` admits no Oritech surface), so it has no recipe and
+does not appear in EMI. Oritech still supplies the things that stand *in* an area rather than carry
+between them — the Steam Engine as generator, the Large Energy Storage as accumulator (ADR-0067) —
+which is why it remains under `via`. *Before ADR-0060 this row was Create: Power Grid's, with
+voltage drop, wire gauge and a brownout model; the mod left with Create.*
 
 Sub-rules:
 
@@ -761,7 +765,8 @@ Sub-rules:
   pole within the shorter of the two reaches -- 7.5, 9 and 18 blocks, Factorio's own -- and every
   linked pole is one network with one balance: generators first, accumulators second, only generator
   surplus charges. Reach is measured in three dimensions, which Factorio has no need to. The wire is
-  not yet drawn (#281). Oritech's transmission pole leaves the power path with #284.
+  not yet drawn (#281). Oritech's transmission pole left the power path with #284, so a wire between
+  two core poles is the only thing that crosses between areas.
 - **Poles wire themselves on placement, and the player adds or cuts wires by hand** — `planned`,
   #296, ADR-0068. A stored wire, not reach, joins two poles. Placement wires to up to 5 poles in
   reach that share no neighbour; the Engineer's Pick adds or cuts one wire at a time.
