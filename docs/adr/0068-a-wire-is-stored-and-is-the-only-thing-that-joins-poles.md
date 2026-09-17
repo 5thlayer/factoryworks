@@ -26,9 +26,11 @@ column, so adding or removing segments leaves the wire in place and only changes
 from. Breaking a pole deletes its wires. Worlds saved before this decision have no wires, and nothing
 migrates them (the pack is pre-release).
 
-**A column's wires survive a change of base.** The base position is the wire's key, not the column's
-identity, so a segment added below the base or a base broken with segments left above re-keys that
-column's wires to the new base rather than dropping them. Placing a pole under a standing pole of the
+**A column's wires survive a column growing downwards.** The base position is the wire's key, not the
+column's identity, so a segment added below the base re-keys that column's wires to the new base
+rather than dropping them. A base *broken* needs no such rule: breaking any segment drops the column
+above it, the chain and scaffolding idiom `SupplyAreaPoleBlock` implements, so a broken base leaves
+no column standing to re-key to and its wires go with it, as any broken pole's do. Placing a pole under a standing pole of the
 same tier is therefore an extension, and adds no wires of its own: a column that merely grew
 downwards is not a new pole. Where such a placement joins two columns into one, their wire sets
 merge, a wire that would now join the column to itself is dropped, and two wires to the same third

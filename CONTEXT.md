@@ -229,7 +229,7 @@ Every **Supply Area Pole** joined to another by a **Wire**, directly or through 
 _Avoid_: grid, power net, FE network
 
 **Wire**:
-A connection between two **Supply Area Pole**s that makes them one **Electric Network**. Only a wire joins poles: two poles within reach of each other but not wired are not connected. A wire can only exist between poles within wire reach. Placing a pole adds wires on its own, and the player adds or cuts one by hand with the **Engineer's Pick**. A wire belongs to its two poles and goes when either pole is broken — a column losing or gaining a segment, base included, is not a broken pole, and keeps its wires.
+A connection between two **Supply Area Pole**s that makes them one **Electric Network**. Only a wire joins poles: two poles within reach of each other but not wired are not connected. A wire can only exist between poles within wire reach. Placing a pole adds wires on its own, and the player adds or cuts one by hand with the **Engineer's Pick**. A wire belongs to its two poles and goes when either pole is broken — a column gaining a segment below its base is not a new pole and keeps its wires, while breaking any segment drops the column above it, so a broken base takes the whole column and its wires with it.
 _Avoid_: link, cable, connection
 
 **Placement Plan**:
