@@ -370,8 +370,9 @@ Sub-rules:
 - **verdict**: `planned`
 - **where**: Terra, Ignus, Gelida
 - **via**: `pack`
-- **owner**: ADR-0025 (the Oil Refinery and Chemical Plant are pack-authored GT machines)
-- **ticket**: #107
+- **owner**: ADR-0060 (the Oil Refinery and Chemical Plant are core subclasses of Oritech machines,
+  built by #258) and ADR-0067 (the oil fluids are Oritech's, retinted to Factorio's colours)
+- **ticket**: #258
 
 Sub-rules:
 
@@ -668,15 +669,13 @@ Sub-rules:
   substitution.
 - **Wireless signal over distance** — `shipped`, and better than Factorio's: Create's Redstone Link
   needs no wire and no relay, where Factorio needs a wire or a radar-linked circuit.
-- **Lamps and display panels as readouts** — `adapted`. Nixie Tubes and the Display Link for the
-  redstone-driven readout, and, since #148, **Power Grid's own devices for the placed hardware**:
-  `small-lamp` is the Light Fixture, `display-panel` the Modular Display, `power-switch` the
-  Contactor. They are grid-powered rather than signal-powered, which is the seam — redstone decides,
-  the grid drives.
-- **An alert that fires on a condition** — `adapted`, and the weakest row on this shelf. Factorio's
-  programmable speaker plays a chosen sound and raises a named alert; #148 borrows Power Grid's
-  **Alarm Bell**, which rings when powered. The trigger survives and the programmability does not —
-  one sound, no alert text, no per-signal selection.
+- **Lamps and display panels as readouts** — `adapted`. `small-lamp` is Oritech's Industrial Light;
+  `display-panel` is `not_emitted`, since the pack has no circuit network for it to show; and
+  `power-switch` is a core block joining two pole networks, #294's (#277). *Since #148 all three
+  were Power Grid's, which left with ADR-0060.*
+- **An alert that fires on a condition** — `excluded`. Factorio's programmable speaker raises an alert
+  on a circuit condition, and the pack has no circuit network; `programmable-speaker` is
+  `not_emitted` (#277). *#148 borrowed Power Grid's Alarm Bell, which left with ADR-0060.*
 - **Two independent networks on one wire (red and green)** — `excluded`. Redstone has one channel;
   the whole trick of running two circuits down one pole has no analogue.
 - **Circuit-controlled inserters and belts** — `unargued`, no verdict, and it depends on #102's
@@ -717,8 +716,8 @@ and the grid drives**, so the deciding half needs no recipe and the driven half 
 FE is the pack's only energy currency (ADR-0060), at **1 FE = 100 J**. Two carriers move it. The
 core's **supply-area pole** (ADR-0036) feeds every machine standing in its area, and **Oritech's
 Energy Transmission Pole** carries power between areas in the place of Factorio's big electric pole.
-Oritech's energy pipes, Enderic Laser and storage blocks are recipe-removed, so there is no third
-route. *Before ADR-0060 this row was Create: Power Grid's, with voltage drop, wire gauge and a
+Oritech's energy pipes and Enderic Laser are recipe-removed, so there is no third route; its Large
+Energy Storage stays, as the accumulator (ADR-0067). *Before ADR-0060 this row was Create: Power Grid's, with voltage drop, wire gauge and a
 brownout model; the mod left with Create.*
 
 Sub-rules:
@@ -785,9 +784,10 @@ Sub-rules:
   from any boiler or from anything else. The pack authors that step. The engine emits rotation and
   not electricity on purpose: an engine that fed a pole directly would route around every mechanic
   ADR-0036 selected Power Grid for.
-- **Solar panels and accumulators** — `planned`. The accumulator is the core's, at Factorio's 5 MJ
-  and 300 kW — 50,000 FE at 150 FE/t (ADR-0060) — and Oritech's storage blocks are recipe-removed.
-  *Before ADR-0060 both were Power Grid's (#148).* It is also
+- **Solar panels and accumulators** — `planned`. Both are Oritech's: `solar-panel` is the Big Solar
+  Panel and `accumulator` the Large Energy Storage, at Oritech's capacity rather than Factorio's 5 MJ
+  (ADR-0067, amending ADR-0060's core accumulator; #277). *Before ADR-0060 both were Power Grid's
+  (#148).* It is also
   the *planet* Electro's identity — see [Day and night cycle](#day-and-night-cycle).
 - **Steam as a stored, pipeable intermediate** — `planned` (#189), and **two fluids rather than
   one**. ADR-0048 registers low-temperature steam, which the Boiler makes and the Steam Engine eats,

@@ -1,0 +1,21 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 5
+    },
+    {
+      "ingredient": "belts:belt",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "id": "belts:improved_belt",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

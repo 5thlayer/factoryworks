@@ -39,7 +39,8 @@ GRADLE = ["./gradlew", ":planetaryfactory_core:runGameTestServer", "--rerun-task
 
 # A rejection the log is allowed to contain, and why. Two kinds, deliberately not merged: a defect
 # this repo owns and has deferred, and an id that only a KubeJS-installed game has. The GameTest
-# server is vanilla, the mod jar and FTB Materials (ADR-0061), so KubeJS's
+# server is vanilla, the mod jar, FTB Materials (ADR-0061), and Oritech, Railcraft Reborn and
+# SimpleBelts (#277), so KubeJS's
 # `StartupEvents.registry` items do not exist on it -- that is the harness, not the pack, and saying so is the whole reason the reasons are here.
 EXPECTED = {
     "planetaryfactory:blocks/yumako_log":
@@ -70,6 +71,23 @@ EXPECTED = {
         "names `planetaryfactory:steel_chest`, registered by KubeJS. Harness, not pack",
     "planetaryfactory:assembling/substation":
         "names `planetaryfactory:advanced_circuit`, registered by KubeJS. Harness, not pack",
+    # #277: recipes whose result is an Oritech, Railcraft or SimpleBelts block -- those jars are on
+    # the harness, so the result id loads -- but whose ingredients are KubeJS intermediates.
+    "planetaryfactory:assembling/accumulator":
+        "names `planetaryfactory:battery`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/engine_unit":
+        "makes `planetaryfactory:engine_unit`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/electric_engine_unit":
+        "makes `planetaryfactory:electric_engine_unit` from `engine_unit` and "
+        "`electronic_circuit`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/rail_signal":
+        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/small_lamp":
+        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/solar_panel":
+        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/train_stop":
+        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
     "planetaryfactory:blocks/copper_stromatolite":
         "drops `planetaryfactory:copper_bacteria_fresh` (KubeJS, harness) AND `gcyr:mercury_rock` "
         "-- the same dangling drop (#258, #23)",

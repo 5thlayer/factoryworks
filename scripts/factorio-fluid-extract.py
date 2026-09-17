@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract Factorio's fluid prototypes -- the two thermal constants ADR-0050's ratio needs.
+"""Extract Factorio's fluid prototypes -- the thermal constants ADR-0050's ratio needs, and colours.
 
 `#210` closes a gap the machine extractor left: `machine.json`'s boiler carries
 `target_temperature` and `energy_consumption`, but the two terms that turn those into a
@@ -15,7 +15,12 @@ read off that file rather than hardcoded here, so the scope tracks the boiler ra
 drifting from it. Widening to all 33 fluids in the dump would carry 31 rows nothing reads
 and would make it look like fluid crafting is in scope, which #210 does not touch.
 
-Two fields per fluid, nothing else: `heat_capacity` and `default_temperature`. Both are
+**Widened once, for colour (#277).** The fluids `data/pack/item-map.json` maps are in scope too,
+read off that file's `kind: fluid` rows, so `scripts/build-fluid-tints.py` can render each borrowed
+fluid in Factorio's `base_color` rather than a colour somebody picked. Still read, not typed: a fluid
+the map stops mapping drops out of the corpus with it.
+
+Four fields per fluid: `heat_capacity`, `default_temperature`, `base_color` and `flow_color`. Both are
 read raw off the prototype -- `heat_capacity` is Factorio's SI string (`0.2kJ`), kept
 alongside its parsed joule value the same way `fuel.json` keeps `fuel_value_raw`, so the
 check can show its work rather than trust a parse.
@@ -74,6 +79,21 @@ def scope_from_machine(machine_path):
     return names
 
 
+def scope_from_item_map(item_map_path):
+    """The Factorio fluids the item map borrows or authors a target for (#277)."""
+    rows = json.loads(item_map_path.read_text(encoding="utf-8"))["items"]
+    return {name for name, row in rows.items() if row.get("kind") == "fluid"}
+
+
+def colour(value):
+    """Factorio's colour as `[r, g, b]` floats; a table keyed `r`/`g`/`b` is normalised to that."""
+    if value is None:
+        return None
+    if isinstance(value, dict):
+        value = [value.get("r", 0), value.get("g", 0), value.get("b", 0)]
+    return [float(c) for c in value[:3]]
+
+
 def extract_fluids(dump, scope):
     fluids = []
     for name, prototype in sorted((dump.get("fluid") or {}).items()):
@@ -85,6 +105,8 @@ def extract_fluids(dump, scope):
                 "heat_capacity": joules(prototype.get("heat_capacity")),
                 "heat_capacity_raw": prototype.get("heat_capacity"),
                 "default_temperature": prototype.get("default_temperature"),
+                "base_color": colour(prototype.get("base_color")),
+                "flow_color": colour(prototype.get("flow_color")),
             }
         )
     return fluids
@@ -99,6 +121,12 @@ def main():
         type=Path,
         default=REPO / "data" / "factorio" / "machine.json",
         help="the scope: fluids named by the boiler's own fluid box filters",
+    )
+    parser.add_argument(
+        "--item-map",
+        type=Path,
+        default=REPO / "data" / "pack" / "item-map.json",
+        help="the colour scope: the fluids the pack maps (#277)",
     )
     args = parser.parse_args()
 
@@ -115,6 +143,7 @@ def main():
     if not scope:
         sys.exit("the boiler in machine.json declares no fluid filters -- nothing to scope on")
 
+    scope |= {name for name in scope_from_item_map(args.item_map) if name in dump.get("fluid", {})}
     fluids = extract_fluids(dump, scope)
     missing = scope - {f["name"] for f in fluids}
     if missing:
@@ -124,13 +153,13 @@ def main():
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
 
-    print(f"{len(fluids)} fluids, scoped from the boiler's own fluid boxes: {sorted(scope)}")
+    print(f"{len(fluids)} fluids, scoped from the boiler's fluid boxes and the item map: {sorted(scope)}")
     print(f"wrote      {args.out.relative_to(REPO)}\n")
     for fluid in fluids:
-        print(
-            f"  {fluid['name']:10} {fluid['heat_capacity_raw']:>8} = {fluid['heat_capacity']:6.1f} J  "
-            f"default {fluid['default_temperature']}C"
-        )
+        heat = ("%8s = %6.1f J" % (fluid["heat_capacity_raw"], fluid["heat_capacity"])
+                if fluid["heat_capacity"] is not None else "%19s" % "(prototype default)")
+        print(f"  {fluid['name']:14} {heat}  default {fluid['default_temperature']}C  "
+              f"colour {fluid['base_color']}")
 
 
 if __name__ == "__main__":

@@ -222,11 +222,14 @@ effect recording the rule that produced them.
   `machine.json`'s boiler already declares in its own fluid boxes (`water` in, `steam`
   out), read off that file rather than typed here, so a future boiler change widens the
   scope with it instead of this file drifting from it. It is not a general fluid corpus —
-  widening to the dump's other 31 fluids would carry rows nothing reads.
+  widening to the dump's other fluids would carry rows nothing reads. #277 widened it once, to
+  the fluids `data/pack/item-map.json` maps, read off its `kind: fluid` rows, so
+  `scripts/build-fluid-tints.py` can draw each borrowed fluid in Factorio's colour.
 
   Per fluid: `name`, `heat_capacity` in joules, `heat_capacity_raw` (Factorio's own
   `0.2kJ`/`2kJ` string, kept the way `fuel.json` keeps `fuel_value_raw` so the check can
-  re-derive rather than trust the parse), and `default_temperature`.
+  re-derive rather than trust the parse), `default_temperature`, and `base_color` and
+  `flow_color` as `[r, g, b]` on [0, 1]. The oil fluids state no `heat_capacity`, so theirs is null.
 
   **`water.heat_capacity` is a red herring.** It is `2kJ`, six times steam's `0.2kJ`, and it
   is *not* the term the boiler's arithmetic reads — see ADR-0050's "the ratio, which is the

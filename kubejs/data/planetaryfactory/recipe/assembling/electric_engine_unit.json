@@ -1,0 +1,27 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "planetaryfactory:engine_unit",
+      "count": 1
+    },
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 2
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_biofuel",
+      "amount": 15
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:electric_engine_unit",
+      "count": 1
+    }
+  ],
+  "time": 200
+}

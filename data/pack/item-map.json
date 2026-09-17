@@ -28,7 +28,7 @@
     "",
     "A row may carry `blocked_by`, the ticket that makes its target LOADABLE: a first-party item",
     "`planetaryfactory_core` has not registered yet, or a borrowed one whose mod is not installed on",
-    "26.1.2 (#277's machines and oil fluids, #251's Researchd). The target is kept as the standing",
+    "26.1.2 (#258's machines, #251's Researchd). The target is kept as the standing",
     "proposal. The converter skips every recipe touching one, so nothing is emitted that the game",
     "rejects at load (#279).",
     "",
@@ -42,10 +42,9 @@
   "items": {
     "accumulator": {
       "kind": "item",
-      "target": "powergrid:battery",
+      "target": "oritech:large_storage",
       "source": "borrowed",
-      "note": "Moved with the mod by #148. Electro's accumulator was named identically; Power Grid's is the Battery -- a placed block that stores electricity, which is what Factorio's accumulator is. `portable_battery` is worn, `capacitor` is a circuit component and `potato_battery` is a joke, so `battery` is the only candidate that is a grid buffer.",
-      "blocked_by": 277
+      "note": "Oritech's Large Energy Storage (#277, ADR-0067, amending ADR-0060's core accumulator). Borrowed rather than authored at Factorio's 5 MJ: the capacity is Oritech's."
     },
     "advanced-circuit": {
       "kind": "item",
@@ -59,24 +58,24 @@
     },
     "assembling-machine-1": {
       "kind": "item",
-      "target": "gtceu:lv_assembling_machine",
-      "source": "borrowed",
-      "note": "ADR-0026's machine, registered through GregTech's registrate -- so the id is `gtceu:` and the tier is a prefix, not a numeral (machines.js).",
-      "blocked_by": 277
+      "target": "planetaryfactory:assembling_machine",
+      "source": "authored",
+      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #258's, so the row is blocked on it. It reads `planetaryfactory:assembling` rather than Oritech's assembler type (ADR-0063).",
+      "blocked_by": 258
     },
     "assembling-machine-2": {
       "kind": "item",
-      "target": "gtceu:mv_assembling_machine",
-      "source": "borrowed",
-      "note": "As `assembling-machine-1`.",
-      "blocked_by": 277
+      "target": "planetaryfactory:assembling_machine_2",
+      "source": "authored",
+      "note": "Standing proposal only. Oritech tiers a machine with addons rather than with a second machine item, so whether this tier is a core block at Factorio's speed or Oritech's Speed Addon is #295's (#277). Blocked rather than `undecided` so the research that unlocks it stays a recorded deferral.",
+      "blocked_by": 295
     },
     "assembling-machine-3": {
       "kind": "item",
-      "target": "gtceu:hv_assembling_machine",
-      "source": "borrowed",
-      "note": "As `assembling-machine-1`.",
-      "blocked_by": 277
+      "target": "planetaryfactory:assembling_machine_3",
+      "source": "authored",
+      "note": "Standing proposal only. Oritech tiers a machine with addons rather than with a second machine item, so whether this tier is a core block at Factorio's speed or Oritech's Speed Addon is #295's (#277). Blocked rather than `undecided` so the research that unlocks it stays a recorded deferral.",
+      "blocked_by": 295
     },
     "asteroid-collector": {
       "status": "undecided",
@@ -184,10 +183,10 @@
     },
     "chemical-plant": {
       "kind": "item",
-      "target": "gtceu:lv_chemical_plant",
-      "source": "borrowed",
-      "note": "ADR-0025's Chemical Plant, registered by #107 through GregTech's registrate -- so the id is `gtceu:` and the tier is a prefix. There is no second tier to add (ADR-0025: one tier, one recipe set); the prefix is the chassis's, not a ladder.",
-      "blocked_by": 277
+      "target": "planetaryfactory:chemical_plant",
+      "source": "authored",
+      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #258's, so the row is blocked on it. Not Oritech's Centrifuge: ADR-0060 recipe-removes it as ore-doubling.",
+      "blocked_by": 258
     },
     "chemical-science-pack": {
       "kind": "item",
@@ -240,10 +239,9 @@
     },
     "crude-oil": {
       "kind": "fluid",
-      "target": "gtceu:raw_oil",
+      "target": "oritech:still_oil",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang override to \"Crude Oil\".",
-      "blocked_by": 277
+      "note": "Oritech's crude oil, the input of its Refinery's `oilbase` recipe (#277). Its near-black already reads as Factorio's. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
     },
     "crude-oil-barrel": {
       "status": "native_mechanic",
@@ -264,11 +262,8 @@
       "ticket": 135
     },
     "display-panel": {
-      "kind": "item",
-      "target": "powergrid:modular_display",
-      "source": "borrowed",
-      "note": "Factorio's display panel shows a signal as an icon or text. Power Grid's Modular Display is a segmented panel you slot digit, letter, hex and symbol modules into, which is the same job. The CRT is the other candidate and is rejected: it needs 12 V on a heater, ~1000 V on the anode and deflection coils to steer a dot, so it is a subsystem rather than a panel. `display_module` is a component OF the Modular Display, not a placed block. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Create's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not.",
-      "blocked_by": 277
+      "status": "not_emitted",
+      "note": "`not_emitted` by #277. A display panel exists to show a circuit-network signal; the pack has no circuit network, which is why `arithmetic-combinator` is `not_emitted`, and ADR-0030 supplies the capability from vanilla. Power Grid, whose block this row named, left with ADR-0060, and Oritech ships nothing that shows a signal (#277)."
     },
     "electric-engine-unit": {
       "kind": "item",
@@ -314,8 +309,9 @@
       "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "express-transport-belt": {
-      "status": "native_mechanic",
-      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "status": "undecided",
+      "note": "SimpleBelts ships exactly `belts:belt`, `belts:improved_belt`, `belts:chute` and `belts:conveyor_support`: two belt tiers, no splitter, no underground. The row read `native_mechanic` on Create's RPM-driven belt, and Create left with ADR-0060 (#277). #261's fork adds throughput tiers and splitters, and owns this row.",
+      "ticket": 261
     },
     "express-underground-belt": {
       "status": "native_mechanic",
@@ -331,8 +327,10 @@
       "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "fast-transport-belt": {
-      "status": "native_mechanic",
-      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "kind": "item",
+      "target": "belts:improved_belt",
+      "source": "borrowed",
+      "note": "SimpleBelts' Improved Conveyor Belt, tier two of its two (#277). The row read `native_mechanic` on Create's RPM-driven belt; Create left with ADR-0060, and SimpleBelts has a second belt item for it to land on."
     },
     "fast-underground-belt": {
       "status": "native_mechanic",
@@ -407,10 +405,9 @@
     },
     "heavy-oil": {
       "kind": "fluid",
-      "target": "gtceu:heavy_oil",
+      "target": "oritech:still_heavy_oil",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang already verbatim Factorio. ADR-0009 binds Electro's oceans to this fluid.",
-      "blocked_by": 277
+      "note": "The heaviest of the three fractions Oritech's Refinery splits oil into -- 1000 oil to 500 heavy oil, 250 naphtha and 250 diesel, Factorio's own three-way shape (#277). Oritech draws it near-black; Factorio's is dark orange, so it is retinted. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
     },
     "heavy-oil-barrel": {
       "status": "native_mechanic",
@@ -475,10 +472,9 @@
     },
     "light-oil": {
       "kind": "fluid",
-      "target": "gtceu:light_oil",
+      "target": "oritech:still_naphtha",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang already verbatim Factorio.",
-      "blocked_by": 277
+      "note": "The middle fraction: Oritech's Light Naphtha (#277). Its orange already reads as Factorio's light oil. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
     },
     "light-oil-barrel": {
       "status": "native_mechanic",
@@ -517,10 +513,9 @@
     },
     "lubricant": {
       "kind": "fluid",
-      "target": "gtceu:lubricant",
+      "target": "oritech:still_biofuel",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang unchanged.",
-      "blocked_by": 277
+      "note": "Oritech ships no lubricant, so this borrows the Oritech fluid whose colour is Factorio's lubricant green: Biofuel (#277). It keeps Oritech's name and its Oritech uses -- a fuel -- which is the price of borrowing rather than authoring a fluid under ADR-0031. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
     },
     "lubricant-barrel": {
       "status": "native_mechanic",
@@ -566,10 +561,10 @@
     },
     "oil-refinery": {
       "kind": "item",
-      "target": "kubejs:oil_refinery",
-      "source": "borrowed",
-      "note": "ADR-0025's Oil Refinery, a MULTIBLOCK (#107) -- and GregTech's model provider does not serve the `kubejs:` namespace the multiblock builder lands in, which is why this id differs from the Chemical Plant's. Not tiered.",
-      "blocked_by": 277
+      "target": "planetaryfactory:oil_refinery",
+      "source": "authored",
+      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #258's, so the row is blocked on it. Its Oritech parent is the Refinery, whose three fractions are the oil fluid rows.",
+      "blocked_by": 258
     },
     "oxide-asteroid-chunk": {
       "status": "undecided",
@@ -588,10 +583,9 @@
     },
     "petroleum-gas": {
       "kind": "fluid",
-      "target": "gtceu:oil",
+      "target": "oritech:still_diesel",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. Lang override to \"Petroleum Gas\". Registered `.liquid()`; fluid state has no mechanical consequence here.",
-      "blocked_by": 277
+      "note": "The third fraction: Oritech's Diesel (#277). NOT A GAS -- a knowing departure that keeps the three-fraction shape the oil recipes are about. Oritech draws it olive-yellow and no Oritech fluid is purple, so it is retinted to Factorio's. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
     },
     "petroleum-gas-barrel": {
       "status": "native_mechanic",
@@ -604,10 +598,9 @@
     },
     "pipe": {
       "kind": "item",
-      "target": "create:fluid_pipe",
+      "target": "oritech:fluid_pipe",
       "source": "borrowed",
-      "note": "As `storage-tank`.",
-      "blocked_by": 277
+      "note": "Oritech's Fluid Pipe (#277): ADR-0060 makes Oritech the pack's tech mod, and its pipe is the plain placed pipe Factorio's is."
     },
     "pipe-to-ground": {
       "status": "not_emitted",
@@ -626,10 +619,10 @@
     },
     "power-switch": {
       "kind": "item",
-      "target": "powergrid:contactor",
-      "source": "borrowed",
-      "note": "Factorio's power switch cuts or joins two electrical networks on a control signal. Power Grid's Contactor is that exact device -- its own ponder calls it a heavy-duty relay that 'lets you switch high currents with a lower voltage input'. The LV/MV/HV Switches are rejected because they are toggled by hand or by a kinetic input rather than by a signal, which makes them a lever and not a switch the factory operates. Redstone reaches the Contactor's coil through Power Grid's own Redstone Converter, so ADR-0030's redstone-is-the-wire answer still supplies the control side. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Create's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not.",
-      "blocked_by": 277
+      "target": "planetaryfactory:power_switch",
+      "source": "authored",
+      "note": "Joins or cuts two pole networks. #277 proposed `oritech:flux_gate`, which is a crafting item rather than a block, and Oritech ships no switch; a first-party block on the core's poles (ADR-0062), #294's.",
+      "blocked_by": 294
     },
     "processing-unit": {
       "kind": "item",
@@ -653,18 +646,15 @@
       "ticket": 120
     },
     "programmable-speaker": {
-      "kind": "item",
-      "target": "powergrid:alarm_bell",
-      "source": "borrowed",
-      "note": "ADAPTED, and the weakest of the four. Factorio's programmable speaker plays a chosen sound and raises a named alert on a circuit condition; Power Grid's Alarm Bell rings, once, when powered. The trigger survives -- a condition makes a noise -- and the programmability does not. It is borrowed anyway because the alternative is `not_emitted`, and an alarm that rings on a condition is most of what the row is for in play. `docs/factorio-mechanics.md` carries the notice. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Create's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not.",
-      "blocked_by": 277
+      "status": "not_emitted",
+      "note": "`not_emitted` by #277. A programmable speaker raises an alert on a circuit condition; the pack has no circuit network, which is why `arithmetic-combinator` is `not_emitted`, and ADR-0030 supplies the capability from vanilla. Power Grid, whose block this row named, left with ADR-0060, and Oritech ships nothing that shows a signal (#277)."
     },
     "pump": {
       "kind": "item",
-      "target": "create:mechanical_pump",
-      "source": "borrowed",
-      "note": "As `storage-tank`.",
-      "blocked_by": 277
+      "target": "planetaryfactory:pump",
+      "source": "authored",
+      "note": "Factorio's in-line pump. Not `oritech:pump`, which drains fluid from the world rather than moving it along a pipe (#277). A first-party block, #293's; `offshore-pump` is already first-party (ADR-0050).",
+      "blocked_by": 293
     },
     "pumpjack": {
       "status": "undecided",
@@ -680,10 +670,9 @@
     },
     "rail": {
       "kind": "item",
-      "target": "create:track",
+      "target": "minecraft:rail",
       "source": "borrowed",
-      "note": "Create's train track, not `minecraft:rail`: ADR-0017's train row is Create's network (#108).",
-      "blocked_by": 277
+      "note": "Vanilla rail (#277): Factorio's rail is the placed straight track, `minecraft:rail` is inside the closed input alphabet, and Railcraft Reborn builds on vanilla rails -- `railcraft:standard_rail` is a crafting component, not a track."
     },
     "rail-chain-signal": {
       "status": "undecided",
@@ -692,10 +681,9 @@
     },
     "rail-signal": {
       "kind": "item",
-      "target": "create:track_signal",
+      "target": "railcraft:block_signal",
       "source": "borrowed",
-      "note": "Create's track signal, placed ON the track rather than spliced into it -- the same affordance as Factorio's, which is also placed beside the rail. It follows its shelf rather than its ingredients (subgroup-owner.json). Create's own recipe is `railway_casing` + `electron_tube`, and the electron tube is redstone-bound, so on Terra that recipe is unbuildable and this one replaces it (#62, #143).",
-      "blocked_by": 277
+      "note": "Railcraft Reborn's Block Signal (#277): it watches a block of track for carts, which is Factorio's rail signal."
     },
     "refined-concrete": {
       "kind": "item",
@@ -756,17 +744,15 @@
     },
     "small-lamp": {
       "kind": "item",
-      "target": "powergrid:light_fixture",
+      "target": "oritech:industrial_light",
       "source": "borrowed",
-      "note": "Factorio's small lamp is a single placed, powered light. Power Grid's Light Fixture is the plainest of its lamps and the only one that is just a lamp: `factory_light` is a housing you right-click a bulb into, `growth_lamp` is a crop bulb, and `ceiling_tile_lamp` belongs to the ceiling-tile system. ADR-0030 keeps the MECHANIC -- Factorio's circuit network is vanilla redstone plus Create's redstone line -- and left which BLOCK each row names to `data/pack/subgroup-owner.json`, whose `logistics/circuit-network` shelf #148 splits: the four rows naming a physical device the network drives borrow a Power Grid block, the four combinators do not.",
-      "blocked_by": 277
+      "note": "Oritech's Industrial Light, the plain placed light (#277)."
     },
     "solar-panel": {
       "kind": "item",
-      "target": "powergrid:solar_panel",
+      "target": "oritech:big_solar_panel",
       "source": "borrowed",
-      "note": "ADR-0017's solar row, borrowed whole (#148's swap; recorded after that ticket closed). Power Grid's Solar Panel is a real-PV panel whose output follows the light it actually receives, which is what Factorio's does, so the row is a 1:1 transcription rather than a judgement. It sits beside `steam-engine`, which is `not_emitted` for the opposite reason: solar is ONE placed block in both games, and the grid mod's steam generator is not.",
-      "blocked_by": 277
+      "note": "Oritech's Big Solar Panel (#277). Its FE reaches the grid through a core pole, which pulls from Oritech generators (ADR-0062)."
     },
     "solar-panel-equipment": {
       "status": "undecided",
@@ -800,8 +786,9 @@
       "ticket": 120
     },
     "splitter": {
-      "status": "native_mechanic",
-      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "status": "undecided",
+      "note": "SimpleBelts ships exactly `belts:belt`, `belts:improved_belt`, `belts:chute` and `belts:conveyor_support`: two belt tiers, no splitter, no underground. The row read `native_mechanic` on Create's RPM-driven belt, and Create left with ADR-0060 (#277). #261's fork adds throughput tiers and splitters, and owns this row.",
+      "ticket": 261
     },
     "steam-engine": {
       "kind": "item",
@@ -863,10 +850,9 @@
     },
     "storage-tank": {
       "kind": "item",
-      "target": "create:fluid_tank",
+      "target": "oritech:portable_tank",
       "source": "borrowed",
-      "note": "Create owns bulk fluid storage on Terra (ADR-0017, #106). FIDELITY NOTE: a Factorio storage tank is one 3x3 unit of a fixed size, while Create's tanks are stacked into a multiblock whose capacity is however many blocks you place -- so one craft is one block, not one tank. Accepted: the recipe is the corpus's, and the capacity model is Create's.",
-      "blocked_by": 277
+      "note": "Oritech's Portable Tank, its one placeable fluid tank (#277). Railcraft's tanks are a coloured multiblock with no single item. FIDELITY NOTE: a Factorio storage tank is a 3x3 of a fixed size; this is one block with Oritech's capacity. Accepted: the recipe is the corpus's, the capacity Oritech's."
     },
     "submachine-gun": {
       "status": "undecided",
@@ -887,10 +873,9 @@
     },
     "sulfuric-acid": {
       "kind": "fluid",
-      "target": "gtceu:sulfuric_acid",
+      "target": "oritech:still_sulfuric_acid",
       "source": "borrowed",
-      "note": "ADR-0025's fluid-id table, which the pack takes from GregTech. GregTech's acid.",
-      "blocked_by": 277
+      "note": "Oritech's Sulfuric Acid (#277). Oritech draws it bright green; Factorio's is yellow, so it is retinted. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
     },
     "sulfuric-acid-barrel": {
       "status": "native_mechanic",
@@ -898,21 +883,20 @@
     },
     "train-stop": {
       "kind": "item",
-      "target": "create:track_station",
+      "target": "railcraft:iron_buffer_stop_track",
       "source": "borrowed",
-      "note": "Create's station: the block a train is routed to and scheduled at, which is what a Factorio train stop is. Create's own recipe is `railway_casing` + a compass and goes with the stock sweep (#143).",
-      "blocked_by": 277
+      "note": "Railcraft Reborn's Iron Buffer Stop Track (#277): the end of the line a train is stopped at. ADAPTED -- Factorio's stop is also a schedule target by name, which a buffer stop is not."
     },
     "transport-belt": {
       "kind": "item",
-      "target": "create:belt_connector",
+      "target": "belts:belt",
       "source": "borrowed",
-      "note": "Create's belt item. ADR-0017 gives Create item logistics; #93 keeps the recipe on `pack:assembling`.",
-      "blocked_by": 277
+      "note": "SimpleBelts' Conveyor Belt, tier one of its two (#277). ADR-0060 gives item logistics to the SimpleBelts fork, which #261 builds out."
     },
     "underground-belt": {
-      "status": "native_mechanic",
-      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "status": "undecided",
+      "note": "SimpleBelts ships exactly `belts:belt`, `belts:improved_belt`, `belts:chute` and `belts:conveyor_support`: two belt tiers, no splitter, no underground. The row read `native_mechanic` on Create's RPM-driven belt, and Create left with ADR-0060 (#277). #261's fork adds throughput tiers and splitters, and owns this row.",
+      "ticket": 261
     },
     "uranium-235": {
       "status": "undecided",

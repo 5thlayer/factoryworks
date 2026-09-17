@@ -1,0 +1,21 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "planetaryfactory:stone_furnace",
+      "count": 1
+    },
+    {
+      "ingredient": "oritech:fluid_pipe",
+      "count": 4
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:boiler",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

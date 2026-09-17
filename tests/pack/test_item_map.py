@@ -22,10 +22,10 @@ TWO ASSERTIONS, AND THE SECOND IS WHY THIS FILE EXISTS (#275, ADR-0061).
    EMI entries and a recipe that takes whichever it feels like. A tag with exactly one populating
    jar stays legal, which is what keeps `#c:raw_materials/iron` doing its job.
 
-WHAT A DEFERRAL IS. The rows #277 and #251 own cannot resolve until those tickets land, so they are
+WHAT A DEFERRAL IS. The rows #258, #293, #294, #295 and #251 own cannot resolve until those tickets land, so they are
 listed in DEFERRED with the ticket that owns each, in `scripts/check-datapack-load.py`'s idiom: an
 unlisted failure fails, and a LISTED row that now resolves fails too. The guard re-arms one row at a
-time rather than the assertion being weakened, and #277 deletes an entry as it decides each row.
+time rather than the assertion being weakened, and each ticket deletes its entry as its block lands.
 
 HOW A TARGET IS RESOLVED. By the lang key its namespace's jar ships, which is what
 `test_starting_kit.py` uses and the only registry evidence a static check has. Three namespaces are
@@ -59,37 +59,29 @@ DEAD_SUBTREES = ("gtceu", "gt_materials", "gcyr")
 
 # A row whose target cannot resolve yet, and the ticket that owns it. Deleting an entry is part of
 # that ticket's fix -- a stale one is a guard nobody re-armed.
-MACHINES_AND_BLOCKS = (
-    "names a mod ADR-0060 removed. It is a machine, block or oil fluid rather than a material "
-    "form, so ADR-0061 does not answer it: #277 owns this row")
+CHASSIS = (
+    "names a `planetaryfactory_core` subclass of an Oritech machine (ADR-0060) that #277 decided and "
+    "the chassis has not built yet: #258 owns this row")
+TIERS = (
+    "names a proposed core tier of the Assembling Machine; whether the tier is a block or Oritech's "
+    "Speed Addon is undecided, and #295 owns this row")
+PUMP = (
+    "names the first-party in-line pump, since Oritech's Pump drains the world rather than a pipe: "
+    "#293 owns this row")
+POWER_SWITCH = (
+    "names the first-party power switch, since Oritech ships none and its Flux Gate is an item: "
+    "#294 owns this row")
 SCIENCE = (
     "names the Researchd fork, which is still on 1.21.1 and therefore not in `mods/`. #251 owns "
     "the port; the row itself is not in question")
 DEFERRED = {
-    "accumulator": MACHINES_AND_BLOCKS,
-    "assembling-machine-1": MACHINES_AND_BLOCKS,
-    "assembling-machine-2": MACHINES_AND_BLOCKS,
-    "assembling-machine-3": MACHINES_AND_BLOCKS,
-    "chemical-plant": MACHINES_AND_BLOCKS,
-    "crude-oil": MACHINES_AND_BLOCKS,
-    "display-panel": MACHINES_AND_BLOCKS,
-    "heavy-oil": MACHINES_AND_BLOCKS,
-    "light-oil": MACHINES_AND_BLOCKS,
-    "lubricant": MACHINES_AND_BLOCKS,
-    "oil-refinery": MACHINES_AND_BLOCKS,
-    "petroleum-gas": MACHINES_AND_BLOCKS,
-    "pipe": MACHINES_AND_BLOCKS,
-    "power-switch": MACHINES_AND_BLOCKS,
-    "programmable-speaker": MACHINES_AND_BLOCKS,
-    "pump": MACHINES_AND_BLOCKS,
-    "rail": MACHINES_AND_BLOCKS,
-    "rail-signal": MACHINES_AND_BLOCKS,
-    "small-lamp": MACHINES_AND_BLOCKS,
-    "solar-panel": MACHINES_AND_BLOCKS,
-    "storage-tank": MACHINES_AND_BLOCKS,
-    "sulfuric-acid": MACHINES_AND_BLOCKS,
-    "train-stop": MACHINES_AND_BLOCKS,
-    "transport-belt": MACHINES_AND_BLOCKS,
+    "assembling-machine-1": CHASSIS,
+    "assembling-machine-2": TIERS,
+    "assembling-machine-3": TIERS,
+    "chemical-plant": CHASSIS,
+    "oil-refinery": CHASSIS,
+    "pump": PUMP,
+    "power-switch": POWER_SWITCH,
     "automation-science-pack": SCIENCE,
     "chemical-science-pack": SCIENCE,
     "logistic-science-pack": SCIENCE,
@@ -107,8 +99,8 @@ REMOVED_BY_ADR_0060 = ("gtceu", "create", "powergrid", "gcyr", "modern_industria
 TAG_WINNERS = {}
 
 # The lang prefixes a registered thing can be named under. A fluid's bucket is an item; the fluid
-# itself is a `fluid_type`.
-PREFIXES = ("item", "block", "fluid_type")
+# itself is a `fluid_type`, or -- Oritech's spelling, keyed by the fluid's own id -- a `fluid`.
+PREFIXES = ("item", "block", "fluid_type", "fluid")
 
 
 @functools.lru_cache(maxsize=None)
@@ -264,8 +256,8 @@ class ItemMapTargetsResolve(unittest.TestCase):
         """The namespaces are named outright, because a removed mod's id resolving is impossible.
 
         `test_every_target_resolves_or_is_a_recorded_deferral` would catch these too, via DEFERRED
-        -- but only until #277 lands. This assertion is what stops #277 answering a row by putting
-        `gtceu:` back.
+        -- but only while a row is deferred. This assertion is what stops a deferred row being answered
+        by putting `gtceu:` back.
         """
         for name, target in self.targets():
             namespace = target.split(":")[0]

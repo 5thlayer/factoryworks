@@ -77,9 +77,17 @@ dependencies {
     //
     // On `runtimeClasspath` only, through its own configuration: `runtimeOnly` would also land on
     // `test`'s classpath, making `mods/` an input of a task `installToPack` writes into.
+    //
+    // Oritech, Railcraft Reborn and SimpleBelts join it for the same reason (#277): the emitted
+    // assembling recipes name their pipes, signals and belts, and a server without the jars rejects
+    // every one of them, which would leave this check unable to tell a real id from a typo. Athena,
+    // GeckoLib and Architectury are what those three require to load.
     devRunMods fileTree(
             dir: rootProject.file('mods'),
-            include: ['ftb-materials-*.jar', 'ftb-library-neoforge-*.jar'])
+            include: ['ftb-materials-*.jar', 'ftb-library-neoforge-*.jar',
+                      'oritech-*.jar', 'athena-*.jar', 'geckolib-neoforge-*.jar',
+                      'railcraft-reborn-*.jar', 'belts-neoforge-*.jar',
+                      'architectury-neoforge-*.jar'])
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather
     // than a Minecraft type, so the Assembler's attachment codec can be round-tripped on a plain
     // JVM -- which is what ADR-0038's "round-trip the data attachment" asks for. Minecraft itself

@@ -62,8 +62,10 @@ NAMESPACES = {"minecraft", "planetaryfactory", "ftbmaterials",
               # Researchd owns the research-pack item; `planetary_factory:` (an underscore) is the
               # id space its packs are declared in, and is not this pack's item namespace.
               "researchd", "planetary_factory",
-              # Oritech's Steam Engine is the pack's engine (ADR-0062, #282).
-              "oritech"}
+              # Oritech is the pack's tech mod (ADR-0060): its engine (#282), pipes, tanks and fluids.
+              "oritech",
+              # Railcraft Reborn's signals and SimpleBelts' belts, ADR-0060's logistics (#277).
+              "railcraft", "belts"}
 
 
 def mod_registered_blocks():
