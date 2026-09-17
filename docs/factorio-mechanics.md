@@ -765,8 +765,9 @@ Sub-rules:
   pole within the shorter of the two reaches -- 7.5, 9 and 18 blocks, Factorio's own -- and every
   linked pole is one network with one balance: generators first, accumulators second, only generator
   surplus charges. Reach is measured in three dimensions, which Factorio has no need to. The wire is
-  not yet drawn (#281). Oritech's transmission pole left the power path with #284, so a wire between
-  two core poles is the only thing that crosses between areas.
+  drawn between every linked pair and disappears when the link breaks (#281). Oritech's transmission
+  pole left the power path with #284, so a wire between two core poles is the only thing that
+  crosses between areas.
 - **Poles wire themselves on placement, and the player adds or cuts wires by hand** — `planned`,
   #296, ADR-0068. A stored wire, not reach, joins two poles. Placement wires to up to 5 poles in
   reach that share no neighbour; the Engineer's Pick adds or cuts one wire at a time.
