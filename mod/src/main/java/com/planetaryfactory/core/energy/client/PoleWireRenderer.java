@@ -83,6 +83,9 @@ public final class PoleWireRenderer
         Tint tint = Tint.HELD;
         /** The tier whose Supply Area Box to draw, or null when this pole is not the one looked at. */
         @Nullable PoleTier areaTier;
+        /** The base and its level, for the scan behind the box's machine outlines. */
+        @Nullable Level areaLevel;
+        @Nullable BlockPos areaBase;
     }
 
     @Override
@@ -97,6 +100,8 @@ public final class PoleWireRenderer
         state.wires.clear();
         state.slack = null;
         state.areaTier = null;
+        state.areaLevel = null;
+        state.areaBase = null;
         Level level = pole.getLevel();
         if (level == null || !PoleColumn.isBase(level, pole.getBlockPos())) {
             return;
@@ -158,6 +163,8 @@ public final class PoleWireRenderer
             return;
         }
         state.areaTier = looked.tier();
+        state.areaLevel = level;
+        state.areaBase = base;
     }
 
     /**
@@ -238,10 +245,12 @@ public final class PoleWireRenderer
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         PoleTier areaTier = state.areaTier;
-        if (areaTier != null) {
+        Level areaLevel = state.areaLevel;
+        BlockPos areaBase = state.areaBase;
+        if (areaTier != null && areaLevel != null && areaBase != null) {
             // This renderer's pose is already at the base's own block, so the box is the bare
             // offsets -- it must not take the camera a second time.
-            SupplyAreaBox.drawAtPose(collector, poseStack, areaTier);
+            SupplyAreaBox.drawAtPose(collector, poseStack, areaLevel, areaBase, areaTier);
         }
         for (EntityRenderState.LeashState wire : state.wires) {
             collector.submitLeash(poseStack, wire);

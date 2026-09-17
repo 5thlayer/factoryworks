@@ -67,6 +67,42 @@ alone, and not the poles it is wired to. "Do my two poles cover the gap between 
 aiming at each in turn, and if it needs a better answer that is a ticket about network coverage, not
 this overlay.
 
+## Amended: the machines are outlined too
+
+The box shipped and the human check this ADR asks for found it **unreadable in a built base**. The
+diagnosis is that a player reading the box wants to know which machines are inside it, and no box
+shape can tell them: membership depends on the vertical band, and the box has no face at a machine's
+height. The limit recorded under Consequences below -- "the overlay says where the footprint lands,
+not whether a given block is powered" -- was the problem rather than an acceptable cost, so it is
+reversed here.
+
+**Every block the pole reaches is outlined, in the same yellow.** The box still answers "where does
+the footprint land" and the outlines answer "what is in it", which is the question that was actually
+being asked of the box.
+
+**The outlines are the pole's own scan, not a capability sweep.** `SupplyAreaScan` is extracted from
+the pole's block entity so the server and the overlay run one piece of code, for the reason ADR-0069
+gives about placement: a second implementation drifts, and the ways this one would drift are not
+guessable. A slave Steam Engine resolves to its master, which may stand outside the area entirely,
+and a machine's hull block answers its controller's face and is never a consumer in its own right
+(#292). A naive "has an Energy capability" check gets both wrong and outlines blocks the network
+never feeds -- the overlay lying again, only more precisely. An owner outside the box is outlined
+where it stands, because that is the block the network draws.
+
+**One colour for all three roles.** A consumer, a generator and an accumulator are all things this
+pole is connected to; which is which is the Jade line's answer, on the machine, and a second colour
+here would collide with the wire gestures' palette for no gain.
+
+**Cached, not asked per frame.** The scan is a capability lookup per block and a substation's area is
+1,620 of them -- a cost the pole's own scan already refuses to pay every tick, and a renderer runs
+sixty times a second rather than twenty. The answer is kept for the pole's own rescan interval of two
+seconds, for the pole's own reason: machines do not appear and vanish every tick. One entry is
+enough, because only one box is ever drawn in a frame.
+
+Rejected alongside it: **filling the box's top face**, which reads as the obvious fix and answers the
+wrong question. It makes the extent easier to read and says nothing about which machines are in the
+band, and the top face sits at base+3, a plane above the player's head.
+
 ## Considered options
 
 **A 2D overlay draped per column**, resting on the highest block in each column, which is how #158

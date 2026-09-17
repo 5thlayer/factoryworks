@@ -241,7 +241,7 @@ What a player sees while holding a placeable block and aiming at a spot: the blo
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
 **Supply Area Box**:
-The bright yellow wireframe of a **Supply Area Pole**'s area — the whole volume it covers, anchored at the base, shown while holding a pole or looking at a placed one (ADR-0070). It says where the area lands on the terrain, never whether anything in it is being fed, which is the Jade line's answer on the machine.
+The bright yellow wireframe of a **Supply Area Pole**'s area — the whole volume it covers, anchored at the base, plus an outline around every machine the pole reaches. Shown while holding a pole or looking at a placed one (ADR-0070). It says where the area lands and what is inside it, never whether anything inside is being *fed*, which is the Jade line's answer on the machine.
 _Avoid_: supply area overlay, footprint overlay, coverage grid, range indicator
 
 **Offshore Pump**:

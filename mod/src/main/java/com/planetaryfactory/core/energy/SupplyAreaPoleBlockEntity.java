@@ -146,36 +146,12 @@ public class SupplyAreaPoleBlockEntity extends BlockEntity {
     }
 
     private void scan(Level level) {
-        List<BlockPos> positions = new ArrayList<>();
-        BlockPos origin = getBlockPos();
-        SupplyArea.forEachOffset(tier(), (dx, dy, dz) -> {
-            BlockPos pos = origin.offset(dx, dy, dz);
-            if (!pos.equals(origin) && level.isLoaded(pos)) {
-                positions.add(pos.immutable());
-            }
-        });
-        // Every block stands for its energy owner (#292): a machine's hull for its controller, a
-        // slave engine for its master. The owner may lie outside this area; it is still the one the
-        // network draws, and it is kept once however many of its blocks are in here.
-        SupplyScan.Roles<BlockPos> roles = SupplyScan.classify(positions,
-                pos -> level.isLoaded(pos) && level.getBlockEntity(pos) instanceof EnergyOwner owned
-                        ? owned.planetaryfactory$energyOwner()
-                        : null,
-                pos -> role(level, pos));
+        // The scan is SupplyAreaScan's, shared with the Supply Area Box's outlines (#158) so the
+        // overlay cannot disagree with the network about what this pole reaches.
+        SupplyScan.Roles<BlockPos> roles = SupplyAreaScan.of(level, getBlockPos(), tier());
         consumers = roles.consumers();
         generators = roles.generators();
         accumulators = roles.accumulators();
-    }
-
-    private SupplyScan.Role role(Level level, BlockPos pos) {
-        if (pos.equals(getBlockPos()) || !level.isLoaded(pos) || handler(level, pos) == null) {
-            return SupplyScan.Role.NONE;
-        }
-        BlockState state = level.getBlockState(pos);
-        if (state.is(GENERATORS)) {
-            return SupplyScan.Role.GENERATOR;
-        }
-        return state.is(ACCUMULATORS) ? SupplyScan.Role.ACCUMULATOR : SupplyScan.Role.CONSUMER;
     }
 
     static EnergyHandler handler(Level level, BlockPos pos) {

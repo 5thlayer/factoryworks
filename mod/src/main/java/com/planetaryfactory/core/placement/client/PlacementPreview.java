@@ -141,7 +141,7 @@ public final class PlacementPreview {
             if (level.getBlockState(placed.pos().below()).is(placed.state().getBlock())) {
                 return;
             }
-            SupplyAreaBox.drawAt(event.getSubmitNodeCollector(), event.getPoseStack(),
+            SupplyAreaBox.drawAt(event.getSubmitNodeCollector(), event.getPoseStack(), level,
                     event.getLevelRenderState().cameraRenderState.pos, placed.pos(), pole.tier());
             return;
         }
