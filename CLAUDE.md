@@ -49,10 +49,11 @@ owns clearing it. A failure in one of these is expected; a failure anywhere else
 - `tests/flora/test_flora_data.py` — Sapros's data is parked, so the files it reads are gone. Owned
   by **#23**, and it cannot be cleared before Sapros's flora returns.
 - `tests/pack/test_furnace_assets.py` — the Electric tier's textures live in the GTCEu jar. Owned by
-  **#258**, which re-derives the departed `gtceu:`/`gcyr:` art against the Oritech chassis. The
-  assertion that the textures live *inside the GTCEu jar* is one of the two that make this check the
-  ladder's own, so it is re-speced rather than relaxed — and note the file fails *before* reaching
-  its own subject, so everything past it is unchecked rather than failing.
+  **#324**, which is the decision about where that art comes from now. The assertion that the
+  textures live *inside the GTCEu jar* is one of the two that make this check the ladder's own, so
+  it is re-speced rather than relaxed — and note the file fails *before* reaching its own subject,
+  so everything past it is unchecked rather than failing. Not #258's: that is the migration spec,
+  and where a departed mod's art comes from is in neither its scope nor its Out of Scope.
 
 Two more were on this list and are not any more (#323). `tests/factorio/test_pack_recipes.py` was
 red on the Steel Pick's sprite; #241's decision applied, and both picks now wear vanilla art with no
