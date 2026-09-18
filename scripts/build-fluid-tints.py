@@ -70,7 +70,8 @@ ORITECH_MODELS = {
 
 
 def read_png(blob):
-    """RGBA rows of an 8-bit, non-interlaced PNG -- `build-pick-textures.py`'s reader, on bytes."""
+    """RGBA rows of an 8-bit, non-interlaced PNG. The same minimal reader every generator here
+    carries, taking bytes rather than a path."""
     i, ihdr, idat, plte, trns = 8, None, b"", b"", b""
     while i < len(blob):
         length = struct.unpack(">I", blob[i:i + 4])[0]

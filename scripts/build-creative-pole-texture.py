@@ -19,7 +19,8 @@ Run after the substation's texture changes:
     scripts/build-creative-pole-texture.py
 
 `--check` re-derives and diffs, like every other generator here. No PIL: the codec below is a
-minimal 8-bit reader and an RGBA writer, the same trade `scripts/build-pick-textures.py` makes.
+minimal 8-bit reader and an RGBA writer, which is the trade every PNG generator here makes -- a
+dependency for one crop is not worth a wheel in the toolchain.
 """
 
 import pathlib
@@ -126,8 +127,7 @@ def luma(pixel):
 def recolour(rows, colour):
     """Re-light every pixel in `colour`, keeping its own brightness relative to that colour's.
 
-    Not a multiply by the colour, which is what `build-pick-textures.py` does to a *greyscale*
-    layer. The substation's sprite is already blue, so multiplying would carry the blue through and
+    Not a multiply by the colour, which is the right move on a *greyscale* layer. The substation's sprite is already blue, so multiplying would carry the blue through and
     land on a muddy purple; dividing by the target's own luma instead makes a mid-bright source
     pixel come out as exactly `colour` and the rest of the ramp fall either side of it. The
     midpoint is the sprite's own mean brightness rather than a constant, so a substation redrawn
