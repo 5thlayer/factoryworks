@@ -211,10 +211,13 @@ The pocket and the hold `docs/spec/terra-progression.md` specifies are granted o
 by `core/start/`, not once per join — a grant that re-fires on login is an unlimited iron supply
 and would invalidate every pace reading after the first relog (#203). Two checks, neither of which
 launches the game. `tests/pack/test_starting_kit.py` asserts every granted id resolves — ours
-against the tier enums that produce the registry paths, the prospector and the quest book against
-the installed jars, the hold against `data/pack/item-map.json` — and that the pocket is the spec's
-pocket and the hold exactly the spec's three items: an id that names nothing is a silent empty slot,
-and the moment the hold holds a green circuit rung 0 has stopped being taught.
+against the tier enums that produce the registry paths, every foreign one against the installed jars
+(the quest book is the only one today, since the prospector went with #323), the hold against
+`data/pack/item-map.json` — and that the pocket is the spec's pocket and the hold exactly the spec's
+three items: an id that names nothing is a silent empty slot, and the moment the hold holds a green
+circuit rung 0 has stopped being taught. The foreign loop filters by namespace rather than by id, so
+it is the assertion that a borrowed id resolves at all and the next borrowed pocket entry has to
+pass it too — which is what `gtceu:prospector.lv` stopped doing when GregTech left.
 `mod/src/test/java/com/planetaryfactory/core/start/` is the once-per-player rule and the flag's
 codec round trip, which are Minecraft-free because the kit names items by string. Run both after
 editing `core/start/` or the spec's Opening. Whether the kit is in the inventory at spawn is a

@@ -38,8 +38,7 @@ otherwise sit next to them.
 | Each carries `category: crafting` | `RuntimeHandRecipes` is a predicate on exactly that field, so the recipe survives but the Personal Assembler will not plan it — and rung 0 has no machine to craft it in either. |
 | The subtree is exactly the registered tiers | The exception is narrow on purpose. A third file here is a decision ADR-0039 did not make. |
 | The steel recipe consumes the iron pick | ADR-0039 states it in one line, and nothing else in the repo would notice both tiers being holdable at once. |
-| Each tier has a model, texture and lang key | The missing-texture checkerboard and a raw translation key. Neither is an error. The two picks are dressed from different places, so the texture is resolved per namespace: ours against the file, a mod's against the jar the pack ships, vanilla's against nothing. |
-| The Steel Pick's texture is current against the installed GregTech jar | It is generated (below), and generated output is never hand-edited. A GregTech update that redrew its tool art would otherwise leave the pack showing the old one silently. |
+| Each tier has a model, texture and lang key | The missing-texture checkerboard and a raw translation key. Neither is an error. The texture is resolved per namespace — ours against the file, a mod's against the jar the pack ships, vanilla's against nothing — because the pack borrows art elsewhere and the next `layer0` here may not be vanilla's. Both picks wear vanilla's today (#323). |
 | Both picks are in `c:tools/wrench` and `gtceu:crafting_tools/wrench` | The Pick stops dismantling machines, and the pack has no other wrench to reach for. |
 | The block tag `EngineersPick` names by id exists and is non-empty | An absent tag is an empty one: every block falls back to vanilla hardness and the flat mining time is gone with nothing logged. |
 

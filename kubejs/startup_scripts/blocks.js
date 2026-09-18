@@ -67,9 +67,10 @@ StartupEvents.registry('block', (event) => {
   // chest are the two the ladder wants, and the GTCEu machine casings they replace both named a
   // namespace that has never held them, so those rendered as nothing at all.
   //
-  // The fix is a 16x16 crop of each atlas's front face, committed the way
-  // `scripts/build-pick-textures.py` commits its flattened GTCEu tool art -- which is a derived
-  // asset, and so #234's question rather than this file's.
+  // The fix is a 16x16 crop of each atlas's front face, committed as a derived asset -- and so
+  // #234's question rather than this file's. It used to name `scripts/build-pick-textures.py` as
+  // the precedent for committing one; that script went with GregTech's art (#323), so the
+  // precedent is the question and not the gesture.
   event.create('planetaryfactory:iron_chest')
     .displayName('Iron Chest')
     .texture('minecraft:entity/chest/copper_exposed')
