@@ -51,9 +51,17 @@ owns clearing it. A failure in one of these is expected; a failure anywhere else
 - `tests/pack/test_furnace_assets.py` — the Electric tier's textures live in the GTCEu jar. Owned by
   **#324**, which is the decision about where that art comes from now. The assertion that the
   textures live *inside the GTCEu jar* is one of the two that make this check the ladder's own, so
-  it is re-speced rather than relaxed — and note the file fails *before* reaching its own subject,
-  so everything past it is unchecked rather than failing. Not #258's: that is the migration spec,
-  and where a departed mod's art comes from is in neither its scope nor its Out of Scope.
+  it is re-speced rather than relaxed. Not #258's: that is the migration spec, and where a departed
+  mod's art comes from is in neither its scope nor its Out of Scope.
+
+  **What is actually unchecked is narrow, and it was measured rather than assumed (#323).** The two
+  failures are `subtests` failures inside `test_every_model_names_textures_that_exist`, on
+  `electric_furnace` and `electric_furnace_on`. All seven of the file's top-level tests pass,
+  including `test_the_electric_tier_does_not_borrow_gregtechs_model_loader` — `subtests` isolates
+  each case, so the rest of the file runs and asserts, and the lit variants, item models, lang keys
+  and loot tables are all still covered. #323 described this file as failing *before* reaching its
+  own subject, with everything past it unchecked; a verbose run says otherwise. Read a claim like
+  that off a run before repeating it.
 
 Two more were on this list and are not any more (#323). `tests/factorio/test_pack_recipes.py` was
 red on the Steel Pick's sprite; #241's decision applied, and both picks now wear vanilla art with no
