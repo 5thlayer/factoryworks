@@ -5,7 +5,8 @@ import javax.annotation.Nullable;
 import com.planetaryfactory.core.PFBlockEntities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -38,6 +39,27 @@ public class RigPartBlockEntity extends BlockEntity {
     @Nullable
     public BlockPos anchorPos() {
         return anchorPos;
+    }
+
+    /**
+     * Breaking a part pops one drill item by hand (its loot table gives nothing) and tears the rest
+     * of the rig down (#192, bed-and-door).
+     *
+     * <p>Here and not in the block's {@code affectNeighborsAfterRemoval}: 26.1 removes the block
+     * entity between the two, so the anchor position is gone by then (#310).
+     */
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (level == null || level.isClientSide() || anchorPos == null || RigBreaker.inProgress()) {
+            return;
+        }
+        BlockState anchor = level.getBlockState(anchorPos);
+        if (anchor.getBlock() instanceof RigBlock rig) {
+            Block.popResource(level, pos, new ItemStack(
+                    com.planetaryfactory.core.PFItems.rig(rig.tier()).get()));
+            RigBreaker.teardown(level, anchorPos, rig.tier(), anchor.getValue(RigBlock.FACING), pos);
+        }
     }
 
     @Override

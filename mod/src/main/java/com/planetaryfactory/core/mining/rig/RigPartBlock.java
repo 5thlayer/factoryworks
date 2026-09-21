@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +21,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.server.level.ServerLevel;
 
 /**
  * One block of a rig's footprint that is not the anchor (#192).
@@ -34,8 +32,8 @@ import net.minecraft.server.level.ServerLevel;
  * forwarding a break there.
  *
  * <p>Its loot table is empty: breaking a part pays out the drill item by hand, in {@link
- * #onRemove}, so that exactly one item drops regardless of which block of the footprint the player
- * actually broke. See {@link RigBreaker}.
+ * RigPartBlockEntity#preRemoveSideEffects}, so that exactly one item drops regardless of which
+ * block of the footprint the player actually broke. See {@link RigBreaker}.
  */
 public class RigPartBlock extends BaseEntityBlock {
 
@@ -118,25 +116,5 @@ public class RigPartBlock extends BaseEntityBlock {
             player.openMenu(rig, buf -> buf.writeEnum(rig.tier()));
         }
         return InteractionResult.CONSUME;
-    }
-
-    /**
-     * Breaking a part -- directly, by a player -- pops one drill item by hand (its loot table gives
-     * nothing) and tears the rest of the rig down (#192, bed-and-door).
-     */
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
-                                               boolean movedByPiston) {
-        // Server-side by construction now: 26.1 hands this a ServerLevel, so the old isClientSide
-        // guard has nothing left to refuse.
-        if (level.getBlockEntity(pos) instanceof RigPartBlockEntity part) {
-            BlockPos anchorPos = part.anchorPos();
-            if (anchorPos != null && level.getBlockState(anchorPos).getBlock() instanceof RigBlock rig) {
-                popResource(level, pos, new ItemStack(
-                        com.planetaryfactory.core.PFItems.rig(rig.tier()).get()));
-                RigBreaker.teardown(level, anchorPos, rig.tier(),
-                        level.getBlockState(anchorPos).getValue(RigBlock.FACING), pos);
-            }
-        }
     }
 }

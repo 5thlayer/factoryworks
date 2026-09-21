@@ -141,7 +141,7 @@ classpath too. Oritech, Railcraft Reborn, SimpleBelts and FTB Materials are ther
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
-`BoilerTests` (#274), and `SteamEngineNetworkTests` (#292) and `AssemblingMachineTests` (#327),
+`BoilerTests` (#274), `RigBreakTests` (#310), and `SteamEngineNetworkTests` (#292) and `AssemblingMachineTests` (#327),
 both registered only when Oritech is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -157,6 +157,10 @@ one Fill Recipe can set and it can hold, while a `crafting-with-fluid` one is re
 dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Every one is also held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
 (#330), and a non-assembling id or a locked recipe is refused there with a message and leaves the Held
 recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
+And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
+none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
+`affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
+moving it back to the block turns both part tests red.
 And that the machine crafts its Held recipe at Factorio's rate (20 ticks and exactly 750 FE for
 copper cable, typed rather than read off `AssemblingMachineSpec`) and that a full output, no
 ingredients and a locked recipe each draw nothing, take nothing and keep the recipe (#328); drawing
