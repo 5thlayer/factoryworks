@@ -30,3 +30,11 @@ Source:  https://github.com/Rearth/SimpleBelts, forked at https://github.com/ada
          branch `planetaryfactory`
 Licence: Creative Commons Attribution 4.0 International
          https://creativecommons.org/licenses/by/4.0/
+
+The splitter's belt and side textures in that jar (#349):
+Author:  malcolmriley
+Source:  https://github.com/malcolmriley/unused-textures
+         blocks/device_conveyorbelt.png (with its .mcmeta) and device_conveyorbelt_side.png at
+         commit c89604ea49c0fc5470c5849f39cd5df1d497b0fb, copied unmodified and renamed
+Licence: Creative Commons Attribution 4.0 International
+         https://creativecommons.org/licenses/by/4.0/

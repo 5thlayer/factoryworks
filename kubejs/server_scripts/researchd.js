@@ -250,17 +250,28 @@ fromFactorio('plastics', {
 });
 
 // ---------------------------------------------------------------------------------------------
-// BELT TIERS (#345). Each node grants its tier's belt, the one effect of its three the pack emits:
-// the underground belt has no pack recipe, and the splitter waits on #349.
+// BELT TIERS (#345, #349). Each node grants its tier's belt and splitter; the underground belt has
+// no pack recipe.
+
+fromFactorio('logistics', {
+  icon: 'belts:splitter',
+  unlocks: ['planetaryfactory:assembling/splitter']
+});
 
 fromFactorio('logistics-2', {
   icon: 'belts:improved_belt',
-  unlocks: ['planetaryfactory:assembling/fast_transport_belt']
+  unlocks: [
+    'planetaryfactory:assembling/fast_transport_belt',
+    'planetaryfactory:assembling/fast_splitter'
+  ]
 });
 
 fromFactorio('logistics-3', {
   icon: 'belts:express_belt',
-  unlocks: ['planetaryfactory:assembling/express_transport_belt']
+  unlocks: [
+    'planetaryfactory:assembling/express_transport_belt',
+    'planetaryfactory:assembling/express_splitter'
+  ]
 });
 
 // ---------------------------------------------------------------------------------------------
