@@ -90,7 +90,7 @@ public final class SteamEngineSpec {
      * minute would owe a burst.
      */
     public Request request(double speed, int rowLength, Carry carry, long energyRoom) {
-        double exact = steamPerTickAtPeak * (speed / PEAK_SPEED) * rowLength + carry.steam();
+        double exact = steamPerTick(speed, rowLength) + carry.steam();
         int whole = (int) Math.floor(exact + EPSILON);
         double perUnit = energyPerUnit(speed);
         int fits = perUnit <= 0.0
@@ -100,6 +100,20 @@ public final class SteamEngineSpec {
             return new Request(Math.max(0, fits), new Carry(0.0, carry.energy()));
         }
         return new Request(whole, new Carry(Math.max(0.0, exact - whole), carry.energy()));
+    }
+
+    /** What a row at {@code speed} burns a second, before any buffer cut; the HUD's consumption. */
+    public double steamPerSecond(double speed, int rowLength) {
+        return steamPerTick(speed, rowLength) * MINECRAFT_TICKS_PER_SECOND;
+    }
+
+    /** What a row at {@code speed} makes a tick if everything is drawn; the HUD's available power. */
+    public double powerPerTick(double speed, int rowLength) {
+        return steamPerTick(speed, rowLength) * energyPerUnit(speed);
+    }
+
+    private double steamPerTick(double speed, int rowLength) {
+        return steamPerTickAtPeak * (speed / PEAK_SPEED) * rowLength;
     }
 
     /** What one millibucket is worth at {@code speed}, in FE. */

@@ -2,6 +2,7 @@ package com.planetaryfactory.core.mixin.oritech;
 
 import com.planetaryfactory.core.energy.EnergyOwner;
 import com.planetaryfactory.core.fluid.SteamChainCorpus;
+import com.planetaryfactory.core.fluid.SteamEngineReadout;
 import com.planetaryfactory.core.fluid.SteamEngineSpec;
 import com.planetaryfactory.core.machine.footprint.FootprintPartBlock;
 import java.util.Set;
@@ -52,7 +53,7 @@ import rearth.oritech.util.Geometry;
  */
 @Mixin(SteamEngineEntity.class)
 public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEntity
-        implements EnergyOwner {
+        implements EnergyOwner, SteamEngineReadout {
 
     /** Oritech's scan reach along the engine's facing axis, read from its class, not restated. */
     @Shadow
@@ -101,6 +102,21 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
     public BlockPos planetaryfactory$energyOwner() {
         SteamEngineEntity self = (SteamEngineEntity) (Object) this;
         return self.inSlaveMode() ? self.master.getBlockPos() : null;
+    }
+
+    @Override
+    public SteamEngineSpec planetaryfactory$readSpec() {
+        return planetaryfactory$spec();
+    }
+
+    @Override
+    public double planetaryfactory$readSpeed() {
+        return Math.min(getSteamProcessingSpeed(), MAX_SPEED);
+    }
+
+    @Override
+    public int planetaryfactory$readRowLength() {
+        return slaves.size() + 1;
     }
 
     @Unique

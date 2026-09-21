@@ -70,6 +70,8 @@ final class SteamEngineNetworkTests {
                 SteamEngineNetworkTests::rowChainsAcrossAPart);
         tests.test("steam_engine_reloads_as_the_packs_engine", 20,
                 SteamEngineNetworkTests::reloadsAsThePacksEngine);
+        tests.test("steam_engine_face_is_its_steam_tank_alone", 20,
+                SteamEngineNetworkTests::faceIsItsSteamTankAlone);
     }
 
     private record Layout(Direction facing, BlockPos a, BlockPos b, BlockPos c, BlockPos pole,
@@ -187,6 +189,37 @@ final class SteamEngineNetworkTests {
 
     private static void place(GameTestHelper helper, BlockPos anchor, Direction facing) {
         PFBlocks.STEAM_ENGINE_FOOTPRINT.placeAll(helper.getLevel(), helper.absolutePos(anchor), facing);
+    }
+
+    /**
+     * A pipe against any block finds one tank, takes steam into it and nothing else, and can drain
+     * nothing: the water tank Oritech's engine returns into stays empty for good (ADR-0062).
+     */
+    private static void faceIsItsSteamTankAlone(GameTestHelper helper) {
+        BlockPos anchor = new BlockPos(3, 1, 3);
+        place(helper, anchor, Direction.NORTH);
+        FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
+        for (BlockPos at : PFBlocks.STEAM_ENGINE_FOOTPRINT.positions(helper.absolutePos(anchor), Direction.NORTH)) {
+            ResourceHandler<FluidResource> face = helper.getLevel().getCapability(
+                    net.neoforged.neoforge.capabilities.Capabilities.Fluid.BLOCK, at, null);
+            BlockPos relative = helper.relativePos(at);
+            if (face == null || face.size() != 1) {
+                helper.fail("the engine's face is " + (face == null ? "absent" : face.size() + " tanks"), relative);
+                return;
+            }
+            try (Transaction transaction = Transaction.openRoot()) {
+                if (face.insert(FluidResource.of(net.minecraft.world.level.material.Fluids.WATER), 10, transaction) != 0) {
+                    helper.fail("the engine took water", relative);
+                }
+                if (face.insert(steam, 10, transaction) != 10) {
+                    helper.fail("the engine refused steam", relative);
+                }
+                if (face.extract(steam, 10, transaction) != 0) {
+                    helper.fail("a pipe drained steam back out of the engine", relative);
+                }
+            }
+        }
+        helper.succeed();
     }
 
     /**
