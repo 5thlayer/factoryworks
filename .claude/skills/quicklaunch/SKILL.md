@@ -1,6 +1,6 @@
 ---
 name: quicklaunch
-description: Install the planetaryfactory_core jar and launch the pack straight into the most recent save, for the user to play or check a change in-world. Use when the user says "quicklaunch", "quick launch", "launch the game", or "install the jar and launch".
+description: Install the planetaryfactory_core jar and launch the pack straight into the most recent save, for the user to play or check a change in-world. Use only when the user asks for it -- "quicklaunch", "quick launch", "launch the game", "install the jar and launch" -- never on your own initiative to check a change, since it opens a window on the user's screen.
 ---
 
 # Quick launch
