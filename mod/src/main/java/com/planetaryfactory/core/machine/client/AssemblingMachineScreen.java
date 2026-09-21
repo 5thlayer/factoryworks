@@ -14,6 +14,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
 
+import org.joml.Matrix3x2f;
+
+import rearth.oritech.api.screen.OritechSurface;
+import rearth.oritech.client.ui.render.LargeItemRenderState;
+
 /**
  * The Assembling Machine's screen (#327): the Held recipe, its five slots, and the craft's progress.
  *
@@ -29,11 +34,7 @@ import net.neoforged.fml.ModList;
  */
 public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingMachineMenu> {
 
-    // Oritech's machine-screen palette, read off its gui_base.png and itemslot.png.
-    private static final int PANEL = 0xFFD0D1D4;
-    private static final int FRAME = 0xFF1E1E1F;
-    private static final int FRAME_LIGHT = 0xFFF1F1F1;
-    private static final int FRAME_SHADOW = 0xFF58585A;
+    // Oritech's slot bevel, read off its itemslot.png.
     private static final int SLOT = 0xFF8B8B8B;
     private static final int SLOT_DARK = 0xFF373737;
     private static final int SLOT_LIGHT = 0xFFFFFFFF;
@@ -42,10 +43,11 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int BAR_TEXT = 0xFFFFFFFF;
     private static final int LOCKED_TEXT = 0xFFA02020;
 
-    private static final int TAB_X = 36;
-    private static final int TAB_SIZE = 32;
-    private static final float ICON_SCALE = 1.5f;
-    private static final int TITLE_HEIGHT = 22;
+    // Oritech's header, from OritechWidgetScreen.addTitle: a 28px icon on a panel padded
+    // (0 top, 2 right, 3 bottom, 2 left), and a 14px label padded (5, 0, 1, 10) six pixels past it.
+    private static final int TITLE_Y = -27;
+    private static final int ICON_SIZE = 28;
+    private static final int LABEL_HEIGHT = 14;
 
     private static final int HELD_X = 8;
     private static final int HELD_Y = 17;
@@ -62,30 +64,36 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final Component NAME = Component.translatable("block.planetaryfactory.assembling_machine");
     private static final ItemStack ICON = new ItemStack(PFItems.ASSEMBLING_MACHINE.get());
 
-    /** Oritech's header: the machine's icon in a tab on the panel's top edge, its name beside it. */
+    /**
+     * Oritech's header, drawn as {@code OritechWidgetScreen.addTitle} lays it out: the machine's
+     * icon on a panel tab at the top edge and its name on a panel beside it, right-aligned when
+     * the name is longer than fifteen characters. The icon is Oritech's own large-item render
+     * state: a pose-scaled item flickers in 26.1's GUI renderer.
+     */
     private void extractTab(GuiGraphicsExtractor graphics) {
-        int x = leftPos + TAB_X;
-        int y = topPos - TAB_SIZE + 4;
-        frame(graphics, x, y, TAB_SIZE, TAB_SIZE);
-        float icon = 16 * ICON_SCALE;
-        graphics.pose().pushMatrix();
-        graphics.pose().translate(x + (TAB_SIZE - icon) / 2, y + (TAB_SIZE - icon) / 2 - 1);
-        graphics.pose().scale(ICON_SCALE, ICON_SCALE);
-        graphics.item(ICON, 0, 0);
-        graphics.pose().popMatrix();
+        int labelWidth = font.width(NAME) + 10;
+        int combined = ICON_SIZE + labelWidth + 2;
+        int x = leftPos + (NAME.getString().length() > 15
+                ? imageWidth - combined
+                : (imageWidth - combined) * 65 / 100);
+        int y = topPos + TITLE_Y;
 
-        int titleX = x + TAB_SIZE + 2;
-        int titleY = y + (TAB_SIZE - TITLE_HEIGHT) / 2 - 2;
-        int titleWidth = font.width(NAME) + 12;
-        frame(graphics, titleX, titleY, titleWidth, TITLE_HEIGHT);
-        graphics.text(font, NAME, titleX + 6, titleY + (TITLE_HEIGHT - 2 - 8) / 2, TEXT, false);
+        int labelX = x + ICON_SIZE + 2 + 6;
+        int labelY = y + 9;
+        OritechSurface.PANEL.render(graphics, labelX - 10, labelY - 5, labelWidth + 10, LABEL_HEIGHT + 6);
+        graphics.text(font, NAME, labelX, labelY, TEXT, false);
+
+        OritechSurface.PANEL.render(graphics, x - 2, y, ICON_SIZE + 4, ICON_SIZE + 3);
+        graphics.submitPictureInPictureRenderState(new LargeItemRenderState(ICON.copy(), x, y,
+                x + ICON_SIZE, y + ICON_SIZE, ICON_SIZE, new Matrix3x2f(graphics.pose()),
+                graphics.peekScissorStack()));
     }
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // The world dims behind the panel as it does behind the inventory; skipping super left it bright.
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
-        frame(graphics, leftPos, topPos, imageWidth, imageHeight);
+        OritechSurface.PANEL.render(graphics, leftPos, topPos, imageWidth, imageHeight);
         extractTab(graphics);
         for (Slot slot : menu.slots) {
             recess(graphics, leftPos + slot.x, topPos + slot.y, 16);
@@ -103,14 +111,6 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         graphics.fill(x - 1, y, x, y + 16, SLOT_DARK);
         graphics.fill(x, y + 16, x + width + 1, y + 17, SLOT_LIGHT);
         graphics.fill(x + width, y, x + width + 1, y + 16, SLOT_LIGHT);
-    }
-
-    /** Oritech's panel: a dark outline, a light inner edge, and a two-pixel shadow along the bottom. */
-    private static void frame(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
-        graphics.fill(x, y, x + width, y + height, FRAME);
-        graphics.fill(x + 1, y + 1, x + width - 1, y + height - 1, FRAME_SHADOW);
-        graphics.fill(x + 1, y + 1, x + width - 1, y + height - 3, FRAME_LIGHT);
-        graphics.fill(x + 2, y + 2, x + width - 2, y + height - 4, PANEL);
     }
 
     @Override
