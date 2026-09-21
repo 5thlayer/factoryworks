@@ -130,13 +130,4 @@ class SteamEngineSpecTest {
             assertEquals(450L * n, SPEC.bufferCapacity(n));
         }
     }
-
-    @Test
-    @DisplayName("the HUD's rated output is what the burn makes at the peak, per row")
-    void ratedOutputMatchesTheBurn() {
-        for (int n = 1; n <= 3; n++) {
-            long[] second = run(SteamEngineSpec.PEAK_SPEED, n, SECOND);
-            assertEquals(second[1] / (double) SECOND, SPEC.peakPowerPerTick(n), 1e-9);
-        }
-    }
 }

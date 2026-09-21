@@ -102,11 +102,6 @@ public final class SteamEngineSpec {
         return new Request(whole, new Carry(Math.max(0.0, exact - whole), carry.energy()));
     }
 
-    /** What a row at the curve's peak makes a tick; the HUD's rated output. */
-    public double peakPowerPerTick(int rowLength) {
-        return energyPerTickAtPeak * rowLength;
-    }
-
     /** What one millibucket is worth at {@code speed}, in FE. */
     private double energyPerUnit(double speed) {
         double ratio = efficiency.applyAsDouble(speed) / efficiency.applyAsDouble(PEAK_SPEED);
