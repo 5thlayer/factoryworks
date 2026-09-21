@@ -164,7 +164,7 @@ final class BeltHandoffTests {
             chest(helper, source).setItem(slot, new ItemStack(Items.COBBLESTONE, Math.min(items, 64)));
         }
         ChuteBlockEntity belt = helper.getBlockEntity(from, ChuteBlockEntity.class);
-        belt.assignFromBeltItem(helper.absolutePos(to), List.of(), tier);
+        belt.assignFromBeltItem(helper.absolutePos(to), List.of(), tier, 0);
         return belt;
     }
 

@@ -94,6 +94,7 @@ public final class PFGameTests {
         }
         if (ModList.get().isLoaded("belts")) {
             BeltHandoffTests.register(registrar);
+            BeltCostTests.register(registrar);
         }
     }
 

@@ -142,7 +142,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), registered only when the
+and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342) and `BeltCostTests` (#346), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -173,6 +173,11 @@ Factorio's belt prototypes, and the 64-block belt stands on the generator's seco
 after the belt settles, because polled it passes on the way through 511. And that no `belts:`
 recipe survives the stock-recipe sweep, against the pack's express belt recipe as a control;
 matching the pack's own namespace instead turns it red.
+And that placing a belt through the belt item charges one item per block, five for a five-block belt,
+and refuses a player holding four with nothing charged, and that breaking either loader through the
+player's game mode puts those five and every item on the belt into the breaker's inventory and
+leaves the other loader standing and free. A charge of one item or a refund dropped on the ground
+turns all four red. The rounding is the fork's `BeltCostTest`.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
