@@ -2,6 +2,7 @@ package com.planetaryfactory.core;
 
 import com.planetaryfactory.core.assembler.CraftingPlanMenu;
 import com.planetaryfactory.core.fluid.BoilerMenu;
+import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.mining.rig.RigMenu;
 import com.planetaryfactory.core.smelting.FurnaceMenu;
 import net.minecraft.core.registries.Registries;
@@ -54,6 +55,13 @@ public final class PFMenus {
     public static final Supplier<MenuType<BoilerMenu>> BOILER =
             MENUS.register("boiler", () -> new MenuType<>(BoilerMenu::new,
                     net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
+
+    /**
+     * The Assembling Machine's (#327): the pack's own, since Oritech's screen has no hook for the
+     * recipe widget. The opening packet carries the position and the widget's list.
+     */
+    public static final Supplier<MenuType<AssemblingMachineMenu>> ASSEMBLING_MACHINE =
+            MENUS.register("assembling_machine", () -> IMenuTypeExtension.create(AssemblingMachineMenu::new));
 
     private PFMenus() {
     }
