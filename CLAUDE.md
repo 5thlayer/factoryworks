@@ -153,7 +153,10 @@ ingredients and a locked recipe each draw nothing, take nothing and keep the rec
 the tick's energy before the stall is asked turns all three stalls red. Nothing is locked until #260,
 so the lock test uses `AssemblingMachineRecipes.lockForTest`. The rate and the stall order are
 `AssemblingMachineSpecTest` and `AssemblingStallTest`; whether an Oritech addon changes the rate in
-a world is not checked -- the multipliers are, on the JVM. Each was checked against the defect it exists for: dropping
+a world is not checked -- the multipliers are, on the JVM. A pole beside a whole machine counts it
+once and fills it, and a small pole reaching only a hull block still finds it: the hull blocks have
+no block entity, so they resolve to the anchor through `EnergyOwnerBlock` in `SupplyAreaScan`, and
+without it one machine counts as four. Each was checked against the defect it exists for: dropping
 the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
 furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red; making no
 two poles link, never rebuilding the network, and never dropping a broken pole each turn a network
