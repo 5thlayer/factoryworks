@@ -361,6 +361,10 @@ file = "kubejs/assets/planetaryfactory/blockstates/small_electric_pole.json"
 hash = "aafb2459a1854047f8e1b3ed657adb65c154b9a2548b9d86c06ce0a3d12b0740"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/steam.json"
+hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/blockstates/steam_engine.json"
 hash = "a66f53fbcd85b26ce3103bf5280012902fa8b359f8b6c144ea9a634a483d8993"
 
@@ -383,6 +387,10 @@ hash = "e71ac312d17b93e7d81ae129683277838de1f1c65b775dc89464505ea810581f"
 [[files]]
 file = "kubejs/assets/planetaryfactory/blockstates/substation_electric_pole.json"
 hash = "e5042ec66566bef5409f936f84f8aa4eca9be38d4d91088d6e52753df99e5c2d"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/superheated_steam.json"
+hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/blockstates/uranium_ore.json"
@@ -466,7 +474,7 @@ hash = "05bb9997ff87c49c5abcfdfb6473458863c4ca61a7f77918c9341c330819807c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
-hash = "16145d31062528efa59ea19ebe21c3ffb525316ee274855d88a51d129815bb2f"
+hash = "e5a401f4dcddbb49ac70d5d894374258d62d0cfc901ff20e6eb509db208f3a3c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/assembling_machine.json"
