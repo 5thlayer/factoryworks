@@ -234,7 +234,7 @@ hash = "9f63c4c3063e5be44ef179df0356903afcfbb6ecd669afd270540c9ed559ddee"
 
 [[files]]
 file = "data/factorio/resource.json"
-hash = "a6e5c53fe564f8d5dd43830d3060adbe057baa1fea8f63aa394b14d1a3a2021d"
+hash = "4da82274d113f37cbe55e6693ff8ec73d56603c02a2f213a43b56cb245e9ba0e"
 
 [[files]]
 file = "data/factorio/science_packs.json"
@@ -1965,7 +1965,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "aa02323d560ae655139da7ca05df90572f8f8082c1dd6be6c570d147e5e50a20"
+hash = "92b01d217582767fc94eaab6e86a2a24151c25762c228eee96c331168e83e5d3"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
