@@ -62,10 +62,10 @@ FACES = {
     "rig_part": ("registerRigCapabilities", ("Item",)),
     "offshore_pump": ("registerPumpCapabilities", ("Fluid",)),
     "boiler": ("registerBoilerCapabilities", ("Fluid", "Item")),
-    # No face yet, and recorded as a decision (#326): the machine is inert until ADR-0071's craft
-    # cycle lands, and a face on it now would let a pipe fill slots nothing reads. Its item and
-    # energy faces are #325's later tickets, and this row is where they land.
-    "assembling_machine": (None, ()),
+    # Energy only (#328): the craft cycle draws FE, and without the face no pole counts the
+    # machine. No item face until ADR-0071's input filter lands -- an unguarded one would let a
+    # pipe fill the slots with anything.
+    "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy",)),
 }
 
 # The three ladders, against the enum every one of their blocks has to be walked from. A face is

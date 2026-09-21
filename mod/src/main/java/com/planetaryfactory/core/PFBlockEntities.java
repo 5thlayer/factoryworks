@@ -6,6 +6,7 @@ import com.planetaryfactory.core.fluid.BoilerBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerItemHandler;
 import com.planetaryfactory.core.fluid.OffshorePumpBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
+import com.planetaryfactory.core.machine.AssemblingMachinePartBlock;
 import com.planetaryfactory.core.mining.rig.RigBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigItemHandler;
 import com.planetaryfactory.core.mining.rig.RigPartBlockEntity;
@@ -105,6 +106,7 @@ public final class PFBlockEntities {
         registerRigCapabilities(event);
         registerPumpCapabilities(event);
         registerBoilerCapabilities(event);
+        registerAssemblingMachineCapabilities(event);
     }
 
     /**
@@ -210,5 +212,33 @@ public final class PFBlockEntities {
                     },
                     PFBlocks.rigPart(tier).get());
         }
+    }
+
+    /**
+     * The Assembling Machine's energy face (#328): Oritech's own buffer, which the craft cycle draws
+     * from, so a supply-area pole counts the machine and fills it.
+     *
+     * <p>Registered on the <b>parts</b> as well as the anchor, for the rig's reason: a pole's area
+     * that covers only part of the footprint must still find the machine. A part has no block entity
+     * and forwards to its anchor's.
+     *
+     * <p>No item face yet. ADR-0071 filters inputs to the Held recipe through
+     * {@code GuardedResourceHandler}, and an unguarded face now would let a pipe fill the slots with
+     * anything; that is the input-filter ticket's.
+     */
+    private static void registerAssemblingMachineCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlock(
+                Capabilities.Energy.BLOCK,
+                (level, pos, state, blockEntity, side) ->
+                        blockEntity instanceof AssemblingMachineBlockEntity machine
+                                ? machine.getEnergyLookup(side) : null,
+                PFBlocks.ASSEMBLING_MACHINE.get());
+        event.registerBlock(
+                Capabilities.Energy.BLOCK,
+                (level, pos, state, blockEntity, side) ->
+                        level.getBlockEntity(AssemblingMachinePartBlock.anchorOf(pos, state))
+                                        instanceof AssemblingMachineBlockEntity machine
+                                ? machine.getEnergyLookup(side) : null,
+                PFBlocks.ASSEMBLING_MACHINE_PART.get());
     }
 }

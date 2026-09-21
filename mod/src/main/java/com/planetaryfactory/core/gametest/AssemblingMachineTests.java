@@ -64,6 +64,30 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::stallsUnfed);
         tests.test("assembling_machine_stalls_on_a_locked_recipe", 100,
                 AssemblingMachineTests::stallsOnALockedRecipe);
+        tests.test("assembling_machine_is_powered_by_a_pole", 100,
+                AssemblingMachineTests::isPoweredByAPole);
+    }
+
+    /**
+     * A creative pole beside an empty machine fills it. Checked against its defect, and the one it
+     * was written over (#328 in-world: "Machines in area: 0"): with the energy face unregistered the
+     * pole counts nothing and the buffer stays empty.
+     */
+    private static void isPoweredByAPole(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = place(helper);
+        BlockPos pole = ANCHOR.west(2);
+        helper.startSequence()
+                .thenExecute(() -> {
+                    machine.energyStorage.set(0L);
+                    helper.setBlock(pole, PFBlocks.CREATIVE_POLE.get());
+                })
+                .thenIdle(60)
+                .thenExecute(() -> {
+                    if (machine.energyStorage.getAmountAsLong() <= 0L) {
+                        helper.fail("a creative pole two blocks away left the machine unpowered", ANCHOR);
+                    }
+                })
+                .thenSucceed();
     }
 
     /** copper-cable: one copper plate makes two wire in Factorio's 0.5 s. */
