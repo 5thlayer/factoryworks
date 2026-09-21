@@ -67,6 +67,7 @@ final class SplitterTests {
                 SplitterTests::switchesToTheFreeSide);
         tests.test("tier_1_splitter_caps_a_tier_3_line_at_" + TIER_1_SPLITTER_ITEMS_PER_SECOND,
                 WARMUP_TICKS + WINDOW_TICKS + 20, SplitterTests::capsTheLine);
+        tests.test("belt_item_links_a_splitter_at_both_ends", 20, SplitterTests::beltItemLinks);
         tests.test("splitter_places_both_halves", 20, helper -> places(helper, false));
         tests.test("splitter_blocked_at_one_half_places_neither", 20, helper -> places(helper, true));
         tests.test("splitter_broken_at_its_left_half_leaves_nothing", 20, helper -> breaks(helper, LEFT));
@@ -105,6 +106,39 @@ final class SplitterTests {
                         + WINDOW_TICKS + " ticks, expected " + expected, LEFT);
             }
         });
+    }
+
+    /** A belt into the splitter's left half and one out of it, laid by clicking with the belt item. */
+    private static void beltItemLinks(GameTestHelper helper) {
+        placeSplitter(helper, BeltTier.BELT);
+        helper.setBlock(FROM, loader(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(LEFT_END, loader(BeltTier.BELT, Direction.WEST));
+        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.beltFor(BeltTier.BELT), 64));
+
+        click(helper, player, FROM);
+        click(helper, player, LEFT);
+        click(helper, player, LEFT);
+        click(helper, player, LEFT_END);
+
+        if (!helper.absolutePos(LEFT).equals(helper.getBlockEntity(FROM, ChuteBlockEntity.class).getTarget())) {
+            helper.fail("clicking a loader then the splitter laid no belt into the splitter", FROM);
+        }
+        if (!helper.absolutePos(LEFT_END).equals(helper.getBlockEntity(LEFT, ChuteBlockEntity.class).getTarget())) {
+            helper.fail("clicking the splitter then a loader laid no belt out of the splitter", LEFT);
+        }
+        for (BlockPos pos : List.of(LEFT.above(), LEFT.west(), LEFT.east())) {
+            if (!helper.getBlockState(pos).isAir()) {
+                helper.fail("clicking the splitter placed " + helper.getBlockState(pos) + " beside it", pos);
+            }
+        }
+        helper.succeed();
+    }
+
+    private static void click(GameTestHelper helper, Player player, BlockPos target) {
+        BlockPos absolute = helper.absolutePos(target);
+        helper.useBlock(target, player, new BlockHitResult(
+                Vec3.atCenterOf(absolute).relative(Direction.UP, 0.5), Direction.UP, absolute, false));
     }
 
     private static void places(GameTestHelper helper, boolean blocked) {
