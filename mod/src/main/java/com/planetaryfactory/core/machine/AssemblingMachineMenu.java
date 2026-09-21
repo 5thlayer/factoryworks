@@ -62,7 +62,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     private static final int DATA_PROGRESS = 1;
     private static final int DATA_DURATION = 2;
     private static final int DATA_COUNT = 3;
-    private static final int OUTPUT = 4;
+    private static final int OUTPUT = AssemblingMachineBlockEntity.OUTPUT;
     private static final int MACHINE_SLOTS = 5;
 
     public static final int INPUT_X = 8;
@@ -91,7 +91,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         this.data = data;
 
         for (int slot = 0; slot < AssemblingMachineBlockEntity.INPUTS; slot++) {
-            addSlot(new ResourceHandlerSlot(slots, slots::set, slot, INPUT_X + slot * 18, INPUT_Y));
+            addSlot(new InputSlot(slots, slots::set, slot, INPUT_X + slot * 18, INPUT_Y));
         }
         addSlot(new OutputSlot(slots, slots::set, OUTPUT, OUTPUT_X, INPUT_Y));
 
@@ -234,6 +234,24 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
             return false;
         }
         return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;
+    }
+
+    /**
+     * An input takes from the player what it takes from a belt (#329): the Held recipe's ingredient
+     * for that slot, or nothing. Asked on the server, which alone can resolve the Held recipe; the
+     * client's stub accepts, and a refused placement is put back by the menu's sync.
+     */
+    private final class InputSlot extends ResourceHandlerSlot {
+        InputSlot(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> modifier,
+                int index, int x, int y) {
+            super(handler, modifier, index, x, y);
+        }
+
+        @Override
+        public boolean mayPlace(ItemStack stack) {
+            return super.mayPlace(stack)
+                    && (machine == null || machine.acceptsInput(getSlotIndex(), ItemResource.of(stack)));
+        }
     }
 
     /** The output takes nothing from the player. */

@@ -2,6 +2,8 @@ package com.planetaryfactory.core.machine;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import com.planetaryfactory.core.recipes.AssemblingRecipe;
@@ -27,24 +29,35 @@ import net.minecraft.world.item.crafting.RecipeHolder;
  */
 public final class AssemblingMachineRecipes {
 
+    /** Which recipe ids research has not unlocked. Nothing, until Researchd returns (#260). */
+    private static final Predicate<String> locked = id -> false;
+
     /**
-     * Which recipe ids research has not unlocked. Nothing, until Researchd returns (#260); the
-     * GameTest swaps it to prove a locked recipe does not craft, since there is no research to
-     * leave undone.
+     * The GameTests' stand-in for an unresearched recipe, since there is no research to leave
+     * undone. A set of ids rather than a swapped predicate: the tests in a batch run side by side,
+     * and one test's lock must neither leak into another's recipe nor be lifted by another's unlock.
      */
-    private static volatile Predicate<String> locked = id -> false;
+    private static final Set<String> lockedForTest = ConcurrentHashMap.newKeySet();
 
     private AssemblingMachineRecipes() {
     }
 
     /** Whether research has yet to unlock {@code id}: the screen marks it and no machine makes it. */
     public static boolean isLocked(String id) {
-        return locked.test(id);
+        return locked.test(id) || lockedForTest.contains(id);
     }
 
-    /** The GameTest's stand-in for an unresearched recipe. Hand {@code null} back to restore. */
-    public static void lockForTest(Predicate<String> predicate) {
-        locked = predicate == null ? id -> false : predicate;
+    public static void lockForTest(String id) {
+        lockedForTest.add(id);
+    }
+
+    public static void unlockForTest(String id) {
+        lockedForTest.remove(id);
+    }
+
+    /** Whether a GameTest holds {@code id} locked right now. */
+    public static boolean isLockedForTest(String id) {
+        return lockedForTest.contains(id);
     }
 
     /** Every assembling recipe, as the screen names them. */

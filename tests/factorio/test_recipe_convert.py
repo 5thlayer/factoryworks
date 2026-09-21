@@ -200,6 +200,13 @@ def check_overrides(overrides, corpus, failures):
             failures.append(f"override {name} names no recipe in the corpus")
 
 
+def assembling_inputs():
+    """The Assembling Machine's input slot count, read from the rule rather than typed here."""
+    source = (ROOT / "mod/src/main/java/com/planetaryfactory/core/machine/AssemblingInputSlots.java"
+              ).read_text()
+    return int(re.search(r"public static final int INPUTS = (\d+);", source).group(1))
+
+
 def check_emitted(items, recipe_types, failures):
     """Every emitted recipe resolves through the item map and onto a recipe type that exists.
 
@@ -250,6 +257,11 @@ def check_emitted(items, recipe_types, failures):
             failures.append(f"{path.name} has time {recipe.get('time')!r}")
         if not recipe.get("category"):
             failures.append(f"{path.name} carries no Factorio category, so no hand set can read it")
+        # One ingredient per input slot (#329, ADR-0074): a fifth has no slot to be inserted into,
+        # and the machine holding the recipe would stall on "no ingredients" forever, with no error.
+        if len(recipe.get("ingredients", [])) > assembling_inputs():
+            failures.append(f"{path.name} has {len(recipe['ingredients'])} item ingredients and the "
+                            f"Assembling Machine has {assembling_inputs()} input slots")
         for field in ("ingredients", "fluid_ingredients"):
             for entry in recipe.get(field, []):
                 ingredient = entry["ingredient"]

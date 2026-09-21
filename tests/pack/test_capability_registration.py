@@ -62,10 +62,9 @@ FACES = {
     "rig_part": ("registerRigCapabilities", ("Item",)),
     "offshore_pump": ("registerPumpCapabilities", ("Fluid",)),
     "boiler": ("registerBoilerCapabilities", ("Fluid", "Item")),
-    # Energy only (#328): the craft cycle draws FE, and without the face no pole counts the
-    # machine. No item face until ADR-0071's input filter lands -- an unguarded one would let a
-    # pipe fill the slots with anything.
-    "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy",)),
+    # Energy (#328): the craft cycle draws FE, and without the face no pole counts the machine.
+    # Item (#329): inputs filtered to the Held recipe, on the guard.
+    "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item")),
 }
 
 # The three ladders, against the enum every one of their blocks has to be walked from. A face is

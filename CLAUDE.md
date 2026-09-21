@@ -153,7 +153,14 @@ And that the machine crafts its Held recipe at Factorio's rate (20 ticks and exa
 copper cable, typed rather than read off `AssemblingMachineSpec`) and that a full output, no
 ingredients and a locked recipe each draw nothing, take nothing and keep the recipe (#328); drawing
 the tick's energy before the stall is asked turns all three stalls red. Nothing is locked until #260,
-so the lock test uses `AssemblingMachineRecipes.lockForTest`. The rate and the stall order are
+so the lock test uses `AssemblingMachineRecipes.lockForTest`, which locks one id and not a swapped
+predicate. The batch's tests run side by side, so each locks a recipe no other test uses. And that
+the item face takes the Held recipe's ingredients each in its own slot and refuses everything else
+(#329, ADR-0074). That is asserted through the capability on the anchor and on a hull block, on both
+overloads. A machine with no recipe takes nothing, and Oritech's `FILL_EVENLY` input mode, which
+spreads a slot-0 insert past the filter, stays pinned off. Making `acceptsInput` return true turns
+two of them red, and dropping the `cycleInputMode` override turns the third red. The slot rule is
+`AssemblingInputSlotsTest`. The rate and the stall order are
 `AssemblingMachineSpecTest` and `AssemblingStallTest`; whether an Oritech addon changes the rate in
 a world is not checked -- the multipliers are, on the JVM. A pole beside a whole machine counts it
 once and fills it, and a small pole reaching only a hull block still finds it: the hull blocks have
