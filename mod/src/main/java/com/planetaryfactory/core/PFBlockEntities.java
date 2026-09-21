@@ -15,9 +15,13 @@ import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceItemHandler;
 import com.planetaryfactory.core.smelting.FurnaceTier;
+import javax.annotation.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.minecraft.core.Direction;
@@ -191,8 +195,8 @@ public final class PFBlockEntities {
      * nothing, and which corner holds the anchor is not visible. The part forwards to its anchor's
      * block entity, the same as its break and its right-click do.
      *
-     * <p>No energy face here. The electric rig is a supply-area pole customer under ADR-0036 and
-     * gets one with #194; the burner rig never does.
+     * <p>The energy face is the electric rig's alone, and forwarded from the parts for the same
+     * reason: {@code energySide()} is null on the burner rig.
      */
     private static void registerRigCapabilities(RegisterCapabilitiesEvent event) {
         for (RigTier tier : RigTier.values()) {
@@ -204,15 +208,33 @@ public final class PFBlockEntities {
             event.registerBlock(
                     Capabilities.Item.BLOCK,
                     (level, pos, state, blockEntity, side) -> {
-                        if (!(blockEntity instanceof RigPartBlockEntity part)
-                                || part.anchorPos() == null
-                                || !(level.getBlockEntity(part.anchorPos()) instanceof RigBlockEntity rig)) {
-                            return null;
-                        }
-                        return new RigItemHandler(rig);
+                        RigBlockEntity rig = rigOf(level, blockEntity);
+                        return rig == null ? null : new RigItemHandler(rig);
+                    },
+                    PFBlocks.rigPart(tier).get());
+            event.registerBlock(
+                    Capabilities.Energy.BLOCK,
+                    (level, pos, state, blockEntity, side) ->
+                            blockEntity instanceof RigBlockEntity rig ? rig.energySide() : null,
+                    PFBlocks.rig(tier).get());
+            event.registerBlock(
+                    Capabilities.Energy.BLOCK,
+                    (level, pos, state, blockEntity, side) -> {
+                        RigBlockEntity rig = rigOf(level, blockEntity);
+                        return rig == null ? null : rig.energySide();
                     },
                     PFBlocks.rigPart(tier).get());
         }
+    }
+
+    /** The anchor a rig part forwards to, or {@code null}. */
+    @Nullable
+    private static RigBlockEntity rigOf(Level level, @Nullable BlockEntity blockEntity) {
+        if (blockEntity instanceof RigPartBlockEntity part && part.anchorPos() != null
+                && level.getBlockEntity(part.anchorPos()) instanceof RigBlockEntity rig) {
+            return rig;
+        }
+        return null;
     }
 
     /**

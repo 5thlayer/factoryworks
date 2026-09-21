@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.smelting;
 
+import com.planetaryfactory.core.energy.ForgeEnergy;
+
 import java.util.Locale;
 
 /**
@@ -51,14 +53,6 @@ public enum FurnaceTier {
     /** Minecraft's tick rate, which is Factorio's too -- the divisor turning watts into joules. */
     private static final long TICKS_PER_SECOND = 20L;
 
-    /**
-     * ADR-0060's rate: one FE is a hundred joules.
-     *
-     * <p>The same constant the rest of the port converts Factorio's wattages at, so the Electric
-     * Furnace sits on the same scale as the Boiler that feeds it rather than on a scale of its own.
-     */
-    private static final long JOULES_PER_FE = 100L;
-
     /** The reference craft the buffer is sized on: steel-plate, 16 s in the corpus. */
     private static final int STEEL_PLATE_TICKS = 320;
 
@@ -100,7 +94,7 @@ public enum FurnaceTier {
 
     /** FE drawn per tick of operation, and zero on the two burner tiers. */
     public long fePerTick() {
-        return burnsFuel ? 0L : ELECTRIC_WATTS / TICKS_PER_SECOND / JOULES_PER_FE;
+        return burnsFuel ? 0L : ELECTRIC_WATTS / TICKS_PER_SECOND / ForgeEnergy.JOULES_PER_FE;
     }
 
     /**

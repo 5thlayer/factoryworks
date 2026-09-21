@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.machine;
 
+import com.planetaryfactory.core.energy.ForgeEnergy;
 import java.util.Set;
 
 /**
@@ -32,8 +33,6 @@ public final class AssemblingMachineSpec {
 
     private static final long TICKS_PER_SECOND = 20L;
 
-    private static final long JOULES_PER_FE = 100L;
-
     private AssemblingMachineSpec() {
     }
 
@@ -57,7 +56,7 @@ public final class AssemblingMachineSpec {
      */
     public static long fePerCraft(int recipeTicks, float efficiencyMultiplier) {
         double joules = WATTS / (double) TICKS_PER_SECOND * (recipeTicks / CRAFTING_SPEED);
-        return Math.round(joules / JOULES_PER_FE * efficiencyMultiplier);
+        return Math.round(joules / ForgeEnergy.JOULES_PER_FE * efficiencyMultiplier);
     }
 
     /**

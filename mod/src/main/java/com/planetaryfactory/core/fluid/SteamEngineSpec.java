@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.fluid;
 
+import com.planetaryfactory.core.energy.ForgeEnergy;
 import java.util.function.DoubleUnaryOperator;
 
 /**
@@ -30,9 +31,6 @@ public final class SteamEngineSpec {
     private static final int FACTORIO_TICKS_PER_SECOND = 60;
     private static final int MINECRAFT_TICKS_PER_SECOND = 20;
 
-    /** ADR-0060's rate, the one the Electric Furnace's 90 FE/t is on too. */
-    private static final double JOULES_PER_FE = 100.0;
-
     /** Guards a floor against a sum like 0.1 + 0.2 landing a hair under a whole number. */
     private static final double EPSILON = 1e-9;
 
@@ -46,7 +44,7 @@ public final class SteamEngineSpec {
         this.steamPerTickAtPeak =
                 fluidUsagePerFactorioTick * FACTORIO_TICKS_PER_SECOND / MINECRAFT_TICKS_PER_SECOND;
         this.energyPerTickAtPeak =
-                maxPowerOutputWatts / MINECRAFT_TICKS_PER_SECOND / JOULES_PER_FE;
+                maxPowerOutputWatts / MINECRAFT_TICKS_PER_SECOND / ForgeEnergy.JOULES_PER_FE;
         this.fluidBoxVolume = fluidBoxVolume;
         this.efficiency = efficiency;
     }
