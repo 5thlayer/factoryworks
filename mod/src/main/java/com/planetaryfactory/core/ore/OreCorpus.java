@@ -35,10 +35,12 @@ public final class OreCorpus {
 
     private final Map<String, Resource> resources;
     private final DistanceLaw law;
+    private final DensityLaw density;
 
-    private OreCorpus(Map<String, Resource> resources, DistanceLaw law) {
+    private OreCorpus(Map<String, Resource> resources, DistanceLaw law, DensityLaw density) {
         this.resources = resources;
         this.law = law;
+        this.density = density;
     }
 
     public static OreCorpus get() {
@@ -59,6 +61,7 @@ public final class OreCorpus {
                 JsonObject entry = entries.getAsJsonObject(name);
                 List<Double> ratios = new ArrayList<>();
                 entry.getAsJsonArray("stage_ratios").forEach(value -> ratios.add(value.getAsDouble()));
+                JsonObject outfield = entry.getAsJsonObject("outfield");
                 resources.put(name, new Resource(
                         name,
                         entry.get("factorio_name").getAsString(),
@@ -66,12 +69,22 @@ public final class OreCorpus {
                                 ? 0L
                                 : (long) entry.get("starting_amount").getAsDouble(),
                         entry.get("mining_time").getAsDouble(),
-                        List.copyOf(ratios)));
+                        List.copyOf(ratios),
+                        new Outfield(
+                                outfield.get("base_density").getAsDouble(),
+                                outfield.get("base_spots_per_km2").getAsDouble(),
+                                outfield.get("random_spot_size_minimum").getAsDouble(),
+                                outfield.get("random_spot_size_maximum").getAsDouble())));
             }
             JsonObject distance = root.getAsJsonObject("distance_law");
+            JsonObject density = root.getAsJsonObject("density_law");
             return new OreCorpus(
                     Map.copyOf(resources),
-                    new DistanceLaw(distance.get("offset").getAsInt(), distance.get("divisor").getAsInt()));
+                    new DistanceLaw(distance.get("offset").getAsInt(), distance.get("divisor").getAsInt()),
+                    new DensityLaw(
+                            density.get("starting_resource_placement_radius").getAsDouble(),
+                            density.get("regular_patch_fade_in_distance").getAsDouble(),
+                            density.get("double_density_distance").getAsDouble()));
         } catch (IOException broken) {
             throw new IllegalStateException("could not read " + path, broken);
         }
@@ -106,6 +119,10 @@ public final class OreCorpus {
         return law;
     }
 
+    public DensityLaw densityLaw() {
+        return density;
+    }
+
     /**
      * One resource: its patch total, what an operation on it costs, and the ladder its stages are
      * rendered against.
@@ -117,17 +134,39 @@ public final class OreCorpus {
      *         {@code minable.mining_time}, and the reason a rig's rate cannot live on the rig
      *         (#193): uranium's 2 costs the same drill twice what iron's 1 does
      * @param stageRatios fractions of a block's own initial amount, richest first
+     * @param outfield what the outfield amount law takes of this resource
      */
     public record Resource(String name, String factorioName, long startingAmount, double miningTime,
-            List<Double> stageRatios) {
+            List<Double> stageRatios, Outfield outfield) {
+    }
+
+    /** Factorio's per-resource autoplace arguments, and the range a spot's size factor is drawn from. */
+    public record Outfield(double baseDensity, double baseSpotsPerKm2, double spotSizeMinimum,
+            double spotSizeMaximum) {
+    }
+
+    /**
+     * Factorio's {@code regular_density_at}, taking only the branch for
+     * {@code has_starting_area_placement != -1}, which every Nauvis resource is (ADR-0045).
+     */
+    public record DensityLaw(double placementRadius, double fadeIn, double doubleDensityDistance) {
+
+        public double at(double baseDensity, double distance) {
+            double fade = clamp((distance - placementRadius) / fadeIn);
+            double doubling = 1 + clamp((distance - fadeIn) / doubleDensityDistance);
+            return baseDensity * fade * doubling;
+        }
+
+        private static double clamp(double value) {
+            return Math.max(0, Math.min(1, value));
+        }
     }
 
     /**
      * Factorio's richness-by-distance term, {@code max((offset + distance) / divisor, 1)}.
      *
-     * <p>Flat inside {@code divisor - offset} blocks of spawn -- 1600 of them -- which is the
-     * arithmetic ADR-0041 quotes for why leaving the starting area early buys nothing. A Factorio
-     * tile and a Minecraft block are both a metre, so the distance needs no conversion.
+     * <p>Flat inside {@code divisor - offset} blocks of origin -- 1600 of them -- and uncapped
+     * beyond (ADR-0045). A Factorio tile and a Minecraft block are both a metre.
      */
     public record DistanceLaw(int offset, int divisor) {
 

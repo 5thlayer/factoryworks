@@ -11,11 +11,16 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
+import java.util.OptionalInt;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 /**
@@ -143,10 +148,31 @@ public final class OreMining {
         return deltaOf(server, pos).remaining(pos.asLong(), initial);
     }
 
-    /** The block's initial amount: its field's quotient, or the outfield law's scaling of it. */
+    /**
+     * The block's initial amount: its starting field's quotient, else its outfield disc's, else
+     * {@code 0} for a block nothing generated.
+     */
     public static int initialAmount(ServerLevel level, OreBlock ore, BlockPos pos) {
         OreFields fields = level.getDataStorage().computeIfAbsent(OreFields.TYPE);
-        return fields.initialAmount(ore.resource(), pos, level.getLevelData().getRespawnData().pos());
+        OptionalInt starting = fields.startingAmount(ore.resource(), pos);
+        if (starting.isPresent()) {
+            return starting.getAsInt();
+        }
+        OutfieldDisc disc = outfieldDiscAt(level, ore.resource(), pos);
+        return disc == null ? 0 : disc.amountPerBlock();
+    }
+
+    private static @Nullable OutfieldDisc outfieldDiscAt(ServerLevel level, OreResource resource, BlockPos pos) {
+        for (StructureStart start : level.structureManager().startsForStructure(ChunkPos.containing(pos), structure -> true)) {
+            for (StructurePiece piece : start.getPieces()) {
+                if (piece instanceof OutfieldDisc.Source source
+                        && source.disc().resource() == resource
+                        && piece.getBoundingBox().isInside(pos)) {
+                    return source.disc();
+                }
+            }
+        }
+        return null;
     }
 
     /**

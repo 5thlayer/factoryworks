@@ -112,6 +112,7 @@ repositories {
 tasks.named('test', Test).configure {
     useJUnitPlatform()
     testLogging { events 'failed' }
+    systemProperty 'pf.repo', rootProject.projectDir.absolutePath
 }
 
 // KubeJS reads `<game dir>/kubejs` and nothing else -- the path is not configurable -- and a dev

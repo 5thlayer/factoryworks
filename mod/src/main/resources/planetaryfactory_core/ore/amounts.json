@@ -6,6 +6,11 @@
     "divisor": 2600,
     "flat_within": 1600
   },
+  "density_law": {
+    "starting_resource_placement_radius": 150.0,
+    "regular_patch_fade_in_distance": 300.0,
+    "double_density_distance": 1300.0
+  },
   "resources": {
     "coal": {
       "factorio_name": "coal",
@@ -20,7 +25,13 @@
         0.02666666666666667,
         0.01,
         0.005333333333333333
-      ]
+      ],
+      "outfield": {
+        "base_density": 8.0,
+        "base_spots_per_km2": 2.5,
+        "random_spot_size_minimum": 0.25,
+        "random_spot_size_maximum": 2.0
+      }
     },
     "copper": {
       "factorio_name": "copper-ore",
@@ -35,7 +46,13 @@
         0.02666666666666667,
         0.01,
         0.005333333333333333
-      ]
+      ],
+      "outfield": {
+        "base_density": 8.0,
+        "base_spots_per_km2": 2.5,
+        "random_spot_size_minimum": 0.25,
+        "random_spot_size_maximum": 2.0
+      }
     },
     "iron": {
       "factorio_name": "iron-ore",
@@ -50,7 +67,13 @@
         0.02666666666666667,
         0.01,
         0.005333333333333333
-      ]
+      ],
+      "outfield": {
+        "base_density": 10.0,
+        "base_spots_per_km2": 2.5,
+        "random_spot_size_minimum": 0.25,
+        "random_spot_size_maximum": 2.0
+      }
     },
     "stone": {
       "factorio_name": "stone",
@@ -65,7 +88,13 @@
         0.02666666666666667,
         0.01,
         0.005333333333333333
-      ]
+      ],
+      "outfield": {
+        "base_density": 4.0,
+        "base_spots_per_km2": 2.5,
+        "random_spot_size_minimum": 0.25,
+        "random_spot_size_maximum": 2.0
+      }
     },
     "uranium": {
       "factorio_name": "uranium-ore",
@@ -80,7 +109,13 @@
         0.027,
         0.01,
         0.005
-      ]
+      ],
+      "outfield": {
+        "base_density": 0.9,
+        "base_spots_per_km2": 1.25,
+        "random_spot_size_minimum": 2.0,
+        "random_spot_size_maximum": 4.0
+      }
     }
   }
 }
