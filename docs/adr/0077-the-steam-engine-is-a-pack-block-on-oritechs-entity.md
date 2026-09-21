@@ -37,6 +37,6 @@ and controller code rather than in blocks the pack owns.
   buffer are empty by design.
 - The engine has no screen. Nothing on it can be set, and Oritech's screen drew a water tank ADR-0062
   leaves empty for good and an addon panel for an engine with no addon slots. Its Jade line is the
-  whole interface: status, a steam gauge and a power output gauge. Jade's own tank and FE rows are
-  hidden on it, since the first repeats the steam gauge and the second shows the buffer, which reads
-  as output and is not. Its fluid face is the steam tank alone, insert-only.
+  whole interface: its status, and Jade's own fluid row for the steam tank. Jade's FE row is hidden
+  on it, since it shows the buffer, which reads as output and is not. Its fluid face is the steam
+  tank alone, insert-only.
