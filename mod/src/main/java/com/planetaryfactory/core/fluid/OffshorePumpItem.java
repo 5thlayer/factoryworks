@@ -24,8 +24,7 @@ import org.jspecify.annotations.Nullable;
  * <p><b>Refused with a message, rather than placed and inert.</b> A pump that accepts any position
  * and then quietly produces nothing does not reach the player as a mistake at the pump: it reaches
  * them as a dead factory three machines downstream, with nothing in any log to say why. That is the
- * same failure the vein-indicator check exists to prevent, and the same reason the rig refuses a
- * footprint that does not fit rather than placing part of one.
+ * same reason the rig refuses a footprint that does not fit rather than placing part of one.
  *
  * <p>Nothing is consumed on a refusal, because nothing was placed.
  */

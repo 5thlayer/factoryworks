@@ -71,21 +71,8 @@ DATA_VERSION = 4790  # 26.1.2, world_version in the client jar's version.json.
 # the jigsaw at world generation, not from rerunning this.
 SEED = 20260829
 
-# The single ore block each patch is made of.
-#
-# One block per patch, and deliberately *not* the buried vein's mix. The vein files
-# `kubejs/data/gtceu/gtceu/ore_vein/{iron,copper,coal}.json` deal four ore blocks each, and two
-# of those veins are mixed across metals: the iron vein carries malachite, which smelts to copper,
-# and the copper vein carries iron ore and pyrite, which smelt to iron. Underground that is a
-# feature -- a vein is a place you learn the local rock -- but the starting patch is the tutorial,
-# and a patch has to answer the question "what is this a patch of" with one word. A player who
-# mines the iron field and gets copper has been taught something false about how the world is
-# organised.
-#
-# So each field is one block: the plain ore of its own metal. The vein files name *materials*
-# (`gtceu:copper`) because GregTech resolves a material to the block for the layer it is generating
-# in; a structure template needs the block id itself, and Terra's surface stone layer makes that
-# `gtceu:<material>_ore`.
+# The single ore block each patch is made of. One block, never a mix: the starting patch is the
+# tutorial, and it has to answer "what is this a patch of" with one word.
 PATCHES = {
     "iron": {
         "block": "planetaryfactory:iron_ore",

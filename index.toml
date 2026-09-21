@@ -1061,26 +1061,6 @@ file = "kubejs/data/gtceu/gtceu/bedrock_fluid/salt_water_deposit.json"
 hash = "42f9187f5ce44b866cd4de2977e39339cde5d4c4a1e902d424c9eda2067122e4"
 
 [[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/coal.json"
-hash = "ba9a2066a3943d5dd8d2d074f81d12f7af5cec1246e328a856bcfa0264f0b4a3"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/copper.json"
-hash = "e535cbb98d48466c3244b62105b566be053e4f6ecac7622006919dbb65b9e362"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/iron.json"
-hash = "04b6fc186103551062dd678a8f5f2eabbfe37b7224ca0b53996fe8208bbfc69b"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/stone.json"
-hash = "1631d0b881a41459317398801d64c82725d63da786e91f797c7bf53036ad0973"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/ore_vein/uranium.json"
-hash = "167a8d625ad257195d1d1aaee1cf286808012e8da8dba6f5e3941c3752bc7fa6"
-
-[[files]]
 file = "kubejs/data/gtceu/tags/item/crafting_tools/wrench.json"
 hash = "6b9dbbb95424062a17c3fa0579624522c4b152f9cad980e73e4efc7c0ee29e60"
 
@@ -1681,10 +1661,6 @@ file = "kubejs/data/remove-stock-bodies.zip"
 hash = "7c202d1fdd213e8d3b6d7ce5c585b45bee7774a836008d4cf0c5af4b5ab0db71"
 
 [[files]]
-file = "kubejs/data/remove-terra-cut-veins.zip"
-hash = "e6ad98dc7928ae0ae10bbf14e5cdeb819f975833f42abe0b56ab6ff039ac481d"
-
-[[files]]
 file = "kubejs/parked/data/planetaryfactory/dimension/aquilo.json"
 hash = "b4331a314b777f0c3daa4418e52be68961bdf42b3abf22112a8b2e266877dfdb"
 
@@ -2113,10 +2089,6 @@ hash = "a6b3987906ad7931ab0d711e00a66eb16a7b97cf57be97629b30319e117677ff"
 [[files]]
 file = "packs/remove-stock-bodies/pack.mcmeta"
 hash = "82bf39a093a255109cc0340a9d1f47b396697e8fefa98a63611b76fc42761336"
-
-[[files]]
-file = "packs/remove-terra-cut-veins/pack.mcmeta"
-hash = "2947d46f51a6a0fa38115ec56678ca1bf357630f3b53515b3ce9c07ca99665de"
 
 [[files]]
 file = "realms_persistence.json"
