@@ -79,15 +79,6 @@ EXPECTED = {
         "names `gcyr:block/martian_rock` (#258)",
     "planetaryfactory:block/fulgorite":
         "names `gcyr:block/martian_rock` (#258)",
-    "planetaryfactory:steam":
-        "the pack's own fluid has no fluid model and its block no variants; both halves of the "
-        "steam chain's rendering are #189's, which owns the two pack-owned fluids",
-    "planetaryfactory:flowing_steam":
-        "the flowing half of the same unregistered fluid model (#189)",
-    "planetaryfactory:superheated_steam":
-        "the second pack-owned fluid, likewise unrendered (#189)",
-    "planetaryfactory:flowing_superheated_steam":
-        "the flowing half of the second fluid (#189)",
 }
 
 # Each way the client says an asset did not resolve, and the group that holds the subject. They are

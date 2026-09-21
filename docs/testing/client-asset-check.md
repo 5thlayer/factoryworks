@@ -67,9 +67,8 @@ nobody watching it.
 Same rule as `check-datapack-load.py`. Every complaint the log may contain about this pack is an
 `EXPECTED` entry with its reason and its ticket; an unlisted one fails; and a listed one that no
 longer appears fails too, because a stale entry is a defect somebody fixed and a guard nobody
-re-armed. The eight today are two groups: four models naming `gcyr:` textures whose mod left with
-ADR-0060, which the chassis ticket (#258) owns, and the four steam fluids, whose
-rendering is #189's along with the rest of the two pack-owned fluids.
+re-armed. The four today are models naming `gcyr:` textures whose mod left with ADR-0060, which
+the chassis ticket (#258) owns.
 
 Only this pack's namespace is scanned. The installed mods produce dozens of the same warnings —
 Railcraft's posts have no `particle` texture — and they are not ours to fix; an entry for each would
