@@ -2,6 +2,7 @@ package com.planetaryfactory.core.machine;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import com.planetaryfactory.core.recipes.AssemblingRecipe;
 import com.planetaryfactory.core.recipes.PFRecipes;
@@ -22,11 +23,28 @@ import net.minecraft.world.item.crafting.RecipeHolder;
  *
  * <p><b>Nothing is Locked yet</b>, for {@code RuntimePlanSource}'s reason: the research predicate
  * asks Researchd, whose fork is not on 26.1.2 (#260). The annotation is wired all the way to the
- * screen, so restoring the predicate is this one line.
+ * screen and into the craft cycle (#328), so restoring the predicate is {@link #locked}'s one line.
  */
 public final class AssemblingMachineRecipes {
 
+    /**
+     * Which recipe ids research has not unlocked. Nothing, until Researchd returns (#260); the
+     * GameTest swaps it to prove a locked recipe does not craft, since there is no research to
+     * leave undone.
+     */
+    private static volatile Predicate<String> locked = id -> false;
+
     private AssemblingMachineRecipes() {
+    }
+
+    /** Whether research has yet to unlock {@code id}: the widget shades it and no machine makes it. */
+    public static boolean isLocked(String id) {
+        return locked.test(id);
+    }
+
+    /** The GameTest's stand-in for an unresearched recipe. Hand {@code null} back to restore. */
+    public static void lockForTest(Predicate<String> predicate) {
+        locked = predicate == null ? id -> false : predicate;
     }
 
     /** Every assembling recipe, as the widget lists it. */
@@ -35,7 +53,7 @@ public final class AssemblingMachineRecipes {
                 .byType(PFRecipes.ASSEMBLING_TYPE.get()).stream()
                 .map(holder -> holder.id().identifier().toString())
                 .toList();
-        return RecipeChoice.of(ids, id -> false);
+        return RecipeChoice.of(ids, AssemblingMachineRecipes::isLocked);
     }
 
     /** The recipe {@code held} names, looked up now rather than when the machine loaded. */
