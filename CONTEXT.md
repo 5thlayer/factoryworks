@@ -215,7 +215,7 @@ One of the patches the starting area deals at spawn, whose total is Factorio's s
 _Avoid_: starting patch, spawn patch, tutorial patch
 
 **Outfield patch**:
-Every ore patch beyond the starting area. Placed by ordinary worldgen at Factorio's own spacing, excluded from the first 150 blocks around the origin, land-only, and reached by rail rather than by belt — a patch is roughly forty chunks from its neighbours of the same resource (ADR-0045).
+Every ore patch beyond the starting area. Placed by ordinary worldgen at Factorio's own spacing, excluded from the first 150 blocks around the origin, land-only, and reached by rail rather than by belt — a patch is roughly forty chunks from its neighbours of the same resource, and a uranium patch nearly a hundred (ADR-0045).
 _Avoid_: regular patch, wild patch, remote patch
 
 **Amplitude**:

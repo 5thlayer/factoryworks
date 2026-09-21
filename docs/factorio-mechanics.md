@@ -154,21 +154,25 @@ Sub-rules:
   `starting_amount = 20000 * base_density * (frequency_multiplier + 1) * size_multiplier`, and the
   per-block amount is that total over the blocks in the patch.
 - **Patch spacing is Factorio's spots per km²** — `planned`, ADR-0045. `base_spots_per_km2` is
-  extracted, not chosen: 2.5 for coal, copper, iron and stone and 1.25 for uranium, which is ~40 and
-  ~56 chunks of mean spacing. An outfield patch is a train ride, not a belt run.
-- **Regular patches are suppressed near spawn** — `adapted`, ADR-0045. Factorio's
-  `starting_resource_placement_radius` (150) ships as a flat exclusion; the 300-block fade-in beyond
-  it does not, because a structure set cannot express a ramp and 150 already keeps a rich patch off
-  the tutorial.
-- **Patch size rises with distance** — `planned`, ADR-0045. Quantity raises a spot's amplitude until
-  `regular_blob_amplitude_at`'s cap and widens its radius past it, which is why a far patch is bigger
-  as well as richer. The two split the quantity rather than multiplying it.
+  extracted, not chosen: 2.5 for coal, copper, iron and stone and 1.25 for uranium. With the mean
+  spot size that is ~671 and ~1549 blocks, ~42 and ~97 chunks, of mean spacing (#317). An outfield
+  patch is a train ride, not a belt run.
+- **Regular patches are suppressed near spawn and fade in** — `planned`, ADR-0045. No patch inside
+  `starting_resource_placement_radius` (150), and a spot's quantity ramps up over the 300 blocks
+  beyond it. Both fall out of the density law rather than an exclusion.
+- **Patch size rises with distance** — `planned`, ADR-0045. A spot's quantity, and with it its
+  radius and blob amplitude, grows with density until 1600 blocks and then stops; neither cap binds
+  at default settings. Each spot draws its size factor between `random_spot_size_minimum` and
+  `maximum`.
+- **A patch has a ragged edge** — `adapted`, ADR-0045. Factorio's three octaves, scales, weights and
+  −1/3 offset times the blob amplitude, sampled from Minecraft's `ImprovedNoise` because
+  `basis_noise` is not published.
 - **Richness rises with distance from spawn** — `shipped` at the design level, ADR-0041. Factorio's
   own term, `max((1000 + distance) / 2600, 1)`, ported metre-for-metre: flat inside 1600 blocks,
   linear beyond. This is why leaving the starting area early buys nothing. *ADR-0045 measures it from
   the world origin rather than from spawn — worldgen cannot see spawn, and one mechanic may not have
-  two datums — and caps it, because past the amplitude crossover the uncapped term pays Factorio's
-  radius growth out as richness.*
+  two datums. It is not capped: past 1600 blocks a spot stops growing and only richness rises, which
+  is Factorio's (#317).*
 - **An ore tile shows its remaining amount** — `adapted`, ADR-0041. Factorio's eight sprite stages
   are kept as a material-independent ratio set (`stage_counts`), computed from the block's own
   amount; the exact number is a Jade line rather than a tooltip. `adapted` because no patch carries
