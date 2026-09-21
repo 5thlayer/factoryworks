@@ -14,9 +14,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
  * finds them there, and that a tag ingredient arrives as the items it names. A graph read off the
  * wrong type is empty with nothing logged, which is the state the port left the Assembler in.
  *
- * <p>The recipes asserted are ones whose every item the GameTest server has: a sapling (vanilla
- * logs, vanilla sapling) and concrete (vanilla bricks and water). Most of the hand set names
- * KubeJS-registered items, which this server does not load.
+ * <p>The recipes asserted are a sapling, for its tag ingredient, and concrete, for its fluid.
  */
 final class HandSetTests {
 
