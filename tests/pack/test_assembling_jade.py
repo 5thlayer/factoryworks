@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""Every string the Assembling Machine's Jade tooltip shows has a lang entry (#333).
+
+A missing key does not fail anywhere: it renders raw on the crosshair. The keys are read out of the
+plugin, and the status keys out of `AssemblingStatus`, whose `langKey()` the plugin asks rather than
+spelling them. The provider is not reachable from the Minecraft-free test source set, so this is
+source text.
+
+Usage: tests/pack/test_assembling_jade.py
+"""
+
+import json
+import pathlib
+import re
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+CORE = ROOT / "mod/src/main/java/com/planetaryfactory/core"
+PLUGIN = CORE / "compat/AssemblingMachineJadePlugin.java"
+STATUS = CORE / "machine/AssemblingStatus.java"
+LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
+
+KEY_RE = re.compile(r'translatable\(\s*"([a-z_.]*planetaryfactory[a-z_.]+)"')
+
+
+def status_keys():
+    source = STATUS.read_text(encoding="utf-8")
+    body = re.search(r"enum AssemblingStatus \{(.*?);", source, re.S).group(1)
+    prefix = re.search(r'return "([a-z_.]+)" \+ name\(\)', source).group(1)
+    return {prefix + name.strip().lower() for name in body.split(",") if name.strip()}
+
+
+def main():
+    lang = json.loads(LANG.read_text(encoding="utf-8"))
+    source = PLUGIN.read_text(encoding="utf-8")
+    failures = []
+
+    keys = set(KEY_RE.findall(source))
+    if not keys:
+        failures.append(f"no lang keys parsed out of {PLUGIN.relative_to(ROOT)}")
+    if "langKey()" not in source:
+        failures.append("the plugin no longer asks AssemblingStatus.langKey(); the status keys are unchecked")
+    keys |= status_keys()
+
+    for key in sorted(keys):
+        if not lang.get(key):
+            failures.append(f"{key} has no lang entry -- the machine's HUD would show its raw key")
+
+    for index, failure in enumerate(failures, 1):
+        print(f"FAIL {index}: {failure}")
+    if failures:
+        return 1
+    print(f"ok   {len(keys)} Assembling Machine HUD keys, each with a lang entry")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

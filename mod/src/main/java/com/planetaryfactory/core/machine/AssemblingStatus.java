@@ -36,6 +36,12 @@ public enum AssemblingStatus {
         };
     }
 
+    /** A synced ordinal back to its status; one out of range, from a mismatched peer, reads as idle. */
+    public static AssemblingStatus fromOrdinal(int ordinal) {
+        AssemblingStatus[] all = values();
+        return ordinal >= 0 && ordinal < all.length ? all[ordinal] : IDLE;
+    }
+
     public String langKey() {
         return "gui.planetaryfactory.assembling_machine.status." + name().toLowerCase(Locale.ROOT);
     }
