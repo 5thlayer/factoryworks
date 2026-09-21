@@ -613,8 +613,12 @@ Sub-rules:
   `improved_chute`, `express_chute` and `turbo_chute`, read as Loader, Fast loader, Express loader and
   Turbo loader, and are crafted from the `burner-inserter`, `inserter`, `fast-inserter` and
   `bulk-inserter` recipes on the Assembling surface, each unlocked by its inserter's technology
-  (#347, ADR-0076). A loader moves its tier's 15, 30, 45 or 60 items/s whatever belt it is on. All
-  four run unpowered for now; the per-item draw of tiers 2 to 4 is #348's.
+  (#347, ADR-0076). A loader moves its tier's 15, 30, 45 or 60 items/s whatever belt it is on.
+- **Inserter energy** — `adapted` as the loader's. Tier 1 runs unpowered, as the burner inserter
+  burns fuel the loader has no slot for. Tiers 2 to 4 hold an FE buffer a pole feeds, pay one swing
+  of their inserter per item (66.5, 81.2 and 116 FE) and its drain every tick (4, 5 and 10 FE/s), and
+  move nothing when short of an item's charge. The loading and the unloading loader each pay, as
+  Factorio's two inserters would, so a tier-2 line costs 133 FE an item (#348, ADR-0076).
 - **Long-handed inserter** — `excluded`. A loader has no arm to lengthen, so a long-handed tier would
   be a loader with nothing to tell it apart; `long-handed-inserter` is `not_emitted` (#347, ADR-0076).
 - **Stack-size bonus research** — `planned`. A loader moves one item per belt entry until #25 picks

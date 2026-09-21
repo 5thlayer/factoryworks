@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.planetaryfactory.core.PFBlocks;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -36,6 +38,7 @@ final class BeltHandoffTests {
     private static final BlockPos FROM = new BlockPos(3, 1, 3);
     private static final BlockPos TO = new BlockPos(7, 1, 3);
     private static final BlockPos TARGET = new BlockPos(8, 1, 3);
+    private static final BlockPos POLE = new BlockPos(5, 1, 4);
 
     private static final int ITEMS = 16;
 
@@ -106,6 +109,8 @@ final class BeltHandoffTests {
     private static void deliversAtRate(GameTestHelper helper, BeltTier loaders, BeltTier tier,
             int itemsPerSecond) {
         helper.setBlock(TARGET, Blocks.CHEST);
+        // Tiers 2 to 4 pay FE per item (#348); the creative pole's area covers the platform.
+        if (loaders != BeltTier.BELT) helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
         placeBelt(helper, SOURCE, FROM, TO, RATE_SUPPLY, loaders, tier);
 
         int expected = itemsPerSecond * RATE_WINDOW_TICKS / 20;
@@ -164,7 +169,7 @@ final class BeltHandoffTests {
     }
 
     /** A chest of cobblestone behind an east-facing loader, belted to a west-facing one. */
-    private static ChuteBlockEntity placeBelt(GameTestHelper helper, BlockPos source, BlockPos from,
+    static ChuteBlockEntity placeBelt(GameTestHelper helper, BlockPos source, BlockPos from,
             BlockPos to, int items, BeltTier loaders, BeltTier tier) {
         helper.setBlock(source, Blocks.CHEST);
         helper.setBlock(from, loader(loaders, Direction.EAST));
@@ -182,11 +187,11 @@ final class BeltHandoffTests {
                 .setValue(HorizontalDirectionalBlock.FACING, facing);
     }
 
-    private static ChestBlockEntity chest(GameTestHelper helper, BlockPos pos) {
+    static ChestBlockEntity chest(GameTestHelper helper, BlockPos pos) {
         return helper.getBlockEntity(pos, ChestBlockEntity.class);
     }
 
-    private static int count(Container container) {
+    static int count(Container container) {
         int total = 0;
         for (int slot = 0; slot < container.getContainerSize(); slot++) {
             total += container.getItem(slot).getCount();

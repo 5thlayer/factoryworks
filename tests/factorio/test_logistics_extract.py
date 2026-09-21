@@ -14,8 +14,9 @@ re-runs it. Every figure the fork and its GameTest type is re-derived from the c
     swing's joules come from the rule under `documented.swing`, which must reproduce the wiki's
     own table, and are divided by the hand size. Tier 1 is built from the burner inserter and
     draws no power.
-  - **the GameTest's typed figures.** `BeltHandoffTests` types each tier's items a second and 512
-    rather than reading them off the fork; they are asserted here against the derivation.
+  - **the GameTest's typed figures.** `BeltHandoffTests` types each tier's items a second and 512,
+    and `BeltPowerTests` tier 2's joules per item and drain, rather than reading them off the fork;
+    they are asserted here against the derivation.
 """
 
 import json
@@ -46,8 +47,9 @@ LOADER_INSERTERS = {1: "burner-inserter", 2: "inserter", 3: "fast-inserter", 4: 
 EXPECTED_FE_PER_ITEM = {2: 66.5, 3: 81.2, 4: 116.0}
 EXPECTED_DRAIN_FE_PER_SECOND = {2: 4.0, 3: 5.0, 4: 10.0}
 
-GAMETEST = (ROOT / "mod" / "src" / "main" / "java" / "com" / "planetaryfactory" / "core"
-            / "gametest" / "BeltHandoffTests.java")
+GAMETESTS = ROOT / "mod" / "src" / "main" / "java" / "com" / "planetaryfactory" / "core" / "gametest"
+GAMETEST = GAMETESTS / "BeltHandoffTests.java"
+POWER_GAMETEST = GAMETESTS / "BeltPowerTests.java"
 
 
 def joules(raw):
@@ -170,6 +172,14 @@ def main():
         typed = typed_int(source, name)
         if typed != want:
             failures.append(f"BeltHandoffTests types {name} = {typed}, the corpus derives {want}")
+
+    power = POWER_GAMETEST.read_text(encoding="utf-8")
+    for name, want in (("TIER_2_JOULES_PER_ITEM", round(EXPECTED_FE_PER_ITEM[2] * JOULES_PER_FE)),
+                       ("TIER_2_DRAIN_WATTS", round(EXPECTED_DRAIN_FE_PER_SECOND[2] * JOULES_PER_FE)),
+                       ("JOULES_PER_FE", JOULES_PER_FE)):
+        typed = typed_int(power, name)
+        if typed != want:
+            failures.append(f"BeltPowerTests types {name} = {typed}, the corpus derives {want}")
 
     for failure in failures:
         print(f"FAIL  {failure}")
