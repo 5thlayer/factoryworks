@@ -60,8 +60,7 @@
       "kind": "item",
       "target": "planetaryfactory:assembling_machine",
       "source": "authored",
-      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #258's, so the row is blocked on it. It reads `planetaryfactory:assembling` rather than Oritech's assembler type (ADR-0063).",
-      "blocked_by": 258
+      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060, ADR-0071), decided by #277. The block is registered by #326, which unblocks the row; it reads `planetaryfactory:assembling` rather than Oritech's assembler type (ADR-0063)."
     },
     "assembling-machine-2": {
       "kind": "item",

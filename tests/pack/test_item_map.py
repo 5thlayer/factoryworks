@@ -75,7 +75,6 @@ SCIENCE = (
     "names the Researchd fork, which is still on 1.21.1 and therefore not in `mods/`. #251 owns "
     "the port; the row itself is not in question")
 DEFERRED = {
-    "assembling-machine-1": CHASSIS,
     "assembling-machine-2": TIERS,
     "assembling-machine-3": TIERS,
     "chemical-plant": CHASSIS,

@@ -10,6 +10,7 @@ import com.planetaryfactory.core.fluid.OffshorePumpItem;
 import com.planetaryfactory.core.fluid.BarrelSpec;
 import com.planetaryfactory.core.mining.EngineersPick;
 import com.planetaryfactory.core.mining.PickTier;
+import com.planetaryfactory.core.machine.AssemblingMachineItem;
 import com.planetaryfactory.core.mining.rig.RigBlockItem;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -59,6 +60,13 @@ public final class PFItems {
      */
     public static final DeferredHolder<Item, Item> BARREL = ITEMS.registerItem(
             "barrel", props -> new BarrelItem(props.stacksTo(BarrelSpec.STACK_SIZE)));
+
+    /**
+     * The Assembling Machine's item (#326). An {@link AssemblingMachineItem}, which places the whole
+     * footprint, rather than {@code registerSimpleBlockItem}, which would place the anchor alone.
+     */
+    public static final DeferredHolder<Item, AssemblingMachineItem> ASSEMBLING_MACHINE = ITEMS.registerItem(
+            "assembling_machine", AssemblingMachineItem::new);
 
     /**
      * The Engineer's Pick, in its two tiers (ADR-0039).
@@ -114,6 +122,7 @@ public final class PFItems {
         FUNCTIONAL.add(ITEMS.registerItem("offshore_pump",
                 props -> new OffshorePumpItem(props)));
         FUNCTIONAL.add(BARREL);
+        FUNCTIONAL.add(ASSEMBLING_MACHINE);
         // Tools sit with the machinery, not with the saplings: a pick is the first thing a player
         // reaches for and the last place they would look for it is NATURAL_BLOCKS.
         PICKS.values().forEach(FUNCTIONAL::add);

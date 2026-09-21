@@ -516,9 +516,8 @@ route and an EMI category that do not exist yet.
    machine".
 5. **Is the multiblock kept?** `getCorePositions()` is a per-subclass override and could be empty,
    but the block would still need `MultiblockMachine.ASSEMBLED` in its state
-   (`initMultiblock` reads `state.getValue(MultiblockMachine.ASSEMBLED)`, read from the 1.21.1 source
-   clone at `common/src/main/java/rearth/oritech/util/MultiblockMachineController.java:137` and
-   **not verified against the jar**). ADR-0059 wants footprint = Factorio tile size placed from one
+   (`initMultiblock` reads `state.getValue(MultiblockMachine.ASSEMBLED)` — verified against the jar
+   for #326, §9.1). ADR-0059 wants footprint = Factorio tile size placed from one
    item, which is the rig idiom, not Oritech's core-placing gesture.
 6. **What happens to #237's check?** §4. Its own text names the condition; someone has to apply it.
 7. **Does the pack's Oritech mixin `required: false` convention extend to a hard subclass?** §2.5. A
@@ -530,9 +529,8 @@ route and an EMI category that do not exist yet.
 
 ## 8. What was not established
 
-- The full bodies of `workTick`, `onProgressCompleted`, `createCraftingOutputs` and
-  `removeCraftingInputs` — read only far enough to establish the call graph and the `OritechRecipe`
-  typing. A design that overrides them needs them read line by line.
+- ~~The full bodies of `workTick`, `onProgressCompleted`, `createCraftingOutputs` and
+  `removeCraftingInputs`~~ — read line by line for #326; see §9.2.
 - `RefineryBlockEntity`'s three fluid storages and what each is for.
 - Whether `BlockEntitiesContent.ASSEMBLER`'s registration constrains anything for a pack-owned type
   (it should not; standard NeoForge `DeferredRegister`), and whether Oritech's `ADDON_ENTITY` fixed
@@ -541,3 +539,88 @@ route and an EMI category that do not exist yet.
   correctly for a pack block entity. The menu *handler* resolves by `BlockPos` and is not typed to
   Oritech's entities (§2.3); the screen was not read.
 - Whether #237's check passes on `main` today.
+
+---
+
+## 9. Read off the jar for #326
+
+The two facts #326 was told to read before writing code. Both are from `javap -p -c` on
+`mods/oritech-2.0.0-exp6.jar`, not the 1.21.1 clone.
+
+### 9.1 `deserializeMultiblock` does not reach `initMultiblock`
+
+`MultiblockMachineEntity.loadAdditional` calls `deserializeMultiblock(ValueInput)`, and that default
+method on `MultiblockMachineController` does exactly two things: clears `getConnectedCores()` and
+refills it from the `cores` child list (each entry's `pos`, mapped back to world space), then calls
+`setCoreQuality(input.getFloatOr("quality", 1.0f))`. **It never calls `initMultiblock` and never reads
+`ASSEMBLED`.** A load cannot throw on a block without the property, and cannot divide by zero: an
+empty `cores` list leaves the list empty and the quality at 1.0.
+
+So the paths that read `ASSEMBLED` are the interactive ones, all on the block or the controller:
+
+| where | what it does with `ASSEMBLED` |
+| --- | --- |
+| `MultiblockMachine.useWithoutItem` | `false` → `tryPlaceNextCore(player)`; then **always** `initMultiblock(state)` before opening the screen |
+| `initMultiblock(state)` | `true` → returns `true` at once. Only past that does it walk `getCorePositions()`, and the quality it sets is `sum / connected.size()` — `0.0f / 0` is NaN on an empty list |
+| `MultiblockMachine.resetMultiblock` (from `playerWillDestroy`, `playerDestroy`, `destroy`, `onExplosionHit`) | `true` → `onControllerBroken()`, which walks `getConnectedCores()` and clears it — harmless when empty |
+| `MultiblockMachineEntity.isAssembled(state)` | the unguarded `state.getValue(ASSEMBLED)`; `MachineBlockEntity`'s own returns `true` |
+
+This is what #326's shape rests on: the block extends `MultiblockMachine` so the property exists,
+the item places the anchor with `ASSEMBLED=true` so `useWithoutItem` skips the core placement and
+`initMultiblock` returns before the division, and the block entity overrides `isAssembled` to `true`
+so the tick does not depend on the state at all.
+
+### 9.2 The craft tick, whole
+
+`MachineBlockEntity.serverTick(level, pos, state, entity)`:
+
+1. `if (!isAssembled(state) || disabledViaRedstone) return;`
+2. On the first tick (`initialRecipeLookup`), set `lastChangedAt = level.getGameTime()` and clear the
+   flag, remembering it was the first.
+3. `currentRecipe = findActiveRecipe()` (the previous one kept in a local).
+4. `if (currentRecipe.isEmpty()) { resetProgress(); return; }`
+5. `if (!canOutputRecipe(currentRecipe)) { resetProgress(); return; }`
+6. If the recipe changed: remember `progress.get()`, `resetProgress()`, and if this was the first
+   tick and the *previous* recipe was empty, restore the remembered progress — which is what keeps a
+   craft's progress over a world load, where the cached recipe starts empty.
+7. `workTick()`.
+
+`workTick()`, all inside one `Transaction.openRoot()` (try-with-resources, closed on every path):
+
+1. `int cost = (int) calculateEnergyUsage();`
+2. `if (energyStorage.internalExtract(cost, tx) != cost) return;` — close without commit: an
+   under-powered tick draws nothing and makes no progress.
+3. `progress.increment(tx);`
+4. If `checkCraftingFinished(currentRecipe)` — `progress.get() >= currentRecipe.time() *
+   getSpeedMultiplier()`:
+   - `if (!onProgressCompleted(tx))` → log `crafting results failed! This should never happen. At: {}`
+     and return without committing, so the energy, the progress and any partial output all roll back;
+   - otherwise `progress.reset(tx)`.
+5. `tx.commit(); setChanged(); onProgressed(); lastWorkedAt = level.getGameTime();`
+
+`onProgressCompleted(tx)` is `createCraftingOutputs(tx) && removeCraftingInputs(tx)`, in that order,
+and short-circuits.
+
+- `createCraftingOutputs(tx)`: for each `ItemStackTemplate` in `getCraftingResults(currentRecipe)`,
+  insert `ItemResource.of(template)` × `template.count()` into `inventory.getOutputContainer()`; any
+  insert short of the count returns `false`.
+- `removeCraftingInputs(tx)`: `OritechRecipe.findMatchingInputSlots(currentRecipe.itemInputs(),
+  getInputView())` assigns one slot per ingredient; `null` → `false`. Then for each assigned slot,
+  extract **one** unit from `inventory.getInputContainer()`; an empty slot or a short extract returns
+  `false`.
+
+Three consequences for ADR-0071's replacement, which #325's later tickets own:
+
+- **The rollback is the transaction, not the code.** A failed output or input step returns before
+  `commit`, and every mutation — energy, progress, outputs — was journalled against `tx`. A replacement
+  `workTick` that mutates anything outside a snapshot-participating store breaks that.
+- **`canOutputRecipe` runs every tick before `workTick`, and failing it resets progress.** A full
+  output under Oritech's cycle does not hold a craft's progress, it discards it; ADR-0071's "holds it
+  and idles" is a behaviour the replacement has to write, not inherit.
+- **Input removal is one unit per slot**, which is the `OritechRecipe` wall of §1.5 restated at the
+  item-movement level: `removeCraftingInputs` cannot consume a `SizedIngredient`'s count and has to be
+  replaced along with the cycle.
+
+For #326 itself only step 4 of `serverTick` matters: the Assembling Machine's `findActiveRecipe`
+returns `OritechRecipe.EMPTY`, so the tick resets progress and returns before `workTick` — nothing is
+looked up, extracted or consumed.

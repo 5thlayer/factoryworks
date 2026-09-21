@@ -5,6 +5,7 @@ import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerItemHandler;
 import com.planetaryfactory.core.fluid.OffshorePumpBlockEntity;
+import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigItemHandler;
 import com.planetaryfactory.core.mining.rig.RigPartBlockEntity;
@@ -81,6 +82,16 @@ public final class PFBlockEntities {
             BOILER = BLOCK_ENTITIES.register("boiler",
                     () -> new BlockEntityType<>(BoilerBlockEntity::new,
                             java.util.Set.of(PFBlocks.BOILER.get())));
+
+    /**
+     * The Assembling Machine's anchor (#326, ADR-0071). Its own type, not Oritech's
+     * {@code ASSEMBLER}: that is the reason the block entity extends Oritech's abstract base rather
+     * than its concrete assembler. The parts have no block entity at all.
+     */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AssemblingMachineBlockEntity>>
+            ASSEMBLING_MACHINE = BLOCK_ENTITIES.register("assembling_machine",
+                    () -> new BlockEntityType<>(AssemblingMachineBlockEntity::new,
+                            java.util.Set.of(PFBlocks.ASSEMBLING_MACHINE.get())));
 
     private PFBlockEntities() {
     }

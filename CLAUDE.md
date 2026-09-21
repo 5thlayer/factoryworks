@@ -174,10 +174,12 @@ what the plan promised. An accepted plan must have put **every** block down in t
 refused plan must have changed **nothing**, which is read before the gesture as well as after,
 because "nothing changed" is not the same claim as "the positions are empty". Both halves are load-
 bearing -- the preview's two failure modes are promising a placement that does not happen and
-refusing one that does. Ten tests, each checked against the defect it exists for: forcing the pole
+refusing one that does. Twelve tests, each checked against the defect it exists for: forcing the pole
 to the vanilla plan turns four red, forcing the rig's footprint to always fit turns one red,
 flattening the rig to a single layer turns two more, dropping the pump's water question turns one,
-and giving up on the wrong-tier column walk turns the last. Three fixtures are load-bearing rather
+and giving up on the wrong-tier column walk turns another. The Assembling Machine's two (#326) are
+the rig's pair for its 2x1x4 footprint (ADR-0072): dropping one block from its plan turns the first
+red, and the second's obstruction is its top block, three above the anchor. Three fixtures are load-bearing rather
 than arbitrary -- the wrong-tier column is three tall because on a one-tall column "the top of the
 column" and "just above the block I hit" are the same block, the rig's size is compared against
 `RigGeometry`'s own footprint rather than a floor, and the rig's obstruction sits a block *up*,
