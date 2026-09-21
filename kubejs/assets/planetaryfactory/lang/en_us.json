@@ -84,6 +84,7 @@
   "fluid_type.planetaryfactory.superheated_steam": "Superheated Steam",
   "block.planetaryfactory.boiler": "Boiler",
   "block.planetaryfactory.assembling_machine": "Assembling Machine",
+  "item.planetaryfactory.assembling_machine": "Assembling Machine",
   "block.planetaryfactory.assembling_machine_part": "Assembling Machine (part)",
   "gui.planetaryfactory.assembling_machine.no_recipe": "No recipe -- set one with Fill Recipe",
   "gui.planetaryfactory.assembling_machine.clear": "Clear recipe",
