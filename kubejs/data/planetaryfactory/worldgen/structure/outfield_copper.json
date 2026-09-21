@@ -1,0 +1,8 @@
+{
+  "type": "planetaryfactory:outfield_disc",
+  "resource": "copper",
+  "biomes": "#planetaryfactory:terra_land",
+  "step": "top_layer_modification",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none"
+}

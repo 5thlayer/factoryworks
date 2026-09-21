@@ -36,11 +36,13 @@ public final class OreCorpus {
     private final Map<String, Resource> resources;
     private final DistanceLaw law;
     private final DensityLaw density;
+    private final Edge edge;
 
-    private OreCorpus(Map<String, Resource> resources, DistanceLaw law, DensityLaw density) {
+    private OreCorpus(Map<String, Resource> resources, DistanceLaw law, DensityLaw density, Edge edge) {
         this.resources = resources;
         this.law = law;
         this.density = density;
+        this.edge = edge;
     }
 
     public static OreCorpus get() {
@@ -74,17 +76,27 @@ public final class OreCorpus {
                                 outfield.get("base_density").getAsDouble(),
                                 outfield.get("base_spots_per_km2").getAsDouble(),
                                 outfield.get("random_spot_size_minimum").getAsDouble(),
-                                outfield.get("random_spot_size_maximum").getAsDouble())));
+                                outfield.get("random_spot_size_maximum").getAsDouble(),
+                                outfield.get("regular_rq_factor").getAsDouble(),
+                                outfield.get("regular_blob_amplitude_multiplier").getAsDouble(),
+                                outfield.get("regular_blob_amplitude_maximum_distance").getAsDouble())));
             }
             JsonObject distance = root.getAsJsonObject("distance_law");
             JsonObject density = root.getAsJsonObject("density_law");
+            JsonObject edge = root.getAsJsonObject("outfield_edge");
+            List<Octave> octaves = new ArrayList<>();
+            edge.getAsJsonArray("octaves").forEach(value -> octaves.add(new Octave(
+                    value.getAsJsonObject().get("input_scale").getAsDouble(),
+                    value.getAsJsonObject().get("output_scale").getAsDouble())));
             return new OreCorpus(
                     Map.copyOf(resources),
                     new DistanceLaw(distance.get("offset").getAsInt(), distance.get("divisor").getAsInt()),
                     new DensityLaw(
                             density.get("starting_resource_placement_radius").getAsDouble(),
                             density.get("regular_patch_fade_in_distance").getAsDouble(),
-                            density.get("double_density_distance").getAsDouble()));
+                            density.get("double_density_distance").getAsDouble()),
+                    new Edge(edge.get("radius_cap").getAsDouble(), List.copyOf(octaves),
+                            edge.get("offset").getAsDouble()));
         } catch (IOException broken) {
             throw new IllegalStateException("could not read " + path, broken);
         }
@@ -123,6 +135,10 @@ public final class OreCorpus {
         return density;
     }
 
+    public Edge edge() {
+        return edge;
+    }
+
     /**
      * One resource: its patch total, what an operation on it costs, and the ladder its stages are
      * rendered against.
@@ -142,7 +158,19 @@ public final class OreCorpus {
 
     /** Factorio's per-resource autoplace arguments, and the range a spot's size factor is drawn from. */
     public record Outfield(double baseDensity, double baseSpotsPerKm2, double spotSizeMinimum,
-            double spotSizeMaximum) {
+            double spotSizeMaximum, double rqFactor, double blobAmplitudeMultiplier,
+            double blobAmplitudeMaximumDistance) {
+
+        public double meanSpotSize() {
+            return (spotSizeMinimum + spotSizeMaximum) / 2;
+        }
+    }
+
+    /** A spot's radius cap and its ragged edge: {@code (octaves - offset) * blob amplitude}. */
+    public record Edge(double radiusCap, List<Octave> octaves, double offset) {
+    }
+
+    public record Octave(double inputScale, double outputScale) {
     }
 
     /**

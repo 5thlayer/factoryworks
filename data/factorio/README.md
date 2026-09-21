@@ -273,7 +273,9 @@ effect recording the rule that produced them.
   every column is flat: the spot stops growing where the richness term starts rising.
   `outfield_edge` is the ragged edge added to the spot's cone: its expression, the three
   `basis_noise` octaves' input scales and weights, and the offset subtracted before the sum
-  is scaled by `regular_blob_amplitude_at`.
+  is scaled by `regular_blob_amplitude_at`. `outfield_placement` is the minimum spacing
+  `spot_noise` keeps between candidate spots, which the outfield structure sets take as their
+  separation (#320).
   `--check` re-extracts and diffs both output files, and
   `tests/factorio/test_resource_extract.py` re-derives every `law` row from a closed form and reads the edge's octaves back out of its
   expression.

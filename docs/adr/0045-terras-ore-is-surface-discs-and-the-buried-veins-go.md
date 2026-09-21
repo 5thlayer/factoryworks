@@ -60,9 +60,10 @@ so the spacing follows the *mean* spot size and not the spot count alone: one sp
 `1e6 × mean_factor / base_spots_per_km2` blocks², where `mean_factor` is the midpoint of
 `random_spot_size_minimum`/`maximum`. That is 2.5 spots/km² at a mean factor of 1.125 for coal,
 copper, iron and stone, ~671 blocks (~42 chunks), and 1.25 at a mean of 3 for uranium, ~1549 blocks
-(~97 chunks). The generator derives the
-`spacing`/`separation` pair from that field rather than carrying 40 as a literal, so a regeneration
-moves it. **This is train distance, and deliberately so** — an outfield patch is not a belt run.
+(~97 chunks). The generator derives
+`spacing` from that field rather than carrying 40 as a literal, so a regeneration moves it, and
+`separation` from the minimum distance `spot_noise` keeps between candidate spots,
+`suggested_minimum_candidate_point_spacing` (~45 blocks, 3 chunks) (#320). **This is train distance, and deliberately so** — an outfield patch is not a belt run.
 
 **Two laws, one after the other.** A spot's size and a tile's richness grow over different bands:
 

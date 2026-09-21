@@ -25,7 +25,9 @@ Three things are read, and nothing is decided:
     and `regular_blob_amplitude_maximum_distance` is a local expression, evaluated per
     resource. The law they feed -- a spot's quantity, radius, peak height and blob amplitude
     against distance, and the mean spacing -- is evaluated here out of the dump's own
-    expressions and re-derived from a closed form by the check (#317).
+    expressions and re-derived from a closed form by the check (#317). The minimum spacing
+    `spot_noise` keeps between candidate spots comes too, as the outfield structure sets'
+    separation (#320).
   - **The hand-mining numbers.** Each resource's `minable.mining_time`, the character's own
     `mining_speed`, and what `steel-axe` adds to it. ADR-0039 labelled these as *transcribed
     from the wiki, not extracted*, because `data/factorio/` held no resource dump and so
@@ -123,6 +125,8 @@ RADIUS_SOURCE = ("regular_patches", "spot_radius_expression")
 # amplitude, and `blobs0` holds two of the octaves (ADR-0045).
 EDGE_LOCALS = ("regular_patches", "blobs0")
 OCTAVE = re.compile(r"basis_noise\{[^}]*input_scale\s*=\s*([^,}]+),\s*output_scale\s*=\s*([^,}]+)\}")
+CANDIDATE_SPACING = re.compile(r"suggested_minimum_candidate_point_spacing\s*=\s*([0-9.]+)")
+RADIUS_CAP = re.compile(r"^\s*min\(\s*([0-9.]+)\s*,")
 EDGE_OFFSET = re.compile(r"-\s*([0-9./]+)\s*\)\s*\*\s*regular_blob_amplitude_at\(distance\)\s*$")
 
 # Where the law is tabulated: the three radii's edges, the richness crossover and two points past
@@ -324,6 +328,14 @@ def edge(locals_):
     }
 
 
+def placement(locals_):
+    """How close two spots may be: the spacing `spot_noise` keeps between candidate points (#320)."""
+    spacing = CANDIDATE_SPACING.search(locals_["regular_patches"])
+    if not spacing:
+        sys.exit("regular_patches' spot_noise no longer suggests a minimum candidate spacing")
+    return {"suggested_minimum_candidate_point_spacing": float(spacing.group(1))}
+
+
 def hand_mining(dump):
     """The character's mining speed, and the speed `steel-axe` leaves them mining at.
 
@@ -459,6 +471,7 @@ def extract(dump):
             "regular_spot_radius_expression": radius_expression,
         },
         "outfield_edge": edge(locals_),
+        "outfield_placement": placement(locals_),
         "hand_mining": hand_mining(dump),
         "character_movement": character_movement(dump),
         "resources": resources,
@@ -469,8 +482,9 @@ def extract(dump):
 def mod_slice(out):
     """The part of the corpus the mod loads, keyed by the pack's own block names.
 
-    Deliberately thin: a total, a ratio set, a mining time, the distance law, and the four
-    per-resource arguments and three constants the outfield amount takes (#319). Everything else
+    Deliberately thin: a total, a ratio set, a mining time, the distance law, the per-resource
+    arguments and three constants the outfield amount takes (#319), and what the disc's shape
+    takes: its radius factor and cap, blob amplitude and edge octaves (#320). Everything else
     in the corpus is read by scripts, and a number that reaches Java is a number that has to
     survive a recompile to be corrected.
 
@@ -498,6 +512,11 @@ def mod_slice(out):
                 "base_spots_per_km2": entry["base_spots_per_km2"],
                 "random_spot_size_minimum": entry["outfield"]["random_spot_size_minimum"],
                 "random_spot_size_maximum": entry["outfield"]["random_spot_size_maximum"],
+                "regular_rq_factor": entry["outfield"]["regular_rq_factor"],
+                "regular_blob_amplitude_multiplier": entry["outfield"]["regular_blob_amplitude_multiplier"],
+                "regular_blob_amplitude_maximum_distance": entry["outfield"][
+                    "regular_blob_amplitude_maximum_distance"
+                ],
             },
         }
     constants = out["constants"]
@@ -509,8 +528,21 @@ def mod_slice(out):
             "regular_patch_fade_in_distance": constants["regular_patch_fade_in_distance"],
             "double_density_distance": constants["double_density_distance"],
         },
+        "outfield_edge": {
+            "radius_cap": radius_cap(out["outfield_expressions"]["regular_spot_radius_expression"]),
+            "octaves": out["outfield_edge"]["octaves"],
+            "offset": out["outfield_edge"]["offset"],
+        },
         "resources": resources,
     }
+
+
+def radius_cap(radius_expression):
+    """The `min(32, ...)` bound on a spot's radius, which the disc's shape reads (#320)."""
+    cap = RADIUS_CAP.match(radius_expression)
+    if not cap:
+        sys.exit(f"the spot radius is no longer min(cap, ...): {radius_expression}")
+    return float(cap.group(1))
 
 
 def main():

@@ -11,6 +11,24 @@
     "regular_patch_fade_in_distance": 300.0,
     "double_density_distance": 1300.0
   },
+  "outfield_edge": {
+    "radius_cap": 32.0,
+    "octaves": [
+      {
+        "input_scale": 0.125,
+        "output_scale": 1
+      },
+      {
+        "input_scale": 0.041666666666666664,
+        "output_scale": 1
+      },
+      {
+        "input_scale": 0.015625,
+        "output_scale": 1.5
+      }
+    ],
+    "offset": 0.3333333333333333
+  },
   "resources": {
     "coal": {
       "factorio_name": "coal",
@@ -30,7 +48,10 @@
         "base_density": 8.0,
         "base_spots_per_km2": 2.5,
         "random_spot_size_minimum": 0.25,
-        "random_spot_size_maximum": 2.0
+        "random_spot_size_maximum": 2.0,
+        "regular_rq_factor": 0.1,
+        "regular_blob_amplitude_multiplier": 0.125,
+        "regular_blob_amplitude_maximum_distance": 1600.0
       }
     },
     "copper": {
@@ -51,7 +72,10 @@
         "base_density": 8.0,
         "base_spots_per_km2": 2.5,
         "random_spot_size_minimum": 0.25,
-        "random_spot_size_maximum": 2.0
+        "random_spot_size_maximum": 2.0,
+        "regular_rq_factor": 0.11,
+        "regular_blob_amplitude_multiplier": 0.125,
+        "regular_blob_amplitude_maximum_distance": 1600.0
       }
     },
     "iron": {
@@ -72,7 +96,10 @@
         "base_density": 10.0,
         "base_spots_per_km2": 2.5,
         "random_spot_size_minimum": 0.25,
-        "random_spot_size_maximum": 2.0
+        "random_spot_size_maximum": 2.0,
+        "regular_rq_factor": 0.11,
+        "regular_blob_amplitude_multiplier": 0.125,
+        "regular_blob_amplitude_maximum_distance": 1600.0
       }
     },
     "stone": {
@@ -93,7 +120,10 @@
         "base_density": 4.0,
         "base_spots_per_km2": 2.5,
         "random_spot_size_minimum": 0.25,
-        "random_spot_size_maximum": 2.0
+        "random_spot_size_maximum": 2.0,
+        "regular_rq_factor": 0.1,
+        "regular_blob_amplitude_multiplier": 0.125,
+        "regular_blob_amplitude_maximum_distance": 1600.0
       }
     },
     "uranium": {
@@ -114,7 +144,10 @@
         "base_density": 0.9,
         "base_spots_per_km2": 1.25,
         "random_spot_size_minimum": 2.0,
-        "random_spot_size_maximum": 4.0
+        "random_spot_size_maximum": 4.0,
+        "regular_rq_factor": 0.1,
+        "regular_blob_amplitude_multiplier": 0.125,
+        "regular_blob_amplitude_maximum_distance": 1600.0
       }
     }
   }

@@ -13,6 +13,9 @@ public record OutfieldDisc(OreResource resource, double sizeFactor, int blockCou
     /** Implemented by the structure piece that places a disc (#320). */
     public interface Source {
         OutfieldDisc disc();
+
+        /** Whether the disc placed ore in this column; its box is a square around a ragged disc. */
+        boolean covers(int x, int z);
     }
 
     public double distance() {

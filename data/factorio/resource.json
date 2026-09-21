@@ -67,6 +67,9 @@
     ],
     "offset": 0.3333333333333333
   },
+  "outfield_placement": {
+    "suggested_minimum_candidate_point_spacing": 45.254833995939045
+  },
   "hand_mining": {
     "character_mining_speed": 0.5,
     "steel_axe_modifier": 1,

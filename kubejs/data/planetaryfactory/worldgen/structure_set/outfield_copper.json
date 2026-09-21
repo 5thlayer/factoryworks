@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "planetaryfactory:outfield_copper",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 42,
+    "separation": 3,
+    "salt": 536495064
+  }
+}

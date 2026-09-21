@@ -153,14 +153,15 @@ Sub-rules:
   than a patch size. The numbers are extracted, not chosen:
   `starting_amount = 20000 * base_density * (frequency_multiplier + 1) * size_multiplier`, and the
   per-block amount is that total over the blocks in the patch.
-- **Patch spacing is Factorio's spots per km²** — `planned`, ADR-0045. `base_spots_per_km2` is
+- **Patch spacing is Factorio's spots per km²** — `shipped` for coal, copper, iron and stone (#320), uranium on #321, ADR-0045. `base_spots_per_km2` is
   extracted, not chosen: 2.5 for coal, copper, iron and stone and 1.25 for uranium. With the mean
   spot size that is ~671 and ~1549 blocks, ~42 and ~97 chunks, of mean spacing (#317). An outfield
-  patch is a train ride, not a belt run.
-- **Regular patches are suppressed near spawn and fade in** — `planned`, ADR-0045. No patch inside
+  patch is a train ride, not a belt run. Each resource is one `random_spread` structure set, separated
+  by Factorio's own minimum candidate spot spacing (~45 blocks, 3 chunks).
+- **Regular patches are suppressed near spawn and fade in** — `shipped` (#320), ADR-0045. No patch inside
   `starting_resource_placement_radius` (150), and a spot's quantity ramps up over the 300 blocks
   beyond it. Both fall out of the density law rather than an exclusion.
-- **Patch size rises with distance** — `planned`, ADR-0045. A spot's quantity, and with it its
+- **Patch size rises with distance** — `shipped` (#320), ADR-0045. A spot's quantity, and with it its
   radius and blob amplitude, grows with density until 1600 blocks and then stops; neither cap binds
   at default settings. Each spot draws its size factor between `random_spot_size_minimum` and
   `maximum`.
