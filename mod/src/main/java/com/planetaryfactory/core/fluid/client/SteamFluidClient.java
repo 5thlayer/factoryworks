@@ -10,18 +10,15 @@ import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.fluid.FluidTintSources;
 
 /**
- * How Terra's two steam fluids draw in a tank, a pipe or Jade (#189, ADR-0048): vanilla's water
- * sprites, which are greyscale, under a constant tint rather than a texture of the pack's own.
+ * How Terra's two steam fluids draw in a tank, a pipe or Jade (#189, ADR-0048): Oritech's animated
+ * steam sprite, untinted as Oritech draws its own, still and flowing alike.
  */
 public final class SteamFluidClient {
 
-    private static final Material WATER_STILL =
-            new Material(Identifier.withDefaultNamespace("block/water_still"));
-    private static final Material WATER_FLOW =
-            new Material(Identifier.withDefaultNamespace("block/water_flow"));
+    private static final Material STEAM_SPRITE =
+            new Material(Identifier.fromNamespaceAndPath("oritech", "block/fluid/fluid_steam"));
 
-    /** Factorio's steam {@code base_color}, 0.5 grey, divided by the water sprite's 0.69 mean. */
-    private static final int STEAM_TINT = 0xFFB8B8B8;
+    private static final int STEAM_TINT = 0xFFFFFFFF;
 
     /** Orange, so the Turbine's fluid is not mistaken for the Engine's in a tank. */
     private static final int SUPERHEATED_STEAM_TINT = 0xFFFF8A3D;
@@ -40,6 +37,6 @@ public final class SteamFluidClient {
     }
 
     private static FluidModel.Unbaked tinted(int tint) {
-        return new FluidModel.Unbaked(WATER_STILL, WATER_FLOW, null, FluidTintSources.constant(tint));
+        return new FluidModel.Unbaked(STEAM_SPRITE, STEAM_SPRITE, null, FluidTintSources.constant(tint));
     }
 }
