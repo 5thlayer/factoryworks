@@ -65,6 +65,14 @@ amount, and it re-derives every row of each resource's `outfield.law` table in
 that file through the `pf.repo` system property the Gradle test task sets. The starting fields
 keep the census; two arithmetics is Factorio's own shape.
 
+`OutfieldShapeTest` is the disc's footprint (#320): the law's radius, cone height and blob amplitude
+re-derive every row of the corpus table, the radius caps at 32, and a disc covers the columns where
+the cone plus `(octaves - 1/3) × amplitude` is above zero, each octave read at its own scale and
+weighted by its own weight, and never off the land. Its saved mask reads back the same columns. Its
+block count is the columns it covers, and a disc inside 150 blocks,
+or one whose radius rounds below one block, covers none. Whether a disc places is
+`OutfieldDiscTests`, in the GameTest run.
+
 `MiningSpeedTest` carries the arithmetic across the two halves: a field's cost is its **amount**
 times the tier's seconds, not its block count. That is the whole of what the amendment changed, and
 it is the one number that was silently a function of how many blocks the generator laid down.

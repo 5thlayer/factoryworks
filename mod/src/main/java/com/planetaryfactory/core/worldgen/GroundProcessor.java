@@ -66,7 +66,7 @@ public final class GroundProcessor extends StructureProcessor {
     }
 
     /** The y of the topmost terrain block in a column: the one a patch replaces. */
-    private static int ground(LevelReader level, int x, int z) {
+    static int ground(LevelReader level, int x, int z) {
         int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos(x, y, z);
         while (y > level.getMinY() && !isTerrain(level.getBlockState(cursor.setY(y)))) {

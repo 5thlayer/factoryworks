@@ -426,6 +426,36 @@ block count; and `OutfieldAmountTest` asserts an outfield disc's uniform amount,
 distance from origin with no cap, against every row of the corpus's `outfield.law` table. Run
 them after editing anything under `core/ore/`, the two ore generators or the extractor. See `docs/testing/ore-amount-check.md`.
 
+### Outfield disc check
+
+Every patch beyond the starting area is a surface disc placed by worldgen (#320, ADR-0045): one
+`planetaryfactory:outfield_disc` structure and one `random_spread` structure set per resource,
+uranium excepted until #321. `scripts/build-outfield-worldgen.py` writes them from
+`data/factorio/resource.json`, and `tests/worldgen/test_outfield_worldgen.py` runs its `--check`
+and re-derives the spacing from each resource's `mean_spacing` and the separation from
+`spot_noise`'s minimum candidate spacing. It also asserts the type is the one `PFWorldgen`
+registers and the biomes are the land tag. The footprint is `OutfieldShapeTest`, Minecraft-free:
+each column is asked for its own biome, because vanilla asks only at the centre and a coastal disc
+would run onto the seabed, and the column mask is saved with the piece so placement never
+recomputes it.
+
+`gametest/OutfieldDiscTests` is the world half, in the GameTest run's default set. For each
+resource it resolves the structure set out of the server's registry by id, generates a disc about
+2,300 blocks out with a tree on its centre, and places it chunk by chunk the way `/place` does. It
+also records the start in its chunk, which `/place` skips. Then it asserts every column holds
+exactly the shape's ore, one deep and flush with the terrain, and that the centre's ore is under the
+trunk. It asserts that the placed count is the piece's stored count, that the reach fits the law's
+radius for the disc's size and distance, and that nothing reaches the pack's saved data. Breaking a
+block reads `amountPerBlock` back through the structure manager, which is the only check that
+reaches #319's read path. A second test per resource generates every chunk within 150 blocks of the
+origin and gets no start, and a third generates against the structure's own biome predicate on the
+flat world's plains and gets none. An off-by-one count, placing on the heightmap instead of walking down to
+the ground, a second block below, the wrong resource's ore, a doubled radius, a density fade from 0
+instead of from 150, and a read path that skips the piece each turn their test red. The GameTest
+world is all plains, so a column-by-column confinement is `OutfieldShapeTest`'s alone. Whether discs
+land on real terrain across Terra's biomes is a world load. Run both after editing `core/ore/`, the
+disc's structure or piece, or the generator.
+
 ### ADR back-links
 
 An ADR that contradicts a closed ticket's stated answer declares it as `supersedes: [55, 62]` in

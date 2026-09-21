@@ -167,7 +167,8 @@ public final class OreMining {
             for (StructurePiece piece : start.getPieces()) {
                 if (piece instanceof OutfieldDisc.Source source
                         && source.disc().resource() == resource
-                        && piece.getBoundingBox().isInside(pos)) {
+                        && piece.getBoundingBox().isInside(pos)
+                        && source.covers(pos.getX(), pos.getZ())) {
                     return source.disc();
                 }
             }
