@@ -217,10 +217,18 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         if (verdict.held()) {
             machine.setHeldRecipe(HeldRecipe.of(id), player);
         } else if (player instanceof ServerPlayer server) {
-            // Above the hotbar: feedback on the press just made. 26.1 has the overlay form on ServerPlayer only.
-            server.sendSystemMessage(Component.translatable(verdict.messageKey(), id), true);
+            server.sendSystemMessage(Component.translatable(verdict.messageKey(), recipeName(server.level(), id)));
         }
         return verdict;
+    }
+
+    /** The product's name when {@code id} resolves; an id that names no recipe has only itself. */
+    private static Component recipeName(ServerLevel level, String id) {
+        return AssemblingMachineRecipes.resolve(level, HeldRecipe.of(id))
+                .map(holder -> holder.value().assemble(null))
+                .filter(stack -> !stack.isEmpty())
+                .map(ItemStack::getHoverName)
+                .orElse(Component.literal(id));
     }
 
     /** What {@link #request} would answer, asked of the server's recipes and research. */
