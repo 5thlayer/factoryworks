@@ -7,10 +7,6 @@ version = mod_version
 group = maven_group
 base.archivesName = mod_id
 
-// Where `gameTestPack` assembles the datapack the GameTest run is handed. Declared up here
-// because the run configuration below reads it.
-def gameTestPacks = layout.buildDirectory.dir('gametest/packs')
-
 // Minecraft 26.1.2 and every 26.1 mod jar in `mods/` are compiled to class file version 69,
 // which is Java 25. Building on 21 cannot read them.
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
@@ -30,13 +26,7 @@ neoForge {
             type = 'gameTestServer'
             // 26.1 dropped `neoforge.enabledGameTestNamespaces`; with no `--tests` selector the
             // server runs every registered test, which here is the mod's own plus vanilla's
-            // `minecraft:always_pass`.
-            //
-            // The pack's datapack is not on this server's classpath -- the GameTest world is
-            // vanilla plus the mod jar -- so the one thing a smelt test needs that the jar does
-            // not carry is handed over as a datapack. See the `gameTestPack` task.
-            programArgument '--packs'
-            programArgument gameTestPacks.get().asFile.absolutePath
+            // `minecraft:always_pass`. The pack's data reaches it through KubeJS; see `linkKubeJS`.
         }
     }
 
@@ -72,8 +62,8 @@ dependencies {
     // FTB Materials, and the library it requires, on every dev run's classpath -- the GameTest server
     // included. ADR-0061 gives the item layer to FTB Materials, so the pack's emitted smelts name
     // `ftbmaterials:` items, and a server that is only vanilla plus this jar rejects all three at
-    // datapack load (`scripts/check-datapack-load.py`). This is the one foreign mod the harness
-    // loads, and it is here because the pack's data names its items, not because the mod calls it.
+    // datapack load (`scripts/check-datapack-load.py`). It is here because the pack's data names its
+    // items, not because the mod calls it.
     //
     // On `runtimeClasspath` only, through its own configuration: `runtimeOnly` would also land on
     // `test`'s classpath, making `mods/` an input of a task `installToPack` writes into.
@@ -82,12 +72,19 @@ dependencies {
     // assembling recipes name their pipes, signals and belts, and a server without the jars rejects
     // every one of them, which would leave this check unable to tell a real id from a typo. Athena,
     // GeckoLib and Architectury are what those three require to load.
+    //
+    // KubeJS and Rhino because KubeJS is how the pack's data and registered items reach the game,
+    // in the pack and in the harness alike (#338). Better Advanced Tooltips too: KubeJS declares it
+    // an optional client dependency, yet registering its creative tab reads a BAT class on the
+    // server as well, and mod loading fails without it.
     devRunMods fileTree(
             dir: rootProject.file('mods'),
             include: ['ftb-materials-*.jar', 'ftb-library-neoforge-*.jar',
                       'oritech-*.jar', 'athena-*.jar', 'geckolib-neoforge-*.jar',
                       'railcraft-reborn-*.jar', 'belts-neoforge-*.jar',
-                      'architectury-neoforge-*.jar'])
+                      'architectury-neoforge-*.jar',
+                      'kubejs-neoforge-*.jar', 'rhino-*.jar',
+                      'better-advanced-tooltips-*.jar'])
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather
     // than a Minecraft type, so the Assembler's attachment codec can be round-tripped on a plain
     // JVM -- which is what ADR-0038's "round-trip the data attachment" asks for. Minecraft itself
@@ -113,63 +110,28 @@ tasks.named('test', Test).configure {
     testLogging { events 'failed' }
 }
 
-// The datapack the GameTests run against (#271), and the one every emitted data file is loaded
-// by (#273).
-//
-// A GameTest server loads vanilla's data plus what is in the mod jar, and the pack's data is
-// neither: it is generated files under `kubejs/`, read by a KubeJS that is not installed here.
-// Copying them into a datapack is what lets `planetaryfactory:smelting` be checked against the
-// recipe the pack actually ships rather than against a fixture written to pass -- and what lets
-// `scripts/check-datapack-load.py` watch the game read every one of them.
-//
-// The live subtrees only. `gtceu/`, `gt_materials/` and `gcyr/` name registries that left with
-// ADR-0060: they would fail here for a reason #273 has already deferred to the chassis (#258), a
-// permanently red check rather than a signal. Every recipe is loaded, subtrees included: #279
-// re-targeted the converter onto `planetaryfactory:assembling`, and a recipe nothing loads is the
-// failure #87 never got to see.
-
-tasks.register('gameTestPack', Sync) {
-    description = 'Assembles the datapack the GameTests run against, from the pack\'s own data.'
-    into gameTestPacks.map { it.dir('planetaryfactory') }
-    from(rootProject.file('kubejs/data/planetaryfactory/recipe')) {
-        into 'data/planetaryfactory/recipe'
-    }
-    from(rootProject.file('kubejs/data/planetaryfactory/loot_table')) {
-        into 'data/planetaryfactory/loot_table'
-    }
-    from(rootProject.file('kubejs/data/planetaryfactory/fuel')) {
-        into 'data/planetaryfactory/fuel'
-    }
-    from(rootProject.file('kubejs/data/planetaryfactory/tags')) {
-        into 'data/planetaryfactory/tags'
-    }
-    from(rootProject.file('kubejs/data/planetaryfactory/worldgen')) {
-        into 'data/planetaryfactory/worldgen'
-    }
-    from(rootProject.file('kubejs/data/planetaryfactory/structure')) {
-        into 'data/planetaryfactory/structure'
-    }
-    from(rootProject.file('kubejs/data/c/tags')) {
-        into 'data/c/tags'
-    }
-    from(rootProject.file('kubejs/data/minecraft/tags')) {
-        into 'data/minecraft/tags'
-    }
+// KubeJS reads `<game dir>/kubejs` and nothing else -- the path is not configurable -- and a dev
+// run's game dir is `mod/run/`. A link to the repo's own `kubejs/` makes the harness read the
+// scripts and data the pack reads, from the one copy there is (#338). Created by the build rather
+// than committed, because `mod/run/` is not tracked.
+tasks.register('linkKubeJS') {
+    description = 'Links the dev runs\' kubejs/ to the repo\'s, so they load the pack\'s own data.'
+    def link = file('run/kubejs').toPath()
+    def target = rootProject.file('kubejs').toPath()
     doLast {
-        // 101 is 26.1's DATA_PACK_FORMAT_MAJOR. A pack declaring the wrong one still loads, but it
-        // loads with a warning that reads exactly like a real incompatibility.
-        new File(destinationDir, 'pack.mcmeta').text = """{
-  "pack": {
-    "pack_format": 101,
-    "description": "Planetary Factory: the pack data the GameTests run against"
-  }
-}
-"""
+        if (java.nio.file.Files.isSymbolicLink(link)) {
+            java.nio.file.Files.delete(link)
+        } else if (java.nio.file.Files.exists(link)) {
+            throw new GradleException("${link} is a real directory, not a link to ${target}: " +
+                    'a dev run would load it instead of the pack\'s data. Delete it.')
+        }
+        java.nio.file.Files.createDirectories(link.parent)
+        java.nio.file.Files.createSymbolicLink(link, link.parent.relativize(target))
     }
 }
 
-tasks.matching { it.name in ['prepareGameTestServerRun', 'runGameTestServer'] }.configureEach {
-    dependsOn tasks.named('gameTestPack')
+tasks.matching { it.name.startsWith('prepare') && it.name.endsWith('Run') }.configureEach {
+    dependsOn tasks.named('linkKubeJS')
 }
 
 // `neoforge.mods.toml` is the one place a version string has to be interpolated;

@@ -124,18 +124,21 @@ before any mod is loaded.
 
 Two seams are the harness's own rather than generic plumbing. The tests stand on a **generated**
 stone platform (`scripts/build-gametest-structures.py`), for the reason `build-terra-start.py`
-exists: a committed `.nbt` nobody can regenerate is a binary with no source. And the run is handed
-the pack's live data tree **as a datapack** — the `gameTestPack` Gradle task — because a
-GameTest server loads vanilla plus the mod jar, and the pack's recipes, loot tables, tags and
-biomes are generated files a KubeJS that is not installed here would read. That is what lets a
-smelt be asserted against the recipe the pack ships rather than against a fixture written to pass,
-and it is what `scripts/check-datapack-load.py` watches the game read. The dead subtrees are
-excluded by name — `gtceu/`, `gt_materials/` and `gcyr/` name registries that left with ADR-0060,
-and are re-derived against the chassis (#258). Every emitted recipe is loaded, subtrees included,
-since #279 put the converter on `planetaryfactory:assembling`. The
-plate smelts name `ftbmaterials:` items (ADR-0061), so FTB Materials and the FTB Library it requires
-are on the dev runtime classpath and are the one foreign mod the server loads; stone brick is still
-the only smelt under test.
+exists: a committed `.nbt` nobody can regenerate is a binary with no source. And the pack's data
+reaches the run through **KubeJS**, on the dev runtime classpath with Rhino, reading the repo's own
+`kubejs/` through a link `mod/run/kubejs` that the `linkKubeJS` Gradle task makes before every dev
+run (#338). KubeJS resolves `kubejs/` against the game directory with no setting to move it, and
+`mod/run/` is untracked, so the link is built rather than committed. There is no second copy: the
+startup scripts register the pack's items, the server scripts run the recipe sweep, and every file
+under `kubejs/data/` loads, the dead `gtceu/`, `gt_materials/` and `gcyr/` subtrees included, which
+name no registry and so load as nothing. That is what lets a test assert against the recipe the pack
+ships rather than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the
+game read. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
+vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
+five blocks above the floor; without it no test block places and the run hangs rather than fails.
+And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the
+classpath too. Oritech, Railcraft Reborn, SimpleBelts and FTB Materials are there because the pack's
+recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), and `SteamEngineNetworkTests` (#292) and `AssemblingMachineTests` (#327),
@@ -575,8 +578,8 @@ with zero `Couldn't parse data file` lines; nothing reads the log today, and tha
 #273.
 
 `scripts/check-datapack-load.py` is that in-world half, and the only check here that reads a log.
-It runs the GameTest server — which `gameTestPack` now hands the pack's whole live data tree, not
-just the four smelts — and asserts the game did not reject any of it. A rejected file is one ERROR
+It runs the GameTest server — which loads the pack's whole `kubejs/` through KubeJS — and asserts
+the game did not reject any of it. A rejected file is one ERROR
 line at load and then an entry absent from its manager, which is the exact shape of #266's evening.
 It is also the only check that can see whether the **ids inside** a file name anything: it found
 `gcyr:mercury_rock`, a perfectly shaped stromatolite drop, naming an item whose mod left with
@@ -584,8 +587,8 @@ ADR-0060 and passing every static check in the repo. Every rejection the log may
 `EXPECTED` with the ticket that owns it, and an entry that stops appearing fails too — a stale one
 is a guard nobody re-armed. `--rerun-tasks` is not optional: Gradle would otherwise call the run up
 to date, print no log, and the check would pass having loaded nothing. Like the GameTest run it is
-in no batch; run it after a converter change, after editing `gameTestPack`, or after any edit to
-`kubejs/data/`.
+in no batch; run it after a converter change, after editing the dev runtime classpath, or after any
+edit to `kubejs/`.
 
 ### Client asset check
 

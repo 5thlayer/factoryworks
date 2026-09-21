@@ -170,8 +170,8 @@ touched mechanism, not to a docs edit. Run it after editing anything under `core
 source set rather than the test one, because a GameTest is code the game loads. `PFGameTests`
 registers them; a test body is a method taking a `GameTestHelper`. They stand on a generated stone
 platform, `scripts/build-gametest-structures.py`. The pack's recipes are not in the mod jar, so the
-run is handed the four emitted smelts as a datapack, assembled by the `gameTestPack` Gradle task —
-which is how a GameTest can assert against the recipe the pack ships rather than a fixture.
+run loads KubeJS reading the repo's own `kubejs/` (#338) — which is how a GameTest can assert
+against the recipe the pack ships rather than a fixture.
 
 The shape of that decision generalises, so it is worth stating once. Most of what looked like
 in-world behaviour was arithmetic that had no business needing a server, and it was written to be

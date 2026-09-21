@@ -17,7 +17,7 @@ exactly that -- a perfectly shaped loot table, passing every static check in the
 item whose mod left with ADR-0060.
 
 HOW. The GameTest server (#271) is already a headless world load that needs no display and no
-human, and `gameTestPack` already hands it the pack's own data as a datapack. This script runs it
+human, and it loads the pack's data through KubeJS reading `kubejs/` (#338). This script runs it
 and reads the log, which nothing did before. `--rerun-tasks` is not optional: Gradle would
 otherwise report the run up to date, print no log at all, and this check would pass having loaded
 nothing.
@@ -37,62 +37,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 GRADLE = ["./gradlew", ":planetaryfactory_core:runGameTestServer", "--rerun-tasks"]
 
-# A rejection the log is allowed to contain, and why. Two kinds, deliberately not merged: a defect
-# this repo owns and has deferred, and an id that only a KubeJS-installed game has. The GameTest
-# server is vanilla, the mod jar, FTB Materials (ADR-0061), and Oritech, Railcraft Reborn and
-# SimpleBelts (#277), so KubeJS's
-# `StartupEvents.registry` items do not exist on it -- that is the harness, not the pack, and saying so is the whole reason the reasons are here.
+# A rejection the log is allowed to contain, with the ticket that owns it.
 EXPECTED = {
-    "planetaryfactory:blocks/yumako_log":
-        "drops `planetaryfactory:yumako_log`, registered by KubeJS, which a GameTest server does "
-        "not load. Harness, not pack",
-    "planetaryfactory:blocks/yumako_leaves":
-        "drops `planetaryfactory:yumako_fresh`, a KubeJS-registered item. Harness, not pack",
-    "planetaryfactory:blocks/jellystem_stem":
-        "drops `planetaryfactory:jellynut_fresh`, a KubeJS-registered item. Harness, not pack",
     "planetaryfactory:blocks/iron_stromatolite":
-        "drops `planetaryfactory:iron_bacteria_fresh` (KubeJS, harness) AND `gcyr:mercury_rock`, "
-        "whose mod left with ADR-0060 -- a real dangling drop, found by this check. The palette "
-        "is #258's; what a stromatolite drops instead is Sapros content (#23)",
-    # #279: `planetaryfactory:assembling` recipes naming an item `kubejs/startup_scripts/` registers.
-    # The shape is the pack's and loads -- every recipe here parses to the field that names the
-    # missing item, and the other 19 assembling recipes load clean.
-    "planetaryfactory:assembling/advanced_circuit":
-        "names `planetaryfactory:advanced_circuit` and `plastic_bar`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/electric_furnace":
-        "names `planetaryfactory:advanced_circuit`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/electronic_circuit":
-        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/iron_chest":
-        "names `planetaryfactory:iron_chest`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/low_density_structure":
-        "names `planetaryfactory:low_density_structure` and `plastic_bar`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/steel_chest":
-        "names `planetaryfactory:steel_chest`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/substation":
-        "names `planetaryfactory:advanced_circuit`, registered by KubeJS. Harness, not pack",
-    # #277: recipes whose result is an Oritech, Railcraft or SimpleBelts block -- those jars are on
-    # the harness, so the result id loads -- but whose ingredients are KubeJS intermediates.
-    "planetaryfactory:assembling/accumulator":
-        "names `planetaryfactory:battery`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/engine_unit":
-        "makes `planetaryfactory:engine_unit`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/electric_engine_unit":
-        "makes `planetaryfactory:electric_engine_unit` from `engine_unit` and "
-        "`electronic_circuit`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/assembling_machine_1":
-        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/rail_signal":
-        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/small_lamp":
-        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/solar_panel":
-        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
-    "planetaryfactory:assembling/train_stop":
-        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
+        "drops `gcyr:mercury_rock`, whose mod left with ADR-0060 -- a real dangling drop. The "
+        "palette is #258's; what a stromatolite drops instead is Sapros content (#23)",
     "planetaryfactory:blocks/copper_stromatolite":
-        "drops `planetaryfactory:copper_bacteria_fresh` (KubeJS, harness) AND `gcyr:mercury_rock` "
-        "-- the same dangling drop (#258, #23)",
+        "drops `gcyr:mercury_rock` -- the same dangling drop (#258, #23)",
 }
 
 # The line the game prints per rejected file, and the two ways a whole registry can fail to load

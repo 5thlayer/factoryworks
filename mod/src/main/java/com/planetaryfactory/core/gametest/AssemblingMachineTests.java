@@ -92,10 +92,7 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::inputModeStaysPinned);
     }
 
-    /**
-     * Two ingredients, so slots 2 and 3 are unused. Not electronic-circuit: KubeJS registers its
-     * item, and the harness has no KubeJS.
-     */
+    /** Two ingredients, so slots 2 and 3 are unused. */
     private static final String BOILER = "planetaryfactory:assembling/boiler";
 
     /** Through the capability, on the anchor and a hull block, on both overloads (ADR-0073). */
@@ -284,6 +281,8 @@ final class AssemblingMachineTests {
 
     /** The pipe recipe, which the refusal test locks and no other test crafts. */
     private static final String PIPE = "planetaryfactory:assembling/pipe";
+
+    private static final String CIRCUIT = "planetaryfactory:assembling/electronic_circuit";
 
     private static final String CONCRETE = "planetaryfactory:assembling/concrete";
 
@@ -496,6 +495,11 @@ final class AssemblingMachineTests {
                 .collect(Collectors.toSet());
         if (!loaded.contains(CABLE)) {
             helper.fail(CABLE + " is not among tier 1's recipes, so this proves nothing");
+            return;
+        }
+        // Its result is a KubeJS item: absent, the harness has stopped loading the pack's registry (#338).
+        if (!loaded.contains(CIRCUIT)) {
+            helper.fail(CIRCUIT + " is not among tier 1's recipes, so KubeJS's items are not in this world");
             return;
         }
         AssemblingMachineBlockEntity machine = place(helper);
