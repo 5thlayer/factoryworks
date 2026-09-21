@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.machine;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.planetaryfactory.core.PFMenus;
 
@@ -18,6 +19,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
@@ -33,20 +35,24 @@ import net.neoforged.neoforge.transfer.IndexModifier;
  * no clear: an Assembling Machine without a recipe does nothing, so a recipe is replaced, never
  * removed.
  *
- * <p>The recipe list still travels in the opening packet, as what the screen names the Held recipe
- * from -- the recipes are server truth, and the client has no recipe manager to read them from. It
- * is fixed for the life of the menu, so the Held recipe crosses as one index into it, in a data slot,
- * beside the craft's progress and duration.
+ * <p>The recipe list still travels in the opening packet, as what the screen names and ghosts the
+ * Held recipe from and what the client's input slots filter by -- the recipes are server truth, and
+ * the client has no recipe manager to read them from. It is fixed for the life of the menu, so the
+ * Held recipe crosses as one index into it, in a data slot, beside the craft's progress and duration.
  */
 public class AssemblingMachineMenu extends AbstractContainerMenu {
 
-    /** One recipe the machine may hold: the recipe, whether the team is locked out of it, and what it makes. */
-    public record Entry(RecipeChoice choice, ItemStack icon) {
+    /**
+     * One recipe the machine may hold: the recipe, whether the team is locked out of it, what it
+     * makes, and what each input slot takes, in {@link AssemblingInputSlots}' order.
+     */
+    public record Entry(RecipeChoice choice, ItemStack icon, List<SizedIngredient> slotIngredients) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, entry -> entry.choice().id(),
                 ByteBufCodecs.BOOL, entry -> entry.choice().locked(),
                 ItemStack.OPTIONAL_STREAM_CODEC, Entry::icon,
-                (id, locked, icon) -> new Entry(new RecipeChoice(id, locked), icon));
+                SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), Entry::slotIngredients,
+                (id, locked, icon, ingredients) -> new Entry(new RecipeChoice(id, locked), icon, ingredients));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, List<Entry>> LIST_CODEC =
                 STREAM_CODEC.apply(ByteBufCodecs.list());
@@ -136,7 +142,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     public static List<Entry> entries(ServerLevel level) {
         return AssemblingMachineRecipes.choices(level).stream()
-                .map(choice -> new Entry(choice, AssemblingMachineRecipes.icon(level, choice.id())))
+                .map(choice -> AssemblingMachineRecipes.resolve(level, HeldRecipe.of(choice.id()))
+                        .map(holder -> new Entry(choice, holder.value().assemble(null),
+                                AssemblingMachineRecipes.slotIngredients(holder.value())))
+                        .orElseGet(() -> new Entry(choice, ItemStack.EMPTY, List.of())))
                 .toList();
     }
 
@@ -167,6 +176,19 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     public Entry held() {
         int index = data.get(DATA_HELD);
         return index >= 0 && index < entries.size() ? entries.get(index) : null;
+    }
+
+    /** What input {@code slot} takes under the Held recipe; empty for an unused slot or no recipe. */
+    public Optional<SizedIngredient> slotIngredient(int slot) {
+        Entry held = held();
+        return held == null ? Optional.empty() : AssemblingInputSlots.ingredientFor(slot, held.slotIngredients());
+    }
+
+    /** Whether input {@code slot}'s contents cannot cover one craft of the Held recipe. */
+    public boolean isShort(int slot) {
+        Entry held = held();
+        return held != null && AssemblingInputSlots.isShort(slot, held.slotIngredients(),
+                slots.get(slot).getItem().getCount(), SizedIngredient::count);
     }
 
     /** Whether the machine holds an id the list does not name. */
@@ -236,7 +258,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;
     }
 
-    /** Filtered on the server only; the client accepts and the menu's sync puts a refusal back. */
+    /**
+     * The server asks the machine; the client asks the Held entry through the same rule, so a wrong
+     * item is refused in the hand rather than placed and put back by the sync (ADR-0074).
+     */
     private final class InputSlot extends ResourceHandlerSlot {
         InputSlot(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> modifier,
                 int index, int x, int y) {
@@ -245,8 +270,14 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            return super.mayPlace(stack)
-                    && (machine == null || machine.acceptsInput(getSlotIndex(), ItemResource.of(stack)));
+            if (!super.mayPlace(stack)) {
+                return false;
+            }
+            if (machine != null) {
+                return machine.acceptsInput(getSlotIndex(), ItemResource.of(stack));
+            }
+            Entry held = held();
+            return held != null && AssemblingMachineRecipes.accepts(getSlotIndex(), held.slotIngredients(), stack);
         }
     }
 

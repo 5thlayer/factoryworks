@@ -469,9 +469,12 @@ Sub-rules:
   replaced, never removed. That the viewer can set every emitted assembling recipe is `AssemblingMachineTests`' GameTest, the check
   that replaced #237 and #238. Its inputs are filtered to the Held recipe (#329, ADR-0074): the
   `n`th ingredient goes in the `n`th slot, and a slot the recipe does not use takes nothing. The
-  filter applies to a belt, a loader or the player's hand. A machine with no recipe takes nothing.
-  Still to land on this surface: the recipe drawn as ghosts in the slots (#334), which read the same
-  slot rule, per-slot capacity (#335), and the energy bar and stall line (#332). JEI has
+  filter applies to a belt, a loader or the player's hand, and the hand is refused on the client
+  too, since the menu carries each slot's ingredient. A machine with no recipe takes nothing. The
+  Held recipe is drawn in the slots by the same rule (#334): each ingredient ghosted with the count
+  one craft needs, the product in the output, a tag cycling through its members, and an input slot
+  holding less than one craft drawn red. Still to land on this surface: per-slot capacity (#335),
+  and the energy bar and stall line (#332). JEI has
   no transfer handler, so a JEI-only player cannot set a recipe. Copying the setting
   is one id, and the configuration card is not built. Furnaces keep Oritech's first match, which is
   Factorio's own split.

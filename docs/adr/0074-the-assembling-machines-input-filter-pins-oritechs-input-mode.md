@@ -46,5 +46,6 @@ Oritech machine at a position, so the mode can still change.
 - A fifth ingredient has no slot. `tests/factorio/test_recipe_convert.py` fails an emitted
   assembling recipe with more item ingredients than `AssemblingInputSlots.INPUTS`, which it reads
   out of the source.
-- The player's hand is filtered by the same rule on the server. The client's slot cannot ask it,
-  because it has no recipe manager, so a wrong item placed by hand is put back by the menu's sync.
+- The player's hand is filtered by the same rule on the server. The client has no recipe manager,
+  so the menu's opening packet carries each recipe's slot ingredients and the client's slot asks
+  the same rule of them (#334): a wrong item is refused in the hand, not placed and put back.

@@ -374,10 +374,8 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
             return false;
         }
         return AssemblingMachineRecipes.resolve(server, held)
-                .map(RecipeHolder::value)
-                .filter(recipe -> recipe.fluidIngredients().isEmpty())
-                .map(recipe -> AssemblingInputSlots.accepts(slot, recipe.ingredients(), resource.toStack(1),
-                        (SizedIngredient sized, ItemStack stack) -> sized.ingredient().test(stack)))
+                .map(holder -> AssemblingMachineRecipes.accepts(slot,
+                        AssemblingMachineRecipes.slotIngredients(holder.value()), resource.toStack(1)))
                 .orElse(false);
     }
 
