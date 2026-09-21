@@ -24,5 +24,8 @@
   "planetaryfactory_core.assembler.cancel.right": "Right-click: cancel 5",
   "planetaryfactory_core.assembler.cancel.shift": "Shift + click: cancel all",
   "planetaryfactory_core.assembler.and_more": "... and %s more",
-  "planetaryfactory_core.assembler.unplannable": "The Assembler cannot plan this recipe"
+  "planetaryfactory_core.assembler.unplannable": "The Assembler cannot plan this recipe",
+  "planetaryfactory_core.assembling_machine.fill": "Sets this machine's recipe; moves no items",
+  "planetaryfactory_core.assembling_machine.refused.not_assembling": "This machine cannot make %s",
+  "planetaryfactory_core.assembling_machine.refused.locked": "Research has not unlocked %s yet"
 }
