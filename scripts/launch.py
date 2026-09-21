@@ -6,7 +6,7 @@ merged NeoForge + vanilla version JSONs under Install/versions, the library
 tree, and a bundled JRE. This rebuilds the java command from those and runs it
 in offline mode, which is enough for singleplayer.
 """
-import contextlib, json, os, re, subprocess, sys, uuid
+import contextlib, json, os, re, subprocess, sys
 from pathlib import Path
 
 INSTANCE = Path(__file__).resolve().parent.parent
@@ -43,6 +43,39 @@ def headless():
         yield
     finally:
         FML_CONFIG.write_text(original)
+
+
+def player():
+    """The name and UUID to launch as: the pack's real player, never a fresh one.
+
+    A UUID drawn anew each launch made every quick launch a player the world had never
+    seen, so FTB Quests completed its opening chapter again and the starting kit was
+    granted again. The name and UUID are, in order: PF_PLAYER_NAME and PF_PLAYER_UUID
+    when both are set; the account usercache.json records from a launcher sign-in, which
+    is the one the saves already know; or "Dev" under Minecraft's own offline UUID, which
+    is at least the same Dev every time. Singleplayer checks no token, so the offline
+    session loads that player's data as it is.
+    """
+    name, pid = os.environ.get("PF_PLAYER_NAME"), os.environ.get("PF_PLAYER_UUID")
+    if name and pid:
+        return name, pid.replace("-", "")
+    try:
+        cached = [e for e in json.load(open(INSTANCE / "usercache.json")) if e["name"] != "Dev"]
+    except (OSError, ValueError):
+        cached = []
+    if cached:
+        latest = max(cached, key=lambda e: e["expiresOn"])
+        return latest["name"], latest["uuid"].replace("-", "")
+    return "Dev", offline_uuid("Dev")
+
+
+def offline_uuid(name):
+    """Minecraft's offline-mode UUID: a version-3 hash of "OfflinePlayer:<name>"."""
+    import hashlib
+    digest = bytearray(hashlib.md5(f"OfflinePlayer:{name}".encode()).digest())
+    digest[6] = (digest[6] & 0x0F) | 0x30
+    digest[8] = (digest[8] & 0x3F) | 0x80
+    return bytes(digest).hex()
 
 
 def load(v):
@@ -90,6 +123,7 @@ def main():
     # exporting net.minecraft and the module layer fails to resolve.
     classpath.append(str(INSTALL / f"versions/{VERSION}/{VERSION}.jar"))
 
+    player_name, player_uuid = player()
     subs = {
         "library_directory": str(LIBS),
         "classpath_separator": os.pathsep,
@@ -98,12 +132,12 @@ def main():
         "launcher_name": "claude-cli",
         "launcher_version": "1",
         "classpath": os.pathsep.join(classpath),
-        "auth_player_name": "Dev",
+        "auth_player_name": player_name,
         "version_type": "release",
         "game_directory": str(INSTANCE),
         "assets_root": str(INSTALL / "assets"),
         "assets_index_name": mc["assets"],
-        "auth_uuid": uuid.uuid4().hex,
+        "auth_uuid": player_uuid,
         "auth_access_token": "0",
         "clientid": "0",
         "auth_xuid": "0",
@@ -140,6 +174,7 @@ def main():
     cmd += [a for a in args if a != "--headless"]
 
     print(" ".join(cmd[:6]), "...", file=sys.stderr)
+    print(f"launching as {player_name} ({player_uuid})", file=sys.stderr)
     os.chdir(INSTANCE)
     with headless() if no_display else contextlib.nullcontext():
         sys.exit(subprocess.call(cmd))
