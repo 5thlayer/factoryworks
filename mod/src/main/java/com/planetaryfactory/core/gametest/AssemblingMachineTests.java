@@ -5,7 +5,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.planetaryfactory.core.PFBlocks;
+import com.planetaryfactory.core.energy.PoleTier;
+import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
+import com.planetaryfactory.core.machine.AssemblingMachineHull;
+import com.planetaryfactory.core.machine.AssemblingMachineItem;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
 import com.planetaryfactory.core.machine.AssemblingStall;
 import com.planetaryfactory.core.machine.HeldRecipe;
@@ -13,6 +17,7 @@ import com.planetaryfactory.core.machine.RecipeChoice;
 import com.planetaryfactory.core.recipes.PFRecipes;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -66,28 +71,77 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::stallsOnALockedRecipe);
         tests.test("assembling_machine_is_powered_by_a_pole", 100,
                 AssemblingMachineTests::isPoweredByAPole);
+        tests.test("assembling_machine_is_found_through_a_hull_block", 100,
+                AssemblingMachineTests::poleReachingOnlyAHullBlockFindsIt);
     }
 
     /**
-     * A creative pole beside an empty machine fills it. Checked against its defect, and the one it
-     * was written over (#328 in-world: "Machines in area: 0"): with the energy face unregistered the
-     * pole counts nothing and the buffer stays empty.
+     * A creative pole beside a whole machine -- anchor and three hull blocks, as the item places it
+     * -- counts it once and fills it. Once, not four times: a hull block has no block entity and
+     * answers the anchor's face, and a scan that did not resolve it to the anchor would offer and
+     * draw one machine per block (#328 in-world: first "Machines in area: 0", with no face at all).
      */
     private static void isPoweredByAPole(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = place(helper);
-        BlockPos pole = ANCHOR.west(2);
+        AssemblingMachineBlockEntity machine = placeWhole(helper);
+        BlockPos pole = ANCHOR.south(2);
         helper.startSequence()
                 .thenExecute(() -> {
                     machine.energyStorage.set(0L);
                     helper.setBlock(pole, PFBlocks.CREATIVE_POLE.get());
                 })
-                .thenIdle(60)
+                .thenIdle(RESCAN_INTERVAL + 5)
                 .thenExecute(() -> {
+                    int found = helper.getBlockEntity(pole, SupplyAreaPoleBlockEntity.class).machineCount();
+                    if (found != 1) {
+                        helper.fail("a pole reaching one whole Assembling Machine counts " + found
+                                + " machines", ANCHOR);
+                    }
                     if (machine.energyStorage.getAmountAsLong() <= 0L) {
-                        helper.fail("a creative pole two blocks away left the machine unpowered", ANCHOR);
+                        helper.fail("a creative pole beside the machine left it unpowered", ANCHOR);
                     }
                 })
                 .thenSucceed();
+    }
+
+    /**
+     * A small pole whose 5x5 reaches a hull block and not the anchor still finds the machine.
+     * Which block is the anchor is not visible to a player, so a pole placed against the far side
+     * must not miss it.
+     */
+    private static void poleReachingOnlyAHullBlockFindsIt(GameTestHelper helper) {
+        placeWhole(helper);
+        List<BlockPos> blocks = AssemblingMachineHull.positions(ANCHOR, FACING);
+        BlockPos part = blocks.stream()
+                .filter(pos -> pos.getY() == ANCHOR.getY() && !pos.equals(ANCHOR))
+                .findFirst().orElseThrow();
+        BlockPos step = part.subtract(ANCHOR);
+        // Two blocks past the hull block: inside a small pole's +-2, and the anchor at 3 is not.
+        BlockPos pole = part.offset(step.multiply(2));
+        helper.startSequence()
+                .thenExecute(() -> helper.setBlock(pole, PFBlocks.pole(PoleTier.SMALL).get()))
+                .thenIdle(RESCAN_INTERVAL + 5)
+                .thenExecute(() -> {
+                    int found = helper.getBlockEntity(pole, SupplyAreaPoleBlockEntity.class).machineCount();
+                    if (found != 1) {
+                        helper.fail("a small pole reaching only a hull block counts " + found
+                                + " machines, expected 1", pole);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    /** A pole rescans at most this many ticks after a machine appears (EnergyFaceTests' figure). */
+    private static final int RESCAN_INTERVAL = 40;
+
+    private static final Direction FACING = Direction.NORTH;
+
+    /** The anchor and its three hull blocks, in the states the item places them in. */
+    private static AssemblingMachineBlockEntity placeWhole(GameTestHelper helper) {
+        List<BlockPos> blocks = AssemblingMachineHull.positions(ANCHOR, FACING);
+        for (int i = 0; i < blocks.size(); i++) {
+            helper.setBlock(blocks.get(i), AssemblingMachineItem.stateAt(i, FACING));
+        }
+        return (AssemblingMachineBlockEntity) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));
     }
 
     /** copper-cable: one copper plate makes two wire in Factorio's 0.5 s. */

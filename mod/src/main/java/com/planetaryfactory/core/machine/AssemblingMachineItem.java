@@ -100,9 +100,10 @@ public class AssemblingMachineItem extends OritechGeoItem implements PlansPlacem
 
     /**
      * The anchor is placed already assembled, which is what makes Oritech's multiblock paths return
-     * early rather than scan for cores the pack never asks the player to place.
+     * early rather than scan for cores the pack never asks the player to place. Public for the
+     * GameTests, which stand a whole machine up without a player's click.
      */
-    private static BlockState stateAt(int index, Direction facing) {
+    public static BlockState stateAt(int index, Direction facing) {
         if (index == 0) {
             return PFBlocks.ASSEMBLING_MACHINE.get().defaultBlockState()
                     .setValue(AssemblingMachineBlock.FACING, facing)

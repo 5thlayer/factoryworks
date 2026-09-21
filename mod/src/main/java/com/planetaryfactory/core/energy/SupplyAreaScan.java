@@ -46,10 +46,20 @@ public final class SupplyAreaScan {
         // slave engine for its master. The owner may lie outside this area; it is still the one the
         // network draws, and it is kept once however many of its blocks are in here.
         return SupplyScan.classify(positions,
-                pos -> level.isLoaded(pos) && level.getBlockEntity(pos) instanceof EnergyOwner owned
-                        ? owned.planetaryfactory$energyOwner()
-                        : null,
+                pos -> owner(level, pos),
                 pos -> role(level, origin, pos));
+    }
+
+    /** A block entity's owner, or failing that a hull block's (#328), or {@code null}. */
+    private static BlockPos owner(Level level, BlockPos pos) {
+        if (!level.isLoaded(pos)) {
+            return null;
+        }
+        if (level.getBlockEntity(pos) instanceof EnergyOwner owned) {
+            return owned.planetaryfactory$energyOwner();
+        }
+        BlockState state = level.getBlockState(pos);
+        return state.getBlock() instanceof EnergyOwnerBlock hull ? hull.energyOwner(pos, state) : null;
     }
 
     private static SupplyScan.Role role(Level level, BlockPos origin, BlockPos pos) {

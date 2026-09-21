@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.machine;
 
+import com.planetaryfactory.core.energy.EnergyOwnerBlock;
+
 import com.mojang.serialization.MapCodec;
 import com.planetaryfactory.core.PFItems;
 
@@ -29,7 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
  *
  * <p>Never held and never placed on its own: no item, no recipe, an empty loot table.
  */
-public class AssemblingMachinePartBlock extends Block {
+public class AssemblingMachinePartBlock extends Block implements EnergyOwnerBlock {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty PART =
@@ -56,6 +58,12 @@ public class AssemblingMachinePartBlock extends Block {
     @Override
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.INVISIBLE;
+    }
+
+    /** Its anchor's: a hull block is not a machine of its own to a pole (#328). */
+    @Override
+    public BlockPos energyOwner(BlockPos pos, BlockState state) {
+        return anchorOf(pos, state);
     }
 
     public static BlockPos anchorOf(BlockPos pos, BlockState state) {
