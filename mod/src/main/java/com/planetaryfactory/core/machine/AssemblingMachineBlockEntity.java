@@ -91,9 +91,14 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
      * The Held recipe's duration before Oritech's speed multiplier, synced for the client's
      * animation speed. The client has no recipe manager to resolve the Held recipe against, so
      * without it the animation reads a duration of 1 and plays a 60-tick loop every tick.
+     *
+     * <p>{@code TICK}, the type {@code lastWorkedAt} rides on, not {@code SPARSE_TICK}: the
+     * animation starts on {@code lastWorkedAt}, and a duration on the sparse schedule arrived
+     * seconds later, so every craft opened at the unknown duration's pace. Zero is "not yet
+     * known", which {@link #getRecipeDuration} answers with the animation's own length.
      */
-    @SyncField({SyncType.SPARSE_TICK, SyncType.GUI_TICK, SyncType.INITIAL})
-    private int recipeDuration = 1;
+    @SyncField({SyncType.TICK, SyncType.GUI_TICK, SyncType.INITIAL})
+    private int recipeDuration;
 
     public AssemblingMachineBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state,
@@ -250,7 +255,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
      */
     @Override
     public int getRecipeDuration() {
-        return recipeDuration;
+        return recipeDuration > 0 ? recipeDuration : getAnimationDuration();
     }
 
     @Override
