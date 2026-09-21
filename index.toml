@@ -1937,7 +1937,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "875001dd22b0fde07f03141202b9f3d02ffa3c34d76b5d3cf6aa9f238e1c7dc8"
+hash = "137ad7eaef9f362ceb2265854da9d21a6776bf874f0eccaf549444840739b6ef"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
