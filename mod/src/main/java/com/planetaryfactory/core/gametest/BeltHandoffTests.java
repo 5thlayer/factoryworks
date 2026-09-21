@@ -20,7 +20,8 @@ import rearth.belts.model.BeltTier;
 
 /**
  * The pack's SimpleBelts fork loaded and moving items: chest, loader, belt, loader, chest (#342),
- * at each tier's Factorio rate (#344, #345) and capacity (#344).
+ * at each tier's Factorio rate (#344, #345) and capacity (#344), and at the slowest piece's rate
+ * when the loaders and the belt are of different tiers (#347).
  *
  * <p>A loader pulls from the inventory behind its facing and pushes into the one behind the far
  * loader's, so the two face each other along the row.
@@ -68,6 +69,12 @@ final class BeltHandoffTests {
         rateTest(tests, BeltTier.IMPROVED, TIER_2_ITEMS_PER_SECOND);
         rateTest(tests, BeltTier.EXPRESS, TIER_3_ITEMS_PER_SECOND);
         rateTest(tests, BeltTier.TURBO, TIER_4_ITEMS_PER_SECOND);
+        tests.test("belt_tier_3_between_tier_1_loaders_delivers_" + TIER_1_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> deliversAtRate(helper, BeltTier.BELT, BeltTier.EXPRESS, TIER_1_ITEMS_PER_SECOND));
+        tests.test("belt_tier_1_between_tier_4_loaders_delivers_" + TIER_1_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> deliversAtRate(helper, BeltTier.TURBO, BeltTier.BELT, TIER_1_ITEMS_PER_SECOND));
         tests.test("belts_own_recipes_are_swept", 20, BeltHandoffTests::ownRecipesAreSwept);
         tests.test("backed_up_64_block_belt_holds_512", LONG_BELT_SETTLED_TICKS + 20,
                 PFGameTests.LONG_PLATFORM, BeltHandoffTests::backedUpBeltHolds512);
@@ -75,7 +82,7 @@ final class BeltHandoffTests {
 
     private static void handsOff(GameTestHelper helper) {
         helper.setBlock(TARGET, Blocks.CHEST);
-        placeBelt(helper, SOURCE, FROM, TO, ITEMS, BeltTier.BELT);
+        placeBelt(helper, SOURCE, FROM, TO, ITEMS, BeltTier.BELT, BeltTier.BELT);
 
         helper.succeedWhen(() -> {
             int arrived = count(chest(helper, TARGET));
@@ -93,12 +100,13 @@ final class BeltHandoffTests {
     private static void rateTest(PFGameTests.Registrar tests, BeltTier tier, int itemsPerSecond) {
         tests.test("belt_tier_" + tier.number() + "_delivers_" + itemsPerSecond + "_items_per_second",
                 RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
-                helper -> deliversAtRate(helper, tier, itemsPerSecond));
+                helper -> deliversAtRate(helper, tier, tier, itemsPerSecond));
     }
 
-    private static void deliversAtRate(GameTestHelper helper, BeltTier tier, int itemsPerSecond) {
+    private static void deliversAtRate(GameTestHelper helper, BeltTier loaders, BeltTier tier,
+            int itemsPerSecond) {
         helper.setBlock(TARGET, Blocks.CHEST);
-        placeBelt(helper, SOURCE, FROM, TO, RATE_SUPPLY, tier);
+        placeBelt(helper, SOURCE, FROM, TO, RATE_SUPPLY, loaders, tier);
 
         int expected = itemsPerSecond * RATE_WINDOW_TICKS / 20;
         int[] before = new int[1];
@@ -109,7 +117,8 @@ final class BeltHandoffTests {
                 .thenExecute(() -> {
                     int delivered = count(chest(helper, TARGET)) - before[0];
                     if (delivered != expected) {
-                        helper.fail("a tier-" + tier.number() + " belt delivered " + delivered + " items in "
+                        helper.fail("a tier-" + tier.number() + " belt between tier-" + loaders.number()
+                                + " loaders delivered " + delivered + " items in "
                                 + RATE_WINDOW_TICKS + " ticks, expected " + expected, TARGET);
                     }
                 })
@@ -137,7 +146,7 @@ final class BeltHandoffTests {
     // Nothing behind the far loader, so the end refuses every item and the belt backs up.
     private static void backedUpBeltHolds512(GameTestHelper helper) {
         ChuteBlockEntity belt = placeBelt(helper, LONG_SOURCE, LONG_FROM, LONG_TO, LONG_SUPPLY,
-                BeltTier.BELT);
+                BeltTier.BELT, BeltTier.BELT);
 
         // Read once rather than polled: succeedWhen would pass while the belt was still filling.
         helper.startSequence().thenIdle(LONG_BELT_SETTLED_TICKS).thenExecute(() -> {
@@ -156,10 +165,10 @@ final class BeltHandoffTests {
 
     /** A chest of cobblestone behind an east-facing loader, belted to a west-facing one. */
     private static ChuteBlockEntity placeBelt(GameTestHelper helper, BlockPos source, BlockPos from,
-            BlockPos to, int items, BeltTier tier) {
+            BlockPos to, int items, BeltTier loaders, BeltTier tier) {
         helper.setBlock(source, Blocks.CHEST);
-        helper.setBlock(from, loader(Direction.EAST));
-        helper.setBlock(to, loader(Direction.WEST));
+        helper.setBlock(from, loader(loaders, Direction.EAST));
+        helper.setBlock(to, loader(loaders, Direction.WEST));
         for (int slot = 0; items > 0; slot++, items -= 64) {
             chest(helper, source).setItem(slot, new ItemStack(Items.COBBLESTONE, Math.min(items, 64)));
         }
@@ -168,8 +177,8 @@ final class BeltHandoffTests {
         return belt;
     }
 
-    private static BlockState loader(Direction facing) {
-        return BlockContent.CHUTE_BLOCK.get().defaultBlockState()
+    private static BlockState loader(BeltTier tier, Direction facing) {
+        return BlockContent.loaderFor(tier).defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, facing);
     }
 

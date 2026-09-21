@@ -557,6 +557,9 @@ Sub-rules:
   Factorio's 1/8-block spacing and each tier's speed, so a belt carries exactly its tier's items/s,
   and a loader loads several entries in a tick when a tier needs more than 20 (#344, #345,
   ADR-0076).
+- **Mixed tiers** — `shipped` for belts and loaders. A belt and each loader cap only their own flow,
+  so any tiers may be joined and a line runs at its slowest piece: a tier-3 belt between tier-1
+  loaders carries 15 items/s, and so does a tier-1 belt between tier-4 loaders (#347, ADR-0076).
 - **Underground belts** — `excluded`. Not for want of a Create block: undergrounds solve a *weaving*
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
   Minecraft has a Y axis and Create has sloped belt runs, so a belt that must cross another goes
@@ -593,20 +596,25 @@ Their underground belts are excluded above, and their splitters are #349's.
 ### Inserters
 
 - **verdict**: `adapted`
-- **notice**: Create funnels and arms move items between inventories, but there is no swing-arm reach
-  across a belt, no long-handed tier, and no stack-size bonus research.
+- **notice**: the inserter is the **loader**, a block that loads an inventory onto a belt or unloads a
+  belt into one. There is no swing arm, so nothing moves between two inventories directly and there
+  is no reach across a belt.
 - **where**: all bodies
-- **via**: `create`
-- **owner**: ADR-0017, #93
+- **via**: `belts` (the pack's SimpleBelts fork, ADR-0060)
+- **owner**: ADR-0076, ADR-0060, #341
 
-The notice above is written against funnels and chutes. **#102 asks whether Create's Mechanical Arm
-is the inserter instead** — an Arm is a swing arm, which is a much closer fit — and will rewrite this
-row's losses to whatever actually survives. #178 scoped the inserter family alongside the belts and
-**ADR-0044 explicitly does not decide it**, handing it back to #102 unblocked: the conveyance is
-settled, the swing arm is a separate mechanic with its own fidelity argument. For that argument, the
-Arm reaches 5 blocks against an inserter's 1 (2 long-handed), moves up to a full stack per cycle at
-roughly 2–2.5 transfers/s at maximum RPM, and does not implement `DirectBeltInputBehaviour` — it uses
-the separate `ArmInteractionPointType` registry.
+Sub-rules:
+
+- **The inserter chain** — `adapted` as the loader. The fork's four loaders, `chute`,
+  `improved_chute`, `express_chute` and `turbo_chute`, read as Loader, Fast loader, Express loader and
+  Turbo loader, and are crafted from the `burner-inserter`, `inserter`, `fast-inserter` and
+  `bulk-inserter` recipes on the Assembling surface, each unlocked by its inserter's technology
+  (#347, ADR-0076). A loader moves its tier's 15, 30, 45 or 60 items/s whatever belt it is on. All
+  four run unpowered for now; the per-item draw of tiers 2 to 4 is #348's.
+- **Long-handed inserter** — `excluded`. A loader has no arm to lengthen, so a long-handed tier would
+  be a loader with nothing to tell it apart; `long-handed-inserter` is `not_emitted` (#347, ADR-0076).
+- **Stack-size bonus research** — `planned`. A loader moves one item per belt entry until #25 picks
+  the technologies (#341).
 
 ### Logistic robots
 
