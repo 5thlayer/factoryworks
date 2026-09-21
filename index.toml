@@ -254,7 +254,7 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "404337703c82f6b98ea234d6b9488613352b62bb4898efe93a9d0c4ba825161f"
+hash = "9e3b7d317287124aaff32cc2cf0a8d146dde1627b060898179c3b7d25420848b"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -1098,7 +1098,7 @@ hash = "6b9dbbb95424062a17c3fa0579624522c4b152f9cad980e73e4efc7c0ee29e60"
 
 [[files]]
 file = "kubejs/data/minecraft/dimension/overworld.json"
-hash = "b0d470afe03b58a5fa526c7d57093115f17d64f0f529508187c49492224f4a4f"
+hash = "323b34c3a1958435b253ef132df02c9ef63c96edbae9967bd6cc923ddd5c2ab1"
 
 [[files]]
 file = "kubejs/data/minecraft/dimension_type/overworld.json"
@@ -1134,11 +1134,11 @@ hash = "f9078270b2a482c4525d4dec9f37ee417928d66164420ad6d53e537a35278aa4"
 
 [[files]]
 file = "kubejs/data/minecraft/world_preset/normal.json"
-hash = "df22baf260b1119b724580bea1019f54cec54b621a0ef0b8a29f3af6e2838a03"
+hash = "bef0955f5bae9500d2795b99062e9cbce59ae88a2c5c10333da4732a04e4e123"
 
 [[files]]
 file = "kubejs/data/minecraft/worldgen/noise_settings/overworld.json"
-hash = "290166c39f81289b0a1c3a38932e9eccbf221f8f5f75e7f0ca6ccc842f084593"
+hash = "c90de761ae3842afa117f78646dbc481df07da4b256770aecfac20af4fd9b705"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/fuel/coal.json"
@@ -1409,12 +1409,20 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/engine_unit.json"
 hash = "967914dcda911f7982b780a92024792d59ea3a33605f8bd72ac1c64302c6e458"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/express_splitter.json"
+hash = "73cc0dcea4dc5aa8fb80f94fee6cbd06b3f6551e3ebb0a2450d5a216a5b364b5"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/express_transport_belt.json"
 hash = "eef3a89259bc133d5ad49fad5adcd73b4302dbe539d65de1c85a93df2d9d219a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/fast_inserter.json"
 hash = "430eb9f9729d73571d2edb2c471fdc64ad66d86f2ba695c9d6bb18a9dd228d1a"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/fast_splitter.json"
+hash = "a0c83c1b7a87d57bc8c353c67f2efec5ec37ca6516e06dcc2ec6247d367b4bac"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/fast_transport_belt.json"
@@ -1503,6 +1511,10 @@ hash = "9b3e54daa4e26fa167a5b4dff0aa1c5c9be32b43b00372610334d1cc68baa430"
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/solar_panel.json"
 hash = "6f30c38fbed22a06ca95fa8a3d89a3cdb526012b2e43f38ea0a961f0f49d2bd5"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/splitter.json"
+hash = "f5f4eafc0849bfacf28a6ff5dc813465de03430ed7d5cb3d33b1f08b9d786af4"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/steam_engine.json"
@@ -1642,7 +1654,7 @@ hash = "7bc6f8f7b55863c4d270f518ddfdd480aac926d6de673b5df0562597ee388537"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/tags/worldgen/biome/terra_land.json"
-hash = "f4247b58aec027e6ae771ddfb340156d9a40f6e517569cbf012b7612f7a13286"
+hash = "e4ad01421e92f7849826eb707bd2d122ca11b13cb7865418e125def16678a61e"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_desert.json"
@@ -1682,7 +1694,7 @@ hash = "f0169f9075608f9f747f7fca0ca2b95d1160e968c45e6e3fdf1c6a5dbc13676e"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/density_function/terra/offset.json"
-hash = "5cafac874d15bdfdcc9f955d25d69a6cf6d1a43b3654bac28a8122257407047e"
+hash = "254b4ac361e5360242723a70ede81b03a5351f7d179c5ef2928209b25b11120f"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/processor_list/terra_start_ground.json"
@@ -1926,7 +1938,7 @@ hash = "f1c8fa34394e1b68631dac2ebce5eadda5915fc000df32ce84b494399ba6f6a6"
 
 [[files]]
 file = "kubejs/server_scripts/researchd.js"
-hash = "ea5fdf9bc64c129c12458e6dbd6cb3b90f4c52e6cddae4962354ebc10b8e0952"
+hash = "67bb056551c27231dae0dc4db05afc9dfd79e26d9f4816e674cb90a8f2965956"
 
 [[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
@@ -1965,7 +1977,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "92b01d217582767fc94eaab6e86a2a24151c25762c228eee96c331168e83e5d3"
+hash = "f6f8d8af77d114fc8f83e3bb84354852307f996eca3be734711ee4745a21d8b3"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
