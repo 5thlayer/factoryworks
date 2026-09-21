@@ -14,6 +14,7 @@ import com.planetaryfactory.core.mining.rig.RigGeometry;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.Placements;
+import rearth.oritech.block.base.block.MultiblockMachine;
 import com.planetaryfactory.core.smelting.FurnaceTier;
 
 import net.minecraft.core.BlockPos;
@@ -192,11 +193,18 @@ final class PlacementPlanTests {
                     + " blocks where its footprint is " + expected, FLOOR);
         }
         BlockPos anchor = plan.blocks().getFirst().pos();
-        if (!(helper.getLevel().getBlockEntity(anchor) instanceof AssemblingMachineBlockEntity machine)
-                || !machine.isAssembled(helper.getLevel().getBlockState(anchor))) {
-            helper.fail("the placed anchor is not an assembled Assembling Machine", helper.relativePos(anchor));
+        if (!(helper.getLevel().getBlockEntity(anchor) instanceof AssemblingMachineBlockEntity)) {
+            helper.fail("the placed anchor holds no Assembling Machine block entity", helper.relativePos(anchor));
         }
-        helper.succeed();
+        // Read again ticks later, not only on the placing tick: Oritech's onLoad schedules a
+        // rescan for the next tick, and a rescan that finds no cores clears ASSEMBLED -- after
+        // which every right-click replays the setup animation and never opens the screen.
+        helper.runAfterDelay(5, () -> {
+            if (!helper.getLevel().getBlockState(anchor).getValue(MultiblockMachine.ASSEMBLED)) {
+                helper.fail("the anchor lost ASSEMBLED after it was placed", helper.relativePos(anchor));
+            }
+            helper.succeed();
+        });
     }
 
     /**
