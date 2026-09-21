@@ -561,22 +561,24 @@ Sub-rules:
   Factorio's 1/8-block spacing and each tier's speed, so a belt carries exactly its tier's items/s,
   and a loader loads several entries in a tick when a tier needs more than 20 (#344, #345,
   ADR-0076).
-- **Mixed tiers** — `shipped` for belts and loaders. A belt and each loader cap only their own flow,
-  so any tiers may be joined and a line runs at its slowest piece: a tier-3 belt between tier-1
-  loaders carries 15 items/s, and so does a tier-1 belt between tier-4 loaders (#347, ADR-0076).
+- **Mixed tiers** — `shipped`. A belt, each loader and each side of a splitter cap only their own
+  flow, so any tiers may be joined and a line runs at its slowest piece: a tier-3 belt between tier-1
+  loaders carries 15 items/s, so does a tier-1 belt between tier-4 loaders, and so does a tier-3 line
+  through a tier-1 splitter (#347, #349, ADR-0076).
 - **Underground belts** — `excluded`. Not for want of a Create block: undergrounds solve a *weaving*
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
   Minecraft has a Y axis and Create has sloped belt runs, so a belt that must cross another goes
   over it. Argued from the medium, not from a mod's shortfall (ADR-0044).
-- **Splitters, with filtering and priority** — `adapted`. Create's tunnels are the splitter: a
-  tunnel splits a belt's output across the belts beside it and filters what goes where, one filter
-  slot per output. Brass Tunnel's seven `SelectionMode` values include `FORCED_SPLIT` and
-  `FORCED_ROUND_ROBIN`, which refuse to distribute unless every target can take its share — that is
-  a balancer — and `PREFER_NEAREST`, which is positional priority. *This entry read "the balancer
-  built out of splitter pairs … is not buildable, and there is no output priority", which was wrong
-  on the facts.* What is genuinely absent is the **constructed pattern**: a balancer assembled from
-  splitter pairs, rather than the outcome one block delivers. ADR-0044 takes the outcome as what the
-  pack promises.
+- **Splitters** — `shipped`. Four tiers from Factorio's four splitter recipes, turbo registered
+  with no recipe. A splitter is two blocks wide, placed and broken as one; each half ends one belt at
+  its back and starts one at its front, and items pass from an input's end to an output's head with
+  nothing held between. It splits evenly, merges evenly, sends everything to the free side when the
+  other backs up, draws no power, and each side passes no more than its tier's items/s (#349,
+  ADR-0076). The placement preview is #355. *This entry read `adapted` to Create's tunnels, which
+  left with ADR-0060.*
+- **Balancers** — `shipped`. A balancer is built from splitters, not bought as a block: chained
+  splitters make Factorio's 2x2 and 4x4 balancers (#349).
+- **Splitter priority and filter** — `planned` on #357.
 - **Two lanes per belt** — `excluded`. Lane balancing is a compression trick for a conveyor one tile
   wide on a plane — what you do when the only free axis runs along the belt. It goes with the
   undergrounds and for the same reason (ADR-0044). *This entry read `by-consequence` of Create
@@ -594,8 +596,8 @@ Sub-rules:
   breaker's inventory and leaves the other loader standing, free to relink (#346). *Upstream
   SimpleBelts charged one item whatever the length.*
 
-`logistics-2` and `logistics-3` are declared in `researchd.js` and each unlocks its belt tier (#345).
-Their underground belts are excluded above, and their splitters are #349's.
+`logistics`, `logistics-2` and `logistics-3` are declared in `researchd.js`; each unlocks its
+splitter, and the last two their belt tier (#345, #349). Their underground belts are excluded above.
 
 ### Inserters
 

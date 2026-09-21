@@ -15,8 +15,9 @@ re-runs it. Every figure the fork and its GameTest type is re-derived from the c
     own table, and are divided by the hand size. Tier 1 is built from the burner inserter and
     draws no power.
   - **the GameTest's typed figures.** `BeltHandoffTests` types each tier's items a second and 512,
-    and `BeltPowerTests` tier 2's joules per item and drain, rather than reading them off the fork;
-    they are asserted here against the derivation.
+    `BeltPowerTests` tier 2's joules per item and drain, and `SplitterTests` tier 1's belt and
+    splitter rates, rather than reading them off the fork; they are asserted here against the
+    derivation.
 """
 
 import json
@@ -50,6 +51,7 @@ EXPECTED_DRAIN_FE_PER_SECOND = {2: 4.0, 3: 5.0, 4: 10.0}
 GAMETESTS = ROOT / "mod" / "src" / "main" / "java" / "com" / "planetaryfactory" / "core" / "gametest"
 GAMETEST = GAMETESTS / "BeltHandoffTests.java"
 POWER_GAMETEST = GAMETESTS / "BeltPowerTests.java"
+SPLITTER_GAMETEST = GAMETESTS / "SplitterTests.java"
 
 
 def joules(raw):
@@ -180,6 +182,13 @@ def main():
         typed = typed_int(power, name)
         if typed != want:
             failures.append(f"BeltPowerTests types {name} = {typed}, the corpus derives {want}")
+
+    splitter_source = SPLITTER_GAMETEST.read_text(encoding="utf-8")
+    for name, want in (("TIER_1_ITEMS_PER_SECOND", rates.get("transport-belt")),
+                       ("TIER_1_SPLITTER_ITEMS_PER_SECOND", splitter_rates.get("splitter"))):
+        typed = typed_int(splitter_source, name)
+        if typed != want:
+            failures.append(f"SplitterTests types {name} = {typed}, the corpus derives {want}")
 
     for failure in failures:
         print(f"FAIL  {failure}")

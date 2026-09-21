@@ -1,0 +1,25 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "belts:splitter",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 10
+    }
+  ],
+  "results": [
+    {
+      "id": "belts:improved_splitter",
+      "count": 1
+    }
+  ],
+  "time": 40
+}

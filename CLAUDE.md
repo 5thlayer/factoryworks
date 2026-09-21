@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346) and `BeltPowerTests` (#348), registered only when the
+and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348) and `SplitterTests` (#349), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -190,6 +190,12 @@ FE takes nothing, that a pole's demand probe leaves a loader nothing, and that a
 loader draws 66.5 FE per item plus its drain (`BeltPowerTests`, #348). The face is the fork's, so
 the two static FE checks cannot read it and say so. Dropping the charge gate, the journal or the
 charge each turns one red. The ledger is the fork's `LoaderEnergyTest`.
+And that a splitter splits one tier-1 belt evenly, sends all 15 items/s to the free side when the
+other backs up, and caps a tier-3 line at its own tier's 15, and that it places both halves or,
+blocked at one, neither, and broken at either half leaves neither standing and drops one item
+(`SplitterTests`). Dropping the output alternation, the fallback to the free side, the rate cap, the
+fit check or the other half's teardown each turns its test red. The rule is the fork's `SplitterTest`,
+which also builds a 4x4 balancer from four splitters.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;

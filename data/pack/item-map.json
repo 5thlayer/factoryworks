@@ -311,8 +311,10 @@
       "ticket": 118
     },
     "express-splitter": {
-      "status": "native_mechanic",
-      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "kind": "item",
+      "target": "belts:express_splitter",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-3 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 45 items/s (#349, ADR-0076)."
     },
     "express-transport-belt": {
       "kind": "item",
@@ -331,8 +333,10 @@
       "note": "The SimpleBelts fork's tier-3 loader, crafted from the fast inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "fast-splitter": {
-      "status": "native_mechanic",
-      "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
+      "kind": "item",
+      "target": "belts:improved_splitter",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-2 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 30 items/s (#349, ADR-0076)."
     },
     "fast-transport-belt": {
       "kind": "item",
@@ -794,9 +798,10 @@
       "ticket": 120
     },
     "splitter": {
-      "status": "undecided",
-      "note": "SimpleBelts ships exactly `belts:belt`, `belts:improved_belt`, `belts:chute` and `belts:conveyor_support`: two belt tiers, no splitter, no underground. The row read `native_mechanic` on Create's RPM-driven belt, and Create left with ADR-0060 (#277). #261's fork adds throughput tiers and splitters, and owns this row.",
-      "ticket": 261
+      "kind": "item",
+      "target": "belts:splitter",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-1 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 15 items/s (#349, ADR-0076)."
     },
     "steam-engine": {
       "kind": "item",
@@ -900,6 +905,13 @@
       "target": "belts:belt",
       "source": "borrowed",
       "note": "The SimpleBelts fork's tier-1 belt, at Factorio's 15 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table."
+    },
+    "turbo-splitter": {
+      "kind": "item",
+      "target": "belts:turbo_splitter",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-4 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 60 items/s (#349, ADR-0076).",
+      "outside_corpus": "Space Age's recipe, which needs tungsten plate from Vulcanus; the corpus is Nauvis pre-launch (#72), so the splitter ships with no recipe (#341)."
     },
     "turbo-transport-belt": {
       "kind": "item",
