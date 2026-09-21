@@ -80,6 +80,12 @@ repeated entries — `data/oritech/recipe/assembler/*` does exactly this), a lis
 `ItemStack`s, **one** `FluidIngredient`, a list of fluid outputs, and `time` in ticks. There is no
 result probability.
 
+**At 2.0.0-exp6** (`javap` on `mods/oritech-2.0.0-exp6.jar`) the record is
+`(List<Ingredient> itemInputs, List<ItemStackTemplate> itemResults, Optional<SizedFluidIngredient>
+fluidInput, List<FluidStackTemplate> fluidOutputs, int time, RecipeType recipeType)`: the fluid input
+is optional and sized, and the results are templates rather than stacks. One fluid in, and a count as
+repeated entries (`data/oritech/recipe/assembler/amethystbud.json`), are unchanged.
+
 Measured over the committed corpus (`data/factorio/recipe.json`, 163 recipes):
 
 | shape | recipes | fits Oritech's schema? |
@@ -96,14 +102,19 @@ recipe type whose serializer carries two fluids. That is Java either way.
 
 `block/base/entity/MachineBlockEntity.java` `getRecipe()` keeps `currentRecipe` while it still
 matches, and otherwise asks `level.getRecipeManager().getRecipeFor(type, input, level)` — the **first**
-match. If that first match cannot output (`canOutputRecipe`), the machine idles; it does not try the
+match. **At 2.0.0-exp6 there is no `getRecipe()`** (`javap -p` on `MachineBlockEntity` in
+`mods/oritech-2.0.0-exp6.jar`): it is split into `protected findActiveRecipe()` and `protected
+loadRecipeFromInput(ServerLevel, OritechRecipeInput, RecipeType)`, and the manager is reached through
+`ServerLevel.recipeAccess()`. The behaviour, first match, is the same. If that first match cannot output (`canOutputRecipe`), the machine idles; it does not try the
 next candidate. Nothing is dropped at load, unlike GregTech's trie (#236), but ambiguity is settled by
 recipe order.
 
 ADR-0056's answer is **output-slot locking**: the lock refuses a rival recipe's product. Oritech has no
 slot lock (`grep` for lock/ghost finds only JEI's filter-screen handler). Both methods it would take are
-overridable: `getRecipe()` is `protected`, `canOutputRecipe()` is `public`. So **selection is Java,
+overridable: `getRecipe()` (`findActiveRecipe()` at 2.0) is `protected`, `canOutputRecipe()` is `public`. So **selection is Java,
 contained in a subclass** — iterate `getAllRecipesFor`, filter on the locked output, persist the lock.
+ADR-0060 replaced the lock with a player-set **Held recipe** (ADR-0071): one id, no lookup, so the
+subclass overrides the craft tick rather than `findActiveRecipe()`.
 
 **Research gating is Native.** Vanilla's three-argument `getRecipeFor` delegates to the four-argument
 overload with a `null` hint (disassembled from `neoforge-21.1.248-merged.jar`), and that four-argument
@@ -180,8 +191,14 @@ CC0 makes copying free; the concrete classes run 70–300 lines. That changes th
 but it never makes a Java cell impossible.
 
 **The visuals are one line.** Oritech registers each renderer as
-`new MachineRenderer<>("models/foundry_block")` (`client/init/ModRenderers.java:24,40,45`). Both
-`MachineRenderer` and `MachineModel` are public, and the path resolves into Oritech's own jar. A core
+`new MachineRenderer<>("models/foundry_block")` (`client/init/ModRenderers.java:24,40,45`). **At
+2.0.0-exp6 that call has the wrong arity** (`javap` on `mods/oritech-2.0.0-exp6.jar`): the constructors
+are `MachineRenderer(BlockEntityRendererProvider.Context, String)` and `(Context, String, boolean)`,
+and the class now extends `ModelBoundedGeoBlockRenderer` under 26.1's render-state pipeline. The pack
+registers `new MachineRenderer<>(context, "models/assembler", false)` (`AssemblingMachineClient`).
+`MachineModel` is still public, at `rearth.oritech.client.renderers.models.MachineModel(String)`. The GeckoLib
+interface is `com.geckolib.animatable.GeoBlockEntity` (`geckolib-neoforge-26.1.2-5.5.2.jar`). Both
+classes are public, and the path resolves into Oritech's own jar. A core
 block entity that implements `GeoBlockEntity` and names the same path renders with Oritech's model,
 texture and animations, and the pack ships no asset. A footprint larger than the model is a
 `poseStack.scale` in a renderer subclass. Whether a scaled model reads well is `world-load (human)`.
@@ -207,7 +224,7 @@ Ledger verdicts are today's. **Level** is the cheapest that closes every gap in 
 | **Oil processing** — advanced, cracking, `sulfur` | `planned` | — | **Java** | Two fluid inputs (fact 2): a two-tank subclass *and* a new recipe type. |
 | **Smelting** — burner tiers | `planned` | — | **Core** | The existing `FurnaceTier` blocks stay. |
 | **Smelting** — electric | `planned` | Powered Furnace | **Java** | `PoweredFurnaceBlockEntity:59` reads vanilla `RecipeType.SMELTING` and `shrink(1)`s — `5 iron_plate → steel_plate` cannot pass. A subclass overriding the lookup to `planetaryfactory:smelting` fixes it. |
-| **Assembling machines** | `planned` | Assembler (4 in / 1 out, no fluid) | **Java** | Three subclasses: output lock (fact 3), a base speed per tier (0.5 / 0.75 / 1.25), addon slot counts (0 / 2 / 4), a 3x3 footprint (fact 5), and a fluid tank for the 26 `crafting-with-fluid` recipes. |
+| **Assembling machines** | `planned` | Assembler (4 in / 1 out, no fluid) | **Java** | Three subclasses: a player-set **Held recipe** rather than an output lock (ADR-0060, ADR-0071; Oritech's own lookup is `findActiveRecipe()` at 2.0, fact 3), a base speed per tier (0.5 / 0.75 / 1.25), addon slot counts (0 / 2 / 4), a footprint (fact 5), and a fluid tank for the 26 `crafting-with-fluid` recipes. Tier 1 is built as `planetaryfactory:assembling_machine` on `MultiblockMachineEntity` in `mods/oritech-2.0.0-exp6.jar`, reading the pack's own `planetaryfactory:assembling` rather than `OritechRecipe` (ADR-0063); like Factorio's `assembling-machine-1` it has no fluid box and refuses every `crafting-with-fluid` recipe (#331). |
 | **Chemical plant** | — (in Oil processing) | Refinery, Centrifuge (fluid-capable) | **Java** | 3 of the 11 `chemistry` recipes need two fluids (fact 2). |
 | **Centrifuge** | — (in Nuclear fission) | Centrifuge | **Java** | No result probability in the schema; `uranium-processing` needs 0.993/0.007. Override `craftItem`. *See the corpus note at the end.* |
 | **Handcrafting and the crafting queue** | `planned` | — | **not Oritech → core** | The Personal Assembler. |
@@ -311,7 +328,7 @@ Counting the headline rows Oritech touches at all, cheapest level after splits:
 - **Core, standalone** — burner machines, the ore patch itself (amount and placement), lava through the Offshore Pump.
 
 **The finding in one line:** Oritech carries the energy layer, the module system and most machine
-bodies, but no Factorio machine *as shipped*. It needs output locking, fixed per-tier speeds and a
+bodies, but no Factorio machine *as shipped*. It needs a player-set recipe (ADR-0071), fixed per-tier speeds and a
 placement gesture, and each of those is one subclass. The hypothesis trades GregTech/MI's recipe
 chassis for Oritech's machine chassis. It does not remove the core's Java; it moves it onto Oritech's
 base classes. It **unblocks** Modules and beacons and reopens the reactor neighbour bonus.

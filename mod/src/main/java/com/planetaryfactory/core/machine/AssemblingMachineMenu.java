@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.planetaryfactory.core.PFMenus;
+import com.planetaryfactory.core.recipes.AssemblingRecipe;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,6 +20,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -223,7 +225,9 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     /** What {@link #request} would answer, asked of the server's recipes and research. */
     public static HoldVerdict verdict(ServerLevel level, String id) {
-        return HoldVerdict.of(AssemblingMachineRecipes.resolve(level, HeldRecipe.of(id)).isPresent(),
+        Optional<RecipeHolder<AssemblingRecipe>> recipe = AssemblingMachineRecipes.resolve(level, HeldRecipe.of(id));
+        return HoldVerdict.of(recipe.isPresent(),
+                recipe.map(holder -> AssemblingMachineSpec.crafts(holder.value().category())).orElse(false),
                 AssemblingMachineRecipes.isLocked(id));
     }
 

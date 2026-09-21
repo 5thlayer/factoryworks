@@ -1,6 +1,8 @@
 package com.planetaryfactory.core.machine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -73,5 +75,13 @@ class AssemblingMachineSpecTest {
     @Test
     void progressPastTheEndDrawsNothing() {
         assertEquals(0, AssemblingMachineSpec.feForTick(20, 20, 750));
+    }
+
+    /** Tier 1's {@code crafting_categories}: no fluid box, so no {@code crafting-with-fluid}. */
+    @Test
+    void tierOneCraftsNoFluidRecipe() {
+        assertTrue(AssemblingMachineSpec.crafts("crafting"));
+        assertTrue(AssemblingMachineSpec.crafts("advanced-crafting"));
+        assertFalse(AssemblingMachineSpec.crafts("crafting-with-fluid"));
     }
 }

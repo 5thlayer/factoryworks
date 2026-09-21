@@ -306,8 +306,8 @@ free with the base class.
 `oritech-coverage.md` fact 9:** that note says the constructor is `new MachineRenderer<>("models/foundry_block")`,
 a one-argument call read off 1.2.12. At 2.0.0-exp6 the constructors are
 `MachineRenderer(BlockEntityRendererProvider$Context, String)` and
-`MachineRenderer(BlockEntityRendererProvider$Context, String, boolean)`. Also, the class named in that
-note as `MachineModel` **does not exist in the jar**; `MachineRenderer` now extends
+`MachineRenderer(BlockEntityRendererProvider$Context, String, boolean)`. `MachineModel` is in the jar
+at `rearth.oritech.client.renderers.models.MachineModel` (#331); `MachineRenderer` now extends
 `rearth.oritech.client.renderers.blocks.ModelBoundedGeoBlockRenderer<T, R>` and is generic over
 `BlockEntityRenderState & GeoRenderState` (26.1's render-state pipeline).
 
@@ -490,7 +490,7 @@ route and an EMI category that do not exist yet.
 | `oritech-coverage.md` fact 3 | reached via `level.getRecipeManager()` | **wrong.** `ServerLevel.recipeAccess()`. |
 | `oritech-coverage.md` fact 3 | `canOutputRecipe()` is public | correct, unchanged |
 | `oritech-coverage.md` fact 9 | `new MachineRenderer<>("models/foundry_block")` | **wrong arity.** Constructors are `(Context, String)` and `(Context, String, boolean)`. |
-| `oritech-coverage.md` fact 9 | `MachineModel` is public | **class absent from the jar.** `MachineRenderer` now extends `ModelBoundedGeoBlockRenderer`. |
+| `oritech-coverage.md` fact 9 | `MachineModel` is public | **correct**: it is `rearth.oritech.client.renderers.models.MachineModel`, not `blocks` (#331). `MachineRenderer` now extends `ModelBoundedGeoBlockRenderer`. |
 | `oritech-coverage.md` fact 9 | concrete machines hard-code their type; extend the abstract base | **correct and still true**, verified on `AssemblerBlockEntity` |
 | `oritech-coverage.md` fact 2 | one `FluidIngredient`, result `ItemStack`s | now `Optional<SizedFluidIngredient>` and `ItemStackTemplate`/`FluidStackTemplate`. Substance (one fluid in) unchanged. |
 | `oritech-coverage.md` "Assembling machines" row | "Three subclasses: output lock (fact 3), base speed per tier, addon slot counts, 3x3 footprint, fluid tank" | the *output lock* half was written before ADR-0060 replaced the surface with a player-set recipe; the row has not been updated. It also does not mention the `OritechRecipe` typing wall (§1.5), which is the largest cost in the row. |

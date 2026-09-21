@@ -14,6 +14,8 @@ public enum HoldVerdict {
     HELD(null),
     /** The id names no assembling recipe the server has loaded. */
     NOT_ASSEMBLING("planetaryfactory_core.assembling_machine.refused.not_assembling"),
+    /** An assembling recipe of a category this tier does not craft: tier 1 has no fluid box. */
+    NOT_THIS_MACHINE("planetaryfactory_core.assembling_machine.refused.not_this_machine"),
     /** Research has not unlocked it. */
     LOCKED("planetaryfactory_core.assembling_machine.refused.locked");
 
@@ -23,9 +25,12 @@ public enum HoldVerdict {
         this.messageKey = messageKey;
     }
 
-    public static HoldVerdict of(boolean resolves, boolean locked) {
+    public static HoldVerdict of(boolean resolves, boolean crafts, boolean locked) {
         if (!resolves) {
             return NOT_ASSEMBLING;
+        }
+        if (!crafts) {
+            return NOT_THIS_MACHINE;
         }
         return locked ? LOCKED : HELD;
     }

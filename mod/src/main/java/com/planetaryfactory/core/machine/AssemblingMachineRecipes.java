@@ -20,9 +20,9 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 /**
  * What an Assembling Machine may hold, read off the server's recipe manager (#327).
  *
- * <p>Every loaded {@code planetaryfactory:assembling} recipe, whatever its category: the machine
- * is Factorio's assembler, which takes all three crafting categories, and a recipe it
- * leaves out is a recipe no machine can ever make.
+ * <p>Every loaded {@code planetaryfactory:assembling} recipe, whatever its category. A
+ * {@code crafting-with-fluid} one is listed and then refused by {@link HoldVerdict}, so Fill Recipe
+ * on it says why rather than doing nothing (#331).
  *
  * <p><b>Nothing is Locked yet</b>, for {@code RuntimePlanSource}'s reason: the research predicate
  * asks Researchd, whose fork is not on 26.1.2 (#260). The annotation is wired all the way to the

@@ -14,24 +14,36 @@ class HoldVerdictTest {
 
     @Test
     void anUnlockedAssemblingRecipeIsHeld() {
-        assertEquals(HoldVerdict.HELD, HoldVerdict.of(true, false));
+        assertEquals(HoldVerdict.HELD, HoldVerdict.of(true, true, false));
         assertTrue(HoldVerdict.HELD.held());
     }
 
     @Test
     void anIdTheMachineCannotResolveIsRefused() {
-        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, false));
+        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, true, false));
         assertFalse(HoldVerdict.NOT_ASSEMBLING.held());
     }
 
     @Test
     void aLockedRecipeIsRefused() {
-        assertEquals(HoldVerdict.LOCKED, HoldVerdict.of(true, true));
+        assertEquals(HoldVerdict.LOCKED, HoldVerdict.of(true, true, true));
     }
 
     @Test
     void anUnknownIdIsNotReportedAsLocked() {
-        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, true));
+        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, true, true));
+    }
+
+    @Test
+    void aRecipeOfACategoryTheMachineDoesNotCraftIsRefused() {
+        assertEquals(HoldVerdict.NOT_THIS_MACHINE, HoldVerdict.of(true, false, false));
+        assertFalse(HoldVerdict.NOT_THIS_MACHINE.held());
+    }
+
+    /** Factorio lists no such recipe in tier 1 at all, so researching it changes nothing here. */
+    @Test
+    void aLockedRecipeOfTheWrongCategoryIsNotReportedAsLocked() {
+        assertEquals(HoldVerdict.NOT_THIS_MACHINE, HoldVerdict.of(true, false, true));
     }
 
     @Test

@@ -27,5 +27,6 @@
   "planetaryfactory_core.assembler.unplannable": "The Assembler cannot plan this recipe",
   "planetaryfactory_core.assembling_machine.fill": "Sets this machine's recipe; moves no items",
   "planetaryfactory_core.assembling_machine.refused.not_assembling": "This machine cannot make %s",
+  "planetaryfactory_core.assembling_machine.refused.not_this_machine": "%s needs a fluid input, which this machine does not have",
   "planetaryfactory_core.assembling_machine.refused.locked": "Research has not unlocked %s yet"
 }
