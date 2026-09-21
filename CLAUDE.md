@@ -628,8 +628,8 @@ the real client, booted by `scripts/launch.py`'s headless context (imported, not
 stopped when the log goes quiet for fifteen seconds with `blocks.png-atlas` created, and killed by
 process group because `launch.py` is a Python parent holding a Java child. The allowlist rule is
 `check-datapack-load.py`'s: every complaint about this namespace is an `EXPECTED` entry with its
-ticket, an unlisted one fails, and a stale one fails too. The eight today are four models naming
-departed `gcyr:` textures (#258) and the four steam fluids (#189). Other mods' namespaces
+ticket, an unlisted one fails, and a stale one fails too. The four today are models naming
+departed `gcyr:` textures (#258). Other mods' namespaces
 are not scanned; they are not ours to fix.
 
 One blind spot is **measured rather than assumed**: a missing item model definition — the

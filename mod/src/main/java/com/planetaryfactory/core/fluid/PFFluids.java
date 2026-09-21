@@ -34,10 +34,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * and it would hand the player a hand-carry route around the Boiler-pipe-Engine chain that rung 0
  * exists to teach. A {@link net.neoforged.neoforge.fluids.FluidType} needs no bucket to register.
  *
- * <p>No model or blockstate JSON is generated for either liquid block: {@link LiquidBlock}s are not
- * rendered from one -- {@link com.planetaryfactory.core.fluid.client.SteamFluidClient} supplies the
- * still/flowing textures directly through {@code IClientFluidTypeExtensions}, the same seam GregTech
- * and every other fluid mod uses.
+ * <p>A liquid block is drawn by its fluid model, which
+ * {@link com.planetaryfactory.core.fluid.client.SteamFluidClient} registers; its blockstate names
+ * vanilla's water model only for the particle.
  */
 public final class PFFluids {
     public static final DeferredRegister<Fluid> FLUIDS =
