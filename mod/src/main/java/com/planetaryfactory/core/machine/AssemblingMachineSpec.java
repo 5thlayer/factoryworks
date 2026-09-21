@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.machine;
 
+import java.util.Set;
+
 /**
  * The Assembling Machine's rate (#328, ADR-0029): {@code assembling-machine-1}'s own
  * {@code crafting_speed} and {@code energy_usage}, on ADR-0060's 1 FE = 100 J.
@@ -25,11 +27,19 @@ public final class AssemblingMachineSpec {
     /** {@code assembling-machine-1}'s {@code energy_usage} in watts, from {@code machine.json}. */
     static final long WATTS = 75_000L;
 
+    /** {@code assembling-machine-1}'s {@code crafting_categories}, from {@code machine.json}. */
+    private static final Set<String> CRAFTING_CATEGORIES = Set.of("crafting", "advanced-crafting");
+
     private static final long TICKS_PER_SECOND = 20L;
 
     private static final long JOULES_PER_FE = 100L;
 
     private AssemblingMachineSpec() {
+    }
+
+    /** Whether this tier crafts a recipe of Factorio {@code category}. */
+    public static boolean crafts(String category) {
+        return CRAFTING_CATEGORIES.contains(category);
     }
 
     /**

@@ -439,7 +439,8 @@ Sub-rules:
 - **ticket**: #87 (the machines are registered; the recipe conversion is not); #326 registers
   tier 1 as `planetaryfactory:assembling_machine` on Oritech's base, placed and inert (ADR-0071,
   ADR-0072); #327 gives it a Held recipe and #328 crafts it at `assembling-machine-1`'s speed 0.5
-  and 75 kW, stalling without consuming
+  and 75 kW, stalling without consuming; #331 emits the recipes naming it, and refuses it every
+  `crafting-with-fluid` one, which tier 1's `crafting_categories` does not list
 
 Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
 (ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes GregTech out of the pack and
@@ -462,12 +463,12 @@ Sub-rules:
   manager when asked, so a tag ingredient stays a tag. The adaptation is **where it is picked**
   (ADR-0073): the recipe viewer is the only picker. EMI's Fill Recipe on the open machine sets the
   Held recipe, lit with an empty inventory, and the server refuses one the machine cannot hold with a
-  message. The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
+  message -- including a `crafting-with-fluid` recipe, since tier 1 has no fluid box (#331). The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
   missing its search and navigation, and #336 removed it. It shows the Held recipe as its result's
   icon and name, whose tooltip carries the recipe when EMI is loaded, and a progress bar between the
   inputs and the output. There is no clear: a machine without a recipe does nothing, so a recipe is
-  replaced, never removed. That the viewer can set every emitted assembling recipe is `AssemblingMachineTests`' GameTest, the check
-  that replaced #237 and #238. Its inputs are filtered to the Held recipe (#329, ADR-0074): the
+  replaced, never removed. That the viewer can set every emitted assembling recipe of tier 1's
+  categories is `AssemblingMachineTests`' GameTest. Its inputs are filtered to the Held recipe (#329, ADR-0074): the
   `n`th ingredient goes in the `n`th slot, and a slot the recipe does not use takes nothing. The
   filter applies to a belt, a loader or the player's hand, and the hand is refused on the client
   too, since the menu carries each slot's ingredient. A machine with no recipe takes nothing. The
@@ -478,6 +479,13 @@ Sub-rules:
   no transfer handler, so a JEI-only player cannot set a recipe. Copying the setting
   is one id, and the configuration card is not built. Furnaces keep Oritech's first match, which is
   Factorio's own split.
+
+  *History.* Under ADR-0056 the surface was Modern Industrialization's **locked output slot**: one
+  mechanism selected the recipe (a locked slot refused a rival recipe's product), showed it and
+  guarded against overfill, and EMI's Fill Recipe set it with the ingredients absent. It keyed on
+  the *product*, so it needed a static check that no two recipes of one type share an ingredient set
+  and an in-world check that locking covered every collision group. ADR-0060 took MI out, and a Held
+  recipe is an id with no lookup at all, so neither check has anything left to guard.
 - **Machine idle draw** — `excluded`. A Factorio machine consumes power while idle: the
   [Electric system](https://wiki.factorio.com/Electric_system) page notes *"an active assembling
   machine 2 will consume 155 kW (150 kW energy consumption + 5 kW drain)"*, about a thirtieth of the

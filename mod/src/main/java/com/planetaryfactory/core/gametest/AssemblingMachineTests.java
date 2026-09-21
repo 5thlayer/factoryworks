@@ -12,6 +12,7 @@ import com.planetaryfactory.core.machine.AssemblingMachineHull;
 import com.planetaryfactory.core.machine.AssemblingMachineItem;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
+import com.planetaryfactory.core.machine.AssemblingMachineSpec;
 import com.planetaryfactory.core.machine.AssemblingStall;
 import com.planetaryfactory.core.machine.HeldRecipe;
 import com.planetaryfactory.core.machine.HoldVerdict;
@@ -281,6 +282,8 @@ final class AssemblingMachineTests {
     /** The pipe recipe, which the refusal test locks and no other test crafts. */
     private static final String PIPE = "planetaryfactory:assembling/pipe";
 
+    private static final String CONCRETE = "planetaryfactory:assembling/concrete";
+
     /** iron-gear-wheel, which the lock test locks and no other test crafts. */
     private static final String GEAR = "planetaryfactory:assembling/iron_gear_wheel";
 
@@ -447,7 +450,8 @@ final class AssemblingMachineTests {
     }
 
     /**
-     * Every {@code planetaryfactory:assembling} recipe in the server's manager is one Fill Recipe's
+     * Every {@code planetaryfactory:assembling} recipe in the server's manager of a category tier 1
+     * crafts is one Fill Recipe's
      * setter -- {@code AssemblingMachineMenu.request}, which EMI's packet lands on (#330) -- holds,
      * and it resolves back once held. The recipe viewer is the only picker (ADR-0073, #336), so a
      * recipe this refuses is one no machine can ever make. Against the manager, not the emitted
@@ -456,10 +460,11 @@ final class AssemblingMachineTests {
     private static void holdsEveryAssemblingRecipe(GameTestHelper helper) {
         Set<String> loaded = helper.getLevel().getServer().getRecipeManager().recipeMap()
                 .byType(PFRecipes.ASSEMBLING_TYPE.get()).stream()
+                .filter(holder -> AssemblingMachineSpec.crafts(holder.value().category()))
                 .map(holder -> holder.id().identifier().toString())
                 .collect(Collectors.toSet());
-        if (loaded.isEmpty()) {
-            helper.fail("the recipe manager holds no assembling recipe, so this proves nothing");
+        if (!loaded.contains(CABLE)) {
+            helper.fail(CABLE + " is not among tier 1's recipes, so this proves nothing");
             return;
         }
         AssemblingMachineBlockEntity machine = place(helper);
@@ -485,9 +490,9 @@ final class AssemblingMachineTests {
 
     /**
      * Fill Recipe on a recipe the machine may not hold is refused and changes nothing (#330): an id
-     * that is not an assembling recipe, and one research has not unlocked. Left to
-     * {@code setHeldRecipe}, both are held -- the first then idles as "no recipe" and the second as
-     * locked, and the press looked like it worked.
+     * that is not an assembling recipe, a {@code crafting-with-fluid} one tier 1 has no fluid box for,
+     * and one research has not unlocked. Left to {@code setHeldRecipe}, each is held and then idles,
+     * and the press looked like it worked.
      */
     private static void refusesWhatItCannotHold(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = place(helper);
@@ -498,6 +503,11 @@ final class AssemblingMachineTests {
         HoldVerdict unknown = menu.request(player, "minecraft:stone_bricks");
         if (unknown != HoldVerdict.NOT_ASSEMBLING || !machine.heldRecipe().equals(HeldRecipe.of(held))) {
             helper.fail("a non-assembling id was answered " + unknown + " and left " + machine.heldRecipe(), ANCHOR);
+            return;
+        }
+        HoldVerdict fluid = menu.request(player, CONCRETE);
+        if (fluid != HoldVerdict.NOT_THIS_MACHINE || !machine.heldRecipe().equals(HeldRecipe.of(held))) {
+            helper.fail("a crafting-with-fluid recipe was answered " + fluid + " and left " + machine.heldRecipe(), ANCHOR);
             return;
         }
         // No other test crafts or locks this one; the lock set is shared by the batch.
