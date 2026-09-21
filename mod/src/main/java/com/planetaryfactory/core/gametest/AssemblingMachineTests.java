@@ -10,9 +10,11 @@ import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineHull;
 import com.planetaryfactory.core.machine.AssemblingMachineItem;
+import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
 import com.planetaryfactory.core.machine.AssemblingStall;
 import com.planetaryfactory.core.machine.HeldRecipe;
+import com.planetaryfactory.core.machine.HoldVerdict;
 import com.planetaryfactory.core.machine.RecipeChoice;
 import com.planetaryfactory.core.recipes.PFRecipes;
 
@@ -59,6 +61,8 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::keepsItsRecipeOverAReload);
         tests.test("assembling_machine_offers_every_assembling_recipe", 20,
                 AssemblingMachineTests::offersEveryAssemblingRecipe);
+        tests.test("assembling_machine_refuses_what_it_cannot_hold", 20,
+                AssemblingMachineTests::refusesWhatItCannotHold);
         tests.test("assembling_machine_hands_back_ingredients_on_a_change", 20,
                 AssemblingMachineTests::handsBackIngredientsOnAChange);
         tests.test("assembling_machine_crafts_at_factorios_rate", 100,
@@ -314,7 +318,8 @@ final class AssemblingMachineTests {
 
     /**
      * Every {@code planetaryfactory:assembling} recipe in the server's manager is in the widget's
-     * list, and holding it resolves back to it. Against the manager, not the emitted files: a
+     * list, and Fill Recipe's setter -- {@code AssemblingMachineMenu.request}, which EMI's packet
+     * lands on (#330) -- holds it, and it resolves back once held. Against the manager, not the emitted files: a
      * recipe the game rejected at load is {@code check-datapack-load.py}'s.
      */
     private static void offersEveryAssemblingRecipe(GameTestHelper helper) {
@@ -336,12 +341,54 @@ final class AssemblingMachineTests {
         }
         AssemblingMachineBlockEntity machine = place(helper);
         Player player = player(helper);
+        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
         for (String id : loaded) {
-            machine.setHeldRecipe(HeldRecipe.of(id), player);
+            HoldVerdict verdict = menu.request(player, id);
+            if (!verdict.held() || !machine.heldRecipe().equals(HeldRecipe.of(id))) {
+                helper.fail("Fill Recipe on " + id + " was answered " + verdict + " and left the machine holding "
+                        + machine.heldRecipe(), ANCHOR);
+                return;
+            }
             if (!machine.heldRecipeResolves()) {
                 helper.fail("the machine cannot hold " + id + ": it does not resolve once held", ANCHOR);
                 return;
             }
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Fill Recipe on a recipe the machine may not hold is refused and changes nothing (#330): an id
+     * that is not an assembling recipe, and one research has not unlocked. Left to
+     * {@code setHeldRecipe}, both are held -- the first then idles as "no recipe" and the second as
+     * locked, and the press looked like it worked.
+     */
+    private static void refusesWhatItCannotHold(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = place(helper);
+        Player player = player(helper);
+        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
+        String held = someRecipe(helper);
+        menu.request(player, held);
+        HoldVerdict unknown = menu.request(player, "minecraft:stone_bricks");
+        if (unknown != HoldVerdict.NOT_ASSEMBLING || !machine.heldRecipe().equals(HeldRecipe.of(held))) {
+            helper.fail("a non-assembling id was answered " + unknown + " and left " + machine.heldRecipe(), ANCHOR);
+            return;
+        }
+        String other = AssemblingMachineRecipes.choices(helper.getLevel()).stream()
+                .map(RecipeChoice::id).filter(id -> !id.equals(held)).findFirst().orElse(null);
+        if (other == null) {
+            helper.fail("fewer than two assembling recipes are loaded, so a lock proves nothing");
+            return;
+        }
+        AssemblingMachineRecipes.lockForTest(other::equals);
+        try {
+            HoldVerdict locked = menu.request(player, other);
+            if (locked != HoldVerdict.LOCKED || !machine.heldRecipe().equals(HeldRecipe.of(held))) {
+                helper.fail("a locked recipe was answered " + locked + " and left " + machine.heldRecipe(), ANCHOR);
+                return;
+            }
+        } finally {
+            AssemblingMachineRecipes.lockForTest(null);
         }
         helper.succeed();
     }

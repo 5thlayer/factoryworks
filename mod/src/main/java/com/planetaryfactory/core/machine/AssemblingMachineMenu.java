@@ -6,9 +6,11 @@ import com.planetaryfactory.core.PFMenus;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -166,8 +168,32 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         if (machine == null || buttonId < 0 || buttonId >= entries.size()) {
             return false;
         }
-        machine.setHeldRecipe(HeldRecipe.of(entries.get(buttonId).choice().id()), player);
-        return true;
+        return request(player, entries.get(buttonId).choice().id()).held();
+    }
+
+    /**
+     * Holds {@code id} if the machine may, or tells the player why not (#330, ADR-0073). The one
+     * setter: the widget's press and EMI's Fill Recipe both land here, so a refusal is never a
+     * gesture that silently did nothing.
+     */
+    public HoldVerdict request(Player player, String id) {
+        if (machine == null) {
+            return HoldVerdict.NOT_ASSEMBLING;
+        }
+        HoldVerdict verdict = verdict((ServerLevel) machine.getLevel(), id);
+        if (verdict.held()) {
+            machine.setHeldRecipe(HeldRecipe.of(id), player);
+        } else if (player instanceof ServerPlayer server) {
+            // Above the hotbar: feedback on the press just made. 26.1 has the overlay form on ServerPlayer only.
+            server.sendSystemMessage(Component.translatable(verdict.messageKey(), id), true);
+        }
+        return verdict;
+    }
+
+    /** What {@link #request} would answer, asked of the server's recipes and research. */
+    public static HoldVerdict verdict(ServerLevel level, String id) {
+        return HoldVerdict.of(AssemblingMachineRecipes.resolve(level, HeldRecipe.of(id)).isPresent(),
+                AssemblingMachineRecipes.isLocked(id));
     }
 
     @Override
