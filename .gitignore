@@ -95,6 +95,8 @@ docs/scratch/
 **/*client*.json
 **/*client*.json5
 **/*client*.properties
+# Jade's HUD settings, rewritten by the client whenever a provider appears.
+config/jade/
 config/InventoryHUD/
 # Sodium's hash of this machine's GPU and driver, rewritten on every launch.
 config/sodium-fingerprint.json
