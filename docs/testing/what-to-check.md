@@ -13,7 +13,7 @@ own. Harnesses come and go; the claims do not. Find the claim, read off the chec
 |---|---|
 | This data parses, and this thing is registered | **Nothing.** Load-time facts are free. |
 | Cross-file references resolve | **Static data check** — `tests/`, no game launch. |
-| This is emitted into a world | **Fixture row** in a world-load harness (none on 26.1.2; see below). |
+| This is emitted into a world | **Fixture row** in `WorldgenFixtureTests` (see below). |
 | This pack logic computes something | **Unit test** in `planetaryfactory_core` or `respoiled`. |
 | This block or entity behaves in-world | **Nothing** if vanilla by construction, else **GameTest**. |
 | This looks or feels right | **Human on delivery.** |
@@ -79,9 +79,13 @@ definition, which is logged nowhere — that hop keeps its static walker.
 A registry that loaded is not a world that contains anything. Ore veins, bedrock deposits,
 worldgen layers and biomes all have a state in which they parse, register, and are then never
 placed. The check is a launch into a fresh world that asserts against what the game actually
-loaded and, for biomes, actually located. **It has no harness on 26.1.2:** `scripts/worldgen-check.py`
-asserted GregTech's vein, deposit and layer registries through a GregTech-era KubeJS dump, and it
-left with GregTech (ADR-0060). The kind stands; the harness is rebuilt when a body next needs it.
+loaded and, for biomes, actually located. **On 26.1.2 the harness is `WorldgenFixtureTests`**
+(#356), a GameTest in the default set. The GameTest world is flat, so it decodes the datapack's own
+dimension file, builds a `RandomState` per seed, and samples columns through the biome source and
+the generator's base height without generating a chunk. A body's facts are a `WaterFixture` row,
+with Terra's the first: its water share, the sea biome sitting on the water, the Shore's width, the
+shelf and the bedrock-band floor, and no water within the starting area's reach of spawn.
+`scripts/worldgen-check.py`, GregTech's vein and layer check, left with GregTech (ADR-0060).
 
 **The client is a second world, and it has a harness (#276).** The paragraph above is about the
 server: a registry that loaded is not a world that contains anything. The mirror claim is that a

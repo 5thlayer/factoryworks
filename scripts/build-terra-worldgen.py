@@ -7,6 +7,7 @@ Terra is the vanilla Overworld, so every file here is a wholesale replacement of
 nothing in this jar set (no OpenLoader), whereas KubeJS's data folder is loaded as a datapack.
 
 Re-run after editing the palette or the terrain constants; it overwrites its outputs.
+`--check` writes nothing and fails if any output differs from what it would write.
 """
 
 import json
@@ -38,30 +39,42 @@ def vanilla(path):
 # a disagreement writes outside the chunk's section array.
 MIN_Y, HEIGHT, SEA_LEVEL = 0, 192, 63
 
-# The terrain. Surface sits where final_density crosses zero:
-#   y = GRAD_LO + (GRAD_HI - GRAD_LO) / 2 * (1 + noise)
-# so with RELIEF 0.55 the ground runs y 60..74 and dips under sea level often enough that
-# Terra actually has water -- which ADR-0019 makes a requirement, not a detail, because
-# vanilla 1.21 overworld biomes ship no water-lake feature at all.
+# The terrain decides where the sea is (#356, ADR-0019): the router's `continents` and the terrain
+# read one function, and the palette's Sea/Shore boundary sits on the water line. Every threshold
+# is tuned against `WorldgenFixtureTests`, whose log prints the function's quantiles per seed.
+CONTINENTS = "minecraft:overworld/continents"
 GRAD_LO, GRAD_HI = 55, 79
-RELIEF = 0.55
+WATER_LINE = -0.235   # about a quarter of Terra is water, Nauvis's share
+SHELF_EDGE = -0.275   # the shelf is about 15% of the sea, Nauvis's 4/26
+SHORE_EDGE = -0.205   # the Shore is a thin band above the water line
+SPAWN_FLOOR = 0.2     # well inland, so the start's reach holds no sea
+DEEP_Y, SHELF_Y, SHORE_Y, HIGH_Y = 5.5, 58.5, 62.0, 73.6
 CLIFF_LIFT = 0.6  # the rare steep segment: landmarks, not roughness
 
 
+CHECK = "--check" in sys.argv
+STALE = []
+
+
 def write(path, obj):
+    text = json.dumps(obj, indent=2) + "\n"
+    if CHECK:
+        try:
+            with open(path) as fh:
+                current = fh.read()
+        except FileNotFoundError:
+            current = None
+        if current != text:
+            STALE.append(os.path.relpath(path, ROOT))
+        return
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as fh:
-        json.dump(obj, fh, indent=2)
-        fh.write("\n")
+        fh.write(text)
     print("wrote", os.path.relpath(path, ROOT))
 
 
 def noise(name, xz, y=0.0):
     return {"type": "minecraft:noise", "noise": name, "xz_scale": xz, "y_scale": y}
-
-
-def mul(a, b):
-    return {"type": "minecraft:mul", "argument1": a, "argument2": b}
 
 
 def add(a, b):
@@ -70,26 +83,62 @@ def add(a, b):
 
 # --- density functions -------------------------------------------------------------
 
-# `offset` carries the relief; the cliff term is a narrow range of the erosion noise that
-# lifts the ground wholesale, so the transition reads as a wall rather than a slope.
+def level(y):
+    return (y - (GRAD_LO + GRAD_HI) / 2) * 2 / (GRAD_HI - GRAD_LO)
+
+
+LAND_SLOPE = (level(HIGH_Y) - level(SHORE_Y)) / (1.0 - WATER_LINE)
+
+# Past the shelf the floor steps straight to the bedrock band: Nauvis has no mid-depth water
+# (ADR-0019).
+GROUND = {
+    "type": "minecraft:range_choice",
+    "input": CONTINENTS,
+    "min_inclusive": SHELF_EDGE,
+    "max_exclusive": 2.0,
+    "when_in_range": {
+        "type": "minecraft:spline",
+        "spline": {
+            "coordinate": CONTINENTS,
+            "points": [
+                {"location": SHELF_EDGE, "value": level(SHELF_Y), "derivative": 0.0},
+                {"location": WATER_LINE, "value": level(SHORE_Y), "derivative": LAND_SLOPE},
+                {"location": 1.0, "value": level(HIGH_Y), "derivative": LAND_SLOPE},
+            ],
+        },
+    },
+    "when_out_of_range": level(DEEP_Y),
+}
+
+# The cliff is a narrow range of the erosion noise that lifts the ground wholesale, so the
+# transition reads as a wall rather than a slope. It is land's alone: on the sea it would lift the
+# floor off the bedrock band.
 CLIFF = {
     "type": "minecraft:range_choice",
-    "input": noise("minecraft:erosion", 0.18),
-    "min_inclusive": 0.62,
-    "max_exclusive": 1.0,
-    "when_in_range": CLIFF_LIFT,
+    "input": CONTINENTS,
+    "min_inclusive": WATER_LINE,
+    "max_exclusive": 2.0,
+    "when_in_range": {
+        "type": "minecraft:range_choice",
+        "input": noise("minecraft:erosion", 0.18),
+        "min_inclusive": 0.62,
+        "max_exclusive": 1.0,
+        "when_in_range": CLIFF_LIFT,
+        "when_out_of_range": 0.0,
+    },
     "when_out_of_range": 0.0,
 }
 
-OFFSET = add(mul(RELIEF, noise("minecraft:continentalness", 0.22)), CLIFF)
+OFFSET = {"type": "minecraft:flat_cache", "argument": {"type": "minecraft:cache_2d", "argument": add(GROUND, CLIFF)}}
 FACTOR = 6.0          # large constant: the spline is shallow, so nothing amplifies it
 JAGGEDNESS = 0.0
 
+# Linear in y down to the floor, so the deep sea's surface can reach the bedrock band.
 GRADIENT = {
     "type": "minecraft:y_clamped_gradient",
-    "from_y": GRAD_LO,
+    "from_y": MIN_Y,
     "to_y": GRAD_HI,
-    "from_value": 1.0,
+    "from_value": -level(MIN_Y),
     "to_value": -1.0,
 }
 
@@ -106,10 +155,10 @@ def build_noise_settings():
     d = vanilla("worldgen/noise_settings/overworld.json")
     d["_comment"] = [
         "Terra's terrain (ADR-0019). Flat by construction: final_density is a y gradient plus",
-        "a shallow relief noise, so the vanilla cave tree is referenced by nothing rather than",
-        "edited. Aquifers are off; all surface water comes from terrain dipping below sea level,",
-        "which is why RELIEF in scripts/build-terra-worldgen.py is load-bearing. Generated --",
-        "edit the script, not this file.",
+        "a spline over the router's own continents, so the vanilla cave tree is referenced by",
+        "nothing rather than edited. Aquifers are off; all surface water comes from terrain",
+        "dipping below sea level, and the palette's sea sits on that water line (#356).",
+        "Generated -- edit scripts/build-terra-worldgen.py, not this file.",
     ]
     d["aquifers_enabled"] = False
     d["ore_veins_enabled"] = False
@@ -132,6 +181,7 @@ def build_noise_settings():
         "from_value": 1.5,
         "to_value": -1.5,
     }
+    r["continents"] = CONTINENTS
     r["final_density"] = add(GRADIENT, OFFSET)
     # The surface estimate aquifers and surface rules read: the highest y, stepping down in
     # cells, where this density turns positive. It is final_density without the cliff, as the
@@ -139,7 +189,7 @@ def build_noise_settings():
     # which is above Terra's ceiling.
     r["preliminary_surface_level"] = {
         "type": "minecraft:find_top_surface",
-        "density": add(GRADIENT, mul(RELIEF, noise("minecraft:continentalness", 0.22))),
+        "density": add(GRADIENT, GROUND),
         "lower_bound": MIN_Y,
         "upper_bound": MIN_Y + HEIGHT,
         "cell_height": 8,
@@ -153,7 +203,7 @@ def build_noise_settings():
         {
             "temperature": [-1.0, 1.0],
             "humidity": [-1.0, 1.0],
-            "continentalness": [0.1, 1.0],
+            "continentalness": [SPAWN_FLOOR, 1.0],
             "erosion": [-1.0, 0.5],
             "weirdness": [-1.0, 1.0],
             "depth": 0.0,
@@ -176,14 +226,18 @@ PALETTE = [
     # where the ground is uneroded, desert where it is worn to nothing -- and every entry has a
     # region it wins. Temperature and humidity are held at 0 so they cannot re-crowd it; the
     # biomes' own `temperature`/`downfall` fields, which drive rain and mob rules, are separate.
-    # name              temp  hum   cont   eros   top block             rain  temp_val
-    ("terra_woodland",   0.0,  0.0,  0.30, -0.70, "minecraft:grass_block", True, 0.7),
-    ("terra_grassland",  0.0,  0.0,  0.30, -0.20, "minecraft:grass_block", True, 0.8),
-    ("terra_dry_steppe", 0.0,  0.0,  0.30,  0.35, "minecraft:grass_block", False, 1.2),
-    ("terra_desert",     0.0,  0.0,  0.30,  0.85, "minecraft:sand",        False, 2.0),
-    ("terra_red_desert", 0.0,  0.0,  0.55,  0.10, "minecraft:red_sand",    False, 2.0),
-    ("terra_shore",      0.0,  0.0, -0.15,  0.40, "minecraft:sand",        True, 0.8),
-    ("terra_sea",        0.0,  0.0, -0.80,  0.20, "minecraft:gravel",      True, 0.7),
+    #
+    # Sea, Shore and the four erosion biomes are ranges that tile continentalness and erosion. A
+    # land biome at a point would sit at a distance the Shore's range does not, and the Shore would
+    # spread inland (#356).
+    # name              temp  hum   cont                        eros           top block             rain  temp_val
+    ("terra_woodland",   0.0,  0.0, [SHORE_EDGE, 0.30],         [-2.0, -0.45], "minecraft:grass_block", True, 0.7),
+    ("terra_grassland",  0.0,  0.0, [SHORE_EDGE, 0.30],         [-0.45, 0.075], "minecraft:grass_block", True, 0.8),
+    ("terra_dry_steppe", 0.0,  0.0, [SHORE_EDGE, 0.30],         [0.075, 0.6],  "minecraft:grass_block", False, 1.2),
+    ("terra_desert",     0.0,  0.0, [SHORE_EDGE, 0.30],         [0.6, 2.0],    "minecraft:sand",        False, 2.0),
+    ("terra_red_desert", 0.0,  0.0,  0.55,                       0.10,         "minecraft:red_sand",    False, 2.0),
+    ("terra_shore",      0.0,  0.0, [WATER_LINE, SHORE_EDGE],   [-2.0, 2.0],   "minecraft:sand",        True, 0.8),
+    ("terra_sea",        0.0,  0.0, [-2.0, WATER_LINE],         [-2.0, 2.0],   "minecraft:gravel",      True, 0.7),
 ]
 
 VEGETATION = {
@@ -422,6 +476,10 @@ def main():
 
     for entry in PALETTE:
         write(os.path.join(PF, "worldgen", "biome", entry[0] + ".json"), build_biome(*entry))
+
+    if STALE:
+        print("stale, re-run scripts/build-terra-worldgen.py:", *STALE, sep="\n  ")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

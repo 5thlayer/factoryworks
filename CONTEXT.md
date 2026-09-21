@@ -66,6 +66,20 @@ _Avoid_: registry name, dimension key
 A player-expanded orbital factory that mines and processes asteroids. Static — it never travels (ADR-0006).
 _Avoid_: space station, orbital base, ship, vessel
 
+### Terra terrain
+
+**Sea**:
+Terra's biome over water. The terrain decides it: a column is sea because its ground lies below sea level, and the biome is only the name painted on it, never the other way round. About a quarter of Terra, Nauvis's own share: a shallow **shelf** along the shore, then deep water whose floor is a thin seabed over bedrock (#356). Internal ID `terra_sea`.
+_Avoid_: ocean, lake, water biome
+
+**Shore**:
+The thin band of Terra just above the water line. It is land in every sense, and an ore patch may lie on it, as Factorio's patches reach the water's edge (#356). Internal ID `terra_shore`.
+_Avoid_: beach, coast, shoreline biome
+
+**Land**:
+Every Terra biome but the **Sea**, the Shore included. The only ground an **outfield patch** lands on.
+_Avoid_: inland, dry land, continent
+
 ### Sapros terrain
 
 Sapros's five biomes. Identifiers carry Factorio's terms so the mapping to the wiki stays free;

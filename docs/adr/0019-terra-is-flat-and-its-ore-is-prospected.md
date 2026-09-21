@@ -53,6 +53,24 @@ lava only. All surface water comes from terrain dipping below y=63. **That Terra
 requirement of this ADR, not an implementation detail**: a flattening spline that never dips below
 63 produces a world with no water, no steam and no chemistry, and it will not announce itself.
 
+*Amended by #356.* **The terrain decides where the sea is.** A column is Sea because its ground is
+below sea level; the biome is only its name. The noise router's `continents` and the terrain read
+one continentalness function, and the palette's Sea/Shore boundary sits on the water line, so the
+Sea is the water: measured at about 100% each way, and held by the fixture at 90%. #316 measured what happened when
+they read two: about 2% of Terra was water, and about 90% of the sea biome was dry. **About a
+quarter of Terra is water**, Nauvis's default share. That figure was extracted from Factorio
+2.1.19's `--generate-map-preview` on default map-gen settings by counting tiles over ±4096: across
+seven seeds the total was 23–29%, about 22 points `deepwater` and about 4 points `water`, identical
+in base game and Space Age. **The profile follows it.** A shelf one to four blocks deep covers
+roughly the outer 15% of the sea, Nauvis's 4/26, and past it the floor steps straight down to a thin
+seabed over the bedrock band. The shelf is a depth, not a biome. The land keeps its relief, flat
+between y 62 and 74 with the rare cliff, but it now follows the router's continentalness rather
+than the raw noise, so a given place stands at a different height than before. The
+Shore is a thin band just above the water line and counts as land. Spawn is held well inland, and
+the hub's water pool stays the guaranteed nearby water, since Factorio keeps its start almost dry.
+Every threshold is tuned against the fixture GameTest `WorldgenFixtureTests` and none is derived on
+paper.
+
 **Biomes.** A reduced palette of 5–8, Nauvis-like, no cold biome. Terra is home and reads as one
 coherent world; contrast belongs on Sapros and Ignus. Sixty flattened vanilla biomes read as vanilla
 with a bug, and the palette size is also what makes the carver work tractable.

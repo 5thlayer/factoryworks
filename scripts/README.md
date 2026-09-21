@@ -54,11 +54,11 @@ fuels are nothing on Terra. `tests/factorio/test_fuel_convert.py` is the check.
 
 | Script | Produces |
 |---|---|
-| `build-terra-worldgen.py` | Terra's flat, cave-free worldgen (ADR-0019, #59) |
+| `build-terra-worldgen.py` | Terra's flat, cave-free worldgen and its sea (ADR-0019, #59, #356); `--check` |
 | `build-terra-start.py` | spawn-anchored starting area `.nbt` templates (ADR-0019, #84) |
 | `nbt.py` | *library* — minimal NBT writer used by `build-terra-start.py` |
 
-Check: `tests/worldgen/test_start_geometry.py`.
+Checks: `tests/worldgen/test_start_geometry.py`, and the GameTest `WorldgenFixtureTests` for the sea.
 
 ## Ore blocks (ADR-0041)
 
