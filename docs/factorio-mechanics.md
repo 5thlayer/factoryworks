@@ -475,8 +475,9 @@ Sub-rules:
   Held recipe is drawn in the slots by the same rule (#334): each ingredient ghosted with the count
   one craft needs, the product in the output, a tag cycling through its members, and an input slot
   holding less than one craft drawn red. The screen also shows the energy bar and the stall line
-  (#332). There is no player-set slot capacity (ADR-0073, amended on #335). JEI has
-  no transfer handler, so a JEI-only player cannot set a recipe. Copying the setting
+  (#332). There is no player-set slot capacity (ADR-0073, amended on #335). EMI is the
+  only setter, as it is the Personal Assembler's transfer target; JEI gets no transfer handler
+  (#337). Copying the setting
   is one id, and the configuration card is not built. Furnaces keep Oritech's first match, which is
   Factorio's own split.
 
