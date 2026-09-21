@@ -56,14 +56,15 @@ A consequence worth knowing: because `refresh` cannot see the managed jars, it c
 going missing or a new one appearing either. That is what the MISSING and STRAY checks below exist
 for.
 
-## The three local jars
+## The local jars
 
-Three jars are built rather than downloaded, and none exists on a public index.
+Four jars are built rather than downloaded, and none exists on a public index.
 
 | Jar | How it is tracked |
 | --- | --- |
 | `gcyr` fork | unmanaged entry in `index.toml` — path plus sha256, no metafile |
 | `Respoiled` fork | unmanaged entry in `index.toml` — path plus sha256, no metafile |
+| `belts` fork (SimpleBelts, `adamico/SimpleBelts` branch `planetaryfactory`) | unmanaged entry in `index.toml` — path plus sha256, no metafile |
 | `planetaryfactory_core` | **not indexed at all** |
 
 `planetaryfactory_core` is excluded in `.packwizignore`. It is rebuilt into `mods/` by
@@ -71,7 +72,7 @@ Three jars are built rather than downloaded, and none exists on a public index.
 fully tracked in `mod/` — so indexing it would dirty the manifest on every build while recording
 nothing git does not already have.
 
-`packwiz update --all` prints this for the two unmanaged jars:
+`packwiz update --all` prints this for the unmanaged jars:
 
 ```
 A supported update system for "gcyr-1.21.1-0.2.4+gt7.0.2-src.jar" cannot be found.

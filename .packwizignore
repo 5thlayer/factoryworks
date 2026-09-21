@@ -46,10 +46,11 @@ build/
 # its own right.
 mods/*.jar
 
-# ...except the two forks, which have no metafile because they exist on no public
+# ...except the forks, which have no metafile because they exist on no public
 # index. Their hash in index.toml is the only record of which build is installed.
 !mods/gcyr-*.jar
 !mods/Respoiled-*.jar
+!mods/belts-neoforge-*.jar
 
 # `planetaryfactory_core` stays excluded even though it is also local (ADR-0024):
 # `installToPack` rebuilds it into mods/ on every `./gradlew build` and Gradle
