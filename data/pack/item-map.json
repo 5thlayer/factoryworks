@@ -32,6 +32,10 @@
     "proposal. The converter skips every recipe touching one, so nothing is emitted that the game",
     "rejects at load (#279).",
     "",
+    "A row may carry `outside_corpus`, the reason its name is in no corpus recipe: an item the pack",
+    "ships whose Factorio recipe is outside the extracted corpus, such as Space Age's turbo tier. The",
+    "converter reports each as a recorded skip, and the check fails one the corpus does name.",
+    "",
     "`kind` is `item`, `tag` or `fluid`. A tag is an ingredient-side answer only; a recipe RESULT",
     "on a tag row cannot be emitted, because a result has to be one item.",
     "",
@@ -309,9 +313,10 @@
       "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "express-transport-belt": {
-      "status": "undecided",
-      "note": "SimpleBelts ships exactly `belts:belt`, `belts:improved_belt`, `belts:chute` and `belts:conveyor_support`: two belt tiers, no splitter, no underground. The row read `native_mechanic` on Create's RPM-driven belt, and Create left with ADR-0060 (#277). #261's fork adds throughput tiers and splitters, and owns this row.",
-      "ticket": 261
+      "kind": "item",
+      "target": "belts:express_belt",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-3 belt, at Factorio's 45 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table."
     },
     "express-underground-belt": {
       "status": "native_mechanic",
@@ -330,7 +335,7 @@
       "kind": "item",
       "target": "belts:improved_belt",
       "source": "borrowed",
-      "note": "SimpleBelts' Improved Conveyor Belt, tier two of its two (#277). The row read `native_mechanic` on Create's RPM-driven belt; Create left with ADR-0060, and SimpleBelts has a second belt item for it to land on."
+      "note": "The SimpleBelts fork's tier-2 belt, at Factorio's 30 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table."
     },
     "fast-underground-belt": {
       "status": "native_mechanic",
@@ -891,7 +896,14 @@
       "kind": "item",
       "target": "belts:belt",
       "source": "borrowed",
-      "note": "SimpleBelts' Conveyor Belt, tier one of its two (#277). ADR-0060 gives item logistics to the SimpleBelts fork, which #261 builds out."
+      "note": "The SimpleBelts fork's tier-1 belt, at Factorio's 15 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table."
+    },
+    "turbo-transport-belt": {
+      "kind": "item",
+      "target": "belts:turbo_belt",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-4 belt, at Factorio's 60 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table.",
+      "outside_corpus": "Space Age's recipe, which needs tungsten plate from Vulcanus; the corpus is Nauvis pre-launch (#72), so the belt ships with no recipe (#341)."
     },
     "underground-belt": {
       "status": "undecided",

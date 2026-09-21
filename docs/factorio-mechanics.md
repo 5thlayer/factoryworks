@@ -546,13 +546,17 @@ ADR-0029 gives the Assembler speed 1 with durations of `energy_required x 20` un
 
 Sub-rules:
 
-- **Three belt tiers** — `planned`. The SimpleBelts fork carries four tiers at Factorio's 15, 30, 45
-  and 60 items/s, each a craftable belt bought from the tech tree (ADR-0076); the ladder is #345's.
-  *This entry read `adapted`, against Create's one RPM-driven belt.*
-- **Throughput as a ratio budget** — `shipped` at tier 1. The SimpleBelts fork's belt carries one
-  item per entry at Factorio's 1/8-block spacing and speed, so a tier-1 belt carries exactly
-  15 items/s and a loader loads several entries in a tick when a tier needs more than 20 (#344,
-  ADR-0076). The other three tiers are #345's.
+- **Belt tiers** — `shipped` for tiers 1 and 2. The fork's four belts, `belt`, `improved_belt`,
+  `express_belt` and `turbo_belt`, carry Factorio's 15, 30, 45 and 60 items/s under Factorio's names
+  (#345, ADR-0076). `logistics-2` and `logistics-3` unlock the fast and express recipes on the
+  Assembling surface. Express needs lubricant, so it is a `crafting-with-fluid` recipe, and no
+  machine that ships takes one yet (#331): the recipe is emitted and not yet craftable. The turbo
+  belt has no recipe, because Space Age's is outside the corpus. *This entry read `adapted`, against
+  Create's one RPM-driven belt.*
+- **Throughput as a ratio budget** — `shipped`. The fork's belt carries one item per entry at
+  Factorio's 1/8-block spacing and each tier's speed, so a belt carries exactly its tier's items/s,
+  and a loader loads several entries in a tick when a tier needs more than 20 (#344, #345,
+  ADR-0076).
 - **Underground belts** — `excluded`. Not for want of a Create block: undergrounds solve a *weaving*
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
   Minecraft has a Y axis and Create has sloped belt runs, so a belt that must cross another goes
@@ -573,15 +577,12 @@ Sub-rules:
   The fork *draws* a belt's items in two lanes of four per block, so they read at a size a player
   can see without overlapping, but the belt is one lane: nothing side-loads, and no lane fills or
   empties apart from the other (#344).
-- **Belt as buffer** — `shipped`. A backed-up belt queues from its end at eight items per block, so
-  a 64-block belt holds 512, as a 64-tile yellow belt does (#344). *This entry read `excluded`,
+- **Belt as buffer** — `shipped`. A backed-up belt queues from its end at eight items per block at
+  every tier, so a 64-block belt holds 512, as a 64-tile belt does (#344). *This entry read `excluded`,
   against Create's one item per block.*
 
-Together these empty out Factorio's belt research. `logistics-2`, `logistics-3` and
-`turbo-transport-belt` survive in `data/factorio/technology.json`, and between them they buy exactly
-a belt tier, an underground belt and a splitter tier — all three now excluded or bought with RPM
-instead. Only `logistics` is declared in `researchd.js` today; the other three are candidates for the
-prune, which is #25's call and not this ledger's.
+`logistics-2` and `logistics-3` are declared in `researchd.js` and each unlocks its belt tier (#345).
+Their underground belts are excluded above, and their splitters are #349's.
 
 ### Inserters
 

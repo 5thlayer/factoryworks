@@ -247,3 +247,17 @@ fromFactorio('plastics', {
   icon: 'planetaryfactory:plastic_bar',
   unlocks: ['planetaryfactory:chemical_plant/plastic_bar']
 });
+
+// ---------------------------------------------------------------------------------------------
+// BELT TIERS (#345). Each node grants its tier's belt, the one effect of its three the pack emits:
+// the underground belt has no pack recipe, and the splitter waits on #349.
+
+fromFactorio('logistics-2', {
+  icon: 'belts:improved_belt',
+  unlocks: ['planetaryfactory:assembling/fast_transport_belt']
+});
+
+fromFactorio('logistics-3', {
+  icon: 'belts:express_belt',
+  unlocks: ['planetaryfactory:assembling/express_transport_belt']
+});
