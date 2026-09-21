@@ -183,9 +183,9 @@ player's game mode puts those five and every item on the belt into the breaker's
 leaves the other loader standing and free. A charge of one item or a refund dropped on the ground
 turns all four red. The rounding is the fork's `BeltCostTest`.
 And that a belt laid onto open ground takes each loader it places from the inventory, the belt's own
-tier first, then the highest lower tier, never a higher one, and places and charges nothing when a
-loader is short (`BeltLoaderCostTests`, #354). Before the fix every open end got a free tier-1 loader,
-which turned five of its six red. The choice is the fork's `LoaderChoiceTest`.
+tier first, then the nearest higher tier, then the nearest lower one, and places and charges nothing
+when a loader is short (`BeltLoaderCostTests`, #354). Before the fix every open end got a free tier-1
+loader, which turned five of its six red. The choice is the fork's `LoaderChoiceTest`.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
 that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
 Both were red on upstream's filter, which the off hand reset.
