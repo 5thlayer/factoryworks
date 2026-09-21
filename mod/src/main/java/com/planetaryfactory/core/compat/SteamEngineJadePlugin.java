@@ -15,6 +15,7 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.JadeIds;
 import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.BoxStyle;
@@ -23,9 +24,9 @@ import snownee.jade.api.view.ProgressView;
 
 /**
  * The Steam Engine's HUD (#352), which is its only interface: no screen, since there is nothing on
- * an engine to set. Laid out as Factorio's hover is -- what it consumes, then what it generates --
- * under the status line. A slave's figures are its Master Engine's, since its own tank is empty by
- * design (ADR-0077).
+ * an engine to set. A slave's figures are its Master Engine's, since its own tank is empty by design
+ * (ADR-0077). Jade's own tank and FE rows are dropped: they repeat the steam gauge and show the
+ * buffer, which reads as output and is not.
  */
 @WailaPlugin
 public class SteamEngineJadePlugin implements IWailaPlugin {
@@ -35,13 +36,10 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
 
     private static final String STATUS = "SteamEngineStatus";
     private static final String CHAINED = "SteamEngineChained";
-    private static final String CONSUMPTION = "SteamEngineConsumption";
-    private static final String MAX_CONSUMPTION = "SteamEngineMaxConsumption";
     private static final String STEAM = "SteamEngineSteam";
     private static final String STEAM_CAPACITY = "SteamEngineSteamCapacity";
     private static final String OUTPUT = "SteamEngineOutput";
     private static final String MAX_OUTPUT = "SteamEngineMaxOutput";
-    private static final String AVAILABLE = "SteamEngineAvailable";
 
     private static final int STEAM_COLOUR = 0xFFB4B4B4;
     private static final int POWER_COLOUR = 0xFF3CC83C;
@@ -54,13 +52,10 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
             }
             tag.putInt(STATUS, engine.status().ordinal());
             tag.putBoolean(CHAINED, engine.inSlaveMode());
-            tag.putDouble(CONSUMPTION, engine.consumptionPerSecond());
-            tag.putDouble(MAX_CONSUMPTION, engine.maxConsumptionPerSecond());
             tag.putLong(STEAM, engine.steam());
             tag.putLong(STEAM_CAPACITY, engine.steamCapacity());
             tag.putLong(OUTPUT, engine.outputPerTick());
             tag.putLong(MAX_OUTPUT, engine.maxOutputPerTick());
-            tag.putLong(AVAILABLE, engine.availablePerTick());
         }
 
         @Override
@@ -83,17 +78,8 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
                 tooltip.add(Component.translatable("gui.planetaryfactory.steam_engine.chained")
                         .withStyle(ChatFormatting.GRAY));
             }
-
-            tooltip.add(Component.translatable("gui.planetaryfactory.steam_engine.consumes")
-                    .withStyle(ChatFormatting.GOLD));
-            tooltip.add(Component.translatable("gui.planetaryfactory.steam_engine.consumption",
-                    rate(data, CONSUMPTION), rate(data, MAX_CONSUMPTION)));
             bar(tooltip, data, STEAM, STEAM_CAPACITY, STEAM_COLOUR, "gui.planetaryfactory.steam_engine.steam");
-
-            tooltip.add(Component.translatable("gui.planetaryfactory.steam_engine.generates")
-                    .withStyle(ChatFormatting.GOLD));
             bar(tooltip, data, OUTPUT, MAX_OUTPUT, POWER_COLOUR, "gui.planetaryfactory.steam_engine.output");
-            bar(tooltip, data, AVAILABLE, MAX_OUTPUT, POWER_COLOUR, "gui.planetaryfactory.steam_engine.available");
         }
 
         @Override
@@ -113,10 +99,6 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
                 JadeUI.progressStyle(), BoxStyle.DEFAULT_NESTED_BOX)));
     }
 
-    private static String rate(CompoundTag data, String key) {
-        return String.format("%.1f", data.getDoubleOr(key, 0.0));
-    }
-
     private static String figure(long value) {
         return String.format("%,d", value);
     }
@@ -129,5 +111,11 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(TOOLTIP, SteamEngineBlock.class);
+        registration.addTooltipCollectedCallback((box, accessor) -> {
+            if (accessor instanceof BlockAccessor block && block.getBlock() instanceof SteamEngineBlock) {
+                box.getTooltip().remove(JadeIds.UNIVERSAL_FLUID_STORAGE);
+                box.getTooltip().remove(JadeIds.UNIVERSAL_ENERGY_STORAGE);
+            }
+        });
     }
 }

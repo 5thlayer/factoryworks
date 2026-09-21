@@ -110,11 +110,6 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
     }
 
     @Override
-    public double planetaryfactory$readSpeed() {
-        return Math.min(getSteamProcessingSpeed(), MAX_SPEED);
-    }
-
-    @Override
     public int planetaryfactory$readRowLength() {
         return slaves.size() + 1;
     }

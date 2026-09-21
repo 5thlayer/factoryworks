@@ -37,5 +37,6 @@ and controller code rather than in blocks the pack owns.
   buffer are empty by design.
 - The engine has no screen. Nothing on it can be set, and Oritech's screen drew a water tank ADR-0062
   leaves empty for good and an addon panel for an engine with no addon slots. Its Jade line is the
-  whole interface, laid out as Factorio's hover is: consumption and steam, then power output and
-  available power. Its fluid face is the steam tank alone, insert-only.
+  whole interface: status, a steam gauge and a power output gauge. Jade's own tank and FE rows are
+  hidden on it, since the first repeats the steam gauge and the second shows the buffer, which reads
+  as output and is not. Its fluid face is the steam tank alone, insert-only.

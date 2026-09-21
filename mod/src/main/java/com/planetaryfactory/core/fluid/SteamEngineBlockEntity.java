@@ -89,17 +89,6 @@ public class SteamEngineBlockEntity extends SteamEngineEntity {
         return tank.getCapacityAsLong(0, held.isEmpty() ? FluidResource.of(PFFluids.STEAM_SOURCE.get()) : held);
     }
 
-    /** Steam burnt over the last tick, as a rate: what the row actually drew, a full buffer's cut included. */
-    public double consumptionPerSecond() {
-        SteamEngineEntity source = source();
-        return workedLastTick(source) ? source.clientStats.steamConsumed() * 20.0 : 0.0;
-    }
-
-    /** Factorio's rated consumption: the row at the curve's peak. */
-    public double maxConsumptionPerSecond() {
-        return readout().planetaryfactory$readSpec().steamPerSecond(SteamEngineSpec.PEAK_SPEED, rowLength());
-    }
-
     /** FE made on the last tick: what the network drew, since the burn stops at the buffer's room. */
     public long outputPerTick() {
         SteamEngineEntity source = source();
@@ -108,15 +97,7 @@ public class SteamEngineBlockEntity extends SteamEngineEntity {
 
     /** Factorio's rated output: the row at the curve's peak. */
     public long maxOutputPerTick() {
-        return Math.round(readout().planetaryfactory$readSpec().powerPerTick(SteamEngineSpec.PEAK_SPEED, rowLength()));
-    }
-
-    /** What the steam in the tank could make this tick if the network drew all of it. */
-    public long availablePerTick() {
-        SteamEngineReadout readout = readout();
-        long available = Math.round(readout.planetaryfactory$readSpec()
-                .powerPerTick(readout.planetaryfactory$readSpeed(), rowLength()));
-        return Math.min(available, maxOutputPerTick());
+        return Math.round(readout().planetaryfactory$readSpec().peakPowerPerTick(rowLength()));
     }
 
     private int rowLength() {
