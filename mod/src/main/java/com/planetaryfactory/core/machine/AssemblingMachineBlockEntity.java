@@ -30,6 +30,8 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import rearth.oritech.api.networking.NetworkedBlockEntity;
+import rearth.oritech.api.networking.SyncField;
+import rearth.oritech.api.networking.SyncType;
 import rearth.oritech.block.base.entity.MultiblockMachineEntity;
 import rearth.oritech.config.OritechConfig;
 import rearth.oritech.init.recipes.OritechRecipe;
@@ -84,6 +86,14 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     private HeldRecipe held = HeldRecipe.NONE;
 
     private AssemblingStall stall = AssemblingStall.NO_RECIPE;
+
+    /**
+     * The Held recipe's duration before Oritech's speed multiplier, synced for the client's
+     * animation speed. The client has no recipe manager to resolve the Held recipe against, so
+     * without it the animation reads a duration of 1 and plays a 60-tick loop every tick.
+     */
+    @SyncField({SyncType.SPARSE_TICK, SyncType.GUI_TICK, SyncType.INITIAL})
+    private int recipeDuration = 1;
 
     public AssemblingMachineBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state,
@@ -140,6 +150,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
             return;
         }
         AssemblingRecipe recipe = resolved.get().value();
+        recipeDuration = AssemblingMachineSpec.durationTicks(recipe.time(), 1.0f);
         int duration = durationTicks(recipe);
         long totalFe = AssemblingMachineSpec.fePerCraft(recipe.time(), getEfficiencyMultiplier());
         try (Transaction tx = Transaction.openRoot()) {
@@ -234,16 +245,12 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     /**
      * The Held recipe's duration before Oritech's speed multiplier, which Oritech's
      * {@code getProgress} and animation multiply back in. Oritech's reads a {@code currentRecipe}
-     * this machine never sets.
+     * this machine never sets. Read from the synced field so the client, which cannot resolve the
+     * recipe, sees the same number.
      */
     @Override
     public int getRecipeDuration() {
-        if (!(level instanceof ServerLevel server)) {
-            return 1;
-        }
-        return AssemblingMachineRecipes.resolve(server, held)
-                .map(holder -> AssemblingMachineSpec.durationTicks(holder.value().time(), 1.0f))
-                .orElse(1);
+        return recipeDuration;
     }
 
     @Override
