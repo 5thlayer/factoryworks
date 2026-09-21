@@ -149,9 +149,10 @@ spot's quantity and radius expressions, and the edge's octaves into `data/factor
 with each resource's law tabulated against distance.
 
 **What is deliberately not ported.** Nothing scales patch *count* with distance — `base_spots_per_km2`
-is constant in Factorio too. Patches are land-only, confined by the same land biome tag the starting
-area uses, so the realised density lands below the extracted 2.5/km² by whatever fraction of Terra is
-sea: faithful as a rule, slightly lean as an outcome.
+is constant in Factorio too. Patches are land-only, confined by the land biome tag, which since #356
+is every Terra biome but the Sea: the Shore is land, and the Sea is the water (ADR-0019).
+Factorio also drops ore that would land on water, so the confinement is faithful as a rule and as an
+outcome.
 
 ## How this is checked
 

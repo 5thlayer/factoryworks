@@ -1214,8 +1214,9 @@ Follow-on: #121.
 
 Sub-rules:
 
-- **Landfill** — `excluded`. ADR-0019 makes Terra flat and sea-bearing; landfill has no meaning there.
-  This one *is* argued.
+- **Landfill** — `excluded`. Vanilla block placement already is the verb (#356). Bridging the shelf
+  costs one block per column, while filling the deep sea costs about sixty per column down to the
+  bedrock band and is a project, which is roughly Factorio's cost shape. This one *is* argued.
 - **Cliffs and cliff explosives** — `excluded`. `by-consequence`: no body generates cliffs as an
   obstacle, so nothing needs removing.
 - **Concrete and its speed bonus** — `adapted`. #87 maps the four concretes onto vanilla's own

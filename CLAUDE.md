@@ -371,6 +371,22 @@ Run them after editing anything under `core/assembler/` or after re-extracting t
 each mouse button reaches the handler on the Assembler's screen, Fill Recipe is unchanged on every
 other screen, and a plan delivers is a world load, not a static check.
 
+### Terra water fixture
+
+`gametest/WorldgenFixtureTests` is the world-load fixture harness (#356), in the GameTest run's
+default set. The GameTest world is flat, so each test decodes the datapack's own
+`minecraft:dimension/overworld.json` and samples ±4096 at 128-block spacing, on three seeds, through
+the biome source and `getBaseHeight`, without generating a chunk. It takes about a second. Each body
+is a `WaterFixture` row, and a new body adds a row, not harness code. `WaterCensus` holds the
+verdict and is unit-tested as `WaterCensusTest`. Terra's row asserts that water is 20–32% of the
+map, that the Sea sits on the water and the water under the Sea (at least 90% each way), that the
+Shore is at most 5%, that the shelf is 8–25% of the water and every other water column reaches the
+bedrock band, and that no water lies within `TerraStartingArea`'s reach of the spawn search's
+point. The terrain's thresholds in `scripts/build-terra-worldgen.py` are tuned against it, and the
+test logs each seed's continentalness quantiles for that. Run it after editing that script, whose
+`--check` asserts the generated files are current. Terra's pre-#356 noise and the old sea point
+each turn all three tests red.
+
 ### Starting-area geometry check
 
 `tests/worldgen/test_start_geometry.py` asserts Terra's starting area can actually deal all four

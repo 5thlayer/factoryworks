@@ -1,26 +1,59 @@
 {
-  "type": "minecraft:add",
-  "argument1": {
-    "type": "minecraft:mul",
-    "argument1": 0.55,
-    "argument2": {
-      "type": "minecraft:noise",
-      "noise": "minecraft:continentalness",
-      "xz_scale": 0.22,
-      "y_scale": 0.0
+  "type": "minecraft:flat_cache",
+  "argument": {
+    "type": "minecraft:cache_2d",
+    "argument": {
+      "type": "minecraft:add",
+      "argument1": {
+        "type": "minecraft:range_choice",
+        "input": "minecraft:overworld/continents",
+        "min_inclusive": -0.275,
+        "max_exclusive": 2.0,
+        "when_in_range": {
+          "type": "minecraft:spline",
+          "spline": {
+            "coordinate": "minecraft:overworld/continents",
+            "points": [
+              {
+                "location": -0.275,
+                "value": -0.7083333333333334,
+                "derivative": 0.0
+              },
+              {
+                "location": -0.235,
+                "value": -0.4166666666666667,
+                "derivative": 0.7827260458839402
+              },
+              {
+                "location": 1.0,
+                "value": 0.5499999999999995,
+                "derivative": 0.7827260458839402
+              }
+            ]
+          }
+        },
+        "when_out_of_range": -5.125
+      },
+      "argument2": {
+        "type": "minecraft:range_choice",
+        "input": "minecraft:overworld/continents",
+        "min_inclusive": -0.235,
+        "max_exclusive": 2.0,
+        "when_in_range": {
+          "type": "minecraft:range_choice",
+          "input": {
+            "type": "minecraft:noise",
+            "noise": "minecraft:erosion",
+            "xz_scale": 0.18,
+            "y_scale": 0.0
+          },
+          "min_inclusive": 0.62,
+          "max_exclusive": 1.0,
+          "when_in_range": 0.6,
+          "when_out_of_range": 0.0
+        },
+        "when_out_of_range": 0.0
+      }
     }
-  },
-  "argument2": {
-    "type": "minecraft:range_choice",
-    "input": {
-      "type": "minecraft:noise",
-      "noise": "minecraft:erosion",
-      "xz_scale": 0.18,
-      "y_scale": 0.0
-    },
-    "min_inclusive": 0.62,
-    "max_exclusive": 1.0,
-    "when_in_range": 0.6,
-    "when_out_of_range": 0.0
   }
 }

@@ -92,7 +92,7 @@ public final class TerraStartingArea {
      * The templates are laid out well inside it -- the furthest patch centre is 62 from the hub
      * face plus its own 17-block half-width.
      */
-    private static final int MAX_DISTANCE_FROM_CENTER = 128;
+    static final int MAX_DISTANCE_FROM_CENTER = 128;
 
     private TerraStartingArea() {
     }
