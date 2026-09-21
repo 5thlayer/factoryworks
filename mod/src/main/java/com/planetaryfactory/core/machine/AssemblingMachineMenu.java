@@ -40,7 +40,8 @@ import net.neoforged.neoforge.transfer.IndexModifier;
  * <p>The recipe list still travels in the opening packet, as what the screen names and ghosts the
  * Held recipe from and what the client's input slots filter by -- the recipes are server truth, and
  * the client has no recipe manager to read them from. It is fixed for the life of the menu, so the
- * Held recipe crosses as one index into it, in a data slot, beside the craft's progress and duration.
+ * Held recipe crosses as one index into it, in a data slot, beside the craft's progress and duration,
+ * the machine's status and its energy.
  */
 public class AssemblingMachineMenu extends AbstractContainerMenu {
 
@@ -69,14 +70,20 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     private static final int DATA_HELD = 0;
     private static final int DATA_PROGRESS = 1;
     private static final int DATA_DURATION = 2;
-    private static final int DATA_COUNT = 3;
+    private static final int DATA_STATUS = 3;
+    private static final int DATA_STORED = 4;
+    private static final int DATA_CAPACITY = 6;
+    private static final int DATA_DRAW = 8;
+    private static final int DATA_COUNT = 10;
     private static final int OUTPUT = AssemblingMachineBlockEntity.OUTPUT;
     private static final int MACHINE_SLOTS = 5;
 
     public static final int INPUT_X = 8;
     public static final int INPUT_Y = 36;
     public static final int OUTPUT_X = 152;
-    public static final int INVENTORY_Y = 72;
+    public static final int ENERGY_Y = 58;
+    public static final int STATUS_Y = 68;
+    public static final int INVENTORY_Y = 92;
 
     private final List<Entry> entries;
     private final ContainerData data;
@@ -125,7 +132,14 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                 return switch (index) {
                     case DATA_HELD -> heldIndex(entries, machine.heldRecipe());
                     case DATA_PROGRESS -> machine.craftProgress();
-                    default -> machine.craftDuration();
+                    case DATA_DURATION -> machine.craftDuration();
+                    case DATA_STATUS -> machine.status().ordinal();
+                    case DATA_STORED -> DataSlotHalves.low(machine.energyStorage.getAmountAsLong());
+                    case DATA_STORED + 1 -> DataSlotHalves.high(machine.energyStorage.getAmountAsLong());
+                    case DATA_CAPACITY -> DataSlotHalves.low(machine.energyStorage.getCapacityAsLong());
+                    case DATA_CAPACITY + 1 -> DataSlotHalves.high(machine.energyStorage.getCapacityAsLong());
+                    case DATA_DRAW -> DataSlotHalves.low(machine.drawTenths());
+                    default -> DataSlotHalves.high(machine.drawTenths());
                 };
             }
 
@@ -202,6 +216,25 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     public float progress() {
         int duration = data.get(DATA_DURATION);
         return duration <= 0 ? 0f : Math.min(1f, (float) data.get(DATA_PROGRESS) / duration);
+    }
+
+    public AssemblingStatus status() {
+        AssemblingStatus[] all = AssemblingStatus.values();
+        int index = data.get(DATA_STATUS);
+        return index >= 0 && index < all.length ? all[index] : AssemblingStatus.IDLE;
+    }
+
+    public long storedFe() {
+        return DataSlotHalves.join(data.get(DATA_STORED), data.get(DATA_STORED + 1));
+    }
+
+    public long capacityFe() {
+        return DataSlotHalves.join(data.get(DATA_CAPACITY), data.get(DATA_CAPACITY + 1));
+    }
+
+    /** The Held recipe's draw while crafting, in tenths of an FE a tick. */
+    public long drawTenths() {
+        return DataSlotHalves.join(data.get(DATA_DRAW), data.get(DATA_DRAW + 1));
     }
 
     /**

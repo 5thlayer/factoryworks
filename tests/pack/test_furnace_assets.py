@@ -12,11 +12,15 @@ block's name, and a missing loot table makes the block break into nothing.
 
 Two things here are specific to this ladder rather than generic asset plumbing:
 
-  - **The Electric tier borrows GregTech's art, and must not borrow GregTech's model.** GTCEu's own
-    `electric_furnace` model declares `"loader": "gtceu:machine"`, which GregTech's model provider
-    does not serve for a `planetaryfactory:` block -- a copied model is a missing model. So the
-    textures are asserted to exist *inside the GTCEu jar*, and the model is asserted not to name
-    that loader.
+  - **The Electric tier looks unlike the burner tiers.** Its point is that it carries no fuel, and a
+    player who cannot tell it from a Steel Furnace at a glance has lost the one thing the block
+    says about itself (#324). So no texture it names may be one a burner tier names.
+  - **The Electric tier's art is borrowed, and every borrowed file is credited.** Its textures are
+    copied from a CC BY-NC-SA repository into the pack's own namespace (#324), and that licence
+    holds only with attribution, so each one is asserted to be named in `NOTICE`. A copy nobody
+    credited fails nothing else and is still a licence breach. The art used to be read out of the
+    GTCEu jar, and a `loader` assertion guarded against copying GregTech's model with it; with the
+    art in our namespace there is no foreign model to copy, and that assertion went with GregTech.
   - **Every tier has a lit variant.** The `LIT` blockstate drives the lit front on all three,
     including the Electric one, where it is the only thing telling "running" from "waiting for the
     pole" from outside.
@@ -29,13 +33,12 @@ import json
 import pathlib
 import re
 import unittest
-import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 FURNACE_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/smelting/FurnaceTier.java"
 ASSETS = ROOT / "kubejs/assets/planetaryfactory"
 DATA = ROOT / "kubejs/data/planetaryfactory"
-MODS = ROOT / "mods"
+NOTICE = ROOT / "NOTICE"
 
 # `STONE(1.0f, true),` -- the enum constant, whatever its arguments are.
 TIER_RE = re.compile(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]", re.MULTILINE)
@@ -48,26 +51,18 @@ def registered_tiers():
     return [name.lower() + "_furnace" for name in tiers]
 
 
-def jar(prefix):
-    """The one installed jar with this prefix. The jar set is a packwiz manifest (ADR-0024)."""
-    found = sorted(MODS.glob(f"{prefix}-*.jar"))
-    if len(found) != 1:
-        raise AssertionError(f"expected exactly one {prefix}-*.jar in mods/, found {len(found)}")
-    return found[0]
-
-
 def texture_exists(texture):
-    """Whether a texture reference resolves, in this repo or in the jar that owns its namespace."""
     namespace, path = texture.split(":", 1)
     if namespace == "planetaryfactory":
         return (ASSETS / "textures" / f"{path}.png").is_file()
-    prefix = {"minecraft": None, "gtceu": "gtceu"}.get(namespace, namespace)
-    if prefix is None:
-        # Vanilla ships no jar here to read; a vanilla path is taken on trust, which is the same
-        # trust every other vanilla parent in these models is taken on.
-        return True
-    with zipfile.ZipFile(jar(prefix)) as archive:
-        return f"assets/{namespace}/textures/{path}.png" in archive.namelist()
+    # Vanilla ships no jar here to read; a vanilla path is taken on the same trust as every vanilla
+    # parent in these models.
+    return namespace == "minecraft"
+
+
+def model_textures(name):
+    path = ASSETS / "models" / "block" / f"{name}.json"
+    return set(json.loads(path.read_text(encoding="utf-8")).get("textures", {}).values())
 
 
 class FurnaceAssets(unittest.TestCase):
@@ -105,17 +100,26 @@ class FurnaceAssets(unittest.TestCase):
                         self.assertTrue(texture_exists(texture),
                                         f"{path.name} names {texture}, which does not exist")
 
-    def test_the_electric_tier_does_not_borrow_gregtechs_model_loader(self):
-        # GTCEu's own model declares `"loader": "gtceu:machine"`, and GregTech's model provider
-        # does not serve it for a `planetaryfactory:` block. A copied model is a missing model,
-        # and the failure is a black-and-magenta cube with nothing in the log to explain it.
+    def test_the_electric_tier_wears_no_burner_tiers_texture(self):
+        burners = set()
+        for name in self.tiers:
+            if name != "electric_furnace":
+                burners |= model_textures(name) | model_textures(name + "_on")
         for suffix in ("", "_on"):
-            path = ASSETS / "models" / "block" / f"electric_furnace{suffix}.json"
-            model = json.loads(path.read_text(encoding="utf-8"))
-            with self.subTest(model=path.name):
-                self.assertNotIn("loader", model, "this model has to be plain vanilla JSON")
-                self.assertTrue(any(t.startswith("gtceu:") for t in model["textures"].values()),
-                                "the Electric tier wears GregTech's art, textures and all")
+            with self.subTest(model=f"electric_furnace{suffix}"):
+                shared = model_textures(f"electric_furnace{suffix}") & burners
+                self.assertFalse(shared, f"the Electric tier looks like a burner tier: {shared}")
+
+    def test_every_borrowed_electric_texture_is_credited(self):
+        notice = NOTICE.read_text(encoding="utf-8")
+        textures = model_textures("electric_furnace") | model_textures("electric_furnace_on")
+        for texture in sorted(textures):
+            with self.subTest(texture=texture):
+                namespace, path = texture.split(":", 1)
+                self.assertEqual("planetaryfactory", namespace,
+                                 "the Electric tier's art is copied into the pack's namespace")
+                file = (ASSETS / "textures" / f"{path}.png").relative_to(ROOT).as_posix()
+                self.assertIn(file, notice, f"{file} is borrowed art with no credit in NOTICE")
 
     def test_the_item_model_resolves_to_a_model_that_exists(self):
         for name in self.tiers:
