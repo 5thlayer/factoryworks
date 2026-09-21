@@ -4,13 +4,22 @@ import java.util.List;
 
 import com.planetaryfactory.core.PFBlockEntities;
 
+import com.planetaryfactory.core.PFMenus;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import rearth.oritech.block.base.entity.MultiblockMachineEntity;
-import rearth.oritech.client.init.ModScreens;
 import rearth.oritech.config.OritechConfig;
 import rearth.oritech.init.recipes.OritechRecipe;
 import rearth.oritech.init.recipes.RecipeContent;
@@ -19,7 +28,7 @@ import rearth.oritech.util.ScreenProvider;
 
 /**
  * The Assembling Machine's anchor (#326, ADR-0071): Oritech's machine base, placed as a footprint
- * and holding no recipe yet.
+ * and holding a {@link HeldRecipe} the player sets from its screen (#327). It crafts nothing yet.
  *
  * <p>Extends {@link MultiblockMachineEntity} rather than Oritech's {@code AssemblerBlockEntity},
  * whose one constructor hard-codes Oritech's own block entity type -- a subclass of it would be
@@ -45,6 +54,13 @@ import rearth.oritech.util.ScreenProvider;
  * from {@link #getOwnRecipeType} would otherwise do.
  */
 public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
+
+    /** The four input slots, which a change of Held recipe hands back. */
+    public static final int INPUTS = 4;
+
+    private static final String HELD_KEY = "held_recipe";
+
+    private HeldRecipe held = HeldRecipe.NONE;
 
     public AssemblingMachineBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state,
@@ -128,12 +144,64 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     }
 
     /**
-     * Oritech's assembler screen. Its handler resolves the block entity by position and is not
-     * typed to Oritech's entities (research §2.3), so it opens on this one.
+     * The pack's own menu, not Oritech's (#327): Oritech's screen has no hook for the recipe
+     * widget. {@link AssemblingMachineBlock} opens it, since the opening packet carries the list.
      */
     @Override
     public MenuType<?> getScreenHandlerType() {
-        return ModScreens.ASSEMBLER_SCREEN.get();
+        return PFMenus.ASSEMBLING_MACHINE.get();
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return AssemblingMachineMenu.open(containerId, playerInventory, this);
+    }
+
+    public HeldRecipe heldRecipe() {
+        return held;
+    }
+
+    /**
+     * Holds {@code next}. A change hands every ingredient already in the input slots back to
+     * {@code player} -- changing one's mind destroys nothing; what does not fit drops at their feet. Setting the recipe already held is
+     * not a change and moves nothing.
+     *
+     * <p>The lock is not asked here: an unresearched recipe is held and shown, and refusing to craft
+     * it is the craft cycle's.
+     */
+    public void setHeldRecipe(HeldRecipe next, Player player) {
+        if (!held.changesTo(next)) {
+            return;
+        }
+        for (int slot = 0; slot < INPUTS; slot++) {
+            ItemStack stack = inventory.getItem(slot).copy();
+            if (stack.isEmpty()) {
+                continue;
+            }
+            inventory.set(slot, ItemResource.EMPTY, 0);
+            player.getInventory().placeItemBackInInventory(stack);
+        }
+        held = next;
+        setChanged();
+    }
+
+    /** Whether {@link #heldRecipe} names a recipe the server has loaded. */
+    public boolean heldRecipeResolves() {
+        return level instanceof ServerLevel server
+                && AssemblingMachineRecipes.resolve(server, held).isPresent();
+    }
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.store(HELD_KEY, HeldRecipe.CODEC, held);
+    }
+
+    /** The id only. It is resolved when asked, never here, where the recipes may not be loaded. */
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        held = input.read(HELD_KEY, HeldRecipe.CODEC).orElse(HeldRecipe.NONE);
     }
 
     /** {@link AssemblingMachineFootprint#addonSlots}: beside the row and behind the anchor. */

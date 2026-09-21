@@ -1,13 +1,16 @@
 package com.planetaryfactory.core.machine.client;
 
 import com.planetaryfactory.core.PFBlockEntities;
+import com.planetaryfactory.core.PFMenus;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import rearth.oritech.client.renderers.blocks.MachineRenderer;
 
 /**
- * The Assembling Machine's renderer (#326): Oritech's own, pointed at Oritech's assembler model.
+ * The Assembling Machine's client half: Oritech's renderer, pointed at Oritech's assembler model
+ * (#326), and the pack's own screen (#327).
  *
  * <p>{@code "models/assembler"} and {@code false} are the arguments Oritech's {@code ModRenderers}
  * registers its assembler with, read off the 2.0.0-exp6 jar. The model and textures resolve into
@@ -20,6 +23,11 @@ public final class AssemblingMachineClient {
 
     public static void register(IEventBus modBus) {
         modBus.addListener(AssemblingMachineClient::registerRenderers);
+        modBus.addListener(AssemblingMachineClient::registerScreens);
+    }
+
+    private static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(PFMenus.ASSEMBLING_MACHINE.get(), AssemblingMachineScreen::new);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

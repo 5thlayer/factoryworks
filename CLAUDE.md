@@ -133,7 +133,8 @@ are on the dev runtime classpath and are the one foreign mod the server loads; s
 the only smelt under test.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
-`BoilerTests` (#274) and `SteamEngineNetworkTests` (#292, registered only when Oritech is loaded),
+`BoilerTests` (#274), and `SteamEngineNetworkTests` (#292) and `AssemblingMachineTests` (#327),
+both registered only when Oritech is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
 (forcing the graph empty turns it red); that a pole's
@@ -142,7 +143,10 @@ transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 
 starved one freezes where it stood; and that power crosses a wire between linked poles, stops
 beyond reach, and stops again when the link is broken. And that a pole reaching only a slave Steam Engine and its
 hull draws the whole row's 1,350 FE/t from the master, once, feeding neither -- `SupplyScanTest` holds
-the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red. Each was checked against the defect it exists for: dropping
+the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red. And that an Assembling Machine's Held recipe survives its save hook and
+resolves again after it, that every assembling recipe in the server's manager is one its widget offers
+and it can hold -- what replaces #237 and #238 -- and that changing the recipe hands the inputs back;
+dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Each was checked against the defect it exists for: dropping
 the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
 furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red; making no
 two poles link, never rebuilding the network, and never dropping a broken pole each turn a network
