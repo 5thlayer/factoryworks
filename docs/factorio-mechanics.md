@@ -463,12 +463,14 @@ Sub-rules:
   (ADR-0073): the recipe viewer is the only picker. EMI's Fill Recipe on the open machine sets the
   Held recipe, lit with an empty inventory, and the server refuses one the machine cannot hold with a
   message. The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
-  missing its search and navigation, and #336 removed it -- only the Held recipe's name and a
-  **clear** button, which empties it and hands the inputs back as a change of recipe does. That the
-  viewer can set every emitted assembling recipe is `AssemblingMachineTests`' GameTest, the check
+  missing its search and navigation, and #336 removed it. It shows the Held recipe as its result's
+  icon and name, whose tooltip carries the recipe when EMI is loaded, and a progress bar between the
+  inputs and the output. There is no clear: a machine without a recipe does nothing, so a recipe is
+  replaced, never removed. That the viewer can set every emitted assembling recipe is `AssemblingMachineTests`' GameTest, the check
   that replaced #237 and #238. Still to land on this surface: the recipe drawn as ghosts in the slots
-  (#334), unused inputs accepting nothing, per-slot capacity and the stall line (ADR-0073). JEI has
-  no transfer handler, so a JEI-only player can clear a recipe but not set one. Copying the setting
+  (#334), unused inputs accepting nothing, per-slot capacity, and the energy bar and stall line
+  (#332). JEI has
+  no transfer handler, so a JEI-only player cannot set a recipe. Copying the setting
   is one id, and the configuration card is not built. Furnaces keep Oritech's first match, which is
   Factorio's own split.
 - **Machine idle draw** — `excluded`. A Factorio machine consumes power while idle: the

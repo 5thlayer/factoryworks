@@ -40,8 +40,8 @@ import rearth.oritech.block.base.block.MultiblockMachine;
  * <p>The codec's round trip is {@code HeldRecipeTest}'s. What is left is the seam around it: that
  * the block entity's save hook actually writes the field and its load hook reads it back into a
  * recipe the server resolves; that every assembling recipe the server loaded is one Fill Recipe
- * can set and the machine can hold -- the check that replaces #237 and #238; and that changing or
- * clearing the recipe hands the player back what the inputs held. And the craft cycle (#328): that a fed,
+ * can set and the machine can hold -- the check that replaces #237 and #238; and that changing the
+ * recipe hands the player back what the inputs held. And the craft cycle (#328): that a fed,
  * powered machine crafts at Factorio's rate, and that each of the three stalls draws nothing, takes
  * nothing and keeps its recipe. Checked against its defect: extracting the tick's energy before the
  * stall is asked turns all three stall tests red.
@@ -61,8 +61,6 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::keepsItsRecipeOverAReload);
         tests.test("assembling_machine_holds_every_assembling_recipe", 20,
                 AssemblingMachineTests::holdsEveryAssemblingRecipe);
-        tests.test("assembling_machine_clear_returns_the_inputs", 20,
-                AssemblingMachineTests::clearReturnsTheInputs);
         tests.test("assembling_machine_refuses_what_it_cannot_hold", 20,
                 AssemblingMachineTests::refusesWhatItCannotHold);
         tests.test("assembling_machine_hands_back_ingredients_on_a_change", 20,
@@ -414,33 +412,6 @@ final class AssemblingMachineTests {
         int returned = player.getInventory().countItem(Items.IRON_INGOT);
         if (returned != 7) {
             helper.fail("a changed recipe handed back " + returned + " of 7 iron ingots", ANCHOR);
-            return;
-        }
-        helper.succeed();
-    }
-
-    /**
-     * The screen's clear button (#336) empties the Held recipe and hands the inputs back, as a
-     * change of recipe does -- the one way to unset a recipe without a viewer.
-     */
-    private static void clearReturnsTheInputs(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = place(helper);
-        Player player = player(helper);
-        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
-        menu.request(player, someRecipe(helper));
-        machine.inventory.set(0, ItemResource.of(Items.IRON_INGOT), 7);
-
-        if (!menu.clickMenuButton(player, AssemblingMachineMenu.CLEAR)) {
-            helper.fail("the clear button was refused", ANCHOR);
-            return;
-        }
-        if (machine.heldRecipe().isSet()) {
-            helper.fail("clear left the machine holding " + machine.heldRecipe(), ANCHOR);
-            return;
-        }
-        int returned = player.getInventory().countItem(Items.IRON_INGOT);
-        if (!machine.inventory.getItem(0).isEmpty() || returned != 7) {
-            helper.fail("clear handed back " + returned + " of 7 iron ingots", ANCHOR);
             return;
         }
         helper.succeed();

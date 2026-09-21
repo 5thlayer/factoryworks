@@ -29,12 +29,14 @@ import net.neoforged.neoforge.transfer.IndexModifier;
  *
  * <p>The pack's own rather than Oritech's, because Oritech's screen has no hook for an extra
  * widget. A recipe is picked in the recipe viewer, never here (ADR-0073, #336): EMI's Fill Recipe
- * lands on {@link #request}. The screen only names what is held and offers a clear button, which
- * is vanilla's menu button click; there is no packet of the pack's own for it.
+ * lands on {@link #request}. The screen only shows what is held and how far its craft is. There is
+ * no clear: an Assembling Machine without a recipe does nothing, so a recipe is replaced, never
+ * removed.
  *
  * <p>The recipe list still travels in the opening packet, as what the screen names the Held recipe
  * from -- the recipes are server truth, and the client has no recipe manager to read them from. It
- * is fixed for the life of the menu, so the Held recipe crosses as one index into it, in a data slot.
+ * is fixed for the life of the menu, so the Held recipe crosses as one index into it, in a data slot,
+ * beside the craft's progress and duration.
  */
 public class AssemblingMachineMenu extends AbstractContainerMenu {
 
@@ -56,17 +58,17 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     /** A recipe held that the list does not name -- one a datapack reload took away. */
     public static final int UNKNOWN = -2;
 
-    /** The clear button's id: empty the Held recipe and hand the inputs back. */
-    public static final int CLEAR = 0;
-
     private static final int DATA_HELD = 0;
+    private static final int DATA_PROGRESS = 1;
+    private static final int DATA_DURATION = 2;
+    private static final int DATA_COUNT = 3;
     private static final int OUTPUT = 4;
     private static final int MACHINE_SLOTS = 5;
 
     public static final int INPUT_X = 8;
     public static final int INPUT_Y = 36;
-    public static final int OUTPUT_X = 98;
-    public static final int INVENTORY_Y = 140;
+    public static final int OUTPUT_X = 152;
+    public static final int INVENTORY_Y = 72;
 
     private final List<Entry> entries;
     private final ContainerData data;
@@ -76,7 +78,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     /** Client side: the slots stand over a stub the menu's own sync fills. */
     public AssemblingMachineMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         this(containerId, playerInventory, null, buf.readBlockPos(), Entry.LIST_CODEC.decode(buf),
-                new ItemStacksResourceHandler(MACHINE_SLOTS), new SimpleContainerData(1));
+                new ItemStacksResourceHandler(MACHINE_SLOTS), new SimpleContainerData(DATA_COUNT));
     }
 
     private AssemblingMachineMenu(int containerId, Inventory playerInventory,
@@ -112,7 +114,11 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         ContainerData data = new ContainerData() {
             @Override
             public int get(int index) {
-                return heldIndex(entries, machine.heldRecipe());
+                return switch (index) {
+                    case DATA_HELD -> heldIndex(entries, machine.heldRecipe());
+                    case DATA_PROGRESS -> machine.craftProgress();
+                    default -> machine.craftDuration();
+                };
             }
 
             @Override
@@ -121,7 +127,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
             @Override
             public int getCount() {
-                return 1;
+                return DATA_COUNT;
             }
         };
         return new AssemblingMachineMenu(containerId, playerInventory, machine, machine.getBlockPos(),
@@ -168,14 +174,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         return data.get(DATA_HELD) == UNKNOWN;
     }
 
-    /** The clear button: the Held recipe goes, and what the inputs held goes back to the player. */
-    @Override
-    public boolean clickMenuButton(Player player, int buttonId) {
-        if (machine == null || buttonId != CLEAR) {
-            return false;
-        }
-        machine.setHeldRecipe(HeldRecipe.NONE, player);
-        return true;
+    /** How far the craft under way is, from 0 to 1; 0 with no recipe held. */
+    public float progress() {
+        int duration = data.get(DATA_DURATION);
+        return duration <= 0 ? 0f : Math.min(1f, (float) data.get(DATA_PROGRESS) / duration);
     }
 
     /**
