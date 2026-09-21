@@ -12,6 +12,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import rearth.oritech.block.entity.generators.SteamEngineEntity;
 
@@ -65,6 +66,11 @@ public class SteamEngineBlockEntity extends SteamEngineEntity {
     @Override
     public ResourceHandler<FluidResource> getFluidLookup(Direction direction) {
         return new SteamEngineFluidHandler(source());
+    }
+
+    @Override
+    public EnergyHandler getEnergyLookup(Direction direction) {
+        return source().energyStorage;
     }
 
     /** The engine whose tank and buffer this one's figures are: its master's when it is a slave. */
