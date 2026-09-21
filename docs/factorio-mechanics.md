@@ -582,8 +582,8 @@ Sub-rules:
   against Create's one item per block.*
 - **Cost per length** — `shipped`. A belt costs one belt item of its tier per block of its length,
   rounded up, as a Factorio belt costs one item per tile. Placing one the player cannot pay for is
-  refused with a message and charges nothing. The belt keeps what it cost, so moving a support does
-  not change the refund. Breaking either loader puts the refund and the belt's items into the
+  refused with a message and charges nothing. The belt keeps what it cost, so a belt reshaped by a
+  broken support still refunds what was paid. Breaking either loader puts the refund and the belt's items into the
   breaker's inventory and leaves the other loader standing, free to relink (#346). *Upstream
   SimpleBelts charged one item whatever the length.*
 
