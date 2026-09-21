@@ -10,14 +10,11 @@ import snownee.jade.api.BlockAccessor;
 /**
  * One stack in and out of a Jade sync tag.
  *
- * <p>Both providers carry an {@link ItemStack} from the server to the tooltip, and 26.1 took away
- * the {@code save}/{@code parse} pair they used: a stack is written through its codec now. Jade's
- * own transport is still a {@link CompoundTag}, so the codec is applied against {@link NbtOps}
- * here rather than twice, differently, in two plugins.
+ * <p>26.1 took away the stack's {@code save}/{@code parse} pair, and Jade's transport is still a
+ * {@link CompoundTag}, so the codec is applied against {@link NbtOps} here, once for every plugin.
  *
  * <p>A stack that will not encode is left out of the tag, and a tag that will not decode reads as
- * empty. Both providers already draw an empty stack as the dash, so a failure here is a tooltip
- * line that says "nothing" rather than a crashed HUD.
+ * empty, which each plugin draws as "nothing" rather than crashing the HUD.
  */
 final class JadeStacks {
 

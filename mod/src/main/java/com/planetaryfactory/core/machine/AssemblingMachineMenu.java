@@ -219,9 +219,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     }
 
     public AssemblingStatus status() {
-        AssemblingStatus[] all = AssemblingStatus.values();
-        int index = data.get(DATA_STATUS);
-        return index >= 0 && index < all.length ? all[index] : AssemblingStatus.IDLE;
+        return AssemblingStatus.fromOrdinal(data.get(DATA_STATUS));
     }
 
     public long storedFe() {

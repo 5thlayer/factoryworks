@@ -76,6 +76,7 @@
   "planetaryfactory.milky_way": "Via Lactea",
   "planetaryfactory.shattered_system": "Abyssus",
   "planetaryfactory.solar_system": "Sol",
+  "tooltip.planetaryfactory.assembling_machine.jade.progress": "%s%%",
   "tooltip.planetaryfactory.barrel.amount": "%s / %s mB",
   "tooltip.planetaryfactory.barrel.empty": "Empty",
   "tooltip.planetaryfactory.boiler.fuel": "%s / %s J",

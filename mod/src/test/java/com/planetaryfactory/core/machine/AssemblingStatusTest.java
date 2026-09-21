@@ -48,4 +48,13 @@ class AssemblingStatusTest {
         assertEquals("gui.planetaryfactory.assembling_machine.status.missing_ingredients",
                 AssemblingStatus.MISSING_INGREDIENTS.langKey());
     }
+
+    @Test
+    void anOrdinalDecodesToItsStatusAndAnythingElseToIdle() {
+        for (AssemblingStatus status : AssemblingStatus.values()) {
+            assertEquals(status, AssemblingStatus.fromOrdinal(status.ordinal()));
+        }
+        assertEquals(AssemblingStatus.IDLE, AssemblingStatus.fromOrdinal(-1));
+        assertEquals(AssemblingStatus.IDLE, AssemblingStatus.fromOrdinal(AssemblingStatus.values().length));
+    }
 }
