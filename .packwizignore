@@ -108,6 +108,8 @@ config/almostunified/debug.json
 config/emi.css
 config/observable.json
 config/runelic.json
+# Jade's HUD settings, rewritten by the client whenever a provider appears.
+config/jade/
 *client*.toml
 *client*.snbt
 *client*.json
