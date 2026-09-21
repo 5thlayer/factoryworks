@@ -556,7 +556,17 @@ refills it from the `cores` child list (each entry's `pos`, mapped back to world
 `ASSEMBLED`.** A load cannot throw on a block without the property, and cannot divide by zero: an
 empty `cores` list leaves the list empty and the quality at 1.0.
 
-So the paths that read `ASSEMBLED` are the interactive ones, all on the block or the controller:
+**But a load does reach a rescan, which does write it — found in-world, after #326 shipped.**
+`MachineControllerLifecycle.onLoad` (NeoForge's `IBlockEntityExtension.onLoad`, which fires on
+placement as well as on chunk load) schedules `rescanMultiblock()` on the server's next tick. The
+rescan walks `getCorePositions()`, and when the list of cores it found is empty it calls
+`resetInvalidMultiblock()`, which sets `ASSEMBLED` to `false`. On an empty core list that is every
+time. The anchor then reads as unassembled, and `useWithoutItem` replays `triggerSetupAnimation`
+on every right-click instead of opening the screen. The Assembling Machine overrides
+`rescanMultiblock` to do nothing, and `PlacementPlanTests` reads `ASSEMBLED` five ticks after
+placing — the tick-0 read passed with the bug live.
+
+So the paths that read `ASSEMBLED` are these, all on the block or the controller:
 
 | where | what it does with `ASSEMBLED` |
 | --- | --- |
@@ -564,6 +574,7 @@ So the paths that read `ASSEMBLED` are the interactive ones, all on the block or
 | `initMultiblock(state)` | `true` → returns `true` at once. Only past that does it walk `getCorePositions()`, and the quality it sets is `sum / connected.size()` — `0.0f / 0` is NaN on an empty list |
 | `MultiblockMachine.resetMultiblock` (from `playerWillDestroy`, `playerDestroy`, `destroy`, `onExplosionHit`) | `true` → `onControllerBroken()`, which walks `getConnectedCores()` and clears it — harmless when empty |
 | `MultiblockMachineEntity.isAssembled(state)` | the unguarded `state.getValue(ASSEMBLED)`; `MachineBlockEntity`'s own returns `true` |
+| `rescanMultiblock()` (scheduled by `onLoad`) | no cores found → `resetInvalidMultiblock()` → **writes** `ASSEMBLED=false` |
 
 This is what #326's shape rests on: the block extends `MultiblockMachine` so the property exists,
 the item places the anchor with `ASSEMBLED=true` so `useWithoutItem` skips the core placement and

@@ -66,6 +66,17 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         return true;
     }
 
+    /**
+     * Never rescanned. Oritech's {@code MachineControllerLifecycle.onLoad} schedules a rescan for
+     * the next server tick -- on placement as well as on chunk load -- and a rescan that finds no
+     * cores calls {@code resetInvalidMultiblock}, which sets {@code ASSEMBLED} to {@code false}.
+     * The block's {@code useWithoutItem} then replays the setup animation on every right-click and
+     * never opens the screen. There are no cores to rescan for.
+     */
+    @Override
+    public void rescanMultiblock() {
+    }
+
     @Override
     public List<Vec3i> getCorePositions() {
         return List.of();
