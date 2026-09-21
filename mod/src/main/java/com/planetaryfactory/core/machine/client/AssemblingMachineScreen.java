@@ -29,15 +29,19 @@ import net.neoforged.fml.ModList;
  */
 public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingMachineMenu> {
 
-    private static final int PANEL = 0xFFC6C6C6;
+    // Oritech's machine-screen palette, read off its gui_base.png and itemslot.png.
+    private static final int PANEL = 0xFFD0D1D4;
+    private static final int FRAME = 0xFF1E1E1F;
+    private static final int FRAME_LIGHT = 0xFFF1F1F1;
+    private static final int FRAME_SHADOW = 0xFF58585A;
     private static final int SLOT = 0xFF8B8B8B;
-    private static final int SLOT_EDGE = 0xFF373737;
+    private static final int SLOT_DARK = 0xFF373737;
+    private static final int SLOT_LIGHT = 0xFFFFFFFF;
     private static final int BAR = 0xFF5DA05D;
     private static final int TEXT = 0xFF404040;
     private static final int BAR_TEXT = 0xFFFFFFFF;
     private static final int LOCKED_TEXT = 0xFFA02020;
 
-    private static final int TAB_EDGE = 0xFF555555;
     private static final int TAB_X = 36;
     private static final int TAB_SIZE = 26;
     private static final int TITLE_HEIGHT = 16;
@@ -60,16 +64,14 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     /** Oritech's header: the machine's icon in a tab on the panel's top edge, its name beside it. */
     private void extractTab(GuiGraphicsExtractor graphics) {
         int x = leftPos + TAB_X;
-        int y = topPos - TAB_SIZE + 2;
-        graphics.fill(x - 1, y - 1, x + TAB_SIZE + 1, topPos, TAB_EDGE);
-        graphics.fill(x, y, x + TAB_SIZE, topPos, PANEL);
+        int y = topPos - TAB_SIZE + 4;
+        frame(graphics, x, y, TAB_SIZE, TAB_SIZE);
         graphics.item(ICON, x + (TAB_SIZE - 16) / 2, y + (TAB_SIZE - 16) / 2);
 
         int titleX = x + TAB_SIZE + 2;
-        int titleY = y + (TAB_SIZE - TITLE_HEIGHT) / 2 - 1;
+        int titleY = y + 2;
         int titleWidth = font.width(NAME) + 12;
-        graphics.fill(titleX - 1, titleY - 1, titleX + titleWidth + 1, titleY + TITLE_HEIGHT + 1, TAB_EDGE);
-        graphics.fill(titleX, titleY, titleX + titleWidth, titleY + TITLE_HEIGHT, PANEL);
+        frame(graphics, titleX, titleY, titleWidth, TITLE_HEIGHT);
         graphics.text(font, NAME, titleX + 6, titleY + (TITLE_HEIGHT - 8) / 2, TEXT, false);
     }
 
@@ -77,8 +79,8 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // The world dims behind the panel as it does behind the inventory; skipping super left it bright.
         super.extractBackground(graphics, mouseX, mouseY, partialTick);
+        frame(graphics, leftPos, topPos, imageWidth, imageHeight);
         extractTab(graphics);
-        graphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, PANEL);
         for (Slot slot : menu.slots) {
             recess(graphics, leftPos + slot.x, topPos + slot.y, 16);
         }
@@ -88,9 +90,21 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         graphics.fill(x, y, x + Math.round(BAR_WIDTH * menu.progress()), y + 16, BAR);
     }
 
+    /** A slot's bevel, as Oritech's itemslot.png draws it: dark above and left, light below and right. */
     private static void recess(GuiGraphicsExtractor graphics, int x, int y, int width) {
-        graphics.fill(x - 1, y - 1, x + width + 1, y + 17, SLOT_EDGE);
-        graphics.fill(x, y, x + width, y + 16, SLOT);
+        graphics.fill(x - 1, y - 1, x + width + 1, y + 17, SLOT);
+        graphics.fill(x - 1, y - 1, x + width, y, SLOT_DARK);
+        graphics.fill(x - 1, y, x, y + 16, SLOT_DARK);
+        graphics.fill(x, y + 16, x + width + 1, y + 17, SLOT_LIGHT);
+        graphics.fill(x + width, y, x + width + 1, y + 16, SLOT_LIGHT);
+    }
+
+    /** Oritech's panel: a dark outline, a light inner edge, and a two-pixel shadow along the bottom. */
+    private static void frame(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
+        graphics.fill(x, y, x + width, y + height, FRAME);
+        graphics.fill(x + 1, y + 1, x + width - 1, y + height - 1, FRAME_SHADOW);
+        graphics.fill(x + 1, y + 1, x + width - 1, y + height - 3, FRAME_LIGHT);
+        graphics.fill(x + 2, y + 2, x + width - 2, y + height - 4, PANEL);
     }
 
     @Override
