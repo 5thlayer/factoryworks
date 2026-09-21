@@ -236,11 +236,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;
     }
 
-    /**
-     * An input takes from the player what it takes from a belt (#329): the Held recipe's ingredient
-     * for that slot, or nothing. Asked on the server, which alone can resolve the Held recipe; the
-     * client's stub accepts, and a refused placement is put back by the menu's sync.
-     */
+    /** Filtered on the server only; the client accepts and the menu's sync puts a refusal back. */
     private final class InputSlot extends ResourceHandlerSlot {
         InputSlot(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> modifier,
                 int index, int x, int y) {

@@ -6,19 +6,11 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 /**
- * The Assembling Machine's item face (#329), returned for every {@code Direction} and the null side.
+ * The Assembling Machine's item face, on every side. Inputs are filtered by
+ * {@link AssemblingInputSlots}; only the output can be extracted.
  *
- * <p>In: an input slot takes only the Held recipe's ingredient for that slot, and a slot the recipe
- * does not use takes nothing ({@link AssemblingInputSlots}, ADR-0073). A machine with no Held recipe
- * therefore takes nothing at all -- deliberately, since it makes nothing. Out: the output slot alone,
- * so a loader cannot strip ingredients a craft is waiting on. Direction never decides either way, which
- * is Factorio's arrangement and the furnace's.
- *
- * <p><b>Over Oritech's inventory, with Oritech's routing pinned off</b> (ADR-0074). Oritech's storage overrides
- * the per-slot insert too: in {@code FILL_EVENLY} mode an insert naming slot 0 is spread over every
- * input slot, past this filter. The machine pins its input mode to {@code FILL_LEFT_TO_RIGHT}, where
- * the per-slot insert is {@code ItemStacksResourceHandler}'s plain one, so there is one routing layer
- * -- this one. See {@link AssemblingMachineBlockEntity#cycleInputMode}.
+ * <p>Only sound while the machine pins Oritech's input mode: {@code FILL_EVENLY} spreads a per-slot
+ * insert past this filter (ADR-0074).
  */
 public class AssemblingMachineItemHandler extends GuardedResourceHandler<ItemResource> {
 
