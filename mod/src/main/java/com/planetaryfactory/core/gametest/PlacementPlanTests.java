@@ -7,6 +7,8 @@ import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.PFItems;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleTier;
+import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
+import com.planetaryfactory.core.machine.AssemblingMachineFootprint;
 import com.planetaryfactory.core.mining.rig.RigCorpus;
 import com.planetaryfactory.core.mining.rig.RigGeometry;
 import com.planetaryfactory.core.mining.rig.RigTier;
@@ -62,6 +64,10 @@ final class PlacementPlanTests {
         tests.test("plan_refuses_another_tier_at_a_pole", 20, PlacementPlanTests::poleWrongTier);
         tests.test("plan_matches_placement_for_a_rig", 20, PlacementPlanTests::rigMatchesPlacement);
         tests.test("plan_refuses_a_rig_whole", 20, PlacementPlanTests::rigRefusesWhole);
+        tests.test("plan_matches_placement_for_an_assembling_machine", 20,
+                PlacementPlanTests::assemblingMachineMatchesPlacement);
+        tests.test("plan_refuses_an_assembling_machine_whole", 20,
+                PlacementPlanTests::assemblingMachineRefusesWhole);
         tests.test("plan_matches_placement_for_a_boiler", 20,
                 PlacementPlanTests::boilerMatchesPlacement);
         tests.test("plan_refuses_a_pump_on_a_dry_site", 20,
@@ -164,6 +170,43 @@ final class PlacementPlanTests {
     private static void rigRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.rig(RigTier.BURNER).get()),
+                FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
+        helper.succeed();
+    }
+
+    /**
+     * The Assembling Machine's footprint (#326): the plan names all of it, and placing puts every
+     * block down in the state named -- the anchor already {@code ASSEMBLED}, each part numbered.
+     *
+     * <p>The size is compared against {@link AssemblingMachineFootprint} for the rig's reason: a
+     * plan naming only the anchor would place one block and agree with itself. And the anchor's
+     * block entity is asked whether it answers as assembled, because Oritech's tick returns early
+     * on an unassembled machine and nothing else here would notice.
+     */
+    private static void assemblingMachineMatchesPlacement(GameTestHelper helper) {
+        PlacementPlan plan = check(helper, new ItemStack(PFItems.ASSEMBLING_MACHINE.get()),
+                FLOOR, Direction.UP, false);
+        int expected = AssemblingMachineFootprint.offsets().size();
+        if (plan.blocks().size() != expected) {
+            helper.fail("an Assembling Machine's plan named " + plan.blocks().size()
+                    + " blocks where its footprint is " + expected, FLOOR);
+        }
+        BlockPos anchor = plan.blocks().getFirst().pos();
+        if (!(helper.getLevel().getBlockEntity(anchor) instanceof AssemblingMachineBlockEntity machine)
+                || !machine.isAssembled(helper.getLevel().getBlockState(anchor))) {
+            helper.fail("the placed anchor is not an assembled Assembling Machine", helper.relativePos(anchor));
+        }
+        helper.succeed();
+    }
+
+    /**
+     * One taken position refuses the whole machine, and nothing goes down. The obstruction is the
+     * machine's top block, three above the anchor: the one a player aiming at the floor is least
+     * likely to see.
+     */
+    private static void assemblingMachineRefusesWhole(GameTestHelper helper) {
+        helper.setBlock(ABOVE_FLOOR.above(AssemblingMachineFootprint.TALL - 1), Blocks.STONE);
+        refusal(check(helper, new ItemStack(PFItems.ASSEMBLING_MACHINE.get()),
                 FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }

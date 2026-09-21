@@ -83,6 +83,8 @@
   "fluid_type.planetaryfactory.steam": "Steam",
   "fluid_type.planetaryfactory.superheated_steam": "Superheated Steam",
   "block.planetaryfactory.boiler": "Boiler",
+  "block.planetaryfactory.assembling_machine": "Assembling Machine",
+  "block.planetaryfactory.assembling_machine_part": "Assembling Machine (part)",
   "tooltip.planetaryfactory.boiler.fuel": "%s / %s J",
   "tooltip.planetaryfactory.boiler.fuel.seconds": "%s s at %s J/t",
   "tooltip.planetaryfactory.boiler.fuel.out": "Out of fuel",

@@ -50,6 +50,15 @@ DEFERRED = {
 }
 
 
+# `<namespace>:<id>` pairs whose definition is GeckoLib's special model rather than a plain one: the
+# item is drawn by a GeoItem renderer, and a plain definition would reach a model whose parent is
+# `builtin/entity` and draw nothing. Still derived, not decided -- the shape is the one Oritech's own
+# `items/assembler.json` has, and the base is the item model beside it.
+GECKOLIB = {
+    "planetaryfactory:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
+}
+
+
 def definitions():
     """Every definition the asset trees imply: (path, content), by the model beside it."""
     wanted = {}
@@ -67,6 +76,15 @@ def definitions():
                 if f"{namespace}:{item}" in DEFERRED:
                     continue
                 path = os.path.join(root, namespace, "items", entry)
+                if f"{namespace}:{item}" in GECKOLIB:
+                    wanted[path] = {
+                        "model": {
+                            "type": "minecraft:special",
+                            "base": f"{namespace}:item/{item}",
+                            "model": {"type": "geckolib:geckolib"},
+                        }
+                    }
+                    continue
                 wanted[path] = {
                     "model": {
                         "type": "minecraft:model",

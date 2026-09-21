@@ -80,6 +80,8 @@ EXPECTED = {
     "planetaryfactory:assembling/electric_engine_unit":
         "makes `planetaryfactory:electric_engine_unit` from `engine_unit` and "
         "`electronic_circuit`, registered by KubeJS. Harness, not pack",
+    "planetaryfactory:assembling/assembling_machine_1":
+        "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
     "planetaryfactory:assembling/rail_signal":
         "names `planetaryfactory:electronic_circuit`, registered by KubeJS. Harness, not pack",
     "planetaryfactory:assembling/small_lamp":

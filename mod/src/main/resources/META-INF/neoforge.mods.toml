@@ -26,23 +26,26 @@ versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
 
-# Optional, and Researchd is not here at all, because the 26.1.2 port removed every class that
-# touched either mod -- see `docs/port/blocked-removals-26.1.2.md`. Nothing in this jar imports
-# `rearth.oritech` outside `mixin/oritech/` and one GameTest class registered only when Oritech is
-# loaded, and the two mixins that named GregTech classes went
-# with their targets.
+# Researchd is not here at all, because the 26.1.2 port removed every class that touched it -- see
+# `docs/port/blocked-removals-26.1.2.md`.
 #
-# These two blocks were `required` and were a load failure rather than a build one, which is the
-# failure mode a green compile cannot see. The range was worse than the type: `[7.0.2,)` is
-# GTCEu's version line, and Oritech's `2.0.0-exp6` sorts *below* it, so the requirement could
-# never have been met by the jar the pack actually ships.
+# Oritech is **required** (ADR-0071). It was optional while nothing but `mixin/oritech/` and one
+# GameTest class named it, and every Oritech mixin is still `required: false` for the reason it
+# always was: a renamed target is a warning and an uncalibrated engine. The Assembling Machine
+# (#326) is a *subclass* of `MultiblockMachineEntity`, which has no such escape hatch -- without
+# Oritech its block entity class cannot load at all -- so the dependency is stated rather than
+# discovered as a crash. The version is pinned to the one the subclass was read against, the way
+# KubeJS's is: 2.0.0-exp6 is an experimental build, and a bump is re-checked, not assumed.
 #
-# `AFTER` is kept: #262 adds the machine chassis on top of Oritech, and load order is cheap to
-# state now and easy to forget then.
+# The earlier `required` blocks named GTCEu's version line, `[7.0.2,)`, which Oritech's
+# `2.0.0-exp6` sorts *below* -- a requirement the shipped jar could never meet. That is why the
+# range here names Oritech's own version exactly.
+#
+# `AFTER` is kept: the machines are built on top of Oritech's classes.
 [[dependencies.${mod_id}]]
 modId = "oritech"
-type = "optional"
-versionRange = "[2.0.0-exp6,)"
+type = "required"
+versionRange = "[2.0.0-exp6]"
 ordering = "AFTER"
 side = "BOTH"
 

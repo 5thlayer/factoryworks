@@ -66,6 +66,13 @@ DEFERRED_ITEM_MODELS = {
     "kubejs:oil_refinery": "the GregTech multiblock's registration left with ADR-0060 (#258)",
 }
 
+# Items drawn by a GeckoLib renderer, whose definition is GeckoLib's special model over the item
+# model beside it rather than a plain model. `scripts/build-item-definitions.py` holds the same
+# table and writes the shape; this asserts it.
+GECKOLIB_ITEMS = {
+    "planetaryfactory:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
+}
+
 # Where an ingredient can appear in a recipe the pack emits. A value under one of these keys is a
 # 26.1 ingredient: a string, or a list of them.
 INGREDIENT_KEYS = ("ingredient", "ingredients", "key")
@@ -133,6 +140,13 @@ def check_item_definitions():
                       "%s states `model` as %r. A definition is an object with a `model` object; "
                       "26.1 has no bare-string form" % (where, model))
                 if not isinstance(model, dict):
+                    continue
+                if "%s:%s" % (namespace.name, name) in GECKOLIB_ITEMS:
+                    check(model.get("type") == "minecraft:special"
+                          and model.get("base") == "%s:item/%s" % (namespace.name, name)
+                          and model.get("model") == {"type": "geckolib:geckolib"},
+                          "%s is recorded as GeckoLib-drawn but is not GeckoLib's special model over "
+                          "the item model beside it, so the item draws nothing" % where)
                     continue
                 check(model.get("type") == "minecraft:model",
                       "%s names the model type `%s`. The pack's items are all plain models; a "

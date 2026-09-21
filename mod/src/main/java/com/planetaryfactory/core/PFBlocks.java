@@ -1,6 +1,8 @@
 package com.planetaryfactory.core;
 
 import com.planetaryfactory.core.energy.PoleTier;
+import com.planetaryfactory.core.machine.AssemblingMachineBlock;
+import com.planetaryfactory.core.machine.AssemblingMachinePartBlock;
 import com.planetaryfactory.core.mining.rig.RigBlock;
 import com.planetaryfactory.core.mining.rig.RigPartBlock;
 import com.planetaryfactory.core.mining.rig.RigTier;
@@ -29,7 +31,7 @@ import java.util.stream.Stream;
 
 /**
  * The blocks the mod itself registers: the two saplings, the pole blocks, the furnace and rig
- * ladders, the Boiler and the pump.
+ * ladders, the Boiler, the pump and the Assembling Machine.
  *
  * <p>The supply-area poles are here (ADR-0036) -- the three tiers and the creative pole (#272),
  * which is one block beside the ladder rather than a row in it. They are mechanism -- a block
@@ -65,6 +67,36 @@ public final class PFBlocks {
      */
     public static final DeferredHolder<Block, BoilerBlock> BOILER =
             BLOCKS.registerBlock("boiler", BoilerBlock::new);
+
+    /**
+     * The Assembling Machine (#326, ADR-0071): an Oritech machine anchor and the invisible parts its
+     * footprint is made of. One block, not a ladder -- whether tiers 2 and 3 are blocks at all is
+     * #295's.
+     *
+     * <p>{@code noOcclusion} on both: the anchor and its parts render nothing themselves (Oritech's
+     * renderer draws the model from the anchor), so a neighbour that culled its face against one of
+     * them would show a hole straight through the machine.
+     */
+    public static final DeferredHolder<Block, AssemblingMachineBlock> ASSEMBLING_MACHINE =
+            BLOCKS.registerBlock("assembling_machine", props -> new AssemblingMachineBlock(props
+                    .mapColor(net.minecraft.world.level.material.MapColor.METAL)
+                    .strength(3.5F)
+                    .requiresCorrectToolForDrops()
+                    .sound(SoundType.METAL)
+                    .noOcclusion()
+                    // A piston moving one block would strand the rest of the footprint.
+                    .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
+
+    public static final DeferredHolder<Block, AssemblingMachinePartBlock> ASSEMBLING_MACHINE_PART =
+            BLOCKS.registerBlock("assembling_machine_part", props -> new AssemblingMachinePartBlock(props
+                    .mapColor(net.minecraft.world.level.material.MapColor.METAL)
+                    .strength(3.5F)
+                    .requiresCorrectToolForDrops()
+                    .sound(SoundType.METAL)
+                    .noOcclusion()
+                    .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)
+                    // A part is never obtained on its own; the machine's item is popped in code.
+                    .noLootTable()));
 
     /**
      * One block per {@link OreResource}: Terra's five ore blocks (ADR-0041).
