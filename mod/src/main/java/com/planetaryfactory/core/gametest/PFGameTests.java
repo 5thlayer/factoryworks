@@ -85,6 +85,9 @@ public final class PFGameTests {
             SteamEngineNetworkTests.register(registrar);
             AssemblingMachineTests.register(registrar);
         }
+        if (ModList.get().isLoaded("belts")) {
+            BeltHandoffTests.register(registrar);
+        }
     }
 
     /** What a test file is handed: a name, a tick budget and a body. */

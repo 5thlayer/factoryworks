@@ -142,7 +142,8 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), and `SteamEngineNetworkTests` (#292) and `AssemblingMachineTests` (#327),
-both registered only when Oritech is loaded,
+both registered only when Oritech is loaded, and `BeltHandoffTests` (#342), registered only when the
+pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
 (forcing the graph empty turns it red); that a pole's
@@ -157,6 +158,8 @@ one Fill Recipe can set and it can hold, while a `crafting-with-fluid` one is re
 dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Every one is also held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
 (#330), and a non-assembling id or a locked recipe is refused there with a message and leaves the Held
 recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
+And that the SimpleBelts fork loads and a loader, a belt and a second loader carry a chest's items
+into another chest.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;

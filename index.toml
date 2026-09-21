@@ -34,7 +34,7 @@ hash = "de57352e7ddc74599ff20aa45532831f10240d87a4adfe092958eeea3d65e37f"
 
 [[files]]
 file = "NOTICE"
-hash = "41a28c5e5b1f0b635a6b453eb0449866bad2c48b86d5348e31fb5acae00ed18f"
+hash = "7c824131800fe0c41c0242b6da2dacbf61e90496c6a08787e8bf71dd377c9c61"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -1904,6 +1904,10 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
+file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
+hash = "14be4935be8f6d45f561a398fab501e91fa6e3011cf4cdf375ce7997c3bc6b40"
+
+[[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
 hash = "7a529047843ae51f3068a44d279ce807e48acd8fff268516c0c9fb2715ddd9aa"
 metafile = true
@@ -2051,11 +2055,6 @@ metafile = true
 [[files]]
 file = "mods/searchables.pw.toml"
 hash = "82e084e5fe83f87a01bc7f030f5ca0d59274122e6d634bdcb5d4c9cb3385dd71"
-metafile = true
-
-[[files]]
-file = "mods/simple-conveyor-belts.pw.toml"
-hash = "6c3a6128b9609ec8df175bbec027f0f5938698ae255981e802fe7c60f1cc942a"
 metafile = true
 
 [[files]]

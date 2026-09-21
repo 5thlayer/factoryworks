@@ -19,3 +19,14 @@ Source:  https://github.com/Futureazoo/TextureRepository
          c22b100f1b4c22f7793175310d42e44688ba2e98, copied unmodified and renamed
 Licence: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
          https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+SimpleBelts fork (#342)
+-----------------------
+
+Files:   mods/belts-neoforge-2.0.0-exp1-pf.1.jar (built from the fork, not committed; its sha256
+         is in index.toml)
+Author:  Rearth, with modifications by the Planetary Factory authors
+Source:  https://github.com/Rearth/SimpleBelts, forked at https://github.com/adamico/SimpleBelts
+         branch `planetaryfactory`
+Licence: Creative Commons Attribution 4.0 International
+         https://creativecommons.org/licenses/by/4.0/
