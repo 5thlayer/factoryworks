@@ -10,8 +10,11 @@ Run these steps in order from the repo root.
 1. **Refuse if a client is already running.** Replacing the jar under a live game breaks class
    loading, and the failure looks like a code bug.
 
+   The game runs on CurseForge's bundled Java (`JAVA` in `scripts/launch.py`), not on the
+   Homebrew JDK that Gradle uses, so match that binary and nothing else:
+
    ```bash
-   pgrep -fl java | grep -v -i gradle | grep -i -E "minecraft|neoforge|curseforge"
+   pgrep -fl "curseforge/Install/java/java-runtime-epsilon/Contents/Home/bin/java"
    ```
 
    If this prints anything, stop and ask the user to close the game.
