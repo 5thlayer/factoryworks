@@ -55,7 +55,7 @@
   "gui.planetaryfactory.steam_engine.status.no_steam": "No steam: pipe in steam from a Boiler",
   "gui.planetaryfactory.steam_engine.status.not_in_pole_area": "Not in a pole's area: place a pole beside it",
   "gui.planetaryfactory.steam_engine.status.charge_full": "Charge full: nothing is drawing power",
-  "gui.planetaryfactory.steam_engine.chained": "Chained to a Master Engine; showing its tank",
+  "gui.planetaryfactory.steam_engine.chained": "Chained to a Master Engine; showing its figures",
   "item.planetaryfactory.assembling_machine": "Assembling Machine",
   "item.planetaryfactory.barrel": "Barrel",
   "item.planetaryfactory.barrel.filled": "%s Barrel",

@@ -15,15 +15,13 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
-import snownee.jade.api.JadeIds;
 import snownee.jade.api.WailaPlugin;
 import snownee.jade.api.config.IPluginConfig;
 
 /**
  * The Steam Engine's HUD (#352), which is its only interface: no screen, since there is nothing on
- * an engine to set. The steam tank is Jade's own fluid row, read through the engine's fluid face,
- * which is its Master Engine's tank on a slave (ADR-0077). Jade's FE row is dropped: it shows the
- * buffer, which reads as output and is not, and the status already says when it is full.
+ * an engine to set. The tank and the charge are Jade's own rows, read through the engine's faces,
+ * which are its Master Engine's on a slave (ADR-0077).
  */
 @WailaPlugin
 public class SteamEngineJadePlugin implements IWailaPlugin {
@@ -80,10 +78,5 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(TOOLTIP, SteamEngineBlock.class);
-        registration.addTooltipCollectedCallback((box, accessor) -> {
-            if (accessor instanceof BlockAccessor block && block.getBlock() instanceof SteamEngineBlock) {
-                box.getTooltip().remove(JadeIds.UNIVERSAL_ENERGY_STORAGE);
-            }
-        });
     }
 }
