@@ -1,0 +1,27 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "belts:improved_belt",
+      "count": 1
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_biofuel",
+      "amount": 20
+    }
+  ],
+  "results": [
+    {
+      "id": "belts:express_belt",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

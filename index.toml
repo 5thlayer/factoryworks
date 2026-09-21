@@ -254,7 +254,7 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "a3dba0ef5f730be14754c709958fac76daa0eb68979c72a5a03fa952a44f630e"
+hash = "a7e5c133f200cd1e1e36456cc0489d819ac7f51087d171a1578cc6f6dca8496a"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -1393,6 +1393,10 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/engine_unit.json"
 hash = "967914dcda911f7982b780a92024792d59ea3a33605f8bd72ac1c64302c6e458"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/express_transport_belt.json"
+hash = "eef3a89259bc133d5ad49fad5adcd73b4302dbe539d65de1c85a93df2d9d219a"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/fast_transport_belt.json"
 hash = "90d1632f19c642e1ddfd177ffb763034afa5928728b87b730346a1825b913bf0"
 
@@ -1898,7 +1902,7 @@ hash = "f1c8fa34394e1b68631dac2ebce5eadda5915fc000df32ce84b494399ba6f6a6"
 
 [[files]]
 file = "kubejs/server_scripts/researchd.js"
-hash = "25adac97a07f9fa23d4ab40c24ae4a85bdd7aafa2282d179e0a43985b4ff4dc2"
+hash = "aecd79ada9a8bf96b13a70172ec3c26c03c6e41b6179320cd1a80257e9997d09"
 
 [[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
@@ -1937,7 +1941,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "137ad7eaef9f362ceb2265854da9d21a6776bf874f0eccaf549444840739b6ef"
+hash = "ccc1ab1e70b58689ee3302148db1b34631225d354d98049c1475ca169ebca4ee"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"

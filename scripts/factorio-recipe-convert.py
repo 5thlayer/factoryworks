@@ -25,6 +25,8 @@ WHAT STOPS A RECIPE BEING EMITTED, in the order it is checked:
   5. it touches an `undecided` item-map row -- blocked on the decision that row names
   6. an override says `skip`             -- a departure, with its reason
 
+An item-map row marked `outside_corpus` has no corpus recipe to stop; it is reported as a skip too.
+
 A Factorio name with NO item-map row at all is none of these: it is a HARD FAILURE (#72), because
 a name nobody has looked at must never be quietly skipped.
 
@@ -331,6 +333,10 @@ def main():
                                 "category-map.json names a type this converter cannot shape")
                 continue
             emitted[emitted_path(recipe_type, name)] = convert(recipe, items, override)
+
+    for name, row in sorted(items.items()):
+        if "outside_corpus" in row:
+            skipped.append((name, "outside the corpus", row["outside_corpus"]))
 
     if failures:
         for failure in failures:

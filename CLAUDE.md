@@ -165,12 +165,14 @@ dropping the field from `saveAdditional` turns the first red. The codec itself i
 (#330), and a non-assembling id or a locked recipe is refused there with a message and leaves the Held
 recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
 And that the SimpleBelts fork loads and a loader, a belt and a second loader carry a chest's items
-into another chest -- at exactly 15 items/s at tier 1, and that a backed-up 64-block belt holds 512
-(#344). Both figures are typed, `tests/factorio/test_logistics_extract.py` derives them from
+into another chest -- at exactly 15, 30, 45 and 60 items/s at tiers 1 to 4 (#345), and that a
+backed-up 64-block belt holds 512 (#344). The figures are typed, `tests/factorio/test_logistics_extract.py` derives them from
 Factorio's belt prototypes, and the 64-block belt stands on the generator's second template,
-`long_platform`. The belt model itself is Minecraft-free and unit-tested in the fork
-(`BeltContentsTest`). Typing 14 or 511 turns the matching test red, and the capacity is read once
-after the belt settles, because polled it passes on the way through 511.
+`long_platform`. The belt model and the tier table are Minecraft-free and unit-tested in the fork
+(`BeltContentsTest`, `BeltTierTest`). Typing 44 or 511 turns the matching test red, and the capacity is read once
+after the belt settles, because polled it passes on the way through 511. And that no `belts:`
+recipe survives the stock-recipe sweep, against the pack's express belt recipe as a control;
+matching the pack's own namespace instead turns it red.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;

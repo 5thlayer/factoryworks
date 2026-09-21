@@ -136,8 +136,11 @@ def check_item_map(items, corpus, failures):
     referenced = {e["name"] for r in corpus for e in r["ingredients"] + r["results"]}
     for name in sorted(referenced - set(items)):
         failures.append(f"item map has no row for {name} -- a hard failure, not a skip (#72)")
-    for name in sorted(set(items) - referenced):
+    outside = {name for name, row in items.items() if "outside_corpus" in row}
+    for name in sorted(set(items) - referenced - outside):
         failures.append(f"item map row {name} names nothing in the corpus")
+    for name in sorted(outside & referenced):
+        failures.append(f"item map row {name} is marked outside_corpus, and the corpus names it")
 
     registered = first_party_items()
     for name, row in sorted(items.items()):

@@ -14,8 +14,8 @@ re-runs it. Every figure the fork and its GameTest type is re-derived from the c
     swing's joules come from the rule under `documented.swing`, which must reproduce the wiki's
     own table, and are divided by the hand size. Tier 1 is built from the burner inserter and
     draws no power.
-  - **the GameTest's typed figures.** `BeltHandoffTests` types 15 items a second and 512 rather
-    than reading them off the fork; they are asserted here against the derivation.
+  - **the GameTest's typed figures.** `BeltHandoffTests` types each tier's items a second and 512
+    rather than reading them off the fork; they are asserted here against the derivation.
 """
 
 import json
@@ -163,10 +163,10 @@ def main():
                             f"{EXPECTED_DRAIN_FE_PER_SECOND[tier]}")
 
     source = GAMETEST.read_text(encoding="utf-8")
-    for name, want in (("TIER_1_ITEMS_PER_SECOND", rates.get("transport-belt")),
-                       ("LONG_BELT_BLOCKS", LONG_BELT_BLOCKS),
-                       ("LONG_BELT_HOLDS", holds),
-                       ("BELT_TIER", 1)):
+    typed_rates = [(f"TIER_{tier}_ITEMS_PER_SECOND", rates.get(belt_name))
+                   for tier, belt_name in enumerate(EXPECTED_ITEMS_PER_SECOND, start=1)]
+    for name, want in typed_rates + [("LONG_BELT_BLOCKS", LONG_BELT_BLOCKS),
+                                     ("LONG_BELT_HOLDS", holds)]:
         typed = typed_int(source, name)
         if typed != want:
             failures.append(f"BeltHandoffTests types {name} = {typed}, the corpus derives {want}")
