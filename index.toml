@@ -250,7 +250,7 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "3ba102853b3134d76e168305bfb415db1187cb5aaa02fa5488efacdb21062892"
+hash = "c97bcda865bc21cd3a99454e1acac23b9c12ded475b50cca8e9f129a5424d96c"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
