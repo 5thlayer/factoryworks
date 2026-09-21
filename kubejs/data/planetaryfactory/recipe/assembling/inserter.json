@@ -1,0 +1,25 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "id": "belts:improved_chute",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

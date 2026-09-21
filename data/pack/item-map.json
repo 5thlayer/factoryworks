@@ -134,14 +134,16 @@
       "ticket": 224
     },
     "bulk-inserter": {
-      "status": "undecided",
-      "note": "As `inserter`.",
-      "ticket": 102
+      "kind": "item",
+      "target": "belts:turbo_chute",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-4 loader, crafted from the bulk inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "burner-inserter": {
-      "status": "undecided",
-      "note": "As `inserter`.",
-      "ticket": 102
+      "kind": "item",
+      "target": "belts:chute",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-1 loader, crafted from the burner inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "burner-mining-drill": {
       "kind": "item",
@@ -323,9 +325,10 @@
       "note": "Create owns item logistics (ADR-0017) and ships ONE belt: speed comes from the drivetrain's RPM, not from a faster belt item, so Factorio's three-tier ladder has no item to land on. A splitter is a funnel-and-belt arrangement and an underground belt is a belt under a block -- both are shapes the player builds, not blocks the player crafts."
     },
     "fast-inserter": {
-      "status": "undecided",
-      "note": "As `inserter`.",
-      "ticket": 102
+      "kind": "item",
+      "target": "belts:express_chute",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-3 loader, crafted from the fast inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "fast-splitter": {
       "status": "native_mechanic",
@@ -424,9 +427,10 @@
       "ticket": 114
     },
     "inserter": {
-      "status": "undecided",
-      "note": "Can Create's Mechanical Arm be Factorio's inserter?",
-      "ticket": 102
+      "kind": "item",
+      "target": "belts:improved_chute",
+      "source": "borrowed",
+      "note": "The SimpleBelts fork's tier-2 loader, crafted from the inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "iron-chest": {
       "kind": "item",
@@ -506,9 +510,8 @@
       "blocked_by": 251
     },
     "long-handed-inserter": {
-      "status": "undecided",
-      "note": "As `inserter`.",
-      "ticket": 102
+      "status": "not_emitted",
+      "note": "Excluded by ADR-0076 (#347): the pack's inserter is a loader, which has no swing arm to lengthen, so a long-handed tier would be a loader with nothing to distinguish it. docs/factorio-mechanics.md records the row as `excluded`."
     },
     "low-density-structure": {
       "kind": "item",

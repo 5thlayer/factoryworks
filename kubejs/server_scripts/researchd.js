@@ -136,6 +136,7 @@ fromFactorio('electronics', {
   unlocks: [
     'planetaryfactory:assembling/copper_cable',
     'planetaryfactory:assembling/electronic_circuit',
+    'planetaryfactory:assembling/inserter',
     'planetaryfactory:assembling/lab',
     'planetaryfactory:assembling/small_electric_pole'
   ]
@@ -260,4 +261,18 @@ fromFactorio('logistics-2', {
 fromFactorio('logistics-3', {
   icon: 'belts:express_belt',
   unlocks: ['planetaryfactory:assembling/express_transport_belt']
+});
+
+// ---------------------------------------------------------------------------------------------
+// LOADER TIERS (#347, ADR-0076). The burner inserter's recipe is unlocked from the start, as in
+// Factorio, and `electronics` grants the inserter's above.
+
+fromFactorio('fast-inserter', {
+  icon: 'belts:express_chute',
+  unlocks: ['planetaryfactory:assembling/fast_inserter']
+});
+
+fromFactorio('bulk-inserter', {
+  icon: 'belts:turbo_chute',
+  unlocks: ['planetaryfactory:assembling/bulk_inserter']
 });
