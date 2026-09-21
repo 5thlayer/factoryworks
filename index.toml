@@ -234,7 +234,7 @@ hash = "9f63c4c3063e5be44ef179df0356903afcfbb6ecd669afd270540c9ed559ddee"
 
 [[files]]
 file = "data/factorio/resource.json"
-hash = "2f00501921af88bf6de3d1f3760e13278ee4caf771d5262627d90d1e90f8cc77"
+hash = "a6e5c53fe564f8d5dd43830d3060adbe057baa1fea8f63aa394b14d1a3a2021d"
 
 [[files]]
 file = "data/factorio/science_packs.json"
@@ -254,7 +254,7 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "a7e5c133f200cd1e1e36456cc0489d819ac7f51087d171a1578cc6f6dca8496a"
+hash = "404337703c82f6b98ea234d6b9488613352b62bb4898efe93a9d0c4ba825161f"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -1369,6 +1369,14 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/boiler.json"
 hash = "9ad3efebc7fa977f6f4ed8920933d8e89fa96293af64afd9a091d83cc293fe69"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/bulk_inserter.json"
+hash = "fe6b7038d01034296724ccbf2735d841f752859e6ecee553c315097ebfff44a5"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/burner_inserter.json"
+hash = "6beb50e5b1ad37f5fedd51146d40c519640d2d1b05ff5adeea316286213080d0"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/burner_mining_drill.json"
 hash = "b026ceec870e03e3a970a2d53634018dabafd4291e4737524cdb9571a610606f"
 
@@ -1405,12 +1413,20 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/express_transport_belt.js
 hash = "eef3a89259bc133d5ad49fad5adcd73b4302dbe539d65de1c85a93df2d9d219a"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/fast_inserter.json"
+hash = "430eb9f9729d73571d2edb2c471fdc64ad66d86f2ba695c9d6bb18a9dd228d1a"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/fast_transport_belt.json"
 hash = "90d1632f19c642e1ddfd177ffb763034afa5928728b87b730346a1825b913bf0"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/hazard_concrete.json"
 hash = "b5aa9d1e2f57b4c024d8ad53edfde39611c02d096ce59cd03ca6c829ff4e773d"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/inserter.json"
+hash = "db4d07c19e22fc1ced542f069d1be399f3f4b5b0345bb6382683ef7f69b8fb44"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/iron_chest.json"
@@ -1910,7 +1926,7 @@ hash = "f1c8fa34394e1b68631dac2ebce5eadda5915fc000df32ce84b494399ba6f6a6"
 
 [[files]]
 file = "kubejs/server_scripts/researchd.js"
-hash = "aecd79ada9a8bf96b13a70172ec3c26c03c6e41b6179320cd1a80257e9997d09"
+hash = "ea5fdf9bc64c129c12458e6dbd6cb3b90f4c52e6cddae4962354ebc10b8e0952"
 
 [[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
@@ -1949,7 +1965,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "37977cac985c1b3fb579542e6f7152571263fa64c4d78d4cb63f86d0a5027cb2"
+hash = "aa02323d560ae655139da7ca05df90572f8f8082c1dd6be6c570d147e5e50a20"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
