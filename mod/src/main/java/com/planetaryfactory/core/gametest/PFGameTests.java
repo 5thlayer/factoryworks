@@ -90,6 +90,7 @@ public final class PFGameTests {
         if (ModList.get().isLoaded("oritech")) {
             SteamEngineNetworkTests.register(registrar);
             AssemblingMachineTests.register(registrar);
+            FootprintBreakTests.register(registrar);
         }
         if (ModList.get().isLoaded("belts")) {
             BeltHandoffTests.register(registrar);

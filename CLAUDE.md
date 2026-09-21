@@ -141,8 +141,8 @@ classpath too. Oritech, Railcraft Reborn, SimpleBelts and FTB Materials are ther
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
-`BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292) and `AssemblingMachineTests` (#327),
-both registered only when Oritech is loaded, and `BeltHandoffTests` (#342), registered only when the
+`BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
+and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -152,9 +152,13 @@ transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 
 starved one freezes where it stood; that an Electric Mining Drill reached only through its part
 blocks is one machine, draws 45 FE/t, mines when fed and freezes when starved (making the part its
 own energy owner, returning false from `pay`, or dropping the journal each turn one red); and that power crosses a wire between linked poles, stops
-beyond reach, and stops again when the link is broken. And that a pole reaching only a slave Steam Engine and its
-hull draws the whole row's 1,350 FE/t from the master, once, feeding neither -- `SupplyScanTest` holds
-the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red. And that an Assembling Machine's Held recipe survives its save hook and
+beyond reach, and stops again when the link is broken. And that a pole reaching only a slave Steam Engine's
+parts draws the whole row's 1,350 FE/t from the master, once, feeding neither -- `SupplyScanTest` holds
+the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red --
+and that the row scan chains an engine whose part, not its anchor, stands in the row; skipping the
+part-to-anchor step turns it red. And that either footprint machine, the Assembling Machine or the
+Steam Engine (ADR-0077), broken at its anchor or at any part leaves none of its blocks standing and
+drops exactly one item; dropping the part's teardown turns the six part tests red. And that an Assembling Machine's Held recipe survives its save hook and
 resolves again after it, that every assembling recipe of tier 1's categories in the server's manager is
 one Fill Recipe can set and it can hold, while a `crafting-with-fluid` one is refused (#331) -- and that changing the recipe hands the inputs back;
 dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Every one is also held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
@@ -508,8 +512,10 @@ is a human check on delivery.
 
 ### Steam Engine check
 
-Oritech's Steam Engine is the pack's engine (#282, ADR-0062), and a mixin
-(`core/mixin/oritech/SteamEngineEntityMixin`) replaces its `tickMaster` and `setupMaster` whole.
+Oritech's Steam Engine entity is the pack's engine (#282, ADR-0062), under the pack's own block,
+`planetaryfactory:steam_engine`, placed and broken as one footprint (#352, ADR-0077), and a mixin
+(`core/mixin/oritech/SteamEngineEntityMixin`) replaces its `tickMaster` and `setupMaster` whole,
+reaching the pack's subclass through inheritance. The HUD's status precedence is `SteamEngineStatusTest`.
 `SteamEngineSpecTest` under `./gradlew :planetaryfactory_core:test` is the arithmetic, read from
 `SteamChainCorpus`: one engine at speed 7 burns 30 mB/s and makes 450 FE/t **over whole ticks** --
 Oritech's `(long)` cast floors 1.5 mB/t to 1, so the spec carries the fraction -- rows are linear, no
@@ -519,7 +525,8 @@ its config is `required: false` because Oritech is an optional dependency: a ren
 warning in the log and an uncalibrated engine, not a crash. A buffer of one tick's output would
 floor a pole-drained row to whole 300 FE millibuckets (1,200 FE/t for three), so the burn keeps
 the millibucket that starts inside the room and carries its overshoot as energy (#292). That an
-engine chains and is pulled by a pole through a slave and its hull is #292's GameTest. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
+engine chains, through a part as well, and is pulled by a pole through a slave's part is
+`SteamEngineNetworkTests`. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
 
 ### Enemy corpus check
 

@@ -17,7 +17,7 @@ whose block entity subclasses Oritech's `SteamEngineEntity`, on the Assembling M
 invisible parts with no block entity, every block of it forwards the anchor's faces and its Jade
 line, and breaking any block removes all four and drops one engine. ADR-0062's arithmetic, chaining
 and curve are unchanged: the mixin reaches the subclass through inheritance. Oritech's own engine is
-recipe-removed and hidden, and the `steam-engine` item-map row names the pack block.
+recipe-removed (hiding it in EMI is #173's, per ADR-0061), and the `steam-engine` item-map row names the pack block.
 
 **Considered: keep Oritech's block and place its cores pre-linked.** The item would put down the
 controller and three `machine_core` blocks already assembled, and a mixin would make breaking a core

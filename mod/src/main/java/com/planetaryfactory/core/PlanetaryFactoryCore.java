@@ -104,6 +104,7 @@ public final class PlanetaryFactoryCore {
             FurnaceClient.register(modBus);
             RigClient.register(modBus);
             com.planetaryfactory.core.machine.client.AssemblingMachineClient.register(modBus);
+            com.planetaryfactory.core.fluid.client.SteamEngineClient.register(modBus);
             // The client extension seam neither fluid registration touches otherwise -- see the
             // class javadoc for why an invisible or missing-texture fluid is the failure this
             // guards against.

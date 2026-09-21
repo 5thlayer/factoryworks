@@ -1,9 +1,9 @@
-package com.planetaryfactory.core.machine;
+package com.planetaryfactory.core.machine.footprint;
 
-import com.planetaryfactory.core.energy.EnergyOwnerBlock;
+import java.util.function.Supplier;
 
 import com.mojang.serialization.MapCodec;
-import com.planetaryfactory.core.PFItems;
+import com.planetaryfactory.core.energy.EnergyOwnerBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,32 +22,37 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
- * One block of the Assembling Machine that is not the anchor (#326).
+ * One block of a {@link FootprintMachine} that is not the anchor.
  *
- * <p>Invisible: Oritech's renderer draws the whole model from the anchor, and this block is the
- * collision and the break target under it. It has no block entity, unlike the rig's part --
- * {@link #PART} and {@link #FACING} together name where the anchor is, so there is nothing to store
- * and nothing that can be lost over a reload.
- *
- * <p>Never held and never placed on its own: no item, no recipe, an empty loot table.
+ * <p>Invisible, since Oritech's renderer draws the whole model from the anchor, and with no block
+ * entity: {@link #PART} and {@link #FACING} together name where the anchor is, so nothing is stored
+ * that a reload could lose. Never held and never placed on its own.
  */
-public class AssemblingMachinePartBlock extends Block implements EnergyOwnerBlock {
+public class FootprintPartBlock extends Block implements EnergyOwnerBlock {
+
+    /** The most parts one footprint may have; the property is declared before any machine is known. */
+    public static final int MAX_PARTS = 3;
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
-    public static final IntegerProperty PART =
-            IntegerProperty.create("part", 1, AssemblingMachineFootprint.PART_COUNT);
+    public static final IntegerProperty PART = IntegerProperty.create("part", 1, MAX_PARTS);
 
-    public static final MapCodec<AssemblingMachinePartBlock> CODEC =
-            simpleCodec(AssemblingMachinePartBlock::new);
+    private final Supplier<FootprintMachine> machine;
+    private final MapCodec<FootprintPartBlock> codec;
 
-    public AssemblingMachinePartBlock(Properties properties) {
+    public FootprintPartBlock(Properties properties, Supplier<FootprintMachine> machine) {
         super(properties);
+        this.machine = machine;
+        this.codec = simpleCodec(props -> new FootprintPartBlock(props, machine));
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, 1));
+    }
+
+    public FootprintMachine machine() {
+        return machine.get();
     }
 
     @Override
     protected MapCodec<? extends Block> codec() {
-        return CODEC;
+        return codec;
     }
 
     @Override
@@ -60,23 +65,18 @@ public class AssemblingMachinePartBlock extends Block implements EnergyOwnerBloc
         return RenderShape.INVISIBLE;
     }
 
-    /** Its anchor's: a hull block is not a machine of its own to a pole (#328). */
+    /** Its anchor's: a part is not a machine of its own to a pole. */
     @Override
     public BlockPos energyOwner(BlockPos pos, BlockState state) {
-        return anchorOf(pos, state);
+        return machine().anchorOf(pos, state);
     }
 
-    public static BlockPos anchorOf(BlockPos pos, BlockState state) {
-        return AssemblingMachineHull.anchorOf(pos, state.getValue(PART), state.getValue(FACING));
-    }
-
-    /** Right-clicking any block of the machine is right-clicking the machine. */
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                                Player player, BlockHitResult hit) {
-        BlockPos anchor = anchorOf(pos, state);
+        BlockPos anchor = machine().anchorOf(pos, state);
         BlockState anchorState = level.getBlockState(anchor);
-        if (!(anchorState.getBlock() instanceof AssemblingMachineBlock)) {
+        if (!machine().isAnchor(anchorState)) {
             return InteractionResult.PASS;
         }
         return anchorState.useWithoutItem(level, player, hit.withPosition(anchor));
@@ -86,14 +86,14 @@ public class AssemblingMachinePartBlock extends Block implements EnergyOwnerBloc
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
                                                boolean movedByPiston) {
-        if (AssemblingMachineHull.inProgress()) {
+        if (FootprintMachine.tearingDown()) {
             return;
         }
-        BlockPos anchor = anchorOf(pos, state);
+        BlockPos anchor = machine().anchorOf(pos, state);
         BlockState anchorState = level.getBlockState(anchor);
-        if (anchorState.getBlock() instanceof AssemblingMachineBlock) {
-            popResource(level, pos, new ItemStack(PFItems.ASSEMBLING_MACHINE.get()));
-            AssemblingMachineHull.teardown(level, anchor, anchorState.getValue(FACING), pos);
+        if (machine().isAnchor(anchorState)) {
+            popResource(level, pos, new ItemStack(machine().item().get()));
+            machine().teardown(level, anchor, anchorState.getValue(FACING), pos);
         }
     }
 }
