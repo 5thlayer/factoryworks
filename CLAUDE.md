@@ -62,31 +62,17 @@ no batch and are not reached by this command; each says above when to run it.
 ### Checks the 26.1.2 move broke
 
 The move to 26.1.2 (ADR-0060) took GregTech and GCyR out and parked every body but Terra under
-`kubejs/parked/`. **Two** checks below fail for that reason alone, and each names the ticket that
-owns clearing it. A failure in one of these is expected; a failure anywhere else is not.
+`kubejs/parked/`. **One** check below fails for that reason alone, and names the ticket that owns
+clearing it. A failure in it is expected; a failure anywhere else is not.
 
 - `tests/flora/test_flora_data.py` — Sapros's data is parked, so the files it reads are gone. Owned
   by **#23**, and it cannot be cleared before Sapros's flora returns.
-- `tests/pack/test_furnace_assets.py` — the Electric tier's textures live in the GTCEu jar. Owned by
-  **#324**, which is the decision about where that art comes from now. The assertion that the
-  textures live *inside the GTCEu jar* is one of the two that make this check the ladder's own, so
-  it is re-speced rather than relaxed. Not #258's: that is the migration spec, and where a departed
-  mod's art comes from is in neither its scope nor its Out of Scope.
-
-  **What is actually unchecked is narrow, and it was measured rather than assumed (#323).** The two
-  failures are `subtests` failures inside `test_every_model_names_textures_that_exist`, on
-  `electric_furnace` and `electric_furnace_on`. All seven of the file's top-level tests pass,
-  including `test_the_electric_tier_does_not_borrow_gregtechs_model_loader` — `subtests` isolates
-  each case, so the rest of the file runs and asserts, and the lit variants, item models, lang keys
-  and loot tables are all still covered. #323 described this file as failing *before* reaching its
-  own subject, with everything past it unchecked; a verbose run says otherwise. Read a claim like
-  that off a run before repeating it.
-
 Two more were on this list and are not any more (#323). `tests/factorio/test_pack_recipes.py` was
 red on the Steel Pick's sprite; #241's decision applied, and both picks now wear vanilla art with no
 generator. `tests/pack/test_starting_kit.py` was red on `gtceu:prospector.lv`; ADR-0056 had already
 ruled the prospector was never canon and ADR-0045 put every ore patch on the surface, so the pocket
-drops it and the charting gesture stays open on #116.
+drops it and the charting gesture stays open on #116. A third, `tests/pack/test_furnace_assets.py`,
+was red on the Electric Furnace's GTCEu textures until #324 gave it art of its own.
 
 `planetaryfactory_core` itself compiles again as of #268, and what that cost is recorded in
 `docs/port/blocked-removals-26.1.2.md`: every class deleted because GregTech left or because the
@@ -108,10 +94,10 @@ after any edit to the trees, the stromatolites or the five biomes.
 `tests/pack/test_furnace_assets.py` asserts the three furnace tiers `FurnaceTier.java` registers
 have their pack-side files: a blockstate covering both `facing` and `lit`, a model per state, an
 item model, a lang key and a loot table. Two of its assertions are the ladder's own rather than
-generic plumbing — the Electric tier's textures are asserted to exist *inside the GTCEu jar*, and
-its model is asserted **not** to declare `"loader": "gtceu:machine"`, which GregTech's model
-provider does not serve for a `planetaryfactory:` block. `tests/pack/test_smelting_type.py` holds
-the recipe type itself: that the pack's recipe class is **not** assignable to vanilla's
+generic plumbing -- the Electric tier wears no texture a burner tier wears, so it reads as a
+different machine at a glance, and every texture it names is in the pack's namespace and credited
+in `NOTICE`, since the art is copied from a CC BY-NC-SA repository (#324).
+`tests/pack/test_smelting_type.py` holds the recipe type itself: that the pack's recipe class is **not** assignable to vanilla's
 `SmeltingRecipe` -- GT's `proxyRecipes` converts that class specifically and would drop the count,
 turning `5 iron_plate -> 1 steel_plate` into a 1:1 with no error and no log line -- that the count
 survives both codecs, and that nothing in the mod reads recipes off vanilla's smelting type. It is
