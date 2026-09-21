@@ -66,13 +66,15 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
 
     /**
      * Oritech's header, drawn as {@code OritechWidgetScreen.addTitle} lays it out: the machine's
-     * icon on a panel tab at the top edge and its name on a panel beside it, right-aligned when
-     * the name is longer than fifteen characters. The icon is Oritech's own large-item render
+     * icon on a panel tab at the top edge and its name on a panel beside it, right-aligned to the
+     * panel's edge when the name is longer than fifteen characters. The icon is Oritech's own large-item render
      * state: a pose-scaled item flickers in 26.1's GUI renderer.
      */
     private void extractTab(GuiGraphicsExtractor graphics) {
         int labelWidth = font.width(NAME) + 10;
-        int combined = ICON_SIZE + labelWidth + 2;
+        // Oritech's combined width leaves out the label's six-pixel gap, so its right-aligned
+        // header ends six pixels past the panel -- into EMI's column. This one counts the gap.
+        int combined = ICON_SIZE + 2 + 6 + labelWidth;
         int x = leftPos + (NAME.getString().length() > 15
                 ? imageWidth - combined
                 : (imageWidth - combined) * 65 / 100);
