@@ -43,8 +43,9 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int LOCKED_TEXT = 0xFFA02020;
 
     private static final int TAB_X = 36;
-    private static final int TAB_SIZE = 26;
-    private static final int TITLE_HEIGHT = 16;
+    private static final int TAB_SIZE = 32;
+    private static final float ICON_SCALE = 1.5f;
+    private static final int TITLE_HEIGHT = 22;
 
     private static final int HELD_X = 8;
     private static final int HELD_Y = 17;
@@ -66,13 +67,18 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         int x = leftPos + TAB_X;
         int y = topPos - TAB_SIZE + 4;
         frame(graphics, x, y, TAB_SIZE, TAB_SIZE);
-        graphics.item(ICON, x + (TAB_SIZE - 16) / 2, y + (TAB_SIZE - 16) / 2);
+        float icon = 16 * ICON_SCALE;
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(x + (TAB_SIZE - icon) / 2, y + (TAB_SIZE - icon) / 2 - 1);
+        graphics.pose().scale(ICON_SCALE, ICON_SCALE);
+        graphics.item(ICON, 0, 0);
+        graphics.pose().popMatrix();
 
         int titleX = x + TAB_SIZE + 2;
-        int titleY = y + 2;
+        int titleY = y + (TAB_SIZE - TITLE_HEIGHT) / 2 - 2;
         int titleWidth = font.width(NAME) + 12;
         frame(graphics, titleX, titleY, titleWidth, TITLE_HEIGHT);
-        graphics.text(font, NAME, titleX + 6, titleY + (TITLE_HEIGHT - 8) / 2, TEXT, false);
+        graphics.text(font, NAME, titleX + 6, titleY + (TITLE_HEIGHT - 2 - 8) / 2, TEXT, false);
     }
 
     @Override
