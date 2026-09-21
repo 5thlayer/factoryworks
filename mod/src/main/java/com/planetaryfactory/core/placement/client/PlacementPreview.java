@@ -1,7 +1,11 @@
 package com.planetaryfactory.core.placement.client;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
@@ -9,6 +13,7 @@ import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.client.SupplyAreaBox;
 import com.planetaryfactory.core.placement.PlacementPlan;
+import com.planetaryfactory.core.placement.PlanHull;
 import com.planetaryfactory.core.placement.Placements;
 
 import net.minecraft.client.Minecraft;
@@ -26,6 +31,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -74,6 +81,7 @@ public final class PlacementPreview {
 
     private static @Nullable Key key;
     private static @Nullable PlacementPlan cached;
+    private static Map<BlockPos, Set<Direction>> outside = Map.of();
 
     private PlacementPreview() {
     }
@@ -91,6 +99,7 @@ public final class PlacementPreview {
                 || hit.getType() != HitResult.Type.BLOCK) {
             key = null;
             cached = null;
+            outside = Map.of();
             return;
         }
         ItemStack stack = player.getMainHandItem();
@@ -98,6 +107,7 @@ public final class PlacementPreview {
         if (key == null || !sameKey(key, now)) {
             key = now;
             cached = Placements.planFor(level, player, InteractionHand.MAIN_HAND, stack, hit);
+            outside = cached == null ? Map.of() : shownFaces(level, cached);
         }
         PlacementPlan plan = cached;
         if (plan == null || plan.blocks().isEmpty()) {
@@ -170,9 +180,9 @@ public final class PlacementPreview {
         PoseStack poseStack = event.getPoseStack();
         SubmitNodeCollector collector = event.getSubmitNodeCollector();
         RandomSource random = RandomSource.create();
-
         for (PlacementPlan.Placed placed : plan.blocks()) {
             BlockPos pos = placed.pos();
+            Set<Direction> shown = outside.getOrDefault(pos, Set.of());
             BlockStateModel model = Minecraft.getInstance().getModelManager()
                     .getBlockStateModelSet().get(placed.state());
             List<BlockStateModelPart> parts = new ArrayList<>();
@@ -192,13 +202,38 @@ public final class PlacementPreview {
                     (pose, buffer) -> {
                         for (BlockStateModelPart part : parts) {
                             emit(buffer, pose, part.getQuads(null), instance);
-                            for (Direction direction : Direction.values()) {
+                            // A quad keyed by a direction is culled against that neighbour, the way
+                            // vanilla culls a placed block's faces; an unkeyed one always draws (#311).
+                            for (Direction direction : shown) {
                                 emit(buffer, pose, part.getQuads(direction), instance);
                             }
                         }
                     });
             poseStack.popPose();
         }
+    }
+
+    /**
+     * The plan's outside faces, less those the world already hides -- a rig's underside against the
+     * ground -- so the preview draws what the placed blocks will (#311).
+     */
+    private static Map<BlockPos, Set<Direction>> shownFaces(ClientLevel level, PlacementPlan plan) {
+        Map<BlockPos, BlockState> states = new HashMap<>();
+        for (PlacementPlan.Placed placed : plan.blocks()) {
+            states.put(placed.pos(), placed.state());
+        }
+        Map<BlockPos, Set<Direction>> faces = new HashMap<>();
+        for (PlanHull.Face face : PlanHull.boundary(states.keySet().stream()
+                .map(pos -> new PlanHull.Cell(pos.getX(), pos.getY(), pos.getZ()))
+                .toList())) {
+            BlockPos pos = new BlockPos(face.cell().x(), face.cell().y(), face.cell().z());
+            Direction direction = Direction.valueOf(face.side().name());
+            BlockState neighbour = level.getBlockState(pos.relative(direction));
+            if (Block.shouldRenderFace(states.get(pos), neighbour, direction)) {
+                faces.computeIfAbsent(pos, at -> EnumSet.noneOf(Direction.class)).add(direction);
+            }
+        }
+        return faces;
     }
 
     private static void emit(com.mojang.blaze3d.vertex.VertexConsumer buffer, PoseStack.Pose pose,

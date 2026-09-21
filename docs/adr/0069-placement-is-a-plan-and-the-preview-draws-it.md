@@ -49,6 +49,13 @@ it draws wires locally; the authoritative answer is still the server's on the cl
 chunk resolves next tick. The plan is cached on the item, the aimed position, the facing and the hit
 face, so a rig's few hundred block checks do not run every frame.
 
+A multiblock draws only the faces on the outside of its plan: a model quad whose cull face touches
+another block of the same plan is skipped, the way the placed blocks cull each other, and so is one
+the world already hides, such as a rig's underside on solid ground (#311). The
+outside follows the footprint, not its bounding box, so a hollow or concave footprint keeps the faces
+around its hole -- the preview promises the shape that will stand. A quad with no cull face always
+draws, so a part whose model is not a full cube can still show inner faces.
+
 Vanilla's white block outline stays as it is. It marks what the player is aiming at, which is still
 true, and suppressing it would be a second render hook for a problem nobody has reported.
 
