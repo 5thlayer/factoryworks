@@ -308,7 +308,7 @@ A recipe inside a Crafting Plan that the team has not researched. The resolver p
 _Avoid_: unavailable recipe, gated
 
 **Assembling Machine**:
-The machine that runs Factorio's crafting recipes, on Oritech's chassis: a `planetaryfactory_core` subclass reusing Oritech's model, energy storage, inventory and addons, and replacing its craft cycle whole (ADR-0071). It runs `planetaryfactory:assembling` (ADR-0063), holds a **Held recipe** rather than matching on input, and is placed as a footprint from one item like every other pack block (ADR-0069). Whether tiers 2 and 3 are further machine blocks or Oritech's speed addons is open (`#295`); ADR-0026's three tiers differing by speed and tint were written against a GregTech chassis that left with ADR-0060. Not Oritech's own Assembler, which is a rival for the same row and is recipe-removed and hidden.
+The machine that runs Factorio's crafting recipes, on Oritech's chassis: a `planetaryfactory_core` subclass reusing Oritech's model, energy storage, inventory and addons, and replacing its craft cycle whole (ADR-0071). It runs `planetaryfactory:assembling` (ADR-0063), holds a **Held recipe** rather than matching on input, and is placed as a footprint from one item like every other pack block (ADR-0069). It comes in three tiers, one block each, at Factorio's speeds and in Factorio's colours; tiers 2 and 3 also craft with a fluid (`#295`). Oritech's addons are not the tier ladder -- what they are is #120's. Not Oritech's own Assembler, which is a rival for the same row and is recipe-removed and hidden.
 _Avoid_: assembler, Oritech assembler, GT assembler, crafter, fabricator
 
 **Held recipe**:
