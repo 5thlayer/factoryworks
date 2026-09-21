@@ -31,17 +31,20 @@ DATA_VERSION = 4790  # 26.1.2, world_version in the client jar's version.json.
 # vertical reach from a machine standing on it, and the pole's own MAX_SEGMENTS column with a block
 # to spare above it, which is what the Placement Preview's column tests need to reach the cap (#297).
 SIZE = (23, 7, 7)
+# A straight 64-block belt, loader to loader, with a chest behind each (#344): 66 long.
+LONG_SIZE = (66, 3, 3)
+TEMPLATES = {"platform.nbt": SIZE, "long_platform.nbt": LONG_SIZE}
 FLOOR = "minecraft:stone"
 
 
-def platform():
+def platform(size):
     """The floor, and nothing else.
 
     Air is left out rather than written as `minecraft:air`: the runner clears the whole bounding
     box to air before placing, so an explicit air block would be 168 entries saying what has
     already happened.
     """
-    width, _, depth = SIZE
+    width, _, depth = size
     blocks = []
     for x in range(width):
         for z in range(depth):
@@ -49,15 +52,16 @@ def platform():
     return blocks
 
 
-def _rendered(size, palette, blocks):
+def _rendered(name, size, palette, blocks):
     """The bytes `write_template` would write, for --check to compare against.
 
     Through a temporary file rather than a buffer, because `nbt.write` takes a path -- and going
     through the same call is the point: a comparison against separately-assembled bytes would be
-    checking this function rather than the writer.
+    checking this function rather than the writer. The file keeps the committed name, since the
+    gzip header records it.
     """
     with tempfile.TemporaryDirectory() as directory:
-        path = os.path.join(directory, "platform.nbt")
+        path = os.path.join(directory, name)
         write_template(path, size, palette, blocks, quiet=True)
         with open(path, "rb") as handle:
             return handle.read()
@@ -76,23 +80,25 @@ def write_template(path, size, palette, blocks, quiet=False):
 
 
 def main():
-    path = os.path.join(STRUCTURES, "platform.nbt")
     if "--check" in sys.argv:
         # The same assertion every other generator's --check makes: that the committed file is the
         # one this script would write. Here it is nearly a formality -- the platform has no input
         # to go stale against, no corpus and no tuning dial, which is why no test file owns it --
         # but a committed binary nobody can re-derive is the thing the rule exists to prevent.
-        if not os.path.exists(path):
-            print("FAIL: %s does not exist; run this script" % os.path.relpath(path, ROOT))
-            return 1
-        want = _rendered(SIZE, [{"Name": FLOOR}], platform())
-        if open(path, "rb").read() != want:
-            print("FAIL: %s is stale; re-run this script" % os.path.relpath(path, ROOT))
-            return 1
-        print("ok: the gametest platform is up to date")
+        for name, size in TEMPLATES.items():
+            path = os.path.join(STRUCTURES, name)
+            if not os.path.exists(path):
+                print("FAIL: %s does not exist; run this script" % os.path.relpath(path, ROOT))
+                return 1
+            want = _rendered(name, size, [{"Name": FLOOR}], platform(size))
+            if open(path, "rb").read() != want:
+                print("FAIL: %s is stale; re-run this script" % os.path.relpath(path, ROOT))
+                return 1
+        print("ok: the gametest platforms are up to date")
         return 0
     os.makedirs(STRUCTURES, exist_ok=True)
-    write_template(path, SIZE, [{"Name": FLOOR}], platform())
+    for name, size in TEMPLATES.items():
+        write_template(os.path.join(STRUCTURES, name), size, [{"Name": FLOOR}], platform(size))
     return 0
 
 

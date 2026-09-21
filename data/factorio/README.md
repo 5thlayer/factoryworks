@@ -40,6 +40,7 @@ scripts/factorio-resource-extract.py
 scripts/factorio-fuel-extract.py
 scripts/factorio-tree-extract.py
 scripts/factorio-enemy-extract.py
+scripts/factorio-logistics-extract.py
 python3 tests/factorio/test_tech_extract.py
 python3 tests/factorio/test_recipe_extract.py
 python3 tests/factorio/test_machine_extract.py
@@ -47,6 +48,7 @@ python3 tests/factorio/test_resource_extract.py
 python3 tests/factorio/test_fuel_extract.py
 python3 tests/factorio/test_tree_extract.py
 python3 tests/factorio/test_enemy_extract.py
+python3 tests/factorio/test_logistics_extract.py
 
 scripts/factorio-fuel-convert.py
 python3 tests/factorio/test_fuel_convert.py
@@ -57,11 +59,11 @@ The last pair is downstream of the extraction rather than part of it: `fuel.json
 onto `data/pack/item-map.json` into the table the mod loads (ADR-0047), so a re-extraction
 that moves a fuel has to be followed by a re-conversion or the game keeps the old table.
 
-All eight extractors read the same dump, so a single `--dump-data` run feeds them. Order
+All nine extractors read the same dump, so a single `--dump-data` run feeds them. Order
 matters: the recipe extractor reads `technology.json`, the machine extractor reads
 `recipe.json` for its scope, and the fluid extractor reads `machine.json` for its scope
 (the fluid names the boiler's own fluid boxes filter on -- see below). The resource and
-tree extractors read only the dump, and the fuel and enemy extractors read `recipe.json`
+tree and logistics extractors read only the dump, and the fuel and enemy extractors read `recipe.json`
 for a flag rather than for a scope -- see below.
 
 The dump lands in `~/Library/Application Support/factorio/script-output/data-raw-dump.json`. The
@@ -292,3 +294,19 @@ effect recording the rule that produced them.
   while ADR-0055 is still deciding what emits; `in_corpus` records the distinction without
   acting on it. The value is a map keyed by pollutant, because Space Age adds `spores`
   beside `pollution` and a biochamber's rate is negative.
+
+- **`logistics.json`** — what the belt fork's rates and a loader's energy are derived from (#344).
+  `belts`, `splitters` and `loaders` are each tier's `speed`, in tiles per Factorio tick, and a
+  splitter's `related_transport_belt`. `inserters` are the five inserter prototypes' swing
+  fields, `energy_per_rotation` and `energy_per_movement` as Factorio's own `5kJ` strings, the
+  `energy_source` type and its `drain` (null for the burner inserter). Nothing is converted:
+  `tests/factorio/test_logistics_extract.py` derives items per second, the 1/8-block spacing,
+  512 per 64 blocks and a loader's FE per item and idle drain from these fields.
+
+  **`documented` is typed, not extracted, and each value carries its source.** Three inputs are
+  engine behaviour rather than prototype data: a belt's eight items per tile (four per lane, two
+  lanes), and, for an inserter's energy per swing, the base hand size (1, and 2 for a `bulk` inserter, which states no `stack_size_bonus`) and the length of
+  the item spike at each end of a swing. The spike is measured -- truncating
+  `0.2 / extension_speed` gives 2 ticks for the fast and bulk inserters, and the game spends 1.
+  `swing` holds the rule and the wiki's per-cycle kJ table the check reproduces from it; the
+  wiki states that table is valid up to 2.0.77, and the dump is 2.1.16.

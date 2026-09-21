@@ -537,26 +537,22 @@ ADR-0029 gives the Assembler speed 1 with durations of `energy_required x 20` un
 ### Transport belts
 
 - **verdict**: `adapted`
-- **notice**: there is one belt and you buy its speed with RPM, so the belt ladder is a
-  power-and-gearing problem rather than three tiers and two research nodes — and the lane-and-tunnel
-  patterns a Factorio player has memorised do not transfer, because most of them are answers to
-  being flat. Routing in Y replaces them (ADR-0044).
+- **notice**: a belt carries Factorio's items per second and holds Factorio's buffer, but in one
+  lane, and a belt is a spline between two loaders rather than a row of tiles — so the
+  lane-and-underground patterns a Factorio player has memorised do not transfer (ADR-0044, ADR-0076).
 - **where**: all bodies
-- **via**: `create`
-- **owner**: ADR-0044, ADR-0017, #93
+- **via**: `belts` (the pack's SimpleBelts fork, ADR-0060)
+- **owner**: ADR-0076, ADR-0044, #341
 
 Sub-rules:
 
-- **Three belt tiers** — `adapted`. There is one belt, and its throughput is the RPM you drive it
-  at, so belt speed is a power-and-gearing decision made per run rather than three craftable tiers
-  bought from the tech tree. Faster belts are therefore never a research unlock here.
-- **Throughput as a ratio budget** — `planned`. Factorio's belt has a known items/s *and* a bounded
-  researched stack multiplier, which is why a ratio is computable; Create's is `RPM/24` entries per
-  second with an items-per-entry that is whatever the upstream inserter handed over, unbounded to 64
-  and surfaced nowhere. ADR-0044 defers the target to play — the question is whether a single belt
-  ever bottlenecks a line before the machines do — and names the dials: the `getSpeed() / 480f`
-  divisor in `BeltBlockEntity.getBeltMovementSpeed()` first, `maxRotationSpeed` second. Not
-  `blocked`: the implementation is known, the number is not.
+- **Three belt tiers** — `planned`. The SimpleBelts fork carries four tiers at Factorio's 15, 30, 45
+  and 60 items/s, each a craftable belt bought from the tech tree (ADR-0076); the ladder is #345's.
+  *This entry read `adapted`, against Create's one RPM-driven belt.*
+- **Throughput as a ratio budget** — `shipped` at tier 1. The SimpleBelts fork's belt carries one
+  item per entry at Factorio's 1/8-block spacing and speed, so a tier-1 belt carries exactly
+  15 items/s and a loader loads several entries in a tick when a tier needs more than 20 (#344,
+  ADR-0076). The other three tiers are #345's.
 - **Underground belts** — `excluded`. Not for want of a Create block: undergrounds solve a *weaving*
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
   Minecraft has a Y axis and Create has sloped belt runs, so a belt that must cross another goes
@@ -574,9 +570,9 @@ Sub-rules:
   wide on a plane — what you do when the only free axis runs along the belt. It goes with the
   undergrounds and for the same reason (ADR-0044). *This entry read `by-consequence` of Create
   having no lane model; the ledger now owns a reason of its own.*
-- **Belt as buffer** — `excluded`. A 64-block belt at one item per block holds 64 items where a
-  64-tile yellow belt holds 512. Using belts as storage is a real Factorio idiom and ADR-0044 drops
-  it knowingly rather than by oversight.
+- **Belt as buffer** — `shipped`. A backed-up belt queues from its end at eight items per block, so
+  a 64-block belt holds 512, as a 64-tile yellow belt does (#344). *This entry read `excluded`,
+  against Create's one item per block.*
 
 Together these empty out Factorio's belt research. `logistics-2`, `logistics-3` and
 `turbo-transport-belt` survive in `data/factorio/technology.json`, and between them they buy exactly
