@@ -10,8 +10,8 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
- * The Assembling Machine's footprint (#326): Oritech's assembler model's own extent, 2 wide, 1 deep
- * and 4 tall, in Oritech's controller-local frame.
+ * The Assembling Machine's footprint (#326): Oritech's assembler model's own extent, 4 wide, 1 deep
+ * and 2 tall, in Oritech's controller-local frame.
  *
  * <p>The frame is the load-bearing part. The model is drawn by Oritech's renderer, rotated by the
  * block's facing, and the footprint is rotated by Oritech's {@code Geometry.rotatePosition} with the
@@ -23,16 +23,17 @@ import org.junit.jupiter.api.Test;
 class AssemblingMachineFootprintTest {
 
     @Test
-    void itIsTwoWideOneDeepFourTallWithTheAnchorFirst() {
+    void itIsFourWideOneDeepTwoTallWithTheAnchorFirst() {
         List<Local> offsets = AssemblingMachineFootprint.offsets();
 
-        assertEquals(2 * 1 * 4, offsets.size());
+        assertEquals(4 * 1 * 2, offsets.size());
         assertEquals(new Local(0, 0, 0), offsets.getFirst(), "the anchor is always first");
         assertEquals(offsets.size(), Set.copyOf(offsets).size(), "no position twice");
         for (Local offset : offsets) {
             assertEquals(0, offset.x(), "one deep: nothing in front of or behind the anchor");
-            assertTrue(offset.y() >= 0 && offset.y() < 4, "four tall, standing on the anchor");
-            assertTrue(offset.z() == 0 || offset.z() == 1, "two wide, to one side of the anchor");
+            assertTrue(offset.y() >= 0 && offset.y() < 2, "two tall, standing on the anchor's level");
+            assertTrue(offset.z() >= -1 && offset.z() <= 2,
+                    "four wide: one beside the anchor, two beyond it on the cores' side");
         }
     }
 
@@ -42,6 +43,16 @@ class AssemblingMachineFootprintTest {
         Set<Local> oritechCores = Set.of(new Local(0, 0, 1), new Local(0, 1, 0), new Local(0, 1, 1));
 
         assertTrue(Set.copyOf(AssemblingMachineFootprint.offsets()).containsAll(oritechCores));
+    }
+
+    @Test
+    void oritechsAddonSlotsAreOutsideIt() {
+        // Addons stand beside the machine; a slot inside the footprint is a part, and no addon
+        // could ever be placed on it.
+        Set<Local> footprint = Set.copyOf(AssemblingMachineFootprint.offsets());
+        for (Local slot : AssemblingMachineFootprint.addonSlots()) {
+            assertTrue(!footprint.contains(slot), slot + " is inside the footprint");
+        }
     }
 
     @Test

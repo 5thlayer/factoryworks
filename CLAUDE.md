@@ -178,8 +178,9 @@ refusing one that does. Twelve tests, each checked against the defect it exists 
 to the vanilla plan turns four red, forcing the rig's footprint to always fit turns one red,
 flattening the rig to a single layer turns two more, dropping the pump's water question turns one,
 and giving up on the wrong-tier column walk turns another. The Assembling Machine's two (#326) are
-the rig's pair for its 2x1x4 footprint (ADR-0072): dropping one block from its plan turns the first
-red, and the second's obstruction is its top block, three above the anchor. Three fixtures are load-bearing rather
+the rig's pair for its 4x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
+red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
+after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Three fixtures are load-bearing rather
 than arbitrary -- the wrong-tier column is three tall because on a one-tall column "the top of the
 column" and "just above the block I hit" are the same block, the rig's size is compared against
 `RigGeometry`'s own footprint rather than a floor, and the rig's obstruction sits a block *up*,

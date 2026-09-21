@@ -209,8 +209,8 @@ final class PlacementPlanTests {
 
     /**
      * One taken position refuses the whole machine, and nothing goes down. The obstruction is the
-     * machine's top block, three above the anchor: the one a player aiming at the floor is least
-     * likely to see.
+     * block above the anchor, in the machine's upper row, rather than on the ground the player is
+     * aiming at.
      */
     private static void assemblingMachineRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(AssemblingMachineFootprint.TALL - 1), Blocks.STONE);
