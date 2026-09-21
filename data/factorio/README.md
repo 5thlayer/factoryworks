@@ -257,6 +257,22 @@ effect recording the rule that produced them.
   a later body siting outfield veins. **Scope is the six resources that function places**;
   `skipped` names the other planets' six, which have no starting patch to read.
 
+  **`outfield` is each resource's regular spot (#317).** The four values ADR-0045 found
+  missing are here: `random_spot_size_minimum`/`maximum`, `regular_rq_factor` and
+  `regular_blob_amplitude_multiplier` are arguments each `default-<name>-patches` passes,
+  and `regular_blob_amplitude_maximum_distance` is a local expression of the patch
+  function, evaluated per resource to 1600. `outfield_expressions` carries that expression,
+  the spot's quantity expression and its radius -- `min(32, regular_rq_factor * quantity ^
+  (1/3))`, which the dump holds only as an argument inside `regular_patches`. `mean_spacing`
+  is one spot per `1e6 / base_spots_per_km2` blocks², square-rooted: ~632 for the four
+  starting ores, ~894 for uranium. `law` tabulates density, spot quantity, radius, peak
+  height and blob amplitude at eight distances, evaluated out of the dump's own
+  expressions. `random_penalty_between` is a per-spot draw and is taken at its midpoint,
+  which is what Factorio's own `regular_spot_height_typical_at` does. Past 1600 blocks
+  every column is flat: the spot stops growing where the richness term starts rising.
+  `--check` re-extracts and diffs both output files, and
+  `tests/factorio/test_resource_extract.py` re-derives every `law` row from a closed form.
+
 - **`enemy.json`** -- Terra's enemies, the turrets that shoot them and the entities whose
   emission feeds them (ADR-0055). Ten sections: `units`, `spawners`, `worms`, `turrets`,
   `walls`, `ammo`, `emissions`, and the four map-settings blocks `enemy_evolution`,

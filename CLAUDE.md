@@ -182,6 +182,9 @@ and refuses a player holding four with nothing charged, and that breaking either
 player's game mode puts those five and every item on the belt into the breaker's inventory and
 leaves the other loader standing and free. A charge of one item or a refund dropped on the ground
 turns all four red. The rounding is the fork's `BeltCostTest`.
+And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
+that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
+Both were red on upstream's filter, which the off hand reset.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;

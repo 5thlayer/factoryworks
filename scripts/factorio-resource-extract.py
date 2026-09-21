@@ -19,6 +19,13 @@ Three things are read, and nothing is decided:
     the arithmetic saying Factorio does not reward leaving early. The outfield law --
     `regular_density_at`, with its three radii -- is closed-form in the same function and
     comes across whole, so a later body siting outfield veins reads it here.
+  - **The outfield spot.** The four values the outfield law names and the committed functions
+    did not carry: `random_spot_size_minimum`/`maximum`, `regular_rq_factor` and
+    `regular_blob_amplitude_multiplier` are arguments each `default-<name>-patches` passes,
+    and `regular_blob_amplitude_maximum_distance` is a local expression, evaluated per
+    resource. The law they feed -- a spot's quantity, radius, peak height and blob amplitude
+    against distance, and the mean spacing -- is evaluated here out of the dump's own
+    expressions and re-derived from a closed form by the check (#317).
   - **The hand-mining numbers.** Each resource's `minable.mining_time`, the character's own
     `mining_speed`, and what `steel-axe` adds to it. ADR-0039 labelled these as *transcribed
     from the wiki, not extracted*, because `data/factorio/` held no resource dump and so
@@ -57,10 +64,12 @@ Usage:
 
     scripts/factorio-resource-extract.py            # finds the dump, writes both files
     scripts/factorio-resource-extract.py --dump PATH
+    scripts/factorio-resource-extract.py --check    # exits 1 if either file is stale
 """
 
 import argparse
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -96,6 +105,23 @@ CARRIED_CONSTANTS = (
     "double_density_distance",
     "starting_patches_split",
 )
+
+# The per-resource arguments the outfield spot reads (ADR-0045).
+OUTFIELD_ARGUMENTS = (
+    "random_spot_size_minimum",
+    "random_spot_size_maximum",
+    "regular_rq_factor",
+    "regular_blob_amplitude_multiplier",
+)
+
+# The local expressions the outfield spot reads. The radius has no name of its own in the
+# dump: it is the `spot_radius_expression` argument inside `regular_patches`.
+OUTFIELD_LOCALS = ("regular_blob_amplitude_maximum_distance", "regular_spot_quantity_expression")
+RADIUS_SOURCE = ("regular_patches", "spot_radius_expression")
+
+# Where the law is tabulated: the three radii's edges, the richness crossover and two points past
+# it, so a reader sees the spot stop growing where the richness term starts.
+LAW_DISTANCES = (0, 150, 300, 450, 1000, 1600, 3000, 10000)
 
 # Terra's alphabet (ADR-0041), and the Factorio resource each pack ore block reads its amounts
 # from. The keys are the pack's block names and the values are Factorio's, which is ADR-0028's
@@ -169,6 +195,95 @@ def distance_law(richness_expression):
     }
 
 
+def call_argument(expression, name):
+    """The text of one `name = ...` argument inside a `f{...}` call, up to its top-level comma."""
+    start = expression.index(name + " = ") + len(name) + 3
+    depth = 0
+    for index in range(start, len(expression)):
+        char = expression[index]
+        if char in "({":
+            depth += 1
+        elif char in ")}":
+            if depth == 0:
+                return expression[start:index].strip()
+            depth -= 1
+        elif char == "," and depth == 0:
+            return expression[start:index].strip()
+    return expression[start:].strip()
+
+
+def noise_evaluator(functions, bindings):
+    """Evaluate a Factorio noise expression string against one resource's arguments.
+
+    `random_penalty_between(min, max, 1)` is a per-spot random draw; it is taken at its midpoint,
+    `(min + max) / 2`, which is what Factorio's own `regular_spot_height_typical_at` uses.
+    """
+    scope = {
+        "pi": math.pi,
+        "min": min,
+        "max": max,
+        "clamp": lambda value, low, high: min(max(value, low), high),
+        "_if": lambda condition, then, otherwise: then if condition else otherwise,
+        "random_penalty_between": lambda low, high, _seed: (low + high) / 2,
+    }
+    scope.update(bindings)
+
+    def compile_(expression):
+        return re.sub(r"\bif\(", "_if(", str(expression)).replace("^", "**")
+
+    def value(expression, **extra):
+        return eval(  # noqa: S307 -- the expression is the dump's, and the names are bound here
+            compile_(expression), {"__builtins__": {}}, {**scope, **extra}
+        )
+
+    def function(body):
+        return lambda *args: value(body["expression"], **dict(zip(body["parameters"], args)))
+
+    for name, body in functions.items():
+        scope[name] = function(body)
+    return value
+
+
+def outfield(arguments, locals_, functions, radius_expression):
+    """One resource's outfield spot: its four arguments and the law they feed."""
+    constants = {key: number(locals_.get(key)) for key in CARRIED_CONSTANTS}
+    bindings = {name: number(arguments.get(name)) for name in OUTFIELD_ARGUMENTS}
+    bindings.update(
+        base_density=number(arguments.get("base_density")),
+        base_spots_per_km2=number(arguments.get("base_spots_per_km2")),
+        has_starting_area_placement=number(arguments.get("has_starting_area_placement")),
+        frequency_multiplier=DEFAULT_CONTROL,
+        size_multiplier=DEFAULT_CONTROL,
+        **{key: constant for key, constant in constants.items() if constant is not None},
+    )
+    reach = noise_evaluator(functions, bindings)(locals_["regular_blob_amplitude_maximum_distance"])
+    bindings["regular_blob_amplitude_maximum_distance"] = reach
+    value = noise_evaluator(functions, bindings)
+
+    def at(distance):
+        quantity = value(locals_["regular_spot_quantity_expression"], distance=distance)
+        return {
+            "distance": distance,
+            "density": value("regular_density_at(distance)", distance=distance),
+            "spot_quantity": quantity,
+            "spot_radius": value(
+                radius_expression, distance=distance, regular_spot_quantity_expression=quantity
+            ),
+            "spot_height": value("regular_spot_height_typical_at(distance)", distance=distance),
+            "blob_amplitude": value("regular_blob_amplitude_at(distance)", distance=distance),
+        }
+
+    spots_per_block = value(
+        "regular_density_at(distance) / regular_spot_quantity_base_at(distance)", distance=reach
+    )
+    return {
+        **{name: bindings[name] for name in OUTFIELD_ARGUMENTS},
+        "regular_blob_amplitude_maximum_distance": reach,
+        "mean_spacing": 1 / math.sqrt(spots_per_block),
+        "law": [at(distance) for distance in LAW_DISTANCES],
+    }
+
+
 def hand_mining(dump):
     """The character's mining speed, and the speed `steel-axe` leaves them mining at.
 
@@ -237,6 +352,11 @@ def extract(dump):
     if not formula:
         sys.exit(f"{PATCH_FUNCTION} carries no `starting_amount` expression")
 
+    missing = [key for key in (*OUTFIELD_LOCALS, RADIUS_SOURCE[0]) if key not in locals_]
+    if missing:
+        sys.exit(f"{PATCH_FUNCTION} carries no {', '.join(missing)}")
+    radius_expression = call_argument(locals_[RADIUS_SOURCE[0]], RADIUS_SOURCE[1])
+
     expressions = dump.get("noise-expression") or {}
     resources, skipped = [], []
     laws = {}
@@ -273,6 +393,7 @@ def extract(dump):
                 "stage_counts": stages,
                 "stage_ratios": [count / stages[0] for count in stages] if stages and stages[0] else [],
                 "distance_law": law,
+                "outfield": outfield(arguments, locals_, functions, radius_expression),
             }
         )
 
@@ -292,6 +413,10 @@ def extract(dump):
                 "expression": body.get("expression"),
             }
             for name, body in sorted(functions.items())
+        },
+        "outfield_expressions": {
+            **{key: locals_[key] for key in OUTFIELD_LOCALS},
+            "regular_spot_radius_expression": radius_expression,
         },
         "hand_mining": hand_mining(dump),
         "character_movement": character_movement(dump),
@@ -344,6 +469,11 @@ def main():
         default=REPO / "mod/src/main/resources/planetaryfactory_core/ore/amounts.json",
         help="the slice the mod loads at class-init",
     )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="write nothing; exit 1 if either committed file differs from a fresh extraction",
+    )
     args = parser.parse_args()
 
     if not args.dump.is_file():
@@ -354,13 +484,27 @@ def main():
 
     dump = json.loads(args.dump.read_text(encoding="utf-8"))
     out, laws = extract(dump)
-
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
-
     slice_ = mod_slice(out)
-    args.mod_out.parent.mkdir(parents=True, exist_ok=True)
-    args.mod_out.write_text(json.dumps(slice_, indent=2) + "\n", encoding="utf-8")
+    written = {
+        args.out: json.dumps(out, indent=2) + "\n",
+        args.mod_out: json.dumps(slice_, indent=2) + "\n",
+    }
+
+    if args.check:
+        stale = [
+            path for path, text in written.items()
+            if not path.is_file() or path.read_text(encoding="utf-8") != text
+        ]
+        for path in stale:
+            print(f"stale      {path.relative_to(REPO)} -- re-run scripts/factorio-resource-extract.py")
+        if stale:
+            sys.exit(1)
+        print(f"ok         {len(written)} files match a fresh extraction")
+        return
+
+    for path, text in written.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
 
     print(f"starting amount = {out['starting_amount_formula']}")
     print(
@@ -385,6 +529,16 @@ def main():
             f"{'none' if total is None else f'{total:,.0f}':>15} "
             f"{len(resource['stage_counts']):7}  "
             f"{(resource['distance_law'] or {}).get('term', '-')}"
+        )
+    print()
+    print(f"{'resource':14} {'spacing':>7} {'rq':>5} {'spot size':>10} {'radius':>7} {'height':>8}  at")
+    for resource in out["resources"]:
+        spot = resource["outfield"]
+        far = next(row for row in spot["law"] if row["distance"] >= spot["regular_blob_amplitude_maximum_distance"])
+        print(
+            f"{resource['name']:14} {spot['mean_spacing']:7.0f} {spot['regular_rq_factor']:5} "
+            f"{spot['random_spot_size_minimum']:>4}-{spot['random_spot_size_maximum']:<5} "
+            f"{far['spot_radius']:7.1f} {far['spot_height']:8.0f}  {far['distance']}"
         )
     print()
     for term, count in sorted(laws.items()):

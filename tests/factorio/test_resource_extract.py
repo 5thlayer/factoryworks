@@ -50,10 +50,17 @@ numbers the decision was made on:
     rate; and `water.heat_capacity` (2 kJ) is a red herring that looks like the obvious term
     and is six times too large -- the conversion is governed by *steam's* 0.2 kJ, and using
     water's gives a plausible-looking ~10 units/s instead of 60.
+  - **The outfield spot re-derives (#317).** Each resource's spot -- quantity, radius, peak
+    height and blob amplitude against distance, and the mean spacing -- is recomputed here from
+    a closed form of Factorio's published expressions, spelled independently of the evaluator
+    the extractor runs over the dump, so the two routes agree or one of them is wrong. The
+    spacing's two figures ADR-0045 quotes, ~632 and ~894 blocks, must fall out of
+    `base_spots_per_km2`.
 
 Usage: tests/factorio/test_resource_extract.py
 """
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -109,6 +116,18 @@ STARTING_TOTALS = {
 # Uranium's rounding is the whole reason there is a tolerance; see the module docstring.
 RATIO_TOLERANCE = 0.001
 
+# ADR-0045's quoted mean spacing, keyed by `base_spots_per_km2`: what the derivation must give.
+ADR_SPACING = {2.5: 632, 1.25: 894}
+
+OUTFIELD_ARGUMENTS = (
+    "random_spot_size_minimum",
+    "random_spot_size_maximum",
+    "regular_rq_factor",
+    "regular_blob_amplitude_multiplier",
+)
+
+RADIUS_CAP = re.compile(r"^min\(\s*([0-9.]+)\s*,")
+
 PICK_TIER = "mod/src/main/java/com/planetaryfactory/core/mining/PickTier.java"
 
 # The four resources ADR-0039's flat mining time speaks for. Uranium is excluded on
@@ -128,6 +147,101 @@ def pick_tiers(source):
     }
     time = re.search(r"MINING_TIME\s*=\s*([0-9.]+)f", source)
     return speeds, float(time.group(1)) if time else None
+
+
+def clamp(value, low, high):
+    return min(max(value, low), high)
+
+
+def outfield_failures(data, resources):
+    """Re-derive each resource's outfield spot from a closed form of Factorio's expressions.
+
+    The expressions are `regular_density_at`, `regular_spot_quantity_base_at`,
+    `regular_spot_height_typical_at` and `regular_blob_amplitude_at` in the corpus's
+    `outfield_law`, the spot's radius in `outfield_expressions`, and
+    `regular_blob_amplitude_maximum_distance` there too. None of the resources here has
+    `has_starting_area_placement == -1`, the branch those expressions special-case, so the
+    closed form spells the other branch only.
+    """
+    failures = []
+    constants = data["constants"]
+    controls = data["controls"]
+    frequency, size = controls["frequency_multiplier"], controls["size_multiplier"]
+    starting_radius = constants["starting_resource_placement_radius"]
+    fade_in = constants["regular_patch_fade_in_distance"]
+    doubling = constants["double_density_distance"]
+    reach = doubling + fade_in
+    radius_expression = data["outfield_expressions"]["regular_spot_radius_expression"]
+    cap = RADIUS_CAP.match(radius_expression)
+    if not cap:
+        return [f"the spot radius {radius_expression!r} is no longer min(cap, ...) -- re-derive it"]
+    radius_cap = float(cap.group(1))
+
+    for name in sorted(set(STARTING_PATCH) | set(resources)):
+        spot = (resources.get(name) or {}).get("outfield")
+        if not spot:
+            failures.append(f"{name} carries no outfield spot -- the outfield law cannot be computed")
+            continue
+        missing = [key for key in OUTFIELD_ARGUMENTS if not isinstance(spot.get(key), (int, float))]
+        if missing:
+            failures.append(f"{name}'s outfield spot is missing {', '.join(missing)}")
+            continue
+        resource = resources[name]
+        rq = spot["regular_rq_factor"]
+        typical = (spot["random_spot_size_minimum"] + spot["random_spot_size_maximum"]) / 2
+        per_spot = 1_000_000 / resource["base_spots_per_km2"] / frequency
+
+        def density(distance):
+            fade = clamp((distance - starting_radius) / fade_in, 0, 1)
+            doubled = 1 + clamp((distance - fade_in) / doubling, 0, 1)
+            return resource["base_density"] * frequency * size * fade * doubled
+
+        def height(distance):
+            return (typical * per_spot * density(distance)) ** (1 / 3) / (math.pi / 3 * rq ** 2)
+
+        if spot["regular_blob_amplitude_maximum_distance"] != reach:
+            failures.append(
+                f"{name}'s regular_blob_amplitude_maximum_distance is "
+                f"{spot['regular_blob_amplitude_maximum_distance']}, and "
+                f"double_density_distance + regular_patch_fade_in_distance is {reach}"
+            )
+
+        for row in spot["law"]:
+            distance = row["distance"]
+            quantity = typical * per_spot * density(distance)
+            want = {
+                "density": density(distance),
+                "spot_quantity": quantity,
+                "spot_radius": min(radius_cap, rq * quantity ** (1 / 3)),
+                "spot_height": height(distance),
+                "blob_amplitude": spot["regular_blob_amplitude_multiplier"]
+                * min(height(reach), height(distance)),
+            }
+            for key, value in want.items():
+                if not math.isclose(row[key], value, rel_tol=1e-9, abs_tol=1e-9):
+                    failures.append(
+                        f"{name}'s {key} at {distance} blocks is {row[key]}, and the closed form "
+                        f"of Factorio's expression gives {value}"
+                    )
+
+        spacing = math.sqrt(per_spot)
+        if not math.isclose(spot["mean_spacing"], spacing, rel_tol=1e-9):
+            failures.append(
+                f"{name}'s mean spacing is {spot['mean_spacing']}, and one spot per "
+                f"{per_spot:.0f} blocks² gives {spacing}"
+            )
+        if name not in STARTING_PATCH:
+            continue
+        quoted = ADR_SPACING.get(resource["base_spots_per_km2"])
+        if quoted is None:
+            failures.append(
+                f"{name} places {resource['base_spots_per_km2']} spots/km², which ADR-0045 quotes no "
+                "spacing for"
+            )
+        elif round(spacing) != quoted:
+            failures.append(f"{name}'s mean spacing is {spacing:.0f} blocks, and ADR-0045 quotes ~{quoted}")
+
+    return failures
 
 
 def main():
@@ -363,6 +477,8 @@ def main():
                         "no longer holds against the extracted corpus"
                     )
 
+    failures += outfield_failures(data, resources)
+
     for index, failure in enumerate(failures, 1):
         print(f"FAIL {index}: {failure}")
     if failures:
@@ -370,7 +486,7 @@ def main():
     print(
         f"ok   {len(resources)} resources, {len(staged)} with stages, one distance law "
         f"flat within 1600 tiles; totals re-derive from {formula}; PickTier {bare}/{researched} "
-        f"matches the character; the opening crosses in "
+        f"matches the character; every outfield spot re-derives; the opening crosses in "
         f"{max(float(part) for part in DISTANCES_PATTERN.search((ROOT / TERRA_START).read_text()).group(1).split(',')) / MINECRAFT_WALK_SPEED:.1f}s "
         f"against Factorio's {data['constants']['starting_resource_placement_radius'] / per_second:.1f}s"
     )
