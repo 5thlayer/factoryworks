@@ -792,10 +792,10 @@
     },
     "steam-engine": {
       "kind": "item",
-      "target": "oritech:steam_engine",
-      "source": "borrowed",
-      "note": "Oritech's Steam Engine is the pack's engine (ADR-0062, #282): its block, its chaining, its fill-driven speed and its efficiency curve, with a mixin putting Factorio's rate in place of Oritech's arithmetic -- 30 mB/s and 450 FE/t at the curve's peak, no water returned. The recipe is Factorio's, emitted by the converter; Oritech's own crafting recipe is swept (ADR-0034). Replaces the old `not_emitted` row, which was written against Power Grid's multiblock.",
-      "ticket": 282
+      "target": "planetaryfactory:steam_engine",
+      "source": "authored",
+      "note": "A `planetaryfactory_core` block on Oritech's Steam Engine entity, placed from one item as its whole footprint and broken as one (ADR-0077, #352). Oritech's chaining, fill-driven speed and efficiency curve are kept, with a mixin putting Factorio's rate in place of Oritech's arithmetic -- 30 mB/s and 450 FE/t at the curve's peak, no water returned (ADR-0062). The recipe is Factorio's, emitted by the converter; Oritech's own engine and its crafting recipe are swept (ADR-0034).",
+      "ticket": 352
     },
     "steam-turbine": {
       "status": "undecided",

@@ -254,7 +254,7 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "d8c70f02708f8c78655fcd4264f26680bf96c500e879a3f2e21504669a9d67c0"
+hash = "a3dba0ef5f730be14754c709958fac76daa0eb68979c72a5a03fa952a44f630e"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -361,6 +361,14 @@ file = "kubejs/assets/planetaryfactory/blockstates/small_electric_pole.json"
 hash = "aafb2459a1854047f8e1b3ed657adb65c154b9a2548b9d86c06ce0a3d12b0740"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/steam_engine.json"
+hash = "a66f53fbcd85b26ce3103bf5280012902fa8b359f8b6c144ea9a634a483d8993"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/steam_engine_part.json"
+hash = "a66f53fbcd85b26ce3103bf5280012902fa8b359f8b6c144ea9a634a483d8993"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/blockstates/steel_furnace.json"
 hash = "4f8085c9d70f899ec30e2fed82614c037fd8ca51b4e6f15c8ca81f968c55c011"
 
@@ -437,6 +445,10 @@ file = "kubejs/assets/planetaryfactory/items/small_electric_pole.json"
 hash = "d9531daf0168221d4125917b9defea185ca3edeaaf7aeab28276deb1371b6ca9"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/items/steam_engine.json"
+hash = "132f3d376fc9fc38d2e7f7326e652e7db9d783c11d37b7fe3b0ed01bf5039ddc"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/items/steel_furnace.json"
 hash = "0dc5dd422071b748f04a8fde5f7da8489b514989137824f8c2c42c031c8cd8d2"
 
@@ -454,7 +466,7 @@ hash = "05bb9997ff87c49c5abcfdfb6473458863c4ca61a7f77918c9341c330819807c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
-hash = "ad0c2de7d403ea59f860e792304f2f476f9cab4e2e605fe23419c231b5b27737"
+hash = "47e05c2975a4aef5c3e2849d83d7437b2caf81e6a974ffdb74b8520aed6ce9cf"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/assembling_machine.json"
@@ -669,6 +681,10 @@ file = "kubejs/assets/planetaryfactory/models/block/small_electric_pole.json"
 hash = "9fa9eb73e76daaa3db8d27afbe48c1dcd3915d6486e384e87843681da2d8b8ee"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/models/block/steam_engine.json"
+hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/models/block/steel_furnace.json"
 hash = "b352c4b2852153ee7e05e190a0eeda0ea5fd23f2f902a84de082eb0a942b6b5f"
 
@@ -743,6 +759,10 @@ hash = "0d3638b01ddb0c1d5cff054b6cebe26a297fa44ade1f67943e1be6421ca480ce"
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/item/small_electric_pole.json"
 hash = "78c96bc3d6ac0dd82929214f3b2e741826fd2a461b6acb7833e69201bdfd9f3b"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/models/item/steam_engine.json"
+hash = "fd7956cf358455f8fe7e4e0340af6b798ca4f239f6c29247b7c9ed25a6bff29d"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/item/steel_furnace.json"
@@ -1285,6 +1305,10 @@ file = "kubejs/data/planetaryfactory/loot_table/blocks/small_electric_pole.json"
 hash = "e32c812631aef844ab9d1eaa1ce2336530d874486594c4e370dd7d06acd5381f"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/loot_table/blocks/steam_engine.json"
+hash = "a5ee277591cb371f59772b4dd2054dedd43d663db82bee3a1201bcdd3e1f3273"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/loot_table/blocks/steel_furnace.json"
 hash = "30f7f8f88ff76adb7e582506f213dcae50d45f6323e18d05b151ab3cfb430573"
 
@@ -1454,7 +1478,7 @@ hash = "6f30c38fbed22a06ca95fa8a3d89a3cdb526012b2e43f38ea0a961f0f49d2bd5"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/steam_engine.json"
-hash = "4507304d02404f671d6b98ada3e65ba13e0bb067c2de4b8920939c82dcfb1eef"
+hash = "05d2e64f5b96c487437704cc8de37952f2102d714f36af45fd757ab69fffa54a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/steel_chest.json"
@@ -1586,7 +1610,7 @@ hash = "c60b14abc03d117f0183d09cd271a8b4c263dcbf07ddf92befe9f5266ec36fe4"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/tags/block/generators.json"
-hash = "00c9e3b21577e08e462c8be72aa497697eb5573f52e2dba37d8dd22bd891a108"
+hash = "7bc6f8f7b55863c4d270f518ddfdd480aac926d6de673b5df0562597ee388537"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/tags/worldgen/biome/terra_land.json"

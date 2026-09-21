@@ -9,6 +9,8 @@ import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineFootprint;
+import com.planetaryfactory.core.fluid.SteamEngineBlockEntity;
+import com.planetaryfactory.core.fluid.SteamEngineFootprint;
 import com.planetaryfactory.core.mining.rig.RigCorpus;
 import com.planetaryfactory.core.mining.rig.RigGeometry;
 import com.planetaryfactory.core.mining.rig.RigTier;
@@ -69,6 +71,10 @@ final class PlacementPlanTests {
                 PlacementPlanTests::assemblingMachineMatchesPlacement);
         tests.test("plan_refuses_an_assembling_machine_whole", 20,
                 PlacementPlanTests::assemblingMachineRefusesWhole);
+        tests.test("plan_matches_placement_for_a_steam_engine", 20,
+                PlacementPlanTests::steamEngineMatchesPlacement);
+        tests.test("plan_refuses_a_steam_engine_whole", 20,
+                PlacementPlanTests::steamEngineRefusesWhole);
         tests.test("plan_matches_placement_for_a_boiler", 20,
                 PlacementPlanTests::boilerMatchesPlacement);
         tests.test("plan_refuses_a_pump_on_a_dry_site", 20,
@@ -187,7 +193,7 @@ final class PlacementPlanTests {
     private static void assemblingMachineMatchesPlacement(GameTestHelper helper) {
         PlacementPlan plan = check(helper, new ItemStack(PFItems.ASSEMBLING_MACHINE.get()),
                 FLOOR, Direction.UP, false);
-        int expected = AssemblingMachineFootprint.offsets().size();
+        int expected = AssemblingMachineFootprint.FOOTPRINT.offsets().size();
         if (plan.blocks().size() != expected) {
             helper.fail("an Assembling Machine's plan named " + plan.blocks().size()
                     + " blocks where its footprint is " + expected, FLOOR);
@@ -215,6 +221,38 @@ final class PlacementPlanTests {
     private static void assemblingMachineRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(AssemblingMachineFootprint.TALL - 1), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.ASSEMBLING_MACHINE.get()),
+                FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
+        helper.succeed();
+    }
+
+    /**
+     * The Steam Engine's footprint (ADR-0077), for the Assembling Machine's reasons: the whole of it,
+     * and an anchor still {@code ASSEMBLED} after Oritech's next-tick rescan.
+     */
+    private static void steamEngineMatchesPlacement(GameTestHelper helper) {
+        PlacementPlan plan = check(helper, new ItemStack(PFItems.STEAM_ENGINE.get()),
+                FLOOR, Direction.UP, false);
+        int expected = SteamEngineFootprint.FOOTPRINT.offsets().size();
+        if (plan.blocks().size() != expected) {
+            helper.fail("a Steam Engine's plan named " + plan.blocks().size()
+                    + " blocks where its footprint is " + expected, FLOOR);
+        }
+        BlockPos anchor = plan.blocks().getFirst().pos();
+        if (!(helper.getLevel().getBlockEntity(anchor) instanceof SteamEngineBlockEntity)) {
+            helper.fail("the placed anchor holds no Steam Engine block entity", helper.relativePos(anchor));
+        }
+        helper.runAfterDelay(5, () -> {
+            if (!helper.getLevel().getBlockState(anchor).getValue(MultiblockMachine.ASSEMBLED)) {
+                helper.fail("the anchor lost ASSEMBLED after it was placed", helper.relativePos(anchor));
+            }
+            helper.succeed();
+        });
+    }
+
+    /** One taken position, in the engine's upper row, refuses the whole engine. */
+    private static void steamEngineRefusesWhole(GameTestHelper helper) {
+        helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
+        refusal(check(helper, new ItemStack(PFItems.STEAM_ENGINE.get()),
                 FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }

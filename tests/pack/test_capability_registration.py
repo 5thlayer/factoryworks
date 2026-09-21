@@ -66,6 +66,7 @@ FACES = {
     # Energy (#328): the craft cycle draws FE, and without the face no pole counts the machine.
     # Item (#329): inputs filtered to the Held recipe, on the guard.
     "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item")),
+    "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
 }
 
 # The three ladders, against the enum every one of their blocks has to be walked from. A face is

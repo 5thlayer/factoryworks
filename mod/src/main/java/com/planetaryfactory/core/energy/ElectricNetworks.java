@@ -82,6 +82,15 @@ public final class ElectricNetworks {
         return List.of();
     }
 
+    public boolean drawsFrom(BlockPos generator) {
+        for (SupplyAreaPoleBlockEntity pole : poles.values()) {
+            if (pole.generators().contains(generator)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Forget an unloaded level. A weak key is not enough: the poles held as values point back at
      * their level, so the key would never be collected.

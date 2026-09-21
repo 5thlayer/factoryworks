@@ -810,10 +810,13 @@ Sub-rules:
 Sub-rules:
 
 - **Boiler and steam engine as the first power** — `adapted`. **ADR-0062 (#282) makes it two steps
-  again**: the pack's Boiler makes steam and **Oritech's Steam Engine** burns it into FE, which a
-  pole pulls through the `planetaryfactory:generators` tag. A mixin calibrates the engine to
-  Factorio — 30 mB/s and 450 FE/t per engine at the efficiency curve's peak, no water returned — and
-  keeps Oritech's chaining and fill-driven speed. The history below is superseded where it disagrees.
+  again**: the pack's Boiler makes steam and the **pack's Steam Engine** burns it into FE, which a
+  pole pulls through the `planetaryfactory:generators` tag. **ADR-0077 (#352)** makes the engine
+  `planetaryfactory:steam_engine`, a pack block on Oritech's engine entity, placed from one item as
+  its whole 2x1x2 footprint and broken as one, like the Assembling Machine; Oritech's own engine is
+  swept. A mixin calibrates it to Factorio — 30 mB/s and 450 FE/t per engine at the efficiency
+  curve's peak, no water returned — and keeps Oritech's chaining and fill-driven speed. The history
+  below is superseded where it disagrees.
   *Before ADR-0062:* the chain was **four** steps, not two:
   the **pack's Boiler** burns solid fuel and makes low-temperature steam, the **pack's Steam Engine**
   eats that steam and emits Create rotation, Power Grid's generator assembly turns SU into watts, and

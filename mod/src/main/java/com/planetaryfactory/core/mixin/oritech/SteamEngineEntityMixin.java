@@ -3,7 +3,7 @@ package com.planetaryfactory.core.mixin.oritech;
 import com.planetaryfactory.core.energy.EnergyOwner;
 import com.planetaryfactory.core.fluid.SteamChainCorpus;
 import com.planetaryfactory.core.fluid.SteamEngineSpec;
-import java.util.Optional;
+import com.planetaryfactory.core.machine.footprint.FootprintPartBlock;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -21,10 +21,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import rearth.oritech.block.base.entity.MultiblockGeneratorBlockEntity;
-import rearth.oritech.block.entity.MachineCoreEntity;
 import rearth.oritech.block.entity.generators.SteamEngineEntity;
 import rearth.oritech.config.OritechConfig;
-import rearth.oritech.init.BlockEntitiesContent;
 import rearth.oritech.util.Geometry;
 
 /**
@@ -43,6 +41,7 @@ import rearth.oritech.util.Geometry;
  *   <li><b>{@code setupMaster}</b> is Oritech's scan with one more stop: an engine already answering
  *       to another live master is a boundary, not a slave. Oritech let two masters that received
  *       steam before either scanned both claim the empty engines between them, counting each twice.
+ *       It finds the pack's engine by class and resolves a part to its anchor (ADR-0077).
  * </ul>
  *
  * <p>It is also an {@link EnergyOwner} (#292): a slave holds no FE, so a pole that reaches one draws
@@ -188,17 +187,14 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
             for (int step = 1; step <= MAX_CHAIN_SIZE; step++) {
                 BlockPos at = new BlockPos(Geometry.offsetToWorldPosition(getFacing(),
                         new Vec3i(step * direction, 0, 0), worldPosition));
-                Optional<MachineCoreEntity> core =
-                        level.getBlockEntity(at, BlockEntitiesContent.MACHINE_CORE.get());
-                if (core.isPresent() && core.get().getCachedController() != null) {
-                    at = core.get().getControllerPos();
+                BlockState state = level.getBlockState(at);
+                if (state.getBlock() instanceof FootprintPartBlock part) {
+                    at = part.machine().anchorOf(at, state);
                 }
-                Optional<SteamEngineEntity> found =
-                        level.getBlockEntity(at, BlockEntitiesContent.STEAM_ENGINE.get());
-                if (found.isEmpty()) {
+                // By class, not by Oritech's type: the pack's engine has a type of its own (ADR-0077).
+                if (!(level.getBlockEntity(at) instanceof SteamEngineEntity engine)) {
                     break;
                 }
-                SteamEngineEntity engine = found.get();
                 if (!engine.isAssembled(engine.getBlockState())
                         || !engine.boilerStorage.getInStack().isEmpty()
                         || (engine.inSlaveMode() && engine.master != self)) {

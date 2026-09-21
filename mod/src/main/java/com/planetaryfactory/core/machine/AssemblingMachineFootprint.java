@@ -3,6 +3,9 @@ package com.planetaryfactory.core.machine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.planetaryfactory.core.machine.footprint.Footprint;
+import com.planetaryfactory.core.machine.footprint.Footprint.Local;
+
 /**
  * Where the Assembling Machine stands (#326): two wide, one deep, two tall -- Oritech's own
  * assembler's controller and three cores, placed as one footprint.
@@ -13,12 +16,7 @@ import java.util.List;
  * #326 took the model's extent, so what the player sees and what the player collides with are the
  * same blocks. The divergence from ADR-0059 is recorded in ADR-0072.
  *
- * <p><b>The offsets are in Oritech's controller-local frame</b>: {@code x} forward, {@code y} up,
- * {@code z} lateral, turned into world positions by Oritech's {@code Geometry.rotatePosition} with
- * the block's facing. That is the frame {@code AssemblerBlockEntity.getCorePositions()} is written
- * in, and the renderer rotates the model by the same facing, so the footprint lands where the model
- * is drawn only while it stays in that frame. The three core positions Oritech's own assembler uses
- * are inside it, which {@code AssemblingMachineFootprintTest} asserts.
+ * <p>It holds the three core positions Oritech's own assembler uses, in {@link Footprint}'s frame.
  *
  * <p>Minecraft-free, for the reason {@code RigGeometry} is: this is arithmetic, and the block glue
  * that rotates it into a {@code BlockPos} lives beside the blocks.
@@ -31,25 +29,9 @@ public final class AssemblingMachineFootprint {
     /** The lateral offset of the machine's first column: the anchor's, with the cores' beside it. */
     private static final int FIRST_COLUMN = 0;
 
-    private static final List<Local> OFFSETS = build();
-
-    /** Every block but the anchor. A part's blockstate names which one it is, 1 to this. */
-    public static final int PART_COUNT = OFFSETS.size() - 1;
+    public static final Footprint FOOTPRINT = build();
 
     private AssemblingMachineFootprint() {
-    }
-
-    /** Every position the machine occupies, anchor first. */
-    public static List<Local> offsets() {
-        return OFFSETS;
-    }
-
-    /** The offset of part {@code part}, which is its index into {@link #offsets()}. */
-    public static Local offsetOfPart(int part) {
-        if (part < 1 || part > PART_COUNT) {
-            throw new IllegalArgumentException("a part is numbered 1 to " + PART_COUNT + ", got " + part);
-        }
-        return OFFSETS.get(part);
     }
 
     /**
@@ -61,21 +43,16 @@ public final class AssemblingMachineFootprint {
                 new Local(1, 0, 0));
     }
 
-    private static List<Local> build() {
-        List<Local> offsets = new ArrayList<>(WIDE * TALL);
-        offsets.add(new Local(0, 0, 0));
+    private static Footprint build() {
+        List<Local> parts = new ArrayList<>(WIDE * TALL - 1);
         for (int y = 0; y < TALL; y++) {
             for (int z = FIRST_COLUMN; z < FIRST_COLUMN + WIDE; z++) {
                 if (y == 0 && z == 0) {
                     continue;
                 }
-                offsets.add(new Local(0, y, z));
+                parts.add(new Local(0, y, z));
             }
         }
-        return List.copyOf(offsets);
-    }
-
-    /** One position relative to the anchor, in Oritech's controller-local frame. */
-    public record Local(int x, int y, int z) {
+        return Footprint.of(parts.toArray(Local[]::new));
     }
 }

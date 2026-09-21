@@ -3,19 +3,15 @@ package com.planetaryfactory.core.compat;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
 import com.planetaryfactory.core.machine.AssemblingMachineBlock;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
-import com.planetaryfactory.core.machine.AssemblingMachinePartBlock;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
 import com.planetaryfactory.core.machine.AssemblingStatus;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
-import snownee.jade.api.Accessor;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -119,28 +115,6 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
                 duration <= 0 ? 0 : Math.round(Math.min(progress, duration) * 100F / duration));
     }
 
-    /**
-     * A hull block is read as its anchor, header and icon included. The hull has no block entity
-     * and no item, so without this Jade names "Assembling Machine (part)" with a blank icon (#333).
-     */
-    private static Accessor<?> anchorFor(IWailaClientRegistration registration, Accessor<?> accessor) {
-        if (!(accessor instanceof BlockAccessor block)
-                || !(block.getBlock() instanceof AssemblingMachinePartBlock)) {
-            return accessor;
-        }
-        BlockPos anchor = AssemblingMachinePartBlock.anchorOf(block.getPosition(), block.getBlockState());
-        BlockState anchorState = block.getLevel().getBlockState(anchor);
-        if (!(anchorState.getBlock() instanceof AssemblingMachineBlock)) {
-            return accessor;
-        }
-        return registration.blockAccessor()
-                .from(block)
-                .hit(block.getHitResult().withPosition(anchor))
-                .blockState(anchorState)
-                .blockEntity(block.getLevel().getBlockEntity(anchor))
-                .build();
-    }
-
     @Override
     public void register(IWailaCommonRegistration registration) {
         registration.registerBlockDataProvider(DATA, AssemblingMachineBlockEntity.class);
@@ -149,6 +123,5 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerBlockComponent(TOOLTIP, AssemblingMachineBlock.class);
-        registration.addRayTraceCallback((hit, accessor, original) -> anchorFor(registration, accessor));
     }
 }

@@ -10,7 +10,7 @@ import com.planetaryfactory.core.fluid.OffshorePumpItem;
 import com.planetaryfactory.core.fluid.BarrelSpec;
 import com.planetaryfactory.core.mining.EngineersPick;
 import com.planetaryfactory.core.mining.PickTier;
-import com.planetaryfactory.core.machine.AssemblingMachineItem;
+import com.planetaryfactory.core.machine.footprint.FootprintItem;
 import com.planetaryfactory.core.mining.rig.RigBlockItem;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -62,11 +62,17 @@ public final class PFItems {
             "barrel", props -> new BarrelItem(props.stacksTo(BarrelSpec.STACK_SIZE)));
 
     /**
-     * The Assembling Machine's item (#326). An {@link AssemblingMachineItem}, which places the whole
-     * footprint, rather than {@code registerSimpleBlockItem}, which would place the anchor alone.
+     * The Assembling Machine's item (#326), which places the whole footprint. Scale 0.7 and the
+     * {@code "assembler"} model are the arguments Oritech's own {@code BlockContent} gives it.
      */
-    public static final DeferredHolder<Item, AssemblingMachineItem> ASSEMBLING_MACHINE = ITEMS.registerItem(
-            "assembling_machine", AssemblingMachineItem::new);
+    public static final DeferredHolder<Item, FootprintItem> ASSEMBLING_MACHINE = ITEMS.registerItem(
+            "assembling_machine",
+            props -> new FootprintItem(props, PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT, 0.7f, "assembler"));
+
+    /** The Steam Engine's item (ADR-0077), on Oritech's own {@code steam_engine} model at its 0.7. */
+    public static final DeferredHolder<Item, FootprintItem> STEAM_ENGINE = ITEMS.registerItem(
+            "steam_engine",
+            props -> new FootprintItem(props, PFBlocks.STEAM_ENGINE_FOOTPRINT, 0.7f, "steam_engine"));
 
     /**
      * The Engineer's Pick, in its two tiers (ADR-0039).
@@ -123,6 +129,7 @@ public final class PFItems {
                 props -> new OffshorePumpItem(props)));
         FUNCTIONAL.add(BARREL);
         FUNCTIONAL.add(ASSEMBLING_MACHINE);
+        FUNCTIONAL.add(STEAM_ENGINE);
         // Tools sit with the machinery, not with the saplings: a pick is the first thing a player
         // reaches for and the last place they would look for it is NATURAL_BLOCKS.
         PICKS.values().forEach(FUNCTIONAL::add);

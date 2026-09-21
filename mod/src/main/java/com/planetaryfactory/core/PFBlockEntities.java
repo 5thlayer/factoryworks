@@ -5,9 +5,10 @@ import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerItemHandler;
 import com.planetaryfactory.core.fluid.OffshorePumpBlockEntity;
+import com.planetaryfactory.core.fluid.SteamEngineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineItemHandler;
-import com.planetaryfactory.core.machine.AssemblingMachinePartBlock;
+import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.mining.rig.RigBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigItemHandler;
 import com.planetaryfactory.core.mining.rig.RigPartBlockEntity;
@@ -15,6 +16,7 @@ import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceItemHandler;
 import com.planetaryfactory.core.smelting.FurnaceTier;
+import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.minecraft.core.Direction;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -99,6 +102,15 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(AssemblingMachineBlockEntity::new,
                             java.util.Set.of(PFBlocks.ASSEMBLING_MACHINE.get())));
 
+    /**
+     * The Steam Engine's anchor (ADR-0077): Oritech's engine entity under the pack's own type, which
+     * {@link SteamEngineBlockEntity#getType} answers in place of the one Oritech's constructor names.
+     */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SteamEngineBlockEntity>>
+            STEAM_ENGINE = BLOCK_ENTITIES.register("steam_engine",
+                    () -> new BlockEntityType<>(SteamEngineBlockEntity::new,
+                            java.util.Set.of(PFBlocks.STEAM_ENGINE.get())));
+
     private PFBlockEntities() {
     }
 
@@ -112,6 +124,7 @@ public final class PFBlockEntities {
         registerPumpCapabilities(event);
         registerBoilerCapabilities(event);
         registerAssemblingMachineCapabilities(event);
+        registerSteamEngineCapabilities(event);
     }
 
     /**
@@ -238,41 +251,44 @@ public final class PFBlockEntities {
     }
 
     /**
-     * The Assembling Machine's energy face (#328): Oritech's own buffer, which the craft cycle draws
-     * from, so a supply-area pole counts the machine and fills it.
-     *
-     * <p>Registered on the <b>parts</b> as well as the anchor, for the rig's reason: a pole's area
-     * that covers only part of the footprint must still find the machine. A part has no block entity
-     * and forwards to its anchor's.
-     *
-     * <p>The item face is registered on the parts too, so a belt against a hull block finds it.
+     * The Assembling Machine's energy face (#328), which the craft cycle draws from, and its item
+     * face (#329), each on every block of the footprint.
      */
     private static void registerAssemblingMachineCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlock(
-                Capabilities.Energy.BLOCK,
+        registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                        ? machine.getEnergyLookup(side) : null);
+        registerOnFootprint(event, Capabilities.Item.BLOCK, PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                        ? new AssemblingMachineItemHandler(machine) : null);
+    }
+
+    /**
+     * The Steam Engine's faces (ADR-0077), Oritech's own: the energy a pole pulls and the steam tank
+     * a pipe fills, which on a slave is its master's.
+     */
+    private static void registerSteamEngineCapabilities(RegisterCapabilitiesEvent event) {
+        registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
+                        ? engine.getEnergyLookup(side) : null);
+        registerOnFootprint(event, Capabilities.Fluid.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
+                        ? engine.getFluidLookup(side) : null);
+    }
+
+    /**
+     * A face on the anchor and on every part, the part forwarding to its anchor's block entity: a
+     * pole's area or a pipe that reaches only part of the machine must still find it.
+     */
+    private static <T> void registerOnFootprint(RegisterCapabilitiesEvent event,
+            BlockCapability<T, Direction> capability, FootprintMachine machine,
+            BiFunction<BlockEntity, Direction, T> face) {
+        event.registerBlock(capability,
+                (level, pos, state, blockEntity, side) -> face.apply(blockEntity, side),
+                machine.anchor().get());
+        event.registerBlock(capability,
                 (level, pos, state, blockEntity, side) ->
-                        blockEntity instanceof AssemblingMachineBlockEntity machine
-                                ? machine.getEnergyLookup(side) : null,
-                PFBlocks.ASSEMBLING_MACHINE.get());
-        event.registerBlock(
-                Capabilities.Energy.BLOCK,
-                (level, pos, state, blockEntity, side) ->
-                        level.getBlockEntity(AssemblingMachinePartBlock.anchorOf(pos, state))
-                                        instanceof AssemblingMachineBlockEntity machine
-                                ? machine.getEnergyLookup(side) : null,
-                PFBlocks.ASSEMBLING_MACHINE_PART.get());
-        event.registerBlock(
-                Capabilities.Item.BLOCK,
-                (level, pos, state, blockEntity, side) ->
-                        blockEntity instanceof AssemblingMachineBlockEntity machine
-                                ? new AssemblingMachineItemHandler(machine) : null,
-                PFBlocks.ASSEMBLING_MACHINE.get());
-        event.registerBlock(
-                Capabilities.Item.BLOCK,
-                (level, pos, state, blockEntity, side) ->
-                        level.getBlockEntity(AssemblingMachinePartBlock.anchorOf(pos, state))
-                                        instanceof AssemblingMachineBlockEntity machine
-                                ? new AssemblingMachineItemHandler(machine) : null,
-                PFBlocks.ASSEMBLING_MACHINE_PART.get());
+                        face.apply(level.getBlockEntity(machine.anchorOf(pos, state)), side),
+                machine.part().get());
     }
 }

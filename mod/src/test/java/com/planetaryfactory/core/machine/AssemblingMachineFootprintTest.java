@@ -1,10 +1,9 @@
 package com.planetaryfactory.core.machine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.planetaryfactory.core.machine.AssemblingMachineFootprint.Local;
+import com.planetaryfactory.core.machine.footprint.Footprint.Local;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ class AssemblingMachineFootprintTest {
 
     @Test
     void itIsTwoWideOneDeepTwoTallWithTheAnchorFirst() {
-        List<Local> offsets = AssemblingMachineFootprint.offsets();
+        List<Local> offsets = AssemblingMachineFootprint.FOOTPRINT.offsets();
 
         assertEquals(2 * 1 * 2, offsets.size());
         assertEquals(new Local(0, 0, 0), offsets.getFirst(), "the anchor is always first");
@@ -42,7 +41,7 @@ class AssemblingMachineFootprintTest {
         Set<Local> oritech = Set.of(new Local(0, 0, 0),
                 new Local(0, 0, 1), new Local(0, 1, 0), new Local(0, 1, 1));
 
-        assertEquals(oritech, Set.copyOf(AssemblingMachineFootprint.offsets()));
+        assertEquals(oritech, Set.copyOf(AssemblingMachineFootprint.FOOTPRINT.offsets()));
     }
 
     @Test
@@ -55,25 +54,9 @@ class AssemblingMachineFootprintTest {
     void oritechsAddonSlotsAreOutsideIt() {
         // Addons stand beside the machine; a slot inside the footprint is a part, and no addon
         // could ever be placed on it.
-        Set<Local> footprint = Set.copyOf(AssemblingMachineFootprint.offsets());
+        Set<Local> footprint = Set.copyOf(AssemblingMachineFootprint.FOOTPRINT.offsets());
         for (Local slot : AssemblingMachineFootprint.addonSlots()) {
             assertTrue(!footprint.contains(slot), slot + " is inside the footprint");
         }
-    }
-
-    @Test
-    void aPartIndexNamesItsOffsetAndBack() {
-        List<Local> offsets = AssemblingMachineFootprint.offsets();
-        for (int part = 1; part < offsets.size(); part++) {
-            assertEquals(offsets.get(part), AssemblingMachineFootprint.offsetOfPart(part));
-        }
-        assertEquals(offsets.size() - 1, AssemblingMachineFootprint.PART_COUNT);
-    }
-
-    @Test
-    void theAnchorIsNotAPart() {
-        assertThrows(IllegalArgumentException.class, () -> AssemblingMachineFootprint.offsetOfPart(0));
-        assertThrows(IllegalArgumentException.class,
-                () -> AssemblingMachineFootprint.offsetOfPart(AssemblingMachineFootprint.PART_COUNT + 1));
     }
 }

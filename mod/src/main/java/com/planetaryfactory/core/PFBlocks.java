@@ -2,7 +2,9 @@ package com.planetaryfactory.core;
 
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.machine.AssemblingMachineBlock;
-import com.planetaryfactory.core.machine.AssemblingMachinePartBlock;
+import com.planetaryfactory.core.machine.AssemblingMachineFootprint;
+import com.planetaryfactory.core.machine.footprint.FootprintMachine;
+import com.planetaryfactory.core.machine.footprint.FootprintPartBlock;
 import com.planetaryfactory.core.mining.rig.RigBlock;
 import com.planetaryfactory.core.mining.rig.RigPartBlock;
 import com.planetaryfactory.core.mining.rig.RigTier;
@@ -14,6 +16,8 @@ import com.planetaryfactory.core.energy.CreativeSupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
 import com.planetaryfactory.core.fluid.BoilerBlock;
 import com.planetaryfactory.core.fluid.OffshorePumpBlock;
+import com.planetaryfactory.core.fluid.SteamEngineBlock;
+import com.planetaryfactory.core.fluid.SteamEngineFootprint;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -31,7 +35,7 @@ import java.util.stream.Stream;
 
 /**
  * The blocks the mod itself registers: the two saplings, the pole blocks, the furnace and rig
- * ladders, the Boiler, the pump and the Assembling Machine.
+ * ladders, the Boiler, the pump, the Assembling Machine and the Steam Engine.
  *
  * <p>The supply-area poles are here (ADR-0036) -- the three tiers and the creative pole (#272),
  * which is one block beside the ladder rather than a row in it. They are mechanism -- a block
@@ -72,31 +76,31 @@ public final class PFBlocks {
      * The Assembling Machine (#326, ADR-0071): an Oritech machine anchor and the invisible parts its
      * footprint is made of. One block, not a ladder -- whether tiers 2 and 3 are blocks at all is
      * #295's.
-     *
-     * <p>{@code noOcclusion} on both: the anchor and its parts render nothing themselves (Oritech's
-     * renderer draws the model from the anchor), so a neighbour that culled its face against one of
-     * them would show a hole straight through the machine.
      */
     public static final DeferredHolder<Block, AssemblingMachineBlock> ASSEMBLING_MACHINE =
-            BLOCKS.registerBlock("assembling_machine", props -> new AssemblingMachineBlock(props
-                    .mapColor(net.minecraft.world.level.material.MapColor.METAL)
-                    .strength(3.5F)
-                    .requiresCorrectToolForDrops()
-                    .sound(SoundType.METAL)
-                    .noOcclusion()
-                    // A piston moving one block would strand the rest of the footprint.
-                    .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
+            BLOCKS.registerBlock("assembling_machine", props -> new AssemblingMachineBlock(machineProperties(props)));
 
-    public static final DeferredHolder<Block, AssemblingMachinePartBlock> ASSEMBLING_MACHINE_PART =
-            BLOCKS.registerBlock("assembling_machine_part", props -> new AssemblingMachinePartBlock(props
-                    .mapColor(net.minecraft.world.level.material.MapColor.METAL)
-                    .strength(3.5F)
-                    .requiresCorrectToolForDrops()
-                    .sound(SoundType.METAL)
-                    .noOcclusion()
-                    .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)
-                    // A part is never obtained on its own; the machine's item is popped in code.
-                    .noLootTable()));
+    public static final DeferredHolder<Block, FootprintPartBlock> ASSEMBLING_MACHINE_PART =
+            BLOCKS.registerBlock("assembling_machine_part",
+                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
+                            () -> PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT));
+
+    public static final FootprintMachine ASSEMBLING_MACHINE_FOOTPRINT = new FootprintMachine(
+            AssemblingMachineFootprint.FOOTPRINT, ASSEMBLING_MACHINE, ASSEMBLING_MACHINE_PART,
+            () -> PFItems.ASSEMBLING_MACHINE.get());
+
+    /** Terra's Steam Engine (ADR-0077): Oritech's engine entity, on the Assembling Machine's footprint seam. */
+    public static final DeferredHolder<Block, SteamEngineBlock> STEAM_ENGINE =
+            BLOCKS.registerBlock("steam_engine", props -> new SteamEngineBlock(machineProperties(props)));
+
+    public static final DeferredHolder<Block, FootprintPartBlock> STEAM_ENGINE_PART =
+            BLOCKS.registerBlock("steam_engine_part",
+                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
+                            () -> PFBlocks.STEAM_ENGINE_FOOTPRINT));
+
+    public static final FootprintMachine STEAM_ENGINE_FOOTPRINT = new FootprintMachine(
+            SteamEngineFootprint.FOOTPRINT, STEAM_ENGINE, STEAM_ENGINE_PART,
+            () -> PFItems.STEAM_ENGINE.get());
 
     /**
      * One block per {@link OreResource}: Terra's five ore blocks (ADR-0041).
@@ -170,6 +174,22 @@ public final class PFBlocks {
             RIG_PARTS.put(tier, BLOCKS.registerBlock(tier.partBlockName(),
                     props -> new RigPartBlock(tier, props)));
         }
+    }
+
+    /**
+     * A footprint machine's anchor and parts. {@code noOcclusion}: they render nothing themselves
+     * (Oritech's renderer draws the model from the anchor), so a neighbour that culled its face
+     * against one would show a hole straight through the machine.
+     */
+    private static BlockBehaviour.Properties machineProperties(BlockBehaviour.Properties props) {
+        return props
+                .mapColor(net.minecraft.world.level.material.MapColor.METAL)
+                .strength(3.5F)
+                .requiresCorrectToolForDrops()
+                .sound(SoundType.METAL)
+                .noOcclusion()
+                // A piston moving one block would strand the rest of the footprint.
+                .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK);
     }
 
     private PFBlocks() {

@@ -8,8 +8,6 @@ import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
-import com.planetaryfactory.core.machine.AssemblingMachineHull;
-import com.planetaryfactory.core.machine.AssemblingMachineItem;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
 import com.planetaryfactory.core.machine.AssemblingMachineSpec;
@@ -103,12 +101,12 @@ final class AssemblingMachineTests {
             helper.fail(BOILER + " is not loaded, so the filter has no recipe to filter to", ANCHOR);
             return;
         }
-        BlockPos hull = AssemblingMachineHull.positions(ANCHOR, FACING).stream()
+        BlockPos part = PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT.positions(ANCHOR, FACING).stream()
                 .filter(pos -> !pos.equals(ANCHOR)).findFirst().orElseThrow();
         ItemResource furnace = ItemResource.of(item("planetaryfactory:stone_furnace"));
         ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
         ItemResource stone = ItemResource.of(Items.STONE);
-        for (BlockPos at : List.of(ANCHOR, hull)) {
+        for (BlockPos at : List.of(ANCHOR, part)) {
             ResourceHandler<ItemResource> face = itemFace(helper, at);
             if (face == null) {
                 helper.fail("no item face at " + at, at);
@@ -242,7 +240,7 @@ final class AssemblingMachineTests {
      */
     private static void poleReachingOnlyAHullBlockFindsIt(GameTestHelper helper) {
         placeWhole(helper);
-        List<BlockPos> blocks = AssemblingMachineHull.positions(ANCHOR, FACING);
+        List<BlockPos> blocks = PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT.positions(ANCHOR, FACING);
         BlockPos part = blocks.stream()
                 .filter(pos -> pos.getY() == ANCHOR.getY() && !pos.equals(ANCHOR))
                 .findFirst().orElseThrow();
@@ -269,10 +267,7 @@ final class AssemblingMachineTests {
 
     /** The anchor and its three hull blocks, in the states the item places them in. */
     private static AssemblingMachineBlockEntity placeWhole(GameTestHelper helper) {
-        List<BlockPos> blocks = AssemblingMachineHull.positions(ANCHOR, FACING);
-        for (int i = 0; i < blocks.size(); i++) {
-            helper.setBlock(blocks.get(i), AssemblingMachineItem.stateAt(i, FACING));
-        }
+        PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT.placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), FACING);
         return (AssemblingMachineBlockEntity) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));
     }
 
