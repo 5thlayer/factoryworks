@@ -140,6 +140,22 @@ not the belt-lane micro-puzzle: lane balancing, sushi belts and weaving undergro
 footprint are 2D problems this pack does not have, and ADR-0044 records why.
 _Avoid_: belt puzzle, the logistics game
 
+**Belt**:
+A single link carrying items from one belt end to another along a curve, shaped by supports and paid for at one belt item per block of its length. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per block, so a belt is a buffer as well as a route (ADR-0060).
+_Avoid_: conveyor, belt segment, lane
+
+**Loader**:
+A belt end set against an inventory: it pulls onto the belt from the inventory behind it, or pushes into it. It has tiers of its own that cap what it moves, and from tier 2 it draws power for each item. The pack's inserter; there is no swing arm.
+_Avoid_: chute, inserter, funnel
+
+**Splitter**:
+A block two wide that joins two belts in to two belts out, splitting evenly, merging, and sending everything to one side when the other backs up. It has tiers of its own that cap what it passes, and draws no power.
+_Avoid_: merger, tunnel
+
+**Balancer**:
+A pattern of splitters that spreads several belts evenly across several others. Built by the player, never a block.
+_Avoid_: balancer block
+
 **Launch Terminal**:
 The structure cargo and fuel are loaded into for a journey subject to a travel timer.
 _Avoid_: rocket silo, launch pad, cargo bay
