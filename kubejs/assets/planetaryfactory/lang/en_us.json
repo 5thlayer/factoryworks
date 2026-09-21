@@ -45,7 +45,6 @@
   "gui.planetaryfactory.assembling_machine.draw": "%s FE/t while crafting",
   "gui.planetaryfactory.assembling_machine.status.idle": "Idle: no recipe held",
   "gui.planetaryfactory.assembling_machine.status.processing": "Crafting",
-  "gui.planetaryfactory.assembling_machine.status.disabled": "Disabled: remove the redstone signal",
   "gui.planetaryfactory.assembling_machine.status.locked": "Locked: research this recipe",
   "gui.planetaryfactory.assembling_machine.status.missing_ingredients": "Missing inputs: fill the red slots",
   "gui.planetaryfactory.assembling_machine.status.output_full": "Output full: empty the output slot",

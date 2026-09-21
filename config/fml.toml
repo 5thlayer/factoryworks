@@ -1,7 +1,7 @@
 #Disables File Watcher. Used to automatically update config if its file has been modified.
 disableConfigWatcher = false
 #Shows an early loading screen for mod loading which improves the user experience with early feedback about mod loading.
-earlyWindowControl = true
+earlyWindowControl = false
 #Max threads for early initialization parallelism,  -1 is based on processor count
 maxThreads = -1
 #Enable NeoForge global version checking
@@ -13,7 +13,7 @@ defaultConfigPath = "defaultconfigs"
 #Disables Optimized DFU client-side - already disabled on servers
 disableOptimizedDFU = true
 #Early window provider
-earlyWindowProvider = "fmlearlywindow"
+earlyWindowProvider = "NOOP"
 #Early window width
 earlyWindowWidth = 1024
 #Early window height

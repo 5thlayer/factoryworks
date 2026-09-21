@@ -247,7 +247,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         boolean powered = now.stalled() || energyStorage.getAmountAsLong() >= resolved
                 .map(holder -> nextTickFe(holder.value()))
                 .orElse(0L);
-        return AssemblingStatus.of(disabledViaRedstone, now, powered);
+        return AssemblingStatus.of(now, powered);
     }
 
     private long nextTickFe(AssemblingRecipe recipe) {
