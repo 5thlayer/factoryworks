@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 /**
  * What an Assembling Machine may hold, read off the server's recipe manager (#327).
@@ -73,11 +74,18 @@ public final class AssemblingMachineRecipes {
                 .map(AssemblingMachineRecipes::cast);
     }
 
-    /** What the screen draws for a recipe: its first result. */
-    public static ItemStack icon(ServerLevel level, String id) {
-        return resolve(level, HeldRecipe.of(id))
-                .map(holder -> holder.value().assemble(null))
-                .orElse(ItemStack.EMPTY);
+    /**
+     * What the input slots take, in {@link AssemblingInputSlots}' order: nothing for a fluid recipe,
+     * which this machine has no tank to run.
+     */
+    public static List<SizedIngredient> slotIngredients(AssemblingRecipe recipe) {
+        return recipe.fluidIngredients().isEmpty() ? recipe.ingredients() : List.of();
+    }
+
+    /** Whether input {@code slot} takes {@code stack}, on the server's face and the client's slot alike. */
+    public static boolean accepts(int slot, List<SizedIngredient> slotIngredients, ItemStack stack) {
+        return AssemblingInputSlots.accepts(slot, slotIngredients, stack,
+                (SizedIngredient sized, ItemStack item) -> sized.ingredient().test(item));
     }
 
     @SuppressWarnings("unchecked")

@@ -78,4 +78,31 @@ class AssemblingInputSlotsTest {
     void aSlotOutsideTheInputsIsForNothing() {
         assertEquals(Optional.empty(), AssemblingInputSlots.ingredientFor(-1, List.of("a")));
     }
+
+    private static final List<String> TWO_PLATES_ONE_CABLE = List.of("iron_plate:2", "copper_cable:1");
+
+    private static boolean isShort(int slot, int held) {
+        return AssemblingInputSlots.isShort(slot, TWO_PLATES_ONE_CABLE, held,
+                ingredient -> Integer.parseInt(ingredient.substring(ingredient.indexOf(':') + 1)));
+    }
+
+    @Test
+    void aSlotHoldingLessThanOneCraftIsShort() {
+        assertTrue(isShort(0, 0));
+        assertTrue(isShort(0, 1));
+    }
+
+    @Test
+    void aSlotHoldingOneCraftIsNotShort() {
+        assertFalse(isShort(0, 2));
+        assertFalse(isShort(1, 1));
+        assertFalse(isShort(0, 64));
+    }
+
+    @Test
+    void aSlotTheRecipeDoesNotUseIsNeverShort() {
+        for (int slot = TWO_PLATES_ONE_CABLE.size(); slot < AssemblingInputSlots.INPUTS; slot++) {
+            assertFalse(isShort(slot, 0), "slot " + slot);
+        }
+    }
 }

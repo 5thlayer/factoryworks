@@ -1,18 +1,27 @@
 package com.planetaryfactory.core.machine.client;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.planetaryfactory.core.PFItems;
 import com.planetaryfactory.core.compat.emi.HeldRecipeTooltip;
+import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import org.joml.Matrix3x2f;
 
@@ -30,7 +39,14 @@ import rearth.oritech.client.ui.render.LargeItemRenderState;
  * far the craft under way is, as Factorio's machine window does. A tab above the panel carries the
  * machine's icon and name, the header every Oritech machine screen has.
  *
- * <p>Whether this draws correctly is a human check on delivery; no check here claims it.
+ * <p>The Held recipe is also drawn in its slots (ADR-0073): each ingredient ghosted in the input slot
+ * {@link com.planetaryfactory.core.machine.AssemblingInputSlots} gives it, with the count one craft
+ * needs, and the product in the output. A tag ingredient cycles through its members. An input slot
+ * holding less than one craft is red, as Factorio's are.
+ *
+ * <p>Whether this draws correctly is a human check on delivery; no check here claims it. So is the
+ * client's input slot refusing a wrong item in the hand (#334): the menu's slot prediction runs in
+ * no harness, and the server half is {@code AssemblingMachineTests}'.
  */
 public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingMachineMenu> {
 
@@ -42,6 +58,11 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int TEXT = 0xFF404040;
     private static final int BAR_TEXT = 0xFFFFFFFF;
     private static final int LOCKED_TEXT = 0xFFA02020;
+    private static final int SHORT = 0xFFB84C4C;
+    // Half the slot's own colour over a ghost, so it reads as a placeholder rather than an item.
+    private static final int GHOST_VEIL = 0x808B8B8B;
+    private static final int SHORT_VEIL = 0x80B84C4C;
+    private static final long CYCLE_MILLIS = 1000;
 
     // Oritech's header, from OritechWidgetScreen.addTitle: a 28px icon on a panel padded
     // (0 top, 2 right, 3 bottom, 2 left), and a 14px label padded (5, 0, 1, 10) six pixels past it.
@@ -99,6 +120,9 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         extractTab(graphics);
         for (Slot slot : menu.slots) {
             recess(graphics, leftPos + slot.x, topPos + slot.y, 16);
+            if (isShort(slot)) {
+                graphics.fill(leftPos + slot.x, topPos + slot.y, leftPos + slot.x + 16, topPos + slot.y + 16, SHORT);
+            }
         }
         int x = leftPos + BAR_X;
         int y = topPos + AssemblingMachineMenu.INPUT_Y;
@@ -113,6 +137,54 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         graphics.fill(x - 1, y, x, y + 16, SLOT_DARK);
         graphics.fill(x, y + 16, x + width + 1, y + 17, SLOT_LIGHT);
         graphics.fill(x + width, y, x + width + 1, y + 16, SLOT_LIGHT);
+    }
+
+    private boolean isShort(Slot slot) {
+        return slot.index < AssemblingMachineBlockEntity.INPUTS && menu.isShort(slot.index);
+    }
+
+    @Override
+    protected void extractSlot(GuiGraphicsExtractor graphics, Slot slot, int mouseX, int mouseY) {
+        ItemStack ghost = ghost(slot);
+        if (!ghost.isEmpty()) {
+            graphics.fakeItem(ghost, slot.x, slot.y);
+            graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, isShort(slot) ? SHORT_VEIL : GHOST_VEIL);
+            graphics.itemDecorations(font, ghost, slot.x, slot.y, String.valueOf(ghost.getCount()));
+        }
+        super.extractSlot(graphics, slot, mouseX, mouseY);
+    }
+
+    @Override
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        ItemStack ghost = hoveredSlot == null || !menu.getCarried().isEmpty() ? ItemStack.EMPTY : ghost(hoveredSlot);
+        if (ghost.isEmpty()) {
+            super.extractTooltip(graphics, mouseX, mouseY);
+            return;
+        }
+        graphics.setTooltipForNextFrame(font, List.of(ghost.getHoverName(),
+                Component.translatable("gui.planetaryfactory.assembling_machine.per_craft", ghost.getCount())
+                        .withStyle(ChatFormatting.GRAY)),
+                Optional.empty(), mouseX, mouseY);
+    }
+
+    /** What an empty slot shows of the Held recipe, or empty: a real stack hides the ghost. */
+    private ItemStack ghost(Slot slot) {
+        if (slot.hasItem()) {
+            return ItemStack.EMPTY;
+        }
+        if (slot.index == AssemblingMachineBlockEntity.OUTPUT) {
+            AssemblingMachineMenu.Entry held = menu.held();
+            return held == null ? ItemStack.EMPTY : held.icon();
+        }
+        return menu.slotIngredient(slot.index).map(AssemblingMachineScreen::cycled).orElse(ItemStack.EMPTY);
+    }
+
+    private static ItemStack cycled(SizedIngredient sized) {
+        List<Holder<Item>> members = sized.ingredient().items().toList();
+        if (members.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(members.get((int) (Util.getMillis() / CYCLE_MILLIS % members.size())), sized.count());
     }
 
     @Override

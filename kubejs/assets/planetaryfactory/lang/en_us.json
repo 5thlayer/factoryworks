@@ -41,6 +41,7 @@
   "fluid_type.planetaryfactory.superheated_steam": "Superheated Steam",
   "gui.planetaryfactory.assembling_machine.locked": "Locked",
   "gui.planetaryfactory.assembling_machine.no_recipe": "No recipe: use Fill Recipe",
+  "gui.planetaryfactory.assembling_machine.per_craft": "%s per craft",
   "gui.planetaryfactory.assembling_machine.unknown_recipe": "Recipe no longer exists",
   "item.planetaryfactory.assembling_machine": "Assembling Machine",
   "item.planetaryfactory.barrel": "Barrel",
