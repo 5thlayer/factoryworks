@@ -122,20 +122,34 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         graphics.text(font, percent, BAR_X + BAR_WIDTH - 2 - font.width(percent),
                 AssemblingMachineMenu.INPUT_Y + 4, BAR_TEXT, true);
 
+        int right = imageWidth - 8;
         AssemblingMachineMenu.Entry held = menu.held();
         if (held == null) {
             String key = menu.holdsUnknown()
                     ? "gui.planetaryfactory.assembling_machine.unknown_recipe"
                     : "gui.planetaryfactory.assembling_machine.no_recipe";
-            graphics.text(font, Component.translatable(key), HELD_X, HELD_Y + 4, TEXT, false);
+            graphics.text(font, fitted(Component.translatable(key), right - HELD_X), HELD_X, HELD_Y + 4,
+                    TEXT, false);
             return;
         }
         graphics.item(held.icon(), HELD_X, HELD_Y);
-        graphics.text(font, held.icon().getHoverName(), HELD_X + 20, HELD_Y + 4, TEXT, false);
+        int nameRight = right;
         if (held.choice().locked()) {
             Component locked = Component.translatable("gui.planetaryfactory.assembling_machine.locked");
-            graphics.text(font, locked, imageWidth - 8 - font.width(locked), HELD_Y + 4, LOCKED_TEXT, false);
+            nameRight -= font.width(locked) + 4;
+            graphics.text(font, locked, right - font.width(locked), HELD_Y + 4, LOCKED_TEXT, false);
         }
+        graphics.text(font, fitted(held.icon().getHoverName(), nameRight - HELD_X - 20), HELD_X + 20, HELD_Y + 4,
+                TEXT, false);
+    }
+
+    /** Cut to {@code width} with an ellipsis; translations and item names vary in length. */
+    private String fitted(Component text, int width) {
+        String plain = text.getString();
+        if (font.width(plain) <= width) {
+            return plain;
+        }
+        return font.plainSubstrByWidth(plain, width - font.width("...")) + "...";
     }
 
     @Override
