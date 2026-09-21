@@ -54,8 +54,9 @@ numbers the decision was made on:
     height and blob amplitude against distance, and the mean spacing -- is recomputed here from
     a closed form of Factorio's published expressions, spelled independently of the evaluator
     the extractor runs over the dump, so the two routes agree or one of them is wrong. The
-    spacing's two figures ADR-0045 quotes, ~632 and ~894 blocks, must fall out of
-    `base_spots_per_km2`.
+    spacing's two figures ADR-0045 quotes, ~671 and ~1549 blocks, must fall out of
+    `base_spots_per_km2` and the mean spot size. The edge's octaves and offset must be the ones
+    its expression spells, since the pack's port of the ragged edge reads them (ADR-0045).
 
 Usage: tests/factorio/test_resource_extract.py
 """
@@ -63,6 +64,7 @@ import json
 import math
 import re
 import sys
+from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -117,7 +119,7 @@ STARTING_TOTALS = {
 RATIO_TOLERANCE = 0.001
 
 # ADR-0045's quoted mean spacing, keyed by `base_spots_per_km2`: what the derivation must give.
-ADR_SPACING = {2.5: 632, 1.25: 894}
+ADR_SPACING = {2.5: 671, 1.25: 1549}
 
 OUTFIELD_ARGUMENTS = (
     "random_spot_size_minimum",
@@ -151,6 +153,20 @@ def pick_tiers(source):
 
 def clamp(value, low, high):
     return min(max(value, low), high)
+
+
+def edge_failures(edge):
+    """The edge's octaves and offset, read back out of the expression they were extracted from."""
+    spelled = edge["blobs0"] + " + " + edge["expression"]
+    scales = re.findall(r"input_scale = ([0-9/.]+), output_scale = ([0-9/.]+)", spelled)
+    want = [{"input_scale": float(Fraction(a)), "output_scale": float(Fraction(b))} for a, b in scales]
+    failures = []
+    if edge["octaves"] != want:
+        failures.append(f"the edge's octaves are {edge['octaves']}, and its expression spells {want}")
+    offset = re.search(r"- ([0-9/.]+)\) \* regular_blob_amplitude_at\(distance\)$", edge["expression"])
+    if not offset or not math.isclose(edge["offset"], float(Fraction(offset.group(1)))):
+        failures.append(f"the edge's offset is {edge['offset']}, and its expression is {edge['expression']!r}")
+    return failures
 
 
 def outfield_failures(data, resources):
@@ -224,11 +240,11 @@ def outfield_failures(data, resources):
                         f"of Factorio's expression gives {value}"
                     )
 
-        spacing = math.sqrt(per_spot)
+        spacing = math.sqrt(per_spot * typical)
         if not math.isclose(spot["mean_spacing"], spacing, rel_tol=1e-9):
             failures.append(
-                f"{name}'s mean spacing is {spot['mean_spacing']}, and one spot per "
-                f"{per_spot:.0f} blocks² gives {spacing}"
+                f"{name}'s mean spacing is {spot['mean_spacing']}, and one spot of mean size per "
+                f"{per_spot * typical:.0f} blocks² gives {spacing}"
             )
         if name not in STARTING_PATCH:
             continue
@@ -478,6 +494,7 @@ def main():
                     )
 
     failures += outfield_failures(data, resources)
+    failures += edge_failures(data["outfield_edge"])
 
     for index, failure in enumerate(failures, 1):
         print(f"FAIL {index}: {failure}")
@@ -486,7 +503,7 @@ def main():
     print(
         f"ok   {len(resources)} resources, {len(staged)} with stages, one distance law "
         f"flat within 1600 tiles; totals re-derive from {formula}; PickTier {bare}/{researched} "
-        f"matches the character; every outfield spot re-derives; the opening crosses in "
+        f"matches the character; every outfield spot and its edge re-derive; the opening crosses in "
         f"{max(float(part) for part in DISTANCES_PATTERN.search((ROOT / TERRA_START).read_text()).group(1).split(',')) / MINECRAFT_WALK_SPEED:.1f}s "
         f"against Factorio's {data['constants']['starting_resource_placement_radius'] / per_second:.1f}s"
     )

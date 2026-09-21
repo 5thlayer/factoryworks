@@ -119,6 +119,12 @@ OUTFIELD_ARGUMENTS = (
 OUTFIELD_LOCALS = ("regular_blob_amplitude_maximum_distance", "regular_spot_quantity_expression")
 RADIUS_SOURCE = ("regular_patches", "spot_radius_expression")
 
+# The ragged edge: `regular_patches` is the spot's cone plus noise octaves scaled by the blob
+# amplitude, and `blobs0` holds two of the octaves (ADR-0045).
+EDGE_LOCALS = ("regular_patches", "blobs0")
+OCTAVE = re.compile(r"basis_noise\{[^}]*input_scale\s*=\s*([^,}]+),\s*output_scale\s*=\s*([^,}]+)\}")
+EDGE_OFFSET = re.compile(r"-\s*([0-9./]+)\s*\)\s*\*\s*regular_blob_amplitude_at\(distance\)\s*$")
+
 # Where the law is tabulated: the three radii's edges, the richness crossover and two points past
 # it, so a reader sees the spot stop growing where the richness term starts.
 LAW_DISTANCES = (0, 150, 300, 450, 1000, 1600, 3000, 10000)
@@ -273,14 +279,48 @@ def outfield(arguments, locals_, functions, radius_expression):
             "blob_amplitude": value("regular_blob_amplitude_at(distance)", distance=distance),
         }
 
-    spots_per_block = value(
-        "regular_density_at(distance) / regular_spot_quantity_base_at(distance)", distance=reach
+    # Spots are placed until the density is met, so the spacing follows the mean spot quantity,
+    # and with it the size factor's midpoint, not the base quantity.
+    spots_per_block = value("regular_density_at(distance)", distance=reach) / value(
+        locals_["regular_spot_quantity_expression"], distance=reach
     )
     return {
         **{name: bindings[name] for name in OUTFIELD_ARGUMENTS},
         "regular_blob_amplitude_maximum_distance": reach,
         "mean_spacing": 1 / math.sqrt(spots_per_block),
         "law": [at(distance) for distance in LAW_DISTANCES],
+    }
+
+
+def after_spot_noise(expression):
+    """What `expression` adds to its `spot_noise{...}` call, with the leading `+` dropped."""
+    start = expression.index("spot_noise{") + len("spot_noise{")
+    depth = 0
+    for index in range(start, len(expression)):
+        if expression[index] == "{":
+            depth += 1
+        elif expression[index] == "}":
+            if depth == 0:
+                return expression[index + 1 :].strip().removeprefix("+").strip()
+            depth -= 1
+    sys.exit("regular_patches' spot_noise call never closes")
+
+
+def edge(locals_):
+    """The outfield spot's ragged edge: `(octaves - offset) * regular_blob_amplitude_at(distance)`."""
+    expression = after_spot_noise(locals_["regular_patches"])
+    octaves = [
+        {"input_scale": eval(scale, {"__builtins__": {}}), "output_scale": eval(weight, {"__builtins__": {}})}  # noqa: S307
+        for scale, weight in OCTAVE.findall(locals_["blobs0"] + expression)
+    ]
+    offset = EDGE_OFFSET.search(expression)
+    if not octaves or not offset or "blobs0" not in expression:
+        sys.exit(f"regular_patches' edge no longer reads as octaves minus an offset: {expression}")
+    return {
+        "expression": expression,
+        "blobs0": locals_["blobs0"],
+        "octaves": octaves,
+        "offset": eval(offset.group(1), {"__builtins__": {}}),  # noqa: S307
     }
 
 
@@ -352,7 +392,7 @@ def extract(dump):
     if not formula:
         sys.exit(f"{PATCH_FUNCTION} carries no `starting_amount` expression")
 
-    missing = [key for key in (*OUTFIELD_LOCALS, RADIUS_SOURCE[0]) if key not in locals_]
+    missing = [key for key in (*OUTFIELD_LOCALS, *EDGE_LOCALS) if key not in locals_]
     if missing:
         sys.exit(f"{PATCH_FUNCTION} carries no {', '.join(missing)}")
     radius_expression = call_argument(locals_[RADIUS_SOURCE[0]], RADIUS_SOURCE[1])
@@ -418,6 +458,7 @@ def extract(dump):
             **{key: locals_[key] for key in OUTFIELD_LOCALS},
             "regular_spot_radius_expression": radius_expression,
         },
+        "outfield_edge": edge(locals_),
         "hand_mining": hand_mining(dump),
         "character_movement": character_movement(dump),
         "resources": resources,

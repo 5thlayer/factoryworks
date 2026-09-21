@@ -40,8 +40,14 @@ not about geometry. The veins lose on the gesture. Factorio agreeing is a bonus.
 
 ## The decision
 
-**One ore shape on Terra.** A patch is a filled disc of one ore block, one block deep, landed on the
-terrain surface. Terra registers **no ore veins at all**. The bedrock crude deposit is untouched: it
+**Where the corpus disagrees with this ADR, the corpus wins.** This ADR was first argued from a
+reading of Factorio's expressions that #317's extraction showed to be wrong in four places: the
+spacing, the amplitude-then-radius crossover, the dropped ramp and the dropped edge. It is amended
+in place, and a later disagreement is settled the same way: port Factorio's behaviour and amend the
+text, unless Minecraft forbids it (#317).
+
+**One ore shape on Terra.** A patch is a disc of one ore block, one block deep, landed on the
+terrain surface, with Factorio's ragged edge. Terra registers **no ore veins at all**. The bedrock crude deposit is untouched: it
 is a fluid, `adapted` under `#86`, and not an ore patch (ADR-0020 as amended).
 
 **Outfield patches are worldgen; the starting area stays a stamp.** The starting area is stamped by
@@ -49,28 +55,33 @@ is a fluid, `adapted` under `#86`, and not an ore patch (ADR-0020 as amended).
 Outfield patches have no spawn anchor, so they are ordinary worldgen: one `structure_set` per
 resource, which also makes them locatable — the thing the Radar will want.
 
-**Spacing is extracted, not chosen.** `base_spots_per_km2` is in the corpus and is the number:
-2.5 for coal, copper, iron and stone, 1.25 for uranium. One spot per `1e6 / spots` blocks² gives
-~632 blocks (~40 chunks) and ~894 blocks (~56 chunks) mean spacing. The generator derives the
+**Spacing is extracted, not chosen.** Factorio adds spots until a region's target quantity is met,
+so the spacing follows the *mean* spot size and not the spot count alone: one spot per
+`1e6 × mean_factor / base_spots_per_km2` blocks², where `mean_factor` is the midpoint of
+`random_spot_size_minimum`/`maximum`. That is 2.5 spots/km² at a mean factor of 1.125 for coal,
+copper, iron and stone, ~671 blocks (~42 chunks), and 1.25 at a mean of 3 for uranium, ~1549 blocks
+(~97 chunks). The generator derives the
 `spacing`/`separation` pair from that field rather than carrying 40 as a literal, so a regeneration
 moves it. **This is train distance, and deliberately so** — an outfield patch is not a belt run.
 
-**Two laws, and they do not overlap.** Factorio splits a patch's quantity between how much a tile
-holds and how wide the patch is:
+**Two laws, one after the other.** A spot's size and a tile's richness grow over different bands:
 
 | | term | shape |
 |---|---|---|
-| density | `1 + clamp((d − 300)/1300, 0, 1)` | grows from 300 blocks, doubled and clamped at ~1600 |
+| density | fade `clamp((d − 150)/300, 0, 1)` × `1 + clamp((d − 300)/1300, 0, 1)` | zero to 150 blocks, full at 450, doubled by 1600, then flat |
 | richness | `max((1000 + d)/2600, 1)` | flat to 1600 blocks, then linear forever |
 
-Density finishes growing exactly where richness starts. Quantity raises the spot's **amplitude**
-(per-tile amount) until `regular_blob_amplitude_at`'s cap, and past the cap it goes into **radius**.
-That is why a far patch in Factorio is visibly bigger, and both halves ship here.
+A spot's quantity is `factor × 1e6 / base_spots_per_km2 × density(d)`, so it grows with density and
+**stops growing at 1600 blocks**. Its radius is `min(32, regular_rq_factor × quantity^(1/3))` and its
+blob amplitude `regular_blob_amplitude_multiplier × min(height(1600), height(d))`. Neither cap binds
+at default settings (iron's typical spot is 22.9 blocks across its radius at 1600), so a far patch is
+not bigger than a patch at 1600. Past 1600 only richness moves, and it moves **without limit**. That
+is Factorio's, and the amount arithmetic's rising fallback is right rather than a bug.
 
-**The two laws split the quantity; they do not multiply it.** Per-block amount is the amplitude law,
-capped. Footprint is the radius law. The patch total is what falls out. The existing fallback in the
-amount arithmetic is the amplitude half and **rises forever, which is a bug this ADR names**: past
-the crossover it pays Factorio's radius growth out as richness instead.
+**A patch's amount is uniform.** Each block of a disc holds `quantity × richness(d) / block count`,
+with `d` the disc centre's distance from origin. Factorio's per-tile amount follows the spot's cone;
+a uniform amount keeps the patch total Factorio's and lets a break read one number for the whole
+disc. The spot's shape still shows in the edge, not in the amounts.
 
 **Distance is measured from world origin, not from spawn.** Worldgen is isolated from level state by
 construction — no `Structure` or `StructurePlacement` can see world spawn, custom ones included. The
@@ -81,23 +92,31 @@ nothing observable changes near spawn and the divergence beyond is a few hundred
 ramp. The alternative — stamping outfield patches mod-side so they can see spawn — reintroduces the
 unbounded saved data this ADR refuses below.
 
-**A near-spawn exclusion, with the ramp dropped.** Factorio suppresses regular patches inside
+**The near-spawn exclusion and the ramp are the law.** Factorio suppresses regular patches inside
 `starting_resource_placement_radius` (150) and fades them in over `regular_patch_fade_in_distance`
-(300), full at 450. A `structure_set` cannot express a ramp. A **flat exclusion at 150 blocks** ships
-and the ramp is `adapted`: the ramp exists to stop a rich outfield patch landing on the tutorial, and
-150 does that. Taking 450 would strip the entire early walkable band, which is the opposite of what
-an opening with no belts and no trains needs.
+(300), full at 450. Both fall out of `density(d)`: a spot's quantity is zero inside 150 and small
+until 450. No separate exclusion ships. A disc whose radius rounds below one block does not
+generate.
 
 **A procedural disc, not size-variant templates.** A continuous radius cannot come out of a jigsaw
 pool dealing three fixed templates. Outfield patches are generated by a structure that fills a circle
-at a computed radius, reusing the ground projection that walks a column past whatever grew there. The
+at a computed radius, reusing the ground projection that walks a column past whatever grew there.
+Each disc draws its own size factor, uniform between the resource's `random_spot_size_minimum` and
+`maximum`, from the structure's seeded random. That is Factorio's `random_penalty_between`.
+
+**The edge is Factorio's, on Minecraft's noise.** Ore sits where the spot's cone plus
+`(octaves − 1/3) × blob_amplitude` is above zero. The three octaves have Factorio's input scales
+(1/8, 1/24, 1/64) and weights (1, 1, 1.5), read from the corpus's `outfield_edge`. They are sampled
+from Minecraft's `ImprovedNoise`, seeded by world seed and resource, because Factorio's
+`basis_noise` is not published. The shape is Factorio's and the noise values are `adapted`. The
 starting area keeps its template pools untouched, so the geometry check written for it still guards
 what it was written for.
 
-**Outfield patches carry no record.** The amount fallback already covers any block outside a recorded
-field. The per-field census exists solely to defeat vanilla's silent dropping of an overlapping
-jigsaw child, which a spaced structure set does not suffer. Recording outfield patches would grow a
-saved-data list without bound as the player explores, for a divisor the laws already supply.
+**Outfield patches carry no record of the pack's own.** The disc's structure piece stores its size
+factor and its block count, counted when it generates, and a broken block reads them through the
+structure manager. Vanilla already saves a structure's pieces with its chunk, so this adds no
+saved data to the pack. The per-field census of the starting area exists solely to defeat vanilla's
+silent dropping of an overlapping jigsaw child, which a spaced structure set does not suffer.
 
 **Uranium stops being a special case.** The fallback that borrowed *"the smallest amount any other
 field recorded"* existed because Factorio states no `starting_amount` for uranium. Under the
@@ -125,11 +144,9 @@ call.
 **GregTech's surface indicators become dead.** They marked buried veins and there are none. The
 check that guards them goes with them, and both failure modes it was written for stop existing.
 
-**A regeneration is required before this can be built.** `regular_blob_amplitude_maximum_distance`,
-`random_spot_size_minimum`/`maximum` and `regular_rq_factor` are not in the committed corpus, and the
-amplitude-then-radius crossover cannot be computed without them. Without a re-extraction the size law
-would be invented, which is the one thing this repo does not do with a Factorio number. This blocks
-the ADR's implementation, not the ADR.
+**The regeneration this needed is done.** #317 extracted the four per-resource arguments, the
+spot's quantity and radius expressions, and the edge's octaves into `data/factorio/resource.json`,
+with each resource's law tabulated against distance.
 
 **What is deliberately not ported.** Nothing scales patch *count* with distance — `base_spots_per_km2`
 is constant in Factorio too. Patches are land-only, confined by the same land biome tag the starting
@@ -140,10 +157,11 @@ sea: faithful as a rule, slightly lean as an outcome.
 
 Three claims, three checks, none of which launches the game:
 
-- **The laws are Factorio's.** The resource extraction check re-derives amplitude, radius and spacing
-  from the committed formulas, as it already does for the starting totals.
-- **The amount arithmetic is right.** Unit tests under the mod's ore package cover the amplitude cap
-  and the radius crossover, including that the two laws split a quantity rather than multiplying it.
+- **The laws are Factorio's.** The resource extraction check re-derives each spot's quantity,
+  radius, height, amplitude and spacing, and the edge's octaves, from the committed formulas, as it
+  already does for the starting totals.
+- **The amount arithmetic is right.** Unit tests under the mod's ore package cover the uniform
+  amount from a stored factor and block count, richness read at the disc centre, and no cap.
 - **The registries are what we said.** The worldgen registry check asserts Terra's ore vein registry
   is **empty** and that the resource structure sets are present — a stronger assertion than the
   fixture makes today.
