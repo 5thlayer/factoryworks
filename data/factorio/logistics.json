@@ -1,0 +1,185 @@
+{
+  "belts": [
+    {
+      "name": "transport-belt",
+      "speed": 0.03125
+    },
+    {
+      "name": "fast-transport-belt",
+      "speed": 0.0625
+    },
+    {
+      "name": "express-transport-belt",
+      "speed": 0.09375
+    },
+    {
+      "name": "turbo-transport-belt",
+      "speed": 0.125
+    }
+  ],
+  "splitters": [
+    {
+      "name": "splitter",
+      "speed": 0.03125,
+      "related_transport_belt": "transport-belt"
+    },
+    {
+      "name": "fast-splitter",
+      "speed": 0.0625,
+      "related_transport_belt": "fast-transport-belt"
+    },
+    {
+      "name": "express-splitter",
+      "speed": 0.09375,
+      "related_transport_belt": "express-transport-belt"
+    },
+    {
+      "name": "turbo-splitter",
+      "speed": 0.125,
+      "related_transport_belt": "turbo-transport-belt"
+    }
+  ],
+  "loaders": [
+    {
+      "name": "loader",
+      "speed": 0.03125
+    },
+    {
+      "name": "fast-loader",
+      "speed": 0.0625
+    },
+    {
+      "name": "express-loader",
+      "speed": 0.09375
+    },
+    {
+      "name": "turbo-loader",
+      "speed": 0.125
+    }
+  ],
+  "inserters": [
+    {
+      "name": "burner-inserter",
+      "rotation_speed": 0.013000000000000001,
+      "extension_speed": 0.035,
+      "energy_per_rotation": "50kJ",
+      "energy_per_movement": "50kJ",
+      "pickup_position": [
+        0,
+        -1
+      ],
+      "insert_position": [
+        0,
+        1.2
+      ],
+      "energy_source": "burner",
+      "drain": null
+    },
+    {
+      "name": "inserter",
+      "rotation_speed": 0.014000000000000002,
+      "extension_speed": 0.035,
+      "energy_per_rotation": "5kJ",
+      "energy_per_movement": "5kJ",
+      "pickup_position": [
+        0,
+        -1
+      ],
+      "insert_position": [
+        0,
+        1.2
+      ],
+      "energy_source": "electric",
+      "drain": "0.4kW"
+    },
+    {
+      "name": "long-handed-inserter",
+      "rotation_speed": 0.02,
+      "extension_speed": 0.05,
+      "energy_per_rotation": "5kJ",
+      "energy_per_movement": "5kJ",
+      "pickup_position": [
+        0,
+        -2
+      ],
+      "insert_position": [
+        0,
+        2.2
+      ],
+      "energy_source": "electric",
+      "drain": "0.4kW"
+    },
+    {
+      "name": "fast-inserter",
+      "rotation_speed": 0.04,
+      "extension_speed": 0.1,
+      "energy_per_rotation": "7kJ",
+      "energy_per_movement": "7kJ",
+      "pickup_position": [
+        0,
+        -1
+      ],
+      "insert_position": [
+        0,
+        1.2
+      ],
+      "energy_source": "electric",
+      "drain": "0.5kW"
+    },
+    {
+      "name": "bulk-inserter",
+      "rotation_speed": 0.04,
+      "extension_speed": 0.1,
+      "energy_per_rotation": "20kJ",
+      "energy_per_movement": "20kJ",
+      "pickup_position": [
+        0,
+        -1
+      ],
+      "insert_position": [
+        0,
+        1.2
+      ],
+      "bulk": true,
+      "energy_source": "electric",
+      "drain": "1kW"
+    }
+  ],
+  "documented": {
+    "belt_density": {
+      "items_per_tile": 8,
+      "source": "https://wiki.factorio.com/Transport_belts/Physics ('Density': 4 per tile per lane, two lanes)"
+    },
+    "hand_size": {
+      "values": {
+        "burner-inserter": 1,
+        "inserter": 1,
+        "long-handed-inserter": 1,
+        "fast-inserter": 1,
+        "bulk-inserter": 2
+      },
+      "source": "https://wiki.factorio.com/Inserter_capacity_bonus_(research) -- the 'none' row: (1) non-bulk, (2) bulk"
+    },
+    "item_spike_ticks": {
+      "values": {
+        "burner-inserter": 5,
+        "inserter": 5,
+        "long-handed-inserter": 4,
+        "fast-inserter": 1,
+        "bulk-inserter": 1
+      },
+      "source": "https://wiki.factorio.com/Inserters#Power_usage ('Tick duration of Item Spike'), measured in https://forums.factorio.com/viewtopic.php?t=128389"
+    },
+    "swing": {
+      "rule": "one swing is two half-spins, each floor(0.5 / rotation_speed) whole ticks at energy_per_rotation * rotation_speed per tick, plus an item spike at each end of item_spike_ticks at energy_per_movement * extension_speed per tick",
+      "per_cycle_kj": {
+        "burner-inserter": 66.9,
+        "inserter": 6.65,
+        "long-handed-inserter": 7,
+        "fast-inserter": 8.12,
+        "bulk-inserter": 23.2
+      },
+      "source": "https://wiki.factorio.com/Inserters#Energy_costs ('Cost per transfer cycle in kJ', theoretically derived and empirically confirmed); the page states it is valid up to 2.0.77"
+    }
+  }
+}

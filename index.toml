@@ -221,6 +221,10 @@ file = "data/factorio/fuel.json"
 hash = "c4a7bc14c2e3de106b73222a41fab0413acbabc14db7131f3f303367a79fb25a"
 
 [[files]]
+file = "data/factorio/logistics.json"
+hash = "eaeec89d00920c946ed363da469dd5d24bab2214582e8d290661275fa84fa188"
+
+[[files]]
 file = "data/factorio/machine.json"
 hash = "a6da92de8795c698181f0be0e7635a69049e0b2664d1065d52c483b89d14b68f"
 
@@ -250,7 +254,7 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "c97bcda865bc21cd3a99454e1acac23b9c12ded475b50cca8e9f129a5424d96c"
+hash = "d8c70f02708f8c78655fcd4264f26680bf96c500e879a3f2e21504669a9d67c0"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -1353,6 +1357,10 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/electric_furnace.json"
 hash = "bb25b4610021ba1b230a3469853614724aa07beffb21d2d2b09881b680d58dbc"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/electric_mining_drill.json"
+hash = "6a7d7fdf6a6e51e2e4bedfdde602b82d78ce5e69065a24283e511c20714012b9"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/electronic_circuit.json"
 hash = "a061d8df307220812cec34e4a59010547611ea2fecf946a537a56015060e345e"
 
@@ -1905,7 +1913,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "14be4935be8f6d45f561a398fab501e91fa6e3011cf4cdf375ce7997c3bc6b40"
+hash = "875001dd22b0fde07f03141202b9f3d02ffa3c34d76b5d3cf6aa9f238e1c7dc8"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
