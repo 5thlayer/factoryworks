@@ -79,9 +79,9 @@ separable and only the storage is refused.
 
 **Consequences.**
 
-- **The machine needs a recipe viewer to be configured.** EMI and JEI both ship in the pack, so
-  this is a pack dependency now stated rather than a gap. Fill Recipe is EMI's; JEI's transfer
-  handler is not built, and a JEI-only player cannot set a recipe until it is.
+- **The machine needs EMI to be configured.** EMI is already a hard requirement of the pack, the
+  Personal Assembler's transfer target (`docs/gdd.md`), and the machine follows the same rule. JEI
+  stays for browsing and gets no transfer handler (#337).
 - **Fill Recipe must work before the list goes.** It is broken today, and the list is then the
   only setter; #330 lands first.
 - **`AssemblingMachineRecipes.choices`** loses its screen reader. What it guarantees -- every
