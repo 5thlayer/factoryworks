@@ -231,6 +231,21 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         return stall;
     }
 
+    /** Ticks into the craft under way, for the screen's progress bar. */
+    public int craftProgress() {
+        return (int) progress.get();
+    }
+
+    /** The Held recipe's duration at this machine's speed, or 0 with none. Server only. */
+    public int craftDuration() {
+        if (!(level instanceof ServerLevel server)) {
+            return 0;
+        }
+        return AssemblingMachineRecipes.resolve(server, held)
+                .map(holder -> durationTicks(holder.value()))
+                .orElse(0);
+    }
+
     /**
      * The Held recipe's duration before Oritech's speed multiplier, for Oritech's
      * {@code getProgress}. Oritech's reads a {@code currentRecipe} this machine never sets. Server

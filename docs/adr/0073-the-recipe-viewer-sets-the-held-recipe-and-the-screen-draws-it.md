@@ -30,8 +30,11 @@ where the Held recipe is **shown**:
 - **EMI's Fill Recipe sets the Held recipe** on the open machine, lit with an empty inventory. The
   server refuses a recipe the machine cannot hold, with a message, through the same path the
   widget used.
-- **The in-screen recipe list is removed.** A **clear** button stays, so a recipe can be removed
-  without a viewer.
+- **The in-screen recipe list is removed, and nothing replaces it with a clear.** An Assembling
+  Machine without a recipe does nothing, so a Held recipe is replaced, never removed (amended on
+  #336, which first shipped a clear button). The screen heads with the Held recipe's icon and
+  name; with EMI loaded the icon's tooltip carries the recipe, as EMI's recipe-bearing stacks do,
+  and a click opens it.
 - **The Held recipe is drawn in the slots**: each ingredient ghosted in its input slot with its
   count, the product in the output slot, a tag ingredient cycling through its members. A ghost
   disappears under a real stack.
@@ -71,7 +74,7 @@ separable and only the storage is refused.
 
 - **The machine needs a recipe viewer to be configured.** EMI and JEI both ship in the pack, so
   this is a pack dependency now stated rather than a gap. Fill Recipe is EMI's; JEI's transfer
-  handler is not built, and a JEI-only player can clear a recipe but not set one until it is.
+  handler is not built, and a JEI-only player cannot set a recipe until it is.
 - **Fill Recipe must work before the list goes.** It is broken today, and the list is then the
   only setter; #330 lands first.
 - **`AssemblingMachineRecipes.choices`** loses its screen reader. What it guarantees -- every

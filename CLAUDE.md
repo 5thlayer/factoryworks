@@ -145,8 +145,7 @@ beyond reach, and stops again when the link is broken. And that a pole reaching 
 hull draws the whole row's 1,350 FE/t from the master, once, feeding neither -- `SupplyScanTest` holds
 the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red. And that an Assembling Machine's Held recipe survives its save hook and
 resolves again after it, that every assembling recipe in the server's manager is one Fill Recipe can set
-and it can hold -- what replaces #237 and #238 -- and that changing the recipe, or the screen's clear
-button (#336), hands the inputs back;
+and it can hold -- what replaces #237 and #238 -- and that changing the recipe hands the inputs back;
 dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Every one is also held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
 (#330), and a non-assembling id or a locked recipe is refused there with a message and leaves the Held
 recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
