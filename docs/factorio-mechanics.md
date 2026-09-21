@@ -580,6 +580,12 @@ Sub-rules:
 - **Belt as buffer** — `shipped`. A backed-up belt queues from its end at eight items per block at
   every tier, so a 64-block belt holds 512, as a 64-tile belt does (#344). *This entry read `excluded`,
   against Create's one item per block.*
+- **Cost per length** — `shipped`. A belt costs one belt item of its tier per block of its length,
+  rounded up, as a Factorio belt costs one item per tile. Placing one the player cannot pay for is
+  refused with a message and charges nothing. The belt keeps what it cost, so moving a support does
+  not change the refund. Breaking either loader puts the refund and the belt's items into the
+  breaker's inventory and leaves the other loader standing, free to relink (#346). *Upstream
+  SimpleBelts charged one item whatever the length.*
 
 `logistics-2` and `logistics-3` are declared in `researchd.js` and each unlocks its belt tier (#345).
 Their underground belts are excluded above, and their splitters are #349's.
