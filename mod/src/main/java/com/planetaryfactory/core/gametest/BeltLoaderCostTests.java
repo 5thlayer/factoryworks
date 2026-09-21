@@ -21,8 +21,8 @@ import rearth.belts.model.BeltTier;
 
 /**
  * A belt laid onto open ground takes each loader it places from the inventory: the belt's own
- * tier, else the highest lower tier held, never a higher one, and nothing is placed or charged
- * when a loader is missing (#354).
+ * tier, else the nearest higher tier held, else the nearest lower one, and nothing is placed or
+ * charged when a loader is missing (#354).
  */
 final class BeltLoaderCostTests {
 
@@ -40,9 +40,8 @@ final class BeltLoaderCostTests {
         tests.test("a_belt_with_no_loader_held_is_refused", 20, helper -> refused(helper, BeltTier.BELT, Map.of()));
         tests.test("a_belt_with_one_loader_for_two_ends_is_refused", 20,
                 helper -> refused(helper, BeltTier.BELT, Map.of(BeltTier.BELT, 1)));
-        tests.test("a_belt_never_takes_a_higher_tier_loader", 20,
-                helper -> refused(helper, BeltTier.BELT, Map.of(BeltTier.IMPROVED, 2)));
         tests.test("a_belt_takes_loaders_of_its_own_tier", 20, BeltLoaderCostTests::ownTier);
+        tests.test("a_belt_takes_a_higher_tier_loader_before_a_lower_one", 20, BeltLoaderCostTests::higherTier);
         tests.test("a_belt_falls_back_to_a_lower_tier_loader", 20, BeltLoaderCostTests::lowerTier);
         tests.test("a_belt_ending_at_a_placed_loader_takes_one", 20, BeltLoaderCostTests::oneEndPlaced);
     }
@@ -80,16 +79,26 @@ final class BeltLoaderCostTests {
         helper.succeed();
     }
 
+    private static void higherTier(GameTestHelper helper) {
+        Player player = player(helper, BeltTier.IMPROVED,
+                Map.of(BeltTier.IMPROVED, 1, BeltTier.BELT, 1, BeltTier.EXPRESS, 1, BeltTier.TURBO, 1));
+        lay(helper, player);
+
+        expectLoader(helper, FROM, BeltTier.IMPROVED);
+        expectLoader(helper, TO, BeltTier.EXPRESS);
+        expectHeld(helper, player, BeltTier.BELT, 1);
+        expectHeld(helper, player, BeltTier.TURBO, 1);
+        helper.succeed();
+    }
+
     private static void lowerTier(GameTestHelper helper) {
-        Player player = player(helper, BeltTier.EXPRESS,
-                Map.of(BeltTier.EXPRESS, 1, BeltTier.BELT, 1, BeltTier.TURBO, 5));
+        Player player = player(helper, BeltTier.EXPRESS, Map.of(BeltTier.EXPRESS, 1, BeltTier.BELT, 1));
         lay(helper, player);
 
         expectLoader(helper, FROM, BeltTier.EXPRESS);
         expectLoader(helper, TO, BeltTier.BELT);
         expectHeld(helper, player, BeltTier.EXPRESS, 0);
         expectHeld(helper, player, BeltTier.BELT, 0);
-        expectHeld(helper, player, BeltTier.TURBO, 5);
         helper.succeed();
     }
 
