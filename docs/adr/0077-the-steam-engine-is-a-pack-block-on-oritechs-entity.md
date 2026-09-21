@@ -33,5 +33,9 @@ and controller code rather than in blocks the pack owns.
 - Oritech's row scan finds engines by block entity *type*, which the subclass does not have. The
   mixin already replaces `setupMaster` whole, so the pack's scan resolves a part to its anchor and
   matches the subclass.
-- A slave's Jade line shows its Master Engine's steam, output and charge, since its own tank and
+- A slave's Jade line shows its Master Engine's figures, since its own tank and
   buffer are empty by design.
+- The engine has no screen. Nothing on it can be set, and Oritech's screen drew a water tank ADR-0062
+  leaves empty for good and an addon panel for an engine with no addon slots. Its Jade line is the
+  whole interface, laid out as Factorio's hover is: consumption and steam, then power output and
+  available power. Its fluid face is the steam tank alone, insert-only.

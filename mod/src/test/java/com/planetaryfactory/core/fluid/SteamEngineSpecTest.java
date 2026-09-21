@@ -130,4 +130,24 @@ class SteamEngineSpecTest {
             assertEquals(450L * n, SPEC.bufferCapacity(n));
         }
     }
+
+    @Test
+    @DisplayName("the HUD's rates agree with what the burn makes, at the peak and per row")
+    void hudRatesMatchTheBurn() {
+        for (int n = 1; n <= 3; n++) {
+            long[] second = run(SteamEngineSpec.PEAK_SPEED, n, SECOND);
+            assertEquals(second[0], SPEC.steamPerSecond(SteamEngineSpec.PEAK_SPEED, n), 1e-9);
+            assertEquals(second[1] / (double) SECOND, SPEC.powerPerTick(SteamEngineSpec.PEAK_SPEED, n), 1e-9);
+        }
+    }
+
+    @Test
+    @DisplayName("an empty tank makes nothing, and past the peak the curve makes less than at it")
+    void hudRatesFollowTheCurve() {
+        assertEquals(0.0, SPEC.powerPerTick(0.0, 1), 1e-9);
+        assertEquals(0.0, SPEC.steamPerSecond(0.0, 1), 1e-9);
+        double peak = SPEC.powerPerTick(SteamEngineSpec.PEAK_SPEED, 1);
+        assertEquals(true, SPEC.powerPerTick(10.0, 1) < peak);
+        assertEquals(true, SPEC.powerPerTick(3.5, 1) < peak);
+    }
 }

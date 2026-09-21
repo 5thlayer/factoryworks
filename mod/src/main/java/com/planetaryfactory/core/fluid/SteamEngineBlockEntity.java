@@ -6,6 +6,7 @@ import com.planetaryfactory.core.PFBlockEntities;
 import com.planetaryfactory.core.energy.ElectricNetworks;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -61,6 +62,11 @@ public class SteamEngineBlockEntity extends SteamEngineEntity {
         return List.of();
     }
 
+    @Override
+    public ResourceHandler<FluidResource> getFluidLookup(Direction direction) {
+        return new SteamEngineFluidHandler(source());
+    }
+
     /** The engine whose tank and buffer this one's figures are: its master's when it is a slave. */
     public SteamEngineEntity source() {
         return inSlaveMode() ? master : this;
@@ -83,22 +89,51 @@ public class SteamEngineBlockEntity extends SteamEngineEntity {
         return tank.getCapacityAsLong(0, held.isEmpty() ? FluidResource.of(PFFluids.STEAM_SOURCE.get()) : held);
     }
 
-    /**
-     * FE made on the last tick. The mixin records a burn in {@code clientStats} and stamps
-     * {@code lastWorkedAt} only when it burns, so a stamp older than a tick means nothing was made.
-     */
+    /** Steam burnt over the last tick, as a rate: what the row actually drew, a full buffer's cut included. */
+    public double consumptionPerSecond() {
+        SteamEngineEntity source = source();
+        return workedLastTick(source) ? source.clientStats.steamConsumed() * 20.0 : 0.0;
+    }
+
+    /** Factorio's rated consumption: the row at the curve's peak. */
+    public double maxConsumptionPerSecond() {
+        return readout().planetaryfactory$readSpec().steamPerSecond(SteamEngineSpec.PEAK_SPEED, rowLength());
+    }
+
+    /** FE made on the last tick: what the network drew, since the burn stops at the buffer's room. */
     public long outputPerTick() {
         SteamEngineEntity source = source();
-        return source.clientStats != null && level.getGameTime() - source.lastWorkedAt <= 1
-                ? source.clientStats.energyProduced() : 0L;
+        return workedLastTick(source) ? source.clientStats.energyProduced() : 0L;
     }
 
-    public long energy() {
-        return source().energyStorage.getAmountAsLong();
+    /** Factorio's rated output: the row at the curve's peak. */
+    public long maxOutputPerTick() {
+        return Math.round(readout().planetaryfactory$readSpec().powerPerTick(SteamEngineSpec.PEAK_SPEED, rowLength()));
     }
 
-    public long energyCapacity() {
-        return source().energyStorage.getCapacityAsLong();
+    /** What the steam in the tank could make this tick if the network drew all of it. */
+    public long availablePerTick() {
+        SteamEngineReadout readout = readout();
+        long available = Math.round(readout.planetaryfactory$readSpec()
+                .powerPerTick(readout.planetaryfactory$readSpeed(), rowLength()));
+        return Math.min(available, maxOutputPerTick());
+    }
+
+    private int rowLength() {
+        return readout().planetaryfactory$readRowLength();
+    }
+
+    /** The mixin is what sizes and burns the engine, so an engine without it is not one this pack can run. */
+    private SteamEngineReadout readout() {
+        return (SteamEngineReadout) source();
+    }
+
+    /**
+     * The mixin stamps {@code lastWorkedAt} and fills {@code clientStats} only on a tick that burnt,
+     * so a stamp older than a tick means nothing was made.
+     */
+    private boolean workedLastTick(SteamEngineEntity source) {
+        return source.clientStats != null && level.getGameTime() - source.lastWorkedAt <= 1;
     }
 
     private static long steam(SteamEngineEntity engine) {

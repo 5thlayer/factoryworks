@@ -26,7 +26,9 @@ MACHINES = {
                      CORE / "fluid/SteamEngineStatus.java", "SteamEngineStatus"),
 }
 
-KEY_RE = re.compile(r'translatable\(\s*"([a-z_.]*planetaryfactory[a-z_.]+)"')
+# Any key-shaped literal, not only a `translatable(` argument: a helper that takes the key as a
+# parameter would otherwise hide it.
+KEY_RE = re.compile(r'"((?:gui|tooltip)\.planetaryfactory\.[a-z_.]+)"')
 
 
 def status_keys(path, enum):
