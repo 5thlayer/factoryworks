@@ -1,0 +1,92 @@
+package com.planetaryfactory.core.machine;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiPredicate;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * Which ingredient goes in which input slot (#329, ADR-0073): the one rule the input face filters
+ * by and #334's ghosts are drawn from, so the slot that accepts an item and the slot that shows it
+ * cannot disagree.
+ *
+ * <p>Ingredients are strings standing for a set of items, and an item matches one when the string
+ * contains it -- {@code "logs"} is a tag holding oak and birch, the way the real rule's
+ * {@code Ingredient.test} is.
+ */
+class AssemblingInputSlotsTest {
+
+    private static final BiPredicate<String, String> CONTAINS = String::contains;
+
+    private static boolean accepts(int slot, List<String> ingredients, String item) {
+        return AssemblingInputSlots.accepts(slot, ingredients, item, CONTAINS);
+    }
+
+    @Test
+    void theNthIngredientIsTheNthSlots() {
+        List<String> recipe = List.of("iron_plate", "copper_cable", "gear");
+        for (int slot = 0; slot < recipe.size(); slot++) {
+            assertEquals(Optional.of(recipe.get(slot)), AssemblingInputSlots.ingredientFor(slot, recipe));
+        }
+    }
+
+    @Test
+    void aSlotAcceptsItsOwnIngredient() {
+        assertTrue(accepts(1, List.of("iron_plate", "copper_cable"), "copper_cable"));
+    }
+
+    @Test
+    void aSlotRefusesAnotherSlotsIngredient() {
+        assertFalse(accepts(0, List.of("iron_plate", "copper_cable"), "copper_cable"));
+    }
+
+    @Test
+    void aSlotRefusesAnItemTheRecipeDoesNotUse() {
+        assertFalse(accepts(0, List.of("iron_plate"), "stone"));
+    }
+
+    @Test
+    void aTagIngredientAcceptsEveryMember() {
+        List<String> recipe = List.of("oak_logs|birch_logs");
+        assertTrue(accepts(0, recipe, "oak_logs"));
+        assertTrue(accepts(0, recipe, "birch_logs"));
+    }
+
+    /** MI's lock-empty rule: a slot past the recipe's ingredients is for nothing. */
+    @Test
+    void aSlotTheRecipeDoesNotUseAcceptsNothing() {
+        List<String> recipe = List.of("iron_plate", "copper_cable");
+        for (int slot = recipe.size(); slot < AssemblingInputSlots.INPUTS; slot++) {
+            assertEquals(Optional.empty(), AssemblingInputSlots.ingredientFor(slot, recipe));
+            assertFalse(accepts(slot, recipe, "iron_plate"), "slot " + slot);
+            assertFalse(accepts(slot, recipe, "copper_cable"), "slot " + slot);
+        }
+    }
+
+    /** No Held recipe is no ingredients: a machine that makes nothing takes nothing. */
+    @Test
+    void withNoRecipeEverySlotAcceptsNothing() {
+        for (int slot = 0; slot < AssemblingInputSlots.INPUTS; slot++) {
+            assertEquals(Optional.empty(), AssemblingInputSlots.ingredientFor(slot, List.of()));
+            assertFalse(accepts(slot, List.of(), "iron_plate"), "slot " + slot);
+        }
+    }
+
+    /** No emitted recipe has five, but the rule still answers: the fifth has no slot to go in. */
+    @Test
+    void anIngredientPastTheFourthHasNoSlot() {
+        List<String> recipe = List.of("a", "b", "c", "d", "e");
+        assertEquals(Optional.empty(), AssemblingInputSlots.ingredientFor(AssemblingInputSlots.INPUTS, recipe));
+        assertFalse(accepts(AssemblingInputSlots.INPUTS, recipe, "e"));
+    }
+
+    @Test
+    void aSlotOutsideTheInputsIsForNothing() {
+        assertEquals(Optional.empty(), AssemblingInputSlots.ingredientFor(-1, List.of("a")));
+    }
+}

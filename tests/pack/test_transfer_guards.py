@@ -51,6 +51,7 @@ ROUTING_FACES = (
     "mining/rig/RigItemHandler.java",
     "fluid/BoilerBlockEntity.java",
     "fluid/OffshorePumpBlockEntity.java",
+    "machine/AssemblingMachineItemHandler.java",
 )
 
 

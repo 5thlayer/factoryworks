@@ -31,7 +31,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import rearth.oritech.block.base.block.MultiblockMachine;
 
 /**
@@ -77,6 +80,141 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::isPoweredByAPole);
         tests.test("assembling_machine_is_found_through_a_hull_block", 100,
                 AssemblingMachineTests::poleReachingOnlyAHullBlockFindsIt);
+        tests.test("assembling_machine_filters_inputs_to_its_recipe", 20,
+                AssemblingMachineTests::filtersInputsToItsRecipe);
+        tests.test("assembling_machine_with_no_recipe_takes_nothing", 20,
+                AssemblingMachineTests::withNoRecipeTakesNothing);
+        tests.test("assembling_machine_input_mode_stays_pinned", 20,
+                AssemblingMachineTests::inputModeStaysPinned);
+    }
+
+    /**
+     * boiler: a stone furnace in slot 0, four pipes (Factorio's, which is Oritech's fluid pipe) in
+     * slot 1, slots 2 and 3 unused. Not electronic-circuit: its product is registered by KubeJS, which
+     * the GameTest server does not load, so the recipe is absent here though not in the pack.
+     */
+    private static final String BOILER = "planetaryfactory:assembling/boiler";
+
+    /**
+     * The item face takes the Held recipe's ingredients, each in its own slot, and refuses the rest
+     * (#329) -- asked through the capability a belt's loader finds, on a hull block as well as the anchor, and
+     * on both of the transfer API's overloads, since the slot-less pair is the one a refusal written
+     * per slot is skipped by. Checked against its defect: making the filter accept everything turns
+     * it red on the first refusal.
+     */
+    private static void filtersInputsToItsRecipe(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = placeWhole(helper);
+        machine.setHeldRecipe(HeldRecipe.of(BOILER), player(helper));
+        if (!machine.heldRecipeResolves()) {
+            helper.fail(BOILER + " is not loaded, so the filter has no recipe to filter to", ANCHOR);
+            return;
+        }
+        BlockPos hull = AssemblingMachineHull.positions(ANCHOR, FACING).stream()
+                .filter(pos -> !pos.equals(ANCHOR)).findFirst().orElseThrow();
+        ItemResource furnace = ItemResource.of(item("planetaryfactory:stone_furnace"));
+        ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
+        ItemResource stone = ItemResource.of(Items.STONE);
+        for (BlockPos at : List.of(ANCHOR, hull)) {
+            ResourceHandler<ItemResource> face = itemFace(helper, at);
+            if (face == null) {
+                helper.fail("no item face at " + at, at);
+                return;
+            }
+            clearInputs(machine);
+            expectMoved(helper, at, "stone, slot-less", 0, face, (f, tx) -> f.insert(stone, 8, tx));
+            expectMoved(helper, at, "stone into slot 0", 0, face, (f, tx) -> f.insert(0, stone, 8, tx));
+            expectMoved(helper, at, "fluid pipe into the furnace's slot 0", 0, face, (f, tx) -> f.insert(0, fluidPipe, 8, tx));
+            expectMoved(helper, at, "furnace into unused slot 2", 0, face, (f, tx) -> f.insert(2, furnace, 8, tx));
+            expectMoved(helper, at, "furnace into unused slot 3", 0, face, (f, tx) -> f.insert(3, furnace, 8, tx));
+            expectMoved(helper, at, "furnace into the output", 0, face,
+                    (f, tx) -> f.insert(AssemblingMachineBlockEntity.OUTPUT, furnace, 8, tx));
+            expectMoved(helper, at, "furnace, slot-less", 8, face, (f, tx) -> f.insert(furnace, 8, tx));
+            expectMoved(helper, at, "fluid pipe, slot-less", 8, face, (f, tx) -> f.insert(fluidPipe, 8, tx));
+            if (!machine.inventory.getResource(0).equals(furnace) || !machine.inventory.getResource(1).equals(fluidPipe)
+                    || !machine.inventory.getResource(2).isEmpty() || !machine.inventory.getResource(3).isEmpty()) {
+                helper.fail("through " + at + " the inputs hold " + inputs(machine)
+                        + ", expected the furnace, the fluid pipes and two empty slots", at);
+                return;
+            }
+            expectMoved(helper, at, "extracting a furnace the craft is waiting on", 0, face,
+                    (f, tx) -> f.extract(furnace, 1, tx));
+            machine.inventory.set(AssemblingMachineBlockEntity.OUTPUT,
+                    ItemResource.of(item("planetaryfactory:boiler")), 2);
+            expectMoved(helper, at, "extracting the product", 2, face,
+                    (f, tx) -> f.extract(ItemResource.of(item("planetaryfactory:boiler")), 2, tx));
+        }
+        helper.succeed();
+    }
+
+    /** A machine that makes nothing takes nothing (#329): no slot, on either overload. */
+    private static void withNoRecipeTakesNothing(GameTestHelper helper) {
+        place(helper);
+        ResourceHandler<ItemResource> face = itemFace(helper, ANCHOR);
+        ItemResource plate = ItemResource.of(item("ftbmaterials:iron_plate"));
+        expectMoved(helper, ANCHOR, "plate, slot-less, with no recipe", 0, face, (f, tx) -> f.insert(plate, 8, tx));
+        for (int slot = 0; slot < AssemblingMachineBlockEntity.INPUTS; slot++) {
+            int named = slot;
+            expectMoved(helper, ANCHOR, "plate into slot " + slot + " with no recipe", 0, face,
+                    (f, tx) -> f.insert(named, plate, 8, tx));
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Oritech's {@code FILL_EVENLY} spreads an insert naming slot 0 over every input slot, past the
+     * per-slot filter, so the machine refuses Oritech's mode button and pins the mode over a reload.
+     * Dropping the {@code cycleInputMode} override turns it red: the fluid pipes reach the unused slots.
+     */
+    private static void inputModeStaysPinned(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = place(helper);
+        machine.setHeldRecipe(HeldRecipe.of(BOILER), player(helper));
+        machine.cycleInputMode();
+        ResourceHandler<ItemResource> face = itemFace(helper, ANCHOR);
+        ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
+        expectMoved(helper, ANCHOR, "fluid pipes into slot 1 after a mode cycle", 8, face,
+                (f, tx) -> f.insert(1, fluidPipe, 8, tx));
+        if (machine.inventory.getAmountAsInt(1) != 8) {
+            helper.fail("after Oritech's mode button the inputs hold " + inputs(machine)
+                    + ", expected all 8 fluid pipes in slot 1", ANCHOR);
+            return;
+        }
+        helper.succeed();
+    }
+
+    /** One transfer through a face, inside the transaction {@link #expectMoved} opens. */
+    private interface Move {
+        int apply(ResourceHandler<ItemResource> face, Transaction tx);
+    }
+
+    /** Runs {@code move} in a committed transaction and fails unless it moved {@code expected}. */
+    private static void expectMoved(GameTestHelper helper, BlockPos at, String what, int expected,
+            ResourceHandler<ItemResource> face, Move move) {
+        int moved;
+        try (Transaction tx = Transaction.openRoot()) {
+            moved = move.apply(face, tx);
+            tx.commit();
+        }
+        if (moved != expected) {
+            helper.fail(what + " moved " + moved + ", expected " + expected, at);
+        }
+    }
+
+    private static ResourceHandler<ItemResource> itemFace(GameTestHelper helper, BlockPos at) {
+        return helper.getLevel().getCapability(Capabilities.Item.BLOCK, helper.absolutePos(at), null);
+    }
+
+    private static void clearInputs(AssemblingMachineBlockEntity machine) {
+        for (int slot = 0; slot <= AssemblingMachineBlockEntity.OUTPUT; slot++) {
+            machine.inventory.set(slot, ItemResource.EMPTY, 0);
+        }
+    }
+
+    private static String inputs(AssemblingMachineBlockEntity machine) {
+        StringBuilder out = new StringBuilder();
+        for (int slot = 0; slot < AssemblingMachineBlockEntity.INPUTS; slot++) {
+            out.append(slot == 0 ? "" : ", ").append(machine.inventory.getItem(slot));
+        }
+        return out.toString();
     }
 
     /**
@@ -150,6 +288,9 @@ final class AssemblingMachineTests {
 
     /** copper-cable: one copper plate makes two wire in Factorio's 0.5 s. */
     private static final String CABLE = "planetaryfactory:assembling/copper_cable";
+
+    /** The pipe recipe, which the refusal test locks and no other test crafts. */
+    private static final String PIPE = "planetaryfactory:assembling/pipe";
 
     /** iron-gear-wheel, which the lock test locks and no other test crafts. */
     private static final String GEAR = "planetaryfactory:assembling/iron_gear_wheel";
@@ -246,14 +387,14 @@ final class AssemblingMachineTests {
         AssemblingMachineBlockEntity machine = place(helper);
         helper.startSequence()
                 .thenExecute(() -> {
-                    AssemblingMachineRecipes.lockForTest(GEAR::equals);
+                    AssemblingMachineRecipes.lockForTest(GEAR);
                     machine.setHeldRecipe(HeldRecipe.of(GEAR), player(helper));
                     machine.inventory.set(0, ItemResource.of(item("ftbmaterials:iron_plate")), 4);
                     machine.energyStorage.set(CHARGE);
                 })
                 .thenIdle(WINDOW)
                 .thenExecute(() -> {
-                    AssemblingMachineRecipes.lockForTest(null);
+                    AssemblingMachineRecipes.unlockForTest(GEAR);
                     assertStalled(helper, machine, AssemblingStall.LOCKED, 4, GEAR);
                 })
                 .thenSucceed();
@@ -336,6 +477,10 @@ final class AssemblingMachineTests {
         Player player = player(helper);
         AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
         for (String id : loaded) {
+            if (AssemblingMachineRecipes.isLockedForTest(id)) {
+                // Another test in the batch has it locked; refusing it is refusesWhatItCannotHold's.
+                continue;
+            }
             HoldVerdict verdict = menu.request(player, id);
             if (!verdict.held() || !machine.heldRecipe().equals(HeldRecipe.of(id))) {
                 helper.fail("Fill Recipe on " + id + " was answered " + verdict + " and left the machine holding "
@@ -360,20 +505,16 @@ final class AssemblingMachineTests {
         AssemblingMachineBlockEntity machine = place(helper);
         Player player = player(helper);
         AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
-        String held = someRecipe(helper);
+        String held = CABLE;
         menu.request(player, held);
         HoldVerdict unknown = menu.request(player, "minecraft:stone_bricks");
         if (unknown != HoldVerdict.NOT_ASSEMBLING || !machine.heldRecipe().equals(HeldRecipe.of(held))) {
             helper.fail("a non-assembling id was answered " + unknown + " and left " + machine.heldRecipe(), ANCHOR);
             return;
         }
-        String other = AssemblingMachineRecipes.choices(helper.getLevel()).stream()
-                .map(RecipeChoice::id).filter(id -> !id.equals(held)).findFirst().orElse(null);
-        if (other == null) {
-            helper.fail("fewer than two assembling recipes are loaded, so a lock proves nothing");
-            return;
-        }
-        AssemblingMachineRecipes.lockForTest(other::equals);
+        // Its own recipe, which no other test crafts or locks: the lock is shared by the batch.
+        String other = PIPE;
+        AssemblingMachineRecipes.lockForTest(other);
         try {
             HoldVerdict locked = menu.request(player, other);
             if (locked != HoldVerdict.LOCKED || !machine.heldRecipe().equals(HeldRecipe.of(held))) {
@@ -381,7 +522,7 @@ final class AssemblingMachineTests {
                 return;
             }
         } finally {
-            AssemblingMachineRecipes.lockForTest(null);
+            AssemblingMachineRecipes.unlockForTest(other);
         }
         helper.succeed();
     }

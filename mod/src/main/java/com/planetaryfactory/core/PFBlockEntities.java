@@ -6,6 +6,7 @@ import com.planetaryfactory.core.fluid.BoilerBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerItemHandler;
 import com.planetaryfactory.core.fluid.OffshorePumpBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
+import com.planetaryfactory.core.machine.AssemblingMachineItemHandler;
 import com.planetaryfactory.core.machine.AssemblingMachinePartBlock;
 import com.planetaryfactory.core.mining.rig.RigBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigItemHandler;
@@ -222,9 +223,10 @@ public final class PFBlockEntities {
      * that covers only part of the footprint must still find the machine. A part has no block entity
      * and forwards to its anchor's.
      *
-     * <p>No item face yet. ADR-0071 filters inputs to the Held recipe through
-     * {@code GuardedResourceHandler}, and an unguarded face now would let a pipe fill the slots with
-     * anything; that is the input-filter ticket's.
+     * <p>The item face (#329) is {@link AssemblingMachineItemHandler}: inputs filtered to the Held
+     * recipe, one ingredient per slot, and only the output extractable. Unsided for the furnace's
+     * reason, and on the parts for the pole's -- a belt run against a hull block must find the
+     * machine too.
      */
     private static void registerAssemblingMachineCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlock(
@@ -239,6 +241,19 @@ public final class PFBlockEntities {
                         level.getBlockEntity(AssemblingMachinePartBlock.anchorOf(pos, state))
                                         instanceof AssemblingMachineBlockEntity machine
                                 ? machine.getEnergyLookup(side) : null,
+                PFBlocks.ASSEMBLING_MACHINE_PART.get());
+        event.registerBlock(
+                Capabilities.Item.BLOCK,
+                (level, pos, state, blockEntity, side) ->
+                        blockEntity instanceof AssemblingMachineBlockEntity machine
+                                ? new AssemblingMachineItemHandler(machine) : null,
+                PFBlocks.ASSEMBLING_MACHINE.get());
+        event.registerBlock(
+                Capabilities.Item.BLOCK,
+                (level, pos, state, blockEntity, side) ->
+                        level.getBlockEntity(AssemblingMachinePartBlock.anchorOf(pos, state))
+                                        instanceof AssemblingMachineBlockEntity machine
+                                ? new AssemblingMachineItemHandler(machine) : null,
                 PFBlocks.ASSEMBLING_MACHINE_PART.get());
     }
 }
