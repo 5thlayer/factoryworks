@@ -149,7 +149,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         if (!ghost.isEmpty()) {
             graphics.fakeItem(ghost, slot.x, slot.y);
             graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, isShort(slot) ? SHORT_VEIL : GHOST_VEIL);
-            graphics.itemDecorations(font, ghost, slot.x, slot.y, String.valueOf(ghost.getCount()));
+            graphics.itemDecorations(font, ghost, slot.x, slot.y);
         }
         super.extractSlot(graphics, slot, mouseX, mouseY);
     }
