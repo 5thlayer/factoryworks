@@ -281,6 +281,9 @@ Sub-rules:
 
 - **Burner tier before electric** — `adapted`. The tier exists and is Factorio's own block rather
   than GregTech's steam stand-in. ADR-0040.
+- **The electric drill is powered by a pole's supply area** — `shipped` (#194). It takes no fuel and
+  no wire: 90 kW is 45 FE/t (ADR-0060), paid only on a tick it works, from a buffer the pole fills
+  (ADR-0036). A pole reaching any block of the 3x3 finds it, and counts it once.
 - **Drills output onto the tile they face** — `shipped` (#193). ADR-0043 reverses ADR-0040's
   `excluded`, which was argued entirely about belts and had deleted the drill-into-furnace pair as
   collateral. A rig pushes into an item handler on its faced tile and **otherwise stalls**, holding

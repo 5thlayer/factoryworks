@@ -58,8 +58,9 @@ FACES = {
     # generators where they stand, and that path is held by the listener assertion below.
     "supply_area_pole": (None, ()),
     "furnace": ("registerFurnaceCapabilities", ("Item", "Energy")),
-    "rig": ("registerRigCapabilities", ("Item",)),
-    "rig_part": ("registerRigCapabilities", ("Item",)),
+    # Energy (#194): the electric rig's alone at run time, registered for both tiers.
+    "rig": ("registerRigCapabilities", ("Item", "Energy")),
+    "rig_part": ("registerRigCapabilities", ("Item", "Energy")),
     "offshore_pump": ("registerPumpCapabilities", ("Fluid",)),
     "boiler": ("registerBoilerCapabilities", ("Fluid", "Item")),
     # Energy (#328): the craft cycle draws FE, and without the face no pole counts the machine.
@@ -211,7 +212,8 @@ class CapabilityRegistration(unittest.TestCase):
         body = method_body(self.source, "registerRigCapabilities")
         self.assertIsNotNone(body)
         self.assertIn("PFBlocks.rigPart(tier)", body)
-        self.assertIn("RigPartBlockEntity", body)
+        self.assertIn("rigOf(", body)
+        self.assertRegex(self.source, r"RigBlockEntity\s+rigOf\([^)]*\)\s*\{[^}]*RigPartBlockEntity")
 
     def test_every_item_face_is_recorded_and_registered(self):
         items = code_of(ITEMS)

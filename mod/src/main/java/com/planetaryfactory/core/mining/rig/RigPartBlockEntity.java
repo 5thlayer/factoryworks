@@ -3,6 +3,7 @@ package com.planetaryfactory.core.mining.rig;
 import javax.annotation.Nullable;
 
 import com.planetaryfactory.core.PFBlockEntities;
+import com.planetaryfactory.core.energy.EnergyOwner;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * everything a rig does lives on {@link RigBlockEntity}; this is the pointer the bed-and-door
  * idiom needs to find it from any part, which is what lets breaking any part break the rig.
  */
-public class RigPartBlockEntity extends BlockEntity {
+public class RigPartBlockEntity extends BlockEntity implements EnergyOwner {
 
     private static final String TAG_ANCHOR_X = "anchor_x";
     private static final String TAG_ANCHOR_Y = "anchor_y";
@@ -41,6 +42,13 @@ public class RigPartBlockEntity extends BlockEntity {
 
     @Nullable
     public BlockPos anchorPos() {
+        return anchorPos;
+    }
+
+    /** Without it a pole counts one electric rig once per block it reaches (#194). */
+    @Override
+    @Nullable
+    public BlockPos planetaryfactory$energyOwner() {
         return anchorPos;
     }
 

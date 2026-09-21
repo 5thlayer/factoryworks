@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.mining.rig;
 
+import com.planetaryfactory.core.energy.ForgeEnergy;
+
 /**
  * A rig's two rates, both of them read off the corpus rather than chosen (#193).
  *
@@ -51,5 +53,19 @@ public final class RigRate {
     /** What one tick of work costs, from the machine's {@code energy_usage} in watts. */
     public static long joulesPerTick(double watts) {
         return Math.round(watts / TICKS_PER_SECOND);
+    }
+
+    /** What one tick of work costs an electric rig, in FE. */
+    public static long fePerTick(double watts) {
+        return Math.round(watts / TICKS_PER_SECOND / ForgeEnergy.JOULES_PER_FE);
+    }
+
+    /**
+     * The FE buffer a pole fills: one operation on a {@code mining_time} 1 ore, for the reason the
+     * Electric Furnace sizes its buffer on a whole craft -- a pole busy elsewhere for a tick must
+     * not stall an operation already under way.
+     */
+    public static long bufferFe(double watts, double miningSpeed) {
+        return fePerTick(watts) * operationTicks(miningSpeed, 1);
     }
 }

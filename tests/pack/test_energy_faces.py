@@ -51,6 +51,7 @@ SNAPSHOT_JOURNAL = re.compile(r"(?<!Long)\bSnapshotJournal\b")
 # to check" by a scan that found nothing.
 FE_FACES = {
     "smelting/FurnaceBlockEntity.java": "addEnergy(",
+    "mining/rig/RigBlockEntity.java": "addEnergy(",
 }
 
 

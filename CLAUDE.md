@@ -141,7 +141,7 @@ classpath too. Oritech, Railcraft Reborn, SimpleBelts and FTB Materials are ther
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
-`BoilerTests` (#274), `RigBreakTests` (#310), and `SteamEngineNetworkTests` (#292) and `AssemblingMachineTests` (#327),
+`BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292) and `AssemblingMachineTests` (#327),
 both registered only when Oritech is loaded, and `BeltHandoffTests` (#342), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
@@ -149,7 +149,9 @@ the server's recipe manager, resolves a tag ingredient to its items and leaves a
 (forcing the graph empty turns it red); that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
 transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
-starved one freezes where it stood; and that power crosses a wire between linked poles, stops
+starved one freezes where it stood; that an Electric Mining Drill reached only through its part
+blocks is one machine, draws 45 FE/t, mines when fed and freezes when starved (making the part its
+own energy owner, returning false from `pay`, or dropping the journal each turn one red); and that power crosses a wire between linked poles, stops
 beyond reach, and stops again when the link is broken. And that a pole reaching only a slave Steam Engine and its
 hull draws the whole row's 1,350 FE/t from the master, once, feeding neither -- `SupplyScanTest` holds
 the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red. And that an Assembling Machine's Held recipe survives its save hook and

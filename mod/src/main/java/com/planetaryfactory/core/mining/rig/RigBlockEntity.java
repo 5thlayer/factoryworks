@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.mining.rig;
 
 import com.planetaryfactory.core.PFBlockEntities;
+import com.planetaryfactory.core.energy.LongSnapshotJournal;
 import com.planetaryfactory.core.mining.rig.RigGeometry.Offset;
 import com.planetaryfactory.core.ore.OreBlock;
 import com.planetaryfactory.core.ore.OreCorpus;
@@ -8,6 +9,7 @@ import com.planetaryfactory.core.ore.OreDelta;
 import com.planetaryfactory.core.ore.OreMining;
 import com.planetaryfactory.core.smelting.FuelBuffer;
 import com.planetaryfactory.core.smelting.FurnaceCycle;
+import com.planetaryfactory.core.smelting.FurnaceEnergyBuffer;
 import com.planetaryfactory.core.smelting.PFFuel;
 
 import javax.annotation.Nullable;
@@ -35,14 +37,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 /**
- * The behaviour behind both mining rigs (#193, #194): it mines the layer beneath it, burns solid
- * fuel for the privilege, and pushes what it mines onto the tile it faces.
+ * The behaviour behind both mining rigs (#193, #194): it mines the layer beneath it, pays for the
+ * privilege in solid fuel or in a pole's FE, and pushes what it mines onto the tile it faces.
  *
  * <p>One block entity type and two blocks pointing at it, the way the three furnace tiers share
  * one. Everything that differs between the rigs is a row in {@link RigCorpus} rather than a branch
@@ -75,6 +79,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
 
     public static final int DATA_PROGRESS = 0;
     public static final int DATA_DURATION = 1;
+    /** Joules of fuel on the burner rig, FE on the electric one. */
     public static final int DATA_FUEL = 2;
     public static final int DATA_FUEL_CAPACITY = 3;
     public static final int DATA_COUNT = 4;
@@ -90,6 +95,8 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
 
     private final RigBuffer buffer = new RigBuffer(BUFFER_CAPACITY);
     private final FuelBuffer fuel = new FuelBuffer();
+    private final FurnaceEnergyBuffer energy;
+    private final LongSnapshotJournal journal;
     private final FurnaceCycle cycle = new FurnaceCycle();
 
     /** The duration of the operation in progress, so the client's gauge has something to scale to. */
@@ -117,8 +124,9 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
             return switch (index) {
                 case DATA_PROGRESS -> cycle.progress();
                 case DATA_DURATION -> duration;
-                case DATA_FUEL -> clampToInt(fuel.storedJoules());
-                case DATA_FUEL_CAPACITY -> clampToInt(fuel.gaugeCapacity());
+                case DATA_FUEL -> clampToInt(burnsFuel() ? fuel.storedJoules() : energy.getEnergyStored());
+                case DATA_FUEL_CAPACITY -> clampToInt(
+                        burnsFuel() ? fuel.gaugeCapacity() : energy.getEnergyCapacity());
                 default -> 0;
             };
         }
@@ -128,8 +136,18 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
             switch (index) {
                 case DATA_PROGRESS -> cycle.setProgress(value);
                 case DATA_DURATION -> duration = value;
-                case DATA_FUEL -> fuel.load(value, fuel.lastLitJoules());
-                case DATA_FUEL_CAPACITY -> fuel.load(fuel.storedJoules(), value);
+                case DATA_FUEL -> {
+                    if (burnsFuel()) {
+                        fuel.load(value, fuel.lastLitJoules());
+                    } else {
+                        energy.setStoredFe(value);
+                    }
+                }
+                case DATA_FUEL_CAPACITY -> {
+                    if (burnsFuel()) {
+                        fuel.load(fuel.storedJoules(), value);
+                    }
+                }
                 default -> {
                 }
             }
@@ -157,6 +175,10 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
         }
         this.tier = rig.tier();
         this.row = RigCorpus.get().rowOf(tier);
+        this.energy = new FurnaceEnergyBuffer(
+                row.burnsFuel() ? 0L : RigRate.bufferFe(row.energyUsage(), row.miningSpeed()));
+        this.journal = new LongSnapshotJournal(
+                energy::getEnergyStored, energy::setStoredFe, this::setChanged);
     }
 
     public RigTier tier() {
@@ -245,9 +267,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
      */
     private boolean pay() {
         if (!row.burnsFuel()) {
-            // #194: the electric rig is a supply-area pole customer under ADR-0036, and until that
-            // ticket lands it has no power source at all. It mines nothing rather than mining free.
-            return false;
+            return energy.drawTick(RigRate.fePerTick(row.energyUsage()));
         }
         long perTick = RigRate.joulesPerTick(row.energyUsage());
         if (fuel.drawTick(perTick)) {
@@ -377,6 +397,44 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
         return hasOre;
     }
 
+    // -- the energy face ------------------------------------------------------------------------
+
+    /**
+     * The FE face ADR-0036's pole feeds, and null on the burner rig so a pole does not count it
+     * as a machine it is failing to power.
+     */
+    @Nullable
+    public EnergyHandler energySide() {
+        return burnsFuel() ? null : energyHandler;
+    }
+
+    private final EnergyHandler energyHandler = new EnergyHandler() {
+        @Override
+        public long getAmountAsLong() {
+            return energy.getEnergyStored();
+        }
+
+        @Override
+        public long getCapacityAsLong() {
+            return energy.getEnergyCapacity();
+        }
+
+        @Override
+        public int insert(int amount, TransactionContext transaction) {
+            if (amount <= 0) {
+                return 0;
+            }
+            // The pole probes demand with an insert it aborts (#266).
+            journal.updateSnapshots(transaction);
+            return (int) energy.addEnergy(amount);
+        }
+
+        @Override
+        public int extract(int amount, TransactionContext transaction) {
+            return 0;
+        }
+    };
+
     private record Target(BlockPos pos, OreBlock ore, String dropId, double miningTime) {
     }
 
@@ -478,6 +536,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
         cycle.setProgress(input.getIntOr("Progress", 0));
         duration = input.getIntOr("Duration", 0);
         fuel.load(input.getLongOr("FuelJoules", 0L), input.getLongOr("FuelLitJoules", 0L));
+        energy.setStoredFe(input.getLongOr("EnergyFe", 0L));
         // A rig that logged out mid-stall comes back stalled and still holding it. A buffer that
         // came back empty would have voided ore across a logout with nothing in the log.
         buffer.load(input.getString("BufferItem").orElse(null), input.getIntOr("BufferCount", 0));
@@ -491,6 +550,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
         output.putInt("Duration", duration);
         output.putLong("FuelJoules", fuel.storedJoules());
         output.putLong("FuelLitJoules", fuel.lastLitJoules());
+        output.putLong("EnergyFe", energy.getEnergyStored());
         if (buffer.itemId() != null) {
             output.putString("BufferItem", buffer.itemId());
             output.putInt("BufferCount", buffer.count());

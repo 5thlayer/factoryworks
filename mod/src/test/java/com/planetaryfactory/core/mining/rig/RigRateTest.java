@@ -70,4 +70,17 @@ class RigRateTest {
     void aRigThatDrawsNothingCostsNothingPerTick() {
         assertEquals(0L, RigRate.joulesPerTick(0.0));
     }
+
+    @Test
+    void theElectricRigDrawsFortyFiveFePerTickOffItsCorpusRow() {
+        // 90 kW is 4,500 J a tick, at ADR-0060's 100 J per FE.
+        double watts = RigCorpus.get().rowOf(RigTier.ELECTRIC).energyUsage();
+        assertEquals(45L, RigRate.fePerTick(watts));
+    }
+
+    @Test
+    void theElectricRigBuffersOneOperationOnIronOre() {
+        RigCorpus.Row row = RigCorpus.get().rowOf(RigTier.ELECTRIC);
+        assertEquals(45L * 40, RigRate.bufferFe(row.energyUsage(), row.miningSpeed()));
+    }
 }

@@ -277,9 +277,10 @@
       "note": "The ladder's top rung (#155): `crafting_speed` 2, no fuel slot, 13 EU/t through GTCEu's `IEnergyContainer`, fed by ADR-0036's supply-area pole and by nothing else -- `acceptEnergyFromNetwork` returns 0, so a GT cable run cannot reach it. #149 specified it on a GT chassis and is closed as superseded: a GT machine reads `SmeltingRecipe` through `GTRecipeType.proxyRecipes` and would be blind to the count-bearing `planetaryfactory:smelting` type. Idle draw is not modelled (ADR-0029 excludes it)."
     },
     "electric-mining-drill": {
-      "status": "undecided",
-      "note": "As `burner-mining-drill`.",
-      "ticket": 105
+      "kind": "item",
+      "target": "planetaryfactory:electric_mining_drill",
+      "source": "authored",
+      "note": "Rung 1's rig, and `planetaryfactory_core`'s (ADR-0043, #194). The burner rig's mechanism unchanged -- one unit per operation through `OreMining` (ADR-0041), the same eject -- on a 3x3 mining the 5x5 beneath it at 0.5 mining speed, and powered by standing in a supply-area pole's area (ADR-0036) at 90 kW, 45 FE/t under ADR-0060. Every one of those numbers is a `data/factorio/machine.json` row. Its own recipe is Factorio's, category `crafting`, so the Personal Assembler plans it."
     },
     "electronic-circuit": {
       "kind": "item",
