@@ -40,7 +40,6 @@ where the Held recipe is **shown**:
   disappears under a real stack.
 - **Input slots the Held recipe does not use accept nothing**, MI's lock-empty rule, on the face
   #329 builds.
-- **Each input slot has a player-set capacity**, capping what a pipe loads into it.
 - **The screen states the stall**: one line from `AssemblingStall`, naming what is wrong and what
   fixes it.
 
@@ -48,6 +47,14 @@ where the Held recipe is **shown**:
 Factorio's screen, but the pack ships EMI and JEI, and a second recipe browser inside one machine
 duplicates the first while missing its search, its uses-and-recipes navigation and its bookmarks.
 The ghosts and the stall line are kept; they are what the list was not.
+
+**Considered: MI's player-set slot capacity (`adjustedCapacity`).** Rejected, amended on #335,
+which first carried it as a decision bullet here. Factorio has no such setting: an assembler caps
+its own intake at about two crafts' worth, and the player never sets a number. The input filter
+already stops a machine taking anything it cannot use, so what is left is a machine buffering a
+stack of each ingredient. That costs throughput on a shared belt, not correctness, and it does not
+pay for a control per slot, saved state and a reset rule. If it turns out to matter, the fix is
+Factorio's automatic cap, derived from the Held recipe, with no screen and nothing saved.
 
 **Considered: MI's storage model -- no Held recipe, slots locked to items, the recipe inferred from
 the inputs.** Rejected, and this is the part worth recording, because MI's UI and MI's storage are
@@ -81,6 +88,6 @@ separable and only the storage is refused.
   emitted recipe is one the machine can hold -- is still asserted by #327's GameTest, which moves
   to the Fill Recipe path.
 - **A Held recipe copies as one id**, so the configuration card the mechanic ledger names stays a
-  small mechanic when it is built. Slot capacities travel with it.
+  small mechanic when it is built.
 - `docs/factorio-mechanics.md`'s "Recipe selection in a machine" row is rewritten against this
   surface.
