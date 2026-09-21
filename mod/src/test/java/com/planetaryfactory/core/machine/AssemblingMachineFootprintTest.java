@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
- * The Assembling Machine's footprint (#326): Oritech's assembler model's own extent, 4 wide, 1 deep
+ * The Assembling Machine's footprint (#326): Oritech's assembler model's own extent, 2 wide, 1 deep
  * and 2 tall, in Oritech's controller-local frame.
  *
  * <p>The frame is the load-bearing part. The model is drawn by Oritech's renderer, rotated by the
@@ -23,26 +23,32 @@ import org.junit.jupiter.api.Test;
 class AssemblingMachineFootprintTest {
 
     @Test
-    void itIsFourWideOneDeepTwoTallWithTheAnchorFirst() {
+    void itIsTwoWideOneDeepTwoTallWithTheAnchorFirst() {
         List<Local> offsets = AssemblingMachineFootprint.offsets();
 
-        assertEquals(4 * 1 * 2, offsets.size());
+        assertEquals(2 * 1 * 2, offsets.size());
         assertEquals(new Local(0, 0, 0), offsets.getFirst(), "the anchor is always first");
         assertEquals(offsets.size(), Set.copyOf(offsets).size(), "no position twice");
         for (Local offset : offsets) {
             assertEquals(0, offset.x(), "one deep: nothing in front of or behind the anchor");
             assertTrue(offset.y() >= 0 && offset.y() < 2, "two tall, standing on the anchor's level");
-            assertTrue(offset.z() >= -1 && offset.z() <= 2,
-                    "four wide: one beside the anchor, two beyond it on the cores' side");
+            assertTrue(offset.z() == 0 || offset.z() == 1, "two wide: the anchor and the cores' side");
         }
     }
 
     @Test
-    void itCoversEveryCorePositionOritechsAssemblerShips() {
-        // AssemblerBlockEntity.getCorePositions() at 2.0.0-exp6, read off the jar.
-        Set<Local> oritechCores = Set.of(new Local(0, 0, 1), new Local(0, 1, 0), new Local(0, 1, 1));
+    void itIsExactlyOritechsControllerAndCores() {
+        // AssemblerBlockEntity.getCorePositions() at 2.0.0-exp6, read off the jar, plus the anchor.
+        Set<Local> oritech = Set.of(new Local(0, 0, 0),
+                new Local(0, 0, 1), new Local(0, 1, 0), new Local(0, 1, 1));
 
-        assertTrue(Set.copyOf(AssemblingMachineFootprint.offsets()).containsAll(oritechCores));
+        assertEquals(oritech, Set.copyOf(AssemblingMachineFootprint.offsets()));
+    }
+
+    @Test
+    void itsAddonSlotsAreOritechsAssemblers() {
+        assertEquals(List.of(new Local(0, 0, -1), new Local(0, 0, 2), new Local(1, 0, 0)),
+                AssemblingMachineFootprint.addonSlots());
     }
 
     @Test

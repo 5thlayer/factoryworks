@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Where the Assembling Machine stands (#326): four wide, one deep, two tall.
+ * Where the Assembling Machine stands (#326): two wide, one deep, two tall -- Oritech's own
+ * assembler's controller and three cores, placed as one footprint.
  *
  * <p><b>The model's own extent, not Factorio's 3x3.</b> ADR-0059 says a machine's footprint is its
- * Factorio tile size, and ADR-0071 has the machine reuse Oritech's assembler model -- which spans
- * one block to one side of the anchor and two to the other, one deep and two and a half tall, and
- * cannot fill a 3x3 without being redrawn.
+ * Factorio tile size, and ADR-0071 has the machine reuse Oritech's assembler model -- which is drawn
+ * over Oritech's 2x1x2 and cannot fill a 3x3 without being redrawn.
  * #326 took the model's extent, so what the player sees and what the player collides with are the
  * same blocks. The divergence from ADR-0059 is recorded in ADR-0072.
  *
@@ -25,14 +25,11 @@ import java.util.List;
  */
 public final class AssemblingMachineFootprint {
 
-    public static final int WIDE = 4;
+    public static final int WIDE = 2;
     public static final int TALL = 2;
 
-    /**
-     * The lateral offset of the machine's first column: one to the side opposite Oritech's cores,
-     * so the anchor is the second column of four and the cores' side carries the two beyond it.
-     */
-    private static final int FIRST_COLUMN = -1;
+    /** The lateral offset of the machine's first column: the anchor's, with the cores' beside it. */
+    private static final int FIRST_COLUMN = 0;
 
     private static final List<Local> OFFSETS = build();
 
@@ -56,9 +53,8 @@ public final class AssemblingMachineFootprint {
     }
 
     /**
-     * Where the machine's addons go: one beyond each end of the row, and one behind the anchor.
-     * Oritech's assembler has them at lateral -1 and 2, which this footprint occupies, so the side
-     * slots move one further out; behind the anchor is Oritech's own {@code (1, 0, 0)}.
+     * Where the machine's addons go: one beyond each end of the row, and one behind the anchor --
+     * Oritech's assembler's own {@code (0,0,-1)}, {@code (0,0,2)} and {@code (1,0,0)}.
      */
     public static List<Local> addonSlots() {
         return List.of(new Local(0, 0, FIRST_COLUMN - 1), new Local(0, 0, FIRST_COLUMN + WIDE),
