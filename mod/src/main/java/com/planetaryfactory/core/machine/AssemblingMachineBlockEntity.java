@@ -145,9 +145,8 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         }
         AssemblingRecipe recipe = resolved.get().value();
         int duration = durationTicks(recipe);
-        long totalFe = AssemblingMachineSpec.fePerCraft(recipe.time(), getEfficiencyMultiplier());
         try (Transaction tx = Transaction.openRoot()) {
-            long fe = AssemblingMachineSpec.feForTick(Math.min(progress.get(), duration - 1), duration, totalFe);
+            long fe = nextTickFe(recipe);
             if (energyStorage.internalExtract(fe, tx) != fe) {
                 stall = AssemblingStall.NO_POWER;
                 return;
@@ -233,6 +232,41 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     /** Why the last tick made no progress, for the screen and the GameTests. */
     public AssemblingStall stall() {
         return stall;
+    }
+
+    /**
+     * What the screen shows, recomputed on every ask (#332). The stall is asked the craft cycle's
+     * way, and power as the tick's share against the buffer, without the draw.
+     */
+    public AssemblingStatus status() {
+        if (!(level instanceof ServerLevel server)) {
+            return AssemblingStatus.IDLE;
+        }
+        Optional<RecipeHolder<AssemblingRecipe>> resolved = AssemblingMachineRecipes.resolve(server, held);
+        AssemblingStall now = stallFor(resolved);
+        boolean powered = now.stalled() || energyStorage.getAmountAsLong() >= resolved
+                .map(holder -> nextTickFe(holder.value()))
+                .orElse(0L);
+        return AssemblingStatus.of(disabledViaRedstone, now, powered);
+    }
+
+    private long nextTickFe(AssemblingRecipe recipe) {
+        int duration = durationTicks(recipe);
+        return AssemblingMachineSpec.feForTick(Math.min(progress.get(), duration - 1), duration, craftFe(recipe));
+    }
+
+    private long craftFe(AssemblingRecipe recipe) {
+        return AssemblingMachineSpec.fePerCraft(recipe.time(), getEfficiencyMultiplier());
+    }
+
+    /** The Held recipe's average draw in tenths of an FE a tick, or 0 with none. Server only. */
+    public long drawTenths() {
+        if (!(level instanceof ServerLevel server)) {
+            return 0L;
+        }
+        return AssemblingMachineRecipes.resolve(server, held)
+                .map(holder -> AssemblingMachineSpec.drawTenths(craftFe(holder.value()), durationTicks(holder.value())))
+                .orElse(0L);
     }
 
     /** Ticks into the craft under way, for the screen's progress bar. */

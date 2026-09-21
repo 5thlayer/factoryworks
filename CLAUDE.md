@@ -181,7 +181,10 @@ spreads a slot-0 insert past the filter, stays pinned off. Making `acceptsInput`
 two of them red, and dropping the `cycleInputMode` override turns the third red. The slot rule is
 `AssemblingInputSlotsTest`. The rate and the stall order are
 `AssemblingMachineSpecTest` and `AssemblingStallTest`; whether an Oritech addon changes the rate in
-a world is not checked -- the multipliers are, on the JVM. A pole beside a whole machine counts it
+a world is not checked -- the multipliers are, on the JVM. And that the screen's status (#332) is recomputed on
+each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
+cycle stops the machine; forcing the power probe true turns it red. The precedence is
+`AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. A pole beside a whole machine counts it
 once and fills it, and a small pole reaching only a hull block still finds it: the hull blocks have
 no block entity, so they resolve to the anchor through `EnergyOwnerBlock` in `SupplyAreaScan`, and
 without it one machine counts as four. Each was checked against the defect it exists for: dropping
@@ -613,8 +616,8 @@ the real client, booted by `scripts/launch.py`'s headless context (imported, not
 stopped when the log goes quiet for fifteen seconds with `blocks.png-atlas` created, and killed by
 process group because `launch.py` is a Python parent holding a Java child. The allowlist rule is
 `check-datapack-load.py`'s: every complaint about this namespace is an `EXPECTED` entry with its
-ticket, an unlisted one fails, and a stale one fails too. The eleven today are seven models naming
-departed `gtceu:`/`gcyr:` textures (#258) and the four steam fluids (#189). Other mods' namespaces
+ticket, an unlisted one fails, and a stale one fails too. The eight today are four models naming
+departed `gcyr:` textures (#258) and the four steam fluids (#189). Other mods' namespaces
 are not scanned; they are not ours to fix.
 
 One blind spot is **measured rather than assumed**: a missing item model definition — the

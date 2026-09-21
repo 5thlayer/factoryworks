@@ -1,0 +1,21 @@
+Third-party material committed to this repository
+==================================================
+
+Each entry names the files, their author, where they came from and the licence they are under. A
+file listed here is NOT covered by any licence this repository states for its own work; its own
+licence governs it.
+
+Electric Furnace textures (#324)
+--------------------------------
+
+Files:   kubejs/assets/planetaryfactory/textures/block/electric_furnace/bottom.png
+         kubejs/assets/planetaryfactory/textures/block/electric_furnace/front_off.png
+         kubejs/assets/planetaryfactory/textures/block/electric_furnace/front_on.png
+         kubejs/assets/planetaryfactory/textures/block/electric_furnace/side.png
+         kubejs/assets/planetaryfactory/textures/block/electric_furnace/top.png
+Author:  Futureazoo
+Source:  https://github.com/Futureazoo/TextureRepository
+         futureazoo/blocks/tech/bronze_furnace_*.png at commit
+         c22b100f1b4c22f7793175310d42e44688ba2e98, copied unmodified and renamed
+Licence: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+         https://creativecommons.org/licenses/by-nc-sa/4.0/

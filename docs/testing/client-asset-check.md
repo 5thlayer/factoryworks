@@ -37,8 +37,8 @@ that has to put a player's splash screen back.
 **Does the asset manager log anything?** For most failures, loudly:
 
 ```
-[Worker-Main-2/WARN]: Missing textures in model planetaryfactory:block/electric_furnace:
-    gtceu:block/casings/voltage/lv/side
+[Worker-Main-2/WARN]: Missing textures in model planetaryfactory:block/scrap_pile:
+    gcyr:block/mars_regolith
 [Worker-Main-2/WARN]: Missing model for variant: 'Block{planetaryfactory:steam}[level=0]'
 [Worker-Main-2/WARN]: Missing FluidModel for fluid 'planetaryfactory:steam'
 ```
@@ -67,8 +67,8 @@ nobody watching it.
 Same rule as `check-datapack-load.py`. Every complaint the log may contain about this pack is an
 `EXPECTED` entry with its reason and its ticket; an unlisted one fails; and a listed one that no
 longer appears fails too, because a stale entry is a defect somebody fixed and a guard nobody
-re-armed. The eleven today are two groups: seven models naming `gtceu:` and `gcyr:` textures whose
-mods left with ADR-0060, which the chassis ticket (#258) owns, and the four steam fluids, whose
+re-armed. The eight today are two groups: four models naming `gcyr:` textures whose mod left with
+ADR-0060, which the chassis ticket (#258) owns, and the four steam fluids, whose
 rendering is #189's along with the rest of the two pack-owned fluids.
 
 Only this pack's namespace is scanned. The installed mods produce dozens of the same warnings —

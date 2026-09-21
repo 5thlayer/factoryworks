@@ -71,6 +71,11 @@ public final class AssemblingMachineSpec {
         return share(progress + 1, durationTicks, totalFe) - share(progress, durationTicks, totalFe);
     }
 
+    /** The average draw over a craft, in tenths of an FE a tick: 75 kW is 37.5 FE/t. 0 with no craft. */
+    public static long drawTenths(long totalFe, int durationTicks) {
+        return durationTicks <= 0 ? 0L : Math.round(totalFe * 10.0 / durationTicks);
+    }
+
     private static long share(int ticks, int durationTicks, long totalFe) {
         return totalFe * ticks / durationTicks;
     }

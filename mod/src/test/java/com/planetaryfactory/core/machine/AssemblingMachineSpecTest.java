@@ -48,6 +48,18 @@ class AssemblingMachineSpecTest {
 
     /** Oritech's speed addon multiplies the duration: 0.5 halves it, and the craft costs the same. */
     @Test
+    void theDrawIsSeventyFiveKilowattsInTenthsOfAnFePerTick() {
+        assertEquals(375, AssemblingMachineSpec.drawTenths(750, 20));
+        assertEquals(375, AssemblingMachineSpec.drawTenths(3000, 80));
+    }
+
+    @Test
+    void aFasterMachineDrawsHarderAndNoRecipeDrawsNothing() {
+        assertEquals(750, AssemblingMachineSpec.drawTenths(750, 10));
+        assertEquals(0, AssemblingMachineSpec.drawTenths(750, 0));
+    }
+
+    @Test
     void aSpeedAddonShortensTheCraftButNotItsCost() {
         assertEquals(10, AssemblingMachineSpec.durationTicks(10, 0.5f));
         assertEquals(750, AssemblingMachineSpec.fePerCraft(10, 1.0f));

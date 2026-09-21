@@ -7,6 +7,7 @@ import com.planetaryfactory.core.PFItems;
 import com.planetaryfactory.core.compat.emi.HeldRecipeTooltip;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
+import com.planetaryfactory.core.machine.AssemblingStatus;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -29,7 +30,8 @@ import rearth.oritech.api.screen.OritechSurface;
 import rearth.oritech.client.ui.render.LargeItemRenderState;
 
 /**
- * The Assembling Machine's screen (#327): the Held recipe, its five slots, and the craft's progress.
+ * The Assembling Machine's screen (#327): the Held recipe, its five slots, the craft's progress, the
+ * machine's energy and its status (#332).
  *
  * <p>No recipe is picked here: the recipe viewer is the only picker, through EMI's Fill Recipe
  * (ADR-0073, #336). The Held recipe heads the screen as its result's icon and name; with EMI loaded
@@ -37,7 +39,9 @@ import rearth.oritech.client.ui.render.LargeItemRenderState;
  * opens it. A recipe the team has not researched is marked locked -- the Lock annotation policy is
  * to annotate, never to hide. Between the inputs and the output, a bar and a percentage show how
  * far the craft under way is, as Factorio's machine window does. A tab above the panel carries the
- * machine's icon and name, the header every Oritech machine screen has.
+ * machine's icon and name, the header every Oritech machine screen has. Under the slots, a bar shows
+ * the stored FE, with the stored and maximum FE and the Held recipe's draw in its tooltip, and one
+ * line states the {@link AssemblingStatus}: what is wrong and what fixes it (ADR-0073).
  *
  * <p>The Held recipe is also drawn in its slots (ADR-0073): each ingredient ghosted in the input slot
  * {@link com.planetaryfactory.core.machine.AssemblingInputSlots} gives it, with the count one craft
@@ -55,9 +59,10 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int SLOT_DARK = 0xFF373737;
     private static final int SLOT_LIGHT = 0xFFFFFFFF;
     private static final int BAR = 0xFF5DA05D;
+    private static final int ENERGY = 0xFFD0A030;
     private static final int TEXT = 0xFF404040;
     private static final int BAR_TEXT = 0xFFFFFFFF;
-    private static final int LOCKED_TEXT = 0xFFA02020;
+    private static final int PROBLEM_TEXT = 0xFFA02020;
     private static final int SHORT = 0xFFB84C4C;
     // Half the slot's own colour over a ghost, so it reads as a placeholder rather than an item.
     private static final int GHOST_VEIL = 0x808B8B8B;
@@ -74,6 +79,11 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int HELD_Y = 17;
     private static final int BAR_X = 84;
     private static final int BAR_WIDTH = 60;
+    private static final int ENERGY_X = 8;
+    private static final int ENERGY_WIDTH = 160;
+    private static final int ENERGY_HEIGHT = 6;
+    private static final int STATUS_X = 8;
+    private static final int STATUS_WIDTH = 160;
 
     private static final boolean EMI = ModList.get().isLoaded("emi");
 
@@ -119,24 +129,34 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         OritechSurface.PANEL.render(graphics, leftPos, topPos, imageWidth, imageHeight);
         extractTab(graphics);
         for (Slot slot : menu.slots) {
-            recess(graphics, leftPos + slot.x, topPos + slot.y, 16);
+            recess(graphics, leftPos + slot.x, topPos + slot.y, 16, 16);
             if (isShort(slot)) {
                 graphics.fill(leftPos + slot.x, topPos + slot.y, leftPos + slot.x + 16, topPos + slot.y + 16, SHORT);
             }
         }
         int x = leftPos + BAR_X;
         int y = topPos + AssemblingMachineMenu.INPUT_Y;
-        recess(graphics, x, y, BAR_WIDTH);
+        recess(graphics, x, y, BAR_WIDTH, 16);
         graphics.fill(x, y, x + Math.round(BAR_WIDTH * menu.progress()), y + 16, BAR);
+
+        int energyX = leftPos + ENERGY_X;
+        int energyY = topPos + AssemblingMachineMenu.ENERGY_Y;
+        recess(graphics, energyX, energyY, ENERGY_WIDTH, ENERGY_HEIGHT);
+        graphics.fill(energyX, energyY, energyX + Math.round(ENERGY_WIDTH * charge()), energyY + ENERGY_HEIGHT, ENERGY);
+    }
+
+    private float charge() {
+        long capacity = menu.capacityFe();
+        return capacity <= 0 ? 0f : Math.min(1f, (float) menu.storedFe() / capacity);
     }
 
     /** A slot's bevel, as Oritech's itemslot.png draws it: dark above and left, light below and right. */
-    private static void recess(GuiGraphicsExtractor graphics, int x, int y, int width) {
-        graphics.fill(x - 1, y - 1, x + width + 1, y + 17, SLOT);
+    private static void recess(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
+        graphics.fill(x - 1, y - 1, x + width + 1, y + height + 1, SLOT);
         graphics.fill(x - 1, y - 1, x + width, y, SLOT_DARK);
-        graphics.fill(x - 1, y, x, y + 16, SLOT_DARK);
-        graphics.fill(x, y + 16, x + width + 1, y + 17, SLOT_LIGHT);
-        graphics.fill(x + width, y, x + width + 1, y + 16, SLOT_LIGHT);
+        graphics.fill(x - 1, y, x, y + height, SLOT_DARK);
+        graphics.fill(x, y + height, x + width + 1, y + height + 1, SLOT_LIGHT);
+        graphics.fill(x + width, y, x + width + 1, y + height, SLOT_LIGHT);
     }
 
     private boolean isShort(Slot slot) {
@@ -156,6 +176,20 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
 
     @Override
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        if (over(mouseX, mouseY, ENERGY_X, AssemblingMachineMenu.ENERGY_Y, ENERGY_WIDTH, ENERGY_HEIGHT)) {
+            graphics.setTooltipForNextFrame(font, List.of(
+                    Component.translatable("gui.planetaryfactory.assembling_machine.energy",
+                            String.format("%,d", menu.storedFe()), String.format("%,d", menu.capacityFe())),
+                    Component.translatable("gui.planetaryfactory.assembling_machine.draw",
+                            menu.drawTenths() / 10 + "." + menu.drawTenths() % 10)
+                            .withStyle(ChatFormatting.GRAY)),
+                    Optional.empty(), mouseX, mouseY);
+            return;
+        }
+        if (over(mouseX, mouseY, STATUS_X, AssemblingMachineMenu.STATUS_Y, STATUS_WIDTH, font.lineHeight)) {
+            graphics.setTooltipForNextFrame(font, Component.translatable(menu.status().langKey()), mouseX, mouseY);
+            return;
+        }
         ItemStack ghost = hoveredSlot == null || !menu.getCarried().isEmpty() ? ItemStack.EMPTY : ghost(hoveredSlot);
         if (ghost.isEmpty()) {
             super.extractTooltip(graphics, mouseX, mouseY);
@@ -165,6 +199,12 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
                 Component.translatable("gui.planetaryfactory.assembling_machine.per_craft", ghost.getCount())
                         .withStyle(ChatFormatting.GRAY)),
                 Optional.empty(), mouseX, mouseY);
+    }
+
+    private boolean over(double mouseX, double mouseY, int x, int y, int width, int height) {
+        double relX = mouseX - leftPos - x;
+        double relY = mouseY - topPos - y;
+        return relX >= 0 && relX < width && relY >= 0 && relY < height;
     }
 
     /** What an empty slot shows of the Held recipe, or empty: a real stack hides the ghost. */
@@ -194,6 +234,10 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         graphics.text(font, percent, BAR_X + BAR_WIDTH - 2 - font.width(percent),
                 AssemblingMachineMenu.INPUT_Y + 4, BAR_TEXT, true);
 
+        AssemblingStatus status = menu.status();
+        graphics.text(font, fitted(Component.translatable(status.langKey()), STATUS_WIDTH), STATUS_X,
+                AssemblingMachineMenu.STATUS_Y, status.problem() ? PROBLEM_TEXT : TEXT, false);
+
         int right = imageWidth - 8;
         AssemblingMachineMenu.Entry held = menu.held();
         if (held == null) {
@@ -209,7 +253,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         if (held.choice().locked()) {
             Component locked = Component.translatable("gui.planetaryfactory.assembling_machine.locked");
             nameRight -= font.width(locked) + 4;
-            graphics.text(font, locked, right - font.width(locked), HELD_Y + 4, LOCKED_TEXT, false);
+            graphics.text(font, locked, right - font.width(locked), HELD_Y + 4, PROBLEM_TEXT, false);
         }
         graphics.text(font, fitted(held.icon().getHoverName(), nameRight - HELD_X - 20), HELD_X + 20, HELD_Y + 4,
                 TEXT, false);

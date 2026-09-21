@@ -21,8 +21,8 @@ client, waits for the resource reload to finish, kills it and reads the log.
 
 The client is verbose where the server is silent. It prints, per broken asset:
 
-    [Worker-Main-2/WARN]: Missing textures in model planetaryfactory:block/electric_furnace:
-        gtceu:block/casings/voltage/lv/side
+    [Worker-Main-2/WARN]: Missing textures in model planetaryfactory:block/scrap_pile:
+        gcyr:block/mars_regolith
     [Worker-Main-2/WARN]: Missing model for variant: 'Block{planetaryfactory:steam}[level=0]'
 
 WHAT IS EXPECTED. Same rule as `check-datapack-load.py`: every complaint the log may contain about
@@ -79,13 +79,6 @@ EXPECTED = {
         "names `gcyr:block/martian_rock` (#258)",
     "planetaryfactory:block/fulgorite":
         "names `gcyr:block/martian_rock` (#258)",
-    "planetaryfactory:item/electric_furnace":
-        "names four `gtceu:` casing textures. The Electric tier's art lived in the GTCEu jar, "
-        "which left with ADR-0060; what it wears instead is #258's",
-    "planetaryfactory:block/electric_furnace":
-        "names four `gtceu:` casing textures (#258)",
-    "planetaryfactory:block/electric_furnace_on":
-        "names four `gtceu:` casing textures, front_active among them (#258)",
     "planetaryfactory:steam":
         "the pack's own fluid has no fluid model and its block no variants; both halves of the "
         "steam chain's rendering are #189's, which owns the two pack-owned fluids",

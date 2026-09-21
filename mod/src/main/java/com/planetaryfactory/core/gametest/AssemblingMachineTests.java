@@ -14,6 +14,7 @@ import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
 import com.planetaryfactory.core.machine.AssemblingMachineSpec;
 import com.planetaryfactory.core.machine.AssemblingStall;
+import com.planetaryfactory.core.machine.AssemblingStatus;
 import com.planetaryfactory.core.machine.HeldRecipe;
 import com.planetaryfactory.core.machine.HoldVerdict;
 import com.planetaryfactory.core.machine.RecipeChoice;
@@ -75,6 +76,8 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::stallsOnAFullOutput);
         tests.test("assembling_machine_stalls_unfed", 100,
                 AssemblingMachineTests::stallsUnfed);
+        tests.test("assembling_machine_status_is_derived_on_each_ask", 20,
+                AssemblingMachineTests::statusIsDerivedOnEachAsk);
         tests.test("assembling_machine_stalls_on_a_locked_recipe", 100,
                 AssemblingMachineTests::stallsOnALockedRecipe);
         tests.test("assembling_machine_is_powered_by_a_pole", 100,
@@ -367,6 +370,34 @@ final class AssemblingMachineTests {
                 .thenIdle(WINDOW)
                 .thenExecute(() -> assertStalled(helper, machine, AssemblingStall.NO_INGREDIENTS, 0, CABLE))
                 .thenSucceed();
+    }
+
+    /**
+     * The screen's status (#332), asked with no tick between the changes, since it is recomputed on
+     * each ask rather than read off the last craft tick. An empty buffer is only reported once
+     * nothing earlier in the craft cycle stops the machine.
+     */
+    private static void statusIsDerivedOnEachAsk(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = place(helper);
+        helper.startSequence()
+                .thenExecute(() -> {
+                    machine.energyStorage.set(0L);
+                    assertStatus(helper, machine, AssemblingStatus.IDLE);
+                    machine.setHeldRecipe(HeldRecipe.of(CABLE), player(helper));
+                    assertStatus(helper, machine, AssemblingStatus.MISSING_INGREDIENTS);
+                    machine.inventory.set(0, ItemResource.of(item("ftbmaterials:copper_plate")), 4);
+                    assertStatus(helper, machine, AssemblingStatus.NO_POWER);
+                    machine.energyStorage.set(CHARGE);
+                    assertStatus(helper, machine, AssemblingStatus.PROCESSING);
+                })
+                .thenSucceed();
+    }
+
+    private static void assertStatus(GameTestHelper helper, AssemblingMachineBlockEntity machine,
+            AssemblingStatus expected) {
+        if (machine.status() != expected) {
+            helper.fail("the screen's status is " + machine.status() + ", expected " + expected, ANCHOR);
+        }
     }
 
     /**
