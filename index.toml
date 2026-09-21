@@ -1581,12 +1581,8 @@ file = "kubejs/data/planetaryfactory/tags/block/generators.json"
 hash = "00c9e3b21577e08e462c8be72aa497697eb5573f52e2dba37d8dd22bd891a108"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/tags/worldgen/biome/terra.json"
-hash = "7d45fd01e55ee40e2ff4f56697795581a9d3bf7441633a9b826f80afb716d361"
-
-[[files]]
 file = "kubejs/data/planetaryfactory/tags/worldgen/biome/terra_land.json"
-hash = "6df7f6b8701f43d38f2f3127a6a7a909aecf701cdcdc686afb61008efe9feeea"
+hash = "f4247b58aec027e6ae771ddfb340156d9a40f6e517569cbf012b7612f7a13286"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_desert.json"

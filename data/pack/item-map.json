@@ -664,7 +664,7 @@
       "kind": "item",
       "target": "planetaryfactory:radar",
       "source": "authored",
-      "note": "#57: a continuous FE-powered block charting chunks nobody has visited, calling `ServerCache.prospectAllInChunk`. Mechanism, so `planetaryfactory_core`'s (ADR-0015). Built by #116, which registers the block and the surface ore indicators.",
+      "note": "#57: a continuous FE-powered block charting chunks nobody has visited, calling `ServerCache.prospectAllInChunk`. Mechanism, so `planetaryfactory_core`'s (ADR-0015). Built by #116; ADR-0045 makes it Factorio's Radar, revealing map at range rather than detecting ore.",
       "blocked_by": 116
     },
     "rail": {

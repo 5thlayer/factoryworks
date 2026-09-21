@@ -4,8 +4,7 @@
 Terra is the vanilla Overworld, so every file here is a wholesale replacement of a
 `minecraft:` entry rather than an addition -- the first the pack ships. It lands in
 `kubejs/data/`, not the instance-root `datapacks/` the ADR names: that folder is read by
-nothing in this jar set (no OpenLoader), whereas KubeJS's data folder already overrides
-GregTech's own ore-vein files and is therefore the proven seam.
+nothing in this jar set (no OpenLoader), whereas KubeJS's data folder is loaded as a datapack.
 
 Re-run after editing the palette or the terrain constants; it overwrites its outputs.
 """
@@ -145,7 +144,7 @@ def build_noise_settings():
         "upper_bound": MIN_Y + HEIGHT,
         "cell_height": 8,
     }
-    # Ore veins are the GregTech vein system's job on Terra, not the router's.
+    # Terra has no buried ore (ADR-0045).
     r["vein_toggle"] = 0.0
     r["vein_ridged"] = 0.0
     r["vein_gap"] = 0.0
@@ -212,9 +211,8 @@ CREATURES = [
     {"type": "minecraft:cow", "weight": 8, "minCount": 4, "maxCount": 4},
 ]
 
-# GenerationStep.Decoration, in order. `underground_ores` is deliberately empty: Terra's ore
-# is GregTech's four veins and nothing else (ADR-0021), and vanilla ore left here would be
-# uncharted by prospecting and undepletable by a miner -- a straight bypass of ADR-0020.
+# GenerationStep.Decoration, in order. `underground_ores` is deliberately empty: Terra's ore is
+# surface discs of the pack's own blocks (ADR-0045), and vanilla ore carries no amount (ADR-0041).
 STEPS = 11
 VEGETAL, TOP_LAYER = 9, 10
 
@@ -252,7 +250,7 @@ def surface_rule():
     """Top block per biome, over dirt, over stone. Bedrock at the floor.
 
     Deliberately thin: with no caves and no vanilla ore, the column below the surface is
-    stone all the way to the GregTech vein band, and there is nothing else to express.
+    stone all the way down, and there is nothing else to express.
     """
     def biome_is(names):
         return {"type": "minecraft:biome", "biome_is": ["planetaryfactory:" + n for n in names]}
