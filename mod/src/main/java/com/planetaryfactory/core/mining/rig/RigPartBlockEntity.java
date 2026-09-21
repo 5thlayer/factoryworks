@@ -5,6 +5,9 @@ import javax.annotation.Nullable;
 import com.planetaryfactory.core.PFBlockEntities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -70,6 +73,17 @@ public class RigPartBlockEntity extends BlockEntity {
             output.putInt(TAG_ANCHOR_Y, anchorPos.getY());
             output.putInt(TAG_ANCHOR_Z, anchorPos.getZ());
         }
+    }
+
+    /** The client needs the anchor too: looking at a part draws the rig's mining area (#195). */
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveCustomOnly(registries);
     }
 
     @Override

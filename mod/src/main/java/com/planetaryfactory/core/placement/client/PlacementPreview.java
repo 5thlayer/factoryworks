@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.QuadInstance;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.client.SupplyAreaBox;
+import com.planetaryfactory.core.mining.rig.client.MiningAreaOverlay;
 import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.PlanHull;
 import com.planetaryfactory.core.placement.Placements;
@@ -115,6 +116,7 @@ public final class PlacementPreview {
         }
         draw(event, level, plan);
         drawSupplyArea(event, level, plan);
+        drawMiningArea(event, level, plan);
         PreviewWires.draw(event.getSubmitNodeCollector(), event.getPoseStack(), level,
                 event.getLevelRenderState().cameraRenderState.pos, plan);
     }
@@ -157,6 +159,19 @@ public final class PlacementPreview {
                     event.getLevelRenderState().cameraRenderState.pos, placed.pos(), pole.tier());
             return;
         }
+    }
+
+    /**
+     * The ore a held rig would work (#195). Only an accepted plan, for the reason a pole's area is:
+     * a refused placement mines nothing.
+     */
+    private static void drawMiningArea(SubmitCustomGeometryEvent event, ClientLevel level, PlacementPlan plan) {
+        if (plan.isRefused()) {
+            return;
+        }
+        PlacementPlan.Placed first = plan.blocks().getFirst();
+        MiningAreaOverlay.drawFor(event.getSubmitNodeCollector(), event.getPoseStack(), level,
+                event.getLevelRenderState().cameraRenderState.pos, first.pos(), first.state());
     }
 
     /**

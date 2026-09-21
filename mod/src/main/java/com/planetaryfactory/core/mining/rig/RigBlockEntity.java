@@ -221,10 +221,8 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
      */
     @Nullable
     private Target nextTarget(ServerLevel server) {
-        Direction facing = getBlockState().getValue(RigBlock.FACING);
-        for (Offset offset : RigArea.tiles(
-                row.width(), row.height(), row.searchingRadius(), RigDirections.toRigFacing(facing))) {
-            BlockPos pos = getBlockPos().offset(offset.dx(), offset.dy(), offset.dz());
+        for (BlockPos pos : RigMiningArea.positions(
+                getBlockPos(), tier, getBlockState().getValue(RigBlock.FACING))) {
             if (!(server.getBlockState(pos).getBlock() instanceof OreBlock ore)) {
                 continue;
             }
