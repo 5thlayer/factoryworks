@@ -94,7 +94,8 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
         long amount = data.getLongOr(amountKey, 0L);
         long capacity = data.getLongOr(capacityKey, 0L);
         float filled = capacity <= 0 ? 0F : Math.min(1F, amount / (float) capacity);
-        Component text = Component.translatable(langKey, figure(amount), figure(capacity));
+        Component text = Component.translatable(langKey, figure(amount), figure(capacity))
+                .withStyle(ChatFormatting.WHITE);
         tooltip.add(JadeUI.progress(new ProgressView(ProgressView.Part.of(filled, colour), text,
                 JadeUI.progressStyle(), BoxStyle.DEFAULT_NESTED_BOX)));
     }
