@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Where the Assembling Machine stands (#326): two wide, one deep, four tall.
+ * Where the Assembling Machine stands (#326): four wide, one deep, two tall.
  *
  * <p><b>The model's own extent, not Factorio's 3x3.</b> ADR-0059 says a machine's footprint is its
- * Factorio tile size, and ADR-0071 has the machine reuse Oritech's assembler model -- which is about
- * two blocks wide, one deep and three and a half tall, and cannot fill a 3x3 without being redrawn.
+ * Factorio tile size, and ADR-0071 has the machine reuse Oritech's assembler model -- which spans
+ * one block to one side of the anchor and two to the other, one deep and two and a half tall, and
+ * cannot fill a 3x3 without being redrawn.
  * #326 took the model's extent, so what the player sees and what the player collides with are the
  * same blocks. The divergence from ADR-0059 is recorded in ADR-0072.
  *
@@ -24,8 +25,14 @@ import java.util.List;
  */
 public final class AssemblingMachineFootprint {
 
-    public static final int WIDE = 2;
-    public static final int TALL = 4;
+    public static final int WIDE = 4;
+    public static final int TALL = 2;
+
+    /**
+     * The lateral offset of the machine's first column: one to the side opposite Oritech's cores,
+     * so the anchor is the second column of four and the cores' side carries the two beyond it.
+     */
+    private static final int FIRST_COLUMN = -1;
 
     private static final List<Local> OFFSETS = build();
 
@@ -48,10 +55,24 @@ public final class AssemblingMachineFootprint {
         return OFFSETS.get(part);
     }
 
+    /**
+     * Where the machine's addons go: one beyond each end of the row, and one behind the anchor.
+     * Oritech's assembler has them at lateral -1 and 2, which this footprint occupies, so the side
+     * slots move one further out; behind the anchor is Oritech's own {@code (1, 0, 0)}.
+     */
+    public static List<Local> addonSlots() {
+        return List.of(new Local(0, 0, FIRST_COLUMN - 1), new Local(0, 0, FIRST_COLUMN + WIDE),
+                new Local(1, 0, 0));
+    }
+
     private static List<Local> build() {
         List<Local> offsets = new ArrayList<>(WIDE * TALL);
+        offsets.add(new Local(0, 0, 0));
         for (int y = 0; y < TALL; y++) {
-            for (int z = 0; z < WIDE; z++) {
+            for (int z = FIRST_COLUMN; z < FIRST_COLUMN + WIDE; z++) {
+                if (y == 0 && z == 0) {
+                    continue;
+                }
                 offsets.add(new Local(0, y, z));
             }
         }

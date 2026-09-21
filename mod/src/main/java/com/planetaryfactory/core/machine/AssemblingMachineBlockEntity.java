@@ -136,12 +136,11 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         return ModScreens.ASSEMBLER_SCREEN.get();
     }
 
-    /**
-     * Oritech's assembler's addon slots, in the same controller-local frame the footprint is in:
-     * beside it on either side and one behind. None of them falls inside the footprint.
-     */
+    /** {@link AssemblingMachineFootprint#addonSlots}: beside the row and behind the anchor. */
     @Override
     public List<Vec3i> getAddonSlots() {
-        return List.of(new Vec3i(0, 0, -1), new Vec3i(0, 0, 2), new Vec3i(1, 0, 0));
+        return AssemblingMachineFootprint.addonSlots().stream()
+                .map(slot -> new Vec3i(slot.x(), slot.y(), slot.z()))
+                .toList();
     }
 }
