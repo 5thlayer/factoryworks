@@ -21,6 +21,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 DATA = ROOT / "kubejs/data/planetaryfactory"
 ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+# Sapros's worldgen is parked with every body but Terra (ADR-0060) and still checked there, so it
+# cannot rot while it waits; the live tree wins once #23 brings it back.
+WORLDGEN = next(d for d in (DATA / "worldgen", ROOT / "kubejs/parked/data/planetaryfactory/worldgen")
+                if (d / "configured_feature/yumako_tree.json").is_file())
 
 # Ids the mod registers, per ADR-0015's ownership rule. Parsed from the Java rather than
 # hardcoded, so moving one across the boundary fails here instead of at startup.
@@ -103,14 +107,14 @@ def main():
           "no id registered here is called Jelly")
 
     for tree in ("yumako", "jellystem"):
-        feature = DATA / f"worldgen/configured_feature/{tree}_tree.json"
+        feature = WORLDGEN / f"configured_feature/{tree}_tree.json"
         check(feature.is_file(), f"{tree} has a configured feature")
         referenced = {s for s in json_strings(json.loads(feature.read_text()))
                       if s.startswith("planetaryfactory:")}
         unknown = referenced - blocks
         check(not unknown, f"{tree}'s feature names only registered blocks (stray: {unknown})")
 
-        placed = DATA / f"worldgen/placed_feature/{tree}_tree.json"
+        placed = WORLDGEN / f"placed_feature/{tree}_tree.json"
         check(placed.is_file(), f"{tree} has a placed feature")
         check(json.loads(placed.read_text())["feature"] == f"planetaryfactory:{tree}_tree",
               f"{tree}'s placed feature points at its configured feature")
@@ -198,7 +202,7 @@ def main():
     marshlands = {"green": "yumako", "red": "jellystem"}
     for colour, tree in marshlands.items():
         biome = json.loads(
-            (DATA / f"worldgen/biome/gleba_{colour}_marshland.json").read_text())
+            (WORLDGEN / f"biome/gleba_{colour}_marshland.json").read_text())
         carried = set(json_strings(biome))
         other = marshlands["red" if colour == "green" else "green"]
         check(f"planetaryfactory:{tree}_tree" in carried,
@@ -211,13 +215,13 @@ def main():
 
     for biome_name in ("gleba_dark_highlands", "gleba_midlands", "gleba_marshes"):
         carried = set(json_strings(json.loads(
-            (DATA / f"worldgen/biome/{biome_name}.json").read_text())))
+            (WORLDGEN / f"biome/{biome_name}.json").read_text())))
         check(not any(c.endswith("_tree") for c in carried),
               f"{biome_name} carries neither tree")
 
-    for path in sorted((DATA / "worldgen").rglob("*.json")):
+    for path in sorted({*(DATA / "worldgen").rglob("*.json"), *WORLDGEN.rglob("*.json")}):
         check(not list(nested_uniform_providers(json.loads(path.read_text()))),
-              f"{path.relative_to(DATA)} states its uniform providers flat")
+              f"{path.relative_to(ROOT)} states its uniform providers flat")
 
     lang = json.loads((ASSETS / "lang/en_us.json").read_text())
     for biome_name in ("gleba_dark_highlands", "gleba_midlands", "gleba_marshes",
