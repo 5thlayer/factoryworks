@@ -87,6 +87,7 @@ public final class PFGameTests {
         RigBreakTests.register(registrar);
         ElectricRigTests.register(registrar);
         WorldgenFixtureTests.register(registrar);
+        OutfieldDiscTests.register(registrar);
         // Oritech is optional, and the class names its types, so it is not even loaded without it.
         if (ModList.get().isLoaded("oritech")) {
             SteamEngineNetworkTests.register(registrar);
@@ -100,6 +101,7 @@ public final class PFGameTests {
             BeltFilterTests.register(registrar);
             BeltPowerTests.register(registrar);
             SplitterTests.register(registrar);
+            BeltHandTests.register(registrar);
         }
     }
 

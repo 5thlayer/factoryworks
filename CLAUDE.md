@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348) and `SplitterTests` (#349), registered only when the
+and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349) and `BeltHandTests` (#350), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -200,6 +200,11 @@ blocked at one, neither, and broken at either half leaves neither standing and d
 (`SplitterTests`). Dropping the output alternation, the fallback to the free side, the rate cap, the
 fit check or the other half's teardown each turns its test red. The rule is the fork's `SplitterTest`,
 which also builds a 4x4 balancer from four splitters.
+And that a belt held at its middle fills the holder's inventory at the belt's 15 items/s while the source
+keeps loading and only what was already past the hand reaches the end, and that a hand with room for four
+takes four and then lets the belt run on to its end, losing nothing (`BeltHandTests`). A hand that never
+takes turns both red, and one that re-arms after a refusal turns the second red. The point itself is the
+fork's `BeltContentsTest`; the client's ray and how the gesture feels are a human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
