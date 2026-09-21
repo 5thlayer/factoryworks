@@ -56,6 +56,15 @@ it hands back a chunk whose every ore block silently refilled. `OreCorpusTest` a
 slice the mod loads at class-init is the one the extractor writes — it has to be a resource rather
 than a datapack file, because the stage count sizes a blockstate property before any world exists.
 
+`OutfieldAmountTest` is the outfield's own arithmetic (#319, ADR-0045): a disc's blocks share one
+amount, its total over the block count its structure piece recorded, read at the disc **centre's**
+distance from world origin. It asserts the spot stops growing at 1600 blocks while richness rises
+with no cap, that uranium derives from its own `base_density` rather than borrowing another field's
+amount, and it re-derives every row of each resource's `outfield.law` table in
+`data/factorio/resource.json` from the mod's law, so the Java and the corpus cannot drift. It reads
+that file through the `pf.repo` system property the Gradle test task sets. The starting fields
+keep the census; two arithmetics is Factorio's own shape.
+
 `MiningSpeedTest` carries the arithmetic across the two halves: a field's cost is its **amount**
 times the tier's seconds, not its block count. That is the whole of what the amendment changed, and
 it is the one number that was silently a function of how many blocks the generator laid down.

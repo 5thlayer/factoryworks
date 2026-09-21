@@ -5,6 +5,7 @@ import com.planetaryfactory.core.PlanetaryFactoryCore;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -25,9 +26,8 @@ import net.minecraft.world.level.saveddata.SavedDataType;
  * changes as the patch is mined; it is the *initial* amount's derivation, fixed at placement.
  * What is left in a given block is the block's own business ({@link OreDelta}).
  *
- * <p>A block outside every recorded field -- an outfield vein, a block someone placed by hand --
- * falls back on the same arithmetic scaled by Factorio's distance law, which is flat inside 1600
- * blocks of spawn and rises beyond it.
+ * <p>A block outside every recorded field is an outfield disc's, and takes {@link OutfieldDisc}'s
+ * arithmetic instead (ADR-0045).
  */
 public final class OreFields extends SavedData {
 
@@ -81,50 +81,14 @@ public final class OreFields extends SavedData {
         return List.copyOf(fields);
     }
 
-    /**
-     * The initial amount of the block at {@code pos}, or {@code 0} where nothing here places one.
-     *
-     * <p>A position inside a recorded field takes that field's amount. Anything else -- an outfield
-     * vein -- takes the same resource's starting-field amount scaled by Factorio's own richness
-     * term, which is 1.0 everywhere inside 1600 blocks of spawn. That keeps one arithmetic for the
-     * whole planet: ADR-0020's "the starting patches and the outfield differ by size and access,
-     * not by mechanic".
-     */
-    public int initialAmount(OreResource resource, BlockPos pos, BlockPos spawn) {
+    /** The amount a block inside a recorded starting field holds, or empty outside every one. */
+    public OptionalInt startingAmount(OreResource resource, BlockPos pos) {
         for (Field field : fields) {
             if (field.resource().equals(resource.key()) && field.box().isInside(pos)) {
-                return field.amountPerBlock();
+                return OptionalInt.of(field.amountPerBlock());
             }
         }
-        int reference = referenceAmount(resource);
-        if (reference <= 0) {
-            return 0;
-        }
-        double distance = Math.sqrt(pos.distSqr(spawn));
-        return Math.max(1, (int) Math.round(reference * OreCorpus.get().distanceLaw().richnessAt(distance)));
-    }
-
-    /**
-     * What one block of this resource's starting field holds, for a world that dealt one.
-     *
-     * <p>A resource with no starting field -- uranium, which Factorio gives none -- falls back on
-     * the smallest amount any <em>other</em> resource's field recorded, rather than on nothing:
-     * an outfield vein of blocks holding zero is a vein that pays out nothing at all. The smallest
-     * is deliberate and not arbitrary -- uranium is the scarcest thing on the planet, so the
-     * leanest field on record is the closest honest stand-in for a total Factorio never states.
-     * The minimum is order-independent, so which field was stamped first does not decide it.
-     */
-    private int referenceAmount(OreResource resource) {
-        int smallestOther = 0;
-        for (Field field : fields) {
-            if (field.resource().equals(resource.key())) {
-                return field.amountPerBlock();
-            }
-            smallestOther = smallestOther == 0
-                    ? field.amountPerBlock()
-                    : Math.min(smallestOther, field.amountPerBlock());
-        }
-        return smallestOther;
+        return OptionalInt.empty();
     }
 
     /**

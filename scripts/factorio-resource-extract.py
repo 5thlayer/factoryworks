@@ -55,8 +55,8 @@ report what they left out.
 
 Two files are written from one read. `data/factorio/resource.json` is the corpus, and
 `mod/src/main/resources/planetaryfactory_core/ore/amounts.json` is the slice the mod loads at
-class-init: the five resources ADR-0041 puts on Terra, their patch totals, their stage ratios and
-the distance law. It is a *classpath* resource rather than a datapack file because the stage count
+class-init: the five resources ADR-0041 puts on Terra, their patch totals, their stage ratios, the
+distance law and the outfield density law. It is a *classpath* resource rather than a datapack file because the stage count
 sizes a blockstate property, which is fixed before any world exists -- and it is generated here
 rather than typed in Java for the same reason nothing else in the pack is typed twice.
 
@@ -469,7 +469,8 @@ def extract(dump):
 def mod_slice(out):
     """The part of the corpus the mod loads, keyed by the pack's own block names.
 
-    Deliberately thin: a total, a ratio set, a mining time and the distance law. Everything else
+    Deliberately thin: a total, a ratio set, a mining time, the distance law, and the four
+    per-resource arguments and three constants the outfield amount takes (#319). Everything else
     in the corpus is read by scripts, and a number that reaches Java is a number that has to
     survive a recompile to be corrected.
 
@@ -492,10 +493,22 @@ def mod_slice(out):
             "starting_amount": entry["starting_amount"],
             "mining_time": entry["mining_time"],
             "stage_ratios": entry["stage_ratios"],
+            "outfield": {
+                "base_density": entry["base_density"],
+                "base_spots_per_km2": entry["base_spots_per_km2"],
+                "random_spot_size_minimum": entry["outfield"]["random_spot_size_minimum"],
+                "random_spot_size_maximum": entry["outfield"]["random_spot_size_maximum"],
+            },
         }
+    constants = out["constants"]
     return {
         "__generated_by": "scripts/factorio-resource-extract.py",
         "distance_law": law,
+        "density_law": {
+            "starting_resource_placement_radius": constants["starting_resource_placement_radius"],
+            "regular_patch_fade_in_distance": constants["regular_patch_fade_in_distance"],
+            "double_density_distance": constants["double_density_distance"],
+        },
         "resources": resources,
     }
 
