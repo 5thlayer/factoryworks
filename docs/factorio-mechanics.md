@@ -438,7 +438,8 @@ Sub-rules:
 - **owner**: ADR-0026, ADR-0029, ADR-0056, ADR-0060
 - **ticket**: #87 (the machines are registered; the recipe conversion is not); #326 registers
   tier 1 as `planetaryfactory:assembling_machine` on Oritech's base, placed and inert (ADR-0071,
-  ADR-0072), and #325's later tickets give it a Held recipe
+  ADR-0072); #327 gives it a Held recipe and #328 crafts it at `assembling-machine-1`'s speed 0.5
+  and 75 kW, stalling without consuming
 
 Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
 (ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes GregTech out of the pack and

@@ -41,8 +41,8 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
  * <p>{@code time} is Factorio's {@code energy_required * 20}; the machine or the Assembler applies
  * its own speed (ADR-0029).
  *
- * <p>No block matches it yet, so {@link #matches} is false: nothing in the pack runs one as a
- * container recipe. The hand set plans over it, and the machine is #277's.
+ * <p>{@link #matches} is false: nothing looks one up by its inputs. The hand set plans over it, and
+ * the Assembling Machine runs the one recipe it holds by id (#328, ADR-0071).
  */
 public record AssemblingRecipe(
         String category,

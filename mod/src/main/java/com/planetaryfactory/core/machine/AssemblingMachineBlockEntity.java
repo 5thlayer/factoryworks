@@ -1,6 +1,11 @@
 package com.planetaryfactory.core.machine;
 
 import java.util.List;
+import java.util.Optional;
+
+import com.planetaryfactory.core.recipes.AssemblingRecipe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.planetaryfactory.core.PFBlockEntities;
 
@@ -14,11 +19,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import rearth.oritech.api.networking.NetworkedBlockEntity;
 import rearth.oritech.block.base.entity.MultiblockMachineEntity;
 import rearth.oritech.config.OritechConfig;
 import rearth.oritech.init.recipes.OritechRecipe;
@@ -28,7 +39,7 @@ import rearth.oritech.util.ScreenProvider;
 
 /**
  * The Assembling Machine's anchor (#326, ADR-0071): Oritech's machine base, placed as a footprint
- * and holding a {@link HeldRecipe} the player sets from its screen (#327). It crafts nothing yet.
+ * and holding a {@link HeldRecipe} the player sets from its screen (#327), which it crafts (#328).
  *
  * <p>Extends {@link MultiblockMachineEntity} rather than Oritech's {@code AssemblerBlockEntity},
  * whose one constructor hard-codes Oritech's own block entity type -- a subclass of it would be
@@ -46,12 +57,20 @@ import rearth.oritech.util.ScreenProvider;
  * <b>Not</b> the bare empty-core-list route: {@code initMultiblock} over an empty list on an
  * unassembled state divides {@code 0.0f} by zero and sets a NaN core quality.
  *
- * <p><b>Inert, deliberately.</b> {@link #findActiveRecipe} answers empty, so Oritech's
- * {@code serverTick} resets progress and returns before {@code workTick} is reached -- nothing is
- * looked up, nothing is consumed and no energy is drawn. ADR-0071 replaces the craft cycle whole
- * against a Held recipe; until #325's later tickets land, the one thing this machine must not do
- * is run Oritech's own assembler recipes by first match, which is what returning Oritech's type
- * from {@link #getOwnRecipeType} would otherwise do.
+ * <p><b>The craft cycle is the pack's, replaced whole (#328, ADR-0071).</b> Oritech's is typed to
+ * {@code OritechRecipe}, whose inputs are one unit per slot; the pack's recipe carries sized
+ * ingredients with Factorio's counts, and the two cannot be adapted into each other.
+ * {@link #serverTick} is therefore overridden rather than {@code workTick} alone, because Oritech's
+ * {@code serverTick} returns before {@code workTick} whenever {@link #findActiveRecipe} -- which
+ * stays empty, so Oritech's own assembler recipes never run here by first match -- finds nothing.
+ * The transaction discipline is Oritech's: open a root, extract the tick's energy, increment
+ * progress, and on the last tick take the inputs and place the outputs, committing only if all of
+ * it succeeded. The rate is {@link AssemblingMachineSpec}'s, with Oritech's addon multipliers on top.
+ *
+ * <p>Every stall ({@link AssemblingStall}) is answered <b>before</b> the energy is extracted, so a
+ * blocked machine draws nothing, starts nothing and voids nothing (ADR-0041). Progress is held
+ * across a stall, the way {@code FurnaceCycle} holds it: the inputs are only taken on the last tick,
+ * and the energy already paid is the craft's. A change of Held recipe resets it.
  */
 public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
@@ -60,7 +79,11 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
     private static final String HELD_KEY = "held_recipe";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AssemblingMachineBlockEntity.class);
+
     private HeldRecipe held = HeldRecipe.NONE;
+
+    private AssemblingStall stall = AssemblingStall.NO_RECIPE;
 
     public AssemblingMachineBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state,
@@ -98,6 +121,131 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         return List.of();
     }
 
+    /**
+     * The pack's craft tick, in place of Oritech's. Redstone still disables the machine, as it does
+     * Oritech's; everything else is {@link #craftTick}.
+     */
+    @Override
+    public void serverTick(ServerLevel world, BlockPos pos, BlockState state, NetworkedBlockEntity blockEntity) {
+        if (!isAssembled(state) || disabledViaRedstone) {
+            return;
+        }
+        craftTick(world);
+    }
+
+    private void craftTick(ServerLevel server) {
+        Optional<RecipeHolder<AssemblingRecipe>> resolved = AssemblingMachineRecipes.resolve(server, held);
+        stall = stallFor(resolved);
+        if (stall.stalled()) {
+            return;
+        }
+        AssemblingRecipe recipe = resolved.get().value();
+        int duration = durationTicks(recipe);
+        long totalFe = AssemblingMachineSpec.fePerCraft(recipe.time(), getEfficiencyMultiplier());
+        try (Transaction tx = Transaction.openRoot()) {
+            long fe = AssemblingMachineSpec.feForTick(Math.min(progress.get(), duration - 1), duration, totalFe);
+            if (energyStorage.internalExtract(fe, tx) != fe) {
+                stall = AssemblingStall.NO_POWER;
+                return;
+            }
+            progress.increment(tx);
+            if (progress.get() >= duration) {
+                if (!takeInputs(recipe, tx) || !placeOutputs(recipe, tx)) {
+                    LOGGER.warn("Assembling Machine at {} passed its checks and could not finish {}",
+                            worldPosition.toShortString(), held.id().orElse("?"));
+                    return;
+                }
+                progress.reset(tx);
+            }
+            tx.commit();
+        }
+        lastWorkedAt = server.getGameTime();
+        setChanged();
+        onProgressed();
+    }
+
+    /** Asked in {@link AssemblingStall}'s order, and never by spending anything: both probes abort. */
+    private AssemblingStall stallFor(Optional<RecipeHolder<AssemblingRecipe>> resolved) {
+        if (resolved.isEmpty()) {
+            return AssemblingStall.NO_RECIPE;
+        }
+        AssemblingRecipe recipe = resolved.get().value();
+        boolean locked = AssemblingMachineRecipes.isLocked(held.id().orElseThrow());
+        boolean fed;
+        boolean fits;
+        try (Transaction probe = Transaction.openRoot()) {
+            fed = takeInputs(recipe, probe);
+        }
+        try (Transaction probe = Transaction.openRoot()) {
+            fits = placeOutputs(recipe, probe);
+        }
+        return AssemblingStall.of(true, locked, fed, fits);
+    }
+
+    /**
+     * Takes one craft's sized ingredients out of the input slots, each ingredient from whichever
+     * slots hold a match. A recipe with a fluid ingredient is never fed: this machine has no tank,
+     * which is tier 1's {@code crafting_categories} excluding {@code crafting-with-fluid}.
+     */
+    private boolean takeInputs(AssemblingRecipe recipe, Transaction tx) {
+        if (!recipe.fluidIngredients().isEmpty()) {
+            return false;
+        }
+        ResourceHandler<ItemResource> inputs = inventory.getInputContainer();
+        for (SizedIngredient sized : recipe.ingredients()) {
+            int owed = sized.count();
+            for (int slot = 0; slot < inputs.size() && owed > 0; slot++) {
+                ItemResource resource = inputs.getResource(slot);
+                if (resource.isEmpty() || !sized.ingredient().test(resource.toStack(1))) {
+                    continue;
+                }
+                owed -= inputs.extract(slot, resource, owed, tx);
+            }
+            if (owed > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Places one craft's whole result, or reports that the output cannot take it. Never a part. */
+    private boolean placeOutputs(AssemblingRecipe recipe, Transaction tx) {
+        if (!recipe.fluidResults().isEmpty()) {
+            return false;
+        }
+        ResourceHandler<ItemResource> outputs = inventory.getOutputContainer();
+        for (ItemStackTemplate result : recipe.results()) {
+            if (outputs.insert(ItemResource.of(result), result.count(), tx) != result.count()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int durationTicks(AssemblingRecipe recipe) {
+        return AssemblingMachineSpec.durationTicks(recipe.time(), getSpeedMultiplier());
+    }
+
+    /** Why the last tick made no progress, for the screen and the GameTests. */
+    public AssemblingStall stall() {
+        return stall;
+    }
+
+    /**
+     * The Held recipe's duration before Oritech's speed multiplier, which Oritech's
+     * {@code getProgress} and animation multiply back in. Oritech's reads a {@code currentRecipe}
+     * this machine never sets.
+     */
+    @Override
+    public int getRecipeDuration() {
+        if (!(level instanceof ServerLevel server)) {
+            return 1;
+        }
+        return AssemblingMachineRecipes.resolve(server, held)
+                .map(holder -> AssemblingMachineSpec.durationTicks(holder.value().time(), 1.0f))
+                .orElse(1);
+    }
+
     @Override
     protected OritechRecipe findActiveRecipe() {
         return OritechRecipe.EMPTY.get();
@@ -105,7 +253,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
     /**
      * Oritech's assembler type, which the base class makes abstract and nothing here reads:
-     * {@link #findActiveRecipe} never reaches the lookup that would.
+     * {@link #serverTick} never reaches the lookup that would.
      */
     @Override
     protected RecipeType<OritechRecipe> getOwnRecipeType() {
@@ -182,6 +330,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
             player.getInventory().placeItemBackInInventory(stack);
         }
         held = next;
+        progress.set(0);
         setChanged();
     }
 
