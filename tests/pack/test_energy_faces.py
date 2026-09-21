@@ -30,6 +30,10 @@ It cannot be a Java unit test: `SnapshotJournal` and `TransactionContext` are Ne
 the mod's test source set has no NeoForge on its classpath by design (`mod/build.gradle`). The
 arithmetic under the faces is Minecraft-free and is held by `FurnaceEnergyBufferTest` and
 `NetworkBalanceTest`.
+
+A powered loader's face is not here: it is the SimpleBelts fork's, whose source is not in this
+repo, and it cannot use `LongSnapshotJournal`, since the fork never depends on the pack. It journals
+its own buffer, and `gametest/BeltPowerTests` holds the probe and the charge in a world (#348).
 """
 
 import pathlib
