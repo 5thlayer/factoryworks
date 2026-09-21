@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.machine.client;
 
+import com.planetaryfactory.core.PFItems;
 import com.planetaryfactory.core.compat.emi.HeldRecipeTooltip;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 
@@ -10,6 +11,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
 
 /**
@@ -20,7 +22,8 @@ import net.neoforged.fml.ModList;
  * the icon's tooltip carries the recipe the way EMI's own recipe-bearing stacks do, and a click
  * opens it. A recipe the team has not researched is marked locked -- the Lock annotation policy is
  * to annotate, never to hide. Between the inputs and the output, a bar and a percentage show how
- * far the craft under way is, as Factorio's machine window does.
+ * far the craft under way is, as Factorio's machine window does. A tab above the panel carries the
+ * machine's icon and name, the header every Oritech machine screen has.
  *
  * <p>Whether this draws correctly is a human check on delivery; no check here claims it.
  */
@@ -34,6 +37,11 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int BAR_TEXT = 0xFFFFFFFF;
     private static final int LOCKED_TEXT = 0xFFA02020;
 
+    private static final int TAB_EDGE = 0xFF555555;
+    private static final int TAB_X = 36;
+    private static final int TAB_SIZE = 26;
+    private static final int TITLE_HEIGHT = 16;
+
     private static final int HELD_X = 8;
     private static final int HELD_Y = 17;
     private static final int BAR_X = 84;
@@ -46,8 +54,30 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         inventoryLabelY = AssemblingMachineMenu.INVENTORY_Y - 11;
     }
 
+    private static final Component NAME = Component.translatable("block.planetaryfactory.assembling_machine");
+    private static final ItemStack ICON = new ItemStack(PFItems.ASSEMBLING_MACHINE.get());
+
+    /** Oritech's header: the machine's icon in a tab on the panel's top edge, its name beside it. */
+    private void extractTab(GuiGraphicsExtractor graphics) {
+        int x = leftPos + TAB_X;
+        int y = topPos - TAB_SIZE + 2;
+        graphics.fill(x - 1, y - 1, x + TAB_SIZE + 1, topPos, TAB_EDGE);
+        graphics.fill(x, y, x + TAB_SIZE, topPos, PANEL);
+        graphics.item(ICON, x + (TAB_SIZE - 16) / 2, y + (TAB_SIZE - 16) / 2);
+
+        int titleX = x + TAB_SIZE + 2;
+        int titleY = y + (TAB_SIZE - TITLE_HEIGHT) / 2 - 1;
+        int titleWidth = font.width(NAME) + 12;
+        graphics.fill(titleX - 1, titleY - 1, titleX + titleWidth + 1, titleY + TITLE_HEIGHT + 1, TAB_EDGE);
+        graphics.fill(titleX, titleY, titleX + titleWidth, titleY + TITLE_HEIGHT, PANEL);
+        graphics.text(font, NAME, titleX + 6, titleY + (TITLE_HEIGHT - 8) / 2, TEXT, false);
+    }
+
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        // The world dims behind the panel as it does behind the inventory; skipping super left it bright.
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
+        extractTab(graphics);
         graphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, PANEL);
         for (Slot slot : menu.slots) {
             recess(graphics, leftPos + slot.x, topPos + slot.y, 16);

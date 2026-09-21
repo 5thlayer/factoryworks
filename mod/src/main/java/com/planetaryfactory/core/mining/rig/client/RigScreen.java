@@ -51,6 +51,8 @@ public class RigScreen extends AbstractContainerScreen<RigMenu> {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        // The world dims behind the panel as it does behind the inventory; skipping super left it bright.
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
         int left = leftPos;
         int top = topPos;
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, left, top, 0.0F, 0.0F, imageWidth, imageHeight, 256, 256);
