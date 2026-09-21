@@ -66,7 +66,10 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         }
     }
 
-    /** What the machine holds -- drawn whether or not it has anything to make it with. */
+    /**
+     * What the machine holds: the result as an icon, named by its tooltip rather than by text --
+     * drawn whether or not the machine has anything to make it with.
+     */
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractLabels(graphics, mouseX, mouseY);
@@ -80,10 +83,20 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
             return;
         }
         graphics.item(held.icon(), 8, HELD_Y);
-        graphics.text(font, held.icon().getHoverName(), 28, HELD_Y + 4, TEXT, false);
         if (held.choice().locked()) {
             graphics.text(font, Component.translatable("gui.planetaryfactory.assembling_machine.locked"),
-                    100, HELD_Y + 4, LOCKED_TEXT, false);
+                    28, HELD_Y + 4, LOCKED_TEXT, false);
+        }
+    }
+
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        AssemblingMachineMenu.Entry held = menu.held();
+        int x = mouseX - leftPos - 8;
+        int y = mouseY - topPos - HELD_Y;
+        if (held != null && !held.icon().isEmpty() && x >= 0 && x < 16 && y >= 0 && y < 16) {
+            graphics.setTooltipForNextFrame(font, held.icon(), mouseX, mouseY);
         }
     }
 }
