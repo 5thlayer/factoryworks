@@ -62,12 +62,14 @@ no batch and are not reached by this command; each says above when to run it.
 ### Checks the 26.1.2 move broke
 
 The move to 26.1.2 (ADR-0060) took GregTech and GCyR out and parked every body but Terra under
-`kubejs/parked/`. **One** check below fails for that reason alone, and names the ticket that owns
-clearing it. A failure in it is expected; a failure anywhere else is not.
+`kubejs/parked/`. No check fails for that reason any more.
 
-- `tests/flora/test_flora_data.py` — Sapros's data is parked, so the files it reads are gone. Owned
-  by **#23**, and it cannot be cleared before Sapros's flora returns.
-Two more were on this list and are not any more (#323). `tests/factorio/test_pack_recipes.py` was
+`tests/flora/test_flora_data.py` was the last one. It now reads Sapros's worldgen from
+`kubejs/parked/` while it is parked, and from the live tree once #23 brings it back. One thing it
+passes is not settled: a stromatolite's stone drop is still a `gcyr:` id, and GCyR has been removed.
+Which stone Sapros drops belongs to #23.
+
+Two more were cleared earlier (#323). `tests/factorio/test_pack_recipes.py` was
 red on the Steel Pick's sprite; #241's decision applied, and both picks now wear vanilla art with no
 generator. `tests/pack/test_starting_kit.py` was red on `gtceu:prospector.lv`; ADR-0056 had already
 ruled the prospector was never canon and ADR-0045 put every ore patch on the surface, so the pocket
@@ -87,7 +89,8 @@ GregTech targets. They are the conversion's input and are rewritten with it.
 `tests/flora/test_flora_data.py` asserts Sapros's tree and surface data are internally consistent
 — features, loot tables, blockstates, textures and lang against what is actually registered, plus
 which marshland carries which tree and that no stromatolite drops ore — with no game launch. Run it
-after any edit to the trees, the stromatolites or the five biomes.
+after any edit to the trees, the stromatolites or the five biomes. The worldgen half is read from
+`kubejs/parked/` while Sapros is parked (ADR-0060).
 
 ### Furnace ladder check
 
