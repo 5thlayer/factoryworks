@@ -32,11 +32,7 @@ public final class AssemblingMachineRecipes {
     /** Which recipe ids research has not unlocked. Nothing, until Researchd returns (#260). */
     private static final Predicate<String> locked = id -> false;
 
-    /**
-     * The GameTests' stand-in for an unresearched recipe, since there is no research to leave
-     * undone. A set of ids rather than a swapped predicate: the tests in a batch run side by side,
-     * and one test's lock must neither leak into another's recipe nor be lifted by another's unlock.
-     */
+    /** Per id, because a batch's GameTests run side by side and must not unlock each other's recipes. */
     private static final Set<String> lockedForTest = ConcurrentHashMap.newKeySet();
 
     private AssemblingMachineRecipes() {
@@ -55,7 +51,6 @@ public final class AssemblingMachineRecipes {
         lockedForTest.remove(id);
     }
 
-    /** Whether a GameTest holds {@code id} locked right now. */
     public static boolean isLockedForTest(String id) {
         return lockedForTest.contains(id);
     }

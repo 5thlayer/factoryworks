@@ -257,8 +257,7 @@ def check_emitted(items, recipe_types, failures):
             failures.append(f"{path.name} has time {recipe.get('time')!r}")
         if not recipe.get("category"):
             failures.append(f"{path.name} carries no Factorio category, so no hand set can read it")
-        # One ingredient per input slot (#329, ADR-0074): a fifth has no slot to be inserted into,
-        # and the machine holding the recipe would stall on "no ingredients" forever, with no error.
+        # One ingredient per input slot, so a fifth could never be inserted (ADR-0074).
         if len(recipe.get("ingredients", [])) > assembling_inputs():
             failures.append(f"{path.name} has {len(recipe['ingredients'])} item ingredients and the "
                             f"Assembling Machine has {assembling_inputs()} input slots")

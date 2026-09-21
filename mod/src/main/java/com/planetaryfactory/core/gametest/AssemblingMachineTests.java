@@ -89,19 +89,12 @@ final class AssemblingMachineTests {
     }
 
     /**
-     * boiler: a stone furnace in slot 0, four pipes (Factorio's, which is Oritech's fluid pipe) in
-     * slot 1, slots 2 and 3 unused. Not electronic-circuit: its product is registered by KubeJS, which
-     * the GameTest server does not load, so the recipe is absent here though not in the pack.
+     * Two ingredients, so slots 2 and 3 are unused. Not electronic-circuit: KubeJS registers its
+     * item, and the harness has no KubeJS.
      */
     private static final String BOILER = "planetaryfactory:assembling/boiler";
 
-    /**
-     * The item face takes the Held recipe's ingredients, each in its own slot, and refuses the rest
-     * (#329) -- asked through the capability a belt's loader finds, on a hull block as well as the anchor, and
-     * on both of the transfer API's overloads, since the slot-less pair is the one a refusal written
-     * per slot is skipped by. Checked against its defect: making the filter accept everything turns
-     * it red on the first refusal.
-     */
+    /** Through the capability, on the anchor and a hull block, on both overloads (ADR-0073). */
     private static void filtersInputsToItsRecipe(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = placeWhole(helper);
         machine.setHeldRecipe(HeldRecipe.of(BOILER), player(helper));
@@ -146,7 +139,7 @@ final class AssemblingMachineTests {
         helper.succeed();
     }
 
-    /** A machine that makes nothing takes nothing (#329): no slot, on either overload. */
+    /** No Held recipe: no slot takes anything, on either overload. */
     private static void withNoRecipeTakesNothing(GameTestHelper helper) {
         place(helper);
         ResourceHandler<ItemResource> face = itemFace(helper, ANCHOR);
@@ -160,11 +153,7 @@ final class AssemblingMachineTests {
         helper.succeed();
     }
 
-    /**
-     * Oritech's {@code FILL_EVENLY} spreads an insert naming slot 0 over every input slot, past the
-     * per-slot filter, so the machine refuses Oritech's mode button and pins the mode over a reload.
-     * Dropping the {@code cycleInputMode} override turns it red: the fluid pipes reach the unused slots.
-     */
+    /** Oritech's mode button must not reach {@code FILL_EVENLY} (ADR-0074). */
     private static void inputModeStaysPinned(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = place(helper);
         machine.setHeldRecipe(HeldRecipe.of(BOILER), player(helper));
@@ -478,7 +467,6 @@ final class AssemblingMachineTests {
         AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
         for (String id : loaded) {
             if (AssemblingMachineRecipes.isLockedForTest(id)) {
-                // Another test in the batch has it locked; refusing it is refusesWhatItCannotHold's.
                 continue;
             }
             HoldVerdict verdict = menu.request(player, id);
@@ -512,7 +500,7 @@ final class AssemblingMachineTests {
             helper.fail("a non-assembling id was answered " + unknown + " and left " + machine.heldRecipe(), ANCHOR);
             return;
         }
-        // Its own recipe, which no other test crafts or locks: the lock is shared by the batch.
+        // No other test crafts or locks this one; the lock set is shared by the batch.
         String other = PIPE;
         AssemblingMachineRecipes.lockForTest(other);
         try {

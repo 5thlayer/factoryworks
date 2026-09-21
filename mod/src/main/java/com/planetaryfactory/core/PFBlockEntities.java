@@ -223,10 +223,7 @@ public final class PFBlockEntities {
      * that covers only part of the footprint must still find the machine. A part has no block entity
      * and forwards to its anchor's.
      *
-     * <p>The item face (#329) is {@link AssemblingMachineItemHandler}: inputs filtered to the Held
-     * recipe, one ingredient per slot, and only the output extractable. Unsided for the furnace's
-     * reason, and on the parts for the pole's -- a belt run against a hull block must find the
-     * machine too.
+     * <p>The item face is registered on the parts too, so a belt against a hull block finds it.
      */
     private static void registerAssemblingMachineCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlock(

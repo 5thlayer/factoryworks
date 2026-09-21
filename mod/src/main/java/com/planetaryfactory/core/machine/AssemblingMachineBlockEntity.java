@@ -366,10 +366,8 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     }
 
     /**
-     * Whether input {@code slot} takes {@code resource}: only the Held recipe's ingredient for that
-     * slot ({@link AssemblingInputSlots}). Nothing with no Held recipe, nothing for a recipe with a
-     * fluid ingredient -- which this machine can never be fed -- and nothing off the server, where
-     * there is no recipe manager to resolve the Held recipe against.
+     * False off the server, which alone can resolve the Held recipe, and for a fluid recipe, which
+     * this machine can never run.
      */
     public boolean acceptsInput(int slot, ItemResource resource) {
         if (resource.isEmpty() || !(level instanceof ServerLevel server)) {
@@ -383,12 +381,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
                 .orElse(false);
     }
 
-    /**
-     * Oritech's input-mode button, refused (#329). {@code FILL_EVENLY} reroutes an insert naming one
-     * slot across every input slot, which walks an item straight past {@link AssemblingMachineItemHandler}'s
-     * per-slot filter; the pack's screen has no button for it, but Oritech's packet reaches any of its
-     * machines. The mode stays {@code FILL_LEFT_TO_RIGHT}, Oritech's default.
-     */
+    /** Refused: {@code FILL_EVENLY} spreads a per-slot insert past the input filter (ADR-0074). */
     @Override
     public void cycleInputMode() {
     }
@@ -409,7 +402,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        // Oritech reads its input mode back from the save; pinned for cycleInputMode's reason.
+        // Oritech restores its input mode from the save; keep it pinned (ADR-0074).
         inventoryInputMode = InventoryInputMode.FILL_LEFT_TO_RIGHT;
         held = input.read(HELD_KEY, HeldRecipe.CODEC).orElse(HeldRecipe.NONE);
     }

@@ -27,6 +27,25 @@ Which check a feature warrants — and whether it warrants one at all — is dec
 feature makes, not ad hoc per ticket. Six claims, six answers, and a content ticket names its check
 kind explicitly so that "no check" is a recorded decision. See `docs/testing/what-to-check.md`.
 
+### Code comments
+
+This overrides "match the surrounding comment density". Much existing code is over-commented, so
+do not copy it.
+
+A comment explains why the code is not the obvious code: a trap, a constraint from outside the
+code, or a choice a reader would otherwise undo. Write the minimum that explains it, then name the
+ADR or ticket that holds the reasoning, e.g. `(ADR-0074)`. Code that is obvious gets no comment.
+
+Keep these out of comments:
+
+- History, such as which ticket built something, what it replaced, or what was tried before. It
+  belongs in the commit and the ADR.
+- Rejected alternatives. They belong in the ADR.
+- How a test was verified, such as "dropping X turns this red". It belongs in the commit.
+- A restatement of what the next lines do.
+
+When you edit code, trim the comments you touch to this rule. Leave comments elsewhere alone.
+
 ### Running the Python checks
 
 `uv run --with pytest pytest tests/` runs **every** check under `tests/`, and is the gesture to
