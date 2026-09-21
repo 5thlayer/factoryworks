@@ -25,17 +25,20 @@ import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import net.neoforged.neoforge.transfer.IndexModifier;
 
 /**
- * The Assembling Machine's menu (#327): four inputs, one output, and the recipe widget's list.
+ * The Assembling Machine's menu (#327): four inputs, one output, and the Held recipe.
  *
  * <p>The pack's own rather than Oritech's, because Oritech's screen has no hook for an extra
- * widget. The list travels in the opening packet -- the recipes are server truth, and the client
- * has no recipe manager to read them from -- and is fixed for the life of the menu, so the Held
- * recipe crosses as one index into it, in a data slot. A press on the widget is vanilla's menu
- * button click carrying that index; there is no packet of the pack's own.
+ * widget. A recipe is picked in the recipe viewer, never here (ADR-0073, #336): EMI's Fill Recipe
+ * lands on {@link #request}. The screen only names what is held and offers a clear button, which
+ * is vanilla's menu button click; there is no packet of the pack's own for it.
+ *
+ * <p>The recipe list still travels in the opening packet, as what the screen names the Held recipe
+ * from -- the recipes are server truth, and the client has no recipe manager to read them from. It
+ * is fixed for the life of the menu, so the Held recipe crosses as one index into it, in a data slot.
  */
 public class AssemblingMachineMenu extends AbstractContainerMenu {
 
-    /** One widget entry: the recipe, whether the team is locked out of it, and what it makes. */
+    /** One recipe the machine may hold: the recipe, whether the team is locked out of it, and what it makes. */
     public record Entry(RecipeChoice choice, ItemStack icon) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, entry -> entry.choice().id(),
@@ -52,6 +55,9 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     /** A recipe held that the list does not name -- one a datapack reload took away. */
     public static final int UNKNOWN = -2;
+
+    /** The clear button's id: empty the Held recipe and hand the inputs back. */
+    public static final int CLEAR = 0;
 
     private static final int DATA_HELD = 0;
     private static final int OUTPUT = 4;
@@ -162,18 +168,19 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         return data.get(DATA_HELD) == UNKNOWN;
     }
 
-    /** A press on the widget: {@code buttonId} is the entry's index. */
+    /** The clear button: the Held recipe goes, and what the inputs held goes back to the player. */
     @Override
     public boolean clickMenuButton(Player player, int buttonId) {
-        if (machine == null || buttonId < 0 || buttonId >= entries.size()) {
+        if (machine == null || buttonId != CLEAR) {
             return false;
         }
-        return request(player, entries.get(buttonId).choice().id()).held();
+        machine.setHeldRecipe(HeldRecipe.NONE, player);
+        return true;
     }
 
     /**
-     * Holds {@code id} if the machine may, or tells the player why not (#330, ADR-0073). The one
-     * setter: the widget's press and EMI's Fill Recipe both land here, so a refusal is never a
+     * Holds {@code id} if the machine may, or tells the player why not (#330, ADR-0073). The
+     * setter EMI's Fill Recipe lands on, so a refusal is never a
      * gesture that silently did nothing.
      */
     public HoldVerdict request(Player player, String id) {

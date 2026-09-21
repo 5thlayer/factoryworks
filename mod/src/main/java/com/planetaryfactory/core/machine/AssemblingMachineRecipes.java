@@ -18,7 +18,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
  * What an Assembling Machine may hold, read off the server's recipe manager (#327).
  *
  * <p>Every loaded {@code planetaryfactory:assembling} recipe, whatever its category: the machine
- * is Factorio's assembler, which takes all three crafting categories, and a recipe the widget
+ * is Factorio's assembler, which takes all three crafting categories, and a recipe it
  * leaves out is a recipe no machine can ever make.
  *
  * <p><b>Nothing is Locked yet</b>, for {@code RuntimePlanSource}'s reason: the research predicate
@@ -37,7 +37,7 @@ public final class AssemblingMachineRecipes {
     private AssemblingMachineRecipes() {
     }
 
-    /** Whether research has yet to unlock {@code id}: the widget shades it and no machine makes it. */
+    /** Whether research has yet to unlock {@code id}: the screen marks it and no machine makes it. */
     public static boolean isLocked(String id) {
         return locked.test(id);
     }
@@ -47,7 +47,7 @@ public final class AssemblingMachineRecipes {
         locked = predicate == null ? id -> false : predicate;
     }
 
-    /** Every assembling recipe, as the widget lists it. */
+    /** Every assembling recipe, as the screen names them. */
     public static List<RecipeChoice> choices(ServerLevel level) {
         List<String> ids = level.getServer().getRecipeManager().recipeMap()
                 .byType(PFRecipes.ASSEMBLING_TYPE.get()).stream()
@@ -65,7 +65,7 @@ public final class AssemblingMachineRecipes {
                 .map(AssemblingMachineRecipes::cast);
     }
 
-    /** What the widget draws for a recipe: its first result. */
+    /** What the screen draws for a recipe: its first result. */
     public static ItemStack icon(ServerLevel level, String id) {
         return resolve(level, HeldRecipe.of(id))
                 .map(holder -> holder.value().assemble(null))

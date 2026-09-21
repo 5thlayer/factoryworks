@@ -455,31 +455,22 @@ Sub-rules:
   overclocking never fires above base tier.
 - **`energy_usage` as a machine property** — `planned`. ADR-0029 emits no `EUt` on a recipe at all;
   a machine modifier supplies it, scaled so the Oil Refinery's 420 kW lands on LV's 32 EU/t.
-- **Recipe selection in a machine** — `planned`. In Factorio a machine is *told* its recipe: the
-  player picks it from a list, the machine displays it, holds it whether or not it is fed, and the
-  setting copies to another machine. The pack has **no surface for this at all**, and that is the
-  design gap, not the absence of a programmed circuit. GregTech's answer is the circuit, which
-  ADR-0026 removed on purpose and #236 measured the cost of: GregTech keys its recipe lookup on the
-  ingredient set, so with no circuit a colliding recipe is refused into the lookup at load and 44 of
-  139 emitted recipes never reach the machine.
-
-  **ADR-0060 replaces the surface below.** The machines are core subclasses of Oritech's, and an
-  assembler, chemical plant or refinery holds a **player-set recipe**: set once, inputs filtered to
-  it, no lookup at all. Furnaces keep Oritech's first match, which is Factorio's own split. The MI
-  account that follows is kept as history.
-
-  ADR-0056 removes that mod, and Modern Industrialization's **locked output slot** is the surface.
-  One mechanism does three jobs: it selects the recipe (a locked slot refuses a rival recipe's
-  product, so that recipe fails its own start simulation), it shows which recipe is selected, and it
-  guards against overfill. The lock persists in NBT and survives an empty slot, so the selection
-  holds whether or not the machine is fed, and EMI's Fill Recipe sets it with the ingredients absent.
-  Machine-configuration copy/paste is not in MI itself and comes from a third-party addon.
-
-  `planned` rather than `shipped`: the mechanism is chosen and proven in play, and nothing is built
-  here yet. Its checks are a static assertion that no two emitted recipes of one type share an
-  ingredient set (#237) and an in-world test that locking covers every collision group (#238) —
-  the candidate filter is the *product*, so it disambiguates a group only where the group's members
-  have distinct outputs.
+- **Recipe selection in a machine** — `adapted`. In Factorio a machine is *told* its recipe: the
+  player picks it from a grid on the machine, the machine displays it, holds it whether or not it is
+  fed, and the setting copies to another machine. The Assembling Machine holds a **Held recipe**
+  (ADR-0071) -- one recipe id, kept whether or not the machine is fed, resolved against the recipe
+  manager when asked, so a tag ingredient stays a tag. The adaptation is **where it is picked**
+  (ADR-0073): the recipe viewer is the only picker. EMI's Fill Recipe on the open machine sets the
+  Held recipe, lit with an empty inventory, and the server refuses one the machine cannot hold with a
+  message. The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
+  missing its search and navigation, and #336 removed it -- only the Held recipe's name and a
+  **clear** button, which empties it and hands the inputs back as a change of recipe does. That the
+  viewer can set every emitted assembling recipe is `AssemblingMachineTests`' GameTest, the check
+  that replaced #237 and #238. Still to land on this surface: the recipe drawn as ghosts in the slots
+  (#334), unused inputs accepting nothing, per-slot capacity and the stall line (ADR-0073). JEI has
+  no transfer handler, so a JEI-only player can clear a recipe but not set one. Copying the setting
+  is one id, and the configuration card is not built. Furnaces keep Oritech's first match, which is
+  Factorio's own split.
 - **Machine idle draw** — `excluded`. A Factorio machine consumes power while idle: the
   [Electric system](https://wiki.factorio.com/Electric_system) page notes *"an active assembling
   machine 2 will consume 155 kW (150 kW energy consumption + 5 kW drain)"*, about a thirtieth of the

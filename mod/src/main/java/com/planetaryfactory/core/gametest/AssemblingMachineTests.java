@@ -39,9 +39,9 @@ import rearth.oritech.block.base.block.MultiblockMachine;
  *
  * <p>The codec's round trip is {@code HeldRecipeTest}'s. What is left is the seam around it: that
  * the block entity's save hook actually writes the field and its load hook reads it back into a
- * recipe the server resolves; that every assembling recipe the server loaded is one the widget
- * offers and the machine can hold -- the check that replaces #237 and #238; and that changing the
- * recipe hands the player back what the inputs held. And the craft cycle (#328): that a fed,
+ * recipe the server resolves; that every assembling recipe the server loaded is one Fill Recipe
+ * can set and the machine can hold -- the check that replaces #237 and #238; and that changing or
+ * clearing the recipe hands the player back what the inputs held. And the craft cycle (#328): that a fed,
  * powered machine crafts at Factorio's rate, and that each of the three stalls draws nothing, takes
  * nothing and keeps its recipe. Checked against its defect: extracting the tick's energy before the
  * stall is asked turns all three stall tests red.
@@ -59,8 +59,10 @@ final class AssemblingMachineTests {
     static void register(PFGameTests.Registrar tests) {
         tests.test("assembling_machine_keeps_its_recipe_over_a_reload", 20,
                 AssemblingMachineTests::keepsItsRecipeOverAReload);
-        tests.test("assembling_machine_offers_every_assembling_recipe", 20,
-                AssemblingMachineTests::offersEveryAssemblingRecipe);
+        tests.test("assembling_machine_holds_every_assembling_recipe", 20,
+                AssemblingMachineTests::holdsEveryAssemblingRecipe);
+        tests.test("assembling_machine_clear_returns_the_inputs", 20,
+                AssemblingMachineTests::clearReturnsTheInputs);
         tests.test("assembling_machine_refuses_what_it_cannot_hold", 20,
                 AssemblingMachineTests::refusesWhatItCannotHold);
         tests.test("assembling_machine_hands_back_ingredients_on_a_change", 20,
@@ -317,26 +319,19 @@ final class AssemblingMachineTests {
     }
 
     /**
-     * Every {@code planetaryfactory:assembling} recipe in the server's manager is in the widget's
-     * list, and Fill Recipe's setter -- {@code AssemblingMachineMenu.request}, which EMI's packet
-     * lands on (#330) -- holds it, and it resolves back once held. Against the manager, not the emitted files: a
-     * recipe the game rejected at load is {@code check-datapack-load.py}'s.
+     * Every {@code planetaryfactory:assembling} recipe in the server's manager is one Fill Recipe's
+     * setter -- {@code AssemblingMachineMenu.request}, which EMI's packet lands on (#330) -- holds,
+     * and it resolves back once held. The recipe viewer is the only picker (ADR-0073, #336), so a
+     * recipe this refuses is one no machine can ever make. Against the manager, not the emitted
+     * files: a recipe the game rejected at load is {@code check-datapack-load.py}'s.
      */
-    private static void offersEveryAssemblingRecipe(GameTestHelper helper) {
+    private static void holdsEveryAssemblingRecipe(GameTestHelper helper) {
         Set<String> loaded = helper.getLevel().getServer().getRecipeManager().recipeMap()
                 .byType(PFRecipes.ASSEMBLING_TYPE.get()).stream()
                 .map(holder -> holder.id().identifier().toString())
                 .collect(Collectors.toSet());
         if (loaded.isEmpty()) {
             helper.fail("the recipe manager holds no assembling recipe, so this proves nothing");
-            return;
-        }
-        Set<String> offered = AssemblingMachineRecipes.choices(helper.getLevel()).stream()
-                .map(RecipeChoice::id)
-                .collect(Collectors.toSet());
-        if (!offered.equals(loaded)) {
-            helper.fail("the widget offers " + offered.size() + " recipe(s) of " + loaded.size()
-                    + "; missing " + loaded.stream().filter(id -> !offered.contains(id)).toList());
             return;
         }
         AssemblingMachineBlockEntity machine = place(helper);
@@ -419,6 +414,33 @@ final class AssemblingMachineTests {
         int returned = player.getInventory().countItem(Items.IRON_INGOT);
         if (returned != 7) {
             helper.fail("a changed recipe handed back " + returned + " of 7 iron ingots", ANCHOR);
+            return;
+        }
+        helper.succeed();
+    }
+
+    /**
+     * The screen's clear button (#336) empties the Held recipe and hands the inputs back, as a
+     * change of recipe does -- the one way to unset a recipe without a viewer.
+     */
+    private static void clearReturnsTheInputs(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = place(helper);
+        Player player = player(helper);
+        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
+        menu.request(player, someRecipe(helper));
+        machine.inventory.set(0, ItemResource.of(Items.IRON_INGOT), 7);
+
+        if (!menu.clickMenuButton(player, AssemblingMachineMenu.CLEAR)) {
+            helper.fail("the clear button was refused", ANCHOR);
+            return;
+        }
+        if (machine.heldRecipe().isSet()) {
+            helper.fail("clear left the machine holding " + machine.heldRecipe(), ANCHOR);
+            return;
+        }
+        int returned = player.getInventory().countItem(Items.IRON_INGOT);
+        if (!machine.inventory.getItem(0).isEmpty() || returned != 7) {
+            helper.fail("clear handed back " + returned + " of 7 iron ingots", ANCHOR);
             return;
         }
         helper.succeed();
