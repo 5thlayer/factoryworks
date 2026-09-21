@@ -16,21 +16,16 @@ import java.util.Locale;
 public enum AssemblingStatus {
     IDLE,
     PROCESSING,
-    DISABLED,
     LOCKED,
     MISSING_INGREDIENTS,
     OUTPUT_FULL,
     NO_POWER;
 
     /**
-     * @param disabled a redstone signal stops the machine before it asks anything else
      * @param stall {@link AssemblingStall#of}'s answer, which never spends anything
      * @param powered whether the buffer can pay the next tick's share
      */
-    public static AssemblingStatus of(boolean disabled, AssemblingStall stall, boolean powered) {
-        if (disabled) {
-            return DISABLED;
-        }
+    public static AssemblingStatus of(AssemblingStall stall, boolean powered) {
         return switch (stall) {
             case NO_RECIPE -> IDLE;
             case LOCKED -> LOCKED;

@@ -14,39 +14,31 @@ class AssemblingStatusTest {
 
     @Test
     void aRunnablePoweredMachineIsProcessing() {
-        assertEquals(AssemblingStatus.PROCESSING, AssemblingStatus.of(false, AssemblingStall.NONE, true));
+        assertEquals(AssemblingStatus.PROCESSING, AssemblingStatus.of(AssemblingStall.NONE, true));
     }
 
     @Test
     void eachStallIsItsOwnStatus() {
-        assertEquals(AssemblingStatus.IDLE, AssemblingStatus.of(false, AssemblingStall.NO_RECIPE, true));
-        assertEquals(AssemblingStatus.LOCKED, AssemblingStatus.of(false, AssemblingStall.LOCKED, true));
+        assertEquals(AssemblingStatus.IDLE, AssemblingStatus.of(AssemblingStall.NO_RECIPE, true));
+        assertEquals(AssemblingStatus.LOCKED, AssemblingStatus.of(AssemblingStall.LOCKED, true));
         assertEquals(AssemblingStatus.MISSING_INGREDIENTS,
-                AssemblingStatus.of(false, AssemblingStall.NO_INGREDIENTS, true));
-        assertEquals(AssemblingStatus.OUTPUT_FULL, AssemblingStatus.of(false, AssemblingStall.OUTPUT_FULL, true));
+                AssemblingStatus.of(AssemblingStall.NO_INGREDIENTS, true));
+        assertEquals(AssemblingStatus.OUTPUT_FULL, AssemblingStatus.of(AssemblingStall.OUTPUT_FULL, true));
     }
 
     @Test
     void aRunnableMachineThatCannotPayItsTickHasNoPower() {
-        assertEquals(AssemblingStatus.NO_POWER, AssemblingStatus.of(false, AssemblingStall.NONE, false));
-        assertEquals(AssemblingStatus.NO_POWER, AssemblingStatus.of(false, AssemblingStall.NO_POWER, true));
+        assertEquals(AssemblingStatus.NO_POWER, AssemblingStatus.of(AssemblingStall.NONE, false));
+        assertEquals(AssemblingStatus.NO_POWER, AssemblingStatus.of(AssemblingStall.NO_POWER, true));
     }
 
     @Test
     void everyStallOutranksNoPower() {
         assertEquals(AssemblingStatus.MISSING_INGREDIENTS,
-                AssemblingStatus.of(false, AssemblingStall.NO_INGREDIENTS, false));
-        assertEquals(AssemblingStatus.OUTPUT_FULL, AssemblingStatus.of(false, AssemblingStall.OUTPUT_FULL, false));
-        assertEquals(AssemblingStatus.LOCKED, AssemblingStatus.of(false, AssemblingStall.LOCKED, false));
-        assertEquals(AssemblingStatus.IDLE, AssemblingStatus.of(false, AssemblingStall.NO_RECIPE, false));
-    }
-
-    /** The stalls' own order is {@link AssemblingStall#of}'s, which {@code AssemblingStallTest} holds. */
-    @Test
-    void aRedstoneSignalOutranksEverything() {
-        for (AssemblingStall stall : AssemblingStall.values()) {
-            assertEquals(AssemblingStatus.DISABLED, AssemblingStatus.of(true, stall, false));
-        }
+                AssemblingStatus.of(AssemblingStall.NO_INGREDIENTS, false));
+        assertEquals(AssemblingStatus.OUTPUT_FULL, AssemblingStatus.of(AssemblingStall.OUTPUT_FULL, false));
+        assertEquals(AssemblingStatus.LOCKED, AssemblingStatus.of(AssemblingStall.LOCKED, false));
+        assertEquals(AssemblingStatus.IDLE, AssemblingStatus.of(AssemblingStall.NO_RECIPE, false));
     }
 
     @Test
