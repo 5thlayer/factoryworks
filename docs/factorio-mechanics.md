@@ -31,12 +31,14 @@ something else and was never argued on its own merits. **`by-consequence` rows a
 ledger**, not by the ticket that caused them.
 
 `via` reuses `subgroup-owner.json`'s owner tokens — `gregtech`, `create`, `powergrid`,
-`gcyr`, `pack`, `kubejs`, `native_mechanic` — and a value must exist in `index.toml`. **`mekanism` is
+`pack`, `kubejs`, `native_mechanic` — and a value must exist in `index.toml`. **`gcyr` is no longer
+one of them** (ADR-0060): GCyR left the manifest, and the rows that named it list their candidates
+instead. **`mekanism` is
 no longer one of them** (ADR-0035): the mod is out of the manifest, so a row naming it would fail the
 must-exist rule. **`electro` is no longer one of them either** (#148): it named Create: Electro
 Energetics, which Create: Power Grid replaced, and it never satisfied the must-exist rule in the
 first place — the mod id was `electroenergetics`. The three rows that wrote `electro` (GCyR) meant
-GCyR and now say `gcyr`. `candidates` is free
+GCyR. `candidates` is free
 text and commits to no jar; **`pack` is admissible as a candidate only with a named mechanism**
 (ADR-0015).
 
@@ -1099,14 +1101,14 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **via**: `gcyr`
+- **candidates**: Oritech: Space Age, or `planetaryfactory_core` (#340)
 - **owner**: #41, ADR-0006
 - **ticket**: #25 — the map *is* this row's ticket, being Terra's flow to the first rocket launch
 
 Sub-rules:
 
-- **The launch is a physical, watchable event** — `planned`. GCyR's `RocketEntity`, and
-  `docs/gdd.md` §4 makes it explicit that the launch is the payoff and is never simulated.
+- **The launch is a physical, watchable event** — `planned`. `docs/gdd.md` §4 makes it
+  explicit that the launch is the payoff and is never simulated.
 - **Rocket parts are produced continuously and buffer in the silo** — `unargued`, no verdict.
 - **Cargo landing pad** — `planned`, the post-launch arc.
 
@@ -1296,18 +1298,25 @@ Sub-rules:
 
 - **verdict**: `blocked`
 - **where**: pack-wide
-- **via**: `gcyr`
-- **owner**: ADR-0001, ADR-0006, `docs/gdd.md` §2
-- **ticket**: #112, #54
+- **candidates**: Oritech: Space Age, or `planetaryfactory_core` (#340)
+- **owner**: ADR-0060, ADR-0006, `docs/gdd.md` §2
+- **ticket**: #340 (the wait); #112, #54 closed
 
 Six bodies, seven destinations. **`blocked` by ADR-0060**: GCyR left, and travel waits for a
 first-party Oritech space addon. This row and the three orbital rows below it are blocked together,
-and the bodies other than Terra are parked under `kubejs/parked/`.
+and the bodies other than Terra are parked under `kubejs/parked/`. The travel rows, this one and
+Rocket silo have no `via` until #340 picks a route.
+
+As of 2026-09-21 that addon exists but is unreleased: `space-age/` on Oritech's `26.1` branch builds a
+separate jar that no release ships. It has rockets assembled from blocks, a pad, a flight planner on
+a 2.5D star map of Earth, Sun, Mars and asteroids, and asteroid tugging. It has no dimensions and no
+planet surfaces. A flight lands in the dimension it left from, so it is the launch half of this row
+and none of the travel. The pack keeps waiting rather than adopting it or building travel itself (#340).
 
 Sub-rules:
 
 - **Each planet is a distinct surface with its own resources and its own puzzle** — `planned`.
-- **The player travels physically and pays fuel** — `planned`. GCyR's tiered fuel costs.
+- **The player travels physically and pays fuel** — `planned`.
 - **Arrival is hostile and you must establish a foothold** — `adapted`. The Vanguard Kit pastes a
   beachhead; Factorio drops you into a working platform's cargo pod, so the shape of the first five
   minutes differs entirely.
@@ -1316,7 +1325,7 @@ Sub-rules:
 
 - **verdict**: `blocked`
 - **where**: Terra Orbit, and every body's orbit
-- **via**: `gcyr` (space stations)
+- **candidates**: `planetaryfactory_core`. Oritech: Space Age has no stations (#340)
 - **owner**: ADR-0006
 - **ticket**: #113
 
@@ -1350,6 +1359,11 @@ Sub-rules:
   This is what makes the asteroid economy an economy rather than a drip, and nobody has thought about
   it.
 - **Asteroid composition varies by orbit and by route** — `unargued`, no verdict.
+
+A candidate, not a decision (2026-09-21): Oritech's Space Age addon tugs a whole asteroid down to the
+surface, and a harder landing makes a bigger crater and recovers less of it. If the addon is adopted, that would
+sit beside orbital collectors as a bulk ore delivery, the other answer to ADR-0020's exhaustion. It would not
+replace them, since it reproduces neither the chunk loop nor reprocessing.
 
 ### Interplanetary logistics
 

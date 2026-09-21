@@ -31,7 +31,7 @@ The Overworld. The starter loop where basic extraction, first automation and the
 _Avoid_: Overworld, home planet, spawn, Nauvis
 
 **Terra Orbit**:
-GCyR's orbit dimension above Terra, reached by rocket, where asteroid chunks are harvested into Space Science and the first Platform is established. Internal ID `overworld_orbit`.
+The orbit above Terra, reached by rocket, where asteroid chunks are harvested into Space Science and the first Platform is established. Internal ID `overworld_orbit`.
 _Avoid_: space, the void, orbital dimension, Nauvis Orbit
 
 **Ignus**:
@@ -63,7 +63,7 @@ The Factorio-derived identifier a body is registered under, never shown to playe
 _Avoid_: registry name, dimension key
 
 **Platform**:
-A GCyR space station: a player-expanded orbital factory that mines and processes asteroids. Static — it never travels.
+A player-expanded orbital factory that mines and processes asteroids. Static — it never travels (ADR-0006).
 _Avoid_: space station, orbital base, ship, vessel
 
 ### Sapros terrain
