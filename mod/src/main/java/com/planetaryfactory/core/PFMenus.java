@@ -57,8 +57,9 @@ public final class PFMenus {
                     net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
 
     /**
-     * The Assembling Machine's (#327): the pack's own, since Oritech's screen has no hook for the
-     * recipe widget. The opening packet carries the position and the widget's list.
+     * The Assembling Machine's: the pack's own, since Oritech's screen has no hook for the Held
+     * recipe (ADR-0073). The opening packet carries the recipe list, which the client has no
+     * recipe manager to read.
      */
     public static final Supplier<MenuType<AssemblingMachineMenu>> ASSEMBLING_MACHINE =
             MENUS.register("assembling_machine", () -> IMenuTypeExtension.create(AssemblingMachineMenu::new));
