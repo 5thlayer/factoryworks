@@ -21,13 +21,17 @@ renderer interface, as GregTech-Modern's map integration does, with FTB Chunks t
 implementation. All FTB code lives in one package, `compileOnly` against a pinned version, and loads
 only when `ftbchunks` is present.
 
-**Scan order (amended, #369).** The Radar scans as Factorio's does. Every 250 kJ it pulses its 7×7
-nearby area, and every 10 MJ it scans one long-range sector within 14, beyond that area. Both count
+**Scan order (amended, #369).** The Radar scans as Factorio's does, with a wider nearby area. Every
+250 kJ it pulses its nearby area, and every 10 MJ it scans one long-range sector within 14, beyond
+that area. Both count
 the same draw, so the long range keeps Factorio's 33.3 s a sector. The long range walks square rings
 outward, each from its top-left sector clockwise, takes the first sector the team's chart lacks, and
-re-scans in turn once none is left. Two things are adapted. "Unexplored" is the team's chart, since
+re-scans in turn once none is left. Three things are adapted. The nearby area is 8×8 sectors, 16
+Minecraft chunks, where Factorio's is 7×7: at one tile per block Factorio's is 14 chunks across,
+inside a normal render distance, so it would reveal nothing a player at the Radar has not seen. An
+even square has no middle sector, so it is the one whose centre is nearest the Radar's block. "Unexplored" is the team's chart, since
 the server does not know what a player walked. A pulse charts only the area's uncharted sectors, one
-a tick, since 196 chunks generated in one tick is a stall and a charted sector is never re-sent. A
+a tick, since 256 chunks generated in one tick is a stall and a charted sector is never re-sent. A
 re-scan spends its 10 MJ and changes no map, for the same reason, until the chart has a live refresh.
 
 **Considered: nearest-first long range with no nearby area.** It was the first build. Rejected: it

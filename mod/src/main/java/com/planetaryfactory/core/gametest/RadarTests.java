@@ -21,10 +21,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * A pole-fed Radar charts its 7x7 nearby area into its owner's chart within seconds, then its first
- * long-range sector, the top-left of the fourth ring, after 10 MJ; a starved one charts nothing
- * (#368, ADR-0079). The tick figures are typed: a pulse is 2,500 FE, 17 ticks at 150 FE/t, then one
- * sector a tick, and 100,000 FE is 667 ticks.
+ * A pole-fed Radar charts its 8x8 nearby area into its owner's chart within seconds, then one
+ * long-range sector in the fourth ring after 10 MJ; a starved one charts nothing (#368, ADR-0079).
+ * The tick figures are typed: a pulse is 2,500 FE, 17 ticks at 150 FE/t, then one sector a tick,
+ * and 100,000 FE is 667 ticks.
  */
 final class RadarTests {
 
@@ -49,9 +49,12 @@ final class RadarTests {
         helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
         BlockPos anchor = helper.absolutePos(FLOOR.above());
         Sector own = Sector.ofBlock(anchor.getX(), anchor.getZ());
+        // An even square reaches four sectors towards the half of its own sector the Radar stands in.
+        int fromX = Math.floorMod(anchor.getX(), Sector.SIZE) < Sector.SIZE / 2 ? -4 : -3;
+        int fromZ = Math.floorMod(anchor.getZ(), Sector.SIZE) < Sector.SIZE / 2 ? -4 : -3;
         Set<Sector> nearby = new HashSet<>();
-        for (int dx = -3; dx <= 3; dx++) {
-            for (int dz = -3; dz <= 3; dz++) {
+        for (int dx = fromX; dx < fromX + 8; dx++) {
+            for (int dz = fromZ; dz < fromZ + 8; dz++) {
                 nearby.add(own.offset(dx, dz));
             }
         }
@@ -60,7 +63,7 @@ final class RadarTests {
                 .thenExecute(() -> {
                     if (!chart(helper, owner).equals(nearby)) {
                         helper.fail("after the first pulse the chart holds " + chart(helper, owner).size()
-                                + " sectors where it should hold the 49 around " + own, FLOOR.above());
+                                + " sectors where it should hold the 64 around " + own, FLOOR.above());
                     }
                 })
                 .thenIdle(BEFORE_TEN_MEGAJOULES - AFTER_NEARBY_PULSE)
@@ -71,13 +74,13 @@ final class RadarTests {
                 })
                 .thenIdle(AFTER_TEN_MEGAJOULES - BEFORE_TEN_MEGAJOULES)
                 .thenExecute(() -> {
-                    Set<Sector> expected = new HashSet<>(nearby);
-                    expected.add(own.offset(-4, -4));
-                    if (!chart(helper, owner).equals(expected)) {
-                        Set<Sector> extra = new HashSet<>(chart(helper, owner));
-                        extra.removeAll(nearby);
+                    Set<Sector> extra = new HashSet<>(chart(helper, owner));
+                    extra.removeAll(nearby);
+                    if (!chart(helper, owner).containsAll(nearby) || extra.size() != 1
+                            || extra.stream().anyMatch(sector -> Math.max(Math.abs(sector.x() - own.x()),
+                                    Math.abs(sector.z() - own.z())) != 4)) {
                         helper.fail("after 10 MJ the long range holds " + extra
-                                + " where it should hold only " + own.offset(-4, -4), FLOOR.above());
+                                + " where it should hold one sector of the fourth ring", FLOOR.above());
                     }
                 })
                 .thenSucceed();
