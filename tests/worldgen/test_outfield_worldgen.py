@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Terra's outfield structure sets: one per resource, spaced by Factorio's corpus (#320).
 
+Crude's oil field is one more, of its own structure type (ADR-0081).
+
 The generator's `--check` holds the files to the generator. This holds the generator to the
 corpus, and the files to the mod: spacing and separation are re-derived here from
 `data/factorio/resource.json`, the structure type is the one `PFWorldgen` registers, and the
@@ -25,6 +27,7 @@ PF_WORLDGEN = os.path.join(
 )
 
 RESOURCES = {"coal": "coal", "copper": "copper-ore", "iron": "iron-ore", "stone": "stone", "uranium": "uranium-ore"}
+OIL_FIELD = "oil_field"
 CHUNK = 16
 
 
@@ -45,7 +48,7 @@ def main():
     corpus = read(CORPUS)
     by_name = {entry["name"]: entry for entry in corpus["resources"]}
     candidate = corpus["outfield_placement"]["suggested_minimum_candidate_point_spacing"]
-    registered = re.search(r'STRUCTURE_TYPES\.register\("([a-z_]+)"', open(PF_WORLDGEN, encoding="utf-8").read())
+    types = re.findall(r'STRUCTURE_TYPES\.register\("([a-z_]+)"', open(PF_WORLDGEN, encoding="utf-8").read())
     land = read(LAND_TAG)["values"]
     if any(biome.endswith("terra_sea") for biome in land):
         failures.append("the land tag holds the sea")
@@ -56,8 +59,9 @@ def main():
         failures.append(f"outfield structure sets are {sets}, not one per resource {expected}")
 
     salts = set()
-    for block, factorio in RESOURCES.items():
-        name = f"outfield_{block}"
+    placed = [(f"outfield_{block}", factorio, "outfield_disc", block) for block, factorio in RESOURCES.items()]
+    placed.append((OIL_FIELD, "crude-oil", OIL_FIELD, None))
+    for name, factorio, kind, block in placed:
         structure = read(os.path.join(WORLDGEN, "structure", f"{name}.json"))
         placement = read(os.path.join(WORLDGEN, "structure_set", f"{name}.json"))["placement"]
         mean = by_name[factorio]["outfield"]["mean_spacing"]
@@ -68,20 +72,20 @@ def main():
         if placement["type"] != "minecraft:random_spread":
             failures.append(f"{name} is placed by {placement['type']}")
         salts.add(placement["salt"])
-        if not registered or structure["type"] != f"planetaryfactory:{registered.group(1)}":
+        if kind not in types or structure["type"] != f"planetaryfactory:{kind}":
             failures.append(f"{name}'s type {structure['type']} is not the one PFWorldgen registers")
-        if structure["resource"] != block:
-            failures.append(f"{name} generates {structure['resource']}")
+        if structure.get("resource") != block:
+            failures.append(f"{name} generates {structure.get('resource')}")
         if structure["biomes"] != "#planetaryfactory:terra_land":
             failures.append(f"{name} is confined to {structure['biomes']}, not Terra's land")
-    if len(salts) != len(RESOURCES):
+    if len(salts) != len(placed):
         failures.append("two outfield sets share a salt, and with it a grid")
 
     for failure in failures:
         print(f"FAIL  {failure}")
     if failures:
         return 1
-    print(f"ok    {len(RESOURCES)} outfield structure sets, spaced and separated by the corpus")
+    print(f"ok    {len(placed)} outfield structure sets, spaced and separated by the corpus")
     return 0
 
 

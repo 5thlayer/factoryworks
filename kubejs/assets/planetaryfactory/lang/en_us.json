@@ -132,5 +132,8 @@
   "map.planetaryfactory.patch.coal": "Coal",
   "map.planetaryfactory.patch.uranium": "Uranium ore",
   "map.planetaryfactory.patch.stone": "Stone",
-  "map.planetaryfactory.patch.amount": "%s: %s"
+  "map.planetaryfactory.patch.amount": "%s: %s",
+  "block.planetaryfactory.oil_well": "Oil Well",
+  "map.planetaryfactory.patch.crude_oil": "Crude oil",
+  "map.planetaryfactory.patch.yield": "%s: %s yield"
 }

@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import com.planetaryfactory.core.oil.OilField;
+import com.planetaryfactory.core.oil.OilFieldSource;
 import com.planetaryfactory.core.ore.OreResource;
 import com.planetaryfactory.core.ore.OutfieldDisc;
 import java.util.List;
@@ -66,6 +68,41 @@ class SectorPatchesTest {
 
         assertEquals(List.of(marker(OreResource.STONE, 40, 83, 40)),
                 SectorPatches.find(new Sector(1, 1), List.of(disc(OreResource.STONE, 40, 40)), surface));
+    }
+
+    private static OilFieldSource oilField(int x, int z, List<OilField.Well> wells) {
+        return new OilFieldSource() {
+            @Override
+            public int centreX() {
+                return x;
+            }
+
+            @Override
+            public int centreZ() {
+                return z;
+            }
+
+            @Override
+            public List<OilField.Well> wells() {
+                return wells;
+            }
+        };
+    }
+
+    @Test
+    void anOilFieldIsMarkedWithItsWellsSummed() {
+        List<OilField.Well> wells = List.of(new OilField.Well(40, 40, 300_000), new OilField.Well(44, 40, 450_000));
+
+        assertEquals(List.of(new PatchMarker(SectorPatches.CRUDE_OIL, 40, 70, 40, 750_000)),
+                SectorPatches.find(new Sector(1, 1), List.of(oilField(40, 40, wells)), FLAT, (x, z) -> false));
+    }
+
+    @Test
+    void anOilFieldsWellOnAnOreColumnIsNotSummed() {
+        List<OilField.Well> wells = List.of(new OilField.Well(40, 40, 300_000), new OilField.Well(44, 40, 450_000));
+
+        assertEquals(List.of(new PatchMarker(SectorPatches.CRUDE_OIL, 40, 70, 40, 300_000)),
+                SectorPatches.find(new Sector(1, 1), List.of(oilField(40, 40, wells)), FLAT, (x, z) -> x == 44));
     }
 
     @Test

@@ -1,8 +1,10 @@
 package com.planetaryfactory.core.radar.ftb;
 
+import com.planetaryfactory.core.oil.WellYield;
 import com.planetaryfactory.core.ore.OreResource;
 import com.planetaryfactory.core.radar.PatchAmount;
 import com.planetaryfactory.core.radar.PatchMarker;
+import com.planetaryfactory.core.radar.SectorPatches;
 import com.planetaryfactory.core.radar.client.ChartMarkerRenderer;
 import com.planetaryfactory.core.radar.client.RadarMapClient;
 
@@ -25,6 +27,9 @@ import net.neoforged.neoforge.common.NeoForge;
  * {@code ftbchunks} is.
  */
 public final class FtbMapMarkers implements ChartMarkerRenderer {
+
+    /** Oritech's crude bucket, the item Factorio's crude-oil icon maps to (ADR-0081). */
+    private static final String OIL_ICON = "oritech:still_oil_bucket";
 
     private FtbMapMarkers() {
     }
@@ -49,17 +54,26 @@ public final class FtbMapMarkers implements ChartMarkerRenderer {
         private final Component name;
         private final String amount;
 
+        private final boolean oil;
+
         private PatchIcon(PatchMarker marker, long amount) {
             super(new Vec3(marker.x() + 0.5, marker.y(), marker.z() + 0.5),
-                    ItemIcon.ofItem(BuiltInRegistries.ITEM.getValue(
-                            Identifier.parse(OreResource.of(marker.resource()).drop()))));
+                    ItemIcon.ofItem(BuiltInRegistries.ITEM.getValue(Identifier.parse(icon(marker)))));
             this.name = Component.translatable("map.planetaryfactory.patch." + marker.resource());
-            this.amount = PatchAmount.format(amount);
+            this.oil = marker.resource().equals(SectorPatches.CRUDE_OIL);
+            this.amount = oil ? PatchAmount.yield(amount, WellYield.fromCorpus().normal()) : PatchAmount.format(amount);
+        }
+
+        private static String icon(PatchMarker marker) {
+            return marker.resource().equals(SectorPatches.CRUDE_OIL)
+                    ? OIL_ICON
+                    : OreResource.of(marker.resource()).drop();
         }
 
         @Override
         public void addTooltip(TooltipList list) {
-            list.add(Component.translatable("map.planetaryfactory.patch.amount", name, amount));
+            list.add(Component.translatable(oil ? "map.planetaryfactory.patch.yield" : "map.planetaryfactory.patch.amount",
+                    name, amount));
         }
     }
 }

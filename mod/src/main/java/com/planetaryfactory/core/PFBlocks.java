@@ -9,6 +9,7 @@ import com.planetaryfactory.core.mining.rig.RigBlock;
 import com.planetaryfactory.core.mining.rig.RigPartBlock;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.ore.OreBlock;
+import com.planetaryfactory.core.oil.OilWellBlock;
 import com.planetaryfactory.core.radar.RadarBlock;
 import com.planetaryfactory.core.radar.RadarFootprint;
 import com.planetaryfactory.core.radar.RadarPartBlock;
@@ -38,7 +39,8 @@ import java.util.stream.Stream;
 
 /**
  * The blocks the mod itself registers: the two saplings, the pole blocks, the furnace and rig
- * ladders, the Boiler, the pump, the Assembling Machine, the Steam Engine and the Radar.
+ * ladders, the Boiler, the pump, the Assembling Machine, the Steam Engine, the Radar and
+ * the oil well.
  *
  * <p>The supply-area poles are here (ADR-0036) -- the three tiers and the creative pole (#272),
  * which is one block beside the ladder rather than a row in it. They are mechanism -- a block
@@ -116,6 +118,10 @@ public final class PFBlocks {
 
     public static final FootprintMachine RADAR_FOOTPRINT = new FootprintMachine(
             RadarFootprint.FOOTPRINT, RADAR, RADAR_PART, () -> PFItems.RADAR.get());
+
+    /** An oil well (ADR-0081): only worldgen places one, and nothing breaks it. */
+    public static final DeferredHolder<Block, OilWellBlock> OIL_WELL =
+            BLOCKS.registerBlock("oil_well", OilWellBlock::new);
 
     /**
      * One block per {@link OreResource}: Terra's five ore blocks (ADR-0041).

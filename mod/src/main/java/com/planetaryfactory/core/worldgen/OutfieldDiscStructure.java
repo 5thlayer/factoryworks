@@ -81,7 +81,7 @@ public final class OutfieldDiscStructure extends Structure {
      * Each column's biome, read at the centre's height, against the structure's own predicate:
      * vanilla asks only at the stub, so a coastal disc would otherwise run onto the seabed.
      */
-    private static OutfieldShape.Land land(GenerationContext context, int y) {
+    static OutfieldShape.Land land(GenerationContext context, int y) {
         Map<Long, Boolean> quarts = new HashMap<>();
         int quartY = QuartPos.fromBlock(y);
         return (x, z) -> quarts.computeIfAbsent(ChunkPos.pack(QuartPos.fromBlock(x), QuartPos.fromBlock(z)),
