@@ -18,7 +18,7 @@ admitted. What is checkable here, with no game launch:
     the graph, which is the same "recipe missing from the Assembler" this ticket was
 
 A science pack the converter holds back until a ticket lands -- Researchd is not on 26.1.2 yet, and
-#251 owns its port -- is reported as deferred rather than failed, read from the converter's
+#260 owns its port -- is reported as deferred rather than failed, read from the converter's
 `--awaited`. The component-shape assertions then have nothing to read, and say so (#279).
 
 WHAT IT CANNOT PROVE is that the `RecipeGraph` admits them: that is a running server, and its

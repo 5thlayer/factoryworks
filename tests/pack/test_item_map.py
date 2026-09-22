@@ -22,7 +22,7 @@ TWO ASSERTIONS, AND THE SECOND IS WHY THIS FILE EXISTS (#275, ADR-0061).
    EMI entries and a recipe that takes whichever it feels like. A tag with exactly one populating
    jar stays legal, which is what keeps `#c:raw_materials/iron` doing its job.
 
-WHAT A DEFERRAL IS. The rows #258, #293, #294, #295 and #251 own cannot resolve until those tickets land, so they are
+WHAT A DEFERRAL IS. The rows #258, #293, #294, #295 and #260 own cannot resolve until those tickets land, so they are
 listed in DEFERRED with the ticket that owns each, in `scripts/check-datapack-load.py`'s idiom: an
 unlisted failure fails, and a LISTED row that now resolves fails too. The guard re-arms one row at a
 time rather than the assertion being weakened, and each ticket deletes its entry as its block lands.
@@ -72,7 +72,7 @@ POWER_SWITCH = (
     "names the first-party power switch, since Oritech ships none and its Flux Gate is an item: "
     "#294 owns this row")
 SCIENCE = (
-    "names the Researchd fork, which is still on 1.21.1 and therefore not in `mods/`. #251 owns "
+    "names the Researchd fork, which is still on 1.21.1 and therefore not in `mods/`. #260 owns "
     "the port; the row itself is not in question")
 DEFERRED = {
     "assembling-machine-2": TIERS,

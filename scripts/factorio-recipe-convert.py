@@ -303,7 +303,7 @@ def main():
             continue
         # A `blocked_by` row has a target the game cannot load yet: a first-party item that
         # arrives with a `planetaryfactory_core` ticket, or a borrowed one whose mod is not on
-        # 26.1.2 (#277, #251). Emitting a
+        # 26.1.2 (#277, #260). Emitting a
         # recipe against it produces JSON that names an item nothing registers, and KubeJS fails
         # to read the recipe at WORLD LOAD rather than at conversion time: an error in a log,
         # nothing craftable, and no clue pointing back here. The static check already tolerates

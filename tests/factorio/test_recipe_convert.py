@@ -55,7 +55,7 @@ PACK_SMELTING = "planetaryfactory:smelting"
 # owns the material forms (ADR-0061). Whether a target actually resolves against the installed jars
 # is `tests/pack/test_item_map.py`'s question; this is the coarser one of whether the row names a mod
 # the pack ships at all. A row naming a mod ADR-0060 removed passes only while it is `blocked_by`
-# the ticket that re-targets it (#277, #251), and no emitted recipe may name one.
+# the ticket that re-targets it (#277, #260), and no emitted recipe may name one.
 NAMESPACES = {"minecraft", "planetaryfactory", "ftbmaterials",
               # `c:` is the common tag namespace, which belongs to no mod.
               "c",
