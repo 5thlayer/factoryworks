@@ -171,7 +171,7 @@ plainly.
 | --- | --- |
 | The belt's upper tiers and the splitter. Throughput stops being one number and becomes a choice — `logistics-2` and `logistics-3` each buy a known one (ADR-0060). | machine |
 | Rail and trains. Distance stops being a wall. | machine |
-| The Fluid Drilling Rig taps a bedrock fluid deposit. *Fractions per `#86`.* | machine |
+| The Pumpjack stands on an oil well. Crude never runs out: a well's yield falls to a floor and stops there, and a far well starts above 100% (ADR-0081). | machine |
 | Oil in the barrel you have had since rung 0. A fluid becomes an item, and the belt and the train can carry it. | machine |
 | Oil Refinery and Chemical Plant. Two new machine idioms in one beat — and the first machines that hold a *player-set* recipe rather than matching on input (ADR-0060), which is the literacy this chapter actually spends. | machine |
 | Solid fuel, and the Steel Furnace that burns it. Fuel throughput becomes a constraint you can feel. | machine |

@@ -26,8 +26,9 @@ oil springs retargeted at Terra, drained by Oritech's Pump. No ADR adopted it.
     starts above 100%.
   - Fields go on land only, never within the first 150 blocks, and never on a column already holding
     ore.
-- Oritech's `oil_spring` biome modifiers become `neoforge:none`, so the well is the only crude
-  source in the pack.
+- Oritech's `oil_spring` biome modifiers are overridden with a no-op, so the well is the only crude
+  source in the pack. The no-op is an `add_features` naming no biome and no feature: NeoForge 26.1
+  registers `none` for structure modifiers only.
 - An oil field gets a patch marker like an ore patch, when a Radar charts it or a player walks past
   it (ADR-0079). The marker shows the field's summed yield and is never removed.
 
