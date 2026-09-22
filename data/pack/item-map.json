@@ -941,9 +941,10 @@
       "ticket": 135
     },
     "uranium-ore": {
-      "status": "undecided",
-      "note": "GregTech's uranium ore is on Terra (ADR-0021) but which item the corpus's `uranium-ore` is has no row.",
-      "ticket": 135
+      "kind": "item",
+      "target": "ftbmaterials:uranium_raw_ore",
+      "source": "borrowed",
+      "note": "Raw Uranium, what a pack uranium ore block pays out (#321). FTB Materials' raw form (ADR-0061); its ore blocks are not used, since a block has to carry an amount (ADR-0041)."
     },
     "utility-science-pack": {
       "status": "undecided",

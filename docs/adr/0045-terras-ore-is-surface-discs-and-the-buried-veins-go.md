@@ -1,5 +1,5 @@
 ---
-status: provisional
+status: accepted
 supersedes: [57, 179]
 ---
 
@@ -139,15 +139,14 @@ prospecting affordance *"a hard prerequisite of this ADR, not an enhancement"*, 
 is discharged rather than met: a visible patch needs finding, not detecting. Exploration replaces
 prospecting. The Radar reveals map at range — Factorio's actual Radar — instead of the ore-detection
 meaning the pack had to invent for it because ore was hidden. `#57` closes. The Ore Finder Satellite
-loses its stated job and needs a new one or needs cutting; that is its own ticket, not this ADR's
-call.
+is cut (#322, amended below).
 
 **GregTech's surface indicators become dead.** They marked buried veins and there are none. The
 check that guards them goes with them, and both failure modes it was written for stop existing.
 
 **The regeneration this needed is done.** #317 extracted the four per-resource arguments, the
 spot's quantity and radius expressions, and the edge's octaves into `data/factorio/resource.json`,
-with each resource's law tabulated against distance.
+with each resource's law tabulated against distance. No Factorio run was needed (amended below).
 
 **What is deliberately not ported.** Nothing scales patch *count* with distance — `base_spots_per_km2`
 is constant in Factorio too. Patches are land-only, confined by the land biome tag, which since #356
@@ -157,7 +156,7 @@ outcome.
 
 ## How this is checked
 
-Three claims, three checks, none of which launches the game:
+Four claims, four checks. The first three launch no game:
 
 - **The laws are Factorio's.** The resource extraction check re-derives each spot's quantity,
   radius, height, amplitude and spacing, and the edge's octaves, from the committed formulas, as it
@@ -167,7 +166,40 @@ Three claims, three checks, none of which launches the game:
 - **The registries are what we said.** The worldgen registry check asserts Terra's ore vein registry
   is **empty** and that the resource structure sets are present — a stronger assertion than the
   fixture makes today.
+- **A disc lands on the terrain.** `OutfieldDiscTests`, in the GameTest run, resolves each
+  resource's structure set from a running server's registry and places a disc. It asserts every
+  column holds exactly the shape's ore, one deep and flush with the ground and under a tree, that
+  nothing generates inside 150 blocks or off the land, and that a break reads the disc's amount (#320).
 
 The vein indicator check is deleted with the veins. What stays unchecked and is a world load: whether
-a procedural disc lands on real terrain across every biome, which is the same class of question the
-starting area's geometry check cannot answer either.
+discs land on real terrain across Terra's biomes, since the GameTest world is flat plains.
+
+## Amended after building it (#321)
+
+This ADR was written `provisional`, and four of its sentences stopped being true while it was built.
+The decision itself is unchanged. It is `accepted` now that uranium, the last resource, generates
+and every outfield patch in the tree is the one this ADR describes.
+
+**The Ore Finder Satellite is cut rather than rehomed.** As written, this ADR left the satellite
+needing "a new job or cutting" and called that another ticket's decision. #322 decided to cut it, on
+three grounds. Factorio has no such mechanic; its Radar is the only scanning it has. GCyR, the mod
+that supplied the satellite, left with ADR-0060. And this ADR had already removed the hidden ore the
+satellite existed to find, so no job was left to give it.
+
+**The corpus blocker lapsed without a game launch.** The first text said a regeneration was required
+before this could be built, because four constants
+(`regular_blob_amplitude_maximum_distance`, `regular_rq_factor`, `random_spot_size_minimum` and
+`maximum`) were not in the committed corpus. They were in the prototype dump already on disk the whole
+time. #317 read them out of it with `scripts/factorio-resource-extract.py` and needed no Factorio run.
+Nobody should schedule one for this.
+
+**The disc-on-terrain question is answered.** The first text filed it as a world load no check could
+reach, "the same class of question the starting area's geometry check cannot answer either." The
+GameTest harness did not exist yet. #320's `OutfieldDiscTests` now answers it on the flat test
+world, and it joins the three checks above. Uranium joins its set in #321. Only the biome spread
+stays a world load.
+
+**Uranium pays out FTB Materials' Raw Uranium.** The enum named `gtceu:raw_uranium`, which stopped
+naming an item when GregTech left. No uranium block had been placed before this, so nothing noticed.
+The drop is `ftbmaterials:uranium_raw_ore` (ADR-0061). A drop that resolves to nothing now fails
+`tests/pack/test_ore_assets.py` and the disc GameTest.

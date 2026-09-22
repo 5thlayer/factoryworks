@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349) and `BeltHandTests` (#350), registered only when the
+and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350) and `BeltSyncTests` (#351), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -205,6 +205,13 @@ keeps loading and only what was already past the hand reaches the end, and that 
 takes four and then lets the belt run on to its end, losing nothing (`BeltHandTests`). A hand that never
 takes turns both red, and one that re-arms after a refusal turns the second red. The point itself is the
 fork's `BeltContentsTest`; the client's ray and how the gesture feels are a human check on delivery.
+And that a belt moving items sends no block update, whether or not it is also loading and delivering,
+and that a belt saved and loaded holds every entry, by id, item and position (`BeltSyncTests`). A
+client learns what a belt gains and loses from the fork's own payload and advances it itself. No
+server API reports a block update being sent, so `mixin/minecraft/ServerLevelMixin` counts them for
+the positions `BlockUpdateWatch` is watching. Sending one each tick the belt moves turns both sync
+tests red. The client's copy is the fork's `BeltSyncTest`, and whether it renders smoothly is a
+human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;

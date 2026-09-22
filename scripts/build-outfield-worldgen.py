@@ -11,8 +11,6 @@ land biome tag, and one `random_spread` structure set. Both placement numbers ar
   - `separation` is the minimum distance Factorio's `spot_noise` keeps between candidate spots,
     `suggested_minimum_candidate_point_spacing`, in chunks, rounded up.
 
-Uranium is not emitted: its drop resolves to nothing until #321.
-
 The salt is a hash of the set's id, so two resources never share a grid.
 
 Usage:
@@ -33,12 +31,13 @@ WORLDGEN = REPO / "kubejs" / "data" / "planetaryfactory" / "worldgen"
 NAMESPACE = "planetaryfactory"
 CHUNK = 16
 
-# The pack's block name and the corpus's resource. Uranium waits on #321.
+# The pack's block name and the corpus's resource.
 RESOURCES = {
     "coal": "coal",
     "copper": "copper-ore",
     "iron": "iron-ore",
     "stone": "stone",
+    "uranium": "uranium-ore",
 }
 
 LAND = f"#{NAMESPACE}:terra_land"
