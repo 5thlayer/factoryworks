@@ -65,7 +65,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int SLOT_LIGHT = 0xFFFFFFFF;
     private static final int BAR = 0xFF5DA05D;
     private static final int ENERGY = 0xFFD0A030;
-    // The Boiler screen's water, since the tank's fluid colour is not reachable from a FluidType in 26.1.
+    // One colour for every fluid, the Boiler screen's water: the tooltip names the fluid.
     private static final int FLUID = 0xFF3B6FE0;
     private static final int TEXT = 0xFF404040;
     private static final int BAR_TEXT = 0xFFFFFFFF;
