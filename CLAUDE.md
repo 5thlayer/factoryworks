@@ -188,7 +188,8 @@ when a loader is short (`BeltLoaderCostTests`, #354). Before the fix every open 
 loader, which turned five of its six red. The choice is the fork's `LoaderChoiceTest`.
 And that a belt laid through the belt item in a shape outside one of ADR-0078's four bounds -- too
 steep, climbing and turning at once, turning tighter than a block, reaching past 32 -- changes no
-block, links neither loader, charges nothing and names its bound to the player (`BeltShapeTests`).
+block, links neither loader, charges nothing and names its bound to the player, and that a support
+clicked past a bound is not stored (`BeltShapeTests`).
 The world is read before the click as well as after. Every other belt fixture is laid through the
 same rule and fails if it is refused; dropping the midpoint support from the 64-block belt turns it
 red. The rule, and where each bound falls, is the fork's `BeltPathTest`, and whether the preview
