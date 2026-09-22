@@ -28,7 +28,7 @@
     "",
     "A row may carry `blocked_by`, the ticket that makes its target LOADABLE: a first-party item",
     "`planetaryfactory_core` has not registered yet, or a borrowed one whose mod is not installed on",
-    "26.1.2 (#258's machines, #251's Researchd). The target is kept as the standing",
+    "26.1.2 (#258's machines, #260's Researchd). The target is kept as the standing",
     "proposal. The converter skips every recipe touching one, so nothing is emitted that the game",
     "rejects at load (#279).",
     "",
@@ -93,7 +93,7 @@
         "researchd:research_pack": "planetary_factory:automation_science_pack"
       },
       "note": "ADR-0018's rung 1. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read.",
-      "blocked_by": 251
+      "blocked_by": 260
     },
     "barrel": {
       "kind": "item",
@@ -201,7 +201,7 @@
         "researchd:research_pack": "planetary_factory:chemical_science_pack"
       },
       "note": "ADR-0018's rung 3. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read.",
-      "blocked_by": 251
+      "blocked_by": 260
     },
     "coal": {
       "kind": "item",
@@ -472,7 +472,7 @@
       "source": "borrowed",
       "note": "Researchd's Lab, and #103 has it running running free without energy consumption. We will use this item but we need to either fork the mod to add energy capability or wait for an upstream update.",
       "ticket": 103,
-      "blocked_by": 251
+      "blocked_by": 260
     },
     "landfill": {
       "status": "not_emitted",
@@ -511,7 +511,7 @@
         "researchd:research_pack": "planetary_factory:logistic_science_pack"
       },
       "note": "ADR-0018's rung 2. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read.",
-      "blocked_by": 251
+      "blocked_by": 260
     },
     "long-handed-inserter": {
       "status": "not_emitted",
@@ -650,7 +650,7 @@
         "researchd:research_pack": "planetary_factory:production_science_pack"
       },
       "note": "ADR-0018's rung 4. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read.",
-      "blocked_by": 251
+      "blocked_by": 260
     },
     "productivity-module": {
       "status": "undecided",
