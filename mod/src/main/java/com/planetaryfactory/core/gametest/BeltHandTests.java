@@ -15,6 +15,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import rearth.belts.blocks.ChuteBlockEntity;
+import rearth.belts.model.BeltContents;
 import rearth.belts.model.BeltTier;
 
 /**
@@ -45,6 +46,11 @@ final class BeltHandTests {
 
     private static final int ROOM = 4;
 
+    // Longer than a tier-1 belt takes to fill five blocks with the far chest full.
+    private static final int BACKUP_TICKS = 300;
+    // On the last block, short of the far loader, where a player aims at the item stopped inside it.
+    private static final double LAST_BLOCK = 0.9;
+
     private BeltHandTests() {
     }
 
@@ -53,6 +59,8 @@ final class BeltHandTests {
                 BeltHandTests::fillsTheInventory);
         tests.test("a_held_belt_stops_taking_when_the_inventory_is_full", WARMUP_TICKS + HOLD_TICKS + 20,
                 BeltHandTests::stopsWhenFull);
+        tests.test("a_backed_up_belt_held_at_its_last_block_gives_up_its_last_item", BACKUP_TICKS + 20 + 20,
+                BeltHandTests::emptiesFromTheEnd);
     }
 
     private static void fillsTheInventory(GameTestHelper helper) {
@@ -126,6 +134,40 @@ final class BeltHandTests {
                     if (loaded != onBelt + delivered + taken) {
                         helper.fail("the source loaded " + loaded + " items, but only " + (onBelt + delivered + taken)
                                 + " are on the belt, at its end or in the hand", FROM);
+                    }
+                    nothingOnTheGround(helper);
+                })
+                .thenSucceed();
+    }
+
+    // The last item stops inside the far loader's back plate, where no aim reaches it (#360).
+    private static void emptiesFromTheEnd(GameTestHelper helper) {
+        helper.setBlock(TARGET, Blocks.CHEST);
+        var target = BeltHandoffTests.chest(helper, TARGET);
+        for (int slot = 0; slot < target.getContainerSize(); slot++) target.setItem(slot, new ItemStack(Items.DIRT, 64));
+        ChuteBlockEntity belt = BeltHandoffTests.placeBelt(helper, SOURCE, FROM, TO, SUPPLY, BeltTier.BELT, BeltTier.BELT);
+        ServerPlayer player = player(helper, "pf_belt_hand_end");
+
+        int[] last = new int[1];
+        helper.startSequence()
+                .thenIdle(BACKUP_TICKS)
+                .thenExecute(() -> {
+                    var entries = belt.getBeltEntries();
+                    double limit = belt.getBeltLength() - BeltContents.SPACING;
+                    if (entries.isEmpty() || entries.getLast().position() < limit) {
+                        helper.fail("the belt has not backed up to its end, so this proves nothing about it", TO);
+                    }
+                    last[0] = entries.getLast().id();
+                })
+                .thenExecuteFor(20, () -> belt.holdHand(player, LAST_BLOCK))
+                .thenExecute(() -> {
+                    if (belt.getBeltEntries().stream().anyMatch(entry -> entry.id() == last[0])) {
+                        helper.fail("held for a second on its last block, a backed-up belt kept the item stopped at its end", TO);
+                    }
+                    int taken = cobblestone(player);
+                    if (Math.abs(taken - TIER_1_ITEMS_PER_SECOND) > 1) {
+                        helper.fail("holding a backed-up tier-1 belt for a second took " + taken + " items, expected "
+                                + TIER_1_ITEMS_PER_SECOND, FROM);
                     }
                     nothingOnTheGround(helper);
                 })
