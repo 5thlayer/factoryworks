@@ -234,7 +234,7 @@ hash = "9f63c4c3063e5be44ef179df0356903afcfbb6ecd669afd270540c9ed559ddee"
 
 [[files]]
 file = "data/factorio/resource.json"
-hash = "4da82274d113f37cbe55e6693ff8ec73d56603c02a2f213a43b56cb245e9ba0e"
+hash = "b7fff072bcfd57b158817e80b975e70e61527eb3145f988c2e400d352e44951a"
 
 [[files]]
 file = "data/factorio/science_packs.json"
@@ -1701,6 +1701,38 @@ file = "kubejs/data/planetaryfactory/worldgen/processor_list/terra_start_ground.
 hash = "3a2cd7e1286c20a7a90417bae71b95bfac6a6c12a932630bc05333822f263ba0"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure/outfield_coal.json"
+hash = "d38d290cb88faf0d2fa241411338d64d584c1de2f9488233257c0a8fe1a346b6"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure/outfield_copper.json"
+hash = "a8f5c505f77972646d7a292ff2b388f2387ea941ca8328a52055fe15b13f7ae2"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure/outfield_iron.json"
+hash = "d458d99e63896d3963baf845d3fe2b2ddd607b1c0eb5f999c15b08d8d3b2d61e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure/outfield_stone.json"
+hash = "6edafa1e61e6a37de1f153c68414df1ca34c68a9b81d67cb8d3fc76c18fcb2ce"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure_set/outfield_coal.json"
+hash = "60552f0c8f55e65213d67565e84d0a5ef79677e12178d622453a9a2d416d0f70"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure_set/outfield_copper.json"
+hash = "9a98014e11cbc686460ceb3844f0c53e830aa4313bcac3caeef1946f7ea9aca1"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure_set/outfield_iron.json"
+hash = "4613b6a52d29ef840f50bf666f726d03ccbeb8f58d16fee8e6375e0d12affe3e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure_set/outfield_stone.json"
+hash = "69bd325b1c98e2942d37c03238875421843e7936bebdf6547887aecae029f250"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/worldgen/template_pool/terra_start.json"
 hash = "7d139a9ae4d4df59b6ae52c0ba4e00bdd57b85776099cc96c7a1ee9b60e9ccf1"
 
@@ -1977,7 +2009,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "72079843392e3a3f1430a70c126857978c3f774007961a800e0119e8dbbd329d"
+hash = "089af5cd801e018191c61769b522538dfd00e96e4cf5a63f06d2d63886934e24"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
