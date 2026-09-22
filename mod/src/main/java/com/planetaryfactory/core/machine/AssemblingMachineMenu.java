@@ -49,8 +49,8 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     /**
      * One recipe the machine may hold: the recipe, whether the team is locked out of it, what it
-     * makes, what each input slot takes, in {@link AssemblingInputSlots}' order, and the fluids its
-     * tank takes, which is the one the tank can hold and the status names.
+     * makes, what each input slot takes, in {@link AssemblingInputSlots}' order, and its fluid
+     * ingredients, whose first fluid is the one the tank holds and the status names.
      */
     public record Entry(RecipeChoice choice, ItemStack icon, List<SizedIngredient> slotIngredients,
                         List<SizedFluidIngredient> fluidIngredients) {
@@ -158,7 +158,8 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                     case DATA_DRAW -> DataSlotHalves.low(machine.drawTenths());
                     case DATA_DRAW + 1 -> DataSlotHalves.high(machine.drawTenths());
                     case DATA_TANK -> (int) machine.tank().getAmountAsLong(0);
-                    default -> machine.tier().fluidCapacity();
+                    case DATA_TANK_CAPACITY -> machine.tier().fluidCapacity();
+                    default -> 0;
                 };
             }
 

@@ -275,7 +275,7 @@ public final class PFBlockEntities {
     /**
      * The Assembling Machine's energy face (#328), which the craft cycle draws from, its item face
      * (#329), and on the tiers with a tank its fluid face (ADR-0075), each on every block of the
-     * footprint. Tier 1 has no fluid face at all.
+     * footprint.
      */
     private static void registerAssemblingMachineCapabilities(RegisterCapabilitiesEvent event) {
         for (AssemblingTier tier : AssemblingTier.values()) {

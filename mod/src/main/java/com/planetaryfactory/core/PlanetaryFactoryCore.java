@@ -1,6 +1,7 @@
 package com.planetaryfactory.core;
 
 import com.planetaryfactory.core.assembler.AssemblerTicker;
+import com.planetaryfactory.core.machine.PaintLock;
 import com.planetaryfactory.core.assembler.client.AssemblerClient;
 import com.planetaryfactory.core.crafting.client.InventoryGridBlank;
 import com.planetaryfactory.core.felling.TreeFelling;
@@ -100,7 +101,7 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onLogin);
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onDatapackSync);
-        NeoForge.EVENT_BUS.addListener(com.planetaryfactory.core.machine.PaintLock::onRightClickBlock);
+        NeoForge.EVENT_BUS.addListener(PaintLock::onRightClickBlock);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onServerTick);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onChunkSent);

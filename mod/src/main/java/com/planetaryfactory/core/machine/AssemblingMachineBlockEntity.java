@@ -124,6 +124,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         return ColorVariant.valueOf(tier().paint());
     }
 
+    /** Ignored: see {@link #getCurrentColor}. */
     @Override
     public void assignColor(ColorVariant color) {
     }
@@ -223,7 +224,6 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         return AssemblingStall.of(true, locked, fed, fluidFed, fits);
     }
 
-    /** Takes one craft's sized ingredients out of the input slots, each from whichever slots hold a match. */
     private boolean takeInputs(AssemblingRecipe recipe, Transaction tx) {
         ResourceHandler<ItemResource> inputs = inventory.getInputContainer();
         for (SizedIngredient sized : recipe.ingredients()) {
@@ -461,14 +461,17 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
                 .orElse(false);
     }
 
-    /** Whether the tank takes {@code resource}: only a fluid the Held recipe names (ADR-0075). Server only. */
+    /**
+     * Whether the tank takes {@code resource}: only the Held recipe's first fluid, since the tank's
+     * one slot feeds only that one (ADR-0075). Server only.
+     */
     public boolean acceptsFluid(FluidResource resource) {
         if (resource.isEmpty() || !tier().hasFluidInput() || !(level instanceof ServerLevel server)) {
             return false;
         }
         return AssemblingMachineRecipes.resolve(server, held)
-                .map(holder -> holder.value().fluidIngredients().stream()
-                        .anyMatch(sized -> sized.ingredient().test(resource.toStack(1))))
+                .flatMap(holder -> holder.value().fluidIngredients().stream().findFirst())
+                .map(sized -> sized.ingredient().test(resource.toStack(1)))
                 .orElse(false);
     }
 
