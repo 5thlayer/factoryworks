@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366) and `BeltPlanTests` (#372), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372) and `BeltTileTests` (#398), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -213,6 +213,25 @@ the player its reason. An accepted one places every block it names in the state 
 what it names. A used loader answers the click by setting its filter, so the item plans nothing there.
 Skipping a free support's turn in the click turns the plan test red. Whether the preview draws right
 is a human check on delivery.
+And that a run of belt **tiles** -- one block of belt per block, facing the way it travels, merged
+into a transport line that ticks once for the whole run -- carries a chest's items into another
+chest between two loaders, at exactly 15, 30, 45 and 60 items/s at tiers 1 to 4, at its slowest
+piece when the loaders' tier or the tiles' differ, and that a backed-up 64-tile line holds 512
+(`BeltTileTests`, #398). The loaders' ledger holds on tiles too: tier 1 moves items with no pole and
+has no energy face, tier 2 with no FE puts nothing on the line, and a pole-fed tier 2 draws 66.5 FE
+per item plus its drain. The figures are typed. Dropping the merge -- scanning a tile as a line of
+itself -- turns eleven of those twelve red, the tier-2 stall alone staying green, which is what it
+is for. Three more hold the line being rebuilt: a tile placed through its own item faces the
+player's look; two loaded lines joined by two tiles become one run of eight, carrying at least what
+the two held with nothing on the ground; and a mid-line tile broken leaves 8 upstream and 8
+downstream, the tiles past the break keeping what they carried. That last one is the defect check --
+rebuilding the run before handing each tile its share drops the whole downstream half, and it turns
+red. The merge that makes the joined case work is order-independent by construction rather than by
+test: every tile of a run lets go before any is drained. The merge rule and the line's rate,
+capacity and rebuild are the fork's `LineScanTest` and `TransportLineTest`. Whether a tile looks
+like a belt is a human check on delivery, and the demand probe's clause of #348 stays
+`BeltPowerTests`', since the loader is unchanged. The spline belt and its item still work beside
+the tiles until #397.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
 that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
 Both were red on upstream's filter, which the off hand reset.

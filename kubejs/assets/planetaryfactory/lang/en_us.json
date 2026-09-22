@@ -150,5 +150,10 @@
   "message.planetaryfactory.pumpjack.no_well": "A Pumpjack must stand on an oil well.",
   "message.planetaryfactory.replace.no_room": "No room in the inventory for what the replaced block hands back.",
   "map.planetaryfactory.patch.crude_oil": "Crude oil",
-  "map.planetaryfactory.patch.yield": "%s: %s yield"
+  "map.planetaryfactory.patch.yield": "%s: %s yield",
+  "gui.planetaryfactory.belt_tile.tier": "Tier %s belt \u2014 %s items/s",
+  "gui.planetaryfactory.belt_tile.line": "Line: %s tiles at %s items/s",
+  "gui.planetaryfactory.belt_tile.empty": "Empty",
+  "gui.planetaryfactory.belt_tile.holds_one": "Holds %s \u00d7 %s",
+  "gui.planetaryfactory.belt_tile.holds": "Holds %s items"
 }
