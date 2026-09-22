@@ -192,7 +192,8 @@
             "blob_amplitude": 2304.93612094107
           }
         ]
-      }
+      },
+      "infinite_yield": null
     },
     {
       "name": "copper-ore",
@@ -304,7 +305,8 @@
             "blob_amplitude": 1904.905885075265
           }
         ]
-      }
+      },
+      "infinite_yield": null
     },
     {
       "name": "crude-oil",
@@ -400,6 +402,32 @@
             "blob_amplitude": 2493.093172382851
           }
         ]
+      },
+      "infinite_yield": {
+        "normal": 300000,
+        "minimum": 60000,
+        "infinite_depletion_amount": 10,
+        "results": [
+          {
+            "type": "fluid",
+            "name": "crude-oil",
+            "amount": 10
+          }
+        ],
+        "random_probability": 0.020833333333333,
+        "richness_divisor": 0.020833333333333,
+        "additional_richness": 220000.0,
+        "collision_box": [
+          [
+            -1.4,
+            -1.4
+          ],
+          [
+            1.4,
+            1.4
+          ]
+        ],
+        "collision_width": 2.8
       }
     },
     {
@@ -512,7 +540,8 @@
             "blob_amplitude": 2051.9976600260197
           }
         ]
-      }
+      },
+      "infinite_yield": null
     },
     {
       "name": "stone",
@@ -624,7 +653,8 @@
             "blob_amplitude": 1829.4290115506778
           }
         ]
-      }
+      },
+      "infinite_yield": null
     },
     {
       "name": "uranium-ore",
@@ -736,7 +766,8 @@
             "blob_amplitude": 1944.0584158356016
           }
         ]
-      }
+      },
+      "infinite_yield": null
     }
   ],
   "skipped": [
