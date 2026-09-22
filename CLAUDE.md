@@ -227,6 +227,12 @@ blocked at one, neither, and broken at either half leaves neither standing and d
 (`SplitterTests`). Dropping the output alternation, the fallback to the free side, the rate cap, the
 fit check or the other half's teardown each turns its test red. The rule is the fork's `SplitterTest`,
 which also builds a 4x4 balancer from four splitters.
+Each half is a block of belt of the splitter's tier (#373): a splitter fed on both sides with no belt
+leaving backs up to 8 items a half, breaking it at either half hands its items, the items on the belts
+into it and those belts' refund to the breaker with nothing on the ground, a half saved and loaded holds
+every entry, and a hand held on a half's first segment takes 15 items/s. The half's two segments, the
+midline and a hand anywhere along it are the fork's `SplitterTest`; whether items are drawn crossing it
+and a player is carried is a human check on delivery.
 And that a belt held at its middle fills the holder's inventory at the belt's 15 items/s while the source
 keeps loading and only what was already past the hand reaches the end, and that a hand with room for four
 takes four and then lets the belt run on to its end, losing nothing (`BeltHandTests`). A hand that never
