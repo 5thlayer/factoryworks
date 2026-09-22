@@ -728,14 +728,18 @@
       "note": "As `low-density-structure`: a solid item, Factorio's own, made from `solid-fuel` and light oil. Distinct from `gtceu:rocket_fuel`, the FLUID the GCyR rocket entity burns (#41)."
     },
     "rocket-part": {
-      "status": "undecided",
-      "note": "#41 makes the Rocket Part a multiblock cycle rather than an item.",
-      "ticket": 41
+      "kind": "item",
+      "target": "planetaryfactory:rocket_part",
+      "source": "authored",
+      "note": "Made in the Rocket Silo, which #378 authors; whether the part cycle survives is #378's question too.",
+      "blocked_by": 378
     },
     "rocket-silo": {
-      "status": "undecided",
-      "note": "GCyR's silo; #41 owns it.",
-      "ticket": 41
+      "kind": "item",
+      "target": "planetaryfactory:rocket_silo",
+      "source": "authored",
+      "note": "A first-party footprint machine, not waiting on Oritech: Space Age (#378). #41's GTCEu multiblock and GCyR rocket left with ADR-0060.",
+      "blocked_by": 378
     },
     "selector-combinator": {
       "status": "not_emitted",
