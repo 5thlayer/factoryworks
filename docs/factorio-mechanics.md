@@ -139,7 +139,7 @@ Sub-rules:
 - **Ore is visible where it lies** — `planned`, ADR-0045. Every patch is on the surface, so finding
   one is exploration and the Radar reveals map rather than detecting ore — Factorio's own Radar.
   *This row read "ore is prospected, not stumbled on", `adapted` under ADR-0019: surface indicators
-  first, an Ore Finder satellite later. ADR-0045 discharges that prerequisite rather than meeting it,
+  first. ADR-0045 discharges that prerequisite rather than meeting it,
   and the indicators become dead.*
 - **Infinite late-game resource (oil-style yield decay)** — `adapted`. #86: GregTech's bedrock
   fluid deposit decays to a floor rather than to zero, and Terra's crude deposit is one. `adapted`
@@ -973,7 +973,7 @@ Sub-rules:
   outpost placement a decision.
 - **Absorption by terrain and trees** — `unargued`, no verdict.
 - **Per-planet consequences** — `blocked`. Named in principle, unspecified everywhere but Terra;
-  migrated here out of `docs/gdd.md` §8.
+  migrated here out of `docs/gdd.md` §7.
 
 ### Enemies and evolution
 
@@ -1612,7 +1612,7 @@ Fusion generator and reactor, craftable only on Gelida. **This row has no `via`,
 
 - **verdict**: `blocked`
 - **where**: Atlantis
-- **owner**: `docs/gdd.md` §8, migrated here
+- **owner**: `docs/gdd.md` §7, migrated here
 
 A named, orbit-only endgame destination with no defined puzzle, resource or attrition model.
 Migrated out of the GDD's Open Questions.

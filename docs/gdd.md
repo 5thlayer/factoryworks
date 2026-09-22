@@ -36,7 +36,7 @@ ladder — the ladder is Factorio's science packs (ADR-0018).
   and recipe-type registries the pack registers its own machines on, and the material system that
   supplies dusts, plates, fluids and ore variants as data. It is instrumental on both counts, and
   its own tech tree is not the pack's.
-- **Gregicality Rocketry (GCyR)** — Rockets, planets, orbit dimensions, space stations, satellites,
+- **Gregicality Rocketry (GCyR)** — Rockets, planets, orbit dimensions, space stations,
   oxygen and temperature systems. Built from source against GregTech 7.0.2 (ADR-0001); the released
   jar is permanently incompatible. Stellaris is a disabled fallback, not part of the design
   (ADR-0002).
@@ -284,22 +284,14 @@ Raids are state, not entities, until a player is present.
   `under_siege` and its simulated production halts immediately.
 - **Instantiation** — The physical Illagers spawn only when a player loads the chunk.
 
-## 7. Satellites
-
-Three of GCyR's satellite types are adopted:
-
-- **GPS** — Navigation and mapping support.
-- **Laser** — Orbital mining.
-- **Dyson Swarm** — Late-game power sink and payoff.
-
-## 8. Open Questions
+## 7. Open Questions
 
 - **Cross-mod recipe audit.** The specific stock recipes that let a player skip a machine step have
   not been enumerated. ADR-0034's sweep removes everything unnamed, so the audit is over the
   survivor list rather than over any one mod's catalogue.
 - **Per-planet Vanguard Kit variants.** Deferred to a later upgrade tier.
 
-## 9. Resource substitution policy
+## 8. Resource substitution policy
 
 Per-body content is drawn from `docs/planets.md`, a transcription of Factorio's own
 resource lists organised under Factorio's names. Every resource named there is resolved by this rule,
