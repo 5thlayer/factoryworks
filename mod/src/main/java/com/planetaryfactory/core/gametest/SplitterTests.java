@@ -1,6 +1,9 @@
 package com.planetaryfactory.core.gametest;
 
 import java.util.List;
+import java.util.UUID;
+
+import com.mojang.authlib.GameProfile;
 
 import com.planetaryfactory.core.PFBlocks;
 
@@ -11,12 +14,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -26,12 +31,14 @@ import rearth.belts.BlockContent;
 import rearth.belts.ItemContent;
 import rearth.belts.blocks.ChuteBlockEntity;
 import rearth.belts.blocks.SplitterBlock;
+import rearth.belts.model.BeltContents;
 import rearth.belts.model.BeltTier;
 
 /**
  * A splitter in the pack's SimpleBelts fork (#349, ADR-0076): one belt split evenly across two, a
  * backed-up side sending everything to the other, and a tier-1 splitter capping a tier-3 line.
- * It places and breaks as both halves.
+ * It places and breaks as both halves. Each half is a block of belt (#373): a backed-up splitter
+ * holds 16, and its items are saved, handed to the player who breaks it and taken by a held hand.
  *
  * <p>Items flow east. A chest and a loader feed the splitter's left half, and each half's output
  * belt ends at a loader with a chest behind it. The rates are typed rather than read off the fork,
@@ -46,6 +53,10 @@ final class SplitterTests {
     private static final BlockPos LEFT_END = new BlockPos(10, 1, 2);
     private static final BlockPos RIGHT_END = new BlockPos(10, 1, 3);
     private static final BlockPos POLE = new BlockPos(4, 1, 5);
+    private static final BlockPos SOURCE_RIGHT = new BlockPos(1, 1, 3);
+    private static final BlockPos FROM_RIGHT = new BlockPos(2, 1, 3);
+    // Beside the left half, well within reach of it.
+    private static final BlockPos STANDING = new BlockPos(6, 1, 0);
 
     private static final int TIER_1_ITEMS_PER_SECOND = 15;
     private static final int TIER_1_SPLITTER_ITEMS_PER_SECOND = 15;
@@ -54,6 +65,13 @@ final class SplitterTests {
     // Long enough for a four-block side to back up at half the line's rate.
     private static final int WARMUP_TICKS = 200;
     private static final int SUPPLY = 27 * 64;
+    // Two blocks of belt, one per half.
+    private static final int BACKED_UP = 16;
+    // Before the midline, so every item entering the left half reaches the hand.
+    private static final double HELD_AT = 0.25;
+    // A multiple of four ticks: tier 1 moves a whole number of items only every four.
+    private static final int HOLD_TICKS = 100;
+    private static final int HELD_ITEMS = TIER_1_ITEMS_PER_SECOND * HOLD_TICKS / 20;
 
     private static final BlockPos FLOOR = new BlockPos(3, 0, 3);
 
@@ -72,6 +90,117 @@ final class SplitterTests {
         tests.test("splitter_blocked_at_one_half_places_neither", 20, helper -> places(helper, true));
         tests.test("splitter_broken_at_its_left_half_leaves_nothing", 20, helper -> breaks(helper, LEFT));
         tests.test("splitter_broken_at_its_right_half_leaves_nothing", 20, helper -> breaks(helper, RIGHT));
+        tests.test("backed_up_splitter_holds_" + BACKED_UP, WARMUP_TICKS + 20, SplitterTests::backsUp);
+        tests.test("splitter_broken_at_its_left_half_hands_its_items_to_the_breaker", WARMUP_TICKS + 20,
+                helper -> breakingHandsItsItemsBack(helper, LEFT));
+        tests.test("splitter_broken_at_its_right_half_hands_its_items_to_the_breaker", WARMUP_TICKS + 20,
+                helper -> breakingHandsItsItemsBack(helper, RIGHT));
+        tests.test("saved_splitter_restores_every_entry", WARMUP_TICKS + 20, SplitterTests::savedSplitterRestores);
+        tests.test("held_splitter_half_fills_the_inventory", WARMUP_TICKS + HOLD_TICKS + 20,
+                SplitterTests::heldHalfFillsTheInventory);
+    }
+
+    private static void backsUp(GameTestHelper helper) {
+        backedUpLine(helper);
+        helper.startSequence()
+                .thenIdle(WARMUP_TICKS)
+                .thenExecute(() -> {
+                    int left = chute(helper, LEFT).getHalf().size();
+                    int right = chute(helper, RIGHT).getHalf().size();
+                    if (left + right != BACKED_UP || left != right) {
+                        helper.fail("a backed-up splitter holds " + left + " on its left half and " + right
+                                + " on its right, expected " + BACKED_UP / 2 + " each", LEFT);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void breakingHandsItsItemsBack(GameTestHelper helper, BlockPos broken) {
+        backedUpLine(helper);
+        ServerPlayer player = player(helper, "pf_splitter_breaker");
+        helper.startSequence()
+                .thenIdle(WARMUP_TICKS)
+                .thenExecute(() -> {
+                    int onSplitter = chute(helper, LEFT).getHalf().size() + chute(helper, RIGHT).getHalf().size();
+                    int onBelts = chute(helper, FROM).getBeltEntries().size() + chute(helper, FROM_RIGHT).getBeltEntries().size();
+                    int refund = chute(helper, FROM).getCost() + chute(helper, FROM_RIGHT).getCost();
+                    if (onSplitter != BACKED_UP) {
+                        helper.fail("the splitter holds " + onSplitter + ", so this proves little", LEFT);
+                    }
+                    player.gameMode.destroyBlock(helper.absolutePos(broken));
+
+                    int handed = cobblestone(player);
+                    if (handed != onSplitter + onBelts) {
+                        helper.fail("breaking a splitter holding " + onSplitter + " with " + onBelts
+                                + " on the belts into it handed the breaker " + handed, broken);
+                    }
+                    int belts = ContainerHelper.clearOrCountMatchingItems(player.getInventory(),
+                            stack -> stack.is(ItemContent.beltFor(BeltTier.BELT)), 0, true);
+                    if (belts != refund) {
+                        helper.fail("breaking a splitter refunded " + belts + " belt items of the " + refund
+                                + " its two belts cost", broken);
+                    }
+                    int lying = helper.getLevel().getEntitiesOfClass(ItemEntity.class, helper.getBounds().inflate(2.0))
+                            .stream().map(ItemEntity::getItem).filter(stack -> stack.is(Items.COBBLESTONE))
+                            .mapToInt(ItemStack::getCount).sum();
+                    if (lying != 0) helper.fail(lying + " cobblestone lie on the ground", broken);
+                })
+                .thenSucceed();
+    }
+
+    // Through the block entity's own save and load, which is what a world save and reload runs.
+    private static void savedSplitterRestores(GameTestHelper helper) {
+        backedUpLine(helper);
+        helper.startSequence()
+                .thenIdle(WARMUP_TICKS)
+                .thenExecute(() -> {
+                    for (BlockPos pos : List.of(LEFT, RIGHT)) {
+                        ChuteBlockEntity half = chute(helper, pos);
+                        var registries = helper.getLevel().registryAccess();
+                        var saved = half.saveWithFullMetadata(registries);
+                        var loaded = (ChuteBlockEntity) BlockEntity.loadStatic(half.getBlockPos(), half.getBlockState(), saved, registries);
+                        if (half.getHalf().size() != BACKED_UP / 2) {
+                            helper.fail("the half holds " + half.getHalf().size() + ", so this proves little", pos);
+                        }
+                        sameEntries(helper, pos, half.getHalf().entering(), loaded.getHalf().entering());
+                        sameEntries(helper, pos, half.getHalf().leaving(), loaded.getHalf().leaving());
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void sameEntries(GameTestHelper helper, BlockPos pos, BeltContents<ItemStack> saved,
+            BeltContents<ItemStack> loaded) {
+        var before = saved.entries();
+        var after = loaded.entries();
+        if (after.size() != before.size()) {
+            helper.fail("a half saved with " + before.size() + " entries loaded with " + after.size(), pos);
+        }
+        for (int i = 0; i < before.size(); i++) {
+            var was = before.get(i);
+            var is = after.get(i);
+            if (was.id() != is.id() || was.position() != is.position() || !ItemStack.matches(was.payload(), is.payload())) {
+                helper.fail("entry " + i + " saved as #" + was.id() + " " + was.payload() + " at " + was.position()
+                        + " loaded as #" + is.id() + " " + is.payload() + " at " + is.position(), pos);
+            }
+        }
+    }
+
+    private static void heldHalfFillsTheInventory(GameTestHelper helper) {
+        line(helper, BeltTier.BELT, BeltTier.BELT, true, true);
+        ServerPlayer player = player(helper, "pf_splitter_hand");
+        ChuteBlockEntity left = chute(helper, LEFT);
+        helper.startSequence()
+                .thenIdle(WARMUP_TICKS)
+                .thenExecuteFor(HOLD_TICKS, () -> left.holdHand(player, true, HELD_AT))
+                .thenExecute(() -> {
+                    int taken = cobblestone(player);
+                    if (Math.abs(taken - HELD_ITEMS) > 1) {
+                        helper.fail("holding a tier-1 splitter's half for " + HOLD_TICKS + " ticks took " + taken
+                                + " items, expected " + HELD_ITEMS, LEFT);
+                    }
+                })
+                .thenSucceed();
     }
 
     private static void splitsEvenly(GameTestHelper helper) {
@@ -195,22 +324,52 @@ final class SplitterTests {
         helper.succeed();
     }
 
+    /** A chest and loader feeding each half, and no belt leaving either, so both back up. */
+    private static void backedUpLine(GameTestHelper helper) {
+        placeSplitter(helper, BeltTier.BELT);
+        feed(helper, SOURCE, FROM, LEFT, BeltTier.BELT);
+        feed(helper, SOURCE_RIGHT, FROM_RIGHT, RIGHT, BeltTier.BELT);
+    }
+
+    private static void feed(GameTestHelper helper, BlockPos source, BlockPos from, BlockPos to, BeltTier tier) {
+        helper.setBlock(source, Blocks.CHEST);
+        for (int slot = 0, left = SUPPLY; left > 0; slot++, left -= 64) {
+            BeltHandoffTests.chest(helper, source).setItem(slot, new ItemStack(Items.COBBLESTONE, Math.min(left, 64)));
+        }
+        helper.setBlock(from, loader(tier, Direction.EAST));
+        belt(helper, from, to, tier);
+    }
+
+    private static ChuteBlockEntity chute(GameTestHelper helper, BlockPos pos) {
+        return helper.getBlockEntity(pos, ChuteBlockEntity.class);
+    }
+
+    // A player of its own: the shared fake player's inventory is every test's at once.
+    private static ServerPlayer player(GameTestHelper helper, String name) {
+        ServerPlayer player = FakePlayerFactory.get(helper.getLevel(), new GameProfile(UUID.randomUUID(), name));
+        player.setGameMode(GameType.SURVIVAL);
+        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        var at = helper.absoluteVec(STANDING.getBottomCenter());
+        player.setPos(at.x, at.y, at.z);
+        return player;
+    }
+
+    private static int cobblestone(ServerPlayer player) {
+        return ContainerHelper.clearOrCountMatchingItems(player.getInventory(),
+                stack -> stack.is(Items.COBBLESTONE), 0, true);
+    }
+
     /** A chest and loader feeding the left half, each half belted to a loader with a chest behind it or not. */
     private static void line(GameTestHelper helper, BeltTier belts, BeltTier splitter,
             boolean leftDrains, boolean rightDrains) {
         if (belts != BeltTier.BELT) helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
         placeSplitter(helper, splitter);
-        helper.setBlock(SOURCE, Blocks.CHEST);
-        for (int slot = 0, left = SUPPLY; left > 0; slot++, left -= 64) {
-            BeltHandoffTests.chest(helper, SOURCE).setItem(slot, new ItemStack(Items.COBBLESTONE, Math.min(left, 64)));
-        }
-        helper.setBlock(FROM, loader(belts, Direction.EAST));
+        feed(helper, SOURCE, FROM, LEFT, belts);
         helper.setBlock(LEFT_END, loader(belts, Direction.WEST));
         helper.setBlock(RIGHT_END, loader(belts, Direction.WEST));
         if (leftDrains) helper.setBlock(LEFT_END.east(), Blocks.CHEST);
         if (rightDrains) helper.setBlock(RIGHT_END.east(), Blocks.CHEST);
 
-        belt(helper, FROM, LEFT, belts);
         belt(helper, LEFT, LEFT_END, belts);
         belt(helper, RIGHT, RIGHT_END, belts);
     }
