@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-/** A patch's amount as its map label reads, in Factorio's short form (#370). */
+/** A patch's amount as its marker's hover reads, in Factorio's short form (#370). */
 class PatchAmountTest {
 
     @Test
