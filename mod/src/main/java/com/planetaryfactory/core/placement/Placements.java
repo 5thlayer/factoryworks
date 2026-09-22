@@ -14,20 +14,24 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.fml.ModList;
 import org.jspecify.annotations.Nullable;
 
 /**
  * The one entry point to a {@link PlacementPlan} (#297, ADR-0069), and the vanilla plan every pack
  * block that places normally is served by.
  *
- * <h2>Every pack block gets a plan; no other mod's does</h2>
+ * <h2>Every pack block gets a plan; no other mod's does, but the belts fork's splitter</h2>
  *
  * <p>The gate is the <em>block</em>'s namespace, not the item's. It has to be: the mechanism is
  * generic and keyed on "this held item places a {@code planetaryfactory:} block", which is what
  * makes a new pack block previewable with no code at all. Other mods' placement refusals are
- * theirs, and owning them is unbounded.
+ * theirs, and owning them is unbounded. The SimpleBelts fork's splitter is the one exception,
+ * because the pack owns the fork (ADR-0069).
  */
 public final class Placements {
+
+    private static final boolean BELTS = ModList.get().isLoaded("belts");
 
     private Placements() {
     }
@@ -41,6 +45,9 @@ public final class Placements {
     @Nullable
     public static PlacementPlan planFor(Level level, @Nullable Player player, InteractionHand hand,
                                         ItemStack stack, BlockHitResult hit) {
+        if (BELTS && SplitterPlans.isSplitter(stack.getItem())) {
+            return SplitterPlans.plan(stack.getItem(), new BlockPlaceContext(level, player, hand, stack, hit));
+        }
         if (!(stack.getItem() instanceof BlockItem item) || !isPackBlock(item.getBlock())) {
             return null;
         }
@@ -57,7 +64,7 @@ public final class Placements {
         return vanillaPlan(item, context);
     }
 
-    /** Whether this block is the pack's own, which is the whole of who gets a preview. */
+    /** Whether this block is the pack's own, which is who gets a preview, the splitter aside. */
     public static boolean isPackBlock(Block block) {
         return BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(PlanetaryFactoryCore.NAMESPACE);
     }

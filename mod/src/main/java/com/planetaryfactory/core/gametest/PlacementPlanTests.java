@@ -18,6 +18,7 @@ import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.Placements;
 import com.planetaryfactory.core.radar.RadarBlockEntity;
 import com.planetaryfactory.core.radar.RadarFootprint;
+import rearth.belts.ItemContent;
 import rearth.oritech.block.base.block.MultiblockMachine;
 import com.planetaryfactory.core.smelting.FurnaceTier;
 
@@ -318,7 +319,11 @@ final class PlacementPlanTests {
      */
     private static PlacementPlan check(GameTestHelper helper, ItemStack stack, BlockPos target,
                                        Direction face, boolean expectRefused) {
-        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        return check(helper, helper.makeMockPlayer(GameType.SURVIVAL), stack, target, face, expectRefused);
+    }
+
+    private static PlacementPlan check(GameTestHelper helper, Player player, ItemStack stack, BlockPos target,
+                                       Direction face, boolean expectRefused) {
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
         BlockPos absolute = helper.absolutePos(target);
         BlockHitResult hit = new BlockHitResult(
@@ -363,6 +368,43 @@ final class PlacementPlanTests {
         if (plan.refusal() != expected) {
             helper.fail("expected the refusal " + expected + " but the plan gave " + plan.refusal(),
                     ABOVE_FLOOR);
+        }
+    }
+
+    /** The fork's splitter (#355), registered only when the fork is loaded, since it names the fork's types. */
+    static final class Splitters {
+
+        private static final int HALVES = 2;
+
+        private Splitters() {
+        }
+
+        static void register(PFGameTests.Registrar tests) {
+            tests.test("plan_matches_placement_for_a_splitter", 20, helper -> {
+                PlacementPlan plan = check(helper, facingSouth(helper), new ItemStack(ItemContent.SPLITTER.get()),
+                        FLOOR, Direction.UP, false);
+                if (plan.blocks().size() != HALVES) {
+                    helper.fail("a splitter's plan named " + plan.blocks().size() + " blocks", FLOOR);
+                }
+                helper.succeed();
+            });
+            tests.test("plan_refuses_a_splitter_blocked_at_its_second_half", 20, helper -> {
+                // A south-facing splitter's right half is west of its left.
+                helper.setBlock(ABOVE_FLOOR.west(), Blocks.STONE);
+                PlacementPlan plan = check(helper, facingSouth(helper), new ItemStack(ItemContent.SPLITTER.get()),
+                        FLOOR, Direction.UP, true);
+                refusal(plan, PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
+                if (plan.blocks().size() != HALVES) {
+                    helper.fail("a refused splitter's plan named " + plan.blocks().size() + " blocks", FLOOR);
+                }
+                helper.succeed();
+            });
+        }
+
+        private static Player facingSouth(GameTestHelper helper) {
+            Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+            player.setYRot(0);
+            return player;
         }
     }
 

@@ -300,10 +300,13 @@ what the plan promised. An accepted plan must have put **every** block down in t
 refused plan must have changed **nothing**, which is read before the gesture as well as after,
 because "nothing changed" is not the same claim as "the positions are empty". Both halves are load-
 bearing -- the preview's two failure modes are promising a placement that does not happen and
-refusing one that does. Twelve tests, each checked against the defect it exists for: forcing the pole
+refusing one that does. Each test was checked against the defect it exists for: forcing the pole
 to the vanilla plan turns four red, forcing the rig's footprint to always fit turns one red,
 flattening the rig to a single layer turns two more, dropping the pump's water question turns one,
-and giving up on the wrong-tier column walk turns another. The Assembling Machine's two (#326) are
+and giving up on the wrong-tier column walk turns another. The fork's splitter is the one other
+mod's item with a plan (#355): `PlacementPlanTests.Splitters`, registered only with the fork loaded,
+holds that both halves go down, and that a splitter blocked at its second half changes nothing; a
+plan naming only the first half turns both red. The Assembling Machine's two (#326) are
 the rig's pair for its 2x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
 red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
 after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Three fixtures are load-bearing rather
