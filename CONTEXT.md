@@ -182,6 +182,17 @@ _Avoid_: chute, inserter, funnel
 A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power. Placed across a running belt, it cuts it: the belt ends at the half's back face, the rest starts from its front, and the block it takes is refunded. It cuts only a belt running straight, level and its own way through it.
 _Avoid_: merger, tunnel
 
+**Input priority**:
+A splitter's preference for one of its two inputs: it takes from that side first, and from the other whenever that side cannot move. None, left or right. Lost when the splitter is broken.
+_Avoid_: input filter
+
+**Output priority**:
+A splitter's preference for one of its two outputs: everything goes to that side, and to the other only when that side is backed up. None, left or right. Lost when the splitter is broken.
+
+**Splitter filter**:
+An item, or a filter item standing for several, set on a splitter with an output priority side. What it matches goes only to that side, and everything else only to the other; either waits when its side is backed up, never overflowing. Clearing the output priority clears the filter. Matches by item, as a loader's filter does.
+_Avoid_: sorter, filter splitter
+
 **Balancer**:
 A pattern of splitters that spreads several belts evenly across several others. Built by the player, never a block.
 _Avoid_: balancer block
