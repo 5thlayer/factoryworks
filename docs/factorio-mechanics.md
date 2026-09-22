@@ -273,7 +273,7 @@ Sub-rules:
 - **where**: all bodies
 - **via**: `planetaryfactory_core`
 - **owner**: ADR-0043
-- **ticket**: #105
+- **ticket**: #105; the pumpjack is #377's
 - **notice**: Terra's two rigs are pack-authored and GregTech owns no drill here. A rig works the
   **layer directly beneath it** — Factorio's tiles, in a game that has a third axis — so a rig is
   placed on a patch rather than scanning downward for one. Its rate is the drill's `mining_speed`

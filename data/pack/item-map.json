@@ -673,8 +673,8 @@
     },
     "pumpjack": {
       "status": "undecided",
-      "note": "As `offshore-pump`.",
-      "ticket": 105
+      "note": "Terra has no crude source: the GregTech bedrock deposit left with ADR-0060, and Oritech's oil springs, which its Pump drains, do not generate in Terra's biomes. #377 owns whether the Pump on a spring is the pumpjack.",
+      "ticket": 377
     },
     "radar": {
       "kind": "item",
