@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -469,6 +470,15 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
                 .map(holder -> holder.value().fluidIngredients().stream()
                         .anyMatch(sized -> sized.ingredient().test(resource.toStack(1))))
                 .orElse(false);
+    }
+
+    /** The fluid the Held recipe takes, which is the only one its tank can hold, or empty. Server only. */
+    public Optional<Fluid> heldFluid() {
+        if (!(level instanceof ServerLevel server)) {
+            return Optional.empty();
+        }
+        return AssemblingMachineRecipes.resolve(server, held)
+                .flatMap(holder -> AssemblingMachineRecipes.firstFluid(holder.value().fluidIngredients()));
     }
 
     /** The input tank, which the fluid face guards. */

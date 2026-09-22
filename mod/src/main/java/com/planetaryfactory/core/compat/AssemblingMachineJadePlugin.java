@@ -5,6 +5,10 @@ import com.planetaryfactory.core.machine.AssemblingMachineBlock;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
 import com.planetaryfactory.core.machine.AssemblingStatus;
+import com.planetaryfactory.core.machine.AssemblingStatusText;
+import java.util.Optional;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +28,7 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.JadeUI;
 
 /**
- * The Assembling Machine's Held recipe, status, energy and progress on the HUD (#333). The status
+ * The Assembling Machine's Held recipe, status, energy, progress and tank on the HUD (#333, #295). The status
  * is {@link AssemblingMachineBlockEntity#status}, the screen's rule; a locked recipe is its LOCKED.
  */
 @WailaPlugin
@@ -40,6 +44,9 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
     private static final String DURATION = "AssemblingDuration";
     private static final String ENERGY = "AssemblingEnergy";
     private static final String CAPACITY = "AssemblingCapacity";
+    private static final String FLUID = "AssemblingFluid";
+    private static final String TANK = "AssemblingTank";
+    private static final String TANK_CAPACITY = "AssemblingTankCapacity";
 
     private static final String PROGRESS_KEY = "tooltip.planetaryfactory.assembling_machine.jade.progress";
 
@@ -53,6 +60,11 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
             tag.putInt(STATUS, machine.status().ordinal());
             tag.putLong(ENERGY, machine.energyStorage.getAmountAsLong());
             tag.putLong(CAPACITY, machine.energyStorage.getCapacityAsLong());
+            if (machine.tier().hasFluidInput()) {
+                tag.putLong(TANK, machine.tank().getAmountAsLong(0));
+                tag.putInt(TANK_CAPACITY, machine.tier().fluidCapacity());
+            }
+            machine.heldFluid().ifPresent(fluid -> tag.putString(FLUID, BuiltInRegistries.FLUID.getKey(fluid).toString()));
             if (machine.heldRecipe().id().isEmpty()) {
                 return;
             }
@@ -94,12 +106,17 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
                             - font.width(progress(data))), 0));
                 }
             }
+            Optional<Fluid> fluid = data.getString(FLUID).map(Identifier::tryParse)
+                    .flatMap(BuiltInRegistries.FLUID::getOptional);
             AssemblingStatus status = AssemblingStatus.fromOrdinal(data.getIntOr(STATUS, -1));
-            tooltip.add(Component.translatable(status.langKey())
+            tooltip.add(AssemblingStatusText.of(status, fluid).copy()
                     .withStyle(status.problem() ? ChatFormatting.RED : ChatFormatting.RESET));
             tooltip.add(Component.translatable("gui.planetaryfactory.assembling_machine.energy",
                     String.format("%,d", data.getLongOr(ENERGY, 0L)),
                     String.format("%,d", data.getLongOr(CAPACITY, 0L))));
+            if (data.contains(TANK_CAPACITY)) {
+                tooltip.add(AssemblingStatusText.tank(fluid, data.getLongOr(TANK, 0L), data.getIntOr(TANK_CAPACITY, 0)));
+            }
         }
 
         @Override

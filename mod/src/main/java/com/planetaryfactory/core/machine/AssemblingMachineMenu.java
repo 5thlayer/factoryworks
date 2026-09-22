@@ -21,7 +21,9 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
@@ -47,15 +49,24 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     /**
      * One recipe the machine may hold: the recipe, whether the team is locked out of it, what it
-     * makes, and what each input slot takes, in {@link AssemblingInputSlots}' order.
+     * makes, what each input slot takes, in {@link AssemblingInputSlots}' order, and the fluids its
+     * tank takes, which is the one the tank can hold and the status names.
      */
-    public record Entry(RecipeChoice choice, ItemStack icon, List<SizedIngredient> slotIngredients) {
+    public record Entry(RecipeChoice choice, ItemStack icon, List<SizedIngredient> slotIngredients,
+                        List<SizedFluidIngredient> fluidIngredients) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, entry -> entry.choice().id(),
                 ByteBufCodecs.BOOL, entry -> entry.choice().locked(),
                 ItemStack.OPTIONAL_STREAM_CODEC, Entry::icon,
                 SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), Entry::slotIngredients,
-                (id, locked, icon, ingredients) -> new Entry(new RecipeChoice(id, locked), icon, ingredients));
+                SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), Entry::fluidIngredients,
+                (id, locked, icon, ingredients, fluids) ->
+                        new Entry(new RecipeChoice(id, locked), icon, ingredients, fluids));
+
+        /** The first fluid this recipe's tank takes, or empty for an item-only recipe. */
+        public Optional<Fluid> fluid() {
+            return AssemblingMachineRecipes.firstFluid(fluidIngredients);
+        }
 
         public static final StreamCodec<RegistryFriendlyByteBuf, List<Entry>> LIST_CODEC =
                 STREAM_CODEC.apply(ByteBufCodecs.list());
@@ -74,7 +85,9 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     private static final int DATA_STORED = 4;
     private static final int DATA_CAPACITY = 6;
     private static final int DATA_DRAW = 8;
-    private static final int DATA_COUNT = 10;
+    private static final int DATA_TANK = 10;
+    private static final int DATA_TANK_CAPACITY = 11;
+    private static final int DATA_COUNT = 12;
     private static final int OUTPUT = AssemblingMachineBlockEntity.OUTPUT;
     private static final int MACHINE_SLOTS = 5;
 
@@ -143,7 +156,9 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                     case DATA_CAPACITY -> DataSlotHalves.low(machine.energyStorage.getCapacityAsLong());
                     case DATA_CAPACITY + 1 -> DataSlotHalves.high(machine.energyStorage.getCapacityAsLong());
                     case DATA_DRAW -> DataSlotHalves.low(machine.drawTenths());
-                    default -> DataSlotHalves.high(machine.drawTenths());
+                    case DATA_DRAW + 1 -> DataSlotHalves.high(machine.drawTenths());
+                    case DATA_TANK -> (int) machine.tank().getAmountAsLong(0);
+                    default -> machine.tier().fluidCapacity();
                 };
             }
 
@@ -164,8 +179,9 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         return AssemblingMachineRecipes.choices(level).stream()
                 .map(choice -> AssemblingMachineRecipes.resolve(level, HeldRecipe.of(choice.id()))
                         .map(holder -> new Entry(choice, holder.value().assemble(null),
-                                AssemblingMachineRecipes.slotIngredients(holder.value(), tier)))
-                        .orElseGet(() -> new Entry(choice, ItemStack.EMPTY, List.of())))
+                                AssemblingMachineRecipes.slotIngredients(holder.value(), tier),
+                                holder.value().fluidIngredients()))
+                        .orElseGet(() -> new Entry(choice, ItemStack.EMPTY, List.of(), List.of())))
                 .toList();
     }
 
@@ -232,6 +248,22 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     public long capacityFe() {
         return DataSlotHalves.join(data.get(DATA_CAPACITY), data.get(DATA_CAPACITY + 1));
+    }
+
+    /** The tank's fill in mB; its fluid is the Held recipe's, since the face takes no other. */
+    public int tankAmount() {
+        return data.get(DATA_TANK);
+    }
+
+    /** The tank's size in mB, or 0 on a tier with no tank. */
+    public int tankCapacity() {
+        return data.get(DATA_TANK_CAPACITY);
+    }
+
+    /** The fluid the Held recipe takes, or empty. */
+    public Optional<Fluid> heldFluid() {
+        Entry held = held();
+        return held == null ? Optional.empty() : held.fluid();
     }
 
     /** The Held recipe's draw while crafting, in tenths of an FE a tick. */

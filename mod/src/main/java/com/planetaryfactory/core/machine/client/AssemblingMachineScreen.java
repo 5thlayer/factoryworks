@@ -10,6 +10,7 @@ import com.planetaryfactory.core.compat.emi.HeldRecipeTooltip;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingStatus;
+import com.planetaryfactory.core.machine.AssemblingStatusText;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -44,7 +45,8 @@ import rearth.oritech.client.ui.render.LargeItemRenderState;
  * far the craft under way is, as Factorio's machine window does. A tab above the panel carries the
  * machine's icon and name, the header every Oritech machine screen has. Under the slots, a bar shows
  * the stored FE, with the stored and maximum FE and the Held recipe's draw in its tooltip, and one
- * line states the {@link AssemblingStatus}: what is wrong and what fixes it (ADR-0073).
+ * line states the {@link AssemblingStatus}: what is wrong and what fixes it (ADR-0073). On a tier
+ * with a tank the energy bar shares its row with the tank's, whose tooltip names the fluid (#295).
  *
  * <p>The Held recipe is also drawn in its slots (ADR-0073): each ingredient ghosted in the input slot
  * {@link com.planetaryfactory.core.machine.AssemblingInputSlots} gives it, with the count one craft
@@ -63,6 +65,8 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int SLOT_LIGHT = 0xFFFFFFFF;
     private static final int BAR = 0xFF5DA05D;
     private static final int ENERGY = 0xFFD0A030;
+    // The Boiler screen's water, since the tank's fluid colour is not reachable from a FluidType in 26.1.
+    private static final int FLUID = 0xFF3B6FE0;
     private static final int TEXT = 0xFF404040;
     private static final int BAR_TEXT = 0xFFFFFFFF;
     private static final int PROBLEM_TEXT = 0xFFA02020;
@@ -85,6 +89,8 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int ENERGY_X = 8;
     private static final int ENERGY_WIDTH = 160;
     private static final int ENERGY_HEIGHT = 6;
+    private static final int SPLIT_WIDTH = 76;
+    private static final int TANK_X = 92;
     private static final int STATUS_X = 8;
     private static final int STATUS_WIDTH = 160;
 
@@ -150,8 +156,27 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
 
         int energyX = leftPos + ENERGY_X;
         int energyY = topPos + AssemblingMachineMenu.ENERGY_Y;
-        recess(graphics, energyX, energyY, ENERGY_WIDTH, ENERGY_HEIGHT);
-        graphics.fill(energyX, energyY, energyX + Math.round(ENERGY_WIDTH * charge()), energyY + ENERGY_HEIGHT, ENERGY);
+        int energyWidth = energyWidth();
+        recess(graphics, energyX, energyY, energyWidth, ENERGY_HEIGHT);
+        graphics.fill(energyX, energyY, energyX + Math.round(energyWidth * charge()), energyY + ENERGY_HEIGHT, ENERGY);
+        if (hasTank()) {
+            int tankX = leftPos + TANK_X;
+            recess(graphics, tankX, energyY, SPLIT_WIDTH, ENERGY_HEIGHT);
+            graphics.fill(tankX, energyY, tankX + Math.round(SPLIT_WIDTH * fill()), energyY + ENERGY_HEIGHT, FLUID);
+        }
+    }
+
+    private boolean hasTank() {
+        return menu.tankCapacity() > 0;
+    }
+
+    private int energyWidth() {
+        return hasTank() ? SPLIT_WIDTH : ENERGY_WIDTH;
+    }
+
+    private float fill() {
+        int capacity = menu.tankCapacity();
+        return capacity <= 0 ? 0f : Math.min(1f, (float) menu.tankAmount() / capacity);
     }
 
     private float charge() {
@@ -185,7 +210,12 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
 
     @Override
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        if (over(mouseX, mouseY, ENERGY_X, AssemblingMachineMenu.ENERGY_Y, ENERGY_WIDTH, ENERGY_HEIGHT)) {
+        if (hasTank() && over(mouseX, mouseY, TANK_X, AssemblingMachineMenu.ENERGY_Y, SPLIT_WIDTH, ENERGY_HEIGHT)) {
+            graphics.setTooltipForNextFrame(font,
+                    AssemblingStatusText.tank(menu.heldFluid(), menu.tankAmount(), menu.tankCapacity()), mouseX, mouseY);
+            return;
+        }
+        if (over(mouseX, mouseY, ENERGY_X, AssemblingMachineMenu.ENERGY_Y, energyWidth(), ENERGY_HEIGHT)) {
             graphics.setTooltipForNextFrame(font, List.of(
                     Component.translatable("gui.planetaryfactory.assembling_machine.energy",
                             String.format("%,d", menu.storedFe()), String.format("%,d", menu.capacityFe())),
@@ -196,7 +226,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
             return;
         }
         if (over(mouseX, mouseY, STATUS_X, AssemblingMachineMenu.STATUS_Y, STATUS_WIDTH, font.lineHeight)) {
-            graphics.setTooltipForNextFrame(font, Component.translatable(menu.status().langKey()), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, AssemblingStatusText.of(menu.status(), menu.heldFluid()), mouseX, mouseY);
             return;
         }
         ItemStack ghost = hoveredSlot == null || !menu.getCarried().isEmpty() ? ItemStack.EMPTY : ghost(hoveredSlot);
@@ -244,7 +274,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
                 AssemblingMachineMenu.INPUT_Y + 4, BAR_TEXT, true);
 
         AssemblingStatus status = menu.status();
-        graphics.text(font, fitted(Component.translatable(status.langKey()), STATUS_WIDTH), STATUS_X,
+        graphics.text(font, fitted(AssemblingStatusText.of(status, menu.heldFluid()), STATUS_WIDTH), STATUS_X,
                 AssemblingMachineMenu.STATUS_Y, status.problem() ? PROBLEM_TEXT : TEXT, false);
 
         int right = imageWidth - 8;
