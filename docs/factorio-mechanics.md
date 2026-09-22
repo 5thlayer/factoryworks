@@ -561,8 +561,10 @@ Sub-rules:
   loader against an inventory or on a support otherwise. A support takes one belt arriving and one
   leaving: with both it joins them at the slower belt's rate and draws no power, and with only one
   arriving it is a dead end the belt backs up against, as a Factorio belt ending in nothing does.
-  Merging and splitting stay the splitter's. Supports are free and only the belt item places them;
-  a belt ending on a free support carries on from it, and a sneak-click plans one mid-belt. Breaking
+  Merging and splitting stay the splitter's. A support takes its direction from its belts, so a free
+  one turns to take a belt either way. Supports are free and have no recipe, since the belt item
+  places them; a belt ending on a free support carries on from it, and a sneak-click plans one
+  mid-belt. An end loader against an inventory is placed whichever way the player faces. Breaking
   any support a belt uses breaks that belt, refunded as breaking a loader is (ADR-0078).
 
 - **Belt tiers** — `shipped` for tiers 1 and 2. The fork's four belts, `belt`, `improved_belt`,

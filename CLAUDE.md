@@ -187,7 +187,8 @@ tier first, then the nearest higher tier, then the nearest lower one, and places
 when a loader is short (`BeltLoaderCostTests`, #354). Before the fix every open end got a free tier-1
 loader, which turned five of its six red. The choice is the fork's `LoaderChoiceTest`. An open end
 becomes a loader only against an inventory and a support otherwise (#366), so those fixtures stand
-chests beyond their ends, and a seventh test lays one with none and gets two supports.
+chests beyond their ends, a seventh test lays one with none and gets two supports, and an eighth
+clicks the end facing its chest rather than back along the belt and still gets a loader.
 And that a belt laid through the belt item in a shape outside one of ADR-0078's four bounds -- too
 steep, climbing and turning at once, turning tighter than a block, reaching past 32 -- changes no
 block, links neither loader, charges nothing and names its bound to the player, and that a mid-belt
@@ -202,8 +203,9 @@ leaving backs up to 44 items, and each refused click in #366's table, and a snea
 support, changes no block and no slot, charges nothing and names its refusal. A belt laid through the
 item from a chest ends on a free support, charges only its length, plans its mid-belt support, and
 carries on from the end; breaking either support through the player's game mode refunds the belt and
-its items to the breaker. Disabling the join and dropping the mid-belt link turned exactly those six
-red. The slot table and the open-end choice are the fork's `SupportSlotsTest`, the join's rate
+its items to the breaker; and a free support facing east turns west to start or end a belt running
+west. Disabling the join and dropping the mid-belt link turned exactly six red, and keeping a free
+support's old facing and dropping the loader's other-side check turned exactly three. The slot table and the open-end choice are the fork's `SupportSlotsTest`, the join's rate
 `JoinTest`, and whether the chaining gesture feels right is a human check on delivery.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
 that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).

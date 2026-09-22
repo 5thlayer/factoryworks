@@ -49,6 +49,7 @@ final class BeltLoaderCostTests {
         tests.test("a_belt_falls_back_to_a_lower_tier_loader", 20, BeltLoaderCostTests::lowerTier);
         tests.test("a_belt_ending_at_a_placed_loader_takes_one", 20, BeltLoaderCostTests::oneEndPlaced);
         tests.test("a_belt_with_no_inventory_at_its_ends_ends_on_supports", 20, BeltLoaderCostTests::supportsWithoutInventory);
+        tests.test("an_end_clicked_facing_its_chest_takes_a_loader", 20, BeltLoaderCostTests::endFacingChest);
     }
 
     private static void refused(GameTestHelper helper, BeltTier belt, Map<BeltTier, Integer> held) {
@@ -118,6 +119,24 @@ final class BeltLoaderCostTests {
             }
         }
         expectHeld(helper, player, BeltTier.BELT, 2);
+        helper.succeed();
+    }
+
+    // Facing the chest, as the player does at the start, rather than back along the belt (#366).
+    private static void endFacingChest(GameTestHelper helper) {
+        helper.setBlock(BEHIND_FROM, Blocks.CHEST);
+        helper.setBlock(BEYOND_TO, Blocks.CHEST);
+        Player player = player(helper, BeltTier.BELT, Map.of(BeltTier.BELT, 2));
+        click(helper, player, FROM_GROUND);
+        player.setYRot(-90);
+        click(helper, player, TO_GROUND);
+
+        expectLoader(helper, FROM, BeltTier.BELT);
+        expectLoader(helper, TO, BeltTier.BELT);
+        Direction facing = helper.getBlockState(TO).getValue(HorizontalDirectionalBlock.FACING);
+        if (facing != Direction.WEST) {
+            helper.fail("the end loader faces " + facing + ", so its chest is not beyond it", TO);
+        }
         helper.succeed();
     }
 

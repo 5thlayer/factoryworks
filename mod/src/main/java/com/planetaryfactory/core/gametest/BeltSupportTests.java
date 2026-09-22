@@ -102,6 +102,8 @@ final class BeltSupportTests {
                 helper -> refused(helper, BeltSupportTests::deadEnd, Click.MIDPOINT, Refusal.NOT_A_MIDPOINT));
 
         tests.test("a_belt_ends_on_a_free_support_and_carries_on_from_it", 20, BeltSupportTests::chains);
+        tests.test("a_free_support_turns_to_start_a_belt_the_other_way", 20, BeltSupportTests::freeSupportStartsWest);
+        tests.test("a_free_support_turns_to_end_a_belt_the_other_way", 20, BeltSupportTests::freeSupportEndsWest);
         tests.test("breaking_a_belts_end_support_refunds_it_to_the_breaker", FILL_TICKS + 20,
                 helper -> breakingRefunds(helper, END, MID));
         tests.test("breaking_a_mid_belt_support_refunds_its_belt_to_the_breaker", FILL_TICKS + 20,
@@ -222,6 +224,45 @@ final class BeltSupportTests {
                     + held.get(ComponentContent.BELT_START.get()) + " facing " + held.get(ComponentContent.BELT_DIR.get()), END);
         }
         helper.succeed();
+    }
+
+    // Once a belt's support is left free, the next belt sets its facing again (#366).
+    private static void freeSupportStartsWest(GameTestHelper helper) {
+        helper.setBlock(SUPPORT, support());
+        helper.setBlock(FROM, Blocks.CHEST);
+        var player = new ListeningPlayer(helper);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.beltFor(BeltTier.BELT), HELD_BELTS));
+        player.getInventory().add(new ItemStack(BlockContent.loaderFor(BeltTier.BELT).asItem(), 1));
+        player.setYRot(-90);
+        click(helper, player, SUPPORT);
+        click(helper, player, FROM.east().below());
+
+        BlockPos loader = FROM.east();
+        if (!helper.absolutePos(loader).equals(belt(helper, SUPPORT).getTarget())) {
+            helper.fail("a free support facing east did not start a belt west; the player was told " + player.heard, SUPPORT);
+        }
+        expectFacing(helper, SUPPORT, Direction.WEST);
+        helper.succeed();
+    }
+
+    private static void freeSupportEndsWest(GameTestHelper helper) {
+        helper.setBlock(SUPPORT, support());
+        helper.setBlock(TO, loader(BeltTier.BELT, Direction.WEST));
+        var player = new ListeningPlayer(helper);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.beltFor(BeltTier.BELT), HELD_BELTS));
+        click(helper, player, TO);
+        click(helper, player, SUPPORT);
+
+        if (!helper.absolutePos(SUPPORT).equals(belt(helper, TO).getTarget())) {
+            helper.fail("a free support facing east did not end a belt running west; the player was told " + player.heard, SUPPORT);
+        }
+        expectFacing(helper, SUPPORT, Direction.WEST);
+        helper.succeed();
+    }
+
+    private static void expectFacing(GameTestHelper helper, BlockPos pos, Direction facing) {
+        Direction found = helper.getBlockState(pos).getValue(HorizontalDirectionalBlock.FACING);
+        if (found != facing) helper.fail("the support faces " + found + ", not " + facing, pos);
     }
 
     private static void breakingRefunds(GameTestHelper helper, BlockPos broken, BlockPos other) {
