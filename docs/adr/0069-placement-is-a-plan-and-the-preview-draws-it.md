@@ -28,6 +28,10 @@ item placing a `planetaryfactory:` block. Other mods' placement refusals are the
 is unbounded. The pole's column rules and the rig's footprint are the only two plans that are not
 vanilla's today.
 
+The pack's SimpleBelts fork is the one exception, because the pack owns that fork. Its belt item
+answers to the same contract, that the click executes the plan the preview draws, through a plan type
+of its own, since the fork cannot depend on the core (#372).
+
 **A multiblock is one plan and refuses as a whole.** The rig places its anchor and every part in one
 gesture, so a single blocked part refuses the placement, and the whole footprint draws red. Drawing
 one part red and the rest translucent would promise a partial placement the game never performs.

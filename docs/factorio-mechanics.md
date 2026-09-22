@@ -668,6 +668,9 @@ Sub-rules:
 - **A held block previews where it lands, red where refused** — `shipped`, #297. The pack's term
   is **Placement Preview**, not ghost: a ghost is the excluded robot-built entity under
   [Construction robots and blueprints](#construction-robots-and-blueprints).
+- **A held belt previews the belt, loaders and supports it would place, red where refused** —
+  `shipped`, #372. The belt item's click executes the plan its preview draws, and the refusal's
+  reason is on the action bar.
 - **A held pole previews the wires it would add** — `planned`, #298.
 - **A held pole shows its supply area and those of the poles around it** — `planned`, #158.
 - **Fast replace: placing another tier over a pole or furnace swaps it in place** — `planned`,

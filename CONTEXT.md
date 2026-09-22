@@ -162,6 +162,10 @@ _Avoid_: conveyor, belt segment, lane
 A block on the block grid, facing along one of its axes, that a belt passes through or ends at. Supports are where a belt's shape is decided; the curve between them only joins them. A support holds at most one belt arriving and one leaving: with both it joins two belts, with only one arriving it is a dead end where items back up. Supports are placed by the belt itself and cost nothing (ADR-0078).
 _Avoid_: pole, midpoint, control point
 
+**Free support**:
+A support with no belt arriving or leaving. It has no direction of its own: the next belt through it sets its facing.
+_Avoid_: empty support, unused support
+
 **Belt end**:
 Where a belt starts or stops: a loader, set against an inventory, or a support, set against another belt or nothing.
 _Avoid_: terminator, endpoint
@@ -296,11 +300,11 @@ A connection between two **Supply Area Pole**s that makes them one **Electric Ne
 _Avoid_: link, cable, connection
 
 **Placement Plan**:
-What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole.
+What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole. A plan may read what an earlier click stored on the item: a belt's plan is its ends, its supports and its curve, from the stored start to the aimed spot.
 _Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state
 
 **Placement Preview**:
-What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused, and, for a pole, the wires it would add and its **Supply Area Box**. It shows what placing would do and changes nothing in the world.
+What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the belt, its ends and its supports. It shows what placing would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
 **Supply Area Box**:

@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-`FootprintBreakTests` (#352) and `RadarTests` (#368), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362) and `BeltSupportTests` (#366), registered only when the
+`FootprintBreakTests` (#352) and `RadarTests` (#368), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366) and `BeltPlanTests` (#372), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -207,6 +207,12 @@ its items to the breaker; and a free support facing east turns west to start or 
 west. Disabling the join and dropping the mid-belt link turned exactly six red, and keeping a free
 support's old facing and dropping the loader's other-side check turned exactly three. The slot table and the open-end choice are the fork's `SupportSlotsTest`, the join's rate
 `JoinTest`, and whether the chaining gesture feels right is a human check on delivery.
+And that the belt item's click executes the plan its preview draws (`BeltPlanTests`, #372): each test
+asks `BeltItem.plan` and then clicks. A refused plan changes no block, slot or stored point and tells
+the player its reason. An accepted one places every block it names in the state it names and charges
+what it names. A used loader answers the click by setting its filter, so the item plans nothing there.
+Skipping a free support's turn in the click turns the plan test red. Whether the preview draws right
+is a human check on delivery.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
 that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
 Both were red on upstream's filter, which the off hand reset.
