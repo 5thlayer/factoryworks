@@ -33,6 +33,30 @@ public record Footprint(List<Local> offsets) {
         return new Footprint(offsets);
     }
 
+    /**
+     * Factorio's tile square, as tall as it is wide, with the anchor at the bottom centre so the
+     * machine sits centred on the block the player clicks. The tile width runs along the lateral
+     * {@code z}, the height along {@code x}.
+     */
+    public static Footprint standing(int tileWidth, int tileHeight) {
+        if (tileWidth % 2 == 0 || tileHeight % 2 == 0) {
+            throw new IllegalStateException("a " + tileWidth + "x" + tileHeight + " machine has no centre block");
+        }
+        int halfX = tileHeight / 2;
+        int halfZ = tileWidth / 2;
+        List<Local> parts = new ArrayList<>();
+        for (int y = 0; y < tileWidth; y++) {
+            for (int x = -halfX; x <= halfX; x++) {
+                for (int z = -halfZ; z <= halfZ; z++) {
+                    if (x != 0 || y != 0 || z != 0) {
+                        parts.add(new Local(x, y, z));
+                    }
+                }
+            }
+        }
+        return of(parts.toArray(Local[]::new));
+    }
+
     public int partCount() {
         return offsets.size() - 1;
     }

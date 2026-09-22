@@ -672,9 +672,10 @@
       "blocked_by": 293
     },
     "pumpjack": {
-      "status": "undecided",
-      "note": "Terra has no crude source: the GregTech bedrock deposit left with ADR-0060, and Oritech's oil springs, which its Pump drains, do not generate in Terra's biomes. #377 owns whether the Pump on a spring is the pumpjack.",
-      "ticket": 377
+      "kind": "item",
+      "target": "planetaryfactory:pumpjack",
+      "source": "authored",
+      "note": "Factorio's Pumpjack (#377, ADR-0081): a 3x3x3 footprint machine standing on an oil well, drawing 45 FE/t and a 1.5 FE/t drain, and pumping 10 mB/s of crude at 100% yield out of any face. Mechanism, so `planetaryfactory_core`'s (ADR-0015). Drawn by Oritech's Pump model, scaled."
     },
     "radar": {
       "kind": "item",

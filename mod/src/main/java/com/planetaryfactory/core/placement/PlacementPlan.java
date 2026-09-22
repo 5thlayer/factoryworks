@@ -53,6 +53,8 @@ public record PlacementPlan(List<Placed> blocks, @Nullable Refusal refusal) {
         NO_FLUID_SOURCE,
         /** A splitter over a belt it would not cut: against its facing, at an angle, through a side or on a curve (#361). */
         BELT_CROSSING,
+        /** A Pumpjack anywhere but over an oil well (ADR-0081). */
+        NOT_ON_WELL,
     }
 
     public PlacementPlan {

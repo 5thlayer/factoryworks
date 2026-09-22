@@ -133,7 +133,11 @@
   "map.planetaryfactory.patch.uranium": "Uranium ore",
   "map.planetaryfactory.patch.stone": "Stone",
   "map.planetaryfactory.patch.amount": "%s: %s",
+  "block.planetaryfactory.pumpjack": "Pumpjack",
+  "block.planetaryfactory.pumpjack_part": "Pumpjack (part)",
+  "item.planetaryfactory.pumpjack": "Pumpjack",
   "block.planetaryfactory.oil_well": "Oil Well",
+  "message.planetaryfactory.pumpjack.no_well": "A Pumpjack must stand on an oil well.",
   "map.planetaryfactory.patch.crude_oil": "Crude oil",
   "map.planetaryfactory.patch.yield": "%s: %s yield"
 }

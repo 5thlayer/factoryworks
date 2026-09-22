@@ -109,6 +109,7 @@ public final class PlanetaryFactoryCore {
             RigClient.register(modBus);
             com.planetaryfactory.core.machine.client.AssemblingMachineClient.register(modBus);
             com.planetaryfactory.core.fluid.client.SteamEngineClient.register(modBus);
+            com.planetaryfactory.core.oil.client.PumpjackClient.register(modBus);
             SteamFluidClient.register(modBus);
             BoilerClient.register(modBus);
             // The wire between linked poles (#281); cosmetic, the balance never reads it.

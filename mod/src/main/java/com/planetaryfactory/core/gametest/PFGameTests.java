@@ -95,6 +95,7 @@ public final class PFGameTests {
             AssemblingMachineTests.register(registrar);
             FootprintBreakTests.register(registrar);
             RadarTests.register(registrar);
+            PumpjackTests.register(registrar);
         }
         if (ModList.get().isLoaded("belts")) {
             BeltHandoffTests.register(registrar);
