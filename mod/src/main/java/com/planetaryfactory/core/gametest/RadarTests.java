@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.gametest;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,8 +21,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * A pole-fed Radar charts its own sector into its owner's chart after 10 MJ, and a starved one
- * charts nothing (#368). The tick figures are typed: 100,000 FE at 150 FE/t is 667 ticks.
+ * A pole-fed Radar charts its 7x7 nearby area into its owner's chart within seconds, then its first
+ * long-range sector, the top-left of the fourth ring, after 10 MJ; a starved one charts nothing
+ * (#368, ADR-0079). The tick figures are typed: a pulse is 2,500 FE, 17 ticks at 150 FE/t, then one
+ * sector a tick, and 100,000 FE is 667 ticks.
  */
 final class RadarTests {
 
@@ -29,6 +32,7 @@ final class RadarTests {
     /** Two blocks past the footprint's edge, where a pole's area reaches its nearest parts. */
     private static final BlockPos POLE = new BlockPos(8, 1, 3);
 
+    private static final int AFTER_NEARBY_PULSE = 100;
     private static final int BEFORE_TEN_MEGAJOULES = 640;
     private static final int AFTER_TEN_MEGAJOULES = 720;
 
@@ -36,7 +40,7 @@ final class RadarTests {
     }
 
     static void register(PFGameTests.Registrar tests) {
-        tests.test("fed_radar_charts_its_first_sector_after_ten_megajoules", 800, RadarTests::fedRadarCharts);
+        tests.test("fed_radar_charts_its_nearby_area_then_a_sector_per_ten_megajoules", 800, RadarTests::fedRadarCharts);
         tests.test("starved_radar_charts_nothing", 800, RadarTests::starvedRadarChartsNothing);
     }
 
@@ -44,22 +48,36 @@ final class RadarTests {
         UUID owner = place(helper);
         helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
         BlockPos anchor = helper.absolutePos(FLOOR.above());
+        Sector own = Sector.ofBlock(anchor.getX(), anchor.getZ());
+        Set<Sector> nearby = new HashSet<>();
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dz = -3; dz <= 3; dz++) {
+                nearby.add(own.offset(dx, dz));
+            }
+        }
         helper.startSequence()
-                .thenIdle(BEFORE_TEN_MEGAJOULES)
+                .thenIdle(AFTER_NEARBY_PULSE)
                 .thenExecute(() -> {
-                    if (!chart(helper, owner).isEmpty()) {
-                        helper.fail("charted a sector before 10 MJ reached the radar", FLOOR.above());
+                    if (!chart(helper, owner).equals(nearby)) {
+                        helper.fail("after the first pulse the chart holds " + chart(helper, owner).size()
+                                + " sectors where it should hold the 49 around " + own, FLOOR.above());
                     }
-                    if (radar(helper).progress() == 0L) {
-                        helper.fail("a pole-fed radar drew nothing", FLOOR.above());
+                })
+                .thenIdle(BEFORE_TEN_MEGAJOULES - AFTER_NEARBY_PULSE)
+                .thenExecute(() -> {
+                    if (!chart(helper, owner).equals(nearby)) {
+                        helper.fail("charted a long-range sector before 10 MJ reached the radar", FLOOR.above());
                     }
                 })
                 .thenIdle(AFTER_TEN_MEGAJOULES - BEFORE_TEN_MEGAJOULES)
                 .thenExecute(() -> {
-                    Set<Sector> expected = Set.of(Sector.ofBlock(anchor.getX(), anchor.getZ()));
+                    Set<Sector> expected = new HashSet<>(nearby);
+                    expected.add(own.offset(-4, -4));
                     if (!chart(helper, owner).equals(expected)) {
-                        helper.fail("after 10 MJ the chart holds " + chart(helper, owner)
-                                + " where it should hold only the radar's own " + expected, FLOOR.above());
+                        Set<Sector> extra = new HashSet<>(chart(helper, owner));
+                        extra.removeAll(nearby);
+                        helper.fail("after 10 MJ the long range holds " + extra
+                                + " where it should hold only " + own.offset(-4, -4), FLOOR.above());
                     }
                 })
                 .thenSucceed();

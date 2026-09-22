@@ -34,6 +34,10 @@ public final class RadarCharts {
                 .add(sector.pack());
     }
 
+    public boolean isCharted(UUID team, String dimension, Sector sector) {
+        return charts.getOrDefault(team, Map.of()).getOrDefault(dimension, Set.of()).contains(sector.pack());
+    }
+
     public Set<Sector> sectors(UUID team, String dimension) {
         return charts.getOrDefault(team, Map.of()).getOrDefault(dimension, Set.of()).stream()
                 .map(Sector::unpack)

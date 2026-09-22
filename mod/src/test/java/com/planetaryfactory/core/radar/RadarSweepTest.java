@@ -4,49 +4,90 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
-/** Nearest uncharted sector first within the reach, then the pass repeats (#368). */
+/**
+ * Factorio's Radar order (ADR-0079): the 7x7 nearby area as one pulse, and beyond it the reach in
+ * square rings, each from its top-left sector clockwise, unexplored sectors first.
+ */
 class RadarSweepTest {
 
-    private static final RadarSweep SWEEP = RadarSweep.of(14);
+    private static final RadarSweep SWEEP = RadarSweep.of(3, 14);
     private static final Sector ORIGIN = new Sector(-3, 7);
 
-    private static double distance(Sector a, Sector b) {
-        return Math.hypot(a.x() - b.x(), a.z() - b.z());
+    private static int ring(Sector sector) {
+        return Math.max(Math.abs(sector.x() - ORIGIN.x()), Math.abs(sector.z() - ORIGIN.z()));
     }
 
     @Test
-    void aPassIsEverySectorWithinFourteenOnce() {
+    void theNearbyAreaIsTheSevenBySevenAroundTheRadar() {
+        List<Sector> nearby = SWEEP.nearby(ORIGIN);
+        assertEquals(49, new HashSet<>(nearby).size());
+        assertEquals(49, nearby.size());
+        assertTrue(nearby.stream().allMatch(sector -> ring(sector) <= 3));
+        assertEquals(ORIGIN, nearby.get(0));
+    }
+
+    @Test
+    void aPassIsEverySectorBeyondTheNearbyAreaWithinFourteenOnce() {
         Set<Sector> seen = new HashSet<>();
         for (int cursor = 0; cursor < SWEEP.size(); cursor++) {
             Sector sector = SWEEP.sectorAt(ORIGIN, cursor);
-            assertTrue(seen.add(sector), "charted twice in one pass: " + sector);
-            assertTrue(Math.abs(sector.x() - ORIGIN.x()) <= 14 && Math.abs(sector.z() - ORIGIN.z()) <= 14,
-                    "out of reach: " + sector);
+            assertTrue(seen.add(sector), "scanned twice in one pass: " + sector);
+            assertTrue(ring(sector) > 3 && ring(sector) <= 14, "out of the long range: " + sector);
         }
-        assertEquals(29 * 29, seen.size());
+        assertEquals(29 * 29 - 7 * 7, seen.size());
     }
 
     @Test
-    void theRadarsOwnSectorIsFirstAndEachNextIsNoNearer() {
-        assertEquals(ORIGIN, SWEEP.sectorAt(ORIGIN, 0));
+    void eachRingStartsTopLeftAndRunsClockwise() {
+        assertEquals(ORIGIN.offset(-4, -4), SWEEP.sectorAt(ORIGIN, 0));
+        assertEquals(ORIGIN.offset(-3, -4), SWEEP.sectorAt(ORIGIN, 1));
+        assertEquals(ORIGIN.offset(4, -4), SWEEP.sectorAt(ORIGIN, 8));
+        assertEquals(ORIGIN.offset(4, -3), SWEEP.sectorAt(ORIGIN, 9));
+        assertEquals(ORIGIN.offset(4, 4), SWEEP.sectorAt(ORIGIN, 16));
+        assertEquals(ORIGIN.offset(-4, 4), SWEEP.sectorAt(ORIGIN, 24));
+        assertEquals(ORIGIN.offset(-4, -3), SWEEP.sectorAt(ORIGIN, 31));
+        assertEquals(ORIGIN.offset(-5, -5), SWEEP.sectorAt(ORIGIN, 32));
         for (int cursor = 1; cursor < SWEEP.size(); cursor++) {
-            assertTrue(distance(ORIGIN, SWEEP.sectorAt(ORIGIN, cursor - 1))
-                            <= distance(ORIGIN, SWEEP.sectorAt(ORIGIN, cursor)),
-                    "sector " + cursor + " is nearer than the one before it");
+            assertTrue(ring(SWEEP.sectorAt(ORIGIN, cursor - 1)) <= ring(SWEEP.sectorAt(ORIGIN, cursor)),
+                    "sector " + cursor + " is in a nearer ring than the one before it");
         }
     }
 
     @Test
-    void aFullReachStartsTheNextPassAtTheRadar() {
+    void anUnexploredSectorIsScannedBeforeAnyRescan() {
+        Set<Sector> charted = new HashSet<>();
+        for (int cursor = 0; cursor < SWEEP.size(); cursor++) {
+            charted.add(SWEEP.sectorAt(ORIGIN, cursor));
+        }
+        Sector unexplored = SWEEP.sectorAt(ORIGIN, 500);
+        charted.remove(unexplored);
+
+        assertEquals(500, SWEEP.pick(ORIGIN, charted::contains, 3));
+    }
+
+    @Test
+    void theFirstUnexploredSectorInOrderComesFirst() {
+        Set<Sector> charted = Set.of(SWEEP.sectorAt(ORIGIN, 0), SWEEP.sectorAt(ORIGIN, 1));
+
+        assertEquals(2, SWEEP.pick(ORIGIN, charted::contains, 40));
+    }
+
+    @Test
+    void withEverythingChartedTheCursorRescansInTurn() {
+        assertEquals(40, SWEEP.pick(ORIGIN, sector -> true, 40));
+    }
+
+    @Test
+    void aFullReachStartsTheNextPassAtTheFirstRing() {
         int cursor = 0;
         for (int i = 0; i < SWEEP.size(); i++) {
             cursor = SWEEP.next(cursor);
         }
         assertEquals(0, cursor);
-        assertEquals(ORIGIN, SWEEP.sectorAt(ORIGIN, cursor));
     }
 
     @Test

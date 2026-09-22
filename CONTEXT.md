@@ -257,7 +257,7 @@ The building that charts map at range for its team: the chunks it scans appear o
 _Avoid_: prospector, scanner, ore detector
 
 **Sector**:
-What a **Radar** charts in one scan: a 32×32-block square, which is Factorio's chunk and four Minecraft chunks. A Radar charts the nearest uncharted sector within its reach first, then keeps re-charting its whole reach in turn, so the map stays current.
+What a **Radar** charts in one scan: a 32×32-block square, which is Factorio's chunk and four Minecraft chunks. A Radar charts the sectors around it at once, then one sector at range at a time, unexplored ones first, and re-scans its reach in turn once all are charted.
 _Avoid_: chunk (a Minecraft chunk is a quarter of a sector), scan area
 
 **Chart**:

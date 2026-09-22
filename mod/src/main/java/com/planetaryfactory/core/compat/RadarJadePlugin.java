@@ -47,10 +47,10 @@ public class RadarJadePlugin implements IWailaPlugin {
                     || !(accessor.getLevel() instanceof ServerLevel level)) {
                 return;
             }
-            Sector next = radar.nextSector();
+            Sector next = radar.nextSector(level);
             tag.putInt(NEXT_X, next.x());
             tag.putInt(NEXT_Z, next.z());
-            tag.putInt(CURSOR, radar.cursor());
+            tag.putInt(CURSOR, radar.nextIndex(level));
             tag.putInt(SWEEP, radar.sweepSize());
             tag.putLong(PROGRESS, radar.progress());
             UUID owner = radar.owner();
@@ -83,7 +83,7 @@ public class RadarJadePlugin implements IWailaPlugin {
             tooltip.add(Component.literal("Next sector (%d, %d), blocks %d..%d, %d..%d".formatted(
                     x, z, x * Sector.SIZE, x * Sector.SIZE + Sector.SIZE - 1,
                     z * Sector.SIZE, z * Sector.SIZE + Sector.SIZE - 1)));
-            tooltip.add(Component.literal("Sector %d of %d this pass, due in %.1f s at full power".formatted(
+            tooltip.add(Component.literal("Long-range sector %d of %d, due in %.1f s at full power".formatted(
                     data.getIntOr(CURSOR, 0) + 1, data.getIntOr(SWEEP, 0), left / (perTick * 20.0))));
             tooltip.add(data.contains(OWNER)
                     ? Component.literal("Team chart: %d sectors here, owner %s".formatted(
