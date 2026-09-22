@@ -318,6 +318,14 @@ _Avoid_: placement context (vanilla's own type, one input to a plan), build plan
 What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the belt, its ends and its supports. It shows what placing would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
+**Fast Replace**:
+Placing a block over a placed one of the same **Replace Group** but another tier, which swaps it in place, up a tier or down. It takes one item and gives the old one back, per entity, so a whole pole column swaps for one item and keeps its height and wires. The new block keeps everything of the old one's it can hold, the Assembling Machine's recipe included where the new tier can craft it, and the rest goes to the player; if the player cannot take it, nothing is replaced. The new block keeps the old one's facing. A plain right-click with another tier of the group in hand replaces, rather than opening the block's screen, and on a multiblock any of its blocks answers; a sneak-right-click still places beside. The **Placement Preview** draws a replace in a colour of its own.
+_Avoid_: upgrade (it goes down a tier too), swap, overwrite
+
+**Replace Group**:
+The blocks that can **Fast Replace** each other, read from Factorio's `fast_replaceable_group` rather than chosen: the small and medium poles are one group and the substation is alone; the three furnaces are one; the three Assembling Machine tiers are one; belts and splitters of every tier are one; loaders of every tier are one.
+_Avoid_: family, tier ladder (a ladder is one kind's tiers; a group can hold two kinds, as belts and splitters do)
+
 **Supply Area Box**:
 The bright yellow wireframe of a **Supply Area Pole**'s area — the whole volume it covers, anchored at the base, plus an outline around every machine the pole reaches. Shown while holding a pole or looking at a placed one (ADR-0070). It says where the area lands and what is inside it, never whether anything inside is being *fed*, which is the Jade line's answer on the machine.
 _Avoid_: supply area overlay, footprint overlay, coverage grid, range indicator
