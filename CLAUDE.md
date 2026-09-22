@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-`FootprintBreakTests` (#352) and `RadarTests` (#368), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366) and `BeltPlanTests` (#372), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366) and `BeltPlanTests` (#372), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -288,7 +288,7 @@ other generator here, but **no test file owns it**: the template has no corpus, 
 no input to go stale against, so the `--check` is the whole of the guard. And the GameTest run is
 in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
 boots a server, so it is run against a change that touched mechanism. Run it after editing
-anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/placement/` or
+anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/` or
 `core/gametest/`.
 
 ### Placement plan check
@@ -704,6 +704,28 @@ by name, and the GameTest run has no FTB Chunks, so it is also the check that th
 without it. Whether the terrain and the patch icons appear on the big map and minimap is a human check on
 delivery.
 Run these after editing `core/radar/` or the generator.
+
+### Crude oil check
+
+Crude is infinite (#377, ADR-0081): an **oil well** holds an amount, a Pumpjack on it yields
+`10 × amount / normal` a cycle and takes 10 off it, down to the higher of 20% yield and 20% of the
+well's start. `scripts/factorio-resource-extract.py` slices crude's figures into `amounts.json`
+beside the ores, and `tests/factorio/test_resource_extract.py` asserts them and re-derives each
+field's wells and centre amount per distance. The derivations are Minecraft-free under
+`mod/src/test/java/com/planetaryfactory/core/oil/`: `WellYieldTest` (yield, the 1,000 cap, the floor,
+the carried fraction), `OilFieldTest` (1/96 of the mask, 3 apart, ore columns turned away, the
+amount), and `PumpjackEnergyTest` and `PumpjackSpecTest` (45 FE/t, a 1.5 FE/t drain paid idle, a
+cycle per 900 FE). `scripts/build-pumpjack-assets.py` copies the `pumpjack` drill row and the item
+map's crude fluid into the mod's resource, and `tests/pack/test_pumpjack_assets.py` runs its
+`--check`, holds the resource against both, and asserts Oritech's two `oil_spring` biome modifiers
+are overridden with a no-op -- NeoForge 26.1 has `none` for structure modifiers only. The field's
+structure set is `build-outfield-worldgen.py`'s. `gametest/OilFieldTests` places a field 2,300 blocks
+out and holds its wells to their drawn amounts, spacing and ground, with an iron disc on the same
+centre turning away exactly the wells on its columns; `PumpjackTests` holds a fed Pumpjack to 10 mB a
+cycle a second, drained from any face, and a starved one to nothing. Disabling the ore check or the
+well refusal turns its test red. Whether the scaled Pump model reads well and the oil-field icons
+appear on the FTB map is a human check on delivery. Run these after editing `core/oil/`, the oil
+field's structure or piece, or either generator.
 
 ### Enemy corpus check
 
