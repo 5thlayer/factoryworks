@@ -404,9 +404,17 @@ _Avoid_: distillation tower, refinery multiblock, cracker
 The pack-registered GregTech single block carrying Factorio's whole chemical-plant recipe list — both crackings, lubricant, plastic, sulfur, solid fuel, sulfuric acid, battery and explosives (ADR-0025). One tier: `gtceu:lv_chemical_plant`, against the recipe type `gtceu:chemical_plant`.
 _Avoid_: chemical reactor, chem plant, reaction chamber
 
+**Oil well**:
+One block, flush with the terrain, that holds an amount of **Crude Oil** and never runs dry: each draw lowers its amount toward a floor — a fifth of what it started with, or 20% yield, whichever is higher — and its yield, the fraction of full output a Pumpjack gets from it, falls with it. A far well can start well above 100%. A crude-oil field is a scattering of wells, not a filled patch. It is the only crude source anywhere in the pack (#377).
+_Avoid_: oil spring, oil deposit, bedrock fluid deposit
+
+**Pumpjack**:
+The machine that draws **Crude Oil** from one **oil well**. It stands on the well and nowhere else, runs on electricity, and its output is its full rate times the well's yield. Crude leaves it through any face (#377).
+_Avoid_: pump, fluid drilling rig, oil derrick
+
 **Crude Oil**:
-The unprocessed fluid a Fluid Drilling Rig extracts, and the sole input to oil processing. `gtceu:raw_oil`.
-_Avoid_: raw oil, oil, petroleum
+The unprocessed fluid a **Pumpjack** draws from an **oil well**, and the sole input to oil processing. It never runs out: a well's yield falls toward a floor and stops there, as in Factorio (#377).
+_Avoid_: raw oil, oil, petroleum, oil spring
 
 **Petroleum Gas**:
 The lightest fraction, and the one that feeds sulfur and plastic. `gtceu:oil`, renamed in lang only.
