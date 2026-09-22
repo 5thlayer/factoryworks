@@ -1,6 +1,8 @@
 package com.planetaryfactory.core.radar;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -13,7 +15,10 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
@@ -119,13 +124,19 @@ public class RadarBlockEntity extends BlockEntity {
         if (owner == null || charted(serverLevel).test(sector)) {
             return;
         }
+        // A structure's start is kept by the chunk it began in, which for a disc holds its centre (ADR-0079).
+        List<StructurePiece> pieces = new ArrayList<>();
         for (int dx = 0; dx < Sector.CHUNKS_PER_SIDE; dx++) {
             for (int dz = 0; dz < Sector.CHUNKS_PER_SIDE; dz++) {
-                serverLevel.getChunk(sector.minChunkX() + dx, sector.minChunkZ() + dz, ChunkStatus.FULL, true);
+                ChunkAccess chunk = serverLevel.getChunk(
+                        sector.minChunkX() + dx, sector.minChunkZ() + dz, ChunkStatus.FULL, true);
+                chunk.getAllStarts().values().forEach(start -> pieces.addAll(start.getPieces()));
             }
         }
+        List<PatchMarker> found = SectorPatches.find(sector, pieces,
+                (x, z) -> serverLevel.getHeight(Heightmap.Types.WORLD_SURFACE, x, z));
         RadarChartData.get(serverLevel.getServer()).chart(ChartOwners.teamOf(owner),
-                serverLevel.dimension().identifier().toString(), sector);
+                serverLevel.dimension().identifier().toString(), sector, found);
     }
 
     /** The FE face a pole fills. Insert-only, and journalled so a pole's aborted probe leaves nothing. */

@@ -34,6 +34,16 @@ the server does not know what a player walked. A pulse charts only the area's un
 a tick, since 324 chunks generated in one tick is a stall and a charted sector is never re-sent. A
 re-scan spends its 10 MJ and changes no map, for the same reason, until the chart has a live refresh.
 
+**Markers (amended, #370).** A patch belongs to the sector holding its centre. When a team charts a
+sector, the outfield discs whose structure starts its four chunks keep are recorded for it, with the
+surface height at each centre, and the record is saved with the chart. A starting field is a jigsaw
+piece, not a disc, and gets none. A marker is drawn in the resource's Factorio `map_color`, bordered
+white so coal's black shows, and names the resource on hover, with no amount. The client keeps its
+markers in memory only. The server sends a player every marker of their team's chart their client
+lacks at each login, on joining a team and on entering a dimension, and each new one once as it is
+charted. What a player has been sent is not saved. A marker is a few bytes, so re-sending at login
+costs little, and unlike the terrain a wiped client loses none.
+
 **Considered: nearest-first long range with no nearby area.** It was the first build. Rejected: it
 spent its first minutes re-charting ground the player had just walked, so the first new terrain
 appeared after several 33 s scans.

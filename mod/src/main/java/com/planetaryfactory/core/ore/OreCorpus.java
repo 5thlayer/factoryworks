@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.ore;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,6 +72,7 @@ public final class OreCorpus {
                                 ? 0L
                                 : (long) entry.get("starting_amount").getAsDouble(),
                         entry.get("mining_time").getAsDouble(),
+                        rgb(entry.getAsJsonArray("map_color")),
                         List.copyOf(ratios),
                         new Outfield(
                                 outfield.get("base_density").getAsDouble(),
@@ -100,6 +102,21 @@ public final class OreCorpus {
         } catch (IOException broken) {
             throw new IllegalStateException("could not read " + path, broken);
         }
+    }
+
+    /** Factorio states a colour in 0..1 unless a component exceeds 1, when it is 0..255 (#370). */
+    static int rgb(JsonArray color) {
+        double scale = 255;
+        for (int i = 0; i < 3; i++) {
+            if (color.get(i).getAsDouble() > 1) {
+                scale = 1;
+            }
+        }
+        int rgb = 0;
+        for (int i = 0; i < 3; i++) {
+            rgb = rgb << 8 | (int) Math.round(color.get(i).getAsDouble() * scale);
+        }
+        return rgb;
     }
 
     public Resource resource(String name) {
@@ -149,11 +166,12 @@ public final class OreCorpus {
      * @param miningTime seconds one unit costs a drill of speed 1 -- Factorio's own
      *         {@code minable.mining_time}, and the reason a rig's rate cannot live on the rig
      *         (#193): uranium's 2 costs the same drill twice what iron's 1 does
+     * @param mapColor the RGB its patches are marked in on the map (#370)
      * @param stageRatios fractions of a block's own initial amount, richest first
      * @param outfield what the outfield amount law takes of this resource
      */
     public record Resource(String name, String factorioName, long startingAmount, double miningTime,
-            List<Double> stageRatios, Outfield outfield) {
+            int mapColor, List<Double> stageRatios, Outfield outfield) {
     }
 
     /** Factorio's per-resource autoplace arguments, and the range a spot's size factor is drawn from. */
