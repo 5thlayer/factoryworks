@@ -96,6 +96,8 @@ PUMP_TYPE = "offshore-pump"
 # `machines` for the reason the other four are (#368).
 RADAR_TYPE = "radar"
 
+POLE_TYPE = "electric-pole"
+
 # Factorio's default electric drain, from the engine rather than from any prototype: an
 # electric energy source with no `drain` set draws 1/30 of its `energy_usage` while idle.
 DEFAULT_DRAIN_FRACTION = 30
@@ -241,6 +243,7 @@ def extract_machines(dump, scope):
                     "drain_source": drain_source,
                     "burner": burner(prototype),
                     "module_slots": prototype.get("module_slots", 0),
+                    "fast_replaceable_group": prototype.get("fast_replaceable_group"),
                     "crafting_categories": prototype.get("crafting_categories")
                     or prototype.get("inputs"),
                     "fluid_boxes": [
@@ -404,6 +407,27 @@ def extract_radars(dump, scope):
     return radars
 
 
+def extract_poles(dump, scope):
+    """Electric poles. The pack's poles type their own areas; the row is here for the group."""
+    poles = []
+    for name, prototype in sorted((dump.get(POLE_TYPE) or {}).items()):
+        if name not in scope:
+            continue
+        width, height = footprint(prototype)
+        poles.append(
+            {
+                "name": name,
+                "type": POLE_TYPE,
+                "supply_area_distance": prototype.get("supply_area_distance"),
+                "maximum_wire_distance": prototype.get("maximum_wire_distance"),
+                "fast_replaceable_group": prototype.get("fast_replaceable_group"),
+                "tile_width": width,
+                "tile_height": height,
+            }
+        )
+    return poles
+
+
 def extract_generators(dump, scope):
     """Generators, and the one number of theirs Factorio does not state.
 
@@ -507,6 +531,7 @@ def main():
     generators = extract_generators(dump, scope)
     pumps = extract_pumps(dump, scope)
     radars = extract_radars(dump, scope)
+    poles = extract_poles(dump, scope)
     categories = extract_categories(dump)
 
     out = {
@@ -517,6 +542,7 @@ def main():
         "generators": generators,
         "pumps": pumps,
         "radars": radars,
+        "poles": poles,
         "categories": categories,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -575,6 +601,12 @@ def main():
             f"{(radar['energy_per_sector'] or 0) / 1e6:g} MJ/sector  "
             f"reach {radar['max_distance_of_sector_revealed']}  "
             f"{radar['tile_width']}x{radar['tile_height']}"
+        )
+    print("\npoles:")
+    for pole in poles:
+        print(
+            f"  {pole['name']:22} supply {pole['supply_area_distance']}  "
+            f"group {pole['fast_replaceable_group']}  {pole['tile_width']}x{pole['tile_height']}"
         )
     print("\ncategories with no crafting entity: "
           + ", ".join(n for n, who in categories.items() if not who))

@@ -302,6 +302,17 @@ boots a server, so it is run against a change that touched mechanism. Run it aft
 anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/` or
 `core/gametest/`.
 
+### Replace group check
+
+Which blocks may Fast Replace which is Factorio's `fast_replaceable_group` (ADR-0082), never typed.
+`scripts/factorio-machine-extract.py` writes it onto the machine and pole rows, and
+`scripts/build-replace-groups.py` joins it onto `data/pack/item-map.json` into the resource
+`ReplaceGroups` reads. A row that is `undecided`, `not_emitted` or `blocked_by` is a recorded skip.
+`tests/factorio/test_machine_extract.py` holds the groups against the dump when it is on disk.
+`tests/pack/test_replace_groups.py` runs the generator's `--check` and holds the resource to its
+own join of the two inputs. `ReplaceGroupsTest` covers the parse and the same-group rule. Run them
+after re-extracting the corpus or editing the item map.
+
 ### Placement plan check
 
 Placement is computed as a **plan** and executed separately (#297, ADR-0069): a `PlacementPlan` is

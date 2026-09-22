@@ -29,6 +29,10 @@ game -- is whether the *committed* output still says what the decisions say it s
     ADR-0041 forbids.
   - the Radar's row (#368) matches the prototype in the dump when the dump is on disk, and
     its own terms give Factorio's 33.3 s per sector at full power.
+  - every machine and pole carries Factorio's `fast_replaceable_group` (ADR-0082), matching the
+    dump when it is on disk. Without the dump, the groups' shape is held instead: the furnaces
+    share one, the Assembling Machines share one, the small and medium poles share one, and the
+    substation's is its own.
   - the widening did not perturb the twelve crafting machines. Drills, boilers and
     generators do not craft and must not appear in `machines`; a drill that leaked in would
     carry a null `crafting_speed` and the recipe converter would inherit it silently.
@@ -106,6 +110,7 @@ MACHINE_FIELDS = {
     "drain_source",
     "burner",
     "module_slots",
+    "fast_replaceable_group",
     "crafting_categories",
     "fluid_boxes",
     "tile_width",
@@ -142,6 +147,51 @@ def radar_failures(radar):
             f"radar charts a sector every {seconds:.2f} s, not Factorio's "
             f"{RADAR_SECONDS_PER_SECTOR} s"
         )
+    return failures
+
+
+REPLACE_GROUPS_SHARED = (
+    ("stone-furnace", "steel-furnace", "electric-furnace"),
+    ("assembling-machine-1", "assembling-machine-2", "assembling-machine-3"),
+    ("small-electric-pole", "medium-electric-pole"),
+)
+POLES = ("small-electric-pole", "medium-electric-pole", "big-electric-pole", "substation")
+
+
+def replace_group_failures(data):
+    rows = {m["name"]: m for m in data["machines"]}
+    poles = {p["name"]: p for p in data.get("poles") or []}
+    failures = [f"no pole row {name}" for name in POLES if name not in poles]
+    rows.update(poles)
+    failures += [
+        f"{name} carries no fast_replaceable_group key"
+        for name, row in sorted(rows.items())
+        if "fast_replaceable_group" not in row
+    ]
+    if failures:
+        return failures
+
+    if DUMP.is_file():
+        dump = json.loads(DUMP.read_text(encoding="utf-8"))
+        for name, row in sorted(rows.items()):
+            prototype = dump[row["type"]][name]
+            want = prototype.get("fast_replaceable_group")
+            if row["fast_replaceable_group"] != want:
+                failures.append(
+                    f"{name}'s fast_replaceable_group is {row['fast_replaceable_group']!r}, "
+                    f"the dump says {want!r}"
+                )
+    else:
+        print(f"note no dump at {DUMP}; the replace groups are held to their shape only")
+
+    group = {name: row["fast_replaceable_group"] for name, row in rows.items()}
+    for names in REPLACE_GROUPS_SHARED:
+        if None in {group[n] for n in names} or len({group[n] for n in names}) != 1:
+            failures.append(f"{', '.join(names)} do not share one group: "
+                            f"{[group[n] for n in names]}")
+    others = {g for n, g in group.items() if n != "substation"}
+    if group["substation"] is None or group["substation"] in others:
+        failures.append(f"the substation's group {group['substation']!r} is not its own")
     return failures
 
 
@@ -344,6 +394,8 @@ def main():
                 f"{name}'s consumption box has no minimum_temperature "
                 "-- the temperature bound is the whole contract"
             )
+
+    failures += replace_group_failures(data)
 
     for index, failure in enumerate(failures, 1):
         print(f"FAIL {index}: {failure}")

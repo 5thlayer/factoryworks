@@ -10,6 +10,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 0,
+      "fast_replaceable_group": "assembling-machine",
       "crafting_categories": [
         "crafting",
         "advanced-crafting"
@@ -28,6 +29,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 2,
+      "fast_replaceable_group": "assembling-machine",
       "crafting_categories": [
         "crafting",
         "advanced-crafting",
@@ -56,6 +58,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 4,
+      "fast_replaceable_group": "assembling-machine",
       "crafting_categories": [
         "crafting",
         "advanced-crafting",
@@ -84,6 +87,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 2,
+      "fast_replaceable_group": "centrifuge",
       "crafting_categories": [
         "centrifuging"
       ],
@@ -101,6 +105,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 3,
+      "fast_replaceable_group": "chemical-plant",
       "crafting_categories": [
         "chemistry"
       ],
@@ -135,6 +140,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 2,
+      "fast_replaceable_group": "crusher",
       "crafting_categories": [
         "crushing"
       ],
@@ -152,6 +158,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 3,
+      "fast_replaceable_group": "oil-refinery",
       "crafting_categories": [
         "oil-processing"
       ],
@@ -190,6 +197,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 2,
+      "fast_replaceable_group": "furnace",
       "crafting_categories": [
         "smelting"
       ],
@@ -213,6 +221,7 @@
         "fuel_inventory_size": 1
       },
       "module_slots": 0,
+      "fast_replaceable_group": "furnace",
       "crafting_categories": [
         "smelting"
       ],
@@ -236,6 +245,7 @@
         "fuel_inventory_size": 1
       },
       "module_slots": 0,
+      "fast_replaceable_group": "furnace",
       "crafting_categories": [
         "smelting"
       ],
@@ -253,6 +263,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 4,
+      "fast_replaceable_group": "rocket-silo",
       "crafting_categories": [
         "rocket-building"
       ],
@@ -270,6 +281,7 @@
       "drain_source": "default",
       "burner": null,
       "module_slots": 2,
+      "fast_replaceable_group": "lab",
       "crafting_categories": [
         "automation-science-pack",
         "logistic-science-pack",
@@ -551,6 +563,44 @@
       "max_distance_of_nearby_sector_revealed": 3,
       "tile_width": 3,
       "tile_height": 3
+    }
+  ],
+  "poles": [
+    {
+      "name": "big-electric-pole",
+      "type": "electric-pole",
+      "supply_area_distance": 2,
+      "maximum_wire_distance": 32,
+      "fast_replaceable_group": "big-electric-pole",
+      "tile_width": 2,
+      "tile_height": 2
+    },
+    {
+      "name": "medium-electric-pole",
+      "type": "electric-pole",
+      "supply_area_distance": 3.5,
+      "maximum_wire_distance": 9,
+      "fast_replaceable_group": "electric-pole",
+      "tile_width": 1,
+      "tile_height": 1
+    },
+    {
+      "name": "small-electric-pole",
+      "type": "electric-pole",
+      "supply_area_distance": 2.5,
+      "maximum_wire_distance": 7.5,
+      "fast_replaceable_group": "electric-pole",
+      "tile_width": 1,
+      "tile_height": 1
+    },
+    {
+      "name": "substation",
+      "type": "electric-pole",
+      "supply_area_distance": 9,
+      "maximum_wire_distance": 18,
+      "fast_replaceable_group": "substation",
+      "tile_width": 2,
+      "tile_height": 2
     }
   ],
   "categories": {
