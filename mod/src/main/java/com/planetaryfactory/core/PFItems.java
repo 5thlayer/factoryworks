@@ -2,6 +2,7 @@ package com.planetaryfactory.core;
 
 import com.planetaryfactory.core.energy.CreativeSupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.PoleTier;
+import com.planetaryfactory.core.smelting.FurnaceItem;
 import com.planetaryfactory.core.smelting.FurnaceTier;
 import com.planetaryfactory.core.energy.SupplyAreaPoleItem;
 import com.planetaryfactory.core.fluid.BarrelFluidHandler;
@@ -130,7 +131,8 @@ public final class PFItems {
         FUNCTIONAL.add(ITEMS.registerItem(CreativeSupplyAreaPoleBlock.BLOCK_NAME,
                 props -> new SupplyAreaPoleItem(PFBlocks.CREATIVE_POLE.get(), props)));
         for (FurnaceTier tier : FurnaceTier.values()) {
-            FUNCTIONAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.furnace(tier)));
+            FUNCTIONAL.add(ITEMS.registerItem(tier.blockName(),
+                    props -> new FurnaceItem(PFBlocks.furnace(tier).get(), props)));
         }
         for (RigTier tier : RigTier.values()) {
             DeferredHolder<Item, RigBlockItem> item = ITEMS.registerItem(tier.blockName(),

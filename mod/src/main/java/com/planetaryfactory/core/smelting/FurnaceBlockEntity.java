@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.smelting;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -296,6 +298,40 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
      */
     private boolean isLit() {
         return tier.burnsFuel() && fuel.isLit();
+    }
+
+    // -- fast replace ---------------------------------------------------------------------------
+
+    /** What a furnace of {@code to}'s tier takes over from this one, and the extras it cannot hold (ADR-0082). */
+    public Handover handOver(FurnaceTier to) {
+        List<ItemStack> kept = new ArrayList<>(FurnaceSlots.SIZE);
+        items.forEach(stack -> kept.add(stack.copy()));
+        List<ItemStack> extras = new ArrayList<>();
+        if (!to.burnsFuel() && !kept.get(FurnaceSlots.FUEL).isEmpty()) {
+            extras.add(kept.set(FurnaceSlots.FUEL, ItemStack.EMPTY));
+        }
+        int toDuration = recipe().map(found -> to.durationTicks(found.value().cookingTime())).orElse(0);
+        int toProgress = duration > 0 ? (int) ((long) cycle.progress() * toDuration / duration) : 0;
+        boolean joules = tier.burnsFuel() && to.burnsFuel();
+        return new Handover(kept, extras, toProgress, toDuration,
+                joules ? fuel.storedJoules() : 0L, joules ? fuel.lastLitJoules() : 0L,
+                tier.burnsFuel() ? 0L : energy.getEnergyStored());
+    }
+
+    /** Takes over a replaced furnace's state; FE past this tier's buffer is clamped away. */
+    public void receive(Handover handover) {
+        for (int slot = 0; slot < FurnaceSlots.SIZE; slot++) {
+            items.set(slot, handover.kept().get(slot).copy());
+        }
+        cycle.setProgress(handover.progress());
+        duration = handover.duration();
+        fuel.load(handover.joules(), handover.litJoules());
+        energy.setStoredFe(handover.fe());
+        setChanged();
+    }
+
+    public record Handover(List<ItemStack> kept, List<ItemStack> extras, int progress, int duration,
+                           long joules, long litJoules, long fe) {
     }
 
     // -- the energy face ------------------------------------------------------------------------

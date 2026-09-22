@@ -4,7 +4,15 @@ import javax.annotation.Nullable;
 
 import com.planetaryfactory.core.PFBlockEntities;
 
+import com.planetaryfactory.core.placement.PlacementPlan;
+import com.planetaryfactory.core.placement.Placements;
+import com.planetaryfactory.core.placement.ReplaceHandoff;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -39,6 +47,8 @@ import net.minecraft.core.Direction;
  * which is the only thing distinguishing "powered and working" from "waiting for the pole".
  */
 public class FurnaceBlock extends BaseEntityBlock {
+
+    private static final String NO_ROOM_KEY = "message.planetaryfactory.replace.no_room";
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -113,6 +123,44 @@ public class FurnaceBlock extends BaseEntityBlock {
         }
         return createTickerHelper(type, PFBlockEntities.FURNACE.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
+    }
+
+    /**
+     * A furnace of another tier in the same Replace Group swaps this one in place, executing the
+     * plan the preview drew (ADR-0082); anything else falls through to the screen.
+     */
+    @Override
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!(stack.getItem() instanceof FurnaceItem item)) {
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
+        }
+        PlacementPlan plan = Placements.planFor(item, new BlockPlaceContext(level, player, hand, stack, hit));
+        if (plan == null || !plan.isReplace()) {
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
+        }
+        // CONSUME rather than FAIL: a failed use falls through to the item, which would place beside (ADR-0082).
+        if (plan.isRefused()) {
+            if (plan.refusal() == PlacementPlan.Refusal.NO_ROOM_TO_RETURN && player instanceof ServerPlayer server) {
+                server.sendSystemMessage(Component.translatable(NO_ROOM_KEY), true);
+            }
+            return InteractionResult.CONSUME;
+        }
+        if (level.isClientSide() || !(level.getBlockEntity(pos) instanceof FurnaceBlockEntity old)) {
+            return InteractionResult.SUCCESS;
+        }
+        PlacementPlan.Placed placed = plan.blocks().getFirst();
+        FurnaceBlockEntity.Handover handover = old.handOver(item.tier());
+        old.clearContent();
+        level.setBlock(pos, placed.state(), Block.UPDATE_ALL);
+        if (level.getBlockEntity(pos) instanceof FurnaceBlockEntity fresh) {
+            fresh.receive(handover);
+        }
+        ReplaceHandoff.execute(player, hand, new ItemStack(state.getBlock()), handover.extras());
+        SoundType sound = placed.state().getSoundType(level, pos, player);
+        level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS,
+                (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

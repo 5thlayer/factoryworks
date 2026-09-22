@@ -23,8 +23,11 @@ import org.jspecify.annotations.Nullable;
  * <p><b>A multiblock is one plan and refuses whole</b> (ADR-0069). The rig's footprint is one plan
  * with one refusal, because the rig places every part in one gesture; drawing one part red and the
  * rest translucent would promise a partial placement the game never performs.
+ *
+ * <p>{@code replaces} names the placed blocks a Fast Replace swaps out, and is empty for an ordinary
+ * placement (ADR-0082).
  */
-public record PlacementPlan(List<Placed> blocks, @Nullable Refusal refusal) {
+public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nullable Refusal refusal) {
 
     /** One block the plan would put down. */
     public record Placed(BlockPos pos, BlockState state) {
@@ -55,20 +58,28 @@ public record PlacementPlan(List<Placed> blocks, @Nullable Refusal refusal) {
         BELT_CROSSING,
         /** A Pumpjack anywhere but over an oil well (ADR-0081). */
         NOT_ON_WELL,
+        /** A Fast Replace whose player has no room for what it hands back (ADR-0082). */
+        NO_ROOM_TO_RETURN,
     }
 
     public PlacementPlan {
         blocks = List.copyOf(blocks);
+        replaces = List.copyOf(replaces);
     }
 
     /** A plan that would go through. */
     public static PlacementPlan accepted(List<Placed> blocks) {
-        return new PlacementPlan(blocks, null);
+        return new PlacementPlan(blocks, List.of(), null);
     }
 
     /** A plan that would not, drawn where its blocks would have gone. */
     public static PlacementPlan refused(List<Placed> blocks, Refusal refusal) {
-        return new PlacementPlan(blocks, refusal);
+        return new PlacementPlan(blocks, List.of(), refusal);
+    }
+
+    /** A Fast Replace, or its refusal when {@code refusal} is not null. */
+    public static PlacementPlan replacing(Placed block, @Nullable Refusal refusal) {
+        return new PlacementPlan(List.of(block), List.of(block.pos()), refusal);
     }
 
     /** A one-block plan that would go through. */
@@ -83,5 +94,9 @@ public record PlacementPlan(List<Placed> blocks, @Nullable Refusal refusal) {
 
     public boolean isRefused() {
         return refusal != null;
+    }
+
+    public boolean isReplace() {
+        return !replaces.isEmpty();
     }
 }

@@ -676,8 +676,9 @@ once every planet's puzzle is done — it is not a logistic-robot analogue and i
 
 - **verdict**: `planned`
 - **notice**: a held pack block draws translucent where placing would put it and red where placing
-  would be refused (#297); the wires and supply area drawn on top of it, and fast replace, are not
-  here yet, so a pole or furnace of another tier still cannot be placed over one to upgrade it.
+  would be refused (#297), and a furnace of another tier placed over one swaps it in place, drawn
+  blue (#388); the wires and supply area drawn on top of it, and fast replace for poles and
+  Assembling Machines, are not here yet.
 - **where**: all bodies
 - **via**: `pack`
 - **owner**: #297, #298, #299
@@ -692,8 +693,12 @@ Sub-rules:
   reason is on the action bar.
 - **A held pole previews the wires it would add** — `planned`, #298.
 - **A held pole shows its supply area and those of the poles around it** — `planned`, #158.
-- **Fast replace: placing another tier over a pole or furnace swaps it in place** — `planned`,
-  #299.
+- **Fast replace: placing another furnace tier over a furnace swaps it in place** — `shipped`,
+  #388. The swap keeps the facing, the items the new tier holds, the smelt's fraction done, the
+  joules between the burners and FE up to the new buffer; the rest goes to the player, and a player
+  with no room for it is refused on the action bar.
+- **Fast replace: placing another tier over a pole or Assembling Machine swaps it in place** —
+  `planned`, #299.
 
 ### Construction robots and blueprints
 
