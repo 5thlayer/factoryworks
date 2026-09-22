@@ -9,17 +9,17 @@ PNGs nobody can re-derive.
 ADR-0041 renders a block's remaining amount as one of Factorio's eight sprite stages. Factorio's
 own thresholds are amounts -- 15000 down to 80 -- which do not port to blocks holding about a
 thousand; what ports is the *ratio set*, and `data/factorio/resource.json` carries it per resource
-as `stage_ratios`. **The speckle count of each stage is that ratio times the full stage's count**,
-so the picture is the number: a block showing a quarter of its speckles is holding about a quarter
-of its ore. That is what makes a stage unable to compete with the amount, which is ADR-0020's
-objection to worn textures and the reason ADR-0041 could amend it.
+as `stage_ratios`. Those ratios are where a block changes stage. **What each stage draws is an even
+step**: stage `i` of `n` keeps `(n - i) / n` of the full sprite's ore pixels. Drawn at the ratios
+themselves, the last four stages (8.7% down to 0.5%) were one or two pixels and the last two looked
+the same (#321). Jade shows the exact amount, so the sprite only has to be readable.
 
 The colours are the placeholder half and are chosen here, one per generated resource. The speckle *positions*
 are drawn from a fixed seed per resource and then *removed in a fixed order* as the stages fall, so
 a block thinning out looks like the same block losing ore rather than eight unrelated sprites.
 
 **Uranium wears borrowed art** (#321): Malcolm Riley's `ore_stone_soul`, CC BY 4.0 and credited in
-`NOTICE`, committed unmodified under `data/art/`. The ratio rule is the same. Its crystal pixels are
+`NOTICE`, committed unmodified under `data/art/`. The step rule is the same. Its crystal pixels are
 the speckles, and they go from the outside in, so a thinning block keeps the core of its crystal. A
 removed pixel takes the colour of the nearest stone pixel in the source.
 
@@ -148,14 +148,18 @@ def sourced_sprites(name, ratios):
         return source[near[1]][near[0]]
 
     out = []
-    for ratio in ratios:
+    for stage in range(len(ratios)):
         pixels = [[p[:] for p in row] for row in source]
-        # `ceil`, as in `sprites`.
-        count = min(len(ore), -(-int(round(len(ore) * ratio * 1000)) // 1000))
-        for x, y in ore[count:]:
+        for x, y in ore[kept(len(ore), stage, len(ratios)):]:
             pixels[y][x] = fill((x, y))
         out.append(png(pixels))
     return out
+
+
+def kept(full, stage, stages):
+    """The ore pixels stage `stage` of `stages` keeps. Never zero, so a block still holding ore
+    never draws as bare stone."""
+    return -(-full * (stages - stage) // stages)
 
 
 def shade(colour, delta):
@@ -163,7 +167,7 @@ def shade(colour, delta):
 
 
 def sprites(resource, ratios):
-    """One sprite per stage, speckled in proportion to that stage's ratio.
+    """One sprite per stage, speckled in even steps down from the full sprite.
 
     The speckle order is fixed and the stages *truncate* it, so stage `n + 1` shows a subset of
     stage `n`'s pixels: the block loses ore in place rather than being redrawn.
@@ -175,11 +179,9 @@ def sprites(resource, ratios):
     ground = [[shade(STONE, rng.randint(-9, 9)) for _ in range(16)] for _ in range(16)]
 
     out = []
-    for ratio in ratios:
+    for stage in range(len(ratios)):
         pixels = [row[:] for row in ground]
-        # `ceil`, so a stage that Factorio still renders as ore never comes out as bare stone.
-        count = min(len(speckles), -(-int(round(FULL_SPECKLES * ratio * 1000)) // 1000))
-        for x, y in speckles[:count]:
+        for x, y in speckles[:kept(FULL_SPECKLES, stage, len(ratios))]:
             pixels[y][x] = shade(SPECKLE[resource], rng.randint(-14, 14))
         out.append(png(pixels))
     return out
@@ -219,7 +221,7 @@ def main():
             print(f"FAIL: {os.path.relpath(path, ROOT)} is missing or stale")
         if stale:
             return 1
-        print(f"ok   {len(files)} ore stage sprites match the corpus's ratios")
+        print(f"ok   {len(files)} ore stage sprites match the corpus's stage count")
         return 0
 
     os.makedirs(OUT, exist_ok=True)
