@@ -59,6 +59,8 @@ final class BeltHandoffTests {
     private static final BlockPos LONG_SOURCE = new BlockPos(0, 1, 1);
     private static final BlockPos LONG_FROM = new BlockPos(1, 1, 1);
     private static final BlockPos LONG_TO = LONG_FROM.east(LONG_BELT_BLOCKS - 1);
+    // A span reaches 32 blocks at most (ADR-0078).
+    private static final BlockPos LONG_SUPPORT = LONG_FROM.east(32);
     private static final int LONG_SUPPLY = 640;
     // The belt is full by tick 683.
     private static final int LONG_BELT_SETTLED_TICKS = 1000;
@@ -150,8 +152,10 @@ final class BeltHandoffTests {
 
     // Nothing behind the far loader, so the end refuses every item and the belt backs up.
     private static void backedUpBeltHolds512(GameTestHelper helper) {
-        ChuteBlockEntity belt = placeBelt(helper, LONG_SOURCE, LONG_FROM, LONG_TO, LONG_SUPPLY,
-                BeltTier.BELT, BeltTier.BELT);
+        helper.setBlock(LONG_SUPPORT, BlockContent.CONVEYOR_SUPPORT_BLOCK.get().defaultBlockState()
+                .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
+        ChuteBlockEntity belt = placeBelt(helper, LONG_SOURCE, LONG_FROM, LONG_TO, List.of(LONG_SUPPORT),
+                LONG_SUPPLY, BeltTier.BELT, BeltTier.BELT);
 
         // Read once rather than polled: succeedWhen would pass while the belt was still filling.
         helper.startSequence().thenIdle(LONG_BELT_SETTLED_TICKS).thenExecute(() -> {
@@ -168,18 +172,29 @@ final class BeltHandoffTests {
         }).thenSucceed();
     }
 
-    /** A chest of cobblestone behind an east-facing loader, belted to a west-facing one. */
     static ChuteBlockEntity placeBelt(GameTestHelper helper, BlockPos source, BlockPos from,
             BlockPos to, int items, BeltTier loaders, BeltTier tier) {
+        return placeBelt(helper, source, from, to, List.of(), items, loaders, tier);
+    }
+
+    /** A chest of cobblestone behind an east-facing loader, belted through supports to a west-facing one. */
+    static ChuteBlockEntity placeBelt(GameTestHelper helper, BlockPos source, BlockPos from,
+            BlockPos to, List<BlockPos> supports, int items, BeltTier loaders, BeltTier tier) {
         helper.setBlock(source, Blocks.CHEST);
         helper.setBlock(from, loader(loaders, Direction.EAST));
         helper.setBlock(to, loader(loaders, Direction.WEST));
         for (int slot = 0; items > 0; slot++, items -= 64) {
             chest(helper, source).setItem(slot, new ItemStack(Items.COBBLESTONE, Math.min(items, 64)));
         }
-        ChuteBlockEntity belt = helper.getBlockEntity(from, ChuteBlockEntity.class);
-        belt.assignFromBeltItem(helper.absolutePos(to), List.of(), tier, 0);
-        return belt;
+        link(helper, from, to, supports, tier);
+        return helper.getBlockEntity(from, ChuteBlockEntity.class);
+    }
+
+    /** Lays a belt from one placed loader to another, failing the test if its shape is refused. */
+    static void link(GameTestHelper helper, BlockPos from, BlockPos to, List<BlockPos> supports, BeltTier tier) {
+        helper.getBlockEntity(from, ChuteBlockEntity.class)
+                .assignFromBeltItem(helper.absolutePos(to), supports.stream().map(helper::absolutePos).toList(), tier, 0)
+                .ifPresent(refusal -> helper.fail("the fixture's belt is refused: " + refusal, from));
     }
 
     private static BlockState loader(BeltTier tier, Direction facing) {

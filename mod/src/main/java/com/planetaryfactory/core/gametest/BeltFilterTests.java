@@ -102,8 +102,7 @@ final class BeltFilterTests {
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
         helper.setBlock(TO, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
-        helper.getBlockEntity(FROM, ChuteBlockEntity.class)
-                .assignFromBeltItem(helper.absolutePos(TO), List.of(), BeltTier.BELT, 0);
+        BeltHandoffTests.link(helper, FROM, TO, List.of(), BeltTier.BELT);
     }
 
     private static BlockHitResult hit(GameTestHelper helper, BlockPos pos) {

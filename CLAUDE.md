@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350) and `BeltSyncTests` (#351), registered only when the
+and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351) and `BeltShapeTests` (#362), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -170,7 +170,7 @@ recipe alone; making `HoldVerdict.of` always answer held turns that test red. Th
 And that the SimpleBelts fork loads and a loader, a belt and a second loader carry a chest's items
 into another chest -- at exactly 15, 30, 45 and 60 items/s at tiers 1 to 4 (#345), that a
 line of mixed tiers runs at its slowest piece, whether that is the loaders or the belt (#347), and that a
-backed-up 64-block belt holds 512 (#344). The figures are typed, `tests/factorio/test_logistics_extract.py` derives them from
+backed-up 64-block belt holds 512 (#344), across two spans, since a span reaches 32 blocks at most. The figures are typed, `tests/factorio/test_logistics_extract.py` derives them from
 Factorio's belt prototypes, and the 64-block belt stands on the generator's second template,
 `long_platform`. The belt model, the tier table and a loader's own cap are Minecraft-free and unit-tested in the fork
 (`BeltContentsTest`, `BeltTierTest`, `FlowLimitTest`, `MixedTierTest`). Typing 44 or 511 turns the matching test red, and the capacity is read once
@@ -186,6 +186,13 @@ And that a belt laid onto open ground takes each loader it places from the inven
 tier first, then the nearest higher tier, then the nearest lower one, and places and charges nothing
 when a loader is short (`BeltLoaderCostTests`, #354). Before the fix every open end got a free tier-1
 loader, which turned five of its six red. The choice is the fork's `LoaderChoiceTest`.
+And that a belt laid through the belt item in a shape outside one of ADR-0078's four bounds -- too
+steep, climbing and turning at once, turning tighter than a block, reaching past 32 -- changes no
+block, links neither loader, charges nothing and names its bound to the player (`BeltShapeTests`).
+The world is read before the click as well as after. Every other belt fixture is laid through the
+same rule and fails if it is refused; dropping the midpoint support from the 64-block belt turns it
+red. The rule, and where each bound falls, is the fork's `BeltPathTest`, and whether the preview
+turns red with it is a human check on delivery.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
 that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
 Both were red on upstream's filter, which the off hand reset.

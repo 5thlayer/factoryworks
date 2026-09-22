@@ -240,8 +240,7 @@ final class SplitterTests {
     }
 
     private static void belt(GameTestHelper helper, BlockPos from, BlockPos to, BeltTier tier) {
-        helper.getBlockEntity(from, ChuteBlockEntity.class)
-                .assignFromBeltItem(helper.absolutePos(to), List.of(), tier, 0);
+        BeltHandoffTests.link(helper, from, to, List.of(), tier);
     }
 
     private static BlockState half(BeltTier tier, SplitterBlock.Side side) {
