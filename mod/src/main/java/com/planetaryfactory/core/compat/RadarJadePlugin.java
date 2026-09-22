@@ -35,7 +35,7 @@ public class RadarJadePlugin implements IWailaPlugin {
     private static final String OWNER = "RadarOwner";
     private static final String NEXT_X = "RadarNextX";
     private static final String NEXT_Z = "RadarNextZ";
-    private static final String CURSOR = "RadarCursor";
+    private static final String NEXT_SECTOR = "RadarNextSector";
     private static final String SWEEP = "RadarSweep";
     private static final String PROGRESS = "RadarProgress";
     private static final String CHARTED = "RadarCharted";
@@ -50,7 +50,7 @@ public class RadarJadePlugin implements IWailaPlugin {
             Sector next = radar.nextSector(level);
             tag.putInt(NEXT_X, next.x());
             tag.putInt(NEXT_Z, next.z());
-            tag.putInt(CURSOR, radar.nextIndex(level));
+            tag.putInt(NEXT_SECTOR, radar.nextIndex(level));
             tag.putInt(SWEEP, radar.sweepSize());
             tag.putLong(PROGRESS, radar.progress());
             UUID owner = radar.owner();
@@ -72,7 +72,7 @@ public class RadarJadePlugin implements IWailaPlugin {
         @Override
         public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
             CompoundTag data = accessor.getServerData();
-            if (!data.contains(CURSOR)) {
+            if (!data.contains(NEXT_SECTOR)) {
                 return;
             }
             long perSector = RadarBlockEntity.spec().fePerSector();
@@ -84,7 +84,7 @@ public class RadarJadePlugin implements IWailaPlugin {
                     x, z, x * Sector.SIZE, x * Sector.SIZE + Sector.SIZE - 1,
                     z * Sector.SIZE, z * Sector.SIZE + Sector.SIZE - 1)));
             tooltip.add(Component.literal("Long-range sector %d of %d, due in %.1f s at full power".formatted(
-                    data.getIntOr(CURSOR, 0) + 1, data.getIntOr(SWEEP, 0), left / (perTick * 20.0))));
+                    data.getIntOr(NEXT_SECTOR, 0) + 1, data.getIntOr(SWEEP, 0), left / (perTick * 20.0))));
             tooltip.add(data.contains(OWNER)
                     ? Component.literal("Team chart: %d sectors here, owner %s".formatted(
                             data.getIntOr(CHARTED, 0), data.getStringOr(OWNER, "")))

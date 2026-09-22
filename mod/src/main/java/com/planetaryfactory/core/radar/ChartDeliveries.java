@@ -18,7 +18,7 @@ public final class ChartDeliveries {
     /** Nothing is recorded as sent while nothing can draw it (ADR-0079). */
     public static final boolean FTB_CHUNKS = ModList.get().isLoaded("ftbchunks");
 
-    /** A backlog sector is four chunk loads from disk on the server thread, so one load a tick. */
+    /** A backlog sector is four chunk loads from disk on the server thread, so one load a tick per player. */
     private static final int TICKS_PER_SECTOR = 4;
 
     /** FTB Chunks starts a client's map from its own login packet, and drops a chunk that beats it. */

@@ -56,5 +56,9 @@ An icon is recomputed from the pack's registry on each refresh, so removal is ex
   should survive one. Bump FTB Chunks deliberately, and check the map by hand after a bump.
 - The chart is the team's and FTB stores it per client, so the server keeps the team's charted
   sectors and each player's delivered set, and sends a player what they missed at login, throttled.
+  A sector counts as delivered when it is sent, not when the client draws it. A client that drops
+  one never gets it again: a client without FTB Chunks, a map not ready after the login grace, a
+  player who changed dimension in flight, or a wiped local map. Acknowledging each sector is the
+  fix if a human check finds holes.
 - A Radar runs only while its own chunk is loaded. That leaves an outpost's Radar to FTB Chunks'
   force-load claims, and is to be revisited with combat (#230).
