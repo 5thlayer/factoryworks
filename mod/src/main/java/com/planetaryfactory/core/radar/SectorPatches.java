@@ -1,6 +1,8 @@
 package com.planetaryfactory.core.radar;
 
 import com.mojang.serialization.Codec;
+import com.planetaryfactory.core.oil.OilField;
+import com.planetaryfactory.core.oil.OilFieldSource;
 import com.planetaryfactory.core.ore.OutfieldDisc;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,11 +13,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The outfield patches of every sector any team has charted, per dimension (#370, ADR-0079). A
- * patch belongs to the sector holding its centre, so it is marked once however many sectors its
- * disc reaches into.
+ * The outfield patches and oil fields of every sector any team has charted, per dimension (#370,
+ * ADR-0079, ADR-0081). A patch belongs to the sector holding its centre, so it is marked once however
+ * many sectors its disc reaches into.
  */
 public final class SectorPatches {
+
+    /** An oil field's marker resource: its total is the wells' summed amount, and nothing retires it. */
+    public static final String CRUDE_OIL = "crude_oil";
 
     /** The height a marker stands at, read when the sector is charted and its chunks are loaded. */
     @FunctionalInterface
@@ -35,8 +40,18 @@ public final class SectorPatches {
      * outfield disc is marked: a starting field is dealt beside spawn and needs no Radar.
      */
     public static List<PatchMarker> find(Sector sector, Collection<?> pieces, Surface surface) {
+        return find(sector, pieces, surface, (x, z) -> false);
+    }
+
+    /** As above, and each oil field centred in {@code sector}, less its wells {@code ore} turned away. */
+    public static List<PatchMarker> find(Sector sector, Collection<?> pieces, Surface surface, OilField.Ore ore) {
         List<PatchMarker> found = new ArrayList<>();
         for (Object piece : pieces) {
+            if (piece instanceof OilFieldSource field
+                    && Sector.ofBlock(field.centreX(), field.centreZ()).equals(sector)) {
+                found.add(new PatchMarker(CRUDE_OIL, field.centreX(), surface.at(field.centreX(), field.centreZ()),
+                        field.centreZ(), OilField.total(OilField.placeable(field.wells(), ore))));
+            }
             if (piece instanceof OutfieldDisc.Source source) {
                 OutfieldDisc disc = source.disc();
                 if (Sector.ofBlock(disc.centreX(), disc.centreZ()).equals(sector)) {

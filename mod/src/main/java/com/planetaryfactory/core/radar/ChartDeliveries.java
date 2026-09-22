@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.planetaryfactory.core.network.PFNetwork;
 import com.planetaryfactory.core.ore.PatchLedgerData;
+import com.planetaryfactory.core.worldgen.OilFieldPiece;
 import com.planetaryfactory.core.network.RadarChunkPacket;
 import com.planetaryfactory.core.network.RadarMarkersPacket;
 
@@ -84,14 +85,15 @@ public final class ChartDeliveries {
         return (dimension, marker) -> ledger.remaining(marker.id(dimension), marker.total());
     }
 
-    /** A structure's start is kept by the chunk it began in, which for a disc holds its centre (ADR-0079). */
+    /** A structure's start is kept by the chunk it began in, which for a disc or a field holds its centre (ADR-0079). */
     public static List<PatchMarker> patchesStartedIn(ServerLevel level, Sector sector,
             List<? extends ChunkAccess> chunks) {
         List<StructurePiece> pieces = new ArrayList<>();
         for (ChunkAccess chunk : chunks) {
             chunk.getAllStarts().values().forEach(start -> pieces.addAll(start.getPieces()));
         }
-        return SectorPatches.find(sector, pieces, (x, z) -> level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z));
+        return SectorPatches.find(sector, pieces, (x, z) -> level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z),
+                (x, z) -> OilFieldPiece.oreAt(level.structureManager(), x, z));
     }
 
     public static void onLogout(PlayerLoggedOutEvent event) {

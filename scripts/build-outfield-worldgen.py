@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Emit Terra's outfield structures and structure sets, one per resource (#320, ADR-0045).
 
+Crude oil's is one `planetaryfactory:oil_field` structure and set, placed the same way (ADR-0081).
+
 Each resource's patches are one `planetaryfactory:outfield_disc` structure, confined to Terra's
 land biome tag, and one `random_spread` structure set. Both placement numbers are read out of
 `data/factorio/resource.json`, not chosen:
@@ -40,6 +42,8 @@ RESOURCES = {
     "uranium": "uranium-ore",
 }
 
+CRUDE = ("oil_field", "crude-oil")
+
 LAND = f"#{NAMESPACE}:terra_land"
 
 # After the trees, so the ground walk passes a trunk and puts the ore under it.
@@ -52,12 +56,13 @@ def emit():
     candidate = corpus["outfield_placement"]["suggested_minimum_candidate_point_spacing"]
     separation = math.ceil(candidate / CHUNK)
     files = {}
-    for block, factorio in sorted(RESOURCES.items()):
-        name = f"outfield_{block}"
+    placed = [(f"outfield_{block}", factorio, {"type": f"{NAMESPACE}:outfield_disc", "resource": block})
+              for block, factorio in sorted(RESOURCES.items())]
+    placed.append((CRUDE[0], CRUDE[1], {"type": f"{NAMESPACE}:{CRUDE[0]}"}))
+    for name, factorio, kind in placed:
         spacing = round(by_name[factorio]["outfield"]["mean_spacing"] / CHUNK)
         files[WORLDGEN / "structure" / f"{name}.json"] = {
-            "type": f"{NAMESPACE}:outfield_disc",
-            "resource": block,
+            **kind,
             "biomes": LAND,
             "step": STEP,
             "spawn_overrides": {},

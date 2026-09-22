@@ -57,7 +57,7 @@ final class OutfieldDiscTests {
     private static final OreResource[] RESOURCES = {
         OreResource.COAL, OreResource.COPPER, OreResource.IRON, OreResource.STONE, OreResource.URANIUM};
 
-    private static final TagKey<Biome> LAND = TagKey.create(Registries.BIOME,
+    static final TagKey<Biome> LAND = TagKey.create(Registries.BIOME,
             Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_land"));
 
     private static final int HOLE = 150;
@@ -307,7 +307,7 @@ final class OutfieldDiscTests {
         helper.succeed();
     }
 
-    private static Holder<Structure> resolve(GameTestHelper helper, OreResource resource) {
+    static Holder<Structure> resolve(GameTestHelper helper, OreResource resource) {
         Identifier id = Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "outfield_" + resource.key());
         var set = helper.getLevel().registryAccess().lookupOrThrow(Registries.STRUCTURE_SET)
                 .get(ResourceKey.create(Registries.STRUCTURE_SET, id));
@@ -332,12 +332,12 @@ final class OutfieldDiscTests {
         return structure;
     }
 
-    private static StructureStart generate(ServerLevel level, Holder<Structure> structure, ChunkPos chunk) {
+    static StructureStart generate(ServerLevel level, Holder<Structure> structure, ChunkPos chunk) {
         // The flat GameTest world has no Terra biome; the tag is asserted in resolve().
         return generate(level, structure, chunk, biome -> true);
     }
 
-    private static StructureStart generate(ServerLevel level, Holder<Structure> structure, ChunkPos chunk,
+    static StructureStart generate(ServerLevel level, Holder<Structure> structure, ChunkPos chunk,
             Predicate<Holder<Biome>> validBiome) {
         var generator = level.getChunkSource().getGenerator();
         return structure.value().generate(structure, level.dimension(), level.registryAccess(), generator,
@@ -345,7 +345,7 @@ final class OutfieldDiscTests {
                 level.getSeed(), chunk, 0, level, validBiome);
     }
 
-    private static void loadChunks(ServerLevel level, BoundingBox box) {
+    static void loadChunks(ServerLevel level, BoundingBox box) {
         for (int x = SectionPos.blockToSectionCoord(box.minX()); x <= SectionPos.blockToSectionCoord(box.maxX()); x++) {
             for (int z = SectionPos.blockToSectionCoord(box.minZ()); z <= SectionPos.blockToSectionCoord(box.maxZ()); z++) {
                 level.getChunk(x, z);
@@ -353,7 +353,7 @@ final class OutfieldDiscTests {
         }
     }
 
-    private static void place(ServerLevel level, Structure structure, StructureStart start, ChunkPos origin,
+    static void place(ServerLevel level, Structure structure, StructureStart start, ChunkPos origin,
             BoundingBox box) {
         level.getChunk(origin.x(), origin.z()).setStartForStructure(structure, start);
         for (int x = SectionPos.blockToSectionCoord(box.minX()); x <= SectionPos.blockToSectionCoord(box.maxX()); x++) {
@@ -367,7 +367,7 @@ final class OutfieldDiscTests {
         }
     }
 
-    private static double distance(ChunkPos chunk) {
+    static double distance(ChunkPos chunk) {
         return Math.hypot(chunk.getMiddleBlockX(), chunk.getMiddleBlockZ());
     }
 }

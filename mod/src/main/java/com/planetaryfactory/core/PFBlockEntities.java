@@ -14,6 +14,7 @@ import com.planetaryfactory.core.mining.rig.RigItemHandler;
 import com.planetaryfactory.core.mining.rig.RigPartBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.radar.RadarBlockEntity;
+import com.planetaryfactory.core.oil.OilWellBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceItemHandler;
 import com.planetaryfactory.core.smelting.FurnaceTier;
@@ -116,6 +117,11 @@ public final class PFBlockEntities {
             RADAR = BLOCK_ENTITIES.register("radar",
                     () -> new BlockEntityType<>(RadarBlockEntity::new,
                             java.util.Set.of(PFBlocks.RADAR.get())));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OilWellBlockEntity>>
+            OIL_WELL = BLOCK_ENTITIES.register("oil_well",
+                    () -> new BlockEntityType<>(OilWellBlockEntity::new,
+                            java.util.Set.of(PFBlocks.OIL_WELL.get())));
 
     private PFBlockEntities() {
     }

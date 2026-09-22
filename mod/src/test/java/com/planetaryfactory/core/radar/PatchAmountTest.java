@@ -28,4 +28,11 @@ class PatchAmountTest {
         assertEquals("9.9k", PatchAmount.format(9_999));
         assertEquals("999k", PatchAmount.format(999_999));
     }
+
+    @Test
+    void anOilFieldReadsAsItsSummedYieldInWholePercent() {
+        assertEquals("100%", PatchAmount.yield(300_000, 300_000));
+        assertEquals("1,234%", PatchAmount.yield(3_702_999, 300_000));
+        assertEquals("0%", PatchAmount.yield(2_999, 300_000));
+    }
 }
