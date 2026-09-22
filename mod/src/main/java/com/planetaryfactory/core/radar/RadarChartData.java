@@ -26,7 +26,7 @@ public final class RadarChartData extends SavedData {
             RecordCodecBuilder.create(instance -> instance.group(
                     RadarCharts.CODEC.fieldOf("charts").forGetter(data -> data.charts),
                     // Not optionalFieldOf(name, default): every older save would share that one
-                    // mutable default, and a value equal to the default is never written.
+                    // mutable default, and a value equal to the default is never written (#369).
                     ChartDelivery.CODEC.optionalFieldOf("delivered")
                             .forGetter(data -> Optional.of(data.delivery)))
                     .apply(instance, (charts, delivery) ->
