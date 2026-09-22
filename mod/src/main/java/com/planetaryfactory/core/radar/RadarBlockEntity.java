@@ -27,13 +27,13 @@ import org.jspecify.annotations.Nullable;
 public class RadarBlockEntity extends BlockEntity {
 
     private static final RadarSpec SPEC = RadarSpec.fromCorpus();
+    private static final RadarSweep SWEEP = RadarSweep.of(SPEC.nearReach(), SPEC.reach());
 
     private final RadarEnergy energy = new RadarEnergy(SPEC);
     private final LongSnapshotJournal journal =
             new LongSnapshotJournal(energy::buffered, energy::setBuffered, this::setChanged);
-    /** A pulse's uncharted sectors, charted one a tick so a pulse never generates 256 chunks at once (ADR-0079). */
+    /** A pulse's uncharted sectors, charted one a tick so a pulse never generates 324 chunks at once (ADR-0079). */
     private final Queue<Sector> pulse = new ArrayDeque<>();
-    private @Nullable RadarSweep sweep;
     private int cursor;
     private @Nullable UUID owner;
 
@@ -59,23 +59,20 @@ public class RadarBlockEntity extends BlockEntity {
     }
 
     public int sweepSize() {
-        return sweep().size();
+        return SWEEP.size();
     }
 
     /** Where in the long range the next sector falls, which is unexplored ground while any is left. */
     public int nextIndex(ServerLevel serverLevel) {
-        return sweep().pick(charted(serverLevel), cursor);
+        return SWEEP.pick(origin(), charted(serverLevel), cursor);
     }
 
     public Sector nextSector(ServerLevel serverLevel) {
-        return sweep().sectorAt(nextIndex(serverLevel));
+        return SWEEP.sectorAt(origin(), nextIndex(serverLevel));
     }
 
-    private RadarSweep sweep() {
-        if (sweep == null) {
-            sweep = RadarSweep.around(worldPosition.getX(), worldPosition.getZ(), SPEC.nearbySpan(), SPEC.reach());
-        }
-        return sweep;
+    private Sector origin() {
+        return Sector.ofBlock(worldPosition.getX(), worldPosition.getZ());
     }
 
     private Predicate<Sector> charted(ServerLevel serverLevel) {
@@ -96,16 +93,16 @@ public class RadarBlockEntity extends BlockEntity {
         RadarEnergy.Scans scans = energy.tick();
         if (scans.nearby() && pulse.isEmpty() && owner != null) {
             Predicate<Sector> charted = charted(serverLevel);
-            sweep().nearby().stream().filter(charted.negate()).forEach(pulse::add);
+            SWEEP.nearby(origin()).stream().filter(charted.negate()).forEach(pulse::add);
         }
         if (!pulse.isEmpty()) {
             chart(serverLevel, pulse.poll());
         }
         if (scans.sector()) {
             int index = nextIndex(serverLevel);
-            chart(serverLevel, sweep().sectorAt(index));
+            chart(serverLevel, SWEEP.sectorAt(origin(), index));
             if (index == cursor) {
-                cursor = sweep().next(cursor);
+                cursor = SWEEP.next(cursor);
             }
         }
         if (energy.progress() != before) {
@@ -168,7 +165,7 @@ public class RadarBlockEntity extends BlockEntity {
         energy.setBuffered(input.getLongOr("Energy", 0L));
         energy.setProgress(input.getLongOr("Progress", 0L));
         energy.setNearbyProgress(input.getLongOr("NearbyProgress", 0L));
-        cursor = Math.max(0, input.getIntOr("Cursor", 0));
+        cursor = SWEEP.resume(input.getIntOr("Cursor", 0));
         owner = input.read("Owner", UUIDUtil.CODEC).orElse(null);
     }
 

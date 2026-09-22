@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  */
 class RadarEnergyTest {
 
-    private static final RadarSpec SPEC = new RadarSpec(150L, 100_000L, 2_500L, 8, 14);
+    private static final RadarSpec SPEC = new RadarSpec(150L, 100_000L, 2_500L, 4, 14);
 
     /** Fills the buffer as a pole would, then ticks; returns the tick the first sector fell due on. */
     private static int ticksToFirstSector(RadarEnergy energy, long fedPerTick) {

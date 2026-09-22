@@ -652,12 +652,11 @@ row against the dump when it is on disk and re-derives 33.3 s per sector;
 `tests/pack/test_radar_assets.py` runs `scripts/build-radar-assets.py --check` and holds the mod's
 resource against the corpus. The rules are Minecraft-free under
 `mod/src/test/java/com/planetaryfactory/core/radar/`: the draw, the 10 MJ sector and the 250 kJ
-nearby pulse counted from the same draw (`RadarSpecTest`, `RadarEnergyTest`), the 8x8 nearby area
-centred on the Radar's block and the long range's clockwise rings, unexplored first
-(`RadarSweepTest`), the 3x3x3
+nearby pulse counted from the same draw (`RadarSpecTest`, `RadarEnergyTest`), the 9x9 nearby area
+and the long range's clockwise rings, unexplored first (`RadarSweepTest`), the 3x3x3
 (`RadarFootprintTest`) and the chart's round trip (`RadarChartsTest`). `gametest/RadarTests` is
-the world half: a pole-fed Radar has charted exactly its 8x8 by tick 100, nothing more at 640, and
-one fourth-ring sector by 720, and a starved one charts nothing; dropping the pulse turns
+the world half: a pole-fed Radar has charted exactly its 9x9 by tick 100, nothing more at 640, and
+the fifth ring's top-left sector by 720, and a starved one charts nothing; dropping the pulse turns
 it red; its placement and break are in `PlacementPlanTests` and
 `FootprintBreakTests`. Without FTB Teams on the classpath, as in the GameTest run, a player is their
 own team. What each player's map is sent (#369) is `ChartDeliveryTest`: at login, on joining a team
