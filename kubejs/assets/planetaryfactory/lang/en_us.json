@@ -113,6 +113,7 @@
   "tooltip.planetaryfactory.pole.jade.consumption": "Consumption: %s / %s FE/t",
   "tooltip.planetaryfactory.pole.jade.machines": "Machines in area: %s",
   "tooltip.planetaryfactory.pole.jade.poles": "Poles in network: %s",
+  "config.jade.plugin_planetaryfactory.radar_debug": "Radar charting (dev)",
   "tooltip.planetaryfactory.pole.jade.production": "Production: %s FE/t",
   "tooltip.planetaryfactory.pole.jade.satisfaction": "Satisfaction: %s",
   "tooltip.planetaryfactory.pole.wireless": "Powers machines directly \u2014 no wires needed",

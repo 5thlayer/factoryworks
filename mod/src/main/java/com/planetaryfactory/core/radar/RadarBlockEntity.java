@@ -49,13 +49,29 @@ public class RadarBlockEntity extends BlockEntity {
         return energy.progress();
     }
 
+    public static RadarSpec spec() {
+        return SPEC;
+    }
+
+    public int cursor() {
+        return cursor;
+    }
+
+    public int sweepSize() {
+        return SWEEP.size();
+    }
+
+    public Sector nextSector() {
+        return SWEEP.sectorAt(Sector.ofBlock(worldPosition.getX(), worldPosition.getZ()), cursor);
+    }
+
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
         long before = energy.progress();
         if (energy.tick() > 0) {
-            chart(serverLevel, SWEEP.sectorAt(Sector.ofBlock(worldPosition.getX(), worldPosition.getZ()), cursor));
+            chart(serverLevel, nextSector());
             cursor = SWEEP.next(cursor);
         }
         if (energy.progress() != before) {
