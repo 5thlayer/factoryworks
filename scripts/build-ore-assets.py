@@ -8,7 +8,7 @@ at the top of this file, argued once and applied five times.
 
 Three decisions live here, each argued in ADR-0041:
 
-  - **Each block drops GregTech's raw ore.** The block changes and the item does not, which is
+  - **Each block drops the raw ore the item map names.** The block changes and the item does not, which is
     what keeps `data/pack/item-map.json`, every generated recipe, ADR-0032's 1:1 chain and
     ADR-0034's sweep untouched. The loot table is the non-player path only -- an explosion, a
     creative break -- because a player's break is a *draw* and the mod pays that out itself,
@@ -49,7 +49,7 @@ ORES = {
     "iron": {"drop": "minecraft:raw_iron", "name": "Iron Ore Patch"},
     "copper": {"drop": "minecraft:raw_copper", "name": "Copper Ore Patch"},
     "coal": {"drop": "minecraft:coal", "name": "Coal Patch"},
-    "uranium": {"drop": "gtceu:raw_uranium", "name": "Uranium Ore Patch"},
+    "uranium": {"drop": "ftbmaterials:uranium_raw_ore", "name": "Uranium Ore Patch"},
     "stone": {"drop": "minecraft:cobblestone", "name": "Stone Patch"},
 }
 

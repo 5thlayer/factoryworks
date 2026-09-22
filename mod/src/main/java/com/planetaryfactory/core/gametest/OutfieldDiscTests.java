@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
@@ -46,7 +47,7 @@ final class OutfieldDiscTests {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private static final OreResource[] RESOURCES = {
-        OreResource.COAL, OreResource.COPPER, OreResource.IRON, OreResource.STONE};
+        OreResource.COAL, OreResource.COPPER, OreResource.IRON, OreResource.STONE, OreResource.URANIUM};
 
     private static final TagKey<Biome> LAND = TagKey.create(Registries.BIOME,
             Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, "terra_land"));
@@ -157,6 +158,10 @@ final class OutfieldDiscTests {
         OreDelta.Draw draw = OreMining.draw(level, (OreBlock) ore.getBlock(), farthestOre);
         if (amount <= 0 || draw.paid() != 1 || draw.remaining() != amount - 1) {
             helper.fail(resource.key() + " at " + farthestOre + " drew " + draw + " from a disc holding " + amount + " a block");
+            return;
+        }
+        if (!BuiltInRegistries.ITEM.containsKey(Identifier.parse(resource.drop()))) {
+            helper.fail(resource.key() + " pays out " + resource.drop() + ", which no mod registers, so every draw pays air");
             return;
         }
         LOGGER.info("OUTFIELD {} disc at {}, {}: size {}, {} blocks, law radius {}, reaches {}, {} a block",

@@ -24,7 +24,7 @@ PF_WORLDGEN = os.path.join(
     ROOT, "mod", "src", "main", "java", "com", "planetaryfactory", "core", "worldgen", "PFWorldgen.java"
 )
 
-RESOURCES = {"coal": "coal", "copper": "copper-ore", "iron": "iron-ore", "stone": "stone"}
+RESOURCES = {"coal": "coal", "copper": "copper-ore", "iron": "iron-ore", "stone": "stone", "uranium": "uranium-ore"}
 CHUNK = 16
 
 
@@ -53,7 +53,7 @@ def main():
     sets = sorted(name for name in os.listdir(os.path.join(WORLDGEN, "structure_set")) if name.startswith("outfield_"))
     expected = sorted(f"outfield_{block}.json" for block in RESOURCES)
     if sets != expected:
-        failures.append(f"outfield structure sets are {sets}, not one per resource {expected} (uranium waits on #321)")
+        failures.append(f"outfield structure sets are {sets}, not one per resource {expected}")
 
     salts = set()
     for block, factorio in RESOURCES.items():

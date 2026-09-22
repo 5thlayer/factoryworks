@@ -18,6 +18,9 @@ places one ore has to be named in, and the failures are all quiet:
   - **The tag GregTech actually scans.** `MinerLogic` reads NeoForge's `Tags.Blocks.ORES`, so
     `c:ores` is what decides whether rung 1's drill can see a pack-authored ore block at all. ADR-0041
     names this as the risk that gates the whole body, and it is one line of JSON to get wrong.
+  - **A drop that names nothing.** `OreMining.drop` turns an id no mod registers into air rather
+    than a throw, so the draw is spent and the hand stays empty. Each drop is resolved against the
+    installed jars' lang keys, vanilla's against the client jar when it is on this machine (#321).
   - **A generated file edited by hand.** Both scripts' `--check` runs here, so a sprite or a
     blockstate edited in place is a failure rather than a thing that survives until the next
     regeneration silently reverts it.
@@ -25,9 +28,11 @@ places one ore has to be named in, and the failures are all quiet:
 Usage: tests/pack/test_ore_assets.py
 """
 import json
+import os
 import re
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -40,6 +45,10 @@ DATA = ROOT / "kubejs/data"
 # The tag GregTech's Miner scans. Not decoration: `MinerLogic` reads `Tags.Blocks.ORES`, which is
 # this file, and a block missing from it is invisible to every drill on the ladder.
 ORES_TAG = DATA / "c/tags/block/ores.json"
+
+MODS = ROOT / "mods"
+VANILLA = Path(os.environ.get(
+    "PF_CLIENT_JAR", os.path.expanduser("~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
 
 
 def java_resources(source):
@@ -60,6 +69,33 @@ def script_drops():
     }
 
 
+def lang_keys(namespace):
+    """The item and block lang keys an installed jar ships for one namespace, or None if none does."""
+    jars = [VANILLA] if namespace == "minecraft" else sorted(MODS.glob("*.jar"))
+    name = f"assets/{namespace}/lang/en_us.json"
+    keys = None
+    for jar in jars:
+        if not jar.is_file():
+            continue
+        with zipfile.ZipFile(jar) as archive:
+            if name in archive.namelist():
+                keys = (keys or set()) | set(json.loads(archive.read(name)))
+    return keys
+
+
+def unresolved_drop(drop):
+    """Why a drop names nothing, or None when it resolves or cannot be asked on this machine."""
+    namespace, _, path = drop.partition(":")
+    keys = lang_keys(namespace)
+    if keys is None:
+        if namespace == "minecraft":
+            return None
+        return f"no installed jar ships the {namespace} namespace"
+    if f"item.{namespace}.{path}" in keys or f"block.{namespace}.{path}" in keys:
+        return None
+    return f"{namespace}'s jar registers no {path}"
+
+
 def main():
     failures = []
     slice_ = json.loads(SLICE.read_text())
@@ -77,6 +113,11 @@ def main():
                 failures.append(
                     f"{key} drops {java.get(key)} by hand and {drops.get(key)} to an explosion"
                 )
+
+    for key, drop in sorted(java.items()):
+        reason = unresolved_drop(drop)
+        if reason:
+            failures.append(f"{key} pays out {drop}, and {reason}: every draw would pay air")
 
     stages = max((len(entry["stage_ratios"]) for entry in corpus.values()), default=0)
     if stages < 2:
@@ -146,7 +187,7 @@ def main():
         print(f"FAIL {index}: {failure}")
     if failures:
         return 1
-    print(f"ok   {len(java)} ore blocks x {stages} stages, drops agree, all in c:ores")
+    print(f"ok   {len(java)} ore blocks x {stages} stages, drops agree and resolve, all in c:ores")
     return 0
 
 
