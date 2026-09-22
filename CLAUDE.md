@@ -245,6 +245,9 @@ keeps loading and only what was already past the hand reaches the end, and that 
 takes four and then lets the belt run on to its end, losing nothing (`BeltHandTests`). A hand that never
 takes turns both red, and one that re-arms after a refusal turns the second red. The point itself is the
 fork's `BeltContentsTest`; the client's ray and how the gesture feels are a human check on delivery.
+A belt whose far inventory is full stops its last item inside the far loader's back plate, where no
+aim reaches, so a hand on that belt holds its end instead (#360): held a second on its last block, it
+takes that item and 15 items/s. The old jar turns it red.
 And that a belt moving items sends no block update, whether or not it is also loading and delivering,
 and that a belt saved and loaded holds every entry, by id, item and position (`BeltSyncTests`). A
 client learns what a belt gains and loses from the fork's own payload and advances it itself. No
