@@ -46,6 +46,7 @@ PF_ITEMS = MOD / "PFItems.java"
 POLE_TIER = MOD / "energy/PoleTier.java"
 FURNACE_TIER = MOD / "smelting/FurnaceTier.java"
 RIG_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/mining/rig/RigTier.java"
+ASSEMBLING_TIER = MOD / "machine/AssemblingTier.java"
 
 # The pack's own smelting type (#155). Its ingredient carries a count, which vanilla's cannot,
 # and it is the only type the three furnace tiers read.
@@ -77,7 +78,7 @@ def mod_registered_blocks():
     Reading only the startup scripts would now report four registered blocks as unregistered, and
     the natural "fix" for that is to weaken the check, which is the one thing it must not do.
 
-    The poles, the furnaces and the mining rigs derive their ids from their tier enums, so they are
+    The poles, the furnaces, the mining rigs and the Assembling Machines derive their ids from their tier enums, so they are
     read the same way rather than typed out: a fifth pole tier, a fourth furnace or a third rung of
     the drill ladder is then registered here without this file being edited.
 
@@ -96,6 +97,8 @@ def mod_registered_blocks():
     rigs = re.findall(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]",
                       RIG_TIER.read_text(encoding="utf-8"), re.MULTILINE)
     blocks |= {f"{tier.lower()}_mining_drill" for tier in rigs}
+    blocks |= set(re.findall(r'^\s{4}[A-Z]+\("([a-z0-9_]+)"',
+                             ASSEMBLING_TIER.read_text(encoding="utf-8"), re.MULTILINE))
     return {f"planetaryfactory:{name}" for name in blocks}
 
 

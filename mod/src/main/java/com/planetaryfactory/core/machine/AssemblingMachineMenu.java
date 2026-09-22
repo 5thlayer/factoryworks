@@ -122,6 +122,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
+    public BlockPos pos() {
+        return pos;
+    }
+
     /** Server side, over the machine's own inventory and the recipes the server has loaded. */
     public static AssemblingMachineMenu open(int containerId, Inventory playerInventory,
             AssemblingMachineBlockEntity machine) {
@@ -244,7 +248,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         if (machine == null) {
             return HoldVerdict.NOT_ASSEMBLING;
         }
-        HoldVerdict verdict = verdict((ServerLevel) machine.getLevel(), id);
+        HoldVerdict verdict = verdict((ServerLevel) machine.getLevel(), machine.tier(), id);
         if (verdict.held()) {
             machine.setHeldRecipe(HeldRecipe.of(id), player);
         } else if (player instanceof ServerPlayer server) {
@@ -262,11 +266,11 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                 .orElse(Component.literal(id));
     }
 
-    /** What {@link #request} would answer, asked of the server's recipes and research. */
-    public static HoldVerdict verdict(ServerLevel level, String id) {
+    /** What {@link #request} would answer on {@code tier}, asked of the server's recipes and research. */
+    public static HoldVerdict verdict(ServerLevel level, AssemblingTier tier, String id) {
         Optional<RecipeHolder<AssemblingRecipe>> recipe = AssemblingMachineRecipes.resolve(level, HeldRecipe.of(id));
         return HoldVerdict.of(recipe.isPresent(),
-                recipe.map(holder -> AssemblingMachineSpec.crafts(holder.value().category())).orElse(false),
+                recipe.map(holder -> tier.crafts(holder.value().category())).orElse(false),
                 AssemblingMachineRecipes.isLocked(id));
     }
 

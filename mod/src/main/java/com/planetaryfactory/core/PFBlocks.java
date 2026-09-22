@@ -3,6 +3,7 @@ package com.planetaryfactory.core;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.machine.AssemblingMachineBlock;
 import com.planetaryfactory.core.machine.AssemblingMachineFootprint;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.machine.footprint.FootprintPartBlock;
 import com.planetaryfactory.core.mining.rig.RigBlock;
@@ -80,21 +81,27 @@ public final class PFBlocks {
             BLOCKS.registerBlock("boiler", BoilerBlock::new);
 
     /**
-     * The Assembling Machine (#326, ADR-0071): an Oritech machine anchor and the invisible parts its
-     * footprint is made of. One block, not a ladder -- whether tiers 2 and 3 are blocks at all is
-     * #295's.
+     * The Assembling Machine ladder (#326, #295, ADR-0071, ADR-0075): per tier, an Oritech machine
+     * anchor and the invisible parts its footprint is made of, one part block per tier so a part
+     * tears down its own tier's anchor.
      */
-    public static final DeferredHolder<Block, AssemblingMachineBlock> ASSEMBLING_MACHINE =
-            BLOCKS.registerBlock("assembling_machine", props -> new AssemblingMachineBlock(machineProperties(props)));
+    private static final Map<AssemblingTier, DeferredHolder<Block, AssemblingMachineBlock>> ASSEMBLING_MACHINES =
+            new EnumMap<>(AssemblingTier.class);
+    private static final Map<AssemblingTier, FootprintMachine> ASSEMBLING_FOOTPRINTS =
+            new EnumMap<>(AssemblingTier.class);
 
-    public static final DeferredHolder<Block, FootprintPartBlock> ASSEMBLING_MACHINE_PART =
-            BLOCKS.registerBlock("assembling_machine_part",
+    static {
+        for (AssemblingTier tier : AssemblingTier.values()) {
+            DeferredHolder<Block, AssemblingMachineBlock> anchor = BLOCKS.registerBlock(tier.blockName(),
+                    props -> new AssemblingMachineBlock(tier, machineProperties(props)));
+            DeferredHolder<Block, FootprintPartBlock> part = BLOCKS.registerBlock(tier.partBlockName(),
                     props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
-                            () -> PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT));
-
-    public static final FootprintMachine ASSEMBLING_MACHINE_FOOTPRINT = new FootprintMachine(
-            AssemblingMachineFootprint.FOOTPRINT, ASSEMBLING_MACHINE, ASSEMBLING_MACHINE_PART,
-            () -> PFItems.ASSEMBLING_MACHINE.get());
+                            () -> PFBlocks.assemblingFootprint(tier)));
+            ASSEMBLING_MACHINES.put(tier, anchor);
+            ASSEMBLING_FOOTPRINTS.put(tier, new FootprintMachine(AssemblingMachineFootprint.FOOTPRINT,
+                    anchor, part, () -> PFItems.assemblingMachine(tier).get()));
+        }
+    }
 
     /** Terra's Steam Engine (ADR-0077): Oritech's engine entity, on the Assembling Machine's footprint seam. */
     public static final DeferredHolder<Block, SteamEngineBlock> STEAM_ENGINE =
@@ -256,6 +263,20 @@ public final class PFBlocks {
     public static Set<Block> poleBlocks() {
         return Stream.concat(POLES.values().stream(), Stream.of(CREATIVE_POLE))
                 .map(DeferredHolder::get).collect(Collectors.toUnmodifiableSet());
+    }
+
+    public static DeferredHolder<Block, AssemblingMachineBlock> assemblingMachine(AssemblingTier tier) {
+        return ASSEMBLING_MACHINES.get(tier);
+    }
+
+    public static FootprintMachine assemblingFootprint(AssemblingTier tier) {
+        return ASSEMBLING_FOOTPRINTS.get(tier);
+    }
+
+    /** The three anchors, for the block entity type that serves all of them. */
+    public static Set<Block> assemblingMachineBlocks() {
+        return ASSEMBLING_MACHINES.values().stream().map(DeferredHolder::get)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     public static DeferredHolder<Block, FurnaceBlock> furnace(FurnaceTier tier) {

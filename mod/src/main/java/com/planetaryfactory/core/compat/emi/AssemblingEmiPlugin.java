@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.compat.emi;
 
 import com.planetaryfactory.core.PFItems;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.PFMenus;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
 import com.planetaryfactory.core.recipes.PFRecipes;
@@ -27,12 +28,14 @@ public final class AssemblingEmiPlugin implements EmiPlugin {
 
     public static final EmiRecipeCategory ASSEMBLING = new EmiRecipeCategory(
             Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, PFRecipes.ASSEMBLING),
-            EmiStack.of(PFItems.ASSEMBLING_MACHINE.get()));
+            EmiStack.of(PFItems.assemblingMachine(AssemblingTier.ONE).get()));
 
     @Override
     public void register(EmiRegistry registry) {
         registry.addCategory(ASSEMBLING);
-        registry.addWorkstation(ASSEMBLING, EmiStack.of(PFItems.ASSEMBLING_MACHINE.get()));
+        for (AssemblingTier tier : AssemblingTier.values()) {
+            registry.addWorkstation(ASSEMBLING, EmiStack.of(PFItems.assemblingMachine(tier).get()));
+        }
         registry.addRecipeHandler(PFMenus.ASSEMBLING_MACHINE.get(), new AssemblingMachineEmiHandler());
         registry.getRecipeMap()
                 .byType(PFRecipes.ASSEMBLING_TYPE.get())

@@ -79,7 +79,7 @@ FACES = {
     "oil_well": (None, ()),
 }
 
-# The three ladders, against the enum every one of their blocks has to be walked from. A face is
+# The ladders, against the enum every one of their blocks has to be walked from. A face is
 # registered per *block*, so a ladder whose loop names one tier ships the other two inert -- and
 # that is not visible in the capability assertion above, which only asks that the face is spelled
 # somewhere in the method. The pack has shipped a ladder tier with no face exactly once, and it
@@ -87,6 +87,7 @@ FACES = {
 LADDERS = {
     "registerFurnaceCapabilities": "FurnaceTier.values()",
     "registerRigCapabilities": "RigTier.values()",
+    "registerAssemblingMachineCapabilities": "AssemblingTier.values()",
 }
 
 # Blocks that get a face without being a row in any ladder enum. FACES above is keyed by block

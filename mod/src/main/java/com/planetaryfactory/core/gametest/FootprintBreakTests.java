@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.planetaryfactory.core.PFBlocks;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 
 import net.minecraft.core.BlockPos;
@@ -38,7 +39,9 @@ final class FootprintBreakTests {
 
     static void register(PFGameTests.Registrar tests) {
         Map<String, FootprintMachine> machines = Map.of(
-                "assembling_machine", PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT,
+                "assembling_machine", PFBlocks.assemblingFootprint(AssemblingTier.ONE),
+                "assembling_machine_2", PFBlocks.assemblingFootprint(AssemblingTier.TWO),
+                "assembling_machine_3", PFBlocks.assemblingFootprint(AssemblingTier.THREE),
                 "steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 "radar", PFBlocks.RADAR_FOOTPRINT,
                 "pumpjack", PFBlocks.PUMPJACK_FOOTPRINT);

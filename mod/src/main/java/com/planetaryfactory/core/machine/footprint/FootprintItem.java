@@ -25,7 +25,12 @@ public class FootprintItem extends OritechGeoItem implements PlansPlacement {
     private final FootprintMachine machine;
 
     public FootprintItem(Properties properties, FootprintMachine machine, float scale, String model) {
-        super(machine.anchor().get(), properties, scale, model, ColorableMachine.ColorVariant.ORANGE);
+        this(properties, machine, scale, model, ColorableMachine.ColorVariant.ORANGE);
+    }
+
+    public FootprintItem(Properties properties, FootprintMachine machine, float scale, String model,
+                         ColorableMachine.ColorVariant color) {
+        super(machine.anchor().get(), properties, scale, model, color);
         this.machine = machine;
     }
 

@@ -3,7 +3,9 @@ package com.planetaryfactory.core.machine.client;
 import java.util.List;
 import java.util.Optional;
 
-import com.planetaryfactory.core.PFItems;
+import com.planetaryfactory.core.PFBlocks;
+import com.planetaryfactory.core.machine.AssemblingMachineBlock;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.compat.emi.HeldRecipeTooltip;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
@@ -87,13 +90,19 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
 
     private static final boolean EMI = ModList.get().isLoaded("emi");
 
+    private final Component name;
+    private final ItemStack icon;
+
     public AssemblingMachineScreen(AssemblingMachineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title, 176, AssemblingMachineMenu.INVENTORY_Y + 83);
         inventoryLabelY = AssemblingMachineMenu.INVENTORY_Y - 11;
+        Block block = playerInventory.player.level().getBlockState(menu.pos()).getBlock();
+        if (!(block instanceof AssemblingMachineBlock)) {
+            block = PFBlocks.assemblingMachine(AssemblingTier.ONE).get();
+        }
+        name = block.getName();
+        icon = new ItemStack(block.asItem());
     }
-
-    private static final Component NAME = Component.translatable("block.planetaryfactory.assembling_machine");
-    private static final ItemStack ICON = new ItemStack(PFItems.ASSEMBLING_MACHINE.get());
 
     /**
      * Oritech's header, drawn as {@code OritechWidgetScreen.addTitle} lays it out: the machine's
@@ -102,11 +111,11 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
      * state: a pose-scaled item flickers in 26.1's GUI renderer.
      */
     private void extractTab(GuiGraphicsExtractor graphics) {
-        int labelWidth = font.width(NAME) + 10;
+        int labelWidth = font.width(name) + 10;
         // Oritech's combined width leaves out the label's six-pixel gap, so its right-aligned
         // header ends six pixels past the panel -- into EMI's column. This one counts the gap.
         int combined = ICON_SIZE + 2 + 6 + labelWidth;
-        int x = leftPos + (NAME.getString().length() > 15
+        int x = leftPos + (name.getString().length() > 15
                 ? imageWidth - combined
                 : (imageWidth - combined) * 65 / 100);
         int y = topPos + TITLE_Y;
@@ -114,10 +123,10 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         int labelX = x + ICON_SIZE + 2 + 6;
         int labelY = y + 9;
         OritechSurface.PANEL.render(graphics, labelX - 10, labelY - 5, labelWidth + 10, LABEL_HEIGHT + 6);
-        graphics.text(font, NAME, labelX, labelY, TEXT, false);
+        graphics.text(font, name, labelX, labelY, TEXT, false);
 
         OritechSurface.PANEL.render(graphics, x - 2, y, ICON_SIZE + 4, ICON_SIZE + 3);
-        graphics.submitPictureInPictureRenderState(new LargeItemRenderState(ICON.copy(), x, y,
+        graphics.submitPictureInPictureRenderState(new LargeItemRenderState(icon.copy(), x, y,
                 x + ICON_SIZE, y + ICON_SIZE, ICON_SIZE, new Matrix3x2f(graphics.pose()),
                 graphics.peekScissorStack()));
     }

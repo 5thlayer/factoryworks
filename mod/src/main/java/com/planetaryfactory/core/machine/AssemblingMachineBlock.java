@@ -11,11 +11,18 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** The Assembling Machine's anchor block (#326, ADR-0071), holding {@link AssemblingMachineBlockEntity}. */
+/** An Assembling Machine tier's anchor block (#326, ADR-0071), holding {@link AssemblingMachineBlockEntity}. */
 public class AssemblingMachineBlock extends FootprintAnchorBlock {
 
-    public AssemblingMachineBlock(Properties properties) {
-        super(properties, () -> PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT);
+    private final AssemblingTier tier;
+
+    public AssemblingMachineBlock(AssemblingTier tier, Properties properties) {
+        super(properties, () -> PFBlocks.assemblingFootprint(tier));
+        this.tier = tier;
+    }
+
+    public AssemblingTier tier() {
+        return tier;
     }
 
     /** Oritech's {@code MachineBlock.newBlockEntity} constructs this class by reflection. */
