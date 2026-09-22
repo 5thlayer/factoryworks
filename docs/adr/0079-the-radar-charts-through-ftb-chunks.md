@@ -46,8 +46,8 @@ that their client lacks, at each login, on joining a team and on entering a dime
 one as it is charted or walked. What a player has been sent is not saved. A marker is a few bytes,
 so re-sending at login costs little, and unlike the terrain a wiped client loses none.
 
-**Amounts (amended, #370, #371).** A marker carries what is left in its patch, drawn under the icon
-on the big map and in the hover, and not on the minimap. It is a snapshot, as Factorio's map label
+**Amounts (amended, #370, #371).** A marker carries what is left in its patch, shown in its hover
+and not drawn on either map, which a label per patch would clutter. It is a snapshot, as Factorio's map label
 is: it changes when the patch is charted, re-scanned or walked past again, not as it is mined. A
 Radar's nearby pulse and its long-range re-scan refresh the amounts of patches already charted,
 which costs no chunk load. When a patch's last block goes, every map holding its marker is sent its

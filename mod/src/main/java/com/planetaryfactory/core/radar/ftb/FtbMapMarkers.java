@@ -9,14 +9,10 @@ import com.planetaryfactory.core.radar.client.RadarMapClient;
 import dev.ftb.mods.ftbchunks.api.FTBChunksAPI;
 import dev.ftb.mods.ftbchunks.api.client.event.AddMapIconEvent;
 import dev.ftb.mods.ftbchunks.api.client.icon.MapIcon;
-import dev.ftb.mods.ftbchunks.api.client.icon.MapType;
 import dev.ftb.mods.ftbchunks.api.neoforge.FTBChunksClientEvent;
 import dev.ftb.mods.ftblibrary.icon.ItemIcon;
 import dev.ftb.mods.ftblibrary.util.TooltipList;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -64,22 +60,6 @@ public final class FtbMapMarkers implements ChartMarkerRenderer {
         @Override
         public void addTooltip(TooltipList list) {
             list.add(Component.translatable("map.planetaryfactory.patch.amount", name, amount));
-        }
-
-        /** Factorio labels a patch's amount on the map; the minimap is too small to carry it. */
-        @Override
-        public void draw(MapType mapType, GuiGraphicsExtractor graphics, int x, int y, int w, int h,
-                boolean outsideVisibleArea, int alpha) {
-            super.draw(mapType, graphics, x, y, w, h, outsideVisibleArea, alpha);
-            if (!mapType.isLargeMap() || outsideVisibleArea) {
-                return;
-            }
-            Font font = Minecraft.getInstance().font;
-            graphics.pose().pushMatrix();
-            graphics.pose().translate(x + w / 2f, y + h);
-            graphics.pose().scale(0.5f, 0.5f);
-            graphics.text(font, amount, -font.width(amount) / 2, 1, 0xFFFFFFFF, true);
-            graphics.pose().popMatrix();
         }
     }
 }

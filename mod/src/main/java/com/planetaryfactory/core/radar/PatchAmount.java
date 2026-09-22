@@ -1,6 +1,6 @@
 package com.planetaryfactory.core.radar;
 
-/** A patch's amount in Factorio's short map form, floored so a label never claims more than is there (#370). */
+/** A patch's amount in Factorio's short form, floored so a label never claims more than is there (#370). */
 public final class PatchAmount {
 
     private PatchAmount() {
