@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.radar;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,11 +11,19 @@ import com.planetaryfactory.core.network.RadarMarkersPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.event.level.ChunkWatchEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-/** Sends each online player's map the team's charted sectors and patch markers it lacks (ADR-0079). */
+/**
+ * Sends each online player's map the team's charted sectors it lacks, and the patch markers of the
+ * chart and of what the player has walked (ADR-0079).
+ */
 public final class ChartDeliveries {
 
     /** Nothing is recorded as sent while nothing can draw it (ADR-0079). */
@@ -49,6 +58,31 @@ public final class ChartDeliveries {
                 PFNetwork.sendToPlayer(player, new RadarMarkersPacket(level.dimension(), markers));
             }
         }
+    }
+
+    /** A chunk sent to a player is drawn on their map, so its patches are marked for them (#370). */
+    public static void onChunkSent(ChunkWatchEvent.Sent event) {
+        if (!FTB_CHUNKS || event.getChunk().getAllStarts().isEmpty()) {
+            return;
+        }
+        ServerLevel level = event.getLevel();
+        ChunkPos pos = event.getPos();
+        List<PatchMarker> found = patchesStartedIn(level,
+                Sector.ofBlock(pos.getMinBlockX(), pos.getMinBlockZ()), List.of(event.getChunk()));
+        if (!found.isEmpty()) {
+            RadarChartData.get(level.getServer()).walked(event.getPlayer().getUUID(),
+                    level.dimension().identifier().toString(), found);
+        }
+    }
+
+    /** A structure's start is kept by the chunk it began in, which for a disc holds its centre (ADR-0079). */
+    public static List<PatchMarker> patchesStartedIn(ServerLevel level, Sector sector,
+            List<? extends ChunkAccess> chunks) {
+        List<StructurePiece> pieces = new ArrayList<>();
+        for (ChunkAccess chunk : chunks) {
+            chunk.getAllStarts().values().forEach(start -> pieces.addAll(start.getPieces()));
+        }
+        return SectorPatches.find(sector, pieces, (x, z) -> level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z));
     }
 
     public static void onLogout(PlayerLoggedOutEvent event) {

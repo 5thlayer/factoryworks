@@ -663,8 +663,8 @@ own team. What each player's map is sent (#369) is `ChartDeliveryTest`: at login
 and on entering a dimension, exactly the team's sectors that map lacks, a sector at a time, and
 nothing twice. Which outfield patches a charted sector marks, by the disc's centre and never a
 starting field, is `SectorPatchesTest`, and which markers each player is sent -- every one of the
-team's chart their client lacks, again after a logout since the client holds them in memory -- is
-`MarkerDeliveryTest` (#370); the markers' colour is `OreCorpusTest`'s. The drawing calls FTB Chunks' internal `ChunkUpdateTask`, compiled against 26.1.2.8
+team's chart and of their own walking that their client lacks, again after a logout since the client
+holds them in memory -- is `MarkerDeliveryTest` (#370), and the walked record `WalkedPatchesTest`. The drawing calls FTB Chunks' internal `ChunkUpdateTask`, compiled against 26.1.2.8
 by name, and the GameTest run has no FTB Chunks, so it is also the check that the Radar charts
 without it. Whether the terrain and the patch icons appear on the big map and minimap is a human check on
 delivery.

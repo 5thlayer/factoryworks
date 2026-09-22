@@ -26,6 +26,7 @@ class MarkerDeliveryTest {
 
     private final RadarCharts charts = new RadarCharts();
     private final SectorPatches patches = new SectorPatches();
+    private final WalkedPatches walked = new WalkedPatches();
     private final MarkerDelivery delivery = new MarkerDelivery();
 
     /** What {@code RadarChartData.chart} does with a sector and the patches found in it. */
@@ -36,8 +37,13 @@ class MarkerDeliveryTest {
         }
     }
 
+    /** What {@code RadarChartData.walked} does with the patches of a chunk sent to a player. */
+    private void walk(UUID player, String dimension, PatchMarker... found) {
+        delivery.found(player, dimension, walked.add(player, dimension, List.of(found)));
+    }
+
     private void observe(UUID player, UUID team, String dimension) {
-        delivery.observe(player, team, dimension, charts, patches);
+        delivery.observe(player, team, dimension, charts, patches, walked);
     }
 
     private Set<PatchMarker> drain(UUID player) {
@@ -121,5 +127,50 @@ class MarkerDeliveryTest {
         chart(TEAM, OVERWORLD, HOME, IRON);
 
         assertEquals(List.of(), delivery.take(ALICE));
+    }
+
+    @Test
+    void walkingPastAPatchMarksItForThatPlayerOnly() {
+        observe(ALICE, TEAM, OVERWORLD);
+        observe(BOB, TEAM, OVERWORLD);
+
+        walk(ALICE, OVERWORLD, IRON);
+
+        assertEquals(Set.of(IRON), drain(ALICE));
+        assertEquals(Set.of(), drain(BOB), "walked terrain is the walker's own map, not the team's chart");
+    }
+
+    @Test
+    void aWalkedPatchIsSentAgainAfterALogin() {
+        observe(ALICE, TEAM, OVERWORLD);
+        walk(ALICE, OVERWORLD, IRON);
+        drain(ALICE);
+        walk(ALICE, OVERWORLD, IRON);
+        assertEquals(Set.of(), drain(ALICE), "the chunk is sent again on each approach");
+
+        delivery.logout(ALICE);
+        observe(ALICE, TEAM, OVERWORLD);
+
+        assertEquals(Set.of(IRON), drain(ALICE));
+    }
+
+    @Test
+    void aPatchBothWalkedAndChartedIsSentOnce() {
+        observe(ALICE, TEAM, OVERWORLD);
+        walk(ALICE, OVERWORLD, IRON);
+        chart(TEAM, OVERWORLD, HOME, IRON);
+
+        assertEquals(List.of(IRON), delivery.take(ALICE));
+    }
+
+    @Test
+    void aPatchWalkedInAnotherDimensionWaitsForTheReturn() {
+        observe(ALICE, TEAM, NETHER);
+        walk(ALICE, OVERWORLD, IRON);
+        assertEquals(Set.of(), drain(ALICE));
+
+        observe(ALICE, TEAM, OVERWORLD);
+
+        assertEquals(Set.of(IRON), drain(ALICE));
     }
 }

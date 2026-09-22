@@ -32,9 +32,11 @@ public final class MarkerDelivery {
 
     /**
      * The player's team and dimension as of now. The first call since login, or one naming a new
-     * team or dimension, queues every marker of that team's chart there the player lacks.
+     * team or dimension, queues every marker there the player lacks, of the team's chart and of what
+     * the player has walked.
      */
-    public void observe(UUID player, UUID team, String dimension, RadarCharts charts, SectorPatches patches) {
+    public void observe(UUID player, UUID team, String dimension, RadarCharts charts, SectorPatches patches,
+            WalkedPatches walked) {
         Session session = sessions.get(player);
         if (session != null && session.team.equals(team) && session.dimension.equals(dimension)) {
             return;
@@ -42,6 +44,15 @@ public final class MarkerDelivery {
         session = new Session(team, dimension);
         sessions.put(player, session);
         queue(player, session, patches.in(dimension, charts.sectors(team, dimension)));
+        queue(player, session, walked.of(player, dimension));
+    }
+
+    /** Markers newly walked by the player, queued while they are in that dimension. */
+    public void found(UUID player, String dimension, Iterable<PatchMarker> markers) {
+        Session session = sessions.get(player);
+        if (session != null && session.dimension.equals(dimension)) {
+            queue(player, session, markers);
+        }
     }
 
     /** Markers newly in the team's chart, queued for every member online in their dimension. */

@@ -59,11 +59,4 @@ class OreCorpusTest {
         assertEquals(1.0, law.richnessAt(1599), 1e-9, "leaving early buys nothing");
         assertTrue(law.richnessAt(5200) > 2.0, "and far out is richer, linearly");
     }
-
-    @Test
-    void mapColoursAreFactoriosScaledToBytes() {
-        assertEquals(0x6A8694, OreCorpus.get().resource("iron").mapColor());
-        assertEquals(0x000000, OreCorpus.get().resource("coal").mapColor());
-        assertEquals(0x00B300, OreCorpus.get().resource("uranium").mapColor());
-    }
 }

@@ -15,9 +15,10 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 
 /**
- * Every team's chart, the outfield patches of its sectors, and what of it each player's map has been
- * sent, saved with the world on the overworld's data storage (#368, #369, #370, ADR-0079). Which
- * markers a player has been sent is not saved: the client forgets them at logout.
+ * Every team's chart, the outfield patches of its sectors and of what each player has walked, and
+ * what of it each player's map has been sent, saved with the world on the overworld's data storage
+ * (#368, #369, #370, ADR-0079). Which markers a player has been sent is not saved: the client
+ * forgets them at logout.
  */
 public final class RadarChartData extends SavedData {
 
@@ -31,23 +32,28 @@ public final class RadarChartData extends SavedData {
                     ChartDelivery.CODEC.optionalFieldOf("delivered")
                             .forGetter(data -> Optional.of(data.delivery)),
                     SectorPatches.CODEC.optionalFieldOf("patches")
-                            .forGetter(data -> Optional.of(data.patches)))
-                    .apply(instance, (charts, delivery, patches) -> new RadarChartData(charts,
-                            delivery.orElseGet(ChartDelivery::new), patches.orElseGet(SectorPatches::new)))));
+                            .forGetter(data -> Optional.of(data.patches)),
+                    WalkedPatches.CODEC.optionalFieldOf("walked")
+                            .forGetter(data -> Optional.of(data.walked)))
+                    .apply(instance, (charts, delivery, patches, walked) -> new RadarChartData(charts,
+                            delivery.orElseGet(ChartDelivery::new), patches.orElseGet(SectorPatches::new),
+                            walked.orElseGet(WalkedPatches::new)))));
 
     private final RadarCharts charts;
     private final ChartDelivery delivery;
     private final SectorPatches patches;
+    private final WalkedPatches walked;
     private final MarkerDelivery markers = new MarkerDelivery();
 
     public RadarChartData() {
-        this(new RadarCharts(), new ChartDelivery(), new SectorPatches());
+        this(new RadarCharts(), new ChartDelivery(), new SectorPatches(), new WalkedPatches());
     }
 
-    private RadarChartData(RadarCharts charts, ChartDelivery delivery, SectorPatches patches) {
+    private RadarChartData(RadarCharts charts, ChartDelivery delivery, SectorPatches patches, WalkedPatches walked) {
         this.charts = charts;
         this.delivery = delivery;
         this.patches = patches;
+        this.walked = walked;
     }
 
     public static RadarChartData get(MinecraftServer server) {
@@ -68,7 +74,16 @@ public final class RadarChartData extends SavedData {
 
     public void observe(UUID player, UUID team, String dimension) {
         delivery.observe(player, team, dimension, charts);
-        markers.observe(player, team, dimension, charts, patches);
+        markers.observe(player, team, dimension, charts, patches, walked);
+    }
+
+    /** The outfield patches centred in a chunk just sent to the player. */
+    public void walked(UUID player, String dimension, List<PatchMarker> found) {
+        List<PatchMarker> added = walked.add(player, dimension, found);
+        if (!added.isEmpty()) {
+            markers.found(player, dimension, added);
+            setDirty();
+        }
     }
 
     public List<PatchMarker> takeMarkers(UUID player) {
