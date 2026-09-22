@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351) and `BeltShapeTests` (#362), registered only when the
+and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362) and `BeltSupportTests` (#366), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -185,15 +185,26 @@ turns all four red. The rounding is the fork's `BeltCostTest`.
 And that a belt laid onto open ground takes each loader it places from the inventory, the belt's own
 tier first, then the nearest higher tier, then the nearest lower one, and places and charges nothing
 when a loader is short (`BeltLoaderCostTests`, #354). Before the fix every open end got a free tier-1
-loader, which turned five of its six red. The choice is the fork's `LoaderChoiceTest`.
+loader, which turned five of its six red. The choice is the fork's `LoaderChoiceTest`. An open end
+becomes a loader only against an inventory and a support otherwise (#366), so those fixtures stand
+chests beyond their ends, and a seventh test lays one with none and gets two supports.
 And that a belt laid through the belt item in a shape outside one of ADR-0078's four bounds -- too
 steep, climbing and turning at once, turning tighter than a block, reaching past 32 -- changes no
-block, links neither loader, charges nothing and names its bound to the player, and that a support
-clicked past a bound is not stored (`BeltShapeTests`).
+block, links neither loader, charges nothing and names its bound to the player, and that a mid-belt
+support sneak-clicked past a bound is not planned (`BeltShapeTests`).
 The world is read before the click as well as after. Every other belt fixture is laid through the
 same rule and fails if it is refused; dropping the midpoint support from the 64-block belt turns it
 red. The rule, and where each bound falls, is the fork's `BeltPathTest`, and whether the preview
 turns red with it is a human check on delivery.
+And that a support is a belt end (`BeltSupportTests`, #366): a tier-1 belt joined to a tier-3 one at a
+support delivers 15 items/s either way round and loses nothing, a belt ending on a support with none
+leaving backs up to 44 items, and each refused click in #366's table, and a sneak-click on a placed
+support, changes no block and no slot, charges nothing and names its refusal. A belt laid through the
+item from a chest ends on a free support, charges only its length, plans its mid-belt support, and
+carries on from the end; breaking either support through the player's game mode refunds the belt and
+its items to the breaker. Disabling the join and dropping the mid-belt link turned exactly those six
+red. The slot table and the open-end choice are the fork's `SupportSlotsTest`, the join's rate
+`JoinTest`, and whether the chaining gesture feels right is a human check on delivery.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
 that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
 Both were red on upstream's filter, which the off hand reset.

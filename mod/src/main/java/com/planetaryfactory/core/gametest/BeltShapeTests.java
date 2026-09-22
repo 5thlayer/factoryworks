@@ -1,19 +1,13 @@
 package com.planetaryfactory.core.gametest;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import com.mojang.authlib.GameProfile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -58,26 +52,26 @@ final class BeltShapeTests {
                 helper -> refused(helper, FROM, new BlockPos(3, 1, 4), Direction.NORTH, Bound.TURN_TOO_TIGHT));
         tests.test("a_belt_reaching_33_blocks_is_refused", 20, PFGameTests.LONG_PLATFORM,
                 helper -> refused(helper, LONG_FROM, LONG_FROM.east(33), Direction.WEST, Bound.SPAN_TOO_LONG));
-        // The preview already draws the span to a hovered support, so the click judges it too.
-        tests.test("a_support_past_a_bound_is_not_stored", 20, BeltShapeTests::supportRefused);
+        // The preview already draws the span to a planned support, so the sneak-click judges it too.
+        tests.test("a_support_past_a_bound_is_not_planned", 20, BeltShapeTests::supportRefused);
     }
 
     private static void supportRefused(GameTestHelper helper) {
-        BlockPos support = new BlockPos(4, 2, 3);
+        BlockPos supportGround = new BlockPos(4, 1, 3);
         helper.setBlock(FROM, loader(Direction.EAST));
-        helper.setBlock(support, BlockContent.CONVEYOR_SUPPORT_BLOCK.get().defaultBlockState()
-                .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
         var player = new ListeningPlayer(helper);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.beltFor(BeltTier.BELT), HELD));
+        player.setYRot(90);
 
         click(helper, player, FROM);
-        click(helper, player, support);
+        player.setShiftKeyDown(true);
+        click(helper, player, supportGround);
 
         if (player.getMainHandItem().has(ComponentContent.MIDPOINTS.get())) {
-            helper.fail("a support past a bound was stored", support);
+            helper.fail("a support past a bound was planned", supportGround.above());
         }
         if (!player.heard.contains(Bound.TOO_STEEP.messageKey())) {
-            helper.fail("the player was told " + player.heard + ", not " + Bound.TOO_STEEP.messageKey(), support);
+            helper.fail("the player was told " + player.heard + ", not " + Bound.TOO_STEEP.messageKey(), supportGround.above());
         }
         helper.succeed();
     }
@@ -128,19 +122,5 @@ final class BeltShapeTests {
         BlockPos absolute = helper.absolutePos(target);
         helper.useBlock(target, player, new BlockHitResult(
                 Vec3.atCenterOf(absolute).relative(Direction.UP, 0.5), Direction.UP, absolute, false));
-    }
-
-    /** A player of its own, keeping the translation key of every message it is sent. */
-    private static final class ListeningPlayer extends FakePlayer {
-        final List<String> heard = new ArrayList<>();
-
-        ListeningPlayer(GameTestHelper helper) {
-            super(helper.getLevel(), new GameProfile(UUID.randomUUID(), "pf_belt_shaper"));
-        }
-
-        @Override
-        public void sendSystemMessage(Component message, boolean actionBar) {
-            if (message.getContents() instanceof TranslatableContents translatable) heard.add(translatable.getKey());
-        }
     }
 }
