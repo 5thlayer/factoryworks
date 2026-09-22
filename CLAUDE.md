@@ -650,7 +650,7 @@ The Radar (#368, ADR-0079) is a 3x3x3 on the footprint seam that charts one 32-b
 10 MJ into its owner's FTB team's chart. `tests/factorio/test_machine_extract.py` holds the `radars`
 row against the dump when it is on disk and re-derives 33.3 s per sector;
 `tests/pack/test_radar_assets.py` runs `scripts/build-radar-assets.py --check` and holds the mod's
-resource against the corpus. The rules are Minecraft-free under
+resource against the corpus and each ore's patch-marker lang key (#370). The rules are Minecraft-free under
 `mod/src/test/java/com/planetaryfactory/core/radar/`: the draw, the 10 MJ sector and the 250 kJ
 nearby pulse counted from the same draw (`RadarSpecTest`, `RadarEnergyTest`), the 9x9 nearby area
 and the long range's clockwise rings, unexplored first (`RadarSweepTest`), the 3x3x3
@@ -661,9 +661,13 @@ it red; its placement and break are in `PlacementPlanTests` and
 `FootprintBreakTests`. Without FTB Teams on the classpath, as in the GameTest run, a player is their
 own team. What each player's map is sent (#369) is `ChartDeliveryTest`: at login, on joining a team
 and on entering a dimension, exactly the team's sectors that map lacks, a sector at a time, and
-nothing twice. The drawing calls FTB Chunks' internal `ChunkUpdateTask`, compiled against 26.1.2.8
+nothing twice. Which outfield patches a charted sector marks, by the disc's centre and never a
+starting field, is `SectorPatchesTest`, and which markers each player is sent -- every one of the
+team's chart their client lacks, again after a logout since the client holds them in memory -- is
+`MarkerDeliveryTest` (#370); the markers' colour is `OreCorpusTest`'s. The drawing calls FTB Chunks' internal `ChunkUpdateTask`, compiled against 26.1.2.8
 by name, and the GameTest run has no FTB Chunks, so it is also the check that the Radar charts
-without it. Whether the terrain appears on the big map and minimap is a human check on delivery.
+without it. Whether the terrain and the patch icons appear on the big map and minimap is a human check on
+delivery.
 Run these after editing `core/radar/` or the generator.
 
 ### Enemy corpus check

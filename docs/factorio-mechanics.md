@@ -1273,8 +1273,10 @@ two.
 Factorio's Radar (ADR-0045, ADR-0079): a 3x3x3 `planetaryfactory:radar` drawing 150 FE/t that
 charts map at range for its owner's team. It detects nothing hidden, since ore lies on the surface.
 #368 built the machine and the team's chart on the server, and #369 sends the chart to each member's
-FTB Chunks map, late joiners included. Marking outfield patches is #116's remaining ticket, and the
-row stays `planned` until a player has seen the map drawn.
+FTB Chunks map, late joiners included. Since #370 each outfield patch whose centre is in the chart
+gets a marker on both maps, named and coloured by resource, with no amount; starting fields get
+none, and a mined-out patch losing its marker is #371. The row stays `planned` until a player has
+seen the map drawn.
 
 **This row is the proof case for the two axes never reading each other.** `combat/defensive-structure`
 is `not_emitted` in `subgroup-owner.json`, and a ledger that read its verdicts out of that file would

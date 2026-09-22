@@ -120,6 +120,7 @@ public final class PlanetaryFactoryCore {
             FuelTooltip.register();
             // The 2x2 grid is gone (#140); what is left of it on the inventory texture goes too.
             InventoryGridBlank.register();
+            com.planetaryfactory.core.radar.client.RadarMapClient.register();
         }
     }
 }

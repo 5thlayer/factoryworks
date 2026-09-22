@@ -6,6 +6,8 @@
   - The resource is compared with the corpus row field by field here too, so a hand-edited
     resource that someone also taught the generator to accept still fails.
   - The block names the generator writes files for are the ones `PFBlocks` registers.
+  - Every ore has the lang key its patch marker is named by (#370), which `FtbMapMarkers` builds
+    from the resource key, so a missing one shows the raw key on the map.
 
 Usage: tests/pack/test_radar_assets.py
 """
@@ -20,6 +22,10 @@ RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/radar/radars.jso
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 GENERATOR = ROOT / "scripts/build-radar-assets.py"
 PF_BLOCKS = ROOT / "mod/src/main/java/com/planetaryfactory/core/PFBlocks.java"
+ORE_SLICE = ROOT / "mod/src/main/resources/planetaryfactory_core/ore/amounts.json"
+MARKERS = ROOT / "mod/src/main/java/com/planetaryfactory/core/radar/ftb/FtbMapMarkers.java"
+LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
+MARKER_KEY = "map.planetaryfactory.patch."
 
 
 def main():
@@ -40,6 +46,13 @@ def main():
     for name in ("radar", "radar_part"):
         if f'registerBlock("{name}"' not in source:
             failures.append(f"PFBlocks registers no {name!r}, which the generator writes files for")
+
+    if f'"{MARKER_KEY}"' not in MARKERS.read_text():
+        failures.append(f"FtbMapMarkers no longer names its markers by {MARKER_KEY!r}")
+    lang = json.loads(LANG.read_text())
+    for ore in json.loads(ORE_SLICE.read_text())["resources"]:
+        if MARKER_KEY + ore not in lang:
+            failures.append(f"no lang key {MARKER_KEY + ore}, so its patch marker shows the raw key")
 
     for index, failure in enumerate(failures, 1):
         print(f"FAIL {index}: {failure}")

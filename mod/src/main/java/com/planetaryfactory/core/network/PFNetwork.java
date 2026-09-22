@@ -42,6 +42,7 @@ public final class PFNetwork {
         registrar.playToClient(PoleWiresPacket.TYPE, PoleWiresPacket.STREAM_CODEC, PoleWiresPacket::handle);
         registrar.playToClient(FuelTablePacket.TYPE, FuelTablePacket.STREAM_CODEC, FuelTablePacket::handle);
         registrar.playToClient(RadarChunkPacket.TYPE, RadarChunkPacket.STREAM_CODEC, RadarChunkPacket::handle);
+        registrar.playToClient(RadarMarkersPacket.TYPE, RadarMarkersPacket.STREAM_CODEC, RadarMarkersPacket::handle);
     }
 
     public static void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {

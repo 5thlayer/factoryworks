@@ -1,9 +1,11 @@
 package com.planetaryfactory.core.radar;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.planetaryfactory.core.network.PFNetwork;
 import com.planetaryfactory.core.network.RadarChunkPacket;
+import com.planetaryfactory.core.network.RadarMarkersPacket;
 
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
 import net.minecraft.server.level.ServerLevel;
@@ -12,7 +14,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-/** Sends each online player's map the team's charted sectors it lacks (ADR-0079). */
+/** Sends each online player's map the team's charted sectors and patch markers it lacks (ADR-0079). */
 public final class ChartDeliveries {
 
     /** Nothing is recorded as sent while nothing can draw it (ADR-0079). */
@@ -41,6 +43,10 @@ public final class ChartDeliveries {
             data.observe(id, ChartOwners.teamOf(id), level.dimension().identifier().toString());
             for (Sector sector : data.takeDeliveries(id, 1)) {
                 send(player, level, sector);
+            }
+            List<PatchMarker> markers = data.takeMarkers(id);
+            if (!markers.isEmpty()) {
+                PFNetwork.sendToPlayer(player, new RadarMarkersPacket(level.dimension(), markers));
             }
         }
     }

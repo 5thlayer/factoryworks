@@ -441,6 +441,7 @@ def extract(dump):
                 # `null` says so rather than a zero that reads as an empty patch.
                 "starting_amount": starting_amount(formula, density) if starts else None,
                 "mining_time": (prototype.get("minable") or {}).get("mining_time"),
+                "map_color": prototype.get("map_color"),
                 "required_fluid": (prototype.get("minable") or {}).get("required_fluid"),
                 "stage_counts": stages,
                 "stage_ratios": [count / stages[0] for count in stages] if stages and stages[0] else [],
@@ -484,7 +485,8 @@ def mod_slice(out):
 
     Deliberately thin: a total, a ratio set, a mining time, the distance law, the per-resource
     arguments and three constants the outfield amount takes (#319), and what the disc's shape
-    takes: its radius factor and cap, blob amplitude and edge octaves (#320). Everything else
+    takes: its radius factor and cap, blob amplitude and edge octaves (#320), and the map colour
+    a patch's marker is drawn in (#370). Everything else
     in the corpus is read by scripts, and a number that reaches Java is a number that has to
     survive a recompile to be corrected.
 
@@ -506,6 +508,7 @@ def mod_slice(out):
             "factorio_name": factorio,
             "starting_amount": entry["starting_amount"],
             "mining_time": entry["mining_time"],
+            "map_color": entry["map_color"],
             "stage_ratios": entry["stage_ratios"],
             "outfield": {
                 "base_density": entry["base_density"],

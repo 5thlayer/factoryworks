@@ -126,5 +126,10 @@
   "tooltip.planetaryfactory.rig.jade.no_ore": "Nothing left to mine",
   "tooltip.planetaryfactory.rig.jade.progress": "%s%%",
   "block.planetaryfactory.radar": "Radar",
-  "block.planetaryfactory.radar_part": "Radar (part)"
+  "block.planetaryfactory.radar_part": "Radar (part)",
+  "map.planetaryfactory.patch.iron": "Iron ore",
+  "map.planetaryfactory.patch.copper": "Copper ore",
+  "map.planetaryfactory.patch.coal": "Coal",
+  "map.planetaryfactory.patch.uranium": "Uranium ore",
+  "map.planetaryfactory.patch.stone": "Stone"
 }

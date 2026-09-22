@@ -92,6 +92,11 @@
       "has_starting_area_placement": true,
       "starting_amount": 320000.0,
       "mining_time": 1,
+      "map_color": [
+        0,
+        0,
+        0
+      ],
       "required_fluid": null,
       "stage_counts": [
         15000,
@@ -204,6 +209,11 @@
       "has_starting_area_placement": true,
       "starting_amount": 320000.0,
       "mining_time": 1,
+      "map_color": [
+        0.8030000000000002,
+        0.388,
+        0.215
+      ],
       "required_fluid": null,
       "stage_counts": [
         15000,
@@ -316,6 +326,11 @@
       "has_starting_area_placement": false,
       "starting_amount": null,
       "mining_time": 1,
+      "map_color": [
+        0.78,
+        0.2,
+        0.77
+      ],
       "required_fluid": null,
       "stage_counts": [
         0
@@ -412,6 +427,11 @@
       "has_starting_area_placement": true,
       "starting_amount": 400000.0,
       "mining_time": 1,
+      "map_color": [
+        0.4149999999999999,
+        0.525,
+        0.58
+      ],
       "required_fluid": null,
       "stage_counts": [
         15000,
@@ -524,6 +544,11 @@
       "has_starting_area_placement": true,
       "starting_amount": 160000.0,
       "mining_time": 1,
+      "map_color": [
+        0.69,
+        0.611,
+        0.42699999999999994
+      ],
       "required_fluid": null,
       "stage_counts": [
         15000,
@@ -636,6 +661,11 @@
       "has_starting_area_placement": false,
       "starting_amount": null,
       "mining_time": 2,
+      "map_color": [
+        0,
+        0.7,
+        0
+      ],
       "required_fluid": "sulfuric-acid",
       "stage_counts": [
         10000,
