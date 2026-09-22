@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -22,7 +23,8 @@ import rearth.belts.model.BeltTier;
 /**
  * A belt laid onto open ground takes each loader it places from the inventory: the belt's own
  * tier, else the nearest higher tier held, else the nearest lower one, and nothing is placed or
- * charged when a loader is missing (#354).
+ * charged when a loader is missing (#354). An open end becomes a loader only against an
+ * inventory, so each end here has a chest beyond it; with none, it becomes a support (#366).
  */
 final class BeltLoaderCostTests {
 
@@ -31,6 +33,8 @@ final class BeltLoaderCostTests {
     private static final BlockPos TO_GROUND = new BlockPos(7, 0, 3);
     private static final BlockPos FROM = FROM_GROUND.above();
     private static final BlockPos TO = TO_GROUND.above();
+    private static final BlockPos BEHIND_FROM = FROM.west();
+    private static final BlockPos BEYOND_TO = TO.east();
     private static final int BELTS = 16;
 
     private BeltLoaderCostTests() {
@@ -44,6 +48,7 @@ final class BeltLoaderCostTests {
         tests.test("a_belt_takes_a_higher_tier_loader_before_a_lower_one", 20, BeltLoaderCostTests::higherTier);
         tests.test("a_belt_falls_back_to_a_lower_tier_loader", 20, BeltLoaderCostTests::lowerTier);
         tests.test("a_belt_ending_at_a_placed_loader_takes_one", 20, BeltLoaderCostTests::oneEndPlaced);
+        tests.test("a_belt_with_no_inventory_at_its_ends_ends_on_supports", 20, BeltLoaderCostTests::supportsWithoutInventory);
     }
 
     private static void refused(GameTestHelper helper, BeltTier belt, Map<BeltTier, Integer> held) {
@@ -102,9 +107,24 @@ final class BeltLoaderCostTests {
         helper.succeed();
     }
 
+    private static void supportsWithoutInventory(GameTestHelper helper) {
+        Player player = player(helper, BeltTier.BELT, Map.of(BeltTier.BELT, 2));
+        click(helper, player, FROM_GROUND);
+        click(helper, player, TO_GROUND);
+
+        for (BlockPos end : new BlockPos[] {FROM, TO}) {
+            if (!helper.getBlockState(end).is(BlockContent.CONVEYOR_SUPPORT_BLOCK.get())) {
+                helper.fail("an end with no inventory beyond it is " + helper.getBlockState(end).getBlock() + ", not a support", end);
+            }
+        }
+        expectHeld(helper, player, BeltTier.BELT, 2);
+        helper.succeed();
+    }
+
     private static void oneEndPlaced(GameTestHelper helper) {
         helper.setBlock(TO, BlockContent.loaderFor(BeltTier.BELT).defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
+        helper.setBlock(BEHIND_FROM, Blocks.CHEST);
         Player player = player(helper, BeltTier.BELT, Map.of(BeltTier.BELT, 1));
         click(helper, player, FROM_GROUND);
         click(helper, player, TO);
@@ -124,6 +144,8 @@ final class BeltLoaderCostTests {
     }
 
     private static void lay(GameTestHelper helper, Player player) {
+        helper.setBlock(BEHIND_FROM, Blocks.CHEST);
+        helper.setBlock(BEYOND_TO, Blocks.CHEST);
         click(helper, player, FROM_GROUND);
         click(helper, player, TO_GROUND);
     }

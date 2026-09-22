@@ -556,8 +556,14 @@ Sub-rules:
   points sit on the block grid and the curve between them is bounded, as Satisfactory bounds its
   conveyors: each span turns no tighter than one block, climbs no steeper than 35° at its steepest
   point, never turns and climbs at once, and reaches at most 32 blocks. An out-of-bounds layout is
-  refused, not bent (ADR-0078). Supports becoming belt ends, so belts join and dead-end at a support,
-  is #366, and optional drawing modes are #365.
+  refused, not bent (ADR-0078). Optional drawing modes are #365.
+- **Belt ends** — `adapted` (#366). Factorio's belt ends where its tiles do; here a belt ends on a
+  loader against an inventory or on a support otherwise. A support takes one belt arriving and one
+  leaving: with both it joins them at the slower belt's rate and draws no power, and with only one
+  arriving it is a dead end the belt backs up against, as a Factorio belt ending in nothing does.
+  Merging and splitting stay the splitter's. Supports are free and only the belt item places them;
+  a belt ending on a free support carries on from it, and a sneak-click plans one mid-belt. Breaking
+  any support a belt uses breaks that belt, refunded as breaking a loader is (ADR-0078).
 
 - **Belt tiers** — `shipped` for tiers 1 and 2. The fork's four belts, `belt`, `improved_belt`,
   `express_belt` and `turbo_belt`, carry Factorio's 15, 30, 45 and 60 items/s under Factorio's names
@@ -600,9 +606,9 @@ Sub-rules:
   against Create's one item per block.*
 - **Cost per length** — `shipped`. A belt costs one belt item of its tier per block of its length,
   rounded up, as a Factorio belt costs one item per tile. Placing one the player cannot pay for is
-  refused with a message and charges nothing. The belt keeps what it cost, so a belt reshaped by a
-  broken support still refunds what was paid. Breaking either loader puts the refund and the belt's items into the
-  breaker's inventory and leaves the other loader standing, free to relink (#346). *Upstream
+  refused with a message and charges nothing. Supports cost nothing (#366). Breaking either end, or
+  any support the belt passes through, puts the refund and the belt's items into the breaker's
+  inventory and leaves the other end standing, free to relink (#346, #366). *Upstream
   SimpleBelts charged one item whatever the length.*
 
 `logistics`, `logistics-2` and `logistics-3` are declared in `researchd.js`; each unlocks its
