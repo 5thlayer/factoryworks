@@ -158,6 +158,14 @@ _Avoid_: belt puzzle, the logistics game
 A single link carrying items from one belt end to another along a curve, shaped by supports and paid for at one belt item per block of its length. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per block, so a belt is a buffer as well as a route (ADR-0060). Its curve is free between supports but bounded: it turns no tighter than one block, climbs no steeper than 35°, and never turns and climbs at once. A layout outside those bounds is refused, not bent to fit (#362).
 _Avoid_: conveyor, belt segment, lane
 
+**Tile**:
+One block of belt, placed and broken on its own, facing the way items travel through it. A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). It stands beside the spline belt until #397 replaces it.
+_Avoid_: belt block, conveyor block, segment
+
+**Transport line**:
+The contiguous run of tiles of one direction of travel, merged at runtime so the whole run ticks once rather than each tile ticking for itself. A line is derived state, rebuilt whenever a tile is placed or broken; each tile keeps its own share of the items, so merging and splitting a line loses nothing. A line runs at its slowest tile and holds eight items a tile, and it is loaded by the loader behind its first tile and unloaded by the one past its last (#398).
+_Avoid_: belt line, chain, run
+
 **Support**:
 A block on the block grid, facing along one of its axes, that a belt passes through or ends at. Supports are where a belt's shape is decided; the curve between them only joins them. A support holds at most one belt arriving and one leaving: with both it joins two belts, with only one arriving it is a dead end where items back up. Supports are placed by the belt itself and cost nothing (ADR-0078).
 _Avoid_: pole, midpoint, control point

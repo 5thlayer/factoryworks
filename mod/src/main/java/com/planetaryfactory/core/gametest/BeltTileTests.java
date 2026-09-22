@@ -1,0 +1,432 @@
+package com.planetaryfactory.core.gametest;
+
+import java.util.Collections;
+import java.util.List;
+
+import com.planetaryfactory.core.PFBlocks;
+import com.planetaryfactory.core.energy.PoleTier;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import rearth.belts.BlockContent;
+import rearth.belts.ItemContent;
+import rearth.belts.blocks.BeltTileBlock;
+import rearth.belts.blocks.BeltTileBlockEntity;
+import rearth.belts.blocks.ChuteBlockEntity;
+import rearth.belts.model.BeltTier;
+
+/**
+ * A line of belt tiles carrying items between two loaders (#398): chest, loader, tiles, loader,
+ * chest, at each tier's Factorio rate, at its slowest piece when the pieces differ, holding eight
+ * items a tile when it backs up, and paying the loaders' FE per item.
+ *
+ * <p>A tile's facing is its direction of travel, so the loaders face the same way the line runs:
+ * the loading one from behind the head tile, the unloading one back along the line past the last.
+ * Each pulls from, and pushes into, the inventory behind its own facing.
+ *
+ * <p>The rates and the capacity are typed rather than read off the fork, so the test cannot agree
+ * with the fork by construction; {@code tests/factorio/test_logistics_extract.py} derives the same
+ * figures from Factorio's belt prototypes.
+ */
+final class BeltTileTests {
+
+    private static final BlockPos SOURCE = new BlockPos(2, 1, 3);
+    private static final BlockPos FROM = new BlockPos(3, 1, 3);
+    private static final BlockPos FIRST_TILE = new BlockPos(4, 1, 3);
+    // Off the line, with both loaders in a small pole's 5x5 area.
+    private static final BlockPos POLE = new BlockPos(5, 1, 4);
+
+    private static final int TILES = 3;
+
+    private static final int TIER_1_ITEMS_PER_SECOND = 15;
+    private static final int TIER_2_ITEMS_PER_SECOND = 30;
+    private static final int TIER_3_ITEMS_PER_SECOND = 45;
+    private static final int TIER_4_ITEMS_PER_SECOND = 60;
+
+    private static final int ITEMS = 16;
+    // A multiple of four ticks: tiers 1 and 3 deliver a whole number of items only every four.
+    private static final int RATE_WINDOW_TICKS = 200;
+    private static final int RATE_WARMUP_TICKS = 100;
+    // A full chest, so the source outlasts the window at tier 4.
+    private static final int RATE_SUPPLY = 27 * 64;
+
+    private static final int LONG_LINE_TILES = 64;
+    private static final int LONG_LINE_HOLDS = 512;
+    private static final BlockPos LONG_SOURCE = new BlockPos(0, 1, 1);
+    private static final BlockPos LONG_FROM = new BlockPos(1, 1, 1);
+    private static final BlockPos LONG_FIRST_TILE = LONG_FROM.east();
+    private static final int LONG_SUPPLY = 640;
+    private static final int LONG_LINE_SETTLED_TICKS = 1000;
+
+    private static final int MERGE_TILES = 3;
+    // The second line's chest and loader, which the merge replaces with two tiles.
+    private static final BlockPos MIDDLE_SOURCE = FIRST_TILE.east(MERGE_TILES);
+    private static final BlockPos MIDDLE_FROM = MIDDLE_SOURCE.east();
+    private static final BlockPos MIDDLE_FIRST_TILE = MIDDLE_FROM.east();
+    // Not the first or the last tile, so both halves of a split are runs of their own.
+    private static final int MERGE_GAP = 1;
+    private static final int MERGE_SUPPLY = 27 * 64;
+    // Long enough for a three-tile line to back up against its own end.
+    private static final int MERGE_FILL_TICKS = 400;
+    // A placed or broken tile scans on its next tick and its head on the tick after.
+    private static final int MERGE_SETTLE_TICKS = 5;
+
+    private static final int TIER_2_JOULES_PER_ITEM = 6650;
+    private static final int TIER_2_DRAIN_WATTS = 400;
+    private static final int JOULES_PER_FE = 100;
+    private static final int UNPOWERED_TICKS = 60;
+    private static final int FED_WARMUP_TICKS = 40;
+    // One tick: the buffer holds only the largest tick the loader's flow limit allows.
+    private static final int DRAW_WINDOW_TICKS = 1;
+
+    private BeltTileTests() {
+    }
+
+    static void register(PFGameTests.Registrar tests) {
+        tests.test("belt_tiles_hand_items_from_chest_to_chest", 400, BeltTileTests::handsOff);
+        rateTest(tests, BeltTier.BELT, TIER_1_ITEMS_PER_SECOND);
+        rateTest(tests, BeltTier.IMPROVED, TIER_2_ITEMS_PER_SECOND);
+        rateTest(tests, BeltTier.EXPRESS, TIER_3_ITEMS_PER_SECOND);
+        rateTest(tests, BeltTier.TURBO, TIER_4_ITEMS_PER_SECOND);
+        tests.test("belt_tiles_tier_3_between_tier_1_loaders_deliver_" + TIER_1_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> deliversAtRate(helper, BeltTier.BELT, tiers(BeltTier.EXPRESS), TIER_1_ITEMS_PER_SECOND));
+        tests.test("belt_tiles_tier_1_between_tier_4_loaders_deliver_" + TIER_1_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> deliversAtRate(helper, BeltTier.TURBO, tiers(BeltTier.BELT), TIER_1_ITEMS_PER_SECOND));
+        tests.test("belt_tiles_of_mixed_tiers_deliver_" + TIER_1_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> deliversAtRate(helper, BeltTier.TURBO,
+                        List.of(BeltTier.EXPRESS, BeltTier.BELT, BeltTier.EXPRESS), TIER_1_ITEMS_PER_SECOND));
+        tests.test("backed_up_64_tile_line_holds_" + LONG_LINE_HOLDS, LONG_LINE_SETTLED_TICKS + 20,
+                PFGameTests.LONG_PLATFORM, BeltTileTests::backedUpLineHolds512);
+        tests.test("tier_1_loader_moves_onto_tiles_with_no_power", UNPOWERED_TICKS + 20,
+                BeltTileTests::tierOneRunsUnpowered);
+        tests.test("tier_2_loader_with_no_fe_puts_nothing_on_tiles", UNPOWERED_TICKS + 20,
+                BeltTileTests::tierTwoStallsUnpowered);
+        tests.test("pole_fed_tier_2_loader_on_tiles_draws_66_5_fe_per_item",
+                FED_WARMUP_TICKS + DRAW_WINDOW_TICKS + 20, BeltTileTests::fedLoaderDrawsPerItem);
+        tests.test("a_tile_placed_with_its_item_faces_the_players_look", 20,
+                BeltTileTests::placedTileFacesTheLook);
+        tests.test("a_tile_placed_between_two_lines_merges_them", MERGE_FILL_TICKS + 20,
+                BeltTileTests::placingATileMergesTwoLines);
+        tests.test("breaking_a_mid_line_tile_splits_it_and_keeps_both_halves_items",
+                MERGE_FILL_TICKS + 20, BeltTileTests::breakingATileSplitsTheLine);
+    }
+
+    // The probe's fourth clause of #348 is `BeltPowerTests`': the loader itself is unchanged here,
+    // and its probe is answered with no belt and no line in front of it at all.
+
+    /** Placed by the item rather than by {@code setBlock}: the facing is the gesture's, not a field's. */
+    private static void placedTileFacesTheLook(GameTestHelper helper) {
+        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        player.setItemInHand(InteractionHand.MAIN_HAND,
+                new ItemStack(ItemContent.tileFor(BeltTier.BELT), 2));
+
+        for (Direction look : List.of(Direction.EAST, Direction.SOUTH)) {
+            BlockPos at = look == Direction.EAST ? FIRST_TILE : FIRST_TILE.south(2);
+            player.setYRot(look.toYRot());
+            click(helper, player, at.below());
+            BlockState placed = helper.getBlockState(at);
+            if (!(placed.getBlock() instanceof BeltTileBlock)) {
+                helper.fail("the tile item placed " + placed.getBlock() + " looking " + look, at);
+                return;
+            }
+            Direction facing = placed.getValue(HorizontalDirectionalBlock.FACING);
+            if (facing != look) {
+                helper.fail("a tile placed looking " + look + " faces " + facing, at);
+                return;
+            }
+        }
+        helper.succeed();
+    }
+
+    /**
+     * Two loaded lines, each fed by a loader of its own, and the two tiles that join them into one
+     * run. The second line's head is holding a live line when the merge is scanned, and block
+     * entities tick in an order nothing here decides, so this is where items would be stranded.
+     */
+    private static void placingATileMergesTwoLines(GameTestHelper helper) {
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(FROM, loader(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(MIDDLE_SOURCE, Blocks.CHEST);
+        helper.setBlock(MIDDLE_FROM, loader(BeltTier.BELT, Direction.EAST));
+        for (int tile = 0; tile < MERGE_TILES; tile++) {
+            helper.setBlock(FIRST_TILE.east(tile), tile(BeltTier.BELT, Direction.EAST));
+            helper.setBlock(MIDDLE_FIRST_TILE.east(tile), tile(BeltTier.BELT, Direction.EAST));
+        }
+        fill(helper, SOURCE, MERGE_SUPPLY);
+        fill(helper, MIDDLE_SOURCE, MERGE_SUPPLY);
+
+        int[] before = new int[1];
+        helper.startSequence().thenIdle(MERGE_FILL_TICKS).thenExecute(() -> {
+            int upstream = held(helper, FIRST_TILE);
+            int downstream = held(helper, MIDDLE_FIRST_TILE);
+            if (upstream != MERGE_TILES * 8 || downstream != MERGE_TILES * 8) {
+                helper.fail("the two lines hold " + upstream + " and " + downstream
+                        + " before the merge, expected " + MERGE_TILES * 8 + " each", FIRST_TILE);
+                return;
+            }
+            before[0] = upstream + downstream;
+            // Emptied first: a replaced chest would spill its own items onto the floor.
+            BeltHandoffTests.chest(helper, MIDDLE_SOURCE).clearContent();
+            helper.setBlock(MIDDLE_SOURCE, tile(BeltTier.BELT, Direction.EAST));
+            helper.setBlock(MIDDLE_FROM, tile(BeltTier.BELT, Direction.EAST));
+        }).thenIdle(MERGE_SETTLE_TICKS).thenExecute(() -> {
+            var line = helper.getBlockEntity(FIRST_TILE, BeltTileBlockEntity.class).line();
+            int tiles = 2 * MERGE_TILES + 2;
+            if (line == null || line.tileCount() != tiles) {
+                helper.fail("the joined runs left a line of "
+                        + (line == null ? "none" : line.tileCount()) + " tiles, expected " + tiles,
+                        FIRST_TILE);
+                return;
+            }
+            int carried = line.size();
+            int onGround = helper.getEntities(EntityType.ITEM).size();
+            if (carried < before[0] || onGround != 0) {
+                helper.fail("the merged line carries " + carried + " items with " + onGround
+                        + " on the ground, expected at least the " + before[0]
+                        + " the two lines held", FIRST_TILE);
+                return;
+            }
+            helper.succeed();
+        });
+    }
+
+    /** Breaking a tile mid-line: the tiles past the break keep what they were carrying. */
+    private static void breakingATileSplitsTheLine(GameTestHelper helper) {
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(FROM, loader(BeltTier.BELT, Direction.EAST));
+        for (int tile = 0; tile < MERGE_TILES; tile++) {
+            helper.setBlock(FIRST_TILE.east(tile), tile(BeltTier.BELT, Direction.EAST));
+        }
+        fill(helper, SOURCE, MERGE_SUPPLY);
+
+        int[] before = new int[1];
+        helper.startSequence().thenIdle(MERGE_FILL_TICKS).thenExecute(() -> {
+            before[0] = held(helper, FIRST_TILE);
+            if (before[0] != MERGE_TILES * 8) {
+                helper.fail("the line holds " + before[0] + " before the break, expected "
+                        + MERGE_TILES * 8, FIRST_TILE);
+            }
+            helper.destroyBlock(FIRST_TILE.east(MERGE_GAP));
+        }).thenIdle(MERGE_SETTLE_TICKS).thenExecute(() -> {
+            int upstream = held(helper, FIRST_TILE);
+            int downstream = held(helper, FIRST_TILE.east(MERGE_GAP + 1));
+            // The broken tile's own eight are its own; every other item stays on its own side.
+            if (upstream != MERGE_GAP * 8 || downstream != (MERGE_TILES - MERGE_GAP - 1) * 8) {
+                helper.fail("the break left " + upstream + " upstream and " + downstream
+                        + " downstream, expected " + MERGE_GAP * 8 + " and "
+                        + (MERGE_TILES - MERGE_GAP - 1) * 8, FIRST_TILE);
+                return;
+            }
+            helper.succeed();
+        });
+    }
+
+    private static void click(GameTestHelper helper, Player player, BlockPos target) {
+        BlockPos absolute = helper.absolutePos(target);
+        helper.useBlock(target, player, new BlockHitResult(
+                Vec3.atCenterOf(absolute).relative(Direction.UP, 0.5), Direction.UP, absolute, false));
+    }
+
+    private static List<BeltTier> tiers(BeltTier tier) {
+        return Collections.nCopies(TILES, tier);
+    }
+
+    private static void handsOff(GameTestHelper helper) {
+        place(helper, tiers(BeltTier.BELT), BeltTier.BELT, ITEMS);
+
+        BlockPos target = targetOf(tiers(BeltTier.BELT));
+        helper.succeedWhen(() -> {
+            int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target));
+            if (arrived != ITEMS) {
+                helper.fail("target chest holds " + arrived + " of " + ITEMS + " cobblestone", target);
+            }
+            int left = BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE));
+            if (left != 0) {
+                helper.fail("source chest still holds " + left + " cobblestone", SOURCE);
+            }
+        });
+    }
+
+    private static void rateTest(PFGameTests.Registrar tests, BeltTier tier, int itemsPerSecond) {
+        tests.test("belt_tiles_tier_" + tier.number() + "_deliver_" + itemsPerSecond + "_items_per_second",
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> deliversAtRate(helper, tier, tiers(tier), itemsPerSecond));
+    }
+
+    private static void deliversAtRate(GameTestHelper helper, BeltTier loaders, List<BeltTier> tiles,
+            int itemsPerSecond) {
+        // Tiers 2 to 4 pay FE per item (#348); the creative pole's area covers the platform.
+        if (loaders != BeltTier.BELT) helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
+        place(helper, tiles, loaders, RATE_SUPPLY);
+        BlockPos target = targetOf(tiles);
+
+        int expected = itemsPerSecond * RATE_WINDOW_TICKS / 20;
+        int[] before = new int[1];
+        helper.startSequence()
+                .thenIdle(RATE_WARMUP_TICKS)
+                .thenExecute(() -> before[0] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target)))
+                .thenIdle(RATE_WINDOW_TICKS)
+                .thenExecute(() -> {
+                    int delivered = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target)) - before[0];
+                    if (delivered != expected) {
+                        helper.fail("a line of " + tiles + " between tier-" + loaders.number()
+                                + " loaders delivered " + delivered + " items in " + RATE_WINDOW_TICKS
+                                + " ticks, expected " + expected, target);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    // Nothing past the last tile, so the line backs up against its own end.
+    private static void backedUpLineHolds512(GameTestHelper helper) {
+        helper.setBlock(LONG_SOURCE, Blocks.CHEST);
+        helper.setBlock(LONG_FROM, loader(BeltTier.BELT, Direction.EAST));
+        for (int tile = 0; tile < LONG_LINE_TILES; tile++) {
+            helper.setBlock(LONG_FIRST_TILE.east(tile), tile(BeltTier.BELT, Direction.EAST));
+        }
+        fill(helper, LONG_SOURCE, LONG_SUPPLY);
+
+        // Read once rather than polled: succeedWhen would pass while the line was still filling.
+        helper.startSequence().thenIdle(LONG_LINE_SETTLED_TICKS).thenExecute(() -> {
+            int held = held(helper, LONG_FIRST_TILE);
+            if (held != LONG_LINE_HOLDS) {
+                helper.fail("a backed-up " + LONG_LINE_TILES + "-tile line holds " + held
+                        + ", expected " + LONG_LINE_HOLDS, LONG_FIRST_TILE);
+            }
+            int left = BeltHandoffTests.count(BeltHandoffTests.chest(helper, LONG_SOURCE));
+            if (left != LONG_SUPPLY - LONG_LINE_HOLDS) {
+                helper.fail("the source chest holds " + left + " after filling the line, expected "
+                        + (LONG_SUPPLY - LONG_LINE_HOLDS), LONG_SOURCE);
+            }
+        }).thenSucceed();
+    }
+
+    // The control for the stall: the same line with the loaders' tier changed moves items.
+    private static void tierOneRunsUnpowered(GameTestHelper helper) {
+        place(helper, tiers(BeltTier.BELT), BeltTier.BELT, RATE_SUPPLY);
+        BlockPos target = targetOf(tiers(BeltTier.BELT));
+        helper.startSequence().thenIdle(UNPOWERED_TICKS).thenExecute(() -> {
+            if (helper.getLevel().getCapability(Capabilities.Energy.BLOCK, helper.absolutePos(FROM), null) != null) {
+                helper.fail("a tier-1 loader has an energy face", FROM);
+            }
+            int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target));
+            if (arrived == 0) {
+                helper.fail("tier-1 loaders with no pole delivered nothing onto tiles in "
+                        + UNPOWERED_TICKS + " ticks", target);
+            }
+        }).thenSucceed();
+    }
+
+    private static void tierTwoStallsUnpowered(GameTestHelper helper) {
+        place(helper, tiers(BeltTier.IMPROVED), BeltTier.IMPROVED, RATE_SUPPLY);
+        helper.startSequence().thenIdle(UNPOWERED_TICKS).thenExecute(() -> {
+            int left = BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE));
+            int onLine = held(helper, FIRST_TILE);
+            if (left != RATE_SUPPLY || onLine != 0) {
+                helper.fail("a tier-2 loader with no FE took " + (RATE_SUPPLY - left)
+                        + " items and put " + onLine + " on the line", FROM);
+            }
+        }).thenSucceed();
+    }
+
+    // Measured with the pole cut off and the buffer filled by hand: fed, the refill's order against
+    // the loader's tick decides what a read sees.
+    private static void fedLoaderDrawsPerItem(GameTestHelper helper) {
+        helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
+        place(helper, tiers(BeltTier.IMPROVED), BeltTier.IMPROVED, RATE_SUPPLY);
+        BlockPos target = targetOf(tiers(BeltTier.IMPROVED));
+        ChuteBlockEntity loader = helper.getBlockEntity(FROM, ChuteBlockEntity.class);
+        long[] before = new long[2];
+        helper.startSequence()
+                .thenIdle(FED_WARMUP_TICKS)
+                .thenExecute(() -> {
+                    if (BeltHandoffTests.count(BeltHandoffTests.chest(helper, target)) == 0) {
+                        helper.fail("pole-fed tier-2 loaders delivered nothing over tiles", target);
+                    }
+                    helper.setBlock(POLE, PFBlocks.pole(PoleTier.SMALL).get());
+                    loader.getEnergy().insertFe(Long.MAX_VALUE);
+                    before[0] = face(helper, FROM).getAmountAsLong();
+                    before[1] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE));
+                })
+                .thenIdle(DRAW_WINDOW_TICKS)
+                .thenExecute(() -> {
+                    long items = before[1] - BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE));
+                    if (items == 0) {
+                        helper.fail("the loader moved nothing in the window, so this proves nothing", FROM);
+                    }
+                    long drawn = before[0] - face(helper, FROM).getAmountAsLong();
+                    long joules = items * TIER_2_JOULES_PER_ITEM
+                            + (long) DRAW_WINDOW_TICKS * TIER_2_DRAIN_WATTS / 20;
+                    // The face reads whole FE, so the window's far end rounds down by under one.
+                    if (Math.abs(drawn * JOULES_PER_FE - joules) >= JOULES_PER_FE) {
+                        helper.fail("the loader drew " + drawn + " FE for " + items + " items in "
+                                + DRAW_WINDOW_TICKS + " ticks, expected " + joules / (double) JOULES_PER_FE,
+                                FROM);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    /** A chest behind an east-facing loader, a line of tiles running east, a west-facing loader and a chest. */
+    private static void place(GameTestHelper helper, List<BeltTier> tiles, BeltTier loaders, int items) {
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(FROM, loader(loaders, Direction.EAST));
+        for (int tile = 0; tile < tiles.size(); tile++) {
+            helper.setBlock(FIRST_TILE.east(tile), tile(tiles.get(tile), Direction.EAST));
+        }
+        helper.setBlock(FIRST_TILE.east(tiles.size()), loader(loaders, Direction.WEST));
+        helper.setBlock(targetOf(tiles), Blocks.CHEST);
+        fill(helper, SOURCE, items);
+    }
+
+    private static BlockPos targetOf(List<BeltTier> tiles) {
+        return FIRST_TILE.east(tiles.size() + 1);
+    }
+
+    private static void fill(GameTestHelper helper, BlockPos chest, int items) {
+        for (int slot = 0; items > 0; slot++, items -= 64) {
+            BeltHandoffTests.chest(helper, chest).setItem(slot, new ItemStack(Items.COBBLESTONE, Math.min(items, 64)));
+        }
+    }
+
+    /** What the line through this tile carries, asked of whichever tile of the run holds it. */
+    private static int held(GameTestHelper helper, BlockPos tile) {
+        var line = helper.getBlockEntity(tile, BeltTileBlockEntity.class).line();
+        return line == null ? 0 : line.size();
+    }
+
+    private static BlockState loader(BeltTier tier, Direction facing) {
+        return BlockContent.loaderFor(tier).defaultBlockState()
+                .setValue(HorizontalDirectionalBlock.FACING, facing);
+    }
+
+    private static BlockState tile(BeltTier tier, Direction facing) {
+        return BlockContent.tileFor(tier).defaultBlockState()
+                .setValue(HorizontalDirectionalBlock.FACING, facing);
+    }
+
+    private static EnergyHandler face(GameTestHelper helper, BlockPos pos) {
+        var handler = helper.getLevel().getCapability(Capabilities.Energy.BLOCK, helper.absolutePos(pos), null);
+        if (handler == null) {
+            helper.fail("the loader has no energy face", pos);
+        }
+        return handler;
+    }
+}
