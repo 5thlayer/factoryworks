@@ -9,6 +9,9 @@ import com.planetaryfactory.core.mining.rig.RigBlock;
 import com.planetaryfactory.core.mining.rig.RigPartBlock;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.ore.OreBlock;
+import com.planetaryfactory.core.radar.RadarBlock;
+import com.planetaryfactory.core.radar.RadarFootprint;
+import com.planetaryfactory.core.radar.RadarPartBlock;
 import com.planetaryfactory.core.ore.OreResource;
 import com.planetaryfactory.core.smelting.FurnaceBlock;
 import com.planetaryfactory.core.smelting.FurnaceTier;
@@ -35,7 +38,7 @@ import java.util.stream.Stream;
 
 /**
  * The blocks the mod itself registers: the two saplings, the pole blocks, the furnace and rig
- * ladders, the Boiler, the pump, the Assembling Machine and the Steam Engine.
+ * ladders, the Boiler, the pump, the Assembling Machine, the Steam Engine and the Radar.
  *
  * <p>The supply-area poles are here (ADR-0036) -- the three tiers and the creative pole (#272),
  * which is one block beside the ladder rather than a row in it. They are mechanism -- a block
@@ -101,6 +104,18 @@ public final class PFBlocks {
     public static final FootprintMachine STEAM_ENGINE_FOOTPRINT = new FootprintMachine(
             SteamEngineFootprint.FOOTPRINT, STEAM_ENGINE, STEAM_ENGINE_PART,
             () -> PFItems.STEAM_ENGINE.get());
+
+    /** The Radar (#368): a pack anchor on the footprint seam, its parts drawn so the whole cube shows. */
+    public static final DeferredHolder<Block, RadarBlock> RADAR =
+            BLOCKS.registerBlock("radar", props -> new RadarBlock(radarProperties(props)));
+
+    public static final DeferredHolder<Block, RadarPartBlock> RADAR_PART =
+            BLOCKS.registerBlock("radar_part",
+                    props -> new RadarPartBlock(radarProperties(props).noLootTable(),
+                            () -> PFBlocks.RADAR_FOOTPRINT));
+
+    public static final FootprintMachine RADAR_FOOTPRINT = new FootprintMachine(
+            RadarFootprint.FOOTPRINT, RADAR, RADAR_PART, () -> PFItems.RADAR.get());
 
     /**
      * One block per {@link OreResource}: Terra's five ore blocks (ADR-0041).
@@ -189,6 +204,16 @@ public final class PFBlocks {
                 .sound(SoundType.METAL)
                 .noOcclusion()
                 // A piston moving one block would strand the rest of the footprint.
+                .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK);
+    }
+
+    /** A footprint machine's, but occluding: every block of the Radar draws itself. */
+    private static BlockBehaviour.Properties radarProperties(BlockBehaviour.Properties props) {
+        return props
+                .mapColor(net.minecraft.world.level.material.MapColor.METAL)
+                .strength(3.5F)
+                .requiresCorrectToolForDrops()
+                .sound(SoundType.METAL)
                 .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK);
     }
 

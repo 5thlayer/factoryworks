@@ -92,6 +92,10 @@ GENERATOR_TYPE = "generator"
 # listed apart from `machines` for the same reason the other three are.
 PUMP_TYPE = "offshore-pump"
 
+# The Radar crafts nothing and spends its power charting sectors, so it is listed apart from
+# `machines` for the reason the other four are (#368).
+RADAR_TYPE = "radar"
+
 # Factorio's default electric drain, from the engine rather than from any prototype: an
 # electric energy source with no `drain` set draws 1/30 of its `energy_usage` while idle.
 DEFAULT_DRAIN_FRACTION = 30
@@ -370,6 +374,36 @@ def extract_pumps(dump, scope):
     return pumps
 
 
+def extract_radars(dump, scope):
+    """Radars. A sector is Factorio's 32x32-tile chunk; both distances are counted in sectors."""
+    radars = []
+    kind = RADAR_TYPE
+    for name, prototype in sorted((dump.get(kind) or {}).items()):
+        if name not in scope:
+            continue
+        usage, drain, drain_source, energy_type = energy(prototype)
+        width, height = footprint(prototype)
+        radars.append(
+            {
+                "name": name,
+                "type": kind,
+                "energy_usage": usage,
+                "energy_type": energy_type,
+                "drain": drain,
+                "drain_source": drain_source,
+                "energy_per_sector": si(prototype.get("energy_per_sector")),
+                "energy_per_nearby_scan": si(prototype.get("energy_per_nearby_scan")),
+                "max_distance_of_sector_revealed": prototype.get("max_distance_of_sector_revealed"),
+                "max_distance_of_nearby_sector_revealed": prototype.get(
+                    "max_distance_of_nearby_sector_revealed"
+                ),
+                "tile_width": width,
+                "tile_height": height,
+            }
+        )
+    return radars
+
+
 def extract_generators(dump, scope):
     """Generators, and the one number of theirs Factorio does not state.
 
@@ -472,6 +506,7 @@ def main():
     boilers = extract_boilers(dump, scope)
     generators = extract_generators(dump, scope)
     pumps = extract_pumps(dump, scope)
+    radars = extract_radars(dump, scope)
     categories = extract_categories(dump)
 
     out = {
@@ -481,6 +516,7 @@ def main():
         "boilers": boilers,
         "generators": generators,
         "pumps": pumps,
+        "radars": radars,
         "categories": categories,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -532,6 +568,14 @@ def main():
     print("\npumps:")
     for pump in pumps:
         print(f"  {pump['name']:22} {pump['pumping_speed']} units/tick  {pump['tile_width']}x{pump['tile_height']}")
+    print("\nradars:")
+    for radar in radars:
+        print(
+            f"  {radar['name']:22} {(radar['energy_usage'] or 0) / 1000:7.1f} kW  "
+            f"{(radar['energy_per_sector'] or 0) / 1e6:g} MJ/sector  "
+            f"reach {radar['max_distance_of_sector_revealed']}  "
+            f"{radar['tile_width']}x{radar['tile_height']}"
+        )
     print("\ncategories with no crafting entity: "
           + ", ".join(n for n, who in categories.items() if not who))
 

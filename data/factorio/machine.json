@@ -537,6 +537,22 @@
       "tile_height": 1
     }
   ],
+  "radars": [
+    {
+      "name": "radar",
+      "type": "radar",
+      "energy_usage": 300000.0,
+      "energy_type": "electric",
+      "drain": 10000.0,
+      "drain_source": "default",
+      "energy_per_sector": 10000000.0,
+      "energy_per_nearby_scan": 250000.0,
+      "max_distance_of_sector_revealed": 14,
+      "max_distance_of_nearby_sector_revealed": 3,
+      "tile_width": 3,
+      "tile_height": 3
+    }
+  ],
   "categories": {
     "advanced-crafting": [
       "assembling-machine/assembling-machine-1",

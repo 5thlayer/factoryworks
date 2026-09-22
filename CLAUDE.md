@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
-and `FootprintBreakTests` (#352), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362) and `BeltSupportTests` (#366), registered only when the
+`FootprintBreakTests` (#352) and `RadarTests` (#368), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362) and `BeltSupportTests` (#366), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -635,6 +635,22 @@ floor a pole-drained row to whole 300 FE millibuckets (1,200 FE/t for three), so
 the millibucket that starts inside the room and carries its overshoot as energy (#292). That an
 engine chains, through a part as well, and is pulled by a pole through a slave's part is
 `SteamEngineNetworkTests`. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
+
+### Radar check
+
+The Radar (#368, ADR-0079) is a 3x3x3 on the footprint seam that charts one 32-block sector per
+10 MJ into its owner's FTB team's chart. `tests/factorio/test_machine_extract.py` holds the `radars`
+row against the dump when it is on disk and re-derives 33.3 s per sector;
+`tests/pack/test_radar_assets.py` runs `scripts/build-radar-assets.py --check` and holds the mod's
+resource against the corpus. The rules are Minecraft-free under
+`mod/src/test/java/com/planetaryfactory/core/radar/`: the draw and sector cost (`RadarSpecTest`,
+`RadarEnergyTest`), nearest-first passes within 14 (`RadarSweepTest`), the 3x3x3
+(`RadarFootprintTest`) and the chart's round trip (`RadarChartsTest`). `gametest/RadarTests` is
+the world half: a pole-fed Radar has charted nothing at tick 640 and its own sector by 720, and a
+starved one charts nothing; its placement and break are in `PlacementPlanTests` and
+`FootprintBreakTests`. Without FTB Teams on the classpath, as in the GameTest run, a player is their
+own team. Whether the chart reaches FTB Chunks' map is #116's next ticket. Run these after editing
+`core/radar/` or the generator.
 
 ### Enemy corpus check
 

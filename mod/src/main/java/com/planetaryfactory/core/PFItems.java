@@ -13,6 +13,7 @@ import com.planetaryfactory.core.mining.PickTier;
 import com.planetaryfactory.core.machine.footprint.FootprintItem;
 import com.planetaryfactory.core.mining.rig.RigBlockItem;
 import com.planetaryfactory.core.mining.rig.RigTier;
+import com.planetaryfactory.core.radar.RadarItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -74,6 +75,8 @@ public final class PFItems {
             "steam_engine",
             props -> new FootprintItem(props, PFBlocks.STEAM_ENGINE_FOOTPRINT, 0.7f, "steam_engine"));
 
+    public static final DeferredHolder<Item, RadarItem> RADAR = ITEMS.registerItem("radar", RadarItem::new);
+
     /**
      * The Engineer's Pick, in its two tiers (ADR-0039).
      *
@@ -130,6 +133,7 @@ public final class PFItems {
         FUNCTIONAL.add(BARREL);
         FUNCTIONAL.add(ASSEMBLING_MACHINE);
         FUNCTIONAL.add(STEAM_ENGINE);
+        FUNCTIONAL.add(RADAR);
         // Tools sit with the machinery, not with the saplings: a pick is the first thing a player
         // reaches for and the last place they would look for it is NATURAL_BLOCKS.
         PICKS.values().forEach(FUNCTIONAL::add);

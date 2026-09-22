@@ -31,7 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class FootprintPartBlock extends Block implements EnergyOwnerBlock {
 
     /** The most parts one footprint may have; the property is declared before any machine is known. */
-    public static final int MAX_PARTS = 3;
+    public static final int MAX_PARTS = 26;
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final IntegerProperty PART = IntegerProperty.create("part", 1, MAX_PARTS);

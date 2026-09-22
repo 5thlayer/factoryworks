@@ -5,16 +5,23 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.planetaryfactory.core.placement.PlacementPlan;
+import com.planetaryfactory.core.placement.Placements;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -24,9 +31,10 @@ import rearth.oritech.block.base.entity.MachineBlockEntity;
 import rearth.oritech.util.Geometry;
 
 /**
- * An Oritech machine placed whole and broken whole (ADR-0072, ADR-0077): its {@link Footprint}, the
- * anchor block that holds its block entity, the invisible part block standing on every other
- * position, and the one item that places it and that a break pays back.
+ * A machine placed whole and broken whole (ADR-0072, ADR-0077): its {@link Footprint}, the anchor
+ * block that holds its block entity, the part block standing on every other position, and the one
+ * item that places it and that a break pays back. The anchor is an Oritech machine, or any
+ * horizontally facing block, as the Radar's is (#368).
  *
  * <p>Positions are the footprint rotated by Oritech's own {@link Geometry#rotatePosition}, the call
  * Oritech's renderer draws the model with, which is what keeps the blocks under the model.
@@ -36,7 +44,7 @@ import rearth.oritech.util.Geometry;
  * guard is what stops the teardown's own removals from starting a second teardown or popping a
  * second item.
  */
-public record FootprintMachine(Footprint footprint, Supplier<? extends FootprintAnchorBlock> anchor,
+public record FootprintMachine(Footprint footprint, Supplier<? extends Block> anchor,
                                Supplier<? extends FootprintPartBlock> part, Supplier<? extends Item> item) {
 
     private static final ThreadLocal<Boolean> TEARING_DOWN = ThreadLocal.withInitial(() -> false);
@@ -68,15 +76,17 @@ public record FootprintMachine(Footprint footprint, Supplier<? extends Footprint
     }
 
     /**
-     * The state each position is placed in. The anchor is placed already assembled, which is what
-     * makes Oritech's multiblock paths return early rather than scan for cores the pack never asks
-     * the player to place.
+     * The state each position is placed in. An Oritech anchor is placed already assembled, which is
+     * what makes Oritech's multiblock paths return early rather than scan for cores the pack never
+     * asks the player to place.
      */
     public BlockState stateAt(int index, Direction facing) {
         if (index == 0) {
-            return anchor.get().defaultBlockState()
-                    .setValue(MultiblockMachine.FACING, facing)
-                    .setValue(MultiblockMachine.ASSEMBLED, true);
+            BlockState state = anchor.get().defaultBlockState()
+                    .setValue(HorizontalDirectionalBlock.FACING, facing);
+            return state.hasProperty(MultiblockMachine.ASSEMBLED)
+                    ? state.setValue(MultiblockMachine.ASSEMBLED, true)
+                    : state;
         }
         return part.get().defaultBlockState()
                 .setValue(FootprintPartBlock.FACING, facing)
@@ -119,6 +129,32 @@ public record FootprintMachine(Footprint footprint, Supplier<? extends Footprint
         return fits
                 ? PlacementPlan.accepted(blocks)
                 : PlacementPlan.refused(blocks, PlacementPlan.Refusal.FOOTPRINT_BLOCKED);
+    }
+
+    /**
+     * Executes the item's plan (ADR-0069), so the preview and the click cannot disagree: every
+     * block or none, and the item spent only when the machine stands. The anchor's position, or
+     * null when the plan refused.
+     */
+    public static @Nullable BlockPos place(BlockItem item, BlockPlaceContext context) {
+        PlacementPlan plan = Placements.planFor(item, context);
+        if (plan == null || plan.isRefused()) {
+            return null;
+        }
+        Level level = context.getLevel();
+        for (PlacementPlan.Placed placed : plan.blocks()) {
+            level.setBlock(placed.pos(), placed.state(), Block.UPDATE_ALL);
+        }
+
+        PlacementPlan.Placed anchor = plan.blocks().getFirst();
+        Player player = context.getPlayer();
+        SoundType sound = anchor.state().getSoundType();
+        level.playSound(player, anchor.pos(), sound.getPlaceSound(), SoundSource.BLOCKS,
+                (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
+        level.gameEvent(GameEvent.BLOCK_PLACE, anchor.pos(), GameEvent.Context.of(player, anchor.state()));
+
+        context.getItemInHand().consume(1, player);
+        return anchor.pos();
     }
 
     public static boolean tearingDown() {
