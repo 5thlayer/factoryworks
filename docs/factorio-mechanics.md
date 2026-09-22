@@ -1269,9 +1269,9 @@ two.
 
 Factorio's Radar (ADR-0045, ADR-0079): a 3x3x3 `planetaryfactory:radar` drawing 150 FE/t that
 charts map at range for its owner's team. It detects nothing hidden, since ore lies on the surface.
-#368 built the machine and the team's chart on the server; drawing the chart on FTB Chunks' map and
-marking outfield patches are #116's remaining tickets, so the row stays `planned` until a player sees
-the map.
+#368 built the machine and the team's chart on the server, and #369 sends the chart to each member's
+FTB Chunks map, late joiners included. Marking outfield patches is #116's remaining ticket, and the
+row stays `planned` until a player has seen the map drawn.
 
 **This row is the proof case for the two axes never reading each other.** `combat/defensive-structure`
 is `not_emitted` in `subgroup-owner.json`, and a ledger that read its verdicts out of that file would
@@ -1280,7 +1280,7 @@ have recorded "radar: excluded" — which is wrong whatever this row's verdict t
 Sub-rules:
 
 - **Reveals map by scanning distant sectors** — `planned`. One 32-block sector per 10 MJ within 14
-  sectors, charted on the server since #368; it reaches the map with #116.
+  sectors, charted on the server since #368 and sent to every team member's map since #369.
 - **Keeps the nearby area live** — `adapted`. No chunk-loaded live view: every pass re-charts the
   nearest sectors first.
 

@@ -651,8 +651,12 @@ resource against the corpus. The rules are Minecraft-free under
 the world half: a pole-fed Radar has charted nothing at tick 640 and its own sector by 720, and a
 starved one charts nothing; its placement and break are in `PlacementPlanTests` and
 `FootprintBreakTests`. Without FTB Teams on the classpath, as in the GameTest run, a player is their
-own team. Whether the chart reaches FTB Chunks' map is #116's next ticket. Run these after editing
-`core/radar/` or the generator.
+own team. What each player's map is sent (#369) is `ChartDeliveryTest`: at login, on joining a team
+and on entering a dimension, exactly the team's sectors that map lacks, a sector at a time, and
+nothing twice. The drawing calls FTB Chunks' internal `ChunkUpdateTask`, compiled against 26.1.2.8
+by name, and the GameTest run has no FTB Chunks, so it is also the check that the Radar charts
+without it. Whether the terrain appears on the big map and minimap is a human check on delivery.
+Run these after editing `core/radar/` or the generator.
 
 ### Enemy corpus check
 

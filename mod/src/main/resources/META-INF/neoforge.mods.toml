@@ -77,3 +77,11 @@ modId = "jei"
 type = "optional"
 ordering = "AFTER"
 side = "CLIENT"
+
+# Pinned because the Radar's map drawing calls FTB Chunks' internals, not its API (ADR-0079).
+[[dependencies.${mod_id}]]
+modId = "ftbchunks"
+type = "optional"
+versionRange = "[26.1.2.8]"
+ordering = "NONE"
+side = "CLIENT"
