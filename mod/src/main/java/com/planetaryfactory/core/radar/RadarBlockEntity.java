@@ -94,9 +94,14 @@ public class RadarBlockEntity extends BlockEntity {
         }
         long before = energy.progress();
         RadarEnergy.Scans scans = energy.tick();
-        if (scans.nearby() && pulse.isEmpty() && owner != null) {
+        if (scans.nearby() && owner != null) {
             Predicate<Sector> charted = charted(serverLevel);
-            SWEEP.nearby(origin()).stream().filter(charted.negate()).forEach(pulse::add);
+            RadarChartData.get(serverLevel.getServer()).rescanned(ChartOwners.teamOf(owner),
+                    serverLevel.dimension().identifier().toString(),
+                    SWEEP.nearby(origin()).stream().filter(charted).toList());
+            if (pulse.isEmpty()) {
+                SWEEP.nearby(origin()).stream().filter(charted.negate()).forEach(pulse::add);
+            }
         }
         if (!pulse.isEmpty()) {
             chart(serverLevel, pulse.poll());
@@ -115,11 +120,16 @@ public class RadarBlockEntity extends BlockEntity {
 
     /**
      * An unowned Radar, one placed other than by a player, charts for no team and generates nothing.
-     * A sector already charted is not loaded again: nothing re-sends it, so a re-scan would only
-     * load four chunks for no change on any map (ADR-0079).
+     * A sector already charted is not loaded again: nothing re-sends its terrain, so a re-scan
+     * refreshes only its patches' amounts, which the ledger holds without a chunk (ADR-0079).
      */
     private void chart(ServerLevel serverLevel, Sector sector) {
-        if (owner == null || charted(serverLevel).test(sector)) {
+        if (owner == null) {
+            return;
+        }
+        if (charted(serverLevel).test(sector)) {
+            RadarChartData.get(serverLevel.getServer()).rescanned(ChartOwners.teamOf(owner),
+                    serverLevel.dimension().identifier().toString(), List.of(sector));
             return;
         }
         List<ChunkAccess> chunks = new ArrayList<>();

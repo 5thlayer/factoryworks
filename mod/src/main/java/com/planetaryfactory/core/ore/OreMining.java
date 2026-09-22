@@ -19,7 +19,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
-import java.util.OptionalInt;
+import com.planetaryfactory.core.radar.RadarChartData;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -44,6 +44,12 @@ import org.slf4j.Logger;
 public final class OreMining {
 
     private static final Logger LOGGER = LogUtils.getLogger();
+
+    /**
+     * The block {@link #draw} is replacing with stone. Its removal reaches {@link #onRemoved} after
+     * its delta has retired, where it would read as a full block lost (#371).
+     */
+    private static @Nullable BlockPos depleting;
 
     private OreMining() {
     }
@@ -120,7 +126,8 @@ public final class OreMining {
      * identically.
      */
     public static OreDelta.Draw draw(ServerLevel level, OreBlock ore, BlockPos pos) {
-        int initial = initialAmount(level, ore, pos);
+        @Nullable OutfieldDisc disc = outfieldDiscOf(level, ore, pos);
+        int initial = initialAmount(level, ore, pos, disc);
         OreDelta delta = deltaOf(level, pos);
         OreDelta.Draw draw = delta.draw(pos.asLong(), initial);
         level.getChunk(pos).markUnsaved();
@@ -129,10 +136,21 @@ public final class OreMining {
         // draws every few ticks and several rigs would make this the loudest thing in the log.
         LOGGER.debug("ore draw: {} at {}, initial={}, paid={}, remaining={}, exhausted={}",
                 ore.resource().key(), pos, initial, draw.paid(), draw.remaining(), draw.exhausted());
+        if (disc != null && draw.paid() > 0) {
+            PatchLedgerData.get(level.getServer()).drew(PatchId.of(dimension(level), disc));
+        }
         if (draw.exhausted()) {
             // The hole argument is served by the stages and by the patch visibly shrinking; a
             // crater in a field a drill has to stand on is not.
-            level.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
+            depleting = pos;
+            try {
+                level.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
+            } finally {
+                depleting = null;
+            }
+            if (disc != null) {
+                blockGone(level, disc, 0);
+            }
         } else {
             level.setBlockAndUpdate(pos, ore.stateFor(draw.remaining(), initial));
         }
@@ -153,13 +171,35 @@ public final class OreMining {
      * {@code 0} for a block nothing generated.
      */
     public static int initialAmount(ServerLevel level, OreBlock ore, BlockPos pos) {
+        return initialAmount(level, ore, pos, outfieldDiscOf(level, ore, pos));
+    }
+
+    private static int initialAmount(ServerLevel level, OreBlock ore, BlockPos pos, @Nullable OutfieldDisc disc) {
+        return disc != null ? disc.amountPerBlock() : startingAmount(level, ore, pos);
+    }
+
+    private static int startingAmount(ServerLevel level, OreBlock ore, BlockPos pos) {
+        return level.getDataStorage().computeIfAbsent(OreFields.TYPE).startingAmount(ore.resource(), pos).orElse(0);
+    }
+
+    /** The outfield disc a block belongs to, or null for a starting field's block or one nothing generated. */
+    private static @Nullable OutfieldDisc outfieldDiscOf(ServerLevel level, OreBlock ore, BlockPos pos) {
         OreFields fields = level.getDataStorage().computeIfAbsent(OreFields.TYPE);
-        OptionalInt starting = fields.startingAmount(ore.resource(), pos);
-        if (starting.isPresent()) {
-            return starting.getAsInt();
+        if (fields.startingAmount(ore.resource(), pos).isPresent()) {
+            return null;
         }
-        OutfieldDisc disc = outfieldDiscAt(level, ore.resource(), pos);
-        return disc == null ? 0 : disc.amountPerBlock();
+        return outfieldDiscAt(level, ore.resource(), pos);
+    }
+
+    private static void blockGone(ServerLevel level, OutfieldDisc disc, int unitsLost) {
+        PatchId patch = PatchId.of(dimension(level), disc);
+        if (PatchLedgerData.get(level.getServer()).blockGone(patch, unitsLost, disc.blockCount())) {
+            RadarChartData.get(level.getServer()).ranOut(patch);
+        }
+    }
+
+    private static String dimension(ServerLevel level) {
+        return level.dimension().identifier().toString();
     }
 
     private static @Nullable OutfieldDisc outfieldDiscAt(ServerLevel level, OreResource resource, BlockPos pos) {
@@ -179,13 +219,21 @@ public final class OreMining {
     /**
      * Any other route out of being an ore block, so a delta never outlives the block it counted.
      *
-     * <p>Called from {@link OreBlock#onRemove}, which is the one seam every removal goes through --
-     * an explosion, a creative break, a structure overwriting the position. Depletion has already
-     * retired its own entry by the time it gets here, and retiring twice costs nothing.
+     * <p>Called from {@link OreBlock#affectNeighborsAfterRemoval}, the one seam every removal goes
+     * through -- depletion, an explosion, a creative break, a structure overwriting the position.
+     * An outfield block removed any way but depletion takes its undrawn units out of its patch's
+     * ledger with it; depletion is counted in {@link #draw} (#371).
      */
-    public static void onRemoved(Level level, BlockPos pos) {
+    public static void onRemoved(Level level, BlockPos pos, OreBlock ore) {
         if (level instanceof ServerLevel server) {
-            deltaOf(server, pos).retire(pos.asLong());
+            OreDelta delta = deltaOf(server, pos);
+            if (!pos.equals(depleting)) {
+                OutfieldDisc disc = outfieldDiscOf(server, ore, pos);
+                if (disc != null) {
+                    blockGone(server, disc, delta.remaining(pos.asLong(), disc.amountPerBlock()));
+                }
+            }
+            delta.retire(pos.asLong());
             server.getChunkAt(pos).markUnsaved();
         }
     }

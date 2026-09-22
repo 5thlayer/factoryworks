@@ -664,7 +664,13 @@ and on entering a dimension, exactly the team's sectors that map lacks, a sector
 nothing twice. Which outfield patches a charted sector marks, by the disc's centre and never a
 starting field, is `SectorPatchesTest`, and which markers each player is sent -- every one of the
 team's chart and of their own walking that their client lacks, again after a logout since the client
-holds them in memory -- is `MarkerDeliveryTest` (#370), and the walked record `WalkedPatchesTest`. The drawing calls FTB Chunks' internal `ChunkUpdateTask`, compiled against 26.1.2.8
+holds them in memory -- is `MarkerDeliveryTest` (#370), and the walked record `WalkedPatchesTest`.
+The same test holds the amount a marker carries: sent again only when a chart, re-scan or walk finds
+it changed, and once as a removal to every map holding it when the patch runs out, never to a map
+that did not (#371). What a patch has left is `PatchLedgerTest`, its label `PatchAmountTest`, and
+`gametest/OutfieldDiscTests`' `outfield_last_block_removes_its_marker` holds the world half: a
+charted disc sends its total, breaking all but one block and re-scanning sends one block's worth,
+and mining the last block out sends exactly one removal and nothing before it. The drawing calls FTB Chunks' internal `ChunkUpdateTask`, compiled against 26.1.2.8
 by name, and the GameTest run has no FTB Chunks, so it is also the check that the Radar charts
 without it. Whether the terrain and the patch icons appear on the big map and minimap is a human check on
 delivery.

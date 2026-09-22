@@ -41,7 +41,7 @@ public final class SectorPatches {
                 OutfieldDisc disc = source.disc();
                 if (Sector.ofBlock(disc.centreX(), disc.centreZ()).equals(sector)) {
                     found.add(new PatchMarker(disc.resource().key(), disc.centreX(),
-                            surface.at(disc.centreX(), disc.centreZ()), disc.centreZ()));
+                            surface.at(disc.centreX(), disc.centreZ()), disc.centreZ(), disc.total()));
                 }
             }
         }

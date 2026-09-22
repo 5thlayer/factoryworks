@@ -10,7 +10,15 @@ import com.planetaryfactory.core.ore.OreMining;
 import com.planetaryfactory.core.ore.OreResource;
 import com.planetaryfactory.core.ore.OutfieldDisc;
 import com.planetaryfactory.core.ore.OutfieldLaw;
+import com.planetaryfactory.core.radar.ChartDeliveries;
+import com.planetaryfactory.core.radar.MarkerDelivery;
+import com.planetaryfactory.core.radar.PatchMarker;
+import com.planetaryfactory.core.radar.RadarChartData;
+import com.planetaryfactory.core.radar.Sector;
 import com.planetaryfactory.core.worldgen.OutfieldDiscStructure;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -67,6 +75,105 @@ final class OutfieldDiscTests {
             tests.test("outfield_" + resource.key() + "_nothing_off_the_land", 20,
                     helper -> nothingOffTheLand(helper, resource, far));
         }
+        tests.test("outfield_last_block_removes_its_marker", 20,
+                helper -> lastBlockRemovesItsMarker(helper, OreResource.IRON, new ChunkPos(100, 140)));
+    }
+
+    /**
+     * A patch's marker is sent with what it holds, and exactly once more with nothing when its last
+     * block goes (#371). The first block is mined out and the last is mined to the end, so a mined-out
+     * block counted twice ends the patch a block early; the rest are broken outright, the route by
+     * which a patch loses units nobody drew.
+     */
+    private static void lastBlockRemovesItsMarker(GameTestHelper helper, OreResource resource, ChunkPos chunk) {
+        ServerLevel level = helper.getLevel();
+        Holder<Structure> structure = resolve(helper, resource);
+        if (structure == null) {
+            return;
+        }
+        StructureStart start = generate(level, structure, chunk);
+        if (!start.isValid() || !(start.getPieces().getFirst() instanceof OutfieldDisc.Source source)) {
+            helper.fail(resource.key() + " generated no disc at " + chunk);
+            return;
+        }
+        OutfieldDisc disc = source.disc();
+        BoundingBox box = start.getBoundingBox();
+        loadChunks(level, box);
+        place(level, structure.value(), start, chunk, box);
+        List<BlockPos> ores = new ArrayList<>();
+        int ground = level.getHeight(Heightmap.Types.WORLD_SURFACE, box.minX(), box.minZ()) - 1;
+        for (int x = box.minX(); x <= box.maxX(); x++) {
+            for (int z = box.minZ(); z <= box.maxZ(); z++) {
+                BlockPos pos = new BlockPos(x, ground, z);
+                if (level.getBlockState(pos).getBlock() instanceof OreBlock) {
+                    ores.add(pos);
+                }
+            }
+        }
+
+        if (ores.size() < 2) {
+            helper.fail(resource.key() + "'s disc at " + chunk + " placed " + ores.size() + " blocks");
+            return;
+        }
+        UUID player = UUID.randomUUID();
+        RadarChartData data = RadarChartData.get(level.getServer());
+        try {
+            lastBlockRemovesItsMarker(helper, level, data, player, chunk, disc, ores);
+        } finally {
+            data.logout(player);
+        }
+    }
+
+    private static void lastBlockRemovesItsMarker(GameTestHelper helper, ServerLevel level, RadarChartData data,
+            UUID player, ChunkPos chunk, OutfieldDisc disc, List<BlockPos> ores) {
+        String dimension = level.dimension().identifier().toString();
+        MarkerDelivery.Amounts amounts = ChartDeliveries.amounts(level.getServer());
+        data.observe(player, player, dimension);
+        Sector sector = Sector.ofBlock(chunk.getMinBlockX(), chunk.getMinBlockZ());
+        List<PatchMarker> found = ChartDeliveries.patchesStartedIn(level, sector,
+                List.of(level.getChunk(chunk.x(), chunk.z())));
+        data.chart(player, dimension, sector, found);
+        List<MarkerDelivery.Update> charted = data.takeMarkers(player, amounts);
+        if (found.size() != 1 || charted.size() != 1 || charted.getFirst().amount() != disc.total()) {
+            helper.fail("charting the disc's sector found " + found + " and sent " + charted
+                    + ", for a disc holding " + disc.total());
+            return;
+        }
+        PatchMarker marker = found.getFirst();
+
+        BlockPos first = ores.removeFirst();
+        BlockPos last = ores.removeLast();
+        OreBlock ore = (OreBlock) level.getBlockState(last).getBlock();
+        for (int unit = 0; unit < disc.amountPerBlock(); unit++) {
+            OreMining.draw(level, ore, first);
+        }
+        for (BlockPos pos : ores) {
+            level.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
+        }
+        data.rescanned(player, dimension, List.of(sector));
+        List<MarkerDelivery.Update> broken = data.takeMarkers(player, amounts);
+        if (!broken.equals(List.of(new MarkerDelivery.Update(marker, disc.amountPerBlock())))) {
+            helper.fail("with one block of " + disc.blockCount() + " left, a re-scan sent " + broken);
+            return;
+        }
+
+        for (int unit = 0; unit < disc.amountPerBlock(); unit++) {
+            if (!data.takeMarkers(player, amounts).isEmpty()) {
+                helper.fail("a removal was sent with " + (disc.amountPerBlock() - unit) + " units left");
+                return;
+            }
+            OreMining.draw(level, ore, last);
+        }
+        List<MarkerDelivery.Update> removal = data.takeMarkers(player, amounts);
+        data.rescanned(player, dimension, List.of(sector));
+        List<MarkerDelivery.Update> after = data.takeMarkers(player, amounts);
+        if (!level.getBlockState(last).is(Blocks.STONE)
+                || !removal.equals(List.of(new MarkerDelivery.Update(marker, 0))) || !after.isEmpty()) {
+            helper.fail("mining out the last block left " + level.getBlockState(last) + ", sent " + removal
+                    + " and then " + after);
+            return;
+        }
+        helper.succeed();
     }
 
     private static void discPlaces(GameTestHelper helper, OreResource resource, ChunkPos chunk) {

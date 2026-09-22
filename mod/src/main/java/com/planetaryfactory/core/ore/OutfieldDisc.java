@@ -22,6 +22,11 @@ public record OutfieldDisc(OreResource resource, double sizeFactor, int blockCou
         return Math.sqrt((double) centreX * centreX + (double) centreZ * centreZ);
     }
 
+    /** What the placed blocks hold between them, which the floored quotient leaves under the law's total. */
+    public long total() {
+        return (long) blockCount * amountPerBlock();
+    }
+
     public int amountPerBlock() {
         long total = OutfieldLaw.of(resource).total(sizeFactor, distance());
         return new OreField(resource.key(), total, blockCount).amountPerBlock();

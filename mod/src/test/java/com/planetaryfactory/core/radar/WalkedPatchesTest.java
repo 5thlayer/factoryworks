@@ -14,8 +14,8 @@ class WalkedPatchesTest {
 
     private static final UUID ALICE = UUID.fromString("6f1b1e5e-0000-4000-8000-0000000000a1");
     private static final String OVERWORLD = "minecraft:overworld";
-    private static final PatchMarker IRON = new PatchMarker("iron", 8, 70, 8);
-    private static final PatchMarker COAL = new PatchMarker("coal", 40, 70, 8);
+    private static final PatchMarker IRON = new PatchMarker("iron", 8, 70, 8, 1_000);
+    private static final PatchMarker COAL = new PatchMarker("coal", 40, 70, 8, 2_000);
 
     @Test
     void addingAnswersOnlyWhatIsNew() {

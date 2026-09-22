@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.UUID;
 
 import com.planetaryfactory.core.network.PFNetwork;
+import com.planetaryfactory.core.ore.PatchLedgerData;
 import com.planetaryfactory.core.network.RadarChunkPacket;
 import com.planetaryfactory.core.network.RadarMarkersPacket;
 
 import net.minecraft.network.protocol.game.ClientboundLevelChunkPacketData;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
@@ -43,6 +45,7 @@ public final class ChartDeliveries {
             return;
         }
         RadarChartData data = RadarChartData.get(event.getServer());
+        MarkerDelivery.Amounts amounts = amounts(event.getServer());
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
             if (player.tickCount < LOGIN_GRACE_TICKS) {
                 continue;
@@ -53,7 +56,7 @@ public final class ChartDeliveries {
             for (Sector sector : data.takeDeliveries(id, 1)) {
                 send(player, level, sector);
             }
-            List<PatchMarker> markers = data.takeMarkers(id);
+            List<MarkerDelivery.Update> markers = data.takeMarkers(id, amounts);
             if (!markers.isEmpty()) {
                 PFNetwork.sendToPlayer(player, new RadarMarkersPacket(level.dimension(), markers));
             }
@@ -73,6 +76,12 @@ public final class ChartDeliveries {
             RadarChartData.get(level.getServer()).walked(event.getPlayer().getUUID(),
                     level.dimension().identifier().toString(), found);
         }
+    }
+
+    /** What is left in each patch, as the ledger holds it. */
+    public static MarkerDelivery.Amounts amounts(MinecraftServer server) {
+        PatchLedgerData ledger = PatchLedgerData.get(server);
+        return (dimension, marker) -> ledger.remaining(marker.id(dimension), marker.total());
     }
 
     /** A structure's start is kept by the chunk it began in, which for a disc holds its centre (ADR-0079). */
