@@ -1,27 +1,21 @@
 #!/usr/bin/env python3
 """Build the ore blocks' eight stage sprites, one set per resource (ADR-0041).
 
-**Placeholder art, generated rather than drawn**, on the same footing as
-`scripts/gen-flora-textures.py`: 16x16 RGBA, pure stdlib, meant to be replaced. What is *not*
-placeholder is the arithmetic, and it is the reason this is a script rather than forty checked-in
-PNGs nobody can re-derive.
-
 ADR-0041 renders a block's remaining amount as one of Factorio's eight sprite stages. Factorio's
 own thresholds are amounts -- 15000 down to 80 -- which do not port to blocks holding about a
 thousand; what ports is the *ratio set*, and `data/factorio/resource.json` carries it per resource
 as `stage_ratios`. Those ratios are where a block changes stage. **What each stage draws is an even
-step**: stage `i` of `n` keeps `(n - i) / n` of the full sprite's ore pixels. Drawn at the ratios
-themselves, the last four stages (8.7% down to 0.5%) were one or two pixels and the last two looked
-the same (#321). Jade shows the exact amount, so the sprite only has to be readable.
+step**: stage `i` of `n` keeps `(n - i) / n` of the full sprite's ore, because the late ratios
+(8.7% down to 0.5%) are too small to see and Jade shows the exact amount (#321). The ore goes
+in a fixed order, from the outside in, so a thinning block keeps its core and each stage is a
+subset of the one before.
 
-The colours are the placeholder half and are chosen here, one per generated resource. The speckle *positions*
-are drawn from a fixed seed per resource and then *removed in a fixed order* as the stages fall, so
-a block thinning out looks like the same block losing ore rather than eight unrelated sprites.
+**Coal, copper, iron and uranium wear borrowed art** (#321): Malcolm Riley's unused textures, CC BY
+4.0 and credited in `NOTICE`, committed unmodified under `data/art/`. The source's ore pixels are
+the ore, and a removed pixel takes the colour of a nearby stone pixel in the source.
 
-**Every ore but stone wears borrowed art** (#321): Malcolm Riley's unused textures, CC BY 4.0 and
-credited in `NOTICE`, committed unmodified under `data/art/`. The step rule is the same. The source's
-ore pixels are the speckles, and they go from the outside in, so a thinning block keeps the core of
-its ore. A removed pixel takes the colour of a nearby stone pixel in the source.
+**Stone is generated** (#363) as Factorio's stone reads: tan boulders standing on the ground. They
+are placed from a fixed seed and go whole.
 
 Run after re-extracting the corpus, in case Factorio changed its stage counts:
 
@@ -53,12 +47,24 @@ RESOURCES = {
     "stone": "stone",
 }
 
-# The placeholder half: a speckle colour per resource, and the stone they sit in. Chosen, not
-# derived -- these are stand-ins for art, and the flora textures were made the same way.
 STONE = (122, 122, 122)
-SPECKLE = {
-    "stone": (166, 160, 150),
-}
+
+# Stone's boulders take Factorio's stone colours: the highlight is its `map_color` and the body the
+# median of its sprite's lit rock. The shadow is chosen darker than any matrix pixel, so each boulder
+# stands up (#363).
+BOULDER_LIGHT = (176, 156, 109)
+BOULDER = (155, 135, 88)
+BOULDER_SHADOW = (72, 64, 50)
+# One per stage, so each stage takes exactly one boulder.
+BOULDERS = 8
+BOULDER_SHAPES = [
+    [(0, 0), (1, 0), (0, 1), (1, 1)],
+    [(0, 0), (1, 0), (2, 0), (0, 1), (1, 1)],
+    [(0, 0), (1, 0), (0, 1), (1, 1), (1, 2)],
+    [(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)],
+    [(0, 0), (1, 0), (2, 0), (1, 1), (2, 1)],
+    [(0, 0), (1, 0), (0, 1)],
+]
 
 SOURCED = {"coal": "ore_slade_coal.png", "copper": "ore_stone_copper_2.png", "iron": "ore_slade_iron.png", "uranium": "ore_stone_soul.png"}
 ART = os.path.join(ROOT, "data", "art")
@@ -72,10 +78,6 @@ ORE_PIXEL = {
     "iron": (0.25, 0.2),
     "uranium": (0.25, 0.3),
 }
-
-# How many of the 256 pixels a full block speckles. Enough to read as an ore at a glance and
-# leave room for eight distinguishable steps below it.
-FULL_SPECKLES = 96
 
 # One seed per resource, so a rerun does not churn forty binaries for no reason.
 SEED = 20260905
@@ -165,8 +167,8 @@ def sourced_sprites(resource, ratios):
 
 
 def kept(full, stage, stages):
-    """The ore pixels stage `stage` of `stages` keeps. Never zero, so a block still holding ore
-    never draws as bare stone."""
+    """How many of `full` ore pieces stage `stage` of `stages` keeps. Never zero, so a block still
+    holding ore never draws as bare stone."""
     return -(-full * (stages - stage) // stages)
 
 
@@ -174,23 +176,38 @@ def shade(colour, delta):
     return [max(0, min(255, value + delta)) for value in colour] + [255]
 
 
-def sprites(resource, ratios):
-    """One sprite per stage, speckled in even steps down from the full sprite.
-
-    The speckle order is fixed and the stages *truncate* it, so stage `n + 1` shows a subset of
-    stage `n`'s pixels: the block loses ore in place rather than being redrawn.
-    """
+def boulder_sprites(resource, ratios):
+    """One sprite per stage: boulders lit from the upper left on the grey matrix, going whole and
+    from the outside in, the way Factorio's stone sheet thins (#363)."""
     rng = random.Random(f"{SEED}:{resource}")
-    positions = [(x, y) for y in range(16) for x in range(16)]
-    rng.shuffle(positions)
-    speckles = positions[:FULL_SPECKLES]
     ground = [[shade(STONE, rng.randint(-9, 9)) for _ in range(16)] for _ in range(16)]
+    taken, boulders = set(), []
+    while len(boulders) < BOULDERS:
+        shape = rng.choice(BOULDER_SHAPES)
+        ox, oy = rng.randrange(15), rng.randrange(15)
+        body = {(ox + dx, oy + dy) for dx, dy in shape}
+        shadow = {(x + dx, y + dy) for x, y in body for dx, dy in ((1, 0), (0, 1), (1, 1))} - body
+        footprint = body | shadow
+        if any(not (0 <= x < 16 and 0 <= y < 16) for x, y in footprint):
+            continue
+        if any((x + dx, y + dy) in taken for x, y in footprint for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+            continue
+        taken |= footprint
+        drawn = {c: shade(BOULDER_SHADOW, rng.randint(-6, 6)) for c in shadow}
+        for x, y in body:
+            lit = (x - 1, y) not in body and (x, y - 1) not in body
+            drawn[(x, y)] = shade(BOULDER_LIGHT if lit else BOULDER, rng.randint(-6, 6))
+        cx = sum(x for x, _ in body) / len(body)
+        cy = sum(y for _, y in body) / len(body)
+        boulders.append(((cx - 7.5) ** 2 + (cy - 7.5) ** 2, drawn))
+    boulders.sort(key=lambda b: b[0])
 
     out = []
     for stage in range(len(ratios)):
         pixels = [row[:] for row in ground]
-        for x, y in speckles[:kept(FULL_SPECKLES, stage, len(ratios))]:
-            pixels[y][x] = shade(SPECKLE[resource], rng.randint(-14, 14))
+        for _, drawn in boulders[:kept(len(boulders), stage, len(ratios))]:
+            for (x, y), colour in drawn.items():
+                pixels[y][x] = colour
         out.append(png(pixels))
     return out
 
@@ -207,7 +224,7 @@ def build():
         if len(ratios) < 2:
             sys.exit(f"{factorio} carries {len(ratios)} stage ratios; there is nothing to render")
         images = (sourced_sprites(resource, ratios) if resource in SOURCED
-                  else sprites(resource, ratios))
+                  else boulder_sprites(resource, ratios))
         for stage, image in enumerate(images):
             files[os.path.join(OUT, f"{resource}_stage{stage}.png")] = image
     return files
