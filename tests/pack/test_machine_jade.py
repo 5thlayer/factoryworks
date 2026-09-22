@@ -18,11 +18,12 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 CORE = ROOT / "mod/src/main/java/com/planetaryfactory/core"
 LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
 
-# Each plugin, and the enum its status line is read from.
+# Each plugin with the helpers that spell its text, and the enum its status line is read from.
 MACHINES = {
-    "Assembling Machine": (CORE / "compat/AssemblingMachineJadePlugin.java",
+    "Assembling Machine": ((CORE / "compat/AssemblingMachineJadePlugin.java",
+                            CORE / "machine/AssemblingStatusText.java"),
                            CORE / "machine/AssemblingStatus.java", "AssemblingStatus"),
-    "Steam Engine": (CORE / "compat/SteamEngineJadePlugin.java",
+    "Steam Engine": ((CORE / "compat/SteamEngineJadePlugin.java",),
                      CORE / "fluid/SteamEngineStatus.java", "SteamEngineStatus"),
 }
 
@@ -42,11 +43,11 @@ def main():
     lang = json.loads(LANG.read_text(encoding="utf-8"))
     failures = []
     count = 0
-    for machine, (plugin, status, enum) in MACHINES.items():
-        source = plugin.read_text(encoding="utf-8")
+    for machine, (sources, status, enum) in MACHINES.items():
+        source = "\n".join(path.read_text(encoding="utf-8") for path in sources)
         keys = set(KEY_RE.findall(source))
         if not keys:
-            failures.append(f"no lang keys parsed out of {plugin.relative_to(ROOT)}")
+            failures.append(f"no lang keys parsed out of {sources[0].relative_to(ROOT)}")
         if "langKey()" not in source:
             failures.append(f"the {machine} plugin no longer asks {enum}.langKey(); the status keys are unchecked")
         keys |= status_keys(status, enum)

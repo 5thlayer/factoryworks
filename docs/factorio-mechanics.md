@@ -451,12 +451,14 @@ Sub-rules:
 - **verdict**: `planned`
 - **where**: all bodies
 - **via**: `planetaryfactory_core`, `oritech`
-- **owner**: ADR-0026, ADR-0029, ADR-0056, ADR-0060
+- **owner**: ADR-0026, ADR-0029, ADR-0056, ADR-0060, ADR-0075
 - **ticket**: #87 (the machines are registered; the recipe conversion is not); #326 registers
   tier 1 as `planetaryfactory:assembling_machine` on Oritech's base, placed and inert (ADR-0071,
   ADR-0072); #327 gives it a Held recipe and #328 crafts it at `assembling-machine-1`'s speed 0.5
   and 75 kW, stalling without consuming; #331 emits the recipes naming it, and refuses it every
-  `crafting-with-fluid` one, which tier 1's `crafting_categories` does not list
+  `crafting-with-fluid` one, which tier 1's `crafting_categories` does not list; #295 adds tiers 2
+  and 3 as blocks of their own (ADR-0075), which craft with a fluid. Tier 3's recipe waits on
+  `speed-module` (#120)
 
 Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
 (ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes GregTech out of the pack and
@@ -466,12 +468,22 @@ lookup.
 
 Sub-rules:
 
-- **`crafting_speed` as a machine property** — `planned`. ADR-0029 puts it on the machine, at
+- **`crafting_speed` as a machine property** — `shipped`. ADR-0029 puts it on the machine, at
   Factorio's raw values (0.5 / 0.75 / 1.25), which is what makes `energy_required x 20` produce
-  Factorio's own felt durations. It is also the only thing that makes the three tiers differ, since
-  overclocking never fires above base tier.
-- **`energy_usage` as a machine property** — `planned`. ADR-0029 emits no `EUt` on a recipe at all;
-  a machine modifier supplies it, scaled so the Oil Refinery's 420 kW lands on LV's 32 EU/t.
+  Factorio's own felt durations. `AssemblingTier` carries one per tier (#295).
+- **`energy_usage` as a machine property** — `shipped`. No recipe carries energy; each tier draws
+  its own 75, 150 or 375 kW at 1 FE = 100 J, priced per craft so tier 1's 37.5 FE/t and tier 3's
+  187.5 FE/t sum exactly (#328, #295).
+- **Machine tiers** — `shipped` for tiers 1 and 2 (ADR-0075). Each tier is its own block, crafted
+  from Factorio's recipe, and wears Oritech's `ORANGE`, `DIAMOND` or `INDUSTRIAL` paint, which it
+  refuses to change. Oritech's addons stay live on every tier, unpriced until #120. Tier 3 is
+  registered, and its recipe is a recorded skip on `speed-module` (#120). Placing a higher tier over
+  a lower one is #299's.
+- **Fluid inputs** — `shipped` on tiers 2 and 3 (ADR-0075). One 1,000 mB input tank whose face, on
+  every block of the machine, takes only the Held recipe's fluid and gives nothing back. A tank short
+  of one craft's fluid stalls the machine as missing items do, and the status names the fluid. A
+  changed recipe voids the tank, as Factorio's does. There is no output tank until a recipe with a
+  fluid result is emitted (barrel emptying).
 - **Recipe selection in a machine** — `adapted`. In Factorio a machine is *told* its recipe: the
   player picks it from a grid on the machine, the machine displays it, holds it whether or not it is
   fed, and the setting copies to another machine. The Assembling Machine holds a **Held recipe**
@@ -576,8 +588,8 @@ Sub-rules:
 - **Belt tiers** — `shipped` for tiers 1 and 2. The fork's four belts, `belt`, `improved_belt`,
   `express_belt` and `turbo_belt`, carry Factorio's 15, 30, 45 and 60 items/s under Factorio's names
   (#345, ADR-0076). `logistics-2` and `logistics-3` unlock the fast and express recipes on the
-  Assembling surface. Express needs lubricant, so it is a `crafting-with-fluid` recipe, and no
-  machine that ships takes one yet (#331): the recipe is emitted and not yet craftable. The turbo
+  Assembling surface. Express needs lubricant, so it is a `crafting-with-fluid` recipe, which
+  Assembling Machine 2 and 3 craft (#295). The turbo
   belt has no recipe, because Space Age's is outside the corpus. *This entry read `adapted`, against
   Create's one RPM-driven belt.*
 - **Throughput as a ratio budget** — `shipped`. The fork's belt carries one item per entry at

@@ -9,13 +9,16 @@ import java.util.function.Predicate;
 import com.planetaryfactory.core.recipes.AssemblingRecipe;
 import com.planetaryfactory.core.recipes.PFRecipes;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 /**
  * What an Assembling Machine may hold, read off the server's recipe manager (#327).
@@ -80,6 +83,14 @@ public final class AssemblingMachineRecipes {
      */
     public static List<SizedIngredient> slotIngredients(AssemblingRecipe recipe, AssemblingTier tier) {
         return recipe.fluidIngredients().isEmpty() || tier.hasFluidInput() ? recipe.ingredients() : List.of();
+    }
+
+    /** The first fluid a recipe's fluid ingredients name, which is the one its tank holds. */
+    public static Optional<Fluid> firstFluid(List<SizedFluidIngredient> fluidIngredients) {
+        return fluidIngredients.stream()
+                .flatMap(sized -> sized.ingredient().fluids().stream())
+                .map(Holder::value)
+                .findFirst();
     }
 
     /** Whether input {@code slot} takes {@code stack}, on the server's face and the client's slot alike. */

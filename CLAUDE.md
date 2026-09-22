@@ -144,7 +144,7 @@ classpath too. Oritech, Railcraft Reborn, SimpleBelts and FTB Materials are ther
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
-`BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327)
+`BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
 `FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366) and `BeltPlanTests` (#372), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
@@ -272,7 +272,15 @@ spreads a slot-0 insert past the filter, stays pinned off. Making `acceptsInput`
 two of them red, and dropping the `cycleInputMode` override turns the third red. The slot rule is
 `AssemblingInputSlotsTest`. The rate and the stall order are
 `AssemblingMachineSpecTest` and `AssemblingStallTest`; whether an Oritech addon changes the rate in
-a world is not checked -- the multipliers are, on the JVM. And that the screen's status (#332) is recomputed on
+a world is not checked -- the multipliers are, on the JVM. Tiers 2 and 3 are blocks of their own
+(#295, ADR-0075): tier 2 crafts copper cable in 14 ticks for 1,000 FE, typed, and every tier keeps
+its paint and the cartridge through a shift-click in the player's game mode (dropping `PaintLock`'s
+listener turns all three red). `AssemblingFluidTests` holds tier 2's tank: concrete crafts from 150 mB
+and leaves 50, 50 mB stalls with nothing drawn or taken, the fluid face on the anchor and a hull
+block takes water only with concrete held and never gives it back, tier 2 holds concrete where tier
+1 refuses it, tier 1 has no fluid face, a changed recipe voids the tank and the tank survives the
+save hook. A `takeFluids` that always feeds and a change that keeps the tank turn four red. The
+per-tier figures are `AssemblingMachineSpecTest`, the fluid stall's order `AssemblingStallTest`. And that the screen's status (#332) is recomputed on
 each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
 cycle stops the machine; forcing the power probe true turns it red. The precedence is
 `AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. A pole beside a whole machine counts it
