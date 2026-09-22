@@ -177,9 +177,10 @@
       "ticket": 113
     },
     "cargo-wagon": {
-      "status": "undecided",
-      "note": "As `locomotive`.",
-      "ticket": 108
+      "kind": "item",
+      "target": "railcraft:cargo_minecart",
+      "source": "borrowed",
+      "note": "Railcraft Reborn's Cargo Minecart (#278): a train car that carries items."
     },
     "centrifuge": {
       "status": "undecided",
@@ -354,9 +355,10 @@
       "ticket": 230
     },
     "fluid-wagon": {
-      "status": "undecided",
-      "note": "As `locomotive`.",
-      "ticket": 108
+      "kind": "item",
+      "target": "railcraft:tank_minecart",
+      "source": "borrowed",
+      "note": "Railcraft Reborn's Minecart with Tank (#278): a train car that carries a fluid."
     },
     "fluoroketone-cold": {
       "status": "not_emitted",
@@ -494,9 +496,10 @@
       "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
     "locomotive": {
-      "status": "undecided",
-      "note": "Create's rail network as Factorio's.",
-      "ticket": 108
+      "kind": "item",
+      "target": "railcraft:steam_locomotive",
+      "source": "borrowed",
+      "note": "Railcraft Reborn's Steam Locomotive (#278, ADR-0060 gives trains to Railcraft): it burns solid fuel, as Factorio's locomotive does. The Electric Locomotive stays out -- a second locomotive with no Factorio counterpart."
     },
     "logistic-robot": {
       "status": "undecided",
@@ -686,9 +689,10 @@
       "note": "Vanilla rail (#277): Factorio's rail is the placed straight track, `minecraft:rail` is inside the closed input alphabet, and Railcraft Reborn builds on vanilla rails -- `railcraft:standard_rail` is a crafting component, not a track."
     },
     "rail-chain-signal": {
-      "status": "undecided",
-      "note": "Create ships one signal block. Whether it can carry Factorio's chain-signal behaviour, or whether chain signals are `excluded` the way underground belts are, is a question for #108 -- and it is not answerable by emitting a second recipe for the same block, which is what the identical ingredient list would produce.",
-      "ticket": 108
+      "kind": "item",
+      "target": "railcraft:distant_signal",
+      "source": "borrowed",
+      "note": "Railcraft Reborn's Distant Signal (#278). ADAPTED -- it repeats the aspect of the signal it is linked to, which is the chain signal's look-ahead, but it reserves no path through a junction."
     },
     "rail-signal": {
       "kind": "item",

@@ -713,15 +713,20 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: Terra
-- **via**: `create`
-- **owner**: ADR-0017 (Create owns schedule-based rail networks)
-- **ticket**: #108
+- **via**: `railcraft`
+- **owner**: ADR-0060 (Railcraft Reborn carries trains), and #277 and #278 for which item each row names
+
+Railcraft runs on vanilla rail: `rail` is `minecraft:rail`, the locomotive is Railcraft's Steam
+Locomotive, the wagons its Cargo Minecart and Minecart with Tank, and the stop its Iron Buffer Stop
+Track. No open ticket owns the rest of the row.
 
 Sub-rules:
 
-- **Schedules and stations** — `planned`. Create Trains have both.
-- **Rail signals and block-based traffic** — `adapted`. Create resolves train conflicts itself; there
-  is no signal to place and no deadlock to debug.
+- **Schedules and stations** — `unargued`, no verdict. A buffer stop ends a line; it is not a
+  schedule target by name.
+- **Rail signals and block-based traffic** — `adapted`. `rail-signal` is Railcraft's Block Signal and
+  `rail-chain-signal` its Distant Signal, which repeats the aspect of the signal it is linked to but
+  reserves no path through a junction.
 - **Train limits at a station** — `unargued`, no verdict.
 
 ### Circuit network
@@ -1592,8 +1597,9 @@ every planet instead of one factory and a shipping lane.
 - **where**: —
 - **owner**: `by-consequence`
 
-Follows [Trains](#trains): Create trains already route in three dimensions without a dedicated
-elevated-rail tier, so the mechanic has nothing to add.
+Follows [Trains](#trains): vanilla rail climbs and descends a block at a time, so a line that must
+cross another goes over it, and an elevated-rail tier has nothing to add. Argued from the medium,
+as underground belts are (ADR-0044).
 
 ### Fusion power
 
