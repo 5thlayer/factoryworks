@@ -588,8 +588,8 @@
     },
     "passive-provider-chest": {
       "status": "undecided",
-      "note": "Create 6's package logistics is the shelf's answer, gated to the `logistic` rung; which block is a provider chest is not chosen.",
-      "ticket": 28
+      "note": "A logistic-network chest, so it exists only if logistic robots do, and #145 owns that question. #28's answer, Create 6's package logistics, left with Create (ADR-0060).",
+      "ticket": 145
     },
     "personal-roboport-equipment": {
       "status": "undecided",
@@ -862,7 +862,7 @@
     "storage-chest": {
       "status": "undecided",
       "note": "As `passive-provider-chest`.",
-      "ticket": 28
+      "ticket": 145
     },
     "storage-tank": {
       "kind": "item",
