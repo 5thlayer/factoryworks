@@ -23,6 +23,7 @@ class AssemblingStatusTest {
         assertEquals(AssemblingStatus.LOCKED, AssemblingStatus.of(AssemblingStall.LOCKED, true));
         assertEquals(AssemblingStatus.MISSING_INGREDIENTS,
                 AssemblingStatus.of(AssemblingStall.NO_INGREDIENTS, true));
+        assertEquals(AssemblingStatus.MISSING_FLUID, AssemblingStatus.of(AssemblingStall.NO_FLUID, true));
         assertEquals(AssemblingStatus.OUTPUT_FULL, AssemblingStatus.of(AssemblingStall.OUTPUT_FULL, true));
     }
 
@@ -36,6 +37,7 @@ class AssemblingStatusTest {
     void everyStallOutranksNoPower() {
         assertEquals(AssemblingStatus.MISSING_INGREDIENTS,
                 AssemblingStatus.of(AssemblingStall.NO_INGREDIENTS, false));
+        assertEquals(AssemblingStatus.MISSING_FLUID, AssemblingStatus.of(AssemblingStall.NO_FLUID, false));
         assertEquals(AssemblingStatus.OUTPUT_FULL, AssemblingStatus.of(AssemblingStall.OUTPUT_FULL, false));
         assertEquals(AssemblingStatus.LOCKED, AssemblingStatus.of(AssemblingStall.LOCKED, false));
         assertEquals(AssemblingStatus.IDLE, AssemblingStatus.of(AssemblingStall.NO_RECIPE, false));

@@ -75,11 +75,11 @@ public final class AssemblingMachineRecipes {
     }
 
     /**
-     * What the input slots take, in {@link AssemblingInputSlots}' order: nothing for a fluid recipe,
-     * which this machine has no tank to run.
+     * What the input slots take, in {@link AssemblingInputSlots}' order: nothing for a fluid recipe
+     * on a tier with no tank to run it.
      */
-    public static List<SizedIngredient> slotIngredients(AssemblingRecipe recipe) {
-        return recipe.fluidIngredients().isEmpty() ? recipe.ingredients() : List.of();
+    public static List<SizedIngredient> slotIngredients(AssemblingRecipe recipe, AssemblingTier tier) {
+        return recipe.fluidIngredients().isEmpty() || tier.hasFluidInput() ? recipe.ingredients() : List.of();
     }
 
     /** Whether input {@code slot} takes {@code stack}, on the server's face and the client's slot alike. */

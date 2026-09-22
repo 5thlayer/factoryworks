@@ -7,6 +7,7 @@ import com.planetaryfactory.core.fluid.BoilerItemHandler;
 import com.planetaryfactory.core.fluid.OffshorePumpBlockEntity;
 import com.planetaryfactory.core.fluid.SteamEngineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
+import com.planetaryfactory.core.machine.AssemblingMachineFluidHandler;
 import com.planetaryfactory.core.machine.AssemblingMachineItemHandler;
 import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
@@ -272,8 +273,9 @@ public final class PFBlockEntities {
     }
 
     /**
-     * The Assembling Machine's energy face (#328), which the craft cycle draws from, and its item
-     * face (#329), each on every block of every tier's footprint.
+     * The Assembling Machine's energy face (#328), which the craft cycle draws from, its item face
+     * (#329), and on the tiers with a tank its fluid face (ADR-0075), each on every block of the
+     * footprint. Tier 1 has no fluid face at all.
      */
     private static void registerAssemblingMachineCapabilities(RegisterCapabilitiesEvent event) {
         for (AssemblingTier tier : AssemblingTier.values()) {
@@ -284,6 +286,11 @@ public final class PFBlockEntities {
             registerOnFootprint(event, Capabilities.Item.BLOCK, footprint,
                     (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
                             ? new AssemblingMachineItemHandler(machine) : null);
+            if (tier.hasFluidInput()) {
+                registerOnFootprint(event, Capabilities.Fluid.BLOCK, footprint,
+                        (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                                ? new AssemblingMachineFluidHandler(machine) : null);
+            }
         }
     }
 

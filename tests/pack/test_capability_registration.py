@@ -69,7 +69,8 @@ FACES = {
     "boiler": ("registerBoilerCapabilities", ("Fluid", "Item")),
     # Energy (#328): the craft cycle draws FE, and without the face no pole counts the machine.
     # Item (#329): inputs filtered to the Held recipe, on the guard.
-    "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item")),
+    # Fluid (#295): tiers 2 and 3's input tank, taking only the Held recipe's fluid.
+    "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item", "Fluid")),
     "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
     # Energy (#368): the scan draws FE, on every block of the footprint.
     "radar": ("registerRadarCapabilities", ("Energy",)),

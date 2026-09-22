@@ -136,12 +136,15 @@ class AssemblingMachineSpecTest {
         }
     }
 
-    /** Only the fluid tiers have a tank. */
+    /** Only the fluid tiers have a tank, of 1,000 mB. */
     @Test
     void onlyTiersTwoAndThreeHaveATank() {
         assertFalse(ONE.hasFluidInput());
         assertTrue(TWO.hasFluidInput());
         assertTrue(THREE.hasFluidInput());
+        assertEquals(0, ONE.fluidCapacity());
+        assertEquals(1000, TWO.fluidCapacity());
+        assertEquals(1000, THREE.fluidCapacity());
     }
 
     /** The ids the item map names, derived from the tier. */

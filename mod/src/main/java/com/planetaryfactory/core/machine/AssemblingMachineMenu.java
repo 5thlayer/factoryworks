@@ -129,7 +129,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     /** Server side, over the machine's own inventory and the recipes the server has loaded. */
     public static AssemblingMachineMenu open(int containerId, Inventory playerInventory,
             AssemblingMachineBlockEntity machine) {
-        List<Entry> entries = entries((ServerLevel) machine.getLevel());
+        List<Entry> entries = entries((ServerLevel) machine.getLevel(), machine.tier());
         ContainerData data = new ContainerData() {
             @Override
             public int get(int index) {
@@ -160,11 +160,11 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                 entries, machine.inventory, data);
     }
 
-    public static List<Entry> entries(ServerLevel level) {
+    public static List<Entry> entries(ServerLevel level, AssemblingTier tier) {
         return AssemblingMachineRecipes.choices(level).stream()
                 .map(choice -> AssemblingMachineRecipes.resolve(level, HeldRecipe.of(choice.id()))
                         .map(holder -> new Entry(choice, holder.value().assemble(null),
-                                AssemblingMachineRecipes.slotIngredients(holder.value())))
+                                AssemblingMachineRecipes.slotIngredients(holder.value(), tier)))
                         .orElseGet(() -> new Entry(choice, ItemStack.EMPTY, List.of())))
                 .toList();
     }
@@ -172,7 +172,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     /** What the opening packet carries: the position, then the list {@link #open} built. */
     public static void writeOpening(RegistryFriendlyByteBuf buf, AssemblingMachineBlockEntity machine) {
         buf.writeBlockPos(machine.getBlockPos());
-        Entry.LIST_CODEC.encode(buf, entries((ServerLevel) machine.getLevel()));
+        Entry.LIST_CODEC.encode(buf, entries((ServerLevel) machine.getLevel(), machine.tier()));
     }
 
     static int heldIndex(List<Entry> entries, HeldRecipe held) {

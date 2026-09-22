@@ -26,6 +26,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -84,11 +88,21 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
     private static final String HELD_KEY = "held_recipe";
 
+    private static final String TANK_KEY = "fluid_input";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AssemblingMachineBlockEntity.class);
 
     private HeldRecipe held = HeldRecipe.NONE;
 
     private AssemblingStall stall = AssemblingStall.NO_RECIPE;
+
+    /** Tiers 2 and 3's input tank (ADR-0075); tier 1's holds nothing, and nothing reaches it. */
+    private final FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, tier().fluidCapacity()) {
+        @Override
+        protected void onContentsChanged(int index, FluidStack previousContents) {
+            setChanged();
+        }
+    };
 
     public AssemblingMachineBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state,
@@ -172,7 +186,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
             }
             progress.increment(tx);
             if (progress.get() >= duration) {
-                if (!takeInputs(recipe, tx) || !placeOutputs(recipe, tx)) {
+                if (!takeInputs(recipe, tx) || !takeFluids(recipe, tx) || !placeOutputs(recipe, tx)) {
                     LOGGER.warn("Assembling Machine at {} passed its checks and could not finish {}",
                             worldPosition.toShortString(), held.id().orElse("?"));
                     return;
@@ -194,25 +208,22 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         AssemblingRecipe recipe = resolved.get().value();
         boolean locked = AssemblingMachineRecipes.isLocked(held.id().orElseThrow());
         boolean fed;
+        boolean fluidFed;
         boolean fits;
         try (Transaction probe = Transaction.openRoot()) {
             fed = takeInputs(recipe, probe);
         }
         try (Transaction probe = Transaction.openRoot()) {
+            fluidFed = takeFluids(recipe, probe);
+        }
+        try (Transaction probe = Transaction.openRoot()) {
             fits = placeOutputs(recipe, probe);
         }
-        return AssemblingStall.of(true, locked, fed, fits);
+        return AssemblingStall.of(true, locked, fed, fluidFed, fits);
     }
 
-    /**
-     * Takes one craft's sized ingredients out of the input slots, each ingredient from whichever
-     * slots hold a match. A recipe with a fluid ingredient is never fed: this machine has no tank,
-     * which is tier 1's {@code crafting_categories} excluding {@code crafting-with-fluid}.
-     */
+    /** Takes one craft's sized ingredients out of the input slots, each from whichever slots hold a match. */
     private boolean takeInputs(AssemblingRecipe recipe, Transaction tx) {
-        if (!recipe.fluidIngredients().isEmpty()) {
-            return false;
-        }
         ResourceHandler<ItemResource> inputs = inventory.getInputContainer();
         for (SizedIngredient sized : recipe.ingredients()) {
             int owed = sized.count();
@@ -224,6 +235,21 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
                 owed -= inputs.extract(slot, resource, owed, tx);
             }
             if (owed > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Takes one craft's fluid out of the tank. A tier with no tank is never fed a fluid recipe, and
+     * the tank's one slot feeds at most one fluid.
+     */
+    private boolean takeFluids(AssemblingRecipe recipe, Transaction tx) {
+        for (SizedFluidIngredient sized : recipe.fluidIngredients()) {
+            FluidResource held = tank.getResource(0);
+            if (held.isEmpty() || !sized.ingredient().test(held.toStack(1))
+                    || tank.extract(0, held, sized.amount(), tx) != sized.amount()) {
                 return false;
             }
         }
@@ -395,8 +421,9 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
     /**
      * Holds {@code next}. A change hands every ingredient already in the input slots back to
-     * {@code player} -- changing one's mind destroys nothing; what does not fit drops at their feet. Setting the recipe already held is
-     * not a change and moves nothing.
+     * {@code player}, and what does not fit drops at their feet. The tank is voided, as Factorio's
+     * is: its face refuses extraction, so kept fluid would be stranded (ADR-0075). Setting the
+     * recipe already held is not a change and moves nothing.
      *
      * <p>The lock is not asked here: an unresearched recipe is held and shown, and refusing to craft
      * it is the craft cycle's.
@@ -413,14 +440,15 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
             inventory.set(slot, ItemResource.EMPTY, 0);
             player.getInventory().placeItemBackInInventory(stack);
         }
+        tank.set(0, FluidResource.EMPTY, 0);
         held = next;
         progress.set(0);
         setChanged();
     }
 
     /**
-     * False off the server, which alone can resolve the Held recipe, and for a fluid recipe, which
-     * this machine can never run.
+     * False off the server, which alone can resolve the Held recipe, and for a fluid recipe on a
+     * tier with no tank, which it can never run.
      */
     public boolean acceptsInput(int slot, ItemResource resource) {
         if (resource.isEmpty() || !(level instanceof ServerLevel server)) {
@@ -428,8 +456,24 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         }
         return AssemblingMachineRecipes.resolve(server, held)
                 .map(holder -> AssemblingMachineRecipes.accepts(slot,
-                        AssemblingMachineRecipes.slotIngredients(holder.value()), resource.toStack(1)))
+                        AssemblingMachineRecipes.slotIngredients(holder.value(), tier()), resource.toStack(1)))
                 .orElse(false);
+    }
+
+    /** Whether the tank takes {@code resource}: only a fluid the Held recipe names (ADR-0075). Server only. */
+    public boolean acceptsFluid(FluidResource resource) {
+        if (resource.isEmpty() || !tier().hasFluidInput() || !(level instanceof ServerLevel server)) {
+            return false;
+        }
+        return AssemblingMachineRecipes.resolve(server, held)
+                .map(holder -> holder.value().fluidIngredients().stream()
+                        .anyMatch(sized -> sized.ingredient().test(resource.toStack(1))))
+                .orElse(false);
+    }
+
+    /** The input tank, which the fluid face guards. */
+    public ResourceHandler<FluidResource> tank() {
+        return tank;
     }
 
     /** Refused: {@code FILL_EVENLY} spreads a per-slot insert past the input filter (ADR-0074). */
@@ -447,6 +491,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.store(HELD_KEY, HeldRecipe.CODEC, held);
+        tank.serialize(output.child(TANK_KEY));
     }
 
     /** The id only. It is resolved when asked, never here, where the recipes may not be loaded. */
@@ -456,6 +501,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         // Oritech restores its input mode from the save; keep it pinned (ADR-0074).
         inventoryInputMode = InventoryInputMode.FILL_LEFT_TO_RIGHT;
         held = input.read(HELD_KEY, HeldRecipe.CODEC).orElse(HeldRecipe.NONE);
+        tank.deserialize(input.childOrEmpty(TANK_KEY));
     }
 
     /** {@link AssemblingMachineFootprint#addonSlots}: beside the row and behind the anchor. */

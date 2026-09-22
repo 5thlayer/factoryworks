@@ -52,6 +52,7 @@ ROUTING_FACES = (
     "fluid/BoilerBlockEntity.java",
     "fluid/OffshorePumpBlockEntity.java",
     "machine/AssemblingMachineItemHandler.java",
+    "machine/AssemblingMachineFluidHandler.java",
     "fluid/SteamEngineFluidHandler.java",
 )
 
