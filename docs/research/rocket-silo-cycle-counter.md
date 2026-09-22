@@ -264,10 +264,8 @@ Two ways to register it, both verified reachable:
 function of the destination — **there is no seam in it**, which is why #41 put the launch price in
 the silo rather than in the fuel bracket.
 
-**The entity has no reference to the pad or to any machine.** Its full field list
-(`RocketEntity.java:120-135`) is `fuelTank`, `configSlot`, `satelliteSlot`,
-`destinationIsSpaceStation`, `partCounts`, `returnToStart`, `satelliteToLaunch`, the tier ints,
-`speed`, `selectedFuelRecipe`, `thrusterPositions` — no origin `BlockPos`. And
+**The entity has no reference to the pad or to any machine.** None of its fields
+(`RocketEntity.java:120-135`) is an origin `BlockPos`. And
 `RocketScannerMachine.setRocketBuilt` (`:115-194`) never stores one: it copies block states into
 `rocket.addBlock(...)` and calls `addFreshEntity`, and that is all. GCyR's `LAUNCH_PAD` is a plain
 `BlockEntry<Block>` (`GCYRBlocks.java:431`) matched in the pattern by `blocks(LAUNCH_PAD.get())`
