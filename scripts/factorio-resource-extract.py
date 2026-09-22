@@ -28,6 +28,11 @@ Three things are read, and nothing is decided:
     expressions and re-derived from a closed form by the check (#317). The minimum spacing
     `spot_noise` keeps between candidate spots comes too, as the outfield structure sets'
     separation (#320).
+  - **Crude's well (ADR-0081).** An infinite resource's `normal`, `minimum`,
+    `infinite_depletion_amount`, `minable.results` and collision box, and the two figures its
+    autoplace spells rather than passes: `random_probability`, the `1 / amplitude` of the tile
+    draw's `random_penalty`, and `additional_richness`, the flat amount added to the patch value
+    divided by that same figure. Crude is sliced for the mod beside the five ores.
   - **The hand-mining numbers.** Each resource's `minable.mining_time`, the character's own
     `mining_speed`, and what `steel-axe` adds to it. ADR-0039 labelled these as *transcribed
     from the wiki, not extracted*, because `data/factorio/` held no resource dump and so
@@ -136,6 +141,9 @@ LAW_DISTANCES = (0, 150, 300, 450, 1000, 1600, 3000, 10000)
 # Terra's alphabet (ADR-0041), and the Factorio resource each pack ore block reads its amounts
 # from. The keys are the pack's block names and the values are Factorio's, which is ADR-0028's
 # declared exception: the corpus is keyed by Factorio's own names.
+# Terra's one fluid resource (ADR-0081), sliced for the mod beside the ores.
+CRUDE = "crude-oil"
+
 TERRA_ALPHABET = {
     "iron": "iron-ore",
     "copper": "copper-ore",
@@ -143,6 +151,11 @@ TERRA_ALPHABET = {
     "uranium": "uranium-ore",
     "stone": "stone",
 }
+
+# Crude's autoplace (ADR-0081): the tile draw's `random_penalty` amplitude is `1 / random_probability`,
+# and the richness divides the patch value by the same figure before adding a flat amount.
+RANDOM_PROBABILITY = re.compile(r"random_penalty\{[^}]*amplitude\s*=\s*1\s*/\s*([0-9.]+)\s*\}")
+RICHNESS_TERMS = re.compile(r"-patches'\)\s*/\s*([0-9.]+)\s*\+\s*([0-9.]+)\s*\)")
 
 ARGUMENT = re.compile(r"(\w+)\s*=\s*([^,{}]+?)\s*(?=,\s*\w+\s*=|\}$)")
 DISTANCE_TERM = re.compile(r"max\(\s*\(\s*(\d+)\s*\+\s*distance\s*\)\s*/\s*(\d+)\s*,\s*1\s*\)")
@@ -202,6 +215,33 @@ def distance_law(richness_expression):
         "offset": offset,
         "divisor": divisor,
         "flat_within": divisor - offset,
+    }
+
+
+def infinite_yield(prototype):
+    """An infinite resource's well: its yield law and its autoplace draw (ADR-0081).
+
+    `None` for a finite resource. The derived figures -- the 1/96 a column carries a well, the
+    depletion floor, a well's amount -- are the mod's unit-tested classes', not this script's.
+    """
+    if not prototype.get("infinite"):
+        return None
+    autoplace = prototype.get("autoplace") or {}
+    probability = RANDOM_PROBABILITY.search(autoplace.get("probability_expression", ""))
+    richness = RICHNESS_TERMS.search(autoplace.get("richness_expression", ""))
+    if not probability or not richness:
+        sys.exit(f"{prototype['name']}'s autoplace no longer reads as random_penalty over a patch plus a flat richness")
+    (low_x, low_y), (high_x, high_y) = prototype["collision_box"]
+    return {
+        "normal": prototype.get("normal"),
+        "minimum": prototype.get("minimum"),
+        "infinite_depletion_amount": prototype.get("infinite_depletion_amount"),
+        "results": (prototype.get("minable") or {}).get("results") or [],
+        "random_probability": float(probability.group(1)),
+        "richness_divisor": float(richness.group(1)),
+        "additional_richness": float(richness.group(2)),
+        "collision_box": prototype["collision_box"],
+        "collision_width": max(high_x - low_x, high_y - low_y),
     }
 
 
@@ -446,6 +486,7 @@ def extract(dump):
                 "stage_ratios": [count / stages[0] for count in stages] if stages and stages[0] else [],
                 "distance_law": law,
                 "outfield": outfield(arguments, locals_, functions, radius_expression),
+                "infinite_yield": infinite_yield(prototype),
             }
         )
 
@@ -479,6 +520,18 @@ def extract(dump):
     }, laws
 
 
+def outfield_slice(entry):
+    return {
+        "base_density": entry["base_density"],
+        "base_spots_per_km2": entry["base_spots_per_km2"],
+        "random_spot_size_minimum": entry["outfield"]["random_spot_size_minimum"],
+        "random_spot_size_maximum": entry["outfield"]["random_spot_size_maximum"],
+        "regular_rq_factor": entry["outfield"]["regular_rq_factor"],
+        "regular_blob_amplitude_multiplier": entry["outfield"]["regular_blob_amplitude_multiplier"],
+        "regular_blob_amplitude_maximum_distance": entry["outfield"]["regular_blob_amplitude_maximum_distance"],
+    }
+
+
 def mod_slice(out):
     """The part of the corpus the mod loads, keyed by the pack's own block names.
 
@@ -507,19 +560,16 @@ def mod_slice(out):
             "starting_amount": entry["starting_amount"],
             "mining_time": entry["mining_time"],
             "stage_ratios": entry["stage_ratios"],
-            "outfield": {
-                "base_density": entry["base_density"],
-                "base_spots_per_km2": entry["base_spots_per_km2"],
-                "random_spot_size_minimum": entry["outfield"]["random_spot_size_minimum"],
-                "random_spot_size_maximum": entry["outfield"]["random_spot_size_maximum"],
-                "regular_rq_factor": entry["outfield"]["regular_rq_factor"],
-                "regular_blob_amplitude_multiplier": entry["outfield"]["regular_blob_amplitude_multiplier"],
-                "regular_blob_amplitude_maximum_distance": entry["outfield"][
-                    "regular_blob_amplitude_maximum_distance"
-                ],
-            },
+            "outfield": outfield_slice(entry),
         }
     constants = out["constants"]
+    crude = by_name.get(CRUDE)
+    if crude is None or crude["infinite_yield"] is None:
+        sys.exit(f"{CRUDE} is not an infinite resource in the dump -- Terra has no crude source")
+    well = crude["infinite_yield"]
+    fluid = next((result for result in well["results"] if result.get("type") == "fluid"), None)
+    if fluid is None:
+        sys.exit(f"{CRUDE} yields no fluid")
     return {
         "__generated_by": "scripts/factorio-resource-extract.py",
         "distance_law": law,
@@ -534,6 +584,20 @@ def mod_slice(out):
             "offset": out["outfield_edge"]["offset"],
         },
         "resources": resources,
+        "crude_oil": {
+            "factorio_name": CRUDE,
+            "fluid": fluid["name"],
+            "amount_per_cycle": fluid["amount"],
+            "mining_time": crude["mining_time"],
+            "normal": well["normal"],
+            "minimum": well["minimum"],
+            "infinite_depletion_amount": well["infinite_depletion_amount"],
+            "random_probability": well["random_probability"],
+            "richness_divisor": well["richness_divisor"],
+            "additional_richness": well["additional_richness"],
+            "collision_width": well["collision_width"],
+            "outfield": outfield_slice(crude),
+        },
     }
 
 

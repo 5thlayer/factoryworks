@@ -58,6 +58,13 @@ numbers the decision was made on:
     `base_spots_per_km2` and the mean spot size. The edge's octaves and offset must be the ones
     its expression spells, since the pack's port of the ragged edge reads them (ADR-0045).
 
+  - **Crude's wells re-derive (ADR-0081).** Crude is infinite, its autoplace's tile draw passes
+    1/48 of a field and its richness divides by the same figure, and each cycle yields 10 crude
+    and takes 10 off the well. The wells a field deals and the amount of its centre well are
+    re-derived per distance from the law table: a field's `π·R²/96` columns carry a well, and
+    its centre holds `(48·H + 220000) · max((1000 + d) / 2600, 1)`, which passes 100% yield
+    beyond the flat radius. The mod's slice must carry the same figures.
+
 Usage: tests/factorio/test_resource_extract.py
 """
 import json
@@ -129,6 +136,9 @@ OUTFIELD_ARGUMENTS = (
 )
 
 RADIUS_CAP = re.compile(r"^min\(\s*([0-9.]+)\s*,")
+
+CRUDE = "crude-oil"
+AMOUNTS = "mod/src/main/resources/planetaryfactory_core/ore/amounts.json"
 
 PICK_TIER = "mod/src/main/java/com/planetaryfactory/core/mining/PickTier.java"
 
@@ -257,6 +267,63 @@ def outfield_failures(data, resources):
         elif round(spacing) != quoted:
             failures.append(f"{name}'s mean spacing is {spacing:.0f} blocks, and ADR-0045 quotes ~{quoted}")
 
+    return failures
+
+
+def crude_failures(resources, amounts):
+    """Crude's well and the fields its law deals, re-derived from the committed corpus (ADR-0081)."""
+    crude = resources.get(CRUDE)
+    if crude is None:
+        return [f"{CRUDE} is not in the corpus -- Terra has no crude source"]
+    well = crude.get("infinite_yield")
+    if not crude["infinite"] or not well:
+        return [f"{CRUDE} carries no infinite yield -- ADR-0081's well has no figures"]
+    failures = []
+    if [r for r in resources.values() if r.get("infinite_yield") and r["name"] != CRUDE]:
+        failures.append("a resource other than crude carries an infinite yield")
+    if not math.isclose(1 / well["random_probability"], 48, rel_tol=1e-9):
+        failures.append(f"crude's tile draw passes 1/{1 / well['random_probability']:.3f}, not 1/48")
+    if well["richness_divisor"] != well["random_probability"]:
+        failures.append("crude's richness no longer divides by its random_probability -- the ×48 is gone")
+    if well["results"] != [{"type": "fluid", "name": CRUDE, "amount": 10}]:
+        failures.append(f"a crude cycle yields {well['results']}, not 10 crude-oil")
+    if well["infinite_depletion_amount"] != 10:
+        failures.append(f"a cycle takes {well['infinite_depletion_amount']} off a well, not 10")
+    if well["normal"] != 300_000 or well["minimum"] * 5 != well["normal"]:
+        failures.append(f"crude's normal {well['normal']} and minimum {well['minimum']} are not 300,000 and 20% of it")
+    if math.ceil(well["collision_width"]) != 3:
+        failures.append(f"crude's collision box is {well['collision_width']} wide, which spaces wells "
+                        f"{math.ceil(well['collision_width'])} apart, not 3")
+    if well["additional_richness"] != 220_000:
+        failures.append(f"crude's flat richness is {well['additional_richness']}, not 220,000")
+
+    law = crude["distance_law"]
+    far = []
+    for row in crude["outfield"]["law"]:
+        if not row["spot_radius"]:
+            if row["distance"] > 150:
+                failures.append(f"crude deals no field {row['distance']} blocks out")
+            continue
+        if row["distance"] <= 150:
+            failures.append(f"crude deals a field within 150 blocks, at {row['distance']}")
+        wells = math.pi * row["spot_radius"] ** 2 * well["random_probability"] / 2
+        richness = max((law["offset"] + row["distance"]) / law["divisor"], 1)
+        centre = (row["spot_height"] / well["richness_divisor"] + well["additional_richness"]) * richness
+        if not 1 <= wells <= 30:
+            failures.append(f"a crude field {row['distance']} blocks out deals {wells:.1f} wells")
+        if row["distance"] >= 3000:
+            far.append(centre)
+    if not far or min(far) <= well["normal"]:
+        failures.append("no far crude well starts above 100% yield")
+
+    sliced = amounts.get("crude_oil") or {}
+    for key, value in (("normal", well["normal"]), ("minimum", well["minimum"]),
+                       ("infinite_depletion_amount", well["infinite_depletion_amount"]),
+                       ("random_probability", well["random_probability"]),
+                       ("additional_richness", well["additional_richness"]),
+                       ("amount_per_cycle", 10), ("mining_time", crude["mining_time"])):
+        if sliced.get(key) != value:
+            failures.append(f"the mod's crude slice has {key} {sliced.get(key)}, the corpus {value}")
     return failures
 
 
@@ -495,6 +562,7 @@ def main():
 
     failures += outfield_failures(data, resources)
     failures += edge_failures(data["outfield_edge"])
+    failures += crude_failures(resources, json.loads((ROOT / AMOUNTS).read_text()))
 
     for index, failure in enumerate(failures, 1):
         print(f"FAIL {index}: {failure}")
