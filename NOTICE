@@ -20,6 +20,26 @@ Source:  https://github.com/Futureazoo/TextureRepository
 Licence: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
          https://creativecommons.org/licenses/by-nc-sa/4.0/
 
+Uranium ore textures (#321)
+---------------------------
+
+Files:   kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage0.png
+         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage1.png
+         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage2.png
+         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage3.png
+         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage4.png
+         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage5.png
+         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage6.png
+         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage7.png
+         data/art/ore_stone_soul.png
+Author:  Malcolm Riley
+Source:  https://github.com/malcolmriley/unused-textures
+         blocks/ore_stone_soul.png at commit c89604ea49c0fc5470c5849f39cd5df1d497b0fb.
+         data/art/ore_stone_soul.png is the unmodified copy. The eight stage sprites are derived
+         from it by scripts/build-ore-textures.py, which removes crystal pixels per stage.
+Licence: Creative Commons Attribution 4.0 International
+         https://creativecommons.org/licenses/by/4.0/
+
 SimpleBelts fork (#342)
 -----------------------
 

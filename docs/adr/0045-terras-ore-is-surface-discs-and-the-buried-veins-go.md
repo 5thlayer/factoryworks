@@ -139,7 +139,7 @@ prospecting affordance *"a hard prerequisite of this ADR, not an enhancement"*, 
 is discharged rather than met: a visible patch needs finding, not detecting. Exploration replaces
 prospecting. The Radar reveals map at range — Factorio's actual Radar — instead of the ore-detection
 meaning the pack had to invent for it because ore was hidden. `#57` closes. The Ore Finder Satellite
-is cut (#322, amended below).
+is to be cut (#322, amended below).
 
 **GregTech's surface indicators become dead.** They marked buried veins and there are none. The
 check that guards them goes with them, and both failure modes it was written for stop existing.
@@ -176,13 +176,15 @@ discs land on real terrain across Terra's biomes, since the GameTest world is fl
 
 ## Amended after building it (#321)
 
-This ADR was written `provisional`, and four of its sentences stopped being true while it was built.
+This ADR was written `provisional`. Three of its sentences stopped being true while it was built,
+and one answer it named was wrong.
 The decision itself is unchanged. It is `accepted` now that uranium, the last resource, generates
 and every outfield patch in the tree is the one this ADR describes.
 
-**The Ore Finder Satellite is cut rather than rehomed.** As written, this ADR left the satellite
-needing "a new job or cutting" and called that another ticket's decision. #322 decided to cut it, on
-three grounds. Factorio has no such mechanic; its Radar is the only scanning it has. GCyR, the mod
+**The Ore Finder Satellite is cut rather than rehomed.** As written, this ADR said the satellite
+"loses its stated job and needs a new one or needs cutting; that is its own ticket, not this ADR's
+call." That ticket is #322, and its decision is to cut it. The live documents still name the
+satellite until #322 lands. The decision rests on three grounds. Factorio has no such mechanic; its Radar is the only scanning it has. GCyR, the mod
 that supplied the satellite, left with ADR-0060. And this ADR had already removed the hidden ore the
 satellite existed to find, so no job was left to give it.
 
@@ -197,7 +199,10 @@ Nobody should schedule one for this.
 reach, "the same class of question the starting area's geometry check cannot answer either." The
 GameTest harness did not exist yet. #320's `OutfieldDiscTests` now answers it on the flat test
 world, and it joins the three checks above. Uranium joins its set in #321. Only the biome spread
-stays a world load.
+stays a world load. The first text read "Three claims, three checks, none of which launches the
+game" and ended: "What stays unchecked and is a world load: whether a procedural disc lands on real
+terrain across every biome, which is the same class of question the starting area's geometry check
+cannot answer either."
 
 **Uranium pays out FTB Materials' Raw Uranium.** The enum named `gtceu:raw_uranium`, which stopped
 naming an item when GregTech left. No uranium block had been placed before this, so nothing noticed.

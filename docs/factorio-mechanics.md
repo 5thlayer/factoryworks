@@ -153,7 +153,7 @@ Sub-rules:
   than a patch size. The numbers are extracted, not chosen:
   `starting_amount = 20000 * base_density * (frequency_multiplier + 1) * size_multiplier`, and the
   per-block amount is that total over the blocks in the patch.
-- **Patch spacing is Factorio's spots per km²** — `shipped` for coal, copper, iron and stone (#320), uranium on #321, ADR-0045. `base_spots_per_km2` is
+- **Patch spacing is Factorio's spots per km²** — `shipped` (#320, uranium #321), ADR-0045. `base_spots_per_km2` is
   extracted, not chosen: 2.5 for coal, copper, iron and stone and 1.25 for uranium. With the mean
   spot size that is ~671 and ~1549 blocks, ~42 and ~97 chunks, of mean spacing (#317). An outfield
   patch is a train ride, not a belt run. Each resource is one `random_spread` structure set, separated
