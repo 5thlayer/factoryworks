@@ -109,8 +109,8 @@
     },
     "battery-equipment": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "beacon": {
       "status": "undecided",
@@ -119,8 +119,8 @@
     },
     "belt-immunity-equipment": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "big-electric-pole": {
       "status": "not_emitted",
@@ -302,13 +302,13 @@
     },
     "exoskeleton-equipment": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "explosives": {
       "status": "undecided",
-      "note": "Every consumer is military -- grenades, mines, artillery -- so whether this row exists at all is the combat question, not the oil chapter's. The Chemical Plant that crafts it now exists (#107).",
-      "ticket": 118
+      "note": "Every consumer is military -- grenades, mines, artillery -- so whether this row exists at all is the combat line's question, not the oil chapter's. Its only in-scope consumer is the grenade, which #230 owns.",
+      "ticket": 230
     },
     "express-splitter": {
       "kind": "item",
@@ -350,8 +350,8 @@
     },
     "firearm-magazine": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "fluid-wagon": {
       "status": "undecided",
@@ -381,18 +381,18 @@
     },
     "gate": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "grenade": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "gun-turret": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "hazard-concrete": {
       "kind": "item",
@@ -412,8 +412,8 @@
     },
     "heavy-armor": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "heavy-oil": {
       "kind": "fluid",
@@ -480,8 +480,8 @@
     },
     "light-armor": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "light-oil": {
       "kind": "fluid",
@@ -546,18 +546,18 @@
     },
     "military-science-pack": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; Military science returns with it, and #228 owns what a sixth pack does to the ladder.",
+      "ticket": 228
     },
     "modular-armor": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "night-vision-equipment": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "nuclear-reactor": {
       "status": "undecided",
@@ -590,8 +590,8 @@
     },
     "personal-roboport-equipment": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "Equipment-grid module (#231), but a personal roboport exists only if robots do, and #145 owns that question.",
+      "ticket": 145
     },
     "petroleum-gas": {
       "kind": "fluid",
@@ -605,8 +605,8 @@
     },
     "piercing-rounds-magazine": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "pipe": {
       "kind": "item",
@@ -626,8 +626,8 @@
     },
     "power-armor": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "power-switch": {
       "kind": "item",
@@ -739,13 +739,13 @@
     },
     "shotgun": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "shotgun-shell": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "small-electric-pole": {
       "kind": "item",
@@ -767,8 +767,8 @@
     },
     "solar-panel-equipment": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #231 owns the armour ladder and the equipment grid.",
+      "ticket": 231
     },
     "solid-fuel": {
       "kind": "item",
@@ -852,8 +852,8 @@
     },
     "stone-wall": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "storage-chest": {
       "status": "undecided",
@@ -868,8 +868,8 @@
     },
     "submachine-gun": {
       "status": "undecided",
-      "note": "The `combat` group is `not_emitted` on every shelf; #118 asks whether the pack has combat at all.",
-      "ticket": 118
+      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; #230 owns the combat line this row is on.",
+      "ticket": 230
     },
     "substation": {
       "kind": "item",
