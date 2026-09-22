@@ -18,10 +18,10 @@ The colours are the placeholder half and are chosen here, one per generated reso
 are drawn from a fixed seed per resource and then *removed in a fixed order* as the stages fall, so
 a block thinning out looks like the same block losing ore rather than eight unrelated sprites.
 
-**Uranium wears borrowed art** (#321): Malcolm Riley's `ore_stone_soul`, CC BY 4.0 and credited in
-`NOTICE`, committed unmodified under `data/art/`. The step rule is the same. Its crystal pixels are
-the speckles, and they go from the outside in, so a thinning block keeps the core of its crystal. A
-removed pixel takes the colour of the nearest stone pixel in the source.
+**Every ore but stone wears borrowed art** (#321): Malcolm Riley's unused textures, CC BY 4.0 and
+credited in `NOTICE`, committed unmodified under `data/art/`. The step rule is the same. The source's
+ore pixels are the speckles, and they go from the outside in, so a thinning block keeps the core of
+its ore. A removed pixel takes the colour of a nearby stone pixel in the source.
 
 Run after re-extracting the corpus, in case Factorio changed its stage counts:
 
@@ -57,19 +57,21 @@ RESOURCES = {
 # derived -- these are stand-ins for art, and the flora textures were made the same way.
 STONE = (122, 122, 122)
 SPECKLE = {
-    "iron": (196, 168, 140),
-    "copper": (196, 118, 62),
-    "coal": (38, 38, 42),
     "stone": (166, 160, 150),
 }
 
-SOURCED = {"uranium": "ore_stone_soul.png"}
+SOURCED = {"coal": "ore_slade_coal.png", "copper": "ore_stone_copper_2.png", "iron": "ore_slade_iron.png", "uranium": "ore_stone_soul.png"}
 ART = os.path.join(ROOT, "data", "art")
 
-# A source pixel is ore above this HSV saturation, or below this value: the crystal's shadow goes
-# with the crystal, or a spent block keeps a dark hole where it stood.
-ORE_SATURATION = 0.25
-SHADOW_VALUE = 0.3
+# A source pixel is ore above the HSV saturation or below the value. The value catches a dark ore
+# and a crystal's shadow, which must go with the crystal or a spent block keeps a dark hole. Coal
+# and iron sit on slade, a dark stone, so their value is tighter; coal has no colour at all.
+ORE_PIXEL = {
+    "coal": (1.1, 0.2),
+    "copper": (0.25, 0.0),
+    "iron": (0.25, 0.2),
+    "uranium": (0.25, 0.3),
+}
 
 # How many of the 256 pixels a full block speckles. Enough to read as an ore at a glance and
 # leave room for eight distinguishable steps below it.
@@ -128,24 +130,30 @@ def read_png(path):
     return rows
 
 
-def sourced_sprites(name, ratios):
-    """One sprite per stage from a borrowed full sprite: the crystal shrinks toward its centre."""
-    source = read_png(os.path.join(ART, name))
+def sourced_sprites(resource, ratios):
+    """One sprite per stage from a borrowed full sprite: the ore shrinks toward its centre."""
+    source = read_png(os.path.join(ART, SOURCED[resource]))
+    saturation, value = ORE_PIXEL[resource]
     cells = [(x, y) for y in range(16) for x in range(16)]
     hsv = {c: colorsys.rgb_to_hsv(*(v / 255 for v in source[c[1]][c[0]][:3])) for c in cells}
-    ore = [c for c in cells if hsv[c][1] > ORE_SATURATION or hsv[c][2] < SHADOW_VALUE]
+    ore = [c for c in cells if hsv[c][1] > saturation or hsv[c][2] < value]
     stone = [c for c in cells if c not in ore]
     cx = sum(x for x, _ in ore) / len(ore)
     cy = sum(y for _, y in ore) / len(ore)
-    # The brightest crystal pixel near the centroid is the last to go, so the final stage still
-    # reads as ore rather than as one dark pixel.
-    centre = max((c for c in ore if hsv[c][1] > ORE_SATURATION),
-                 key=lambda c: (hsv[c][2] - 0.1 * ((c[0] - cx) ** 2 + (c[1] - cy) ** 2) ** 0.5, -c[1], -c[0]))
+    # The most ore-like pixel near the centroid is the last to go, so the final stage still reads
+    # as ore rather than as a shadow: the brightest coloured pixel, or for coal the darkest.
+    coloured = [c for c in ore if hsv[c][1] > saturation]
+    strength = (lambda c: hsv[c][2]) if coloured else (lambda c: 1 - hsv[c][2])
+    centre = max(coloured or ore,
+                 key=lambda c: (strength(c) - 0.1 * ((c[0] - cx) ** 2 + (c[1] - cy) ** 2) ** 0.5, -c[1], -c[0]))
     ore.sort(key=lambda c: ((c[0] - centre[0]) ** 2 + (c[1] - centre[1]) ** 2, c[1], c[0]))
 
+    # The median of the nearest stone pixels by brightness, not the nearest one, so a filled hole
+    # does not copy a highlight and read as a bright speck.
     def fill(c):
-        near = min(stone, key=lambda s: ((s[0] - c[0]) ** 2 + (s[1] - c[1]) ** 2, s[1], s[0]))
-        return source[near[1]][near[0]]
+        near = sorted(stone, key=lambda s: ((s[0] - c[0]) ** 2 + (s[1] - c[1]) ** 2, s[1], s[0]))[:5]
+        near.sort(key=lambda s: (hsv[s][2], s[1], s[0]))
+        return source[near[2][1]][near[2][0]]
 
     out = []
     for stage in range(len(ratios)):
@@ -198,7 +206,7 @@ def build():
         ratios = entry["stage_ratios"]
         if len(ratios) < 2:
             sys.exit(f"{factorio} carries {len(ratios)} stage ratios; there is nothing to render")
-        images = (sourced_sprites(SOURCED[resource], ratios) if resource in SOURCED
+        images = (sourced_sprites(resource, ratios) if resource in SOURCED
                   else sprites(resource, ratios))
         for stage, image in enumerate(images):
             files[os.path.join(OUT, f"{resource}_stage{stage}.png")] = image
