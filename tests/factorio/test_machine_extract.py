@@ -27,6 +27,8 @@ game -- is whether the *committed* output still says what the decisions say it s
     both drills for ADR-0043's rigs, the boiler and the steam engine for ADR-0048's chain.
     A missing field here reaches the consumer as a number typed by hand, which is the thing
     ADR-0041 forbids.
+  - the Radar's row (#368) matches the prototype in the dump when the dump is on disk, and
+    its own terms give Factorio's 33.3 s per sector at full power.
   - the widening did not perturb the twelve crafting machines. Drills, boilers and
     generators do not craft and must not appear in `machines`; a drill that leaked in would
     carry a null `crafting_speed` and the recipe converter would inherit it silently.
@@ -38,6 +40,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
+
+DUMP = Path.home() / "Library/Application Support/factorio/script-output/data-raw-dump.json"
 
 DEFAULT_DRAIN_FRACTION = 30
 
@@ -76,6 +80,19 @@ REQUIRED_DRILLS = ("burner-mining-drill", "electric-mining-drill")
 REQUIRED_BOILER = "boiler"
 REQUIRED_GENERATOR = "steam-engine"
 
+# The Radar's prototype as the dump states it, for when the dump is not on disk. The seconds
+# per sector is Factorio's own tooltip figure and is what the row must give back.
+RADAR_PROTOTYPE = {
+    "energy_usage": "300kW",
+    "energy_per_sector": "10MJ",
+    "energy_per_nearby_scan": "250kJ",
+    "max_distance_of_sector_revealed": 14,
+    "max_distance_of_nearby_sector_revealed": 3,
+}
+RADAR_SECONDS_PER_SECTOR = 33.3
+RADAR_TILES = (3, 3)
+SI = {"k": 1e3, "M": 1e6}
+
 # The key set every crafting-machine row has carried since `#126`. Pinned alongside the
 # names: "no existing machine row changes" is a claim about the row's shape as well as
 # about which rows there are.
@@ -94,6 +111,38 @@ MACHINE_FIELDS = {
     "tile_width",
     "tile_height",
 }
+
+
+def si(text):
+    number = str(text).rstrip("WJ")
+    return float(number[:-1]) * SI[number[-1]] if number[-1] in SI else float(number)
+
+
+def radar_failures(radar):
+    if radar is None:
+        return ["no radar -- #368's Radar has no draw, sector cost or reach to read"]
+    failures = []
+    prototype = RADAR_PROTOTYPE
+    if DUMP.is_file():
+        prototype = json.loads(DUMP.read_text(encoding="utf-8"))["radar"]["radar"]
+    else:
+        print(f"note no dump at {DUMP}; the radar row is compared to the transcription")
+    for field in RADAR_PROTOTYPE:
+        want = prototype[field]
+        want = si(want) if isinstance(want, str) else want
+        if radar.get(field) != want:
+            failures.append(f"radar's {field} is {radar.get(field)!r}, the prototype says {want!r}")
+    if (radar.get("tile_width"), radar.get("tile_height")) != RADAR_TILES:
+        failures.append(f"radar is {radar.get('tile_width')}x{radar.get('tile_height')}, not 3x3")
+    if radar.get("energy_type") != "electric":
+        failures.append(f"radar is {radar.get('energy_type')}, not electric")
+    seconds = radar["energy_per_sector"] / radar["energy_usage"]
+    if round(seconds, 1) != RADAR_SECONDS_PER_SECTOR:
+        failures.append(
+            f"radar charts a sector every {seconds:.2f} s, not Factorio's "
+            f"{RADAR_SECONDS_PER_SECTOR} s"
+        )
+    return failures
 
 
 def main():
@@ -136,7 +185,15 @@ def main():
         if machine["module_slots"] is None:
             failures.append(f"{machine['name']} has no module_slots")
 
-    for machine in machines + (data.get("drills") or []) + (data.get("boilers") or []):
+    radars = {r["name"]: r for r in data.get("radars") or []}
+    failures.extend(radar_failures(radars.get("radar")))
+
+    for machine in (
+        machines
+        + (data.get("drills") or [])
+        + (data.get("boilers") or [])
+        + list(radars.values())
+    ):
         drain, source = machine["drain"], machine["drain_source"]
         if machine["energy_type"] != "electric":
             if drain is not None or source != "none":

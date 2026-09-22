@@ -1261,12 +1261,15 @@ two.
 
 - **verdict**: `planned`
 - **where**: Terra
-- **via**: `pack`, `powergrid`
-- **owner**: #57
+- **via**: `pack`
+- **owner**: #116
 - **ticket**: #116
 
-#57 decided the Radar — a pack machine on a GT chassis with its own research node — and closing that
-ticket is not the same as the mechanic being in a player's hands.
+Factorio's Radar (ADR-0045, ADR-0079): a 3x3x3 `planetaryfactory:radar` drawing 150 FE/t that
+charts map at range for its owner's team. It detects nothing hidden, since ore lies on the surface.
+#368 built the machine and the team's chart on the server; drawing the chart on FTB Chunks' map and
+marking outfield patches are #116's remaining tickets, so the row stays `planned` until a player sees
+the map.
 
 **This row is the proof case for the two axes never reading each other.** `combat/defensive-structure`
 is `not_emitted` in `subgroup-owner.json`, and a ledger that read its verdicts out of that file would
@@ -1274,9 +1277,10 @@ have recorded "radar: excluded" — which is wrong whatever this row's verdict t
 
 Sub-rules:
 
-- **Radar reveals map, and periodically scans distant chunks** — `adapted`. It finds ore patches;
-  there is no fog of war to lift, because Minecraft has no map fog in Factorio's sense.
-- **Orbital scanning as the mid-game upgrade** — `planned`. GCyR's Ore Finder satellite.
+- **Reveals map by scanning distant sectors** — `planned`. One 32-block sector per 10 MJ within 14
+  sectors, charted on the server since #368; it reaches the map with #116.
+- **Keeps the nearby area live** — `adapted`. No chunk-loaded live view: every pass re-charts the
+  nearest sectors first.
 
 ### The logistic request and trash system
 

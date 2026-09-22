@@ -123,5 +123,7 @@
   "tooltip.planetaryfactory.rig.jade.fuel": "Fuel: %s / %s J",
   "tooltip.planetaryfactory.rig.jade.idle": "idle",
   "tooltip.planetaryfactory.rig.jade.no_ore": "Nothing left to mine",
-  "tooltip.planetaryfactory.rig.jade.progress": "%s%%"
+  "tooltip.planetaryfactory.rig.jade.progress": "%s%%",
+  "block.planetaryfactory.radar": "Radar",
+  "block.planetaryfactory.radar_part": "Radar (part)"
 }

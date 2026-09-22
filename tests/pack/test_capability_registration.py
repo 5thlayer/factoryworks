@@ -71,6 +71,8 @@ FACES = {
     # Item (#329): inputs filtered to the Held recipe, on the guard.
     "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item")),
     "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
+    # Energy (#368): the scan draws FE, on every block of the footprint.
+    "radar": ("registerRadarCapabilities", ("Energy",)),
 }
 
 # The three ladders, against the enum every one of their blocks has to be walked from. A face is

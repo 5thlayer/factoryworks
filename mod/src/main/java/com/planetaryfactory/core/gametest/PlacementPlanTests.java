@@ -16,6 +16,8 @@ import com.planetaryfactory.core.mining.rig.RigGeometry;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.Placements;
+import com.planetaryfactory.core.radar.RadarBlockEntity;
+import com.planetaryfactory.core.radar.RadarFootprint;
 import rearth.oritech.block.base.block.MultiblockMachine;
 import com.planetaryfactory.core.smelting.FurnaceTier;
 
@@ -75,6 +77,10 @@ final class PlacementPlanTests {
                 PlacementPlanTests::steamEngineMatchesPlacement);
         tests.test("plan_refuses_a_steam_engine_whole", 20,
                 PlacementPlanTests::steamEngineRefusesWhole);
+        tests.test("plan_matches_placement_for_a_radar", 20,
+                PlacementPlanTests::radarMatchesPlacement);
+        tests.test("plan_refuses_a_radar_whole", 20,
+                PlacementPlanTests::radarRefusesWhole);
         tests.test("plan_matches_placement_for_a_boiler", 20,
                 PlacementPlanTests::boilerMatchesPlacement);
         tests.test("plan_refuses_a_pump_on_a_dry_site", 20,
@@ -253,6 +259,29 @@ final class PlacementPlanTests {
     private static void steamEngineRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.STEAM_ENGINE.get()),
+                FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
+        helper.succeed();
+    }
+
+    /** The Radar's 3x3x3 (#368): every block of it, the anchor holding the Radar's block entity. */
+    private static void radarMatchesPlacement(GameTestHelper helper) {
+        PlacementPlan plan = check(helper, new ItemStack(PFItems.RADAR.get()), FLOOR, Direction.UP, false);
+        int expected = RadarFootprint.FOOTPRINT.offsets().size();
+        if (plan.blocks().size() != expected) {
+            helper.fail("a Radar's plan named " + plan.blocks().size()
+                    + " blocks where its footprint is " + expected, FLOOR);
+        }
+        BlockPos anchor = plan.blocks().getFirst().pos();
+        if (!(helper.getLevel().getBlockEntity(anchor) instanceof RadarBlockEntity)) {
+            helper.fail("the placed anchor holds no Radar block entity", helper.relativePos(anchor));
+        }
+        helper.succeed();
+    }
+
+    /** One taken position, in the top layer's corner, refuses the whole Radar. */
+    private static void radarRefusesWhole(GameTestHelper helper) {
+        helper.setBlock(ABOVE_FLOOR.offset(1, 2, 1), Blocks.STONE);
+        refusal(check(helper, new ItemStack(PFItems.RADAR.get()),
                 FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }

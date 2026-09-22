@@ -253,8 +253,16 @@ How wide a patch is. Fixed until the **amplitude** cap is reached and growing wi
 _Avoid_: size, footprint, patch size
 
 **Radar**:
-The building that reveals map at range. It detects nothing — ore is visible where it lies, so finding a patch is exploration rather than prospecting (ADR-0045).
+The building that charts map at range for its team: the chunks it scans appear on the map as if walked, and each **outfield patch** it charts gets a marker. It detects nothing hidden — ore is visible where it lies, so finding a patch is exploration rather than prospecting, and the marker only labels what the chart already shows (ADR-0045).
 _Avoid_: prospector, scanner, ore detector
+
+**Sector**:
+What a **Radar** charts in one scan: a 32×32-block square, which is Factorio's chunk and four Minecraft chunks. A Radar charts the nearest uncharted sector within its reach first, then keeps re-charting its whole reach in turn, so the map stays current.
+_Avoid_: chunk (a Minecraft chunk is a quarter of a sector), scan area
+
+**Chart**:
+What a team has seen through its Radars: every sector a Radar of theirs has charted. It belongs to the team, so a player who joins later or was offline receives it too.
+_Avoid_: explored area, revealed map, fog
 
 ### Powering things
 

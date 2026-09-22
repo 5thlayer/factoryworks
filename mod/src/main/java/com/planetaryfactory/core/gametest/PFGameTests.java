@@ -93,6 +93,7 @@ public final class PFGameTests {
             SteamEngineNetworkTests.register(registrar);
             AssemblingMachineTests.register(registrar);
             FootprintBreakTests.register(registrar);
+            RadarTests.register(registrar);
         }
         if (ModList.get().isLoaded("belts")) {
             BeltHandoffTests.register(registrar);

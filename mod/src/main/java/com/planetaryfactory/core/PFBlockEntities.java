@@ -13,6 +13,7 @@ import com.planetaryfactory.core.mining.rig.RigBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigItemHandler;
 import com.planetaryfactory.core.mining.rig.RigPartBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigTier;
+import com.planetaryfactory.core.radar.RadarBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceItemHandler;
 import com.planetaryfactory.core.smelting.FurnaceTier;
@@ -111,6 +112,11 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(SteamEngineBlockEntity::new,
                             java.util.Set.of(PFBlocks.STEAM_ENGINE.get())));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RadarBlockEntity>>
+            RADAR = BLOCK_ENTITIES.register("radar",
+                    () -> new BlockEntityType<>(RadarBlockEntity::new,
+                            java.util.Set.of(PFBlocks.RADAR.get())));
+
     private PFBlockEntities() {
     }
 
@@ -125,6 +131,7 @@ public final class PFBlockEntities {
         registerBoilerCapabilities(event);
         registerAssemblingMachineCapabilities(event);
         registerSteamEngineCapabilities(event);
+        registerRadarCapabilities(event);
     }
 
     /**
@@ -274,6 +281,12 @@ public final class PFBlockEntities {
         registerOnFootprint(event, Capabilities.Fluid.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
                         ? engine.getFluidLookup(side) : null);
+    }
+
+    /** The Radar's energy face (#368), on every block, so a pole reaching any of it feeds it. */
+    private static void registerRadarCapabilities(RegisterCapabilitiesEvent event) {
+        registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.RADAR_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof RadarBlockEntity radar ? radar.energySide() : null);
     }
 
     /**

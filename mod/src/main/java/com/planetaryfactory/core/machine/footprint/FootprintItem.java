@@ -1,17 +1,10 @@
 package com.planetaryfactory.core.machine.footprint;
 
 import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
 import com.planetaryfactory.core.placement.PlansPlacement;
 
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.gameevent.GameEvent;
 import org.jspecify.annotations.Nullable;
 import rearth.oritech.item.OritechGeoItem;
 import rearth.oritech.util.ColorableMachine;
@@ -41,26 +34,9 @@ public class FootprintItem extends OritechGeoItem implements PlansPlacement {
         return machine.plan(context);
     }
 
-    /** Placing executes the plan (ADR-0069), so the preview and the click cannot disagree. */
+    /** Replaces {@code BlockItem.place} whole: see {@link FootprintMachine#place}. */
     @Override
     public InteractionResult place(BlockPlaceContext context) {
-        PlacementPlan plan = Placements.planFor(this, context);
-        if (plan == null || plan.isRefused()) {
-            return InteractionResult.FAIL;
-        }
-        Level level = context.getLevel();
-        for (PlacementPlan.Placed placed : plan.blocks()) {
-            level.setBlock(placed.pos(), placed.state(), Block.UPDATE_ALL);
-        }
-
-        PlacementPlan.Placed anchor = plan.blocks().getFirst();
-        Player player = context.getPlayer();
-        SoundType sound = anchor.state().getSoundType();
-        level.playSound(player, anchor.pos(), sound.getPlaceSound(), SoundSource.BLOCKS,
-                (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
-        level.gameEvent(GameEvent.BLOCK_PLACE, anchor.pos(), GameEvent.Context.of(player, anchor.state()));
-
-        context.getItemInHand().consume(1, player);
-        return InteractionResult.SUCCESS;
+        return FootprintMachine.place(this, context) == null ? InteractionResult.FAIL : InteractionResult.SUCCESS;
     }
 }

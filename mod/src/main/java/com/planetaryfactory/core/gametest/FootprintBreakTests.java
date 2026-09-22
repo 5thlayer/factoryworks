@@ -39,7 +39,8 @@ final class FootprintBreakTests {
     static void register(PFGameTests.Registrar tests) {
         Map<String, FootprintMachine> machines = Map.of(
                 "assembling_machine", PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT,
-                "steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT);
+                "steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT,
+                "radar", PFBlocks.RADAR_FOOTPRINT);
         machines.forEach((name, machine) -> {
             tests.test(name + "_broken_at_its_anchor_leaves_nothing", 20,
                     helper -> breakAndCheck(helper, machine, 0));
@@ -98,6 +99,6 @@ final class FootprintBreakTests {
         if (!machine.isAnchor(state)) {
             helper.fail("placing the machine put no anchor on the floor", FLOOR.above());
         }
-        return machine.positions(anchor, state.getValue(rearth.oritech.block.base.block.MultiblockMachine.FACING));
+        return machine.positions(anchor, state.getValue(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING));
     }
 }

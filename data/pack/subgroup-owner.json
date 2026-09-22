@@ -535,8 +535,13 @@
     },
     "combat/defensive-structure": {
       "owner": "not_emitted",
-      "reason": "#26 dropped Military science -- its ingredients feed nothing downstream. THAT PREMISE IS FALSE since #118 (ADR-0055): the combat line has customers and Military science returns. The shelf stays out of the corpus's emit scope only until `item-map.json` carries its rows; the ledger verdict is `planned` and this field is the other axis. `radar` on this shelf was already authored separately by #57.",
-      "note": "Contains `radar`. #57 decided a continuous FE Radar as a `gtceu:machine` KubeJS registration with the mechanism in `planetaryfactory_core`, unlocked by its own research node -- a pack machine, not Factorio's item, so this row stays cut and the Radar is authored rather than converted.",
+      "reason": "#26 dropped Military science -- its ingredients feed nothing downstream. THAT PREMISE IS FALSE since #118 (ADR-0055): the combat line has customers and Military science returns. The shelf stays out of the corpus's emit scope only until `item-map.json` carries its rows; the ledger verdict is `planned` and this field is the other axis.",
+      "note": "Contains `radar`, which is emitted on its own row: #368 builds it as `planetaryfactory:radar` (ADR-0079), crafted in the pack's Assembling Machine from Factorio's recipe. The rest of the shelf stays cut.",
+    "per_recipe": {
+      "radar": "pack:assembling",
+      "stone-wall": "not_emitted",
+      "gate": "not_emitted"
+    },
       "count": 3
     },
     "space/space-crushing": {
