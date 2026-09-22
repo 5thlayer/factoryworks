@@ -509,6 +509,17 @@ ADR has overridden. Run `scripts/adr-backlink-check.sh` after committing an ADR 
 key — it needs an authenticated `gh`, so it is not part of any offline check. See
 `docs/agents/domain.md`.
 
+### Item-map ticket check
+
+An `undecided` item-map row is a recorded skip only while the ticket it names is open, and a
+`blocked_by` only while its blocker is (#278). A closed one leaves the converter skipping the row
+for good behind a pointer that looks live. `scripts/item-map-ticket-check.sh` fails every row whose
+`ticket` or `blocked_by` names a closed or missing issue, with that issue's title. When a ticket
+closes, each row naming it is rewritten to a target, made `not_emitted` or `native_mechanic`, or
+pointed at a new open ticket -- never at the reopened old one. It needs an authenticated `gh`, so
+run it after closing a ticket or editing `data/pack/item-map.json`; it is in no batch. The
+mechanic ledger's pointers are #379's.
+
 ### Transfer-face check
 
 `tests/pack/test_transfer_guards.py` asserts every item and fluid face in the mod is reachable by
