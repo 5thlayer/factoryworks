@@ -920,9 +920,8 @@
       "outside_corpus": "Space Age's recipe, which needs tungsten plate from Vulcanus; the corpus is Nauvis pre-launch (#72), so the belt ships with no recipe (#341)."
     },
     "underground-belt": {
-      "status": "undecided",
-      "note": "SimpleBelts ships exactly `belts:belt`, `belts:improved_belt`, `belts:chute` and `belts:conveyor_support`: two belt tiers, no splitter, no underground. The row read `native_mechanic` on Create's RPM-driven belt, and Create left with ADR-0060 (#277). #261's fork adds throughput tiers and splitters, and owns this row.",
-      "ticket": 261
+      "status": "not_emitted",
+      "note": "Excluded by ADR-0044, restated by ADR-0060 and ADR-0078: an underground solves weaving past another belt in two dimensions, and Minecraft has a Y axis, so a belt that must cross another goes over it. The SimpleBelts fork ships none. docs/factorio-mechanics.md records the sub-rule as `excluded`."
     },
     "uranium-235": {
       "status": "undecided",
