@@ -18,6 +18,7 @@ import com.planetaryfactory.core.placement.PlanHull;
 import com.planetaryfactory.core.placement.Placements;
 
 import net.minecraft.client.Minecraft;
+import net.neoforged.fml.ModList;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -80,6 +81,8 @@ public final class PlacementPreview {
     /** Red: any reason placing would be refused, the pack's and vanilla's alike. */
     private static final int REFUSED_TINT = (ALPHA << 24) | 0xFF4040;
 
+    private static final boolean BELTS = ModList.get().isLoaded("belts");
+
     private static @Nullable Key key;
     private static @Nullable PlacementPlan cached;
     private static Map<BlockPos, Set<Direction>> outside = Map.of();
@@ -115,6 +118,9 @@ public final class PlacementPreview {
             return;
         }
         draw(event, level, plan);
+        if (BELTS) {
+            PreviewSplitterBelts.draw(event, plan, plan.isRefused() ? REFUSED_TINT : ACCEPTED_TINT);
+        }
         drawSupplyArea(event, level, plan);
         drawMiningArea(event, level, plan);
         PreviewWires.draw(event.getSubmitNodeCollector(), event.getPoseStack(), level,
