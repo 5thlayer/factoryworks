@@ -1397,7 +1397,7 @@ Sub-rules:
 - **where**: Terra Orbit, and every body's orbit
 - **candidates**: `planetaryfactory_core`. Oritech: Space Age has no stations (#340)
 - **owner**: ADR-0006
-- **ticket**: #113
+- **ticket**: #340
 
 A Platform is a static orbital factory, not a ship — no thrusters, no navigation, no interplanetary
 transit, and therefore no asteroid defence and no hull mass to manage. That is an argued divergence

@@ -168,13 +168,13 @@
     },
     "cargo-bay": {
       "status": "undecided",
-      "note": "Post-launch, and `not_emitted` on its shelf; #113 and #114 own the space chapter.",
-      "ticket": 113
+      "note": "Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age.",
+      "ticket": 340
     },
     "cargo-landing-pad": {
       "status": "undecided",
-      "note": "`not_emitted` shelf.",
-      "ticket": 113
+      "note": "Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age. Its post-launch arc is the Rocket silo row's sub-rule.",
+      "ticket": 340
     },
     "cargo-wagon": {
       "kind": "item",
@@ -782,18 +782,18 @@
     },
     "space-platform-foundation": {
       "status": "undecided",
-      "note": "Post-launch, and `not_emitted` on its shelf; #113 and #114 own the space chapter.",
-      "ticket": 113
+      "note": "Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age.",
+      "ticket": 340
     },
     "space-platform-starter-pack": {
       "status": "undecided",
-      "note": "Post-launch, and `not_emitted` on its shelf; #113 and #114 own the space chapter.",
-      "ticket": 113
+      "note": "Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age.",
+      "ticket": 340
     },
     "space-science-pack": {
       "status": "undecided",
-      "note": "Post-launch, and `not_emitted` on its shelf; #113 and #114 own the space chapter.",
-      "ticket": 113
+      "note": "Made in orbit in Space Age, so it waits on the platform: Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age.",
+      "ticket": 340
     },
     "speed-module": {
       "status": "undecided",
@@ -950,8 +950,8 @@
     },
     "utility-science-pack": {
       "status": "undecided",
-      "note": "Post-launch, and `not_emitted` on its shelf; #113 and #114 own the space chapter.",
-      "ticket": 113
+      "note": "Not a space item: ADR-0018 reserves it for after the first launch, and #139 owns the post-launch production rung.",
+      "ticket": 139
     },
     "water": {
       "kind": "fluid",
