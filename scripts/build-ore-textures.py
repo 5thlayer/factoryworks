@@ -14,9 +14,14 @@ so the picture is the number: a block showing a quarter of its speckles is holdi
 of its ore. That is what makes a stage unable to compete with the amount, which is ADR-0020's
 objection to worn textures and the reason ADR-0041 could amend it.
 
-The colours are the placeholder half and are chosen here, one per resource. The speckle *positions*
+The colours are the placeholder half and are chosen here, one per generated resource. The speckle *positions*
 are drawn from a fixed seed per resource and then *removed in a fixed order* as the stages fall, so
 a block thinning out looks like the same block losing ore rather than eight unrelated sprites.
+
+**Uranium wears borrowed art** (#321): Malcolm Riley's `ore_stone_soul`, CC BY 4.0 and credited in
+`NOTICE`, committed unmodified under `data/art/`. The ratio rule is the same. Its crystal pixels are
+the speckles, and they go from the outside in, so a thinning block keeps the core of its crystal. A
+removed pixel takes the colour of the nearest stone pixel in the source.
 
 Run after re-extracting the corpus, in case Factorio changed its stage counts:
 
@@ -26,6 +31,7 @@ Run after re-extracting the corpus, in case Factorio changed its stage counts:
 Writes `kubejs/assets/planetaryfactory/textures/block/ore/<resource>_stage<N>.png`.
 """
 import argparse
+import colorsys
 import json
 import os
 import random
@@ -54,9 +60,16 @@ SPECKLE = {
     "iron": (196, 168, 140),
     "copper": (196, 118, 62),
     "coal": (38, 38, 42),
-    "uranium": (94, 176, 88),
     "stone": (166, 160, 150),
 }
+
+SOURCED = {"uranium": "ore_stone_soul.png"}
+ART = os.path.join(ROOT, "data", "art")
+
+# A source pixel is ore above this HSV saturation, or below this value: the crystal's shadow goes
+# with the crystal, or a spent block keeps a dark hole where it stood.
+ORE_SATURATION = 0.25
+SHADOW_VALUE = 0.3
 
 # How many of the 256 pixels a full block speckles. Enough to read as an ore at a glance and
 # leave room for eight distinguishable steps below it.
@@ -80,6 +93,69 @@ def png(pixels):
         + chunk(b"IDAT", zlib.compress(raw, 9))
         + chunk(b"IEND", b"")
     )
+
+
+def read_png(path):
+    """A 16x16 8-bit RGBA PNG's pixels, as rows of [r, g, b, a]."""
+    data = open(path, "rb").read()
+    width, height, depth, kind = struct.unpack(">IIBB", data[16:26])
+    if (width, height, depth, kind) != (16, 16, 8, 6):
+        sys.exit(f"{path} is not a 16x16 8-bit RGBA PNG")
+    idat, i = b"", 8
+    while i < len(data):
+        (length,) = struct.unpack(">I", data[i:i + 4])
+        if data[i + 4:i + 8] == b"IDAT":
+            idat += data[i + 8:i + 8 + length]
+        i += 12 + length
+    raw, stride, rows, prev = zlib.decompress(idat), 64, [], bytearray(64)
+    for y in range(16):
+        kind, line = raw[y * (stride + 1)], bytearray(raw[y * (stride + 1) + 1:(y + 1) * (stride + 1)])
+        for x in range(stride):
+            a = line[x - 4] if x >= 4 else 0
+            b, c = prev[x], prev[x - 4] if x >= 4 else 0
+            if kind == 1:
+                line[x] = (line[x] + a) & 255
+            elif kind == 2:
+                line[x] = (line[x] + b) & 255
+            elif kind == 3:
+                line[x] = (line[x] + (a + b) // 2) & 255
+            elif kind == 4:
+                p = a + b - c
+                pa, pb, pc = abs(p - a), abs(p - b), abs(p - c)
+                line[x] = (line[x] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        rows.append([list(line[x * 4:x * 4 + 4]) for x in range(16)])
+        prev = line
+    return rows
+
+
+def sourced_sprites(name, ratios):
+    """One sprite per stage from a borrowed full sprite: the crystal shrinks toward its centre."""
+    source = read_png(os.path.join(ART, name))
+    cells = [(x, y) for y in range(16) for x in range(16)]
+    hsv = {c: colorsys.rgb_to_hsv(*(v / 255 for v in source[c[1]][c[0]][:3])) for c in cells}
+    ore = [c for c in cells if hsv[c][1] > ORE_SATURATION or hsv[c][2] < SHADOW_VALUE]
+    stone = [c for c in cells if c not in ore]
+    cx = sum(x for x, _ in ore) / len(ore)
+    cy = sum(y for _, y in ore) / len(ore)
+    # The brightest crystal pixel near the centroid is the last to go, so the final stage still
+    # reads as ore rather than as one dark pixel.
+    centre = max((c for c in ore if hsv[c][1] > ORE_SATURATION),
+                 key=lambda c: (hsv[c][2] - 0.1 * ((c[0] - cx) ** 2 + (c[1] - cy) ** 2) ** 0.5, -c[1], -c[0]))
+    ore.sort(key=lambda c: ((c[0] - centre[0]) ** 2 + (c[1] - centre[1]) ** 2, c[1], c[0]))
+
+    def fill(c):
+        near = min(stone, key=lambda s: ((s[0] - c[0]) ** 2 + (s[1] - c[1]) ** 2, s[1], s[0]))
+        return source[near[1]][near[0]]
+
+    out = []
+    for ratio in ratios:
+        pixels = [[p[:] for p in row] for row in source]
+        # `ceil`, as in `sprites`.
+        count = min(len(ore), -(-int(round(len(ore) * ratio * 1000)) // 1000))
+        for x, y in ore[count:]:
+            pixels[y][x] = fill((x, y))
+        out.append(png(pixels))
+    return out
 
 
 def shade(colour, delta):
@@ -120,7 +196,9 @@ def build():
         ratios = entry["stage_ratios"]
         if len(ratios) < 2:
             sys.exit(f"{factorio} carries {len(ratios)} stage ratios; there is nothing to render")
-        for stage, image in enumerate(sprites(resource, ratios)):
+        images = (sourced_sprites(SOURCED[resource], ratios) if resource in SOURCED
+                  else sprites(resource, ratios))
+        for stage, image in enumerate(images):
             files[os.path.join(OUT, f"{resource}_stage{stage}.png")] = image
     return files
 

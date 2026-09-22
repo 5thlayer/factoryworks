@@ -426,8 +426,9 @@ which launches the game: `tests/factorio/test_resource_extract.py` re-derives ev
 from Factorio's own committed formula rather than trusting the number;
 `mod/src/test/java/com/planetaryfactory/core/ore/` asserts a block pays out exactly what it holds
 and that an exhausted position retires its delta, since a delta left behind is inherited by the next
-block placed there; `tests/pack/test_ore_assets.py` walks all forty blockstate/model/texture hops
-and asserts every ore block is in `c:ores`, which is the tag GregTech's miner scans;
+block placed there; `tests/pack/test_ore_assets.py` walks all forty blockstate/model/texture hops,
+asserts every ore block is in `c:ores`, and resolves every drop against the installed jars, since an
+id nothing registers pays air rather than throwing (#321);
 `MiningSpeedTest` asserts a field costs its *amount* times the tier's seconds rather than its
 block count; and `OutfieldAmountTest` asserts an outfield disc's uniform amount, read at its centre's
 distance from origin with no cap, against every row of the corpus's `outfield.law` table. Run
@@ -437,7 +438,7 @@ them after editing anything under `core/ore/`, the two ore generators or the ext
 
 Every patch beyond the starting area is a surface disc placed by worldgen (#320, ADR-0045): one
 `planetaryfactory:outfield_disc` structure and one `random_spread` structure set per resource,
-uranium excepted until #321. `scripts/build-outfield-worldgen.py` writes them from
+uranium included (#321). `scripts/build-outfield-worldgen.py` writes them from
 `data/factorio/resource.json`, and `tests/worldgen/test_outfield_worldgen.py` runs its `--check`
 and re-derives the spacing from each resource's `mean_spacing` and the separation from
 `spot_noise`'s minimum candidate spacing. It also asserts the type is the one `PFWorldgen`

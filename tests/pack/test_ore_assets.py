@@ -20,7 +20,9 @@ places one ore has to be named in, and the failures are all quiet:
     names this as the risk that gates the whole body, and it is one line of JSON to get wrong.
   - **A drop that names nothing.** `OreMining.drop` turns an id no mod registers into air rather
     than a throw, so the draw is spent and the hand stays empty. Each drop is resolved against the
-    installed jars' lang keys, vanilla's against the client jar when it is on this machine (#321).
+    installed jars the way `test_item_map.py` resolves an item-map target (#321).
+  - **Borrowed art with no credit.** A sprite `scripts/build-ore-textures.py` derives from someone
+    else's texture holds only with attribution, so the source and every stage are named in `NOTICE`.
   - **A generated file edited by hand.** Both scripts' `--check` runs here, so a sprite or a
     blockstate edited in place is a failure rather than a thing that survives until the next
     regeneration silently reverts it.
@@ -28,12 +30,13 @@ places one ore has to be named in, and the failures are all quiet:
 Usage: tests/pack/test_ore_assets.py
 """
 import json
-import os
 import re
 import subprocess
 import sys
-import zipfile
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import test_item_map  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -45,11 +48,6 @@ DATA = ROOT / "kubejs/data"
 # The tag GregTech's Miner scans. Not decoration: `MinerLogic` reads `Tags.Blocks.ORES`, which is
 # this file, and a block missing from it is invisible to every drill on the ladder.
 ORES_TAG = DATA / "c/tags/block/ores.json"
-
-MODS = ROOT / "mods"
-VANILLA = Path(os.environ.get(
-    "PF_CLIENT_JAR", os.path.expanduser("~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
-
 
 def java_resources(source):
     """The enum's five entries: corpus key and drop item."""
@@ -69,31 +67,14 @@ def script_drops():
     }
 
 
-def lang_keys(namespace):
-    """The item and block lang keys an installed jar ships for one namespace, or None if none does."""
-    jars = [VANILLA] if namespace == "minecraft" else sorted(MODS.glob("*.jar"))
-    name = f"assets/{namespace}/lang/en_us.json"
-    keys = None
-    for jar in jars:
-        if not jar.is_file():
-            continue
-        with zipfile.ZipFile(jar) as archive:
-            if name in archive.namelist():
-                keys = (keys or set()) | set(json.loads(archive.read(name)))
-    return keys
-
-
 def unresolved_drop(drop):
     """Why a drop names nothing, or None when it resolves or cannot be asked on this machine."""
-    namespace, _, path = drop.partition(":")
-    keys = lang_keys(namespace)
-    if keys is None:
-        if namespace == "minecraft":
-            return None
-        return f"no installed jar ships the {namespace} namespace"
-    if f"item.{namespace}.{path}" in keys or f"block.{namespace}.{path}" in keys:
+    namespace = drop.partition(":")[0]
+    if namespace == "minecraft" and not test_item_map.vanilla_lang():
         return None
-    return f"{namespace}'s jar registers no {path}"
+    if test_item_map.resolves(drop):
+        return None
+    return "no installed jar registers it"
 
 
 def main():
@@ -175,6 +156,18 @@ def main():
         missing = {f"planetaryfactory:{ore}_ore" for ore in java} - tagged
         if missing:
             failures.append(f"{sorted(missing)} are outside c:ores, so no drill can see them")
+
+    notice = (ROOT / "NOTICE").read_text()
+    textures = (ROOT / "scripts/build-ore-textures.py").read_text()
+    sourced = re.search(r"^SOURCED = (\{.*\})$", textures, re.M)
+    if not sourced:
+        failures.append("scripts/build-ore-textures.py has no one-line SOURCED table to read credits from")
+    for ore, art in (json.loads(sourced.group(1)) if sourced else {}).items():
+        credited = [f"data/art/{art}"] + [
+            f"kubejs/assets/planetaryfactory/textures/block/ore/{ore}_stage{n}.png" for n in range(stages)]
+        for file in credited:
+            if file not in notice:
+                failures.append(f"{file} is borrowed art with no credit in NOTICE")
 
     for script in ("build-ore-textures.py", "build-ore-assets.py"):
         run = subprocess.run(
