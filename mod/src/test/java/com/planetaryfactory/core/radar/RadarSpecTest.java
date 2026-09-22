@@ -30,8 +30,8 @@ class RadarSpecTest {
     }
 
     @Test
-    void theNearbyAreaIsEightSectorsAcross() {
-        assertEquals(8, spec.nearbySpan());
+    void theNearbyAreaReachesFourSectors() {
+        assertEquals(4, spec.nearReach());
     }
 
     @Test
