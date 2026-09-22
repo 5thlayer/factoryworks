@@ -1156,9 +1156,9 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **candidates**: Oritech: Space Age, or `planetaryfactory_core` (#340)
-- **owner**: #41, ADR-0006
-- **ticket**: #25 — the map *is* this row's ticket, being Terra's flow to the first rocket launch
+- **via**: `planetaryfactory_core`
+- **owner**: #378, which authors the silo rather than waiting on Oritech: Space Age
+- **ticket**: #378, on #25's map of Terra's flow to the first rocket launch
 
 Sub-rules:
 
@@ -1374,8 +1374,8 @@ Sub-rules:
 
 Six bodies, seven destinations. **`blocked` by ADR-0060**: GCyR left, and travel waits for a
 first-party Oritech space addon. This row and the three orbital rows below it are blocked together,
-and the bodies other than Terra are parked under `kubejs/parked/`. The travel rows, this one and
-Rocket silo have no `via` until #340 picks a route.
+and the bodies other than Terra are parked under `kubejs/parked/`. The travel rows and this one have
+no `via` until #340 picks a route; the Rocket silo is first-party (#378).
 
 As of 2026-09-21 that addon exists but is unreleased: `space-age/` on Oritech's `26.1` branch builds a
 separate jar that no release ships. It has rockets assembled from blocks, a pad, a flight planner on
