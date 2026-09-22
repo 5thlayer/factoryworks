@@ -1018,7 +1018,7 @@ Sub-rules:
 - **where**: Terra
 - **via**: `pack`
 - **owner**: #118
-- **ticket**: #118
+- **ticket**: #230
 
 **This was the canonical `by-consequence` row, and #118 reversed it.** #26 dropped Military science
 because its ingredients feed nothing downstream, and seven `combat/*` shelves went `not_emitted`
@@ -1059,7 +1059,7 @@ than a regeneration.
 - **where**: Terra
 - **via**: `pack`
 - **owner**: #118
-- **ticket**: #118
+- **ticket**: #231
 
 Same #26 cascade, reversed with the rest of it. **The old note here was stale twice over**: it read
 "MekaSuit is the spacesuit (`docs/gdd.md` §1), and a MekaSuit *is* an equipment grid", but ADR-0035
@@ -1081,7 +1081,7 @@ route around.
 - **where**: Terra
 - **via**: `pack`
 - **owner**: #118
-- **ticket**: #118
+- **ticket**: #230
 
 Same #26 cascade, reversed with the rest of it. The seven shelves shared one stated reason and it is
 false, so leaving this one behind would keep a shelf cut for an argument nobody holds. `personal-roboport`
