@@ -1,6 +1,9 @@
 package com.planetaryfactory.core.radar;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import com.planetaryfactory.core.PFBlockEntities;
 import com.planetaryfactory.core.energy.LongSnapshotJournal;
@@ -18,17 +21,19 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The Radar (#368, ADR-0079): draws power, and charts one sector of its reach into its owner's
- * team's chart per 10 MJ, nearest first, pass after pass.
+ * The Radar (#368, ADR-0079): draws power, pulses its nearby area into its owner's team's chart
+ * every 250 kJ, and charts one long-range sector per 10 MJ, unexplored sectors first.
  */
 public class RadarBlockEntity extends BlockEntity {
 
     private static final RadarSpec SPEC = RadarSpec.fromCorpus();
-    private static final RadarSweep SWEEP = RadarSweep.of(SPEC.reach());
+    private static final RadarSweep SWEEP = RadarSweep.of(SPEC.nearReach(), SPEC.reach());
 
     private final RadarEnergy energy = new RadarEnergy(SPEC);
     private final LongSnapshotJournal journal =
             new LongSnapshotJournal(energy::buffered, energy::setBuffered, this::setChanged);
+    /** A pulse's uncharted sectors, charted one a tick so a pulse never generates 196 chunks at once (ADR-0079). */
+    private final Queue<Sector> pulse = new ArrayDeque<>();
     private int cursor;
     private @Nullable UUID owner;
 
@@ -53,16 +58,31 @@ public class RadarBlockEntity extends BlockEntity {
         return SPEC;
     }
 
-    public int cursor() {
-        return cursor;
-    }
-
     public int sweepSize() {
         return SWEEP.size();
     }
 
-    public Sector nextSector() {
-        return SWEEP.sectorAt(Sector.ofBlock(worldPosition.getX(), worldPosition.getZ()), cursor);
+    /** Where in the long range the next sector falls, which is unexplored ground while any is left. */
+    public int nextIndex(ServerLevel serverLevel) {
+        return SWEEP.pick(origin(), charted(serverLevel), cursor);
+    }
+
+    public Sector nextSector(ServerLevel serverLevel) {
+        return SWEEP.sectorAt(origin(), nextIndex(serverLevel));
+    }
+
+    private Sector origin() {
+        return Sector.ofBlock(worldPosition.getX(), worldPosition.getZ());
+    }
+
+    private Predicate<Sector> charted(ServerLevel serverLevel) {
+        if (owner == null) {
+            return sector -> false;
+        }
+        RadarChartData data = RadarChartData.get(serverLevel.getServer());
+        UUID team = ChartOwners.teamOf(owner);
+        String dimension = serverLevel.dimension().identifier().toString();
+        return sector -> data.isCharted(team, dimension, sector);
     }
 
     public void serverTick() {
@@ -70,18 +90,33 @@ public class RadarBlockEntity extends BlockEntity {
             return;
         }
         long before = energy.progress();
-        if (energy.tick() > 0) {
-            chart(serverLevel, nextSector());
-            cursor = SWEEP.next(cursor);
+        RadarEnergy.Scans scans = energy.tick();
+        if (scans.nearby() && pulse.isEmpty() && owner != null) {
+            Predicate<Sector> charted = charted(serverLevel);
+            SWEEP.nearby(origin()).stream().filter(charted.negate()).forEach(pulse::add);
+        }
+        if (!pulse.isEmpty()) {
+            chart(serverLevel, pulse.poll());
+        }
+        if (scans.sector()) {
+            int index = nextIndex(serverLevel);
+            chart(serverLevel, SWEEP.sectorAt(origin(), index));
+            if (index == cursor) {
+                cursor = SWEEP.next(cursor);
+            }
         }
         if (energy.progress() != before) {
             setChanged();
         }
     }
 
-    /** An unowned Radar, one placed other than by a player, charts for no team and generates nothing. */
+    /**
+     * An unowned Radar, one placed other than by a player, charts for no team and generates nothing.
+     * A sector already charted is not loaded again: nothing re-sends it, so a re-scan would only
+     * load four chunks for no change on any map (ADR-0079).
+     */
     private void chart(ServerLevel serverLevel, Sector sector) {
-        if (owner == null) {
+        if (owner == null || charted(serverLevel).test(sector)) {
             return;
         }
         for (int dx = 0; dx < Sector.CHUNKS_PER_SIDE; dx++) {
@@ -129,6 +164,7 @@ public class RadarBlockEntity extends BlockEntity {
         super.loadAdditional(input);
         energy.setBuffered(input.getLongOr("Energy", 0L));
         energy.setProgress(input.getLongOr("Progress", 0L));
+        energy.setNearbyProgress(input.getLongOr("NearbyProgress", 0L));
         cursor = SWEEP.resume(input.getIntOr("Cursor", 0));
         owner = input.read("Owner", UUIDUtil.CODEC).orElse(null);
     }
@@ -138,6 +174,7 @@ public class RadarBlockEntity extends BlockEntity {
         super.saveAdditional(output);
         output.putLong("Energy", energy.buffered());
         output.putLong("Progress", energy.progress());
+        output.putLong("NearbyProgress", energy.nearbyProgress());
         output.putInt("Cursor", cursor);
         output.storeNullable("Owner", UUIDUtil.CODEC, owner);
     }

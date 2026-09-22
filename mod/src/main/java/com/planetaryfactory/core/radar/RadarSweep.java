@@ -1,32 +1,54 @@
 package com.planetaryfactory.core.radar;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
- * The order a Radar charts its reach in (#368): every sector within {@code reach} of its own,
- * nearest first. A pass is one walk of that order, so a Radar's whole state is a cursor into it.
+ * Factorio's Radar order (ADR-0079): the nearby area, charted as one pulse, and beyond it the long
+ * range in square rings outward, each from its top-left sector clockwise. A long-range scan takes
+ * the first sector in that order the chart lacks, and re-scans in turn once none is left.
  */
 public final class RadarSweep {
 
+    private final List<Sector> nearby;
     private final List<Sector> offsets;
 
-    private RadarSweep(List<Sector> offsets) {
+    private RadarSweep(List<Sector> nearby, List<Sector> offsets) {
+        this.nearby = List.copyOf(nearby);
         this.offsets = List.copyOf(offsets);
     }
 
-    public static RadarSweep of(int reach) {
-        List<Sector> offsets = new ArrayList<>((2 * reach + 1) * (2 * reach + 1));
-        for (int dz = -reach; dz <= reach; dz++) {
-            for (int dx = -reach; dx <= reach; dx++) {
-                offsets.add(new Sector(dx, dz));
+    public static RadarSweep of(int nearReach, int reach) {
+        return new RadarSweep(rings(0, nearReach), rings(nearReach + 1, reach));
+    }
+
+    /** Rings {@code from} to {@code to}, each clockwise from its top-left, north being -z. */
+    private static List<Sector> rings(int from, int to) {
+        List<Sector> offsets = new ArrayList<>();
+        for (int r = from; r <= to; r++) {
+            if (r == 0) {
+                offsets.add(new Sector(0, 0));
+                continue;
+            }
+            for (int dx = -r; dx < r; dx++) {
+                offsets.add(new Sector(dx, -r));
+            }
+            for (int dz = -r; dz < r; dz++) {
+                offsets.add(new Sector(r, dz));
+            }
+            for (int dx = r; dx > -r; dx--) {
+                offsets.add(new Sector(dx, r));
+            }
+            for (int dz = r; dz > -r; dz--) {
+                offsets.add(new Sector(-r, dz));
             }
         }
-        offsets.sort(Comparator.<Sector>comparingInt(o -> o.x() * o.x() + o.z() * o.z())
-                .thenComparingInt(Sector::z)
-                .thenComparingInt(Sector::x));
-        return new RadarSweep(offsets);
+        return offsets;
+    }
+
+    public List<Sector> nearby(Sector origin) {
+        return nearby.stream().map(offset -> origin.offset(offset.x(), offset.z())).toList();
     }
 
     public int size() {
@@ -36,6 +58,16 @@ public final class RadarSweep {
     public Sector sectorAt(Sector origin, int cursor) {
         Sector offset = offsets.get(cursor);
         return origin.offset(offset.x(), offset.z());
+    }
+
+    /** The long-range scan due: the first sector the chart lacks, or else the re-scan at {@code cursor}. */
+    public int pick(Sector origin, Predicate<Sector> charted, int cursor) {
+        for (int i = 0; i < offsets.size(); i++) {
+            if (!charted.test(sectorAt(origin, i))) {
+                return i;
+            }
+        }
+        return resume(cursor);
     }
 
     /** The cursor after {@code cursor}, starting the next pass after the last. */

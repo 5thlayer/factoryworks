@@ -25,6 +25,16 @@ class RadarSpecTest {
     }
 
     @Test
+    void aNearbyPulseCostsTwoHundredFiftyKilojoulesAsTwoThousandFiveHundredFe() {
+        assertEquals(2_500L, spec.fePerNearbyScan());
+    }
+
+    @Test
+    void theNearbyAreaReachesThreeSectors() {
+        assertEquals(3, spec.nearReach());
+    }
+
+    @Test
     void theFootprintIsFactoriosThreeByThree() {
         assertEquals(3, RadarCorpus.get().tileWidth());
         assertEquals(3, RadarCorpus.get().tileHeight());

@@ -27,6 +27,16 @@ class RadarChartsTest {
     }
 
     @Test
+    void aSectorIsChartedOnlyForTheTeamAndDimensionThatChartedIt() {
+        RadarCharts charts = new RadarCharts();
+        charts.chart(TEAM, OVERWORLD, new Sector(2, 3));
+        assertTrue(charts.isCharted(TEAM, OVERWORLD, new Sector(2, 3)));
+        assertFalse(charts.isCharted(TEAM, OVERWORLD, new Sector(3, 2)));
+        assertFalse(charts.isCharted(TEAM, NETHER, new Sector(2, 3)));
+        assertFalse(charts.isCharted(OTHER, OVERWORLD, new Sector(2, 3)));
+    }
+
+    @Test
     void chartsAreKeptPerTeamAndPerDimension() {
         RadarCharts charts = new RadarCharts();
         charts.chart(TEAM, OVERWORLD, new Sector(0, 0));

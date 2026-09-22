@@ -21,6 +21,19 @@ renderer interface, as GregTech-Modern's map integration does, with FTB Chunks t
 implementation. All FTB code lives in one package, `compileOnly` against a pinned version, and loads
 only when `ftbchunks` is present.
 
+**Scan order (amended, #369).** The Radar scans as Factorio's does. Every 250 kJ it pulses its 7×7
+nearby area, and every 10 MJ it scans one long-range sector within 14, beyond that area. Both count
+the same draw, so the long range keeps Factorio's 33.3 s a sector. The long range walks square rings
+outward, each from its top-left sector clockwise, takes the first sector the team's chart lacks, and
+re-scans in turn once none is left. Two things are adapted. "Unexplored" is the team's chart, since
+the server does not know what a player walked. A pulse charts only the area's uncharted sectors, one
+a tick, since 196 chunks generated in one tick is a stall and a charted sector is never re-sent. A
+re-scan spends its 10 MJ and changes no map, for the same reason, until the chart has a live refresh.
+
+**Considered: nearest-first long range with no nearby area.** It was the first build. Rejected: it
+spent its first minutes re-charting ground the player had just walked, so the first new terrain
+appeared after several 33 s scans.
+
 **Considered: vanilla chunk packets.** Rejected: the client drops a chunk outside its storage
 radius, and FTB's hook ignores a chunk the level does not hold.
 

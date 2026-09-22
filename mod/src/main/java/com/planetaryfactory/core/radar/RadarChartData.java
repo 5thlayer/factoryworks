@@ -73,6 +73,10 @@ public final class RadarChartData extends SavedData {
         delivery.logout(player);
     }
 
+    public boolean isCharted(UUID team, String dimension, Sector sector) {
+        return charts.isCharted(team, dimension, sector);
+    }
+
     public Set<Sector> sectors(UUID team, String dimension) {
         return charts.sectors(team, dimension);
     }

@@ -1280,9 +1280,15 @@ have recorded "radar: excluded" — which is wrong whatever this row's verdict t
 Sub-rules:
 
 - **Reveals map by scanning distant sectors** — `planned`. One 32-block sector per 10 MJ within 14
-  sectors, charted on the server since #368 and sent to every team member's map since #369.
-- **Keeps the nearby area live** — `adapted`. No chunk-loaded live view: every pass re-charts the
-  nearest sectors first.
+  sectors, beyond the nearby area, in square rings outward from each ring's top-left sector
+  clockwise, unexplored sectors first and then a re-scan in turn, which changes no map while a
+  charted sector is never re-sent. Charted on the server since #368
+  and sent to every team member's map since #369. "Unexplored" is the team's chart: the server does
+  not know what a player has walked.
+- **Keeps the nearby area live** — `adapted`. The 7x7 around the Radar pulses every 250 kJ, 0.83 s
+  at full power, from the same draw as the sector scan. A pulse charts only the area's uncharted
+  sectors, one a tick, and a charted sector is never re-sent, so the map shows the area as first
+  charted rather than live.
 
 ### The logistic request and trash system
 
