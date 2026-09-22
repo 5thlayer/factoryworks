@@ -18,6 +18,8 @@ public enum AssemblingStall {
     LOCKED,
     /** The inputs do not cover one craft. */
     NO_INGREDIENTS,
+    /** The tank does not hold one craft's fluid. */
+    NO_FLUID,
     /** The output slot cannot take a craft's whole result. */
     OUTPUT_FULL,
     /**
@@ -26,7 +28,8 @@ public enum AssemblingStall {
      */
     NO_POWER;
 
-    public static AssemblingStall of(boolean resolves, boolean locked, boolean fed, boolean outputFits) {
+    public static AssemblingStall of(boolean resolves, boolean locked, boolean fed, boolean fluidFed,
+                                     boolean outputFits) {
         if (!resolves) {
             return NO_RECIPE;
         }
@@ -35,6 +38,9 @@ public enum AssemblingStall {
         }
         if (!fed) {
             return NO_INGREDIENTS;
+        }
+        if (!fluidFed) {
+            return NO_FLUID;
         }
         if (!outputFits) {
             return OUTPUT_FULL;

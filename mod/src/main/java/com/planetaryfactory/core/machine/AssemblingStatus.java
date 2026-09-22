@@ -18,6 +18,7 @@ public enum AssemblingStatus {
     PROCESSING,
     LOCKED,
     MISSING_INGREDIENTS,
+    MISSING_FLUID,
     OUTPUT_FULL,
     NO_POWER;
 
@@ -30,6 +31,7 @@ public enum AssemblingStatus {
             case NO_RECIPE -> IDLE;
             case LOCKED -> LOCKED;
             case NO_INGREDIENTS -> MISSING_INGREDIENTS;
+            case NO_FLUID -> MISSING_FLUID;
             case OUTPUT_FULL -> OUTPUT_FULL;
             case NO_POWER -> NO_POWER;
             case NONE -> powered ? PROCESSING : NO_POWER;

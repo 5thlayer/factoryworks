@@ -17,6 +17,9 @@ public enum AssemblingTier {
 
     private static final String FLUID_CATEGORY = "crafting-with-fluid";
 
+    /** The fluid box's {@code volume} Factorio gives tiers 2 and 3, in mB (ADR-0075). */
+    private static final int FLUID_INPUT_MB = 1_000;
+
     private final String blockName;
     private final double craftingSpeed;
     private final long watts;
@@ -60,5 +63,10 @@ public enum AssemblingTier {
     /** Whether this tier has a fluid input, which is the same as crafting with a fluid. */
     public boolean hasFluidInput() {
         return crafts(FLUID_CATEGORY);
+    }
+
+    /** The input tank's size in mB, or 0 on a tier with none. */
+    public int fluidCapacity() {
+        return hasFluidInput() ? FLUID_INPUT_MB : 0;
     }
 }
