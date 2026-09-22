@@ -131,5 +131,6 @@
   "map.planetaryfactory.patch.copper": "Copper ore",
   "map.planetaryfactory.patch.coal": "Coal",
   "map.planetaryfactory.patch.uranium": "Uranium ore",
-  "map.planetaryfactory.patch.stone": "Stone"
+  "map.planetaryfactory.patch.stone": "Stone",
+  "map.planetaryfactory.patch.amount": "%s: %s"
 }

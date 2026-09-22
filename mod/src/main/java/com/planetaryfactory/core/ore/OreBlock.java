@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.server.level.ServerLevel;
 
 /**
@@ -47,6 +48,8 @@ public final class OreBlock extends Block {
                 .mapColor(MapColor.STONE)
                 .requiresCorrectToolForDrops()
                 .strength(3.0f, 3.0f)
+                // A pushed block would arrive full, its delta retired behind it (ADR-0041).
+                .pushReaction(PushReaction.BLOCK)
                 .sound(SoundType.STONE));
         this.resource = resource;
         registerDefaultState(stateDefinition.any().setValue(STAGE, 0));
@@ -83,6 +86,6 @@ public final class OreBlock extends Block {
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
                                                boolean movedByPiston) {
-        OreMining.onRemoved(level, pos);
+        OreMining.onRemoved(level, pos, this);
     }
 }

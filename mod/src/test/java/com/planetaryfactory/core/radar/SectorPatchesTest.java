@@ -31,6 +31,10 @@ class SectorPatchesTest {
         };
     }
 
+    private static PatchMarker marker(OreResource resource, int x, int y, int z) {
+        return new PatchMarker(resource.key(), x, y, z, disc(resource, x, z).disc().total());
+    }
+
     /** A starting field is a jigsaw piece, not an outfield disc. */
     private record StartingFieldPiece(OreResource resource, int x, int z) {
     }
@@ -45,7 +49,7 @@ class SectorPatchesTest {
                 disc(OreResource.COPPER, 360, -80));
 
         assertEquals(
-                List.of(new PatchMarker("iron", 327, 70, -89), new PatchMarker("coal", 351, 70, -65)),
+                List.of(marker(OreResource.IRON, 327, 70, -89), marker(OreResource.COAL, 351, 70, -65)),
                 SectorPatches.find(sector, pieces, FLAT));
     }
 
@@ -60,18 +64,18 @@ class SectorPatchesTest {
     void aMarkerStandsOnTheSurfaceAtItsCentre() {
         SectorPatches.Surface surface = (x, z) -> x == 40 && z == 40 ? 83 : 0;
 
-        assertEquals(List.of(new PatchMarker("stone", 40, 83, 40)),
+        assertEquals(List.of(marker(OreResource.STONE, 40, 83, 40)),
                 SectorPatches.find(new Sector(1, 1), List.of(disc(OreResource.STONE, 40, 40)), surface));
     }
 
     @Test
     void aTeamsMarkersAreThoseOfItsChartedSectors() {
         SectorPatches patches = new SectorPatches();
-        PatchMarker iron = new PatchMarker("iron", 8, 70, 8);
-        PatchMarker coal = new PatchMarker("coal", 40, 70, 8);
+        PatchMarker iron = new PatchMarker("iron", 8, 70, 8, 300);
+        PatchMarker coal = new PatchMarker("coal", 40, 70, 8, 300);
         patches.record(OVERWORLD, new Sector(0, 0), List.of(iron));
         patches.record(OVERWORLD, new Sector(1, 0), List.of(coal));
-        patches.record("minecraft:the_nether", new Sector(0, 0), List.of(new PatchMarker("stone", 8, 70, 8)));
+        patches.record("minecraft:the_nether", new Sector(0, 0), List.of(new PatchMarker("stone", 8, 70, 8, 300)));
 
         assertEquals(Set.of(iron), patches.in(OVERWORLD, Set.of(new Sector(0, 0), new Sector(5, 5))));
         assertEquals(List.of(coal), patches.in(OVERWORLD, new Sector(1, 0)));
@@ -80,7 +84,7 @@ class SectorPatchesTest {
     @Test
     void theRecordSurvivesItsCodec() {
         SectorPatches patches = new SectorPatches();
-        PatchMarker uranium = new PatchMarker("uranium", -3000, 64, 2100);
+        PatchMarker uranium = new PatchMarker("uranium", -3000, 64, 2100, 300);
         patches.record(OVERWORLD, Sector.ofBlock(-3000, 2100), List.of(uranium));
 
         JsonElement json = SectorPatches.CODEC.encodeStart(JsonOps.INSTANCE, patches).getOrThrow();

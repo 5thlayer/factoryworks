@@ -50,6 +50,8 @@ def main():
     if f'"{MARKER_KEY}"' not in MARKERS.read_text():
         failures.append(f"FtbMapMarkers no longer names its markers by {MARKER_KEY!r}")
     lang = json.loads(LANG.read_text())
+    if MARKER_KEY + "amount" not in lang:
+        failures.append(f"no lang key {MARKER_KEY}amount, so a patch's hover shows the raw key")
     for ore in json.loads(ORE_SLICE.read_text())["resources"]:
         if MARKER_KEY + ore not in lang:
             failures.append(f"no lang key {MARKER_KEY + ore}, so its patch marker shows the raw key")

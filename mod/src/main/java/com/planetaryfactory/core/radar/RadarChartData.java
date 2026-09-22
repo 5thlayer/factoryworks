@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.radar;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.UUID;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import com.planetaryfactory.core.PlanetaryFactoryCore;
+import com.planetaryfactory.core.ore.PatchId;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -77,17 +79,25 @@ public final class RadarChartData extends SavedData {
         markers.observe(player, team, dimension, charts, patches, walked);
     }
 
-    /** The outfield patches centred in a chunk just sent to the player. */
-    public void walked(UUID player, String dimension, List<PatchMarker> found) {
-        List<PatchMarker> added = walked.add(player, dimension, found);
-        if (!added.isEmpty()) {
-            markers.found(player, dimension, added);
-            setDirty();
-        }
+    /** A Radar looking again at sectors its team has charted refreshes their markers' amounts. */
+    public void rescanned(UUID team, String dimension, Collection<Sector> sectors) {
+        markers.charted(team, dimension, patches.in(dimension, sectors));
     }
 
-    public List<PatchMarker> takeMarkers(UUID player) {
-        return markers.take(player);
+    /** The outfield patches centred in a chunk just sent to the player. */
+    public void walked(UUID player, String dimension, List<PatchMarker> found) {
+        if (!walked.add(player, dimension, found).isEmpty()) {
+            setDirty();
+        }
+        markers.found(player, dimension, found);
+    }
+
+    public void ranOut(PatchId patch) {
+        markers.ranOut(patch);
+    }
+
+    public List<MarkerDelivery.Update> takeMarkers(UUID player, MarkerDelivery.Amounts amounts) {
+        return markers.take(player, amounts);
     }
 
     public List<Sector> takeDeliveries(UUID player, int max) {

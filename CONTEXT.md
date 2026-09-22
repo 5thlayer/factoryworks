@@ -257,7 +257,7 @@ How wide a patch is. Fixed until the **amplitude** cap is reached and growing wi
 _Avoid_: size, footprint, patch size
 
 **Radar**:
-The building that charts map at range for its team: the chunks it scans appear on the map as if walked, and each **outfield patch** it charts gets a marker. It detects nothing hidden — ore is visible where it lies, so finding a patch is exploration rather than prospecting, and the marker only labels what the chart already shows (ADR-0045).
+The building that charts map at range for its team: the chunks it scans appear on the map as if walked, and each **outfield patch** it charts gets a marker showing what the patch had left when last charted or walked past, gone once the patch is mined out. It detects nothing hidden — ore is visible where it lies, so finding a patch is exploration rather than prospecting, and the marker only labels what the chart already shows (ADR-0045, ADR-0079).
 _Avoid_: prospector, scanner, ore detector
 
 **Sector**:

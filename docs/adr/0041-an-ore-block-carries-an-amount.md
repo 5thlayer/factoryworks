@@ -165,6 +165,14 @@ amount that is wrong: a fresh patch and a nearly-spent one hold the same block c
 sums the blocks' amounts instead.** Still computed from the world on demand, still no persisted
 counter, still unable to drift — a change to the derivation, not to the decision.
 
+**Amended (#370, #371): an outfield patch keeps a ledger for its map marker.** A marker shows what
+is left in its whole patch, and summing a disc on demand means loading every chunk it reaches. So
+each outfield patch records the units drawn from it and the blocks it has lost, as they happen, and
+the marker reads that. It is not the counter ADR-0020 refused: nothing is paid out of it and no
+block reads it, so a block and the ledger cannot disagree about what a draw yields. It is the map's
+sum of the blocks, kept current by the one draw path and the one removal seam above. A patch is
+exhausted when its last block goes, however it went.
+
 ## Reading the remaining amount
 
 **Eight sprite stages, at Factorio's ratios, plus a Jade line for the exact number.** ADR-0020's

@@ -40,11 +40,19 @@ surface height at each centre, and the record is saved with the chart. A startin
 piece, not a disc, and gets none. Walking marks a patch too, for the walker only, since walked
 terrain is on the walker's map and not the team's chart: when the server sends a player the chunk
 holding a disc's start, the patch is recorded as theirs and saved. A marker is drawn as the item the
-resource drops, raw iron for iron, and names the resource on hover, with no amount. The client keeps
-its markers in memory only. The server sends a player every marker of their team's chart and of their
-own walking that their client lacks, at each login, on joining a team and on entering a dimension, and
-each new one once as it is charted or walked. What a player has been sent is not saved. A marker is a few bytes, so re-sending at login
-costs little, and unlike the terrain a wiped client loses none.
+resource drops, raw iron for iron, and names the resource on hover. The client keeps its markers in
+memory only. The server sends a player every marker of their team's chart and of their own walking
+that their client lacks, at each login, on joining a team and on entering a dimension, and each new
+one as it is charted or walked. What a player has been sent is not saved. A marker is a few bytes,
+so re-sending at login costs little, and unlike the terrain a wiped client loses none.
+
+**Amounts (amended, #370, #371).** A marker carries what is left in its patch, drawn under the icon
+on the big map and in the hover, and not on the minimap. It is a snapshot, as Factorio's map label
+is: it changes when the patch is charted, re-scanned or walked past again, not as it is mined. A
+Radar's nearby pulse and its long-range re-scan refresh the amounts of patches already charted,
+which costs no chunk load. When a patch's last block goes, every map holding its marker is sent its
+removal at once, and an exhausted patch is never marked again. What is left is read from a
+per-patch ledger (ADR-0041, amended).
 
 **Considered: nearest-first long range with no nearby area.** It was the first build. Rejected: it
 spent its first minutes re-charting ground the player had just walked, so the first new terrain
