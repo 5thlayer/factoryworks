@@ -26,6 +26,12 @@ Splitters are tiered as well, four of them from Factorio's four splitter recipes
 and a splitter each cap only their own flow, and any mix of tiers may be joined, so a line runs at
 its slowest piece.
 
+Each half of a splitter is a block of belt of the splitter's tier, as each side of Factorio's is: one
+lane of a Factorio splitter is 128 positions in and 128 out, the 256 of a straight belt block. A
+half holds eight items and moves them at its tier's belt speed, and an item changes side at the
+splitter's midline. Factorio's 51-position input buffer is left out, because it aligns items
+across two lanes and the pack's belts have one (#373).
+
 **Considered: a loader takes its belt's tier.** One loader block, with its speed and draw read from
 the belt attached to it. Rejected, because every inserter technology would then buy nothing, and
 the loader would have no recipe the corpus can author.

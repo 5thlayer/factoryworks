@@ -167,7 +167,7 @@ A support with no belt arriving or leaving. It has no direction of its own: the 
 _Avoid_: empty support, unused support
 
 **Belt end**:
-Where a belt starts or stops: a loader, set against an inventory, or a support, set against another belt or nothing.
+Where a belt starts or stops: a loader, set against an inventory; a support, set against another belt or nothing; or a splitter half, set against another belt.
 _Avoid_: terminator, endpoint
 
 **Span**:
@@ -179,7 +179,7 @@ A belt end set against an inventory: it pulls onto the belt from the inventory b
 _Avoid_: chute, inserter, funnel
 
 **Splitter**:
-A block two wide that joins two belts in to two belts out, splitting evenly, merging, and sending everything to one side when the other backs up. It has tiers of its own that cap what it passes, and draws no power.
+A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power.
 _Avoid_: merger, tunnel
 
 **Balancer**:
