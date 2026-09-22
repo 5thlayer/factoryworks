@@ -51,6 +51,8 @@ public record PlacementPlan(List<Placed> blocks, @Nullable Refusal refusal) {
         FOOTPRINT_BLOCKED,
         /** An Offshore Pump with no adjacent source to pump (#213, ADR-0050). */
         NO_FLUID_SOURCE,
+        /** A splitter over a belt it would not cut: against its facing, at an angle, through a side or on a curve (#361). */
+        BELT_CROSSING,
     }
 
     public PlacementPlan {

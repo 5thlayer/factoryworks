@@ -591,7 +591,8 @@ Sub-rules:
   its back and starts one at its front, and items pass from an input's end to an output's head with
   nothing held between. It splits evenly, merges evenly, sends everything to the free side when the
   other backs up, draws no power, and each side passes no more than its tier's items/s (#349,
-  ADR-0076). The placement preview is #355. *This entry read `adapted` to Create's tunnels, which
+  ADR-0076). The placement preview is #355. Placed across a running belt it cuts the belt, as
+  Factorio's does, but refuses a belt against its facing rather than turning to match (#361). *This entry read `adapted` to Create's tunnels, which
   left with ADR-0060.*
 - **Balancers** — `shipped`. A balancer is built from splitters, not bought as a block: chained
   splitters make Factorio's 2x2 and 4x4 balancers (#349).

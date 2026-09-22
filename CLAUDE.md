@@ -233,6 +233,13 @@ into it and those belts' refund to the breaker with nothing on the ground, a hal
 every entry, and a hand held on a half's first segment takes 15 items/s. The half's two segments, the
 midline and a hand anywhere along it are the fork's `SplitterTest`; whether items are drawn crossing it
 and a player is carried is a human check on delivery.
+A splitter placed across a running belt cuts it (#361): in each of #361's four layouts every belt
+through a half ends at it and a belt of the rest starts from it, and items reach every output; a
+backed-up nine-block belt cut four blocks along keeps 32 behind the half, 8 on it and 32 past it, the
+ones behind where they were; and a five-block belt cut two along refunds the placer one belt and each
+end two when broken. Skipping the cut in the fork's `place` turns all six red. The crossing and the
+cut are the fork's `BeltCrossingTest` and `BeltCutTest`, and whether the preview shows the cut and the
+gesture feels right is a human check on delivery.
 And that a belt held at its middle fills the holder's inventory at the belt's 15 items/s while the source
 keeps loading and only what was already past the hand reaches the end, and that a hand with room for four
 takes four and then lets the belt run on to its end, losing nothing (`BeltHandTests`). A hand that never
@@ -306,7 +313,9 @@ flattening the rig to a single layer turns two more, dropping the pump's water q
 and giving up on the wrong-tier column walk turns another. The fork's splitter is the one other
 mod's item with a plan (#355): `PlacementPlanTests.Splitters`, registered only with the fork loaded,
 holds that both halves go down, and that a splitter blocked at its second half changes nothing; a
-plan naming only the first half turns both red. The Assembling Machine's two (#326) are
+plan naming only the first half turns both red. Across belts (#361), its plan names the belts it cuts and the
+click cuts exactly those, and a belt against its facing, at an angle, through its side or on a curve
+refuses it with its reason named, changing no block, slot or belt. The Assembling Machine's two (#326) are
 the rig's pair for its 2x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
 red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
 after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Three fixtures are load-bearing rather

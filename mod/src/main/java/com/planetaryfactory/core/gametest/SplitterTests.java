@@ -40,6 +40,9 @@ import rearth.belts.model.BeltTier;
  * It places and breaks as both halves. Each half is a block of belt (#373): a backed-up splitter
  * holds 16, and its items are saved, handed to the player who breaks it and taken by a held hand.
  *
+ * <p>A splitter placed across a running belt cuts it (#361): the belt ends at the half's back face
+ * and a belt of the rest starts at its front, items staying where they were and one belt refunded.
+ *
  * <p>Items flow east. A chest and a loader feed the splitter's left half, and each half's output
  * belt ends at a loader with a chest behind it. The rates are typed rather than read off the fork,
  * and {@code tests/factorio/test_logistics_extract.py} derives them from Factorio's prototypes.
@@ -75,6 +78,19 @@ final class SplitterTests {
 
     private static final BlockPos FLOOR = new BlockPos(3, 0, 3);
 
+    // A nine-block belt cut four blocks along: 32 behind the half, 8 on it and 32 past it.
+    private static final int NINE_BLOCKS_FULL = 72;
+    private static final int NINE_BLOCKS_COST = 9;
+    private static final int UPSTREAM_ENTRIES = 32;
+    private static final int HALF_ENTRIES = 8;
+    private static final int DOWNSTREAM_ENTRIES = 32;
+    private static final int FLOW_TICKS = 200;
+    // A five-block belt cut two blocks along keeps two blocks either side and refunds the third.
+    private static final BlockPos SHORT_END = new BlockPos(6, 1, 2);
+    private static final BlockPos SHORT_CUT = new BlockPos(4, 1, 2);
+    private static final int SHORT_COST = 5;
+    private static final int SHORT_HALF_COST = 2;
+
     private SplitterTests() {
     }
 
@@ -98,6 +114,158 @@ final class SplitterTests {
         tests.test("saved_splitter_restores_every_entry", WARMUP_TICKS + 20, SplitterTests::savedSplitterRestores);
         tests.test("held_splitter_half_fills_the_inventory", WARMUP_TICKS + HOLD_TICKS + 20,
                 SplitterTests::heldHalfFillsTheInventory);
+        tests.test("splitter_placed_across_a_belt_links_one_in_and_one_out", FLOW_TICKS + 20,
+                helper -> cutsLayout(helper, List.of(new Column(LEFT, Side.LONG, Side.LONG))));
+        tests.test("splitter_placed_across_two_belts_links_two_in_and_one_out", FLOW_TICKS + 20,
+                helper -> cutsLayout(helper, List.of(new Column(LEFT, Side.LONG, Side.LONG), new Column(RIGHT, Side.LONG, Side.STUB))));
+        tests.test("splitter_placed_across_two_belts_links_one_in_and_two_out", FLOW_TICKS + 20,
+                helper -> cutsLayout(helper, List.of(new Column(LEFT, Side.LONG, Side.LONG), new Column(RIGHT, Side.STUB, Side.LONG))));
+        tests.test("splitter_placed_across_two_belts_links_two_in_and_two_out", FLOW_TICKS + 20,
+                helper -> cutsLayout(helper, List.of(new Column(LEFT, Side.LONG, Side.LONG), new Column(RIGHT, Side.LONG, Side.LONG))));
+        tests.test("splitter_placed_on_a_loaded_belt_keeps_every_entry", WARMUP_TICKS + 20,
+                SplitterTests::cutsALoadedBelt);
+        tests.test("splitter_placed_on_a_five_block_belt_refunds_one_belt", 20, SplitterTests::cutRefunds);
+    }
+
+    /**
+     * A long side is a belt to or from a loader four blocks off the splitter. A stub is the one
+     * block of belt inside a loader touching the splitter, which is a half with a belt on one side
+     * only: the cut links the loader straight to the half.
+     */
+    private enum Side { LONG, STUB }
+
+    private record Column(BlockPos half, Side in, Side out) {
+
+        BlockPos from() {
+            return new BlockPos(in == Side.LONG ? 2 : 5, 1, half.getZ());
+        }
+
+        BlockPos to() {
+            return new BlockPos(out == Side.LONG ? 10 : 7, 1, half.getZ());
+        }
+    }
+
+    private static void cutsLayout(GameTestHelper helper, List<Column> columns) {
+        for (Column column : columns) {
+            helper.setBlock(column.to(), loader(BeltTier.BELT, Direction.WEST));
+            helper.setBlock(column.to().east(), Blocks.CHEST);
+            feed(helper, column.from().west(), column.from(), column.to(), BeltTier.BELT);
+        }
+        ServerPlayer player = placer(helper, "pf_splitter_layout");
+        helper.startSequence()
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    placeByHand(helper, player, LEFT);
+                    for (Column column : columns) {
+                        ChuteBlockEntity half = chute(helper, column.half());
+                        if (!helper.absolutePos(column.half()).equals(chute(helper, column.from()).getTarget())) {
+                            helper.fail("the belt from " + column.from() + " was not cut at the splitter", column.half());
+                        }
+                        if (!helper.absolutePos(column.to()).equals(half.getTarget())) {
+                            helper.fail("the half at " + column.half() + " starts no belt to " + column.to(), column.half());
+                        }
+                        if (chute(helper, column.to()).incomingBelt() != half) {
+                            helper.fail("the loader at " + column.to() + " is not the end of the half's belt", column.to());
+                        }
+                    }
+                })
+                .thenIdle(FLOW_TICKS)
+                .thenExecute(() -> {
+                    for (Column column : columns) {
+                        if (delivered(helper, column.to()) == 0) {
+                            helper.fail("nothing reached " + column.to() + " through the cut belt", column.to());
+                        }
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void cutsALoadedBelt(GameTestHelper helper) {
+        helper.setBlock(LEFT_END, loader(BeltTier.BELT, Direction.WEST));
+        feed(helper, SOURCE, FROM, LEFT_END, BeltTier.BELT);
+        chute(helper, FROM).assignFromBeltItem(helper.absolutePos(LEFT_END), List.of(), BeltTier.BELT, NINE_BLOCKS_COST);
+        ServerPlayer player = placer(helper, "pf_splitter_loaded");
+        helper.startSequence()
+                .thenIdle(WARMUP_TICKS)
+                .thenExecute(() -> {
+                    ChuteBlockEntity from = chute(helper, FROM);
+                    if (from.getBeltEntries().size() != NINE_BLOCKS_FULL) {
+                        helper.fail("the belt holds " + from.getBeltEntries().size() + ", so this proves little", FROM);
+                    }
+                    List<Double> before = from.getBeltEntries().stream().map(BeltContents.Entry::position).toList();
+                    placeByHand(helper, player, LEFT);
+
+                    ChuteBlockEntity half = chute(helper, LEFT);
+                    int upstream = from.getBeltEntries().size();
+                    int onHalf = half.getHalf().size();
+                    int downstream = half.getBeltEntries().size();
+                    int handed = cobblestone(player);
+                    if (upstream != UPSTREAM_ENTRIES || onHalf != HALF_ENTRIES || downstream != DOWNSTREAM_ENTRIES || handed != 0) {
+                        helper.fail("the cut left " + upstream + " behind the half, " + onHalf + " on it, " + downstream
+                                + " past it and handed " + handed + ", expected " + UPSTREAM_ENTRIES + ", " + HALF_ENTRIES
+                                + ", " + DOWNSTREAM_ENTRIES + " and 0", LEFT);
+                    }
+                    List<Double> kept = from.getBeltEntries().stream().map(BeltContents.Entry::position).toList();
+                    if (!kept.equals(before.subList(0, kept.size()))) {
+                        helper.fail("the entries behind the half moved: " + kept, FROM);
+                    }
+                    double first = half.getBeltEntries().getFirst().position();
+                    if (Math.abs(first) > 1e-6) helper.fail("the first entry past the half is at " + first + ", not its head", LEFT);
+                    if (belts(player) != 1) helper.fail("the cut refunded " + belts(player) + " belts, not 1", LEFT);
+                })
+                .thenSucceed();
+    }
+
+    private static void cutRefunds(GameTestHelper helper) {
+        helper.setBlock(FROM, loader(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(SHORT_END, loader(BeltTier.BELT, Direction.WEST));
+        chute(helper, FROM).assignFromBeltItem(helper.absolutePos(SHORT_END), List.of(), BeltTier.BELT, SHORT_COST)
+                .ifPresent(refusal -> helper.fail("the fixture's belt is refused: " + refusal, FROM));
+        ServerPlayer player = placer(helper, "pf_splitter_refund");
+        helper.startSequence()
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    placeByHand(helper, player, SHORT_CUT);
+                    if (belts(player) != 1) helper.fail("placing the splitter refunded " + belts(player) + " belts, not 1", SHORT_CUT);
+                    int upstream = chute(helper, FROM).getCost();
+                    int downstream = chute(helper, SHORT_CUT).getCost();
+                    if (upstream != SHORT_HALF_COST || downstream != SHORT_HALF_COST) {
+                        helper.fail("the halves store " + upstream + " and " + downstream + ", expected "
+                                + SHORT_HALF_COST + " each", SHORT_CUT);
+                    }
+                    for (BlockPos end : List.of(FROM, SHORT_END)) {
+                        ServerPlayer breaker = player(helper, "pf_splitter_refund_breaker");
+                        breaker.gameMode.destroyBlock(helper.absolutePos(end));
+                        if (belts(breaker) != SHORT_HALF_COST) {
+                            helper.fail("breaking " + end + " refunded " + belts(breaker) + " belts, not " + SHORT_HALF_COST, end);
+                        }
+                    }
+                })
+                .thenSucceed();
+    }
+
+    /** A survival player facing east holding a splitter. */
+    private static ServerPlayer placer(GameTestHelper helper, String name) {
+        ServerPlayer player = player(helper, name);
+        player.setYRot(-90);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.SPLITTER.get()));
+        return player;
+    }
+
+    /** Clicks the top of the block under {@code left}, as a player placing a splitter there does. */
+    private static void placeByHand(GameTestHelper helper, Player player, BlockPos left) {
+        BlockPos floor = left.below();
+        BlockPos absolute = helper.absolutePos(floor);
+        helper.useBlock(floor, player, new BlockHitResult(
+                Vec3.atCenterOf(absolute).relative(Direction.UP, 0.5), Direction.UP, absolute, false));
+        if (!(helper.getBlockState(left).getBlock() instanceof SplitterBlock)) {
+            helper.fail("no splitter was placed at " + left, left);
+        }
+    }
+
+    private static int belts(Player player) {
+        return ContainerHelper.clearOrCountMatchingItems(player.getInventory(),
+                stack -> stack.is(ItemContent.beltFor(BeltTier.BELT)), 0, true);
     }
 
     private static void backsUp(GameTestHelper helper) {

@@ -179,7 +179,7 @@ A belt end set against an inventory: it pulls onto the belt from the inventory b
 _Avoid_: chute, inserter, funnel
 
 **Splitter**:
-A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power.
+A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power. Placed across a running belt, it cuts it: the belt ends at the half's back face, the rest starts from its front, and the block it takes is refunded. It cuts only a belt running straight, level and its own way through it.
 _Avoid_: merger, tunnel
 
 **Balancer**:
