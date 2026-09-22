@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.radar;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,9 +25,12 @@ public final class RadarChartData extends SavedData {
             RadarChartData::new,
             RecordCodecBuilder.create(instance -> instance.group(
                     RadarCharts.CODEC.fieldOf("charts").forGetter(data -> data.charts),
-                    ChartDelivery.CODEC.optionalFieldOf("delivered", new ChartDelivery())
-                            .forGetter(data -> data.delivery))
-                    .apply(instance, RadarChartData::new)));
+                    // Not optionalFieldOf(name, default): every older save would share that one
+                    // mutable default, and a value equal to the default is never written.
+                    ChartDelivery.CODEC.optionalFieldOf("delivered")
+                            .forGetter(data -> Optional.of(data.delivery)))
+                    .apply(instance, (charts, delivery) ->
+                            new RadarChartData(charts, delivery.orElseGet(ChartDelivery::new)))));
 
     private final RadarCharts charts;
     private final ChartDelivery delivery;
