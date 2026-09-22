@@ -543,13 +543,21 @@ ADR-0029 gives the Assembler speed 1 with durations of `energy_required x 20` un
 
 - **verdict**: `adapted`
 - **notice**: a belt carries Factorio's items per second and holds Factorio's buffer, but in one
-  lane, and a belt is a spline between two loaders rather than a row of tiles — so the
-  lane-and-underground patterns a Factorio player has memorised do not transfer (ADR-0044, ADR-0076).
+  lane, and a belt is a bounded spline between grid-aligned supports rather than a row of tiles — so
+  the lane-and-underground patterns a Factorio player has memorised do not transfer (ADR-0044,
+  ADR-0076, ADR-0078).
 - **where**: all bodies
 - **via**: `belts` (the pack's SimpleBelts fork, ADR-0060)
-- **owner**: ADR-0076, ADR-0044, #341
+- **owner**: ADR-0076, ADR-0044, ADR-0078, #341
 
 Sub-rules:
+
+- **Belt shape** — `shipped` (#362). Factorio's tile grid is not reproduced; the belt's control
+  points sit on the block grid and the curve between them is bounded, as Satisfactory bounds its
+  conveyors: each span turns no tighter than one block, climbs no steeper than 35° at its steepest
+  point, never turns and climbs at once, and reaches at most 32 blocks. An out-of-bounds layout is
+  refused, not bent (ADR-0078). Supports becoming belt ends, so belts join and dead-end at a support,
+  is #366, and optional drawing modes are #365.
 
 - **Belt tiers** — `shipped` for tiers 1 and 2. The fork's four belts, `belt`, `improved_belt`,
   `express_belt` and `turbo_belt`, carry Factorio's 15, 30, 45 and 60 items/s under Factorio's names

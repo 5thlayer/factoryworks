@@ -155,8 +155,20 @@ footprint are 2D problems this pack does not have, and ADR-0044 records why.
 _Avoid_: belt puzzle, the logistics game
 
 **Belt**:
-A single link carrying items from one belt end to another along a curve, shaped by supports and paid for at one belt item per block of its length. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per block, so a belt is a buffer as well as a route (ADR-0060).
+A single link carrying items from one belt end to another along a curve, shaped by supports and paid for at one belt item per block of its length. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per block, so a belt is a buffer as well as a route (ADR-0060). Its curve is free between supports but bounded: it turns no tighter than one block, climbs no steeper than 35°, and never turns and climbs at once. A layout outside those bounds is refused, not bent to fit (#362).
 _Avoid_: conveyor, belt segment, lane
+
+**Support**:
+A block on the block grid, facing along one of its axes, that a belt passes through or ends at. Supports are where a belt's shape is decided; the curve between them only joins them. A support holds at most one belt arriving and one leaving: with both it joins two belts, with only one arriving it is a dead end where items back up. Supports are placed by the belt itself and cost nothing (ADR-0078).
+_Avoid_: pole, midpoint, control point
+
+**Belt end**:
+Where a belt starts or stops: a loader, set against an inventory, or a support, set against another belt or nothing.
+_Avoid_: terminator, endpoint
+
+**Span**:
+The stretch of a belt between two consecutive supports or ends. A span either climbs or turns, never both, and is at most two chunks long (#362).
+_Avoid_: segment, belt segment
 
 **Loader**:
 A belt end set against an inventory: it pulls onto the belt from the inventory behind it, or pushes into it. It has tiers of its own that cap what it moves, and from tier 2 it draws power for each item. The pack's inserter; there is no swing arm.
