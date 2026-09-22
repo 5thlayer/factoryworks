@@ -15,6 +15,7 @@ import com.planetaryfactory.core.mining.rig.RigPartBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.radar.RadarBlockEntity;
 import com.planetaryfactory.core.oil.OilWellBlockEntity;
+import com.planetaryfactory.core.oil.PumpjackBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
 import com.planetaryfactory.core.smelting.FurnaceItemHandler;
 import com.planetaryfactory.core.smelting.FurnaceTier;
@@ -118,6 +119,11 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(RadarBlockEntity::new,
                             java.util.Set.of(PFBlocks.RADAR.get())));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpjackBlockEntity>>
+            PUMPJACK = BLOCK_ENTITIES.register("pumpjack",
+                    () -> new BlockEntityType<>(PumpjackBlockEntity::new,
+                            java.util.Set.of(PFBlocks.PUMPJACK.get())));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OilWellBlockEntity>>
             OIL_WELL = BLOCK_ENTITIES.register("oil_well",
                     () -> new BlockEntityType<>(OilWellBlockEntity::new,
@@ -138,6 +144,7 @@ public final class PFBlockEntities {
         registerAssemblingMachineCapabilities(event);
         registerSteamEngineCapabilities(event);
         registerRadarCapabilities(event);
+        registerPumpjackCapabilities(event);
     }
 
     /**
@@ -293,6 +300,14 @@ public final class PFBlockEntities {
     private static void registerRadarCapabilities(RegisterCapabilitiesEvent event) {
         registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.RADAR_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof RadarBlockEntity radar ? radar.energySide() : null);
+    }
+
+    /** The Pumpjack's energy face and its crude, out of any face of any block (ADR-0081). */
+    private static void registerPumpjackCapabilities(RegisterCapabilitiesEvent event) {
+        registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.PUMPJACK_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof PumpjackBlockEntity pumpjack ? pumpjack.energySide() : null);
+        registerOnFootprint(event, Capabilities.Fluid.BLOCK, PFBlocks.PUMPJACK_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof PumpjackBlockEntity pumpjack ? pumpjack.fluidSide() : null);
     }
 
     /**

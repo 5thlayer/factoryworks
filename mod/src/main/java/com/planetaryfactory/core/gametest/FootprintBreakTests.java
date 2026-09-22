@@ -40,7 +40,8 @@ final class FootprintBreakTests {
         Map<String, FootprintMachine> machines = Map.of(
                 "assembling_machine", PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT,
                 "steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT,
-                "radar", PFBlocks.RADAR_FOOTPRINT);
+                "radar", PFBlocks.RADAR_FOOTPRINT,
+                "pumpjack", PFBlocks.PUMPJACK_FOOTPRINT);
         machines.forEach((name, machine) -> {
             tests.test(name + "_broken_at_its_anchor_leaves_nothing", 20,
                     helper -> breakAndCheck(helper, machine, 0));
@@ -87,6 +88,9 @@ final class FootprintBreakTests {
 
     /** Places the machine with its own item, the way a player does; every block it put down, anchor first. */
     private static List<BlockPos> place(GameTestHelper helper, FootprintMachine machine) {
+        if (machine == PFBlocks.PUMPJACK_FOOTPRINT) {
+            helper.setBlock(FLOOR, PFBlocks.OIL_WELL.get());
+        }
         var player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(machine.item().get()));
         BlockPos absolute = helper.absolutePos(FLOOR);

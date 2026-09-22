@@ -1,0 +1,11 @@
+{
+  "pumpjack": {
+    "mining_speed": 1,
+    "energy_usage": 90000.0,
+    "drain": 3000.0,
+    "tile_width": 3,
+    "tile_height": 3,
+    "output_volume": 1000,
+    "fluid": "oritech:still_oil"
+  }
+}

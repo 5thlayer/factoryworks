@@ -73,6 +73,8 @@ FACES = {
     "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
     # Energy (#368): the scan draws FE, on every block of the footprint.
     "radar": ("registerRadarCapabilities", ("Energy",)),
+    # Energy and Fluid (ADR-0081): a pole feeds it and a pipe drains crude, on every block.
+    "pumpjack": ("registerPumpjackCapabilities", ("Energy", "Fluid")),
     # No face: a well is read by the Pumpjack standing on it, never by a pipe.
     "oil_well": (None, ()),
 }

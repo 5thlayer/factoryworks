@@ -19,6 +19,8 @@ import com.planetaryfactory.core.mining.rig.RigGeometry;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.Placements;
+import com.planetaryfactory.core.oil.PumpjackBlockEntity;
+import com.planetaryfactory.core.oil.PumpjackFootprint;
 import com.planetaryfactory.core.radar.RadarBlockEntity;
 import com.planetaryfactory.core.radar.RadarFootprint;
 import rearth.belts.BlockContent;
@@ -92,6 +94,10 @@ final class PlacementPlanTests {
                 PlacementPlanTests::radarMatchesPlacement);
         tests.test("plan_refuses_a_radar_whole", 20,
                 PlacementPlanTests::radarRefusesWhole);
+        tests.test("plan_matches_placement_for_a_pumpjack_on_a_well", 20,
+                PlacementPlanTests::pumpjackMatchesPlacementOnAWell);
+        tests.test("plan_refuses_a_pumpjack_off_a_well", 20,
+                PlacementPlanTests::pumpjackRefusesOffAWell);
         tests.test("plan_matches_placement_for_a_boiler", 20,
                 PlacementPlanTests::boilerMatchesPlacement);
         tests.test("plan_refuses_a_pump_on_a_dry_site", 20,
@@ -286,6 +292,28 @@ final class PlacementPlanTests {
         if (!(helper.getLevel().getBlockEntity(anchor) instanceof RadarBlockEntity)) {
             helper.fail("the placed anchor holds no Radar block entity", helper.relativePos(anchor));
         }
+        helper.succeed();
+    }
+
+    /** A Pumpjack's 3x3x3 over an oil well (ADR-0081), the anchor on the well holding its block entity. */
+    private static void pumpjackMatchesPlacementOnAWell(GameTestHelper helper) {
+        helper.setBlock(FLOOR, PFBlocks.OIL_WELL.get());
+        PlacementPlan plan = check(helper, new ItemStack(PFItems.PUMPJACK.get()), FLOOR, Direction.UP, false);
+        if (plan.blocks().size() != PumpjackFootprint.FOOTPRINT.offsets().size()) {
+            helper.fail("a Pumpjack's plan named " + plan.blocks().size() + " blocks", FLOOR);
+        }
+        BlockPos anchor = plan.blocks().getFirst().pos();
+        if (!(helper.getLevel().getBlockEntity(anchor) instanceof PumpjackBlockEntity pumpjack)
+                || pumpjack.well() == null) {
+            helper.fail("the placed anchor is not a Pumpjack over the well", helper.relativePos(anchor));
+        }
+        helper.succeed();
+    }
+
+    /** The same click on stone refuses the whole Pumpjack and changes nothing. */
+    private static void pumpjackRefusesOffAWell(GameTestHelper helper) {
+        refusal(check(helper, new ItemStack(PFItems.PUMPJACK.get()),
+                FLOOR, Direction.UP, true), PlacementPlan.Refusal.NOT_ON_WELL, helper);
         helper.succeed();
     }
 

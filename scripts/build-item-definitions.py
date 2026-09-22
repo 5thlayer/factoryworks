@@ -57,6 +57,7 @@ DEFERRED = {
 GECKOLIB = {
     "planetaryfactory:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
     "planetaryfactory:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",
+    "planetaryfactory:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
 }
 
 
