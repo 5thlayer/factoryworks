@@ -286,11 +286,8 @@ Raids are state, not entities, until a player is present.
 
 ## 7. Satellites
 
-GCyR ships four satellite types, all adopted:
+Three of GCyR's satellite types are adopted:
 
-- **Ore Finder** — The mid-game upgrade over walking and reading surface vein indicators. Both
-  exist: rocks early, orbital scanning once you can launch. Gives the first satellite an obvious
-  purpose.
 - **GPS** — Navigation and mapping support.
 - **Laser** — Orbital mining.
 - **Dyson Swarm** — Late-game power sink and payoff.
