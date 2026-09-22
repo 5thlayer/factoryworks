@@ -8,9 +8,9 @@ import org.jspecify.annotations.Nullable;
 import rearth.belts.items.SplitterItem;
 
 /**
- * The SimpleBelts fork's splitter, the one other mod's item with a plan (ADR-0069). The plan is
- * built from the two methods the fork's {@code place} calls, so the click executes it. Loaded only
- * when the fork is.
+ * The SimpleBelts fork's splitter, the one other mod's item with a plan (ADR-0069). The fork's
+ * {@code place} executes the fork's own plan, which also names the belts the splitter cuts (#361);
+ * this is that plan's blocks and refusal. Loaded only when the fork is.
  */
 final class SplitterPlans {
 
@@ -23,16 +23,18 @@ final class SplitterPlans {
 
     @Nullable
     static PlacementPlan plan(Item item, BlockPlaceContext context) {
-        if (!context.canPlace()) {
+        SplitterItem.Plan plan = ((SplitterItem) item).plan(context);
+        if (plan == null) {
             return null;
         }
-        SplitterItem splitter = (SplitterItem) item;
-        List<SplitterItem.Half> halves = splitter.halves(context);
-        List<PlacementPlan.Placed> blocks = halves.stream()
+        List<PlacementPlan.Placed> blocks = plan.halves().stream()
                 .map(half -> new PlacementPlan.Placed(half.pos(), half.state()))
                 .toList();
-        return splitter.fits(context, halves)
-                ? PlacementPlan.accepted(blocks)
-                : PlacementPlan.refused(blocks, PlacementPlan.Refusal.FOOTPRINT_BLOCKED);
+        if (plan.blocked()) {
+            return PlacementPlan.refused(blocks, PlacementPlan.Refusal.FOOTPRINT_BLOCKED);
+        }
+        return plan.refused()
+                ? PlacementPlan.refused(blocks, PlacementPlan.Refusal.BELT_CROSSING)
+                : PlacementPlan.accepted(blocks);
     }
 }
