@@ -487,10 +487,6 @@ _Avoid_: pending raid, queued attack
 
 ### Orbit
 
-**Ore Finder Satellite**:
-The orbital scanner, whose job is open: ADR-0045 put every patch on the surface and retired the vein indicators it was designed to supersede, so what it reveals that walking does not has not been decided.
-_Avoid_: scanner, prospector
-
 **Dyson Swarm**:
 The late-game orbital power infrastructure.
 _Avoid_: solar swarm, dyson sphere
