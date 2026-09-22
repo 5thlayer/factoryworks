@@ -1288,8 +1288,9 @@ Sub-rules:
   charted sector is never re-sent. Charted on the server since #368
   and sent to every team member's map since #369. "Unexplored" is the team's chart: the server does
   not know what a player has walked.
-- **Keeps the nearby area live** — `adapted`. The 7x7 around the Radar pulses every 250 kJ, 0.83 s
-  at full power, from the same draw as the sector scan. A pulse charts only the area's uncharted
+- **Keeps the nearby area live** — `adapted`. An 8x8-sector area, 16 Minecraft chunks, centred on
+  the Radar pulses every 250 kJ, 0.83 s at full power, from the same draw as the sector scan.
+  Factorio's 7x7 is 14 chunks, inside a normal render distance. A pulse charts only the area's uncharted
   sectors, one a tick, and a charted sector is never re-sent, so the map shows the area as first
   charted rather than live.
 

@@ -21,18 +21,16 @@ public final class RadarCorpus {
     private final double energyUsageWatts;
     private final double energyPerSectorJoules;
     private final double energyPerNearbyScanJoules;
-    private final int nearbyReach;
     private final int sectorReach;
     private final int tileWidth;
     private final int tileHeight;
 
     private RadarCorpus(double energyUsageWatts, double energyPerSectorJoules,
-                        double energyPerNearbyScanJoules, int nearbyReach, int sectorReach,
+                        double energyPerNearbyScanJoules, int sectorReach,
                         int tileWidth, int tileHeight) {
         this.energyUsageWatts = energyUsageWatts;
         this.energyPerSectorJoules = energyPerSectorJoules;
         this.energyPerNearbyScanJoules = energyPerNearbyScanJoules;
-        this.nearbyReach = nearbyReach;
         this.sectorReach = sectorReach;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
@@ -59,7 +57,6 @@ public final class RadarCorpus {
                     row.get("energy_usage").getAsDouble(),
                     row.get("energy_per_sector").getAsDouble(),
                     row.get("energy_per_nearby_scan").getAsDouble(),
-                    row.get("max_distance_of_nearby_sector_revealed").getAsInt(),
                     row.get("max_distance_of_sector_revealed").getAsInt(),
                     row.get("tile_width").getAsInt(),
                     row.get("tile_height").getAsInt());
@@ -78,11 +75,6 @@ public final class RadarCorpus {
 
     public double energyPerNearbyScanJoules() {
         return energyPerNearbyScanJoules;
-    }
-
-    /** In sectors, counted from the Radar's own. */
-    public int nearbyReach() {
-        return nearbyReach;
     }
 
     /** In sectors, counted from the Radar's own. */
