@@ -59,6 +59,9 @@ dependencies {
     // FTB Teams, and the library its API names, for whose chart a Radar charts into (#368). Reached
     // only from `core/radar/ftb/`, which loads only when `ftbteams` does.
     //
+    // FTB Chunks, pinned by name, because the map drawing calls its internal chunk task rather than
+    // its API (ADR-0079): a bump must be a deliberate edit here, then a look at the map by hand.
+    //
     // GeckoLib because the Steam Engine mixin (#282) extends Oritech's machine base class, which
     // implements GeckoLib's `GeoBlockEntity`; javac needs the supertype to resolve the hierarchy.
     compileOnly fileTree(
@@ -66,7 +69,8 @@ dependencies {
             include: ['oritech-*.jar', 'researchd-*.jar', 'emi-*.jar', 'jei-*.jar',
                       'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar',
                       'belts-neoforge-*.jar', 'architectury-neoforge-*.jar',
-                      'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar'])
+                      'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar',
+                      'ftb-chunks-neoforge-26.1.2.8.jar'])
     // FTB Materials, and the library it requires, on every dev run's classpath -- the GameTest server
     // included. ADR-0061 gives the item layer to FTB Materials, so the pack's emitted smelts name
     // `ftbmaterials:` items, and a server that is only vanilla plus this jar rejects all three at

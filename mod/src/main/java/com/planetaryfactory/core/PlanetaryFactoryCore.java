@@ -22,6 +22,7 @@ import com.planetaryfactory.core.ore.OreMining;
 import com.planetaryfactory.core.start.StartingKitGrant;
 import com.planetaryfactory.core.worldgen.PFWorldgen;
 import com.planetaryfactory.core.worldgen.TerraStartingArea;
+import com.planetaryfactory.core.radar.ChartDeliveries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -99,6 +100,8 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onLogin);
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onDatapackSync);
+        NeoForge.EVENT_BUS.addListener(ChartDeliveries::onServerTick);
+        NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
             AssemblerClient.register(modBus);
             FurnaceClient.register(modBus);
