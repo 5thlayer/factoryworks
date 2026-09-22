@@ -9,10 +9,12 @@ import dev.ftb.mods.ftbchunks.api.FTBChunksAPI;
 import dev.ftb.mods.ftbchunks.api.client.event.AddMapIconEvent;
 import dev.ftb.mods.ftbchunks.api.client.icon.MapIcon;
 import dev.ftb.mods.ftbchunks.api.neoforge.FTBChunksClientEvent;
-import dev.ftb.mods.ftblibrary.icon.Color4I;
+import dev.ftb.mods.ftblibrary.icon.ItemIcon;
 import dev.ftb.mods.ftblibrary.util.TooltipList;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -49,7 +51,8 @@ public final class FtbMapMarkers implements ChartMarkerRenderer {
 
         private PatchIcon(PatchMarker marker) {
             super(new Vec3(marker.x() + 0.5, marker.y(), marker.z() + 0.5),
-                    Color4I.rgb(OreResource.of(marker.resource()).corpus().mapColor()).withBorder(Color4I.WHITE, false));
+                    ItemIcon.ofItem(BuiltInRegistries.ITEM.getValue(
+                            Identifier.parse(OreResource.of(marker.resource()).drop()))));
             this.name = Component.translatable("map.planetaryfactory.patch." + marker.resource());
         }
 

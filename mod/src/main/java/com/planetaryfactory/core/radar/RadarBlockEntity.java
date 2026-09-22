@@ -17,8 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
@@ -124,17 +122,14 @@ public class RadarBlockEntity extends BlockEntity {
         if (owner == null || charted(serverLevel).test(sector)) {
             return;
         }
-        // A structure's start is kept by the chunk it began in, which for a disc holds its centre (ADR-0079).
-        List<StructurePiece> pieces = new ArrayList<>();
+        List<ChunkAccess> chunks = new ArrayList<>();
         for (int dx = 0; dx < Sector.CHUNKS_PER_SIDE; dx++) {
             for (int dz = 0; dz < Sector.CHUNKS_PER_SIDE; dz++) {
-                ChunkAccess chunk = serverLevel.getChunk(
-                        sector.minChunkX() + dx, sector.minChunkZ() + dz, ChunkStatus.FULL, true);
-                chunk.getAllStarts().values().forEach(start -> pieces.addAll(start.getPieces()));
+                chunks.add(serverLevel.getChunk(
+                        sector.minChunkX() + dx, sector.minChunkZ() + dz, ChunkStatus.FULL, true));
             }
         }
-        List<PatchMarker> found = SectorPatches.find(sector, pieces,
-                (x, z) -> serverLevel.getHeight(Heightmap.Types.WORLD_SURFACE, x, z));
+        List<PatchMarker> found = ChartDeliveries.patchesStartedIn(serverLevel, sector, chunks);
         RadarChartData.get(serverLevel.getServer()).chart(ChartOwners.teamOf(owner),
                 serverLevel.dimension().identifier().toString(), sector, found);
     }

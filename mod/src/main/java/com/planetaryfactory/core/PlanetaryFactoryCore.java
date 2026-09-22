@@ -102,6 +102,7 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onDatapackSync);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onServerTick);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
+        NeoForge.EVENT_BUS.addListener(ChartDeliveries::onChunkSent);
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
             AssemblerClient.register(modBus);
             FurnaceClient.register(modBus);
