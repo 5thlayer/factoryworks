@@ -242,8 +242,7 @@ final class BeltPlanTests {
             }
             for (var support : plan.supports()) {
                 touched.add(support.pos());
-                named.put(support.pos(), BlockContent.CONVEYOR_SUPPORT_BLOCK.get().defaultBlockState()
-                        .setValue(HorizontalDirectionalBlock.FACING, support.facing()));
+                named.put(support.pos(), support.state());
             }
         }
         named.forEach((pos, state) -> {
