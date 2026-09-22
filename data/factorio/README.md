@@ -108,8 +108,8 @@ is stale.
 
   `machines`, one object per crafting machine: `name`, `type` (`assembling-machine`,
   `furnace`, `rocket-silo`, `lab`), `crafting_speed`, `energy_usage` (W), `energy_type`,
-  `drain` (W), `drain_source`, `module_slots`, `crafting_categories`, `fluid_boxes` and the
-  tile footprint. A lab has no `crafting_speed`; its `researching_speed` is extracted into
+  `drain` (W), `drain_source`, `module_slots`, `fast_replaceable_group`,
+  `crafting_categories`, `fluid_boxes` and the tile footprint. A lab has no `crafting_speed`; its `researching_speed` is extracted into
   that field, and its `inputs` into `crafting_categories`, because the pack reads both the
   same way.
 
@@ -167,6 +167,12 @@ is stale.
   draws no power, and the `energy_usage` sitting beside it in the corpus is a display
   figure with no consumer, per ADR-0050), and its fluid box. Scope is the same
   "its own item recipe is in `recipe.json`" rule as the rest of this file.
+
+  `poles`, one object per electric pole: `supply_area_distance`, `maximum_wire_distance`,
+  `fast_replaceable_group` and the footprint. The pack types its own pole areas (ADR-0036);
+  the rows are here for the group, which `scripts/build-replace-groups.py` copies into the
+  mod (ADR-0082). The small and medium poles share `electric-pole`, and the big pole and the
+  substation each have their own.
 
   `categories`, every recipe category in the game and every entity declaring it — the
   authority `data/pack/category-map.json`'s left-hand side is checked against.
