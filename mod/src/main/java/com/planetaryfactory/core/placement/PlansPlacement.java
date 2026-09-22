@@ -6,8 +6,8 @@ import org.jspecify.annotations.Nullable;
 /**
  * An item that answers for its own placement (#297, ADR-0069).
  *
- * <p>Implemented only by an item whose placement is not vanilla's. Everything else -- a furnace,
- * the Boiler, a sapling -- is served by {@link Placements#vanillaPlan}, which defers to
+ * <p>Implemented only by an item whose placement is not vanilla's. Everything else -- the Boiler,
+ * a sapling -- is served by {@link Placements#vanillaPlan}, which defers to
  * {@code BlockPlaceContext} and so gets facing, replaceable blocks and "can this state survive
  * here" without the pack restating any of it.
  *

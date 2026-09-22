@@ -148,6 +148,7 @@
   "item.planetaryfactory.pumpjack": "Pumpjack",
   "block.planetaryfactory.oil_well": "Oil Well",
   "message.planetaryfactory.pumpjack.no_well": "A Pumpjack must stand on an oil well.",
+  "message.planetaryfactory.replace.no_room": "No room in the inventory for what the replaced block hands back.",
   "map.planetaryfactory.patch.crude_oil": "Crude oil",
   "map.planetaryfactory.patch.yield": "%s: %s yield"
 }

@@ -81,6 +81,11 @@ public final class PlacementPreview {
     /** Red: any reason placing would be refused, the pack's and vanilla's alike. */
     private static final int REFUSED_TINT = (ALPHA << 24) | 0xFF4040;
 
+    /** Blue: a Fast Replace, apart from both white and red (ADR-0082). A refused replace draws red. */
+    private static final int REPLACE_TINT = (ALPHA << 24) | 0x4080FF;
+
+    private static final float REPLACE_SCALE = 1.004F;
+
     private static final boolean BELTS = ModList.get().isLoaded("belts");
 
     private static @Nullable Key key;
@@ -119,7 +124,7 @@ public final class PlacementPreview {
         }
         draw(event, level, plan);
         if (BELTS) {
-            PreviewSplitterBelts.draw(event, plan, plan.isRefused() ? REFUSED_TINT : ACCEPTED_TINT);
+            PreviewSplitterBelts.draw(event, plan, tint(plan));
         }
         drawSupplyArea(event, level, plan);
         drawMiningArea(event, level, plan);
@@ -192,11 +197,17 @@ public final class PlacementPreview {
                 && a.facing() == b.facing();
     }
 
+    private static int tint(PlacementPlan plan) {
+        if (plan.isRefused()) {
+            return REFUSED_TINT;
+        }
+        return plan.isReplace() ? REPLACE_TINT : ACCEPTED_TINT;
+    }
+
     private static void draw(SubmitCustomGeometryEvent event, ClientLevel level, PlacementPlan plan) {
         Vec3 camera = event.getLevelRenderState().cameraRenderState.pos;
-        int tint = plan.isRefused() ? REFUSED_TINT : ACCEPTED_TINT;
         QuadInstance instance = new QuadInstance();
-        instance.setColor(tint);
+        instance.setColor(tint(plan));
 
         PoseStack poseStack = event.getPoseStack();
         SubmitNodeCollector collector = event.getSubmitNodeCollector();
@@ -218,6 +229,12 @@ public final class PlacementPreview {
             }
             poseStack.pushPose();
             poseStack.translate(pos.getX() - camera.x(), pos.getY() - camera.y(), pos.getZ() - camera.z());
+            if (plan.replaces().contains(pos)) {
+                // Drawn over the block it replaces, so a hair larger or the two faces z-fight.
+                poseStack.translate(0.5, 0.5, 0.5);
+                poseStack.scale(REPLACE_SCALE, REPLACE_SCALE, REPLACE_SCALE);
+                poseStack.translate(-0.5, -0.5, -0.5);
+            }
             collector.submitCustomGeometry(poseStack,
                     RenderTypes.entityTranslucent(TextureAtlas.LOCATION_BLOCKS),
                     (pose, buffer) -> {

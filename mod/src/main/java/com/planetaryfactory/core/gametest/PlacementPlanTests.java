@@ -31,13 +31,19 @@ import rearth.belts.items.SplitterItem;
 import rearth.belts.model.BeltPath;
 import rearth.belts.model.BeltTier;
 import rearth.oritech.block.base.block.MultiblockMachine;
+import com.planetaryfactory.core.smelting.FurnaceBlock;
+import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
+import com.planetaryfactory.core.smelting.FurnaceSlots;
 import com.planetaryfactory.core.smelting.FurnaceTier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.GameType;
@@ -107,11 +113,12 @@ final class PlacementPlanTests {
                 PlacementPlanTests::boilerMatchesPlacement);
         tests.test("plan_refuses_a_pump_on_a_dry_site", 20,
                 PlacementPlanTests::pumpRefusesADrySite);
+        Replaces.register(tests);
     }
 
     // ---- the cases -------------------------------------------------------------------------
 
-    /** A plain BlockItem: no pack code at all, and the facing is the one vanilla just decided. */
+    /** Aimed at the floor, a furnace's plan is vanilla's, and the facing the one vanilla decided. */
     private static void furnaceMatchesPlacement(GameTestHelper helper) {
         check(helper, new ItemStack(PFBlocks.furnace(FurnaceTier.values()[0]).get()),
                 FLOOR, Direction.UP, false);
@@ -592,6 +599,300 @@ final class PlacementPlanTests {
             Player player = helper.makeMockPlayer(GameType.SURVIVAL);
             player.setYRot(0);
             return player;
+        }
+    }
+
+    /**
+     * Fast Replace on the furnaces (#388, ADR-0082): the plan names the furnace it replaces, the
+     * click swaps it in place, and the world and the inventory are held to what the plan said.
+     */
+    static final class Replaces {
+
+        private static final BlockPos AT = new BlockPos(3, 1, 3);
+        private static final Direction FACING = Direction.EAST;
+        private static final int STONE_PROGRESS = 40;
+        private static final int STONE_DURATION = 64;
+        private static final int STEEL_PROGRESS = 20;
+        private static final int STEEL_DURATION = 32;
+        private static final int JOULES = 1_000_000;
+        private static final int LIT_JOULES = 4_000_000;
+
+        private Replaces() {
+        }
+
+        static void register(PFGameTests.Registrar tests) {
+            tests.test("replace_stone_furnace_with_steel_and_back", 20, Replaces::burnerAndBack);
+            tests.test("replace_burner_furnace_with_electric_and_back", 20, Replaces::electricAndBack);
+            tests.test("replace_with_the_last_item_returns_into_the_freed_slot", 20, Replaces::lastItem);
+            tests.test("replace_refused_with_no_room_changes_nothing", 20,
+                    helper -> noRoom(helper, stack(FurnaceTier.STEEL, 2)));
+            tests.test("replace_refused_with_no_room_for_the_fuel", 20, Replaces::noRoomForFuel);
+            tests.test("replace_ignores_a_block_of_another_group", 20, Replaces::otherGroup);
+            tests.test("replace_sneak_places_beside", 20, Replaces::sneakPlacesBeside);
+            tests.test("replace_same_tier_places_nothing", 20, Replaces::sameTier);
+        }
+
+        private static void burnerAndBack(GameTestHelper helper) {
+            burner(helper, FurnaceTier.STONE);
+            ListeningPlayer player = new ListeningPlayer(helper);
+            replace(helper, player, stack(FurnaceTier.STEEL, 2), FurnaceTier.STEEL);
+            holds(helper, 5, STEEL_PROGRESS, STEEL_DURATION, JOULES);
+            spent(helper, player, FurnaceTier.STEEL, 1);
+            returned(helper, player, FurnaceTier.STONE, 1);
+
+            player.getInventory().clearContent();
+            replace(helper, player, stack(FurnaceTier.STONE, 2), FurnaceTier.STONE);
+            holds(helper, 5, STONE_PROGRESS, STONE_DURATION, JOULES);
+            spent(helper, player, FurnaceTier.STONE, 1);
+            returned(helper, player, FurnaceTier.STEEL, 1);
+            helper.succeed();
+        }
+
+        /** The fuel slot has no counterpart on the Electric tier, and neither buffer crosses. */
+        private static void electricAndBack(GameTestHelper helper) {
+            burner(helper, FurnaceTier.STONE);
+            ListeningPlayer player = new ListeningPlayer(helper);
+            replace(helper, player, stack(FurnaceTier.ELECTRIC, 2), FurnaceTier.ELECTRIC);
+            holds(helper, 0, STEEL_PROGRESS, STEEL_DURATION, 0);
+            spent(helper, player, FurnaceTier.ELECTRIC, 1);
+            returned(helper, player, FurnaceTier.STONE, 1);
+            if (player.getInventory().countItem(Items.COAL) != 5) {
+                helper.fail("the fuel slot's 5 coal did not come back to the player", AT);
+            }
+
+            furnace(helper).data().set(FurnaceBlockEntity.DATA_ENERGY, 500);
+            player.getInventory().clearContent();
+            replace(helper, player, stack(FurnaceTier.STONE, 2), FurnaceTier.STONE);
+            holds(helper, 0, STONE_PROGRESS, STONE_DURATION, 0);
+            spent(helper, player, FurnaceTier.STONE, 1);
+            returned(helper, player, FurnaceTier.ELECTRIC, 1);
+            helper.succeed();
+        }
+
+        private static void lastItem(GameTestHelper helper) {
+            burner(helper, FurnaceTier.STONE);
+            ListeningPlayer player = new ListeningPlayer(helper);
+            fill(player);
+            replace(helper, player, stack(FurnaceTier.STEEL, 1), FurnaceTier.STEEL);
+            ItemStack hand = player.getMainHandItem();
+            if (!hand.is(PFBlocks.furnace(FurnaceTier.STONE).get().asItem()) || hand.getCount() != 1) {
+                helper.fail("the freed slot holds " + hand + " rather than the stone furnace", AT);
+            }
+            helper.succeed();
+        }
+
+        /** The last Electric Furnace frees a slot for the stone one, but the coal has none. */
+        private static void noRoomForFuel(GameTestHelper helper) {
+            noRoom(helper, stack(FurnaceTier.ELECTRIC, 1));
+        }
+
+        private static void noRoom(GameTestHelper helper, ItemStack held) {
+            burner(helper, FurnaceTier.STONE);
+            ListeningPlayer player = new ListeningPlayer(helper);
+            fill(player);
+            player.setItemInHand(InteractionHand.MAIN_HAND, held);
+            BlockHitResult hit = hit(helper, Direction.NORTH);
+            PlacementPlan plan = plan(helper, player, hit);
+            if (plan.refusal() != PlacementPlan.Refusal.NO_ROOM_TO_RETURN || !plan.isReplace()) {
+                helper.fail("a full inventory planned " + plan, AT);
+            }
+            BlockState before = helper.getBlockState(AT);
+            BlockState beside = helper.getBlockState(AT.north());
+            List<ItemStack> contents = contents(furnace(helper));
+            List<ItemStack> inventory = inventory(player);
+
+            helper.useBlock(AT, player, hit);
+
+            if (!helper.getBlockState(AT).equals(before)
+                    || !helper.getBlockState(AT.north()).equals(beside)
+                    || !ItemStack.listMatches(contents(furnace(helper)), contents)
+                    || !ItemStack.listMatches(inventory(player), inventory)) {
+                helper.fail("a refused replace changed the world or the inventory", AT);
+            }
+            if (!player.heard.contains("message.planetaryfactory.replace.no_room")) {
+                helper.fail("a refused replace named no reason on the action bar", AT);
+            }
+            helper.succeed();
+        }
+
+        private static void otherGroup(GameTestHelper helper) {
+            burner(helper, FurnaceTier.STONE);
+            ListeningPlayer player = new ListeningPlayer(helper);
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(PFBlocks.BOILER.get(), 2));
+            BlockHitResult hit = hit(helper, Direction.NORTH);
+            PlacementPlan plan = Placements.planFor(helper.getLevel(), player,
+                    InteractionHand.MAIN_HAND, player.getMainHandItem(), hit);
+            if (plan != null && plan.isReplace()) {
+                helper.fail("a Boiler planned to replace a furnace", AT);
+            }
+            unchangedAfterClick(helper, player, hit, 2);
+            helper.succeed();
+        }
+
+        private static void sameTier(GameTestHelper helper) {
+            burner(helper, FurnaceTier.STONE);
+            ListeningPlayer player = new ListeningPlayer(helper);
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack(FurnaceTier.STONE, 2));
+            BlockHitResult hit = hit(helper, Direction.NORTH);
+            if (plan(helper, player, hit).isReplace()) {
+                helper.fail("a stone furnace planned to replace a stone furnace", AT);
+            }
+            unchangedAfterClick(helper, player, hit, 2);
+            helper.succeed();
+        }
+
+        /** Through the game mode, which is where a sneak skips the block's use. */
+        private static void sneakPlacesBeside(GameTestHelper helper) {
+            burner(helper, FurnaceTier.STONE);
+            ListeningPlayer player = new ListeningPlayer(helper);
+            player.setShiftKeyDown(true);
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack(FurnaceTier.STEEL, 2));
+            BlockHitResult hit = hit(helper, Direction.UP);
+            PlacementPlan plan = plan(helper, player, hit);
+            BlockPos above = helper.absolutePos(AT.above());
+            if (plan.isReplace() || plan.isRefused() || !plan.blocks().getFirst().pos().equals(above)) {
+                helper.fail("a sneaking player's plan was not a placement on top: " + plan, AT);
+            }
+            player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(),
+                    InteractionHand.MAIN_HAND, hit);
+            player.setShiftKeyDown(false);
+            helper.assertBlockPresent(PFBlocks.furnace(FurnaceTier.STONE).get(), AT);
+            if (!helper.getLevel().getBlockState(above).equals(plan.blocks().getFirst().state())) {
+                helper.fail("sneak-placing left " + helper.getLevel().getBlockState(above), AT.above());
+            }
+            helper.succeed();
+        }
+
+        // ---- the gesture -------------------------------------------------------------------
+
+        private static void replace(GameTestHelper helper, ListeningPlayer player, ItemStack stack,
+                                    FurnaceTier to) {
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            BlockHitResult hit = hit(helper, Direction.NORTH);
+            PlacementPlan plan = plan(helper, player, hit);
+            BlockPos absolute = helper.absolutePos(AT);
+            BlockState expected = PFBlocks.furnace(to).get().defaultBlockState()
+                    .setValue(FurnaceBlock.FACING, FACING);
+            if (plan.isRefused() || !plan.replaces().equals(List.of(absolute))
+                    || plan.blocks().size() != 1
+                    || !plan.blocks().getFirst().equals(new PlacementPlan.Placed(absolute, expected))) {
+                helper.fail("the plan was not a replace of the furnace by " + to + ": " + plan, AT);
+            }
+            helper.useBlock(AT, player, hit);
+            if (!helper.getBlockState(AT).equals(expected)) {
+                helper.fail("the replace left " + helper.getBlockState(AT) + ", not " + expected, AT);
+            }
+        }
+
+        private static void unchangedAfterClick(GameTestHelper helper, ListeningPlayer player,
+                                                BlockHitResult hit, int count) {
+            BlockState before = helper.getBlockState(AT);
+            BlockState north = helper.getBlockState(AT.north());
+            helper.useBlock(AT, player, hit);
+            if (!helper.getBlockState(AT).equals(before) || !helper.getBlockState(AT.north()).equals(north)
+                    || player.getMainHandItem().getCount() != count) {
+                helper.fail("clicking a furnace changed the world or spent the held item", AT);
+            }
+        }
+
+        private static PlacementPlan plan(GameTestHelper helper, ListeningPlayer player, BlockHitResult hit) {
+            PlacementPlan plan = Placements.planFor(helper.getLevel(), player,
+                    InteractionHand.MAIN_HAND, player.getMainHandItem(), hit);
+            if (plan == null) {
+                helper.fail("no plan at all where one was expected", AT);
+                throw new IllegalStateException("unreachable");
+            }
+            return plan;
+        }
+
+        private static BlockHitResult hit(GameTestHelper helper, Direction face) {
+            BlockPos absolute = helper.absolutePos(AT);
+            return new BlockHitResult(Vec3.atCenterOf(absolute).relative(face, 0.5), face, absolute, false);
+        }
+
+        // ---- fixtures and reads ------------------------------------------------------------
+
+        /** A furnace mid-smelt: cobblestone in, coal banked and in the slot, bricks out. */
+        private static void burner(GameTestHelper helper, FurnaceTier tier) {
+            helper.setBlock(AT, PFBlocks.furnace(tier).get().defaultBlockState()
+                    .setValue(FurnaceBlock.FACING, FACING));
+            FurnaceBlockEntity furnace = furnace(helper);
+            furnace.setItem(FurnaceSlots.INPUT, new ItemStack(Items.COBBLESTONE, 10));
+            furnace.setItem(FurnaceSlots.FUEL, new ItemStack(Items.COAL, 5));
+            furnace.setItem(FurnaceSlots.OUTPUT, new ItemStack(Items.STONE_BRICKS, 3));
+            furnace.data().set(FurnaceBlockEntity.DATA_PROGRESS, STONE_PROGRESS);
+            furnace.data().set(FurnaceBlockEntity.DATA_DURATION, STONE_DURATION);
+            furnace.data().set(FurnaceBlockEntity.DATA_ENERGY_CAPACITY, LIT_JOULES);
+            furnace.data().set(FurnaceBlockEntity.DATA_ENERGY, JOULES);
+        }
+
+        private static void holds(GameTestHelper helper, int coal, int progress, int duration, int energy) {
+            FurnaceBlockEntity furnace = furnace(helper);
+            ContainerData data = furnace.data();
+            if (furnace.getItem(FurnaceSlots.INPUT).getCount() != 10
+                    || furnace.getItem(FurnaceSlots.FUEL).getCount() != coal
+                    || furnace.getItem(FurnaceSlots.OUTPUT).getCount() != 3) {
+                helper.fail("the new furnace holds " + contents(furnace), AT);
+            }
+            if (data.get(FurnaceBlockEntity.DATA_PROGRESS) != progress
+                    || data.get(FurnaceBlockEntity.DATA_DURATION) != duration) {
+                helper.fail("the smelt stood at " + data.get(FurnaceBlockEntity.DATA_PROGRESS) + "/"
+                        + data.get(FurnaceBlockEntity.DATA_DURATION) + ", not " + progress + "/" + duration, AT);
+            }
+            int gauge = energy == JOULES ? LIT_JOULES : data.get(FurnaceBlockEntity.DATA_ENERGY_CAPACITY);
+            if (data.get(FurnaceBlockEntity.DATA_ENERGY) != energy
+                    || data.get(FurnaceBlockEntity.DATA_ENERGY_CAPACITY) != gauge) {
+                helper.fail("the new furnace's buffer is " + data.get(FurnaceBlockEntity.DATA_ENERGY)
+                        + ", not " + energy, AT);
+            }
+        }
+
+        private static void spent(GameTestHelper helper, ListeningPlayer player, FurnaceTier tier, int left) {
+            ItemStack hand = player.getMainHandItem();
+            if (!hand.is(PFBlocks.furnace(tier).get().asItem()) || hand.getCount() != left) {
+                helper.fail("the hand holds " + hand + " where " + left + " " + tier + " should be left", AT);
+            }
+        }
+
+        private static void returned(GameTestHelper helper, ListeningPlayer player, FurnaceTier tier, int count) {
+            int got = player.getInventory().countItem(PFBlocks.furnace(tier).get().asItem());
+            if (got != count) {
+                helper.fail(got + " of the replaced " + tier + " furnace came back, not " + count, AT);
+            }
+        }
+
+        /** Every main-inventory slot but the hand's full of dirt. */
+        private static void fill(ListeningPlayer player) {
+            Inventory inventory = player.getInventory();
+            for (int slot = 0; slot < inventory.getNonEquipmentItems().size(); slot++) {
+                if (slot != inventory.getSelectedSlot()) {
+                    inventory.setItem(slot, new ItemStack(Items.DIRT, 64));
+                }
+            }
+        }
+
+        private static ItemStack stack(FurnaceTier tier, int count) {
+            return new ItemStack(PFBlocks.furnace(tier).get(), count);
+        }
+
+        private static FurnaceBlockEntity furnace(GameTestHelper helper) {
+            return helper.getBlockEntity(AT, FurnaceBlockEntity.class);
+        }
+
+        private static List<ItemStack> contents(FurnaceBlockEntity furnace) {
+            List<ItemStack> items = new ArrayList<>();
+            for (int slot = 0; slot < FurnaceSlots.SIZE; slot++) {
+                items.add(furnace.getItem(slot).copy());
+            }
+            return items;
+        }
+
+        private static List<ItemStack> inventory(Player player) {
+            List<ItemStack> slots = new ArrayList<>();
+            for (ItemStack stack : player.getInventory()) {
+                slots.add(stack.copy());
+            }
+            return slots;
         }
     }
 

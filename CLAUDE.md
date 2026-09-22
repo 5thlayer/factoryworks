@@ -347,6 +347,14 @@ column" and "just above the block I hit" are the same block, the rig's size is c
 where a player cannot see it. The geometry underneath stays Minecraft-free (`RigGeometry`,
 `PoleColumn`) and is unit-tested there.
 
+A Fast Replace is a plan too (#388, ADR-0082): its `replaces` names the block it swaps out, and
+`PlacementPlanTests.Replaces` asks for it, clicks, and holds the world, the new furnace's contents and
+the inventory to it -- Stone to Steel and back, a burner to Electric and back with the fuel handed
+over, the last held item's freed slot, and a full inventory refused with nothing changed and the
+reason on the action bar. A sneak places beside, and a same-tier furnace or another group's block
+replaces nothing. Skipping the handover or letting the inventory check pass turns three red. The
+blue the preview draws a replace in is a human check on delivery.
+
 Run it after editing anything under `core/placement/`, and re-run `scripts/check-datapack-load.py`
 too when the platform moves, since the same server reads it.
 
