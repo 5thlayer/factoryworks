@@ -35,14 +35,20 @@ Run these steps in order from the repo root.
 
    If there is no save, launch without `--quickPlaySingleplayer` and say so.
 
-4. **Launch in the background**, with the log going to the scratchpad:
+4. **Launch in the background as kc00l**, with the log going to the scratchpad:
 
    ```bash
-   python3 scripts/launch.py --quickPlaySingleplayer "<save>" > <scratchpad>/launch.log 2>&1
+   PF_PLAYER_NAME=kc00l PF_PLAYER_UUID=f033ed5f-f0aa-46b9-b818-c246e0b7aa0b \
+     python3 scripts/launch.py --quickPlaySingleplayer "<save>" > <scratchpad>/launch.log 2>&1
    ```
+
+   Always pass both variables. Without them `launch.py` guesses from `usercache.json` and can
+   fall back to "Dev", a player the save has never seen, so the starting kit and the opening
+   quests fire again. The UUID is kc00l's Mojang account UUID.
 
    Run it with `run_in_background`, because the game blocks until it is closed. Do **not** pass
    `--headless`: the user is at the display and wants the window. `launch.py` has no `--help`, and
    any argument it does not recognise is passed on to the game.
 
-5. **Report in one line**: the jar was installed, and which save was opened.
+5. **Report in one line**: the jar was installed, and which save was opened. Check the log's
+   `launching as` line says `kc00l`; if it does not, say so.
