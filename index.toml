@@ -34,7 +34,7 @@ hash = "de57352e7ddc74599ff20aa45532831f10240d87a4adfe092958eeea3d65e37f"
 
 [[files]]
 file = "NOTICE"
-hash = "7c824131800fe0c41c0242b6da2dacbf61e90496c6a08787e8bf71dd377c9c61"
+hash = "366523e67760ee39a47dd617a4442c97876aa3679af4b4603450ed0a58b5f8db"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -209,6 +209,22 @@ file = "config/yacl.json5"
 hash = "121b93764159be6fb7dab523b29a844e2bb78400ce8c48f52135a097e9b0006e"
 
 [[files]]
+file = "data/art/ore_slade_coal.png"
+hash = "9556e0b004404d7896dffefa7e2b6c4d606dae8414d743b3e3e57fad239a1934"
+
+[[files]]
+file = "data/art/ore_slade_iron.png"
+hash = "4f7aa3d2789f1f6100d9e2d77266c44827cd02a36914f1292b31a6c6861994ad"
+
+[[files]]
+file = "data/art/ore_stone_copper_2.png"
+hash = "41bc9e050109055f1ddeda6db9f2acc4b1fe149fa3d74644dec94c5a691820b6"
+
+[[files]]
+file = "data/art/ore_stone_soul.png"
+hash = "5e970d1ac2684c2443b55634f9e5d0c1f3c5e99ae9be8fbdafb4e3d5d90ce917"
+
+[[files]]
 file = "data/factorio/enemy.json"
 hash = "1f6525e6b4ed98c3431c3fe0c9b36801fa9902e085d417a8885fa5a83fad3815"
 
@@ -226,7 +242,7 @@ hash = "eaeec89d00920c946ed363da469dd5d24bab2214582e8d290661275fa84fa188"
 
 [[files]]
 file = "data/factorio/machine.json"
-hash = "a6da92de8795c698181f0be0e7635a69049e0b2664d1065d52c483b89d14b68f"
+hash = "bc0e00969173878b3681725950a23a6f1e3322d2150bea7e39b177ca9b6122fe"
 
 [[files]]
 file = "data/factorio/recipe.json"
@@ -234,7 +250,7 @@ hash = "9f63c4c3063e5be44ef179df0356903afcfbb6ecd669afd270540c9ed559ddee"
 
 [[files]]
 file = "data/factorio/resource.json"
-hash = "b7fff072bcfd57b158817e80b975e70e61527eb3145f988c2e400d352e44951a"
+hash = "d8f0669fbf78f24beba60873a40f942b9802dd496c649c2c0585679a963afd20"
 
 [[files]]
 file = "data/factorio/science_packs.json"
@@ -254,7 +270,7 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "9e3b7d317287124aaff32cc2cf0a8d146dde1627b060898179c3b7d25420848b"
+hash = "4c6e330f355c1d6c6c10853e2ad60d24db21d30ed37631be5231b5ed2e93c412"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -262,7 +278,7 @@ hash = "d3258b12a308a2dd576c79ee70de61741c451cefec8e7dc788aa9b157c35cf22"
 
 [[files]]
 file = "data/pack/subgroup-owner.json"
-hash = "92947cc7403e3e59a06a5621f172de7a12c9a3261f146c3e9ba53eaa3116d82c"
+hash = "d645f6dfb7dcb9a718cba9f92f3a1c9c3fd0afc1ed8b1f821ca972fefaa8fecb"
 
 [[files]]
 file = "defaultconfigs/ftbessentials-server.snbt"
@@ -298,6 +314,22 @@ hash = "4849b3bdf290930054a304aa986822c8b31fa4b74e0104936e0e29a3cdcd365a"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/blockstates/assembling_machine.json"
+hash = "edb487a28d5be0c4ba61e145020da3e1c4068f0b7d52d367a12bc5476199ded2"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/assembling_machine_2.json"
+hash = "edb487a28d5be0c4ba61e145020da3e1c4068f0b7d52d367a12bc5476199ded2"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/assembling_machine_2_part.json"
+hash = "edb487a28d5be0c4ba61e145020da3e1c4068f0b7d52d367a12bc5476199ded2"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/assembling_machine_3.json"
+hash = "edb487a28d5be0c4ba61e145020da3e1c4068f0b7d52d367a12bc5476199ded2"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/assembling_machine_3_part.json"
 hash = "edb487a28d5be0c4ba61e145020da3e1c4068f0b7d52d367a12bc5476199ded2"
 
 [[files]]
@@ -357,6 +389,26 @@ file = "kubejs/assets/planetaryfactory/blockstates/offshore_pump.json"
 hash = "8ffff00078f8ab2150c340b66f4aa1ff14ebc2fffc028859d8b0084e14ab69a3"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/oil_well.json"
+hash = "6357faafb31f2a45c2d3d257f625cb84df49c5f90dde6bd8916635b5cf322e55"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/pumpjack.json"
+hash = "aa98c1e0dc413c7560097ed7e603a19dca0640a8cdd944c3927d540f5d861d49"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/pumpjack_part.json"
+hash = "aa98c1e0dc413c7560097ed7e603a19dca0640a8cdd944c3927d540f5d861d49"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/radar.json"
+hash = "791fd4ff5dce362a4616ab01c8301d19c1ecc00affc6fc381478e0e4d411ff7b"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/blockstates/radar_part.json"
+hash = "791fd4ff5dce362a4616ab01c8301d19c1ecc00affc6fc381478e0e4d411ff7b"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/blockstates/small_electric_pole.json"
 hash = "aafb2459a1854047f8e1b3ed657adb65c154b9a2548b9d86c06ce0a3d12b0740"
 
@@ -405,6 +457,14 @@ file = "kubejs/assets/planetaryfactory/items/assembling_machine.json"
 hash = "96c5a47cae009f7cff9517aa3009672c18f2f31518c82a4f510c05965d89c10c"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/items/assembling_machine_2.json"
+hash = "0268754090d1721c7ff5c2761c48fff710727d1502596dce92643921f3f7dfe7"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/items/assembling_machine_3.json"
+hash = "ca5f1ad6e498e4220c4addda47efba8d10fe606bfeb97d242a25ee7ea592318f"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/items/barrel.json"
 hash = "de2ff1d1dd16d6c415b4ac046912652532d59ac95215a799faa38588e853cae4"
 
@@ -449,6 +509,14 @@ file = "kubejs/assets/planetaryfactory/items/offshore_pump.json"
 hash = "d57e1c5a68771b55d8f5f40f621cf6fd3f0bb5a7232069a38a642b5cf1fba003"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/items/pumpjack.json"
+hash = "0180229b2da4db337265516c25d50d2436a8a97dcfef2cbd4cf69a2af4f711c9"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/items/radar.json"
+hash = "9bc522b39ca2f8ed328d80d32d265d34c7982ee74b28dc066c36385c9b5068fe"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/items/small_electric_pole.json"
 hash = "d9531daf0168221d4125917b9defea185ca3edeaaf7aeab28276deb1371b6ca9"
 
@@ -474,7 +542,7 @@ hash = "05bb9997ff87c49c5abcfdfb6473458863c4ca61a7f77918c9341c330819807c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
-hash = "e5a401f4dcddbb49ac70d5d894374258d62d0cfc901ff20e6eb509db208f3a3c"
+hash = "bd99af68116df51fb638bb1f771fd1d846f539efd0fb217e630f3e72bb53ad79"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/assembling_machine.json"
@@ -523,6 +591,10 @@ hash = "2aa7658d29793bdba9893db10b68089add5a894bd3b7dd8abbc3259347ffbfbb"
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/offshore_pump.json"
 hash = "f6e40c835558ed6c7dad4116537d910d3d5d52ffcd62976c741c6821a90546a7"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/models/block/oil_well.json"
+hash = "3007062396b1921e5047b752b86dd036298742b8a85833c226273724b08af4ab"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/ore/coal_stage0.json"
@@ -685,6 +757,14 @@ file = "kubejs/assets/planetaryfactory/models/block/ore/uranium_stage7.json"
 hash = "06fad23b53d0df0bf3f2afb1267f7cca59d845d5342956e06f5c637b936b13ae"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/models/block/pumpjack.json"
+hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/models/block/radar.json"
+hash = "da21131c0518f34db49a626349f771944d281d8c07273c01136577ffcee6db3e"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/models/block/small_electric_pole.json"
 hash = "9fa9eb73e76daaa3db8d27afbe48c1dcd3915d6486e384e87843681da2d8b8ee"
 
@@ -718,6 +798,14 @@ hash = "531df9cddc4c825bc14defdbaa1f753a51e2180b491ea061ee5cdd40f894f977"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/item/assembling_machine.json"
+hash = "2c901e776a89b3cf68ece100371ecdc9bdce90b3c6bfe74cbcfa97ba7ec92d06"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/models/item/assembling_machine_2.json"
+hash = "2c901e776a89b3cf68ece100371ecdc9bdce90b3c6bfe74cbcfa97ba7ec92d06"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/models/item/assembling_machine_3.json"
 hash = "2c901e776a89b3cf68ece100371ecdc9bdce90b3c6bfe74cbcfa97ba7ec92d06"
 
 [[files]]
@@ -763,6 +851,14 @@ hash = "69e3fbddf721e92479fe9db6dc77616ef0cab6567e7e27d80f5c4f81fd7c0a59"
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/item/offshore_pump.json"
 hash = "0d3638b01ddb0c1d5cff054b6cebe26a297fa44ade1f67943e1be6421ca480ce"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/models/item/pumpjack.json"
+hash = "33b247ec80e61863530c3ab08f874ee32e9452fcfad374b28c6845502f3524ce"
+
+[[files]]
+file = "kubejs/assets/planetaryfactory/models/item/radar.json"
+hash = "ccea93a0b814072d52d63bae38cd4735a7f842756311cf168f36b4852278189f"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/item/small_electric_pole.json"
@@ -838,163 +934,163 @@ hash = "0bfb7be4dd39c33a6a3c7f2f931eb80f96475258cfb30f03adcf7a237d2e649e"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/coal_stage0.png"
-hash = "8a276f660d226cff98820f2fe5aedcb9df8e0ce052d50a3b4adb65fc44a08057"
+hash = "2cc68601d08abe0a95c587e41dc5accf71b021bb13a188a6e6410c597c411e37"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/coal_stage1.png"
-hash = "bc11dafe8cd7e3d60ee0b5acae41413d8a05ff7bd0368e475d363ae5ff261ae3"
+hash = "88656fdb890d230d1151290e7bcb231990d459cf13fbcafaa662cbdd3cb0b2ec"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/coal_stage2.png"
-hash = "1583ee5c20944067a172fab7bb109d7036e09e21abc856405acf98505207808d"
+hash = "a919fffcac1aeaf0bbccb23e267d5a235edd927e95f866db4a4a44b4df913fcf"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/coal_stage3.png"
-hash = "89b28e8e2b10f8bca44303b4f0a7fe43a0b415a3eeff76a80819503db7880122"
+hash = "b866459ac8a29a276207531f08527fe724bc1c0b1810257c8952f5d2529e9b49"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/coal_stage4.png"
-hash = "2ef83c23956393690b113fe3e12151167ad68339b4e92c21808a8e71db2bf161"
+hash = "e28be36cd21154d1adf77e5479e4b8e8ab64b295f08ba42a2d7a2a5e100c47b5"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/coal_stage5.png"
-hash = "2fafe617d8f6d5b1a51d3a5cabbb0bfb34c98506ca6eb7e2bfef07f3a25d051a"
+hash = "a9817f13afae97a1a28c3154e98d38021d115d98cb7159108c298dae7745cb16"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/coal_stage6.png"
-hash = "44c5a23411db0ed7fd5fea2d592b52b1305bdddab955ccc63b7b30debde6ee78"
+hash = "94ed445e60eeb8c40705491f2c4fc9f47d40eca0eca46648fbee54dd3ae3c062"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/coal_stage7.png"
-hash = "2ee6747d4f9554c4d15d1c943b19816b4dda78ee5b346f491a6f53065cf402fa"
+hash = "96033f0cc0ad068e6d0153555d2c2d15f9c665a309fa34fec6062afde8b1fbb8"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/copper_stage0.png"
-hash = "8af045baee2f090a20eb98f7c1da435c539c8f63dcaa6bf6aa9d87c6fad3a68b"
+hash = "b67cafa403d3e42144dbfd881ff727d5b9152441df2f32f5bebe89da96911018"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/copper_stage1.png"
-hash = "7c6d285c368e66c9286f6e74c0bd98bee373a753ebe6d534e5ca93413363af81"
+hash = "838e2942b4fb94f8b93d918b37f368297ee2c71e9e1d83ebec2a2be12e12f596"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/copper_stage2.png"
-hash = "1f2c0fb20b0794810f48c074e55b1f1f962d0191a7801a20901782bd050ffbce"
+hash = "42654ca5469ed38c781405bb5762d43003ca62608421ef76164ed24d08104b24"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/copper_stage3.png"
-hash = "95dd8aa9df6aeab3bd66f6a44bc2475b1d7c31fe918e5b338487ce5aec2b547b"
+hash = "6255af8ed37bb2efc661a61c8d9395bc60d72a9adf266c1b71e3ce07a69c2f8d"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/copper_stage4.png"
-hash = "73f195e86d91915077945645f4f860289edb58d2d39a36e65d71e2527177579d"
+hash = "e12e6cedd8584b512b5d44a2e26c75312ae8c49fe76430d1aeb5d20934c287cd"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/copper_stage5.png"
-hash = "674c2b16f7fab17030518a6e66f7df58af59de6d56bb2b44633b36e80f251dcb"
+hash = "826bd746d8dfc1ceff94bcb923367f31349c63f5789fc45229b93bdcbc4ed184"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/copper_stage6.png"
-hash = "c35c689b1ac203d8fdc51b874f0f167616e95a65a84621c4e1a36490cce61803"
+hash = "b5f9cfdf3455bb1bea42383fdfc4ef74da2be9eb459b3ea0b5d54224b23bda3e"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/copper_stage7.png"
-hash = "588c98aeed633ec9a4e2452b62c4f1119a2298a7968582bf1d329ce3cab42065"
+hash = "fe52cd57d715dabb2b074186a02d1f754aac344fb8f08a5c97ab1c86ed130b2d"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/iron_stage0.png"
-hash = "cce2748ab19c15a1fd1d560b9c53126c5ca5fcc392deae64dcd42c04ee6fe1d3"
+hash = "d5cacdc118fc83f3aa0452deb235ebd7d76c6212bd092599e93dc3101280eff5"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/iron_stage1.png"
-hash = "1d89d5ba96b44acb6cf30b3adb93ee7c3823021ae533eefdae1c43b77ce79679"
+hash = "883f4168e510f102e3e86e85d454e94c7b1114c03b7118b5bf79e9e922a74c71"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/iron_stage2.png"
-hash = "f587819506654ea78c4b29629cf19c6fd3a9d8c2717e0f11edf224cc2712b62d"
+hash = "f3e4138f27b8ee45f4daa79a4b3058bf2954d2c4f52e963d8529413fa1cc4535"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/iron_stage3.png"
-hash = "4f89158b94e99980b04259cb5851e1afaa375df37e144b17e0e8b7d657def489"
+hash = "bbb5ad4940a051b9f4e8f82da8112a84e0e709503b4a975b061d80c9eef3e7bc"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/iron_stage4.png"
-hash = "17a9aa06fed3fc323801a4fdd848d9155ecc96a1c2f15ad7ad04d309b997a100"
+hash = "1dc79f35ba3ae2329ab43e0d397ba49f53f9f662a391f8366529a11cc4aa0cb8"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/iron_stage5.png"
-hash = "4a0544ade25111ed7e03d03267ee500eaf1e2abaa39021c6444a51e37f33caff"
+hash = "21346a0c3c5030a6f17e80763f99b7f5c8079b68d1a9ac37b5f5a010f5d8b1c2"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/iron_stage6.png"
-hash = "a8b48ae2ede392c53d283283635a05caf67715c13bde942dcd6632309ce0af44"
+hash = "47042af9711254c94e13832ac38f033c33bb50d4ecec9224bb7bcb5a2eb87c4c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/iron_stage7.png"
-hash = "79f4907f31ba4765edf553fc3e1cffa6813f0369c7f0d947bcabdfa014bea858"
+hash = "c3e172bd1f0e0f8624181d3fa08e85e58a90494c370fbc15c123af40de0cafdd"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/stone_stage0.png"
-hash = "7f17d6444302b81613104dd38ba01f2d16522a5cc67c8ffbd87696c70b0e3f1c"
+hash = "c0dfdb2b3edf667f80a1c6144e7f969122a3b855f3b1b258d0080a7418032d20"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/stone_stage1.png"
-hash = "3b8adfba3d8580f64830be140e9b676038ea8914db8a8443041537c14e72731a"
+hash = "4fa40678ece9fc868129381ef27b33f1deb1e167986ea2dac429143c429d9248"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/stone_stage2.png"
-hash = "8051b0e9caa9ed4fcf96dcc6be207246b2b29f1c110f9752d026f67e18c9e374"
+hash = "60a07edadd1720845cb61b34b5a5627bcea061a4b6145cb5ebd3271da4e9c463"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/stone_stage3.png"
-hash = "df3e32b26c40cb09fa6d2f5617bcf95898da40b1cbaf768daac5a92911690b42"
+hash = "028cf5af3a56f9c0231275d0fba7baa2f4c1433a1e87e2eed46b7bfcb0f22e75"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/stone_stage4.png"
-hash = "0449684db281d822b8f35b065e0dfbc683426a9b5a49b8ad3a56d07c1f2dd27c"
+hash = "bb1da1d0bdb932a31cd2af91291c1717f546e89b026f9f1722dbbb1336627e3a"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/stone_stage5.png"
-hash = "8d8a577b56d1c62f4f0e52b163a664d1aa81fe5a84b5643a0696d1a710ec2cfb"
+hash = "a545c996e68e5260432b216d025e9c4a529f002bf411bc64fa00ad2eab28116e"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/stone_stage6.png"
-hash = "07ffeec91f01684dbaa19d18857a5d152675ff61d81b09389a21aedaba970067"
+hash = "ac232a60f6c3220b1d5ed9740febfbbc429a067104950bb00f2c0c14952f0b55"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/stone_stage7.png"
-hash = "cf36bdd29e3e5001b393ffd80fe8d3330a3ee665544d73ef1732653c59522d94"
+hash = "6f3419ea77791b38d952dafcabcc89257b80979c3a4e28c64ad41a4a9982f995"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage0.png"
-hash = "4519b2799cae0fe39530b8f575dd1ddbaf3e6d526b02b3639cacb1a3baf25f8b"
+hash = "6ead7baf3ff34e42ab3a2790e1576fd0acf080baf5aec421375a68c391cdb104"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage1.png"
-hash = "7de71c29e5879d086e599a405b26b8e61cc6a13f20472d344c656f8171f3e052"
+hash = "37b9148a97b96c2573e379bd13ca8490e23b8ba85a3c7b240be1a31c7167d376"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage2.png"
-hash = "f3bdc6c25a412479a73cd9b6108a96c52ee1de2a22d6898e182a9170777e8347"
+hash = "d60b9bedf841f17529c3b0e4d08744561912f84a3463a784d2ec7359eb7ba5dc"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage3.png"
-hash = "5a93812a15e267f1581fe1d0167d94f967091f7841985be5d5ae6da6852069ce"
+hash = "c8e1527293544d4b6b62b698bd74c053b48fb0b9c468bcbf00f2462453ba9b05"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage4.png"
-hash = "8214197c16fb7ede1011e6602a5e58f0ff8261c789601ed337e3adcdc22a85e0"
+hash = "1e914bebee6d3dac2c06080e02ae52a747018daedac275044a80c17eac8ea4a1"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage5.png"
-hash = "e0bc778193bb57097361cc928361c8c62042e59f20317dfda29d962989132437"
+hash = "40d9883f16f8fb5728d983f73b738e182df10625ca591ef5defd196b06592e16"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage6.png"
-hash = "6799386f9d59fee60f0dbd5ed5efe228ae026dc7e10cee668ed04fa7a9fb7f55"
+hash = "12b7b91dc06d79d9b1f784d159edf2a70cf8206c3243910d038ac16fc8e69ffd"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage7.png"
-hash = "a94b235698527cec38bb64769350a9f64e8bc80576ec633a4d7b5281318be551"
+hash = "01ab2bc337c268c107cdc11b6c6541bce279741a21dbcf8a0594547f264f9a2c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/small_electric_pole.png"
@@ -1141,6 +1237,14 @@ file = "kubejs/data/minecraft/worldgen/noise_settings/overworld.json"
 hash = "c90de761ae3842afa117f78646dbc481df07da4b256770aecfac20af4fd9b705"
 
 [[files]]
+file = "kubejs/data/oritech/neoforge/biome_modifier/oil_spring.json"
+hash = "003a38d109ac87f9da363fc7d62a00daaa83f83509fa0518e3ca0f15b12b115b"
+
+[[files]]
+file = "kubejs/data/oritech/neoforge/biome_modifier/oil_spring_desert.json"
+hash = "003a38d109ac87f9da363fc7d62a00daaa83f83509fa0518e3ca0f15b12b115b"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/fuel/coal.json"
 hash = "8f5bb42ad35c3386aba30cedfd82be51c844399484784493fc86a65193704189"
 
@@ -1233,6 +1337,14 @@ file = "kubejs/data/planetaryfactory/loot_table/blocks/assembling_machine.json"
 hash = "68c33357e69b8b9003aa503dd3731234a8cf53f8f81e9982d2f567d686d721cd"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/loot_table/blocks/assembling_machine_2.json"
+hash = "0f96d03effac4ad49cf38f0937b1ebd2cb8aff17333323f96910d8c194651718"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/loot_table/blocks/assembling_machine_3.json"
+hash = "d345b232f4290a17a419ad1efcb468e16611d31a4d4575e46fda9213941c8af0"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/loot_table/blocks/boiler.json"
 hash = "01cf5cf873b09e01bd4a47adfc48df1e6d3b5facb546d50e701bff45f08678bf"
 
@@ -1305,6 +1417,14 @@ file = "kubejs/data/planetaryfactory/loot_table/blocks/offshore_pump.json"
 hash = "0908bd299f6cbdb90cfa75a3ef916f8a084d21eb06c917e043c0847f9f4cd160"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/loot_table/blocks/pumpjack.json"
+hash = "459dd00e9d94cb0ed53f039072092d0ba6f21066242c533782a29420dd0b2846"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/loot_table/blocks/radar.json"
+hash = "aac9ad3a33b31bc21a14f6c0eac920af1f5eeb48e7711234c8761cb9f3ffe6eb"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/loot_table/blocks/scrap_pile.json"
 hash = "9883d710e25702d7b0605d433b1095cb983afe08e12636d51c44527fba2c0fbb"
 
@@ -1361,6 +1481,10 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/assembling_machine_1.json
 hash = "57dc3b031c9b48c7b05f86a2577f9f4abc4809780358f9db40db27d3245b532a"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/assembling_machine_2.json"
+hash = "03068ec032e89e5ae69b70bac8229b27546ac45e45c81154e801e3903318f3f2"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/barrel.json"
 hash = "b8428bfb061dd228770733664a699c84ffb9519e36cb02df40c2ba5e912e53f2"
 
@@ -1379,6 +1503,10 @@ hash = "6beb50e5b1ad37f5fedd51146d40c519640d2d1b05ff5adeea316286213080d0"
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/burner_mining_drill.json"
 hash = "b026ceec870e03e3a970a2d53634018dabafd4291e4737524cdb9571a610606f"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/cargo_wagon.json"
+hash = "646d8c3a655bedf34a6765f73005468c8ea6283af726a80a8f03153dbf2edda3"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/concrete.json"
@@ -1429,6 +1557,10 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/fast_transport_belt.json"
 hash = "90d1632f19c642e1ddfd177ffb763034afa5928728b87b730346a1825b913bf0"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/fluid_wagon.json"
+hash = "9dff0b2a633d8aec2a598301d625d4577b57ec977db109c4906c2bb148ca9914"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/hazard_concrete.json"
 hash = "b5aa9d1e2f57b4c024d8ad53edfde39611c02d096ce59cd03ca6c829ff4e773d"
 
@@ -1447,6 +1579,10 @@ hash = "6ac1c0d7787ec207f9dca629b34aaaafa0381852fbb5a101eeb1f29f00b8173d"
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/iron_stick.json"
 hash = "1f63b63c33d2eb0f30f25b9530ecea99f0a0e74accf279e6feb1717833baf8ee"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/locomotive.json"
+hash = "dedf9e3e5d0a95f3dfaa1ab2daaa46365442011b90cec8127f9c4cf7717b113b"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/low_density_structure.json"
@@ -1473,8 +1609,20 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/pipe.json"
 hash = "5a8ff0f1141e351b8f5a2658ac1ae1fc89a7c2324949e16f5880d21a3f567f13"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/pumpjack.json"
+hash = "8ae642de4f0ae2b81f28d3a3f34cd2ea14cea33b8e338cbdd006229fe9d9eecc"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/radar.json"
+hash = "b89a2342f00e89ab91f387dc2106972b4cde1c56db005c850a7d4b36642e312a"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/rail.json"
 hash = "a77a97797db5cc5bebfb2e0ccefc8c3bd2dbafb554dfafa9f50226cb71d7cbf2"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/rail_chain_signal.json"
+hash = "c61e4336007b98ba6c6a0d597204e8eb3115a8ca1add07f84d4dfb405b4d346d"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/rail_signal.json"
@@ -1701,6 +1849,10 @@ file = "kubejs/data/planetaryfactory/worldgen/processor_list/terra_start_ground.
 hash = "3a2cd7e1286c20a7a90417bae71b95bfac6a6c12a932630bc05333822f263ba0"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure/oil_field.json"
+hash = "cd5ba743164c69d2e6cc8b0bfe6ee010675418e670960d2bb480f0cb5bed31be"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/worldgen/structure/outfield_coal.json"
 hash = "d38d290cb88faf0d2fa241411338d64d584c1de2f9488233257c0a8fe1a346b6"
 
@@ -1717,6 +1869,14 @@ file = "kubejs/data/planetaryfactory/worldgen/structure/outfield_stone.json"
 hash = "6edafa1e61e6a37de1f153c68414df1ca34c68a9b81d67cb8d3fc76c18fcb2ce"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure/outfield_uranium.json"
+hash = "fa3beccb9434c2e1e646cc8baee84052484aab8342361a7f691a576d15f73bcc"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure_set/oil_field.json"
+hash = "015e26384ec0be14487b005d5a91537a957772a9e9caee245f1d415f9e6ad4de"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/worldgen/structure_set/outfield_coal.json"
 hash = "60552f0c8f55e65213d67565e84d0a5ef79677e12178d622453a9a2d416d0f70"
 
@@ -1731,6 +1891,10 @@ hash = "4613b6a52d29ef840f50bf666f726d03ccbeb8f58d16fee8e6375e0d12affe3e"
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/structure_set/outfield_stone.json"
 hash = "69bd325b1c98e2942d37c03238875421843e7936bebdf6547887aecae029f250"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/worldgen/structure_set/outfield_uranium.json"
+hash = "1cecb955fc65cb3a6b3bbdf4e6c3631d0fc40b9d71331b748f1f396fa2421377"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/template_pool/terra_start.json"
@@ -2009,7 +2173,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "089af5cd801e018191c61769b522538dfd00e96e4cf5a63f06d2d63886934e24"
+hash = "2b1a7b091a4636415e2b5de02699efd7bdba6823cae3ec0deae2b945787a2d93"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
