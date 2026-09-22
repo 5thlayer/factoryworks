@@ -56,6 +56,8 @@ DEFERRED = {
 # `items/assembler.json` has, and the base is the item model beside it.
 GECKOLIB = {
     "planetaryfactory:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
+    "planetaryfactory:assembling_machine_2": "an OritechGeoItem drawing Oritech's assembler model (#295)",
+    "planetaryfactory:assembling_machine_3": "an OritechGeoItem drawing Oritech's assembler model (#295)",
     "planetaryfactory:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",
     "planetaryfactory:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
 }

@@ -10,9 +10,9 @@ import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
-import com.planetaryfactory.core.machine.AssemblingMachineSpec;
 import com.planetaryfactory.core.machine.AssemblingStall;
 import com.planetaryfactory.core.machine.AssemblingStatus;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.HeldRecipe;
 import com.planetaryfactory.core.machine.HoldVerdict;
 import com.planetaryfactory.core.machine.RecipeChoice;
@@ -28,7 +28,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import rearth.oritech.util.ColorableMachine.ColorVariant;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -70,6 +76,11 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::handsBackIngredientsOnAChange);
         tests.test("assembling_machine_crafts_at_factorios_rate", 100,
                 AssemblingMachineTests::craftsAtFactoriosRate);
+        tests.test("assembling_machine_2_crafts_at_factorios_rate", 100,
+                AssemblingMachineTests::tierTwoCraftsAtFactoriosRate);
+        for (AssemblingTier tier : AssemblingTier.values()) {
+            tests.test(tier.blockName() + "_ignores_paint", 20, helper -> ignoresPaint(helper, tier));
+        }
         tests.test("assembling_machine_stalls_on_a_full_output", 100,
                 AssemblingMachineTests::stallsOnAFullOutput);
         tests.test("assembling_machine_stalls_unfed", 100,
@@ -101,7 +112,7 @@ final class AssemblingMachineTests {
             helper.fail(BOILER + " is not loaded, so the filter has no recipe to filter to", ANCHOR);
             return;
         }
-        BlockPos part = PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT.positions(ANCHOR, FACING).stream()
+        BlockPos part = PFBlocks.assemblingFootprint(AssemblingTier.ONE).positions(ANCHOR, FACING).stream()
                 .filter(pos -> !pos.equals(ANCHOR)).findFirst().orElseThrow();
         ItemResource furnace = ItemResource.of(item("planetaryfactory:stone_furnace"));
         ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
@@ -240,7 +251,7 @@ final class AssemblingMachineTests {
      */
     private static void poleReachingOnlyAHullBlockFindsIt(GameTestHelper helper) {
         placeWhole(helper);
-        List<BlockPos> blocks = PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT.positions(ANCHOR, FACING);
+        List<BlockPos> blocks = PFBlocks.assemblingFootprint(AssemblingTier.ONE).positions(ANCHOR, FACING);
         BlockPos part = blocks.stream()
                 .filter(pos -> pos.getY() == ANCHOR.getY() && !pos.equals(ANCHOR))
                 .findFirst().orElseThrow();
@@ -267,7 +278,7 @@ final class AssemblingMachineTests {
 
     /** The anchor and its three hull blocks, in the states the item places them in. */
     private static AssemblingMachineBlockEntity placeWhole(GameTestHelper helper) {
-        PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT.placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), FACING);
+        PFBlocks.assemblingFootprint(AssemblingTier.ONE).placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), FACING);
         return (AssemblingMachineBlockEntity) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));
     }
 
@@ -305,7 +316,19 @@ final class AssemblingMachineTests {
      * whole number, and a floor or a ceiling on it misses by a craft's worth of rounding.
      */
     private static void craftsAtFactoriosRate(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = place(helper);
+        craftsCableAt(helper, AssemblingTier.ONE, TICKS_PER_CRAFT, FE_PER_CRAFT);
+    }
+
+    /**
+     * copper-cable's 0.5 s at {@code assembling-machine-2}'s speed 0.75 is 13.3 ticks, run in 14; its
+     * 150 kW over the unrounded 2/3 s is 1,000 FE. Typed, for the tier 1 figures' reason.
+     */
+    private static void tierTwoCraftsAtFactoriosRate(GameTestHelper helper) {
+        craftsCableAt(helper, AssemblingTier.TWO, 14, 1000L);
+    }
+
+    private static void craftsCableAt(GameTestHelper helper, AssemblingTier tier, int ticksPerCraft, long fePerCraft) {
+        AssemblingMachineBlockEntity machine = place(helper, tier);
         long[] energy = new long[1];
         int[] wire = new int[1];
         helper.startSequence()
@@ -319,16 +342,17 @@ final class AssemblingMachineTests {
                     energy[0] = machine.energyStorage.getAmountAsLong();
                     wire[0] = machine.inventory.getItem(OUTPUT).getCount();
                 })
-                .thenIdle(WINDOW)
+                .thenIdle(2 * ticksPerCraft)
                 .thenExecute(() -> {
                     long spent = energy[0] - machine.energyStorage.getAmountAsLong();
-                    if (spent != 2 * FE_PER_CRAFT) {
-                        helper.fail("two crafts' window drew " + spent + " FE, expected " + (2 * FE_PER_CRAFT),
-                                ANCHOR);
+                    if (spent != 2 * fePerCraft) {
+                        helper.fail("two crafts' window on " + tier + " drew " + spent + " FE, expected "
+                                + (2 * fePerCraft), ANCHOR);
                     }
                     int made = machine.inventory.getItem(OUTPUT).getCount() - wire[0];
                     if (made != 4) {
-                        helper.fail("two crafts' window made " + made + " copper wire, expected 4", ANCHOR);
+                        helper.fail("two crafts' window on " + tier + " made " + made + " copper wire, expected 4",
+                                ANCHOR);
                     }
                     if (machine.inventory.getItem(0).getCount() + machine.inventory.getItem(OUTPUT).getCount() / 2
                             != 8) {
@@ -336,6 +360,48 @@ final class AssemblingMachineTests {
                     }
                 })
                 .thenSucceed();
+    }
+
+    /**
+     * A shift-click with another tier's paint, through the player's game mode as a real click goes,
+     * leaves the machine its tier's colour and the cartridge unspent (ADR-0075). The colours are
+     * typed: read off the tier, a swapped pair would agree with itself.
+     */
+    private static void ignoresPaint(GameTestHelper helper, AssemblingTier tier) {
+        AssemblingMachineBlockEntity machine = place(helper, tier);
+        ColorVariant expected = switch (tier) {
+            case ONE -> ColorVariant.ORANGE;
+            case TWO -> ColorVariant.DIAMOND;
+            case THREE -> ColorVariant.INDUSTRIAL;
+        };
+        if (machine.getCurrentColor() != expected) {
+            helper.fail(tier + " wears " + machine.getCurrentColor() + ", expected " + expected, ANCHOR);
+            return;
+        }
+        // No tier wears sculk, so this is always another tier's colour or none.
+        Item paint = item("oritech:sculk_paint");
+        // Not makeMockServerPlayerInLevel: joining the level fires KubeJS's login sync, which
+        // refuses the mock connection.
+        ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        player.setGameMode(GameType.SURVIVAL);
+        player.setShiftKeyDown(true);
+        ItemStack stack = new ItemStack(paint, 4);
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        BlockPos absolute = helper.absolutePos(ANCHOR);
+        player.gameMode.useItemOn(player, helper.getLevel(), stack, InteractionHand.MAIN_HAND,
+                new BlockHitResult(Vec3.atCenterOf(absolute), Direction.UP, absolute, false));
+        player.setShiftKeyDown(false);
+        if (machine.getCurrentColor() != expected) {
+            helper.fail("painting " + tier + " turned it " + machine.getCurrentColor(), ANCHOR);
+            return;
+        }
+        int left = player.getItemInHand(InteractionHand.MAIN_HAND).getCount();
+        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+        if (left != 4) {
+            helper.fail("painting " + tier + " spent " + (4 - left) + " paint on a colour it cannot take", ANCHOR);
+            return;
+        }
+        helper.succeed();
     }
 
     /** Room for one wire, and a craft makes two: it holds, draws nothing and takes no plate. */
@@ -485,7 +551,7 @@ final class AssemblingMachineTests {
     private static void holdsEveryAssemblingRecipe(GameTestHelper helper) {
         Set<String> loaded = helper.getLevel().getServer().getRecipeManager().recipeMap()
                 .byType(PFRecipes.ASSEMBLING_TYPE.get()).stream()
-                .filter(holder -> AssemblingMachineSpec.crafts(holder.value().category()))
+                .filter(holder -> AssemblingTier.ONE.crafts(holder.value().category()))
                 .map(holder -> holder.id().identifier().toString())
                 .collect(Collectors.toSet());
         if (!loaded.contains(CABLE)) {
@@ -587,7 +653,11 @@ final class AssemblingMachineTests {
     }
 
     private static AssemblingMachineBlockEntity place(GameTestHelper helper) {
-        BlockState anchor = PFBlocks.ASSEMBLING_MACHINE.get().defaultBlockState()
+        return place(helper, AssemblingTier.ONE);
+    }
+
+    private static AssemblingMachineBlockEntity place(GameTestHelper helper, AssemblingTier tier) {
+        BlockState anchor = PFBlocks.assemblingMachine(tier).get().defaultBlockState()
                 .setValue(MultiblockMachine.ASSEMBLED, true);
         helper.setBlock(ANCHOR, anchor);
         return (AssemblingMachineBlockEntity) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));

@@ -34,6 +34,7 @@ import rearth.oritech.block.base.entity.MultiblockMachineEntity;
 import rearth.oritech.config.OritechConfig;
 import rearth.oritech.init.recipes.OritechRecipe;
 import rearth.oritech.init.recipes.RecipeContent;
+import rearth.oritech.util.ColorableMachine.ColorVariant;
 import rearth.oritech.util.ContainerSlotAssignment;
 import rearth.oritech.util.InventoryInputMode;
 import rearth.oritech.util.ScreenProvider;
@@ -92,6 +93,24 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     public AssemblingMachineBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state,
                 OritechConfig.processingMachines.assemblerData.energyPerTick.get());
+    }
+
+    /** The tier is the block's: one block entity type serves all three (ADR-0075). */
+    public AssemblingTier tier() {
+        return getBlockState().getBlock() instanceof AssemblingMachineBlock block ? block.tier() : AssemblingTier.ONE;
+    }
+
+    /**
+     * The tier's paint, whatever was saved or assigned: the paint is how a player tells the tiers
+     * apart (ADR-0075). {@code PaintLock} stops a cartridge being spent on it.
+     */
+    @Override
+    public ColorVariant getCurrentColor() {
+        return ColorVariant.valueOf(tier().paint());
+    }
+
+    @Override
+    public void assignColor(ColorVariant color) {
     }
 
     @Override
@@ -226,7 +245,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     }
 
     private int durationTicks(AssemblingRecipe recipe) {
-        return AssemblingMachineSpec.durationTicks(recipe.time(), getSpeedMultiplier());
+        return AssemblingMachineSpec.durationTicks(tier(), recipe.time(), getSpeedMultiplier());
     }
 
     /** Why the last tick made no progress, for the screen and the GameTests. */
@@ -256,7 +275,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     }
 
     private long craftFe(AssemblingRecipe recipe) {
-        return AssemblingMachineSpec.fePerCraft(recipe.time(), getEfficiencyMultiplier());
+        return AssemblingMachineSpec.fePerCraft(tier(), recipe.time(), getEfficiencyMultiplier());
     }
 
     /** The Held recipe's average draw in tenths of an FE a tick, or 0 with none. Server only. */
@@ -296,7 +315,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
             return 1;
         }
         return AssemblingMachineRecipes.resolve(server, held)
-                .map(holder -> AssemblingMachineSpec.durationTicks(holder.value().time(), 1.0f))
+                .map(holder -> AssemblingMachineSpec.durationTicks(tier(), holder.value().time(), 1.0f))
                 .orElse(1);
     }
 

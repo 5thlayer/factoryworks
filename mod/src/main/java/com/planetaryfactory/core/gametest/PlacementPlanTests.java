@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.PFItems;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
@@ -83,7 +84,11 @@ final class PlacementPlanTests {
         tests.test("plan_matches_placement_for_a_rig", 20, PlacementPlanTests::rigMatchesPlacement);
         tests.test("plan_refuses_a_rig_whole", 20, PlacementPlanTests::rigRefusesWhole);
         tests.test("plan_matches_placement_for_an_assembling_machine", 20,
-                PlacementPlanTests::assemblingMachineMatchesPlacement);
+                helper -> assemblingMachineMatchesPlacement(helper, AssemblingTier.ONE));
+        tests.test("plan_matches_placement_for_an_assembling_machine_2", 20,
+                helper -> assemblingMachineMatchesPlacement(helper, AssemblingTier.TWO));
+        tests.test("plan_matches_placement_for_an_assembling_machine_3", 20,
+                helper -> assemblingMachineMatchesPlacement(helper, AssemblingTier.THREE));
         tests.test("plan_refuses_an_assembling_machine_whole", 20,
                 PlacementPlanTests::assemblingMachineRefusesWhole);
         tests.test("plan_matches_placement_for_a_steam_engine", 20,
@@ -213,8 +218,8 @@ final class PlacementPlanTests {
      * block entity is asked whether it answers as assembled, because Oritech's tick returns early
      * on an unassembled machine and nothing else here would notice.
      */
-    private static void assemblingMachineMatchesPlacement(GameTestHelper helper) {
-        PlacementPlan plan = check(helper, new ItemStack(PFItems.ASSEMBLING_MACHINE.get()),
+    private static void assemblingMachineMatchesPlacement(GameTestHelper helper, AssemblingTier tier) {
+        PlacementPlan plan = check(helper, new ItemStack(PFItems.assemblingMachine(tier).get()),
                 FLOOR, Direction.UP, false);
         int expected = AssemblingMachineFootprint.FOOTPRINT.offsets().size();
         if (plan.blocks().size() != expected) {
@@ -222,8 +227,9 @@ final class PlacementPlanTests {
                     + " blocks where its footprint is " + expected, FLOOR);
         }
         BlockPos anchor = plan.blocks().getFirst().pos();
-        if (!(helper.getLevel().getBlockEntity(anchor) instanceof AssemblingMachineBlockEntity)) {
-            helper.fail("the placed anchor holds no Assembling Machine block entity", helper.relativePos(anchor));
+        if (!(helper.getLevel().getBlockEntity(anchor) instanceof AssemblingMachineBlockEntity machine)
+                || machine.tier() != tier) {
+            helper.fail("the placed anchor holds no tier " + tier + " Assembling Machine", helper.relativePos(anchor));
         }
         // Read again ticks later, not only on the placing tick: Oritech's onLoad schedules a
         // rescan for the next tick, and a rescan that finds no cores clears ASSEMBLED -- after
@@ -243,7 +249,7 @@ final class PlacementPlanTests {
      */
     private static void assemblingMachineRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(AssemblingMachineFootprint.TALL - 1), Blocks.STONE);
-        refusal(check(helper, new ItemStack(PFItems.ASSEMBLING_MACHINE.get()),
+        refusal(check(helper, new ItemStack(PFItems.assemblingMachine(AssemblingTier.ONE).get()),
                 FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }

@@ -62,9 +62,6 @@ DEAD_SUBTREES = ("gtceu", "gt_materials", "gcyr")
 CHASSIS = (
     "names a `planetaryfactory_core` subclass of an Oritech machine (ADR-0060) that #277 decided and "
     "the chassis has not built yet: #258 owns this row")
-TIERS = (
-    "names a proposed core tier of the Assembling Machine; whether the tier is a block or Oritech's "
-    "Speed Addon is undecided, and #295 owns this row")
 PUMP = (
     "names the first-party in-line pump, since Oritech's Pump drains the world rather than a pipe: "
     "#293 owns this row")
@@ -77,8 +74,6 @@ SCIENCE = (
 SILO = (
     "names the first-party Rocket Silo and the part it makes, which #378 owns and has not built yet")
 DEFERRED = {
-    "assembling-machine-2": TIERS,
-    "assembling-machine-3": TIERS,
     "chemical-plant": CHASSIS,
     "oil-refinery": CHASSIS,
     "pump": PUMP,

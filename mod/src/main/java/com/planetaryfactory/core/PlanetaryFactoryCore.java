@@ -100,6 +100,7 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onLogin);
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onDatapackSync);
+        NeoForge.EVENT_BUS.addListener(com.planetaryfactory.core.machine.PaintLock::onRightClickBlock);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onServerTick);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onChunkSent);

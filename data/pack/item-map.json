@@ -70,15 +70,13 @@
       "kind": "item",
       "target": "planetaryfactory:assembling_machine_2",
       "source": "authored",
-      "note": "Standing proposal only. Oritech tiers a machine with addons rather than with a second machine item, so whether this tier is a core block at Factorio's speed or Oritech's Speed Addon is #295's (#277). Blocked rather than `undecided` so the research that unlocks it stays a recorded deferral.",
-      "blocked_by": 295
+      "note": "Tier 2 of the `planetaryfactory_core` Assembling Machine: a block of its own at Factorio's speed and draw, with a fluid input (ADR-0075, #295)."
     },
     "assembling-machine-3": {
       "kind": "item",
       "target": "planetaryfactory:assembling_machine_3",
       "source": "authored",
-      "note": "Standing proposal only. Oritech tiers a machine with addons rather than with a second machine item, so whether this tier is a core block at Factorio's speed or Oritech's Speed Addon is #295's (#277). Blocked rather than `undecided` so the research that unlocks it stays a recorded deferral.",
-      "blocked_by": 295
+      "note": "Tier 3 of the `planetaryfactory_core` Assembling Machine (ADR-0075, #295). Registered; its recipe takes `speed-module`, undecided on #120, so the converter records it as a skip."
     },
     "asteroid-collector": {
       "status": "undecided",

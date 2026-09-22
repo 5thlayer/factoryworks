@@ -8,6 +8,7 @@ import com.planetaryfactory.core.fluid.OffshorePumpBlockEntity;
 import com.planetaryfactory.core.fluid.SteamEngineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineItemHandler;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.mining.rig.RigBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigItemHandler;
@@ -96,14 +97,14 @@ public final class PFBlockEntities {
                             java.util.Set.of(PFBlocks.BOILER.get())));
 
     /**
-     * The Assembling Machine's anchor (#326, ADR-0071). Its own type, not Oritech's
-     * {@code ASSEMBLER}: that is the reason the block entity extends Oritech's abstract base rather
-     * than its concrete assembler. The parts have no block entity at all.
+     * The Assembling Machine's anchor (#326, ADR-0071), one type for every tier (ADR-0075). Its own
+     * type, not Oritech's {@code ASSEMBLER}: that is the reason the block entity extends Oritech's
+     * abstract base rather than its concrete assembler. The parts have no block entity at all.
      */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AssemblingMachineBlockEntity>>
             ASSEMBLING_MACHINE = BLOCK_ENTITIES.register("assembling_machine",
                     () -> new BlockEntityType<>(AssemblingMachineBlockEntity::new,
-                            java.util.Set.of(PFBlocks.ASSEMBLING_MACHINE.get())));
+                            PFBlocks.assemblingMachineBlocks()));
 
     /**
      * The Steam Engine's anchor (ADR-0077): Oritech's engine entity under the pack's own type, which
@@ -272,15 +273,18 @@ public final class PFBlockEntities {
 
     /**
      * The Assembling Machine's energy face (#328), which the craft cycle draws from, and its item
-     * face (#329), each on every block of the footprint.
+     * face (#329), each on every block of every tier's footprint.
      */
     private static void registerAssemblingMachineCapabilities(RegisterCapabilitiesEvent event) {
-        registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT,
-                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
-                        ? machine.getEnergyLookup(side) : null);
-        registerOnFootprint(event, Capabilities.Item.BLOCK, PFBlocks.ASSEMBLING_MACHINE_FOOTPRINT,
-                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
-                        ? new AssemblingMachineItemHandler(machine) : null);
+        for (AssemblingTier tier : AssemblingTier.values()) {
+            FootprintMachine footprint = PFBlocks.assemblingFootprint(tier);
+            registerOnFootprint(event, Capabilities.Energy.BLOCK, footprint,
+                    (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                            ? machine.getEnergyLookup(side) : null);
+            registerOnFootprint(event, Capabilities.Item.BLOCK, footprint,
+                    (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                            ? new AssemblingMachineItemHandler(machine) : null);
+        }
     }
 
     /**
