@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -396,8 +396,8 @@ other generator here, but **no test file owns it**: the template has no corpus, 
 no input to go stale against, so the `--check` is the whole of the guard. And the GameTest run is
 in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
 boots a server, so it is run against a change that touched mechanism. Run it after editing
-anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/` or
-`core/gametest/`.
+anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`,
+`core/reach/` or `core/gametest/`.
 
 ### Replace group check
 
@@ -409,6 +409,24 @@ Which blocks may Fast Replace which is Factorio's `fast_replaceable_group` (ADR-
 `tests/pack/test_replace_groups.py` runs the generator's `--check` and holds the resource to its
 own join of the two inputs. `ReplaceGroupsTest` covers the parse and the same-group rule. Run them
 after re-extracting the corpus or editing the item map.
+
+### Building tag check
+
+What the player breaks at full Reach (16) rather than vanilla's 4.5 is the
+`planetaryfactory:buildings` block tag (#413), never typed. `scripts/factorio-building-extract.py`
+writes `data/factorio/building.json`, every Factorio item that places an entity, and
+`scripts/build-building-tag.py` joins its Buildings onto `data/pack/item-map.json` by the block of
+the target's own id. A missing, `undecided`, `not_emitted`, `native_mechanic` or `blocked_by` row,
+and a target that places no block of its id, is a recorded skip, which is why the belt tiles wait
+for #397 to repoint the transport-belt rows. `tests/pack/test_building_tag.py` runs the `--check`,
+traces each entry to a Building row, names the families the rule exists for and re-extracts when the
+dump is on disk. `ReachTests` holds the rule in a world: through `handleBlockBreakAction`, stone 6
+blocks off is refused with the block and inventory unchanged, a Stone Furnace 6 off and stone 4 off
+break, and so does a burner drill's part 7 off, since a footprint's or a rig's part answers as its
+anchor. Dropping the listener turns the first red, and dropping the part's resolution the last. Only
+a break's start is refused, with vanilla's 1.0 of server lenience, so a start the client allowed is
+never refused behind it. An Oritech machine core is not synced its controller, so the client refuses
+one beyond 4.5. Run them after re-extracting the corpus or editing the item map.
 
 ### Placement plan check
 

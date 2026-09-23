@@ -1,6 +1,8 @@
 package com.planetaryfactory.core.energy;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * A block entity whose energy belongs to another block's (#292, ADR-0062).
@@ -14,4 +16,13 @@ public interface EnergyOwner {
 
     /** The block whose energy this one's face stands for, or {@code null} if it is its own. */
     BlockPos planetaryfactory$energyOwner();
+
+    /** A block entity's owner, or failing that a hull block's (#328), or {@code null}. */
+    static BlockPos of(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof EnergyOwner owned) {
+            return owned.planetaryfactory$energyOwner();
+        }
+        BlockState state = level.getBlockState(pos);
+        return state.getBlock() instanceof EnergyOwnerBlock hull ? hull.energyOwner(pos, state) : null;
+    }
 }

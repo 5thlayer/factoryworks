@@ -50,16 +50,8 @@ public final class SupplyAreaScan {
                 pos -> role(level, origin, pos));
     }
 
-    /** A block entity's owner, or failing that a hull block's (#328), or {@code null}. */
     private static BlockPos owner(Level level, BlockPos pos) {
-        if (!level.isLoaded(pos)) {
-            return null;
-        }
-        if (level.getBlockEntity(pos) instanceof EnergyOwner owned) {
-            return owned.planetaryfactory$energyOwner();
-        }
-        BlockState state = level.getBlockState(pos);
-        return state.getBlock() instanceof EnergyOwnerBlock hull ? hull.energyOwner(pos, state) : null;
+        return level.isLoaded(pos) ? EnergyOwner.of(level, pos) : null;
     }
 
     private static SupplyScan.Role role(Level level, BlockPos origin, BlockPos pos) {
