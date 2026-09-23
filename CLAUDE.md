@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `LoaderFloorTests` (#399) and `RotateTests` (#386), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `LoaderMouthTests` (#408) and `RotateTests` (#386), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -234,14 +234,12 @@ capacity and rebuild are the fork's `LineScanTest` and `TransportLineTest`. Whet
 like a belt is a human check on delivery, and the demand probe's clause of #348 stays
 `BeltPowerTests`', since the loader is unchanged. The spline belt and its item still work beside
 the tiles until #397.
-And that a loader draws a belt floor to meet its tile (`LoaderFloorTests`, #399), read off its
-`floor` blockstate as a player builds and breaks a line through the game mode: loading behind a
-line's first tile and unloading past its last at all four tiers, set whichever of the loader and
-the tile went down first and cleared when the tile is broken, and none with no tile or a tile
-running across. With the floor never set, the first two turn red; the third guards against a floor
-drawn where none belongs. A loader the spline belt item places beside a tile draws none until #397
-retires that item. Whether the floor reads as one belt and scrolls the right way is a human check
-on delivery.
+And that a loader carries no items (`LoaderMouthTests`, #408): a loading line's item is first seen
+on its first tile at the back edge, where the loader's mouth is, and a line backed up against a full
+chest holds its head flush with the last tile's front edge, and delivers once the chest
+has room. The loader is a slate housing inside its own block with a tier-coloured band round its
+mouth; whether it reads as a solid machine and the items seem to come out of it is a human check on
+delivery.
 And that a stack pressed with Rotate 0 to 3 times (`RotateTests`, #386, ADR-0083) plans and places a
 belt tile facing the look turned that many quarters clockwise, sneaking or not, and a Stone Furnace
 facing back at the turned look, the plan's state being the placed one; that the turn stays on the
