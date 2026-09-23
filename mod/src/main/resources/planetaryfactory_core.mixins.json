@@ -9,6 +9,9 @@
     "minecraft.ServerLevelMixin",
     "minecraft.UseOnContextMixin"
   ],
+  "client": [
+    "minecraft.MinecraftMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
