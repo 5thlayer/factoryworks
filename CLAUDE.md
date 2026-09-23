@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `LoaderMouthTests` (#408) and `RotateTests` (#386), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `LoaderMouthTests` (#408), `BeltCornerTests` (#391) and `RotateTests` (#386), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -240,6 +240,16 @@ chest holds its head flush with the last tile's front edge, and delivers once th
 has room. The loader is a slate housing inside its own block with a tier-coloured band round its
 mouth; whether it reads as a solid machine and the items seem to come out of it is a human check on
 delivery.
+And that a tile fed from exactly one side, with nothing behind it, is a corner inside its line
+(`BeltCornerTests`, #391): an L of six tiles, up a column and along a row, is one line of six,
+delivers every item and 15 and 60 items/s at tiers 1 and 4, and backed up holds 48; a loader beside a
+line's head turns it and loads it; a tile fed from
+its side with a tile behind it stays straight and its row carries 15 items/s. Forcing every tile
+straight turns the four L tests red and leaves the side-load one green, which is what it is for. The
+fixtures place downstream first, since a tile's shape is set by the placement of what feeds it. The
+rule, a line following what feeds what, a ring's scan and motion, and the arc an item is drawn along
+are the fork's `TileShapeTest`, `LineScanTest` and `TransportLineTest`. A ring's GameTest waits for
+#409, and whether a corner reads as a Factorio corner is a human check on delivery.
 And that a stack pressed with Rotate 0 to 3 times (`RotateTests`, #386, ADR-0083) plans and places a
 belt tile facing the look turned that many quarters clockwise, sneaking or not, and a Stone Furnace
 facing back at the turned look, the plan's state being the placed one; that the turn stays on the
