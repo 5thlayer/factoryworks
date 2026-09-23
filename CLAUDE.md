@@ -389,6 +389,15 @@ exactly the wires touching it, for one item spent and one returned. A substation
 and a small pole on a substation, and a full inventory, change nothing and name their reason. The
 fixture stands a third pole wired past the neighbour, since a base wired afresh would take it first;
 swapping with the block's placement and removal hooks turns both replaces red.
+`PlacementPlanTests.AssemblingReplaces` holds the Assembling Machine's (#390), registered only with
+Oritech loaded: tier 1 to 2 keeps copper cable Held, the items, the craft scaled to tier 2's 14 ticks
+and the FE; tier 2 to 1 with concrete clears the recipe, voids the tank, drops the fluid face and
+hands the inputs back; tier 2 to 3 keeps the tank; a hull block replaces as the anchor does; an Oritech
+speed addon stays attached and in effect; and a full inventory changes nothing and names its reason.
+One block entity type serves every tier, so the swap keeps it (`shouldChangedStateKeepBlockEntity`)
+and sets no neighbour flag, since the anchor's removal hook tears the footprint down. Not keeping the
+block entity turns five red, letting the inventory check pass turns the no-room test red, and a part
+that does not hand the click to its anchor turns the hull test red.
 
 Run it after editing anything under `core/placement/`, and re-run `scripts/check-datapack-load.py`
 too when the platform moves, since the same server reads it.

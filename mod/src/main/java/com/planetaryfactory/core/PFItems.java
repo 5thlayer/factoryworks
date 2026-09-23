@@ -11,6 +11,7 @@ import com.planetaryfactory.core.fluid.OffshorePumpItem;
 import com.planetaryfactory.core.fluid.BarrelSpec;
 import com.planetaryfactory.core.mining.EngineersPick;
 import com.planetaryfactory.core.mining.PickTier;
+import com.planetaryfactory.core.machine.AssemblingMachineItem;
 import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.footprint.FootprintItem;
 import com.planetaryfactory.core.mining.rig.RigBlockItem;
@@ -25,7 +26,6 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import rearth.oritech.util.ColorableMachine;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -66,19 +66,14 @@ public final class PFItems {
     public static final DeferredHolder<Item, Item> BARREL = ITEMS.registerItem(
             "barrel", props -> new BarrelItem(props.stacksTo(BarrelSpec.STACK_SIZE)));
 
-    /**
-     * Each Assembling Machine tier's item (#326, #295), which places the whole footprint. Scale 0.7
-     * and the {@code "assembler"} model are the arguments Oritech's own {@code BlockContent} gives
-     * it; the paint is the tier's (ADR-0075).
-     */
-    private static final Map<AssemblingTier, DeferredHolder<Item, FootprintItem>> ASSEMBLING_MACHINES =
+    /** Each Assembling Machine tier's item (#326, #295). */
+    private static final Map<AssemblingTier, DeferredHolder<Item, AssemblingMachineItem>> ASSEMBLING_MACHINES =
             new EnumMap<>(AssemblingTier.class);
 
     static {
         for (AssemblingTier tier : AssemblingTier.values()) {
             ASSEMBLING_MACHINES.put(tier, ITEMS.registerItem(tier.blockName(),
-                    props -> new FootprintItem(props, PFBlocks.assemblingFootprint(tier), 0.7f, "assembler",
-                            ColorableMachine.ColorVariant.valueOf(tier.paint()))));
+                    props -> new AssemblingMachineItem(props, tier)));
         }
     }
 
@@ -159,7 +154,7 @@ public final class PFItems {
     private PFItems() {
     }
 
-    public static DeferredHolder<Item, FootprintItem> assemblingMachine(AssemblingTier tier) {
+    public static DeferredHolder<Item, AssemblingMachineItem> assemblingMachine(AssemblingTier tier) {
         return ASSEMBLING_MACHINES.get(tier);
     }
 

@@ -8,6 +8,7 @@ import com.planetaryfactory.core.energy.EnergyOwnerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -69,6 +70,18 @@ public class FootprintPartBlock extends Block implements EnergyOwnerBlock {
     @Override
     public BlockPos energyOwner(BlockPos pos, BlockState state) {
         return machine().anchorOf(pos, state);
+    }
+
+    /** Answered by the anchor, so a Fast Replace aimed at a part replaces the machine (ADR-0082). */
+    @Override
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+                                          Player player, InteractionHand hand, BlockHitResult hit) {
+        BlockPos anchor = machine().anchorOf(pos, state);
+        BlockState anchorState = level.getBlockState(anchor);
+        if (!machine().isAnchor(anchorState)) {
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
+        }
+        return anchorState.useItemOn(stack, level, player, hand, hit.withPosition(anchor));
     }
 
     @Override

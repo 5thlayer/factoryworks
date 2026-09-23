@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.machine;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,8 +98,16 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
     private AssemblingStall stall = AssemblingStall.NO_RECIPE;
 
-    /** Tiers 2 and 3's input tank (ADR-0075); tier 1's holds nothing, and nothing reaches it. */
-    private final FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, tier().fluidCapacity()) {
+    /**
+     * Tiers 2 and 3's input tank (ADR-0075); tier 1's holds nothing, and nothing reaches it. Its
+     * size is asked of the tier each time, since a Fast Replace changes the tier under it (ADR-0082).
+     */
+    private final FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, 0) {
+        @Override
+        protected int getCapacity(int index, FluidResource resource) {
+            return tier().fluidCapacity();
+        }
+
         @Override
         protected void onContentsChanged(int index, FluidStack previousContents) {
             setChanged();
@@ -445,6 +454,56 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         held = next;
         progress.set(0);
         setChanged();
+    }
+
+    // -- fast replace ---------------------------------------------------------------------------
+
+    /**
+     * Readies this machine to become tier {@code to} and returns what the player is handed
+     * (ADR-0082). Server only; the caller swaps the block straight after.
+     */
+    public List<ItemStack> retierTo(AssemblingTier to) {
+        List<ItemStack> extras = retierExtras(to);
+        ServerLevel server = (ServerLevel) level;
+        if (!keepsHeldRecipe(to)) {
+            for (int slot = 0; slot < INPUTS; slot++) {
+                inventory.set(slot, ItemResource.EMPTY, 0);
+            }
+            tank.set(0, FluidResource.EMPTY, 0);
+            held = HeldRecipe.NONE;
+            progress.set(0);
+        } else {
+            AssemblingMachineRecipes.resolve(server, held).ifPresent(holder -> {
+                int from = durationTicks(holder.value());
+                int until = AssemblingMachineSpec.durationTicks(to, holder.value().time(), getSpeedMultiplier());
+                progress.set((int) ((long) progress.get() * until / from));
+            });
+        }
+        if (!to.hasFluidInput()) {
+            tank.set(0, FluidResource.EMPTY, 0);
+        }
+        setChanged();
+        return extras;
+    }
+
+    /** The inputs {@link #retierTo} would hand back, or none off the server. */
+    public List<ItemStack> retierExtras(AssemblingTier to) {
+        if (keepsHeldRecipe(to)) {
+            return List.of();
+        }
+        List<ItemStack> extras = new ArrayList<>(INPUTS);
+        for (int slot = 0; slot < INPUTS; slot++) {
+            ItemStack stack = inventory.getItem(slot);
+            if (!stack.isEmpty()) {
+                extras.add(stack.copy());
+            }
+        }
+        return extras;
+    }
+
+    private boolean keepsHeldRecipe(AssemblingTier to) {
+        return !held.isSet() || !(level instanceof ServerLevel server)
+                || AssemblingMachineMenu.verdict(server, to, held.id().orElseThrow()).held();
     }
 
     /**
