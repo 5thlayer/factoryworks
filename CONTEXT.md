@@ -187,7 +187,7 @@ The stretch of a belt between two consecutive supports or ends. A span either cl
 _Avoid_: segment, belt segment
 
 **Loader**:
-A belt end set against an inventory: it pulls onto the belt from the inventory behind it, or pushes into it. It has tiers of its own that cap what it moves, and from tier 2 it draws power for each item. The pack's inserter; there is no swing arm.
+A belt end set against an inventory: it pulls onto the belt from the inventory behind it, or pushes into it. It has tiers of its own that cap what it moves, and from tier 2 it draws power for each item. The pack's inserter; there is no swing arm. It carries no items itself: like Factorio's 1×1 loader, whose belt distance is 0, it hands items straight between the inventory and the tile at its mouth, so a line's capacity is its tiles' alone. It is drawn as a solid housing with a low mouth at belt height on the tile face.
 _Avoid_: chute, inserter, funnel
 
 **Splitter**:
