@@ -159,8 +159,12 @@ A single link carrying items from one belt end to another along a curve, shaped 
 _Avoid_: conveyor, belt segment, lane
 
 **Tile**:
-One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, or back toward them while sneaking. A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). It stands beside the spline belt until #397 replaces it.
+One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, turned by Rotate (ADR-0083). A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). It stands beside the spline belt until #397 replaces it.
 _Avoid_: belt block, conveyor block, segment
+
+**Stretch**:
+The tiles one drag of the tile item lays, placed, charged and refused as one. A sneak-click stores its start and the way the player looks; the next click lays it to the aimed spot, in one straight leg or two joined by one corner, the first leg along the stored look. It is level, and never starts by turning back on its look. A tile already on its path is turned to it, or replaced when of another tier (#393).
+_Avoid_: run, zoop, drag (the gesture, not what it lays), tile path
 
 **Tier colour**:
 The colour a belt tier is painted in: yellow, red, blue, green for tiers 1 to 4. The belt shows it as the stripes along its edges, and every other belt piece of that tier shows it on its own body: the loader's gate, the splitter's divider. Factorio's convention. Structure standing on the ground, such as supports and legs, stays slate.

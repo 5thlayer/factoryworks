@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import rearth.belts.ComponentContent;
 import rearth.belts.ItemContent;
 import rearth.belts.model.BeltTier;
 
@@ -62,8 +63,11 @@ final class RotateTests {
                     }
                     String gesture = "looking " + look + " with offset " + offset + (sneaking ? " sneaking" : "");
                     BlockPos tile = new BlockPos(1 + 4 * offset, 1, 2 * row);
-                    if (!placesFacing(helper, player, ItemContent.tileFor(BeltTier.BELT), offset, tile, turned,
-                            "a tile placed " + gesture)) {
+                    boolean tileTurned = sneaking
+                            ? startsFacing(helper, player, offset, tile, turned, "a stretch started " + gesture)
+                            : placesFacing(helper, player, ItemContent.tileFor(BeltTier.BELT), offset, tile, turned,
+                                    "a tile placed " + gesture);
+                    if (!tileTurned) {
                         return;
                     }
                     BlockPos furnace = tile.east(2);
@@ -105,6 +109,24 @@ final class RotateTests {
         }
         if (plan == null || plan.blocks().size() != 1 || !plan.blocks().getFirst().state().equals(placed)) {
             helper.fail(what + " was planned as " + plan + " and placed as " + placed, at);
+            return false;
+        }
+        return true;
+    }
+
+    /** Whether a sneak-click with a fresh tile stack pressed {@code offset} times stores the stretch's start facing this way (#393). */
+    private static boolean startsFacing(GameTestHelper helper, Player player, int offset, BlockPos at,
+                                        Direction expected, String what) {
+        ItemStack stack = new ItemStack(ItemContent.tileFor(BeltTier.BELT), 2);
+        for (int press = 0; press < offset; press++) {
+            HeldTurn.press(stack, false);
+        }
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        helper.useBlock(at.below(), player, hit(helper, at.below()));
+        Direction stored = stack.get(ComponentContent.BELT_DIR.get());
+        if (stored != expected || !helper.getBlockState(at).isAir()) {
+            helper.fail(what + " stored " + stored + " and left " + helper.getBlockState(at) + ", expected "
+                    + expected + " and nothing placed", at);
             return false;
         }
         return true;

@@ -24,8 +24,8 @@ import org.jspecify.annotations.Nullable;
  * with one refusal, because the rig places every part in one gesture; drawing one part red and the
  * rest translucent would promise a partial placement the game never performs.
  *
- * <p>{@code replaces} names the placed blocks a Fast Replace swaps out, and is empty for an ordinary
- * placement (ADR-0082).
+ * <p>{@code replaces} names the placed blocks a Fast Replace swaps out, or a belt stretch turns (#393),
+ * and is empty for an ordinary placement (ADR-0082).
  */
 public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nullable Refusal refusal) {
 
@@ -50,7 +50,7 @@ public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nulla
         COLUMN_FULL,
         /** A pole column whose next segment's position is occupied. */
         BLOCKED_TOP,
-        /** A multiblock footprint at least one of whose positions is not clear. */
+        /** A multiblock footprint or a belt stretch at least one of whose positions is not clear. */
         FOOTPRINT_BLOCKED,
         /** An Offshore Pump with no adjacent source to pump (#213, ADR-0050). */
         NO_FLUID_SOURCE,
@@ -60,6 +60,12 @@ public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nulla
         NOT_ON_WELL,
         /** A Fast Replace whose player has no room for what it hands back (ADR-0082). */
         NO_ROOM_TO_RETURN,
+        /** A belt stretch whose end lies behind the look stored with its start (#393). */
+        BEHIND_LOOK,
+        /** A belt stretch with a tile over no solid ground (#393). */
+        NO_GROUND,
+        /** A placement costing more items than the player holds (#393). */
+        NOT_ENOUGH_ITEMS,
     }
 
     public PlacementPlan {
