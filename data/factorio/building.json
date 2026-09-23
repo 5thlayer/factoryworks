@@ -1,0 +1,1220 @@
+{
+  "items": [
+    {
+      "item": "accumulator",
+      "item_type": "item",
+      "entities": {
+        "accumulator": "accumulator"
+      },
+      "building": true
+    },
+    {
+      "item": "active-provider-chest",
+      "item_type": "item",
+      "entities": {
+        "active-provider-chest": "logistic-container"
+      },
+      "building": true
+    },
+    {
+      "item": "agricultural-tower",
+      "item_type": "item",
+      "entities": {
+        "agricultural-tower": "agricultural-tower"
+      },
+      "building": true
+    },
+    {
+      "item": "arithmetic-combinator",
+      "item_type": "item",
+      "entities": {
+        "arithmetic-combinator": "arithmetic-combinator"
+      },
+      "building": true
+    },
+    {
+      "item": "artificial-jellynut-soil",
+      "item_type": "item",
+      "tile": "artificial-jellynut-soil",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "artificial-yumako-soil",
+      "item_type": "item",
+      "tile": "artificial-yumako-soil",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "artillery-turret",
+      "item_type": "item",
+      "entities": {
+        "artillery-turret": "artillery-turret"
+      },
+      "building": true
+    },
+    {
+      "item": "artillery-wagon",
+      "item_type": "item-with-entity-data",
+      "entities": {
+        "artillery-wagon": "artillery-wagon"
+      },
+      "building": false,
+      "not_a_building": "a vehicle"
+    },
+    {
+      "item": "assembling-machine-1",
+      "item_type": "item",
+      "entities": {
+        "assembling-machine-1": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "assembling-machine-2",
+      "item_type": "item",
+      "entities": {
+        "assembling-machine-2": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "assembling-machine-3",
+      "item_type": "item",
+      "entities": {
+        "assembling-machine-3": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "asteroid-collector",
+      "item_type": "item",
+      "entities": {
+        "asteroid-collector": "asteroid-collector"
+      },
+      "building": true
+    },
+    {
+      "item": "beacon",
+      "item_type": "item",
+      "entities": {
+        "beacon": "beacon"
+      },
+      "building": true
+    },
+    {
+      "item": "big-electric-pole",
+      "item_type": "item",
+      "entities": {
+        "big-electric-pole": "electric-pole"
+      },
+      "building": true
+    },
+    {
+      "item": "big-mining-drill",
+      "item_type": "item",
+      "entities": {
+        "big-mining-drill": "mining-drill"
+      },
+      "building": true
+    },
+    {
+      "item": "biochamber",
+      "item_type": "item",
+      "entities": {
+        "biochamber": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "biolab",
+      "item_type": "item",
+      "entities": {
+        "biolab": "lab"
+      },
+      "building": true
+    },
+    {
+      "item": "boiler",
+      "item_type": "item",
+      "entities": {
+        "boiler": "boiler"
+      },
+      "building": true
+    },
+    {
+      "item": "bottomless-chest",
+      "item_type": "item",
+      "entities": {
+        "bottomless-chest": "container"
+      },
+      "building": true
+    },
+    {
+      "item": "buffer-chest",
+      "item_type": "item",
+      "entities": {
+        "buffer-chest": "logistic-container"
+      },
+      "building": true
+    },
+    {
+      "item": "bulk-inserter",
+      "item_type": "item",
+      "entities": {
+        "bulk-inserter": "inserter"
+      },
+      "building": true
+    },
+    {
+      "item": "burner-generator",
+      "item_type": "item",
+      "entities": {
+        "burner-generator": "burner-generator"
+      },
+      "building": true
+    },
+    {
+      "item": "burner-inserter",
+      "item_type": "item",
+      "entities": {
+        "burner-inserter": "inserter"
+      },
+      "building": true
+    },
+    {
+      "item": "burner-mining-drill",
+      "item_type": "item",
+      "entities": {
+        "burner-mining-drill": "mining-drill"
+      },
+      "building": true
+    },
+    {
+      "item": "captive-biter-spawner",
+      "item_type": "item",
+      "entities": {
+        "captive-biter-spawner": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "car",
+      "item_type": "item-with-entity-data",
+      "entities": {
+        "car": "car"
+      },
+      "building": false,
+      "not_a_building": "a vehicle"
+    },
+    {
+      "item": "cargo-bay",
+      "item_type": "item",
+      "entities": {
+        "cargo-bay": "cargo-bay"
+      },
+      "building": true
+    },
+    {
+      "item": "cargo-landing-pad",
+      "item_type": "item",
+      "entities": {
+        "cargo-landing-pad": "cargo-landing-pad"
+      },
+      "building": true
+    },
+    {
+      "item": "cargo-wagon",
+      "item_type": "item-with-entity-data",
+      "entities": {
+        "cargo-wagon": "cargo-wagon"
+      },
+      "building": false,
+      "not_a_building": "a vehicle"
+    },
+    {
+      "item": "centrifuge",
+      "item_type": "item",
+      "entities": {
+        "centrifuge": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "chemical-plant",
+      "item_type": "item",
+      "entities": {
+        "chemical-plant": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "concrete",
+      "item_type": "item",
+      "tile": "concrete",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "constant-combinator",
+      "item_type": "item",
+      "entities": {
+        "constant-combinator": "constant-combinator"
+      },
+      "building": true
+    },
+    {
+      "item": "construction-robot",
+      "item_type": "item",
+      "entities": {
+        "construction-robot": "construction-robot"
+      },
+      "building": false,
+      "not_a_building": "a robot"
+    },
+    {
+      "item": "crusher",
+      "item_type": "item",
+      "entities": {
+        "crusher": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "cryogenic-plant",
+      "item_type": "item",
+      "entities": {
+        "cryogenic-plant": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "decider-combinator",
+      "item_type": "item",
+      "entities": {
+        "decider-combinator": "decider-combinator"
+      },
+      "building": true
+    },
+    {
+      "item": "display-panel",
+      "item_type": "item",
+      "entities": {
+        "display-panel": "display-panel"
+      },
+      "building": true
+    },
+    {
+      "item": "electric-energy-interface",
+      "item_type": "item",
+      "entities": {
+        "electric-energy-interface": "electric-energy-interface"
+      },
+      "building": true
+    },
+    {
+      "item": "electric-furnace",
+      "item_type": "item",
+      "entities": {
+        "electric-furnace": "furnace"
+      },
+      "building": true
+    },
+    {
+      "item": "electric-mining-drill",
+      "item_type": "item",
+      "entities": {
+        "electric-mining-drill": "mining-drill"
+      },
+      "building": true
+    },
+    {
+      "item": "electromagnetic-plant",
+      "item_type": "item",
+      "entities": {
+        "electromagnetic-plant": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "express-loader",
+      "item_type": "item",
+      "entities": {
+        "express-loader": "loader"
+      },
+      "building": true
+    },
+    {
+      "item": "express-splitter",
+      "item_type": "item",
+      "entities": {
+        "express-splitter": "splitter"
+      },
+      "building": true
+    },
+    {
+      "item": "express-transport-belt",
+      "item_type": "item",
+      "entities": {
+        "express-transport-belt": "transport-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "express-underground-belt",
+      "item_type": "item",
+      "entities": {
+        "express-underground-belt": "underground-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "fast-inserter",
+      "item_type": "item",
+      "entities": {
+        "fast-inserter": "inserter"
+      },
+      "building": true
+    },
+    {
+      "item": "fast-loader",
+      "item_type": "item",
+      "entities": {
+        "fast-loader": "loader"
+      },
+      "building": true
+    },
+    {
+      "item": "fast-splitter",
+      "item_type": "item",
+      "entities": {
+        "fast-splitter": "splitter"
+      },
+      "building": true
+    },
+    {
+      "item": "fast-transport-belt",
+      "item_type": "item",
+      "entities": {
+        "fast-transport-belt": "transport-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "fast-underground-belt",
+      "item_type": "item",
+      "entities": {
+        "fast-underground-belt": "underground-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "flamethrower-turret",
+      "item_type": "item",
+      "entities": {
+        "flamethrower-turret": "fluid-turret"
+      },
+      "building": true
+    },
+    {
+      "item": "fluid-wagon",
+      "item_type": "item-with-entity-data",
+      "entities": {
+        "fluid-wagon": "fluid-wagon"
+      },
+      "building": false,
+      "not_a_building": "a vehicle"
+    },
+    {
+      "item": "foundation",
+      "item_type": "item",
+      "tile": "foundation",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "foundry",
+      "item_type": "item",
+      "entities": {
+        "foundry": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "fusion-generator",
+      "item_type": "item",
+      "entities": {
+        "fusion-generator": "fusion-generator"
+      },
+      "building": true
+    },
+    {
+      "item": "fusion-reactor",
+      "item_type": "item",
+      "entities": {
+        "fusion-reactor": "fusion-reactor"
+      },
+      "building": true
+    },
+    {
+      "item": "gate",
+      "item_type": "item",
+      "entities": {
+        "gate": "gate"
+      },
+      "building": true
+    },
+    {
+      "item": "gun-turret",
+      "item_type": "item",
+      "entities": {
+        "gun-turret": "ammo-turret"
+      },
+      "building": true
+    },
+    {
+      "item": "hazard-concrete",
+      "item_type": "item",
+      "tile": "hazard-concrete-left",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "heat-exchanger",
+      "item_type": "item",
+      "entities": {
+        "heat-exchanger": "boiler"
+      },
+      "building": true
+    },
+    {
+      "item": "heat-interface",
+      "item_type": "item",
+      "entities": {
+        "heat-interface": "heat-interface"
+      },
+      "building": true
+    },
+    {
+      "item": "heat-pipe",
+      "item_type": "item",
+      "entities": {
+        "heat-pipe": "heat-pipe"
+      },
+      "building": true
+    },
+    {
+      "item": "heating-tower",
+      "item_type": "item",
+      "entities": {
+        "heating-tower": "reactor"
+      },
+      "building": true
+    },
+    {
+      "item": "ice-platform",
+      "item_type": "item",
+      "tile": "ice-platform",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "infinity-cargo-wagon",
+      "item_type": "item",
+      "entities": {
+        "infinity-cargo-wagon": "infinity-cargo-wagon"
+      },
+      "building": false,
+      "not_a_building": "a vehicle"
+    },
+    {
+      "item": "infinity-chest",
+      "item_type": "item",
+      "entities": {
+        "infinity-chest": "infinity-container"
+      },
+      "building": true
+    },
+    {
+      "item": "infinity-pipe",
+      "item_type": "item",
+      "entities": {
+        "infinity-pipe": "infinity-pipe"
+      },
+      "building": true
+    },
+    {
+      "item": "inserter",
+      "item_type": "item",
+      "entities": {
+        "inserter": "inserter"
+      },
+      "building": true
+    },
+    {
+      "item": "iron-chest",
+      "item_type": "item",
+      "entities": {
+        "iron-chest": "container"
+      },
+      "building": true
+    },
+    {
+      "item": "jellynut-seed",
+      "item_type": "item",
+      "entities": {
+        "jellystem": "plant"
+      },
+      "building": false,
+      "not_a_building": "a plant a seed places"
+    },
+    {
+      "item": "lab",
+      "item_type": "item",
+      "entities": {
+        "lab": "lab"
+      },
+      "building": true
+    },
+    {
+      "item": "land-mine",
+      "item_type": "item",
+      "entities": {
+        "land-mine": "land-mine"
+      },
+      "building": true
+    },
+    {
+      "item": "landfill",
+      "item_type": "item",
+      "tile": "landfill",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "landing-pad-unloading-bay",
+      "item_type": "item",
+      "entities": {
+        "landing-pad-unloading-bay": "cargo-bay"
+      },
+      "building": true
+    },
+    {
+      "item": "lane-splitter",
+      "item_type": "item",
+      "entities": {
+        "lane-splitter": "lane-splitter"
+      },
+      "building": true
+    },
+    {
+      "item": "laser-turret",
+      "item_type": "item",
+      "entities": {
+        "laser-turret": "electric-turret"
+      },
+      "building": true
+    },
+    {
+      "item": "lightning-collector",
+      "item_type": "item",
+      "entities": {
+        "lightning-collector": "lightning-attractor"
+      },
+      "building": true
+    },
+    {
+      "item": "lightning-rod",
+      "item_type": "item",
+      "entities": {
+        "lightning-rod": "lightning-attractor"
+      },
+      "building": true
+    },
+    {
+      "item": "linked-belt",
+      "item_type": "item",
+      "entities": {
+        "linked-belt": "linked-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "linked-chest",
+      "item_type": "item",
+      "entities": {
+        "linked-chest": "linked-container"
+      },
+      "building": true
+    },
+    {
+      "item": "loader",
+      "item_type": "item",
+      "entities": {
+        "loader": "loader"
+      },
+      "building": true
+    },
+    {
+      "item": "locomotive",
+      "item_type": "item-with-entity-data",
+      "entities": {
+        "locomotive": "locomotive"
+      },
+      "building": false,
+      "not_a_building": "a vehicle"
+    },
+    {
+      "item": "logistic-robot",
+      "item_type": "item",
+      "entities": {
+        "logistic-robot": "logistic-robot"
+      },
+      "building": false,
+      "not_a_building": "a robot"
+    },
+    {
+      "item": "long-handed-inserter",
+      "item_type": "item",
+      "entities": {
+        "long-handed-inserter": "inserter"
+      },
+      "building": true
+    },
+    {
+      "item": "medium-electric-pole",
+      "item_type": "item",
+      "entities": {
+        "medium-electric-pole": "electric-pole"
+      },
+      "building": true
+    },
+    {
+      "item": "nuclear-reactor",
+      "item_type": "item",
+      "entities": {
+        "nuclear-reactor": "reactor"
+      },
+      "building": true
+    },
+    {
+      "item": "offshore-pump",
+      "item_type": "item",
+      "entities": {
+        "offshore-pump": "offshore-pump"
+      },
+      "building": true
+    },
+    {
+      "item": "oil-refinery",
+      "item_type": "item",
+      "entities": {
+        "oil-refinery": "assembling-machine"
+      },
+      "building": true
+    },
+    {
+      "item": "one-way-valve",
+      "item_type": "item",
+      "entities": {
+        "one-way-valve": "valve"
+      },
+      "building": true
+    },
+    {
+      "item": "overflow-valve",
+      "item_type": "item",
+      "entities": {
+        "overflow-valve": "valve"
+      },
+      "building": true
+    },
+    {
+      "item": "overgrowth-jellynut-soil",
+      "item_type": "item",
+      "tile": "overgrowth-jellynut-soil",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "overgrowth-yumako-soil",
+      "item_type": "item",
+      "tile": "overgrowth-yumako-soil",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "passive-provider-chest",
+      "item_type": "item",
+      "entities": {
+        "passive-provider-chest": "logistic-container"
+      },
+      "building": true
+    },
+    {
+      "item": "pipe",
+      "item_type": "item",
+      "entities": {
+        "pipe": "pipe"
+      },
+      "building": true
+    },
+    {
+      "item": "pipe-to-ground",
+      "item_type": "item",
+      "entities": {
+        "pipe-to-ground": "pipe-to-ground"
+      },
+      "building": true
+    },
+    {
+      "item": "power-switch",
+      "item_type": "item",
+      "entities": {
+        "power-switch": "power-switch"
+      },
+      "building": true
+    },
+    {
+      "item": "programmable-speaker",
+      "item_type": "item",
+      "entities": {
+        "programmable-speaker": "programmable-speaker"
+      },
+      "building": true
+    },
+    {
+      "item": "proxy-container",
+      "item_type": "item",
+      "entities": {
+        "proxy-container": "proxy-container"
+      },
+      "building": true
+    },
+    {
+      "item": "pump",
+      "item_type": "item",
+      "entities": {
+        "pump": "pump"
+      },
+      "building": true
+    },
+    {
+      "item": "pumpjack",
+      "item_type": "item",
+      "entities": {
+        "pumpjack": "mining-drill"
+      },
+      "building": true
+    },
+    {
+      "item": "radar",
+      "item_type": "item",
+      "entities": {
+        "radar": "radar"
+      },
+      "building": true
+    },
+    {
+      "item": "rail",
+      "item_type": "rail-planner",
+      "entities": {
+        "straight-rail": "straight-rail",
+        "curved-rail-a": "curved-rail-a",
+        "curved-rail-b": "curved-rail-b",
+        "half-diagonal-rail": "half-diagonal-rail",
+        "rail-ramp": "rail-ramp",
+        "elevated-straight-rail": "elevated-straight-rail",
+        "elevated-curved-rail-a": "elevated-curved-rail-a",
+        "elevated-curved-rail-b": "elevated-curved-rail-b",
+        "elevated-half-diagonal-rail": "elevated-half-diagonal-rail"
+      },
+      "building": true
+    },
+    {
+      "item": "rail-chain-signal",
+      "item_type": "item",
+      "entities": {
+        "rail-chain-signal": "rail-chain-signal"
+      },
+      "building": true
+    },
+    {
+      "item": "rail-ramp",
+      "item_type": "rail-planner",
+      "entities": {
+        "straight-rail": "straight-rail",
+        "curved-rail-a": "curved-rail-a",
+        "curved-rail-b": "curved-rail-b",
+        "half-diagonal-rail": "half-diagonal-rail",
+        "rail-ramp": "rail-ramp",
+        "elevated-straight-rail": "elevated-straight-rail",
+        "elevated-curved-rail-a": "elevated-curved-rail-a",
+        "elevated-curved-rail-b": "elevated-curved-rail-b",
+        "elevated-half-diagonal-rail": "elevated-half-diagonal-rail"
+      },
+      "building": true
+    },
+    {
+      "item": "rail-signal",
+      "item_type": "item",
+      "entities": {
+        "rail-signal": "rail-signal"
+      },
+      "building": true
+    },
+    {
+      "item": "rail-support",
+      "item_type": "item",
+      "entities": {
+        "rail-support": "rail-support"
+      },
+      "building": true
+    },
+    {
+      "item": "railgun-turret",
+      "item_type": "item",
+      "entities": {
+        "railgun-turret": "ammo-turret"
+      },
+      "building": true
+    },
+    {
+      "item": "recycler",
+      "item_type": "item",
+      "entities": {
+        "recycler": "furnace"
+      },
+      "building": true
+    },
+    {
+      "item": "refined-concrete",
+      "item_type": "item",
+      "tile": "refined-concrete",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "refined-hazard-concrete",
+      "item_type": "item",
+      "tile": "refined-hazard-concrete-left",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "requester-chest",
+      "item_type": "item",
+      "entities": {
+        "requester-chest": "logistic-container"
+      },
+      "building": true
+    },
+    {
+      "item": "roboport",
+      "item_type": "item",
+      "entities": {
+        "roboport": "roboport"
+      },
+      "building": true
+    },
+    {
+      "item": "rocket-silo",
+      "item_type": "item",
+      "entities": {
+        "rocket-silo": "rocket-silo"
+      },
+      "building": true
+    },
+    {
+      "item": "rocket-turret",
+      "item_type": "item",
+      "entities": {
+        "rocket-turret": "ammo-turret"
+      },
+      "building": true
+    },
+    {
+      "item": "selector-combinator",
+      "item_type": "item",
+      "entities": {
+        "selector-combinator": "selector-combinator"
+      },
+      "building": true
+    },
+    {
+      "item": "simple-entity-with-force",
+      "item_type": "item",
+      "entities": {
+        "simple-entity-with-force": "simple-entity-with-force"
+      },
+      "building": true
+    },
+    {
+      "item": "simple-entity-with-owner",
+      "item_type": "item",
+      "entities": {
+        "simple-entity-with-owner": "simple-entity-with-owner"
+      },
+      "building": true
+    },
+    {
+      "item": "small-electric-pole",
+      "item_type": "item",
+      "entities": {
+        "small-electric-pole": "electric-pole"
+      },
+      "building": true
+    },
+    {
+      "item": "small-lamp",
+      "item_type": "item",
+      "entities": {
+        "small-lamp": "lamp"
+      },
+      "building": true
+    },
+    {
+      "item": "solar-panel",
+      "item_type": "item",
+      "entities": {
+        "solar-panel": "solar-panel"
+      },
+      "building": true
+    },
+    {
+      "item": "space-platform-foundation",
+      "item_type": "item",
+      "tile": "space-platform-foundation",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "space-platform-hub",
+      "item_type": "item",
+      "entities": {
+        "space-platform-hub": "space-platform-hub"
+      },
+      "building": true
+    },
+    {
+      "item": "spidertron",
+      "item_type": "item-with-entity-data",
+      "entities": {
+        "spidertron": "spider-vehicle"
+      },
+      "building": false,
+      "not_a_building": "a vehicle"
+    },
+    {
+      "item": "splitter",
+      "item_type": "item",
+      "entities": {
+        "splitter": "splitter"
+      },
+      "building": true
+    },
+    {
+      "item": "stack-inserter",
+      "item_type": "item",
+      "entities": {
+        "stack-inserter": "inserter"
+      },
+      "building": true
+    },
+    {
+      "item": "steam-engine",
+      "item_type": "item",
+      "entities": {
+        "steam-engine": "generator"
+      },
+      "building": true
+    },
+    {
+      "item": "steam-turbine",
+      "item_type": "item",
+      "entities": {
+        "steam-turbine": "generator"
+      },
+      "building": true
+    },
+    {
+      "item": "steel-chest",
+      "item_type": "item",
+      "entities": {
+        "steel-chest": "container"
+      },
+      "building": true
+    },
+    {
+      "item": "steel-furnace",
+      "item_type": "item",
+      "entities": {
+        "steel-furnace": "furnace"
+      },
+      "building": true
+    },
+    {
+      "item": "stone-brick",
+      "item_type": "item",
+      "tile": "stone-path",
+      "building": false,
+      "not_a_building": "laid as a tile"
+    },
+    {
+      "item": "stone-furnace",
+      "item_type": "item",
+      "entities": {
+        "stone-furnace": "furnace"
+      },
+      "building": true
+    },
+    {
+      "item": "stone-wall",
+      "item_type": "item",
+      "entities": {
+        "stone-wall": "wall"
+      },
+      "building": true
+    },
+    {
+      "item": "storage-chest",
+      "item_type": "item",
+      "entities": {
+        "storage-chest": "logistic-container"
+      },
+      "building": true
+    },
+    {
+      "item": "storage-tank",
+      "item_type": "item",
+      "entities": {
+        "storage-tank": "storage-tank"
+      },
+      "building": true
+    },
+    {
+      "item": "substation",
+      "item_type": "item",
+      "entities": {
+        "substation": "electric-pole"
+      },
+      "building": true
+    },
+    {
+      "item": "tank",
+      "item_type": "item-with-entity-data",
+      "entities": {
+        "tank": "car"
+      },
+      "building": false,
+      "not_a_building": "a vehicle"
+    },
+    {
+      "item": "tesla-turret",
+      "item_type": "item",
+      "entities": {
+        "tesla-turret": "electric-turret"
+      },
+      "building": true
+    },
+    {
+      "item": "thruster",
+      "item_type": "item",
+      "entities": {
+        "thruster": "thruster"
+      },
+      "building": true
+    },
+    {
+      "item": "top-up-valve",
+      "item_type": "item",
+      "entities": {
+        "top-up-valve": "valve"
+      },
+      "building": true
+    },
+    {
+      "item": "train-stop",
+      "item_type": "item",
+      "entities": {
+        "train-stop": "train-stop"
+      },
+      "building": true
+    },
+    {
+      "item": "transport-belt",
+      "item_type": "item",
+      "entities": {
+        "transport-belt": "transport-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "tree-seed",
+      "item_type": "item",
+      "entities": {
+        "tree-plant": "plant"
+      },
+      "building": false,
+      "not_a_building": "a plant a seed places"
+    },
+    {
+      "item": "turbo-loader",
+      "item_type": "item",
+      "entities": {
+        "turbo-loader": "loader"
+      },
+      "building": true
+    },
+    {
+      "item": "turbo-splitter",
+      "item_type": "item",
+      "entities": {
+        "turbo-splitter": "splitter"
+      },
+      "building": true
+    },
+    {
+      "item": "turbo-transport-belt",
+      "item_type": "item",
+      "entities": {
+        "turbo-transport-belt": "transport-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "turbo-underground-belt",
+      "item_type": "item",
+      "entities": {
+        "turbo-underground-belt": "underground-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "underground-belt",
+      "item_type": "item",
+      "entities": {
+        "underground-belt": "underground-belt"
+      },
+      "building": true
+    },
+    {
+      "item": "wooden-chest",
+      "item_type": "item",
+      "entities": {
+        "wooden-chest": "container"
+      },
+      "building": true
+    },
+    {
+      "item": "yumako-seed",
+      "item_type": "item",
+      "entities": {
+        "yumako-tree": "plant"
+      },
+      "building": false,
+      "not_a_building": "a plant a seed places"
+    }
+  ]
+}

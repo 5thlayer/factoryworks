@@ -24,6 +24,7 @@ import com.planetaryfactory.core.start.StartingKitGrant;
 import com.planetaryfactory.core.worldgen.PFWorldgen;
 import com.planetaryfactory.core.worldgen.TerraStartingArea;
 import com.planetaryfactory.core.radar.ChartDeliveries;
+import com.planetaryfactory.core.reach.Reach;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -72,7 +73,7 @@ public final class PlanetaryFactoryCore {
         modBus.addListener(PFBlockEntities::registerCapabilities);
         modBus.addListener(PFItems::registerCapabilities);
         modBus.addListener(PFNetwork::register);
-        modBus.addListener(com.planetaryfactory.core.reach.Reach::onEntityAttributes);
+        modBus.addListener(Reach::onEntityAttributes);
         // Game bus, not the mod bus: this one fires per running server, not per mod load.
         NeoForge.EVENT_BUS.addListener(TerraStartingArea::onServerStarted);
         // Every Electric Network in a level settles once per level tick (ADR-0062). Poles only
@@ -103,6 +104,7 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onLogin);
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onDatapackSync);
         NeoForge.EVENT_BUS.addListener(PaintLock::onRightClickBlock);
+        NeoForge.EVENT_BUS.addListener(Reach::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onServerTick);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onChunkSent);

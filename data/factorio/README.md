@@ -41,6 +41,7 @@ scripts/factorio-fuel-extract.py
 scripts/factorio-tree-extract.py
 scripts/factorio-enemy-extract.py
 scripts/factorio-logistics-extract.py
+scripts/factorio-building-extract.py
 python3 tests/factorio/test_tech_extract.py
 python3 tests/factorio/test_recipe_extract.py
 python3 tests/factorio/test_machine_extract.py
@@ -53,17 +54,19 @@ python3 tests/factorio/test_logistics_extract.py
 scripts/factorio-fuel-convert.py
 python3 tests/factorio/test_fuel_convert.py
 scripts/build-tree-assets.py
+scripts/build-building-tag.py
+python3 tests/pack/test_building_tag.py
 ```
 
 The last pair is downstream of the extraction rather than part of it: `fuel.json` is joined
 onto `data/pack/item-map.json` into the table the mod loads (ADR-0047), so a re-extraction
 that moves a fuel has to be followed by a re-conversion or the game keeps the old table.
 
-All nine extractors read the same dump, so a single `--dump-data` run feeds them. Order
+All ten extractors read the same dump, so a single `--dump-data` run feeds them. Order
 matters: the recipe extractor reads `technology.json`, the machine extractor reads
 `recipe.json` for its scope, and the fluid extractor reads `machine.json` for its scope
 (the fluid names the boiler's own fluid boxes filter on -- see below). The resource and
-tree and logistics extractors read only the dump, and the fuel and enemy extractors read `recipe.json`
+tree, logistics and building extractors read only the dump, and the fuel and enemy extractors read `recipe.json`
 for a flag rather than for a scope -- see below.
 
 The dump lands in `~/Library/Application Support/factorio/script-output/data-raw-dump.json`. The
@@ -339,3 +342,10 @@ effect recording the rule that produced them.
   `0.2 / extension_speed` gives 2 ticks for the fast and bulk inserters, and the game spends 1.
   `swing` holds the rule and the wiki's per-cycle kJ table the check reproduces from it; the
   wiki states that table is valid up to 2.0.77, and the dump is 2.1.16.
+- **`building.json`** — which Factorio items place a **Building** (#413): every item with a
+  `place_result`, and a rail planner's `rails`, with the entity type each places. An item laid with
+  `place_as_tile` is carried as not a Building, and so are a seed's plant, a vehicle and a robot,
+  each with its reason. `scripts/build-building-tag.py` joins the Buildings onto
+  `data/pack/item-map.json` into the `planetaryfactory:buildings` block tag, which decides what the
+  player breaks at full Reach rather than vanilla's 4.5; `tests/pack/test_building_tag.py` runs its
+  `--check` and re-extracts this file when the dump is on disk.
