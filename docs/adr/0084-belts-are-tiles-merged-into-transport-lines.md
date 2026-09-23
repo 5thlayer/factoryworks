@@ -30,6 +30,9 @@ way to break a belt from its middle. A player had to learn a geometry Factorio n
 - **A belt ends where its tiles do.** Its ends are a loader, which meets a tile face to face and
   carries no items itself (#408), a splitter half (#394), or nothing, where the line backs up. The
   belt places no loaders; a player places them.
+- **A loader takes its filter whether or not a line reaches it.** A click with an item sets it and an
+  empty hand clears it, so it is set before the belt is built. A block is placed against a loader
+  with a sneak, as against a chest.
 
 The spline belt item, the support, the span bounds, the loader choice at open ends (#354), the
 splitter's belt cut (#361) and the far-end hand hold (#360) are removed from the fork.

@@ -1,7 +1,5 @@
 package com.planetaryfactory.core.gametest;
 
-import java.util.List;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -18,13 +16,11 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import rearth.belts.BlockContent;
-import rearth.belts.blocks.ChuteBlockEntity;
 import rearth.belts.model.BeltTier;
 
 /**
  * A loader's item filter, set by clicking it with the item, holds through the rest of the click,
- * where the client goes on to try the empty off hand. A loader takes the filter click only while a
- * tile line runs from or into it.
+ * where the client goes on to try the empty off hand, and is set as well on a loader no line reaches yet.
  */
 final class BeltFilterTests {
 
@@ -42,7 +38,8 @@ final class BeltFilterTests {
     static void register(PFGameTests.Registrar tests) {
         tests.test("a_loaders_filter_survives_the_empty_off_hand", RUN_TICKS + 20,
                 BeltFilterTests::filterSurvivesEmptyOffHand);
-        tests.test("both_loaders_of_a_tile_line_read_as_used", 20, BeltFilterTests::bothEndsReadAsUsed);
+        tests.test("a_free_loader_takes_a_filter_before_its_line", RUN_TICKS + 20,
+                BeltFilterTests::freeLoaderTakesFilter);
     }
 
     // Cobblestone sits in the first slot, so an unfiltered loader takes it first.
@@ -70,22 +67,28 @@ final class BeltFilterTests {
         }).thenSucceed();
     }
 
-    // What the loader reads is the world, which the client holds too, so both sides agree.
-    private static void bothEndsReadAsUsed(GameTestHelper helper) {
-        placeBelt(helper);
-        helper.setBlock(FREE, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
+    private static void freeLoaderTakesFilter(GameTestHelper helper) {
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(FROM, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
-        helper.runAfterDelay(2, () -> {
-            for (BlockPos end : List.of(FROM, TO)) {
-                if (!helper.getBlockEntity(end, ChuteBlockEntity.class).isUsed()) {
-                    helper.fail("this loader reads as free while a tile line runs through it", end);
-                }
+        Container source = chest(helper, SOURCE);
+        source.setItem(0, new ItemStack(Items.COBBLESTONE, 32));
+        source.setItem(1, new ItemStack(Items.DIRT, 32));
+
+        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIRT));
+        helper.useBlock(FROM, player, hit(helper, FROM));
+        placeBelt(helper);
+
+        helper.startSequence().thenIdle(RUN_TICKS).thenExecute(() -> {
+            if (count(chest(helper, TARGET), Items.DIRT) == 0) {
+                helper.fail("no dirt arrived, so this proves nothing about the filter", TARGET);
             }
-            if (helper.getBlockEntity(FREE, ChuteBlockEntity.class).isUsed()) {
-                helper.fail("a loader with no tile in front of it reads as used", FREE);
+            int cobblestone = count(chest(helper, TARGET), Items.COBBLESTONE);
+            if (cobblestone != 0) {
+                helper.fail(cobblestone + " cobblestone passed a loader filtered to dirt before its line", FROM);
             }
-            helper.succeed();
-        });
+        }).thenSucceed();
     }
 
     private static void placeBelt(GameTestHelper helper) {

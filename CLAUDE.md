@@ -261,9 +261,9 @@ go the sixth. The per-tile shares, the cut at an edge and the rejoin, the client
 each item are the fork's `TileLineSyncTest`. Whether the items are drawn on the belt, move smoothly
 and cross tiles with no jump is a human check on delivery.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
-that both loaders of a tile line read as in use while a free loader does not (`BeltFilterTests`). A
-loader is in use while a tile in front of it runs along its facing, which the client reads from its
-own world. The filter test was red on upstream's filter, which the off hand reset.
+is taken by a loader no line reaches yet, holding once the line is built (`BeltFilterTests`,
+ADR-0084). The first was red on upstream's filter, which the off hand reset, and the second on a
+filter taken only by a loader a tile line ran through.
 A splitter meets belt tiles face to face (`SplitterTileTests`, #394): between tile lines it splits
 one tier-1 line evenly, sends all 15 items/s to the free side and caps a tier-3 line at 15, and broken
 at either half leaves neither standing, hands its items to the breaker and drops one splitter. Placed
