@@ -36,7 +36,7 @@ import rearth.belts.model.BeltTier;
 import rearth.belts.model.TransportLine;
 
 /**
- * A stretch of belt tiles laid in two clicks (#393, ADR-0069): each test sneak-clicks a start, asks
+ * A stretch of belt tiles (#393, ADR-0069): each test sneak-clicks a start, perhaps corners, asks
  * {@link Placements} for the plan of the next click, clicks, then holds the world, the inventory and
  * the stored start to the plan. An accepted plan puts every tile it names down in the state it names
  * and charges one held-tier tile for each one placed or replaced; a refused plan changes no block, no
@@ -86,7 +86,9 @@ final class StretchTests {
                     player.getMainHandItem().setCount(3);
                 }, START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
         tests.test("a_creative_stretch_charges_nothing", 20, StretchTests::creative);
-        tests.test("a_second_sneak_click_keeps_the_start_and_a_sneak_use_in_the_air_clears_it", 20, StretchTests::startGesture);
+        tests.test("a_sneak_click_adds_a_corner_the_stretch_runs_on_from", 20, StretchTests::corner);
+        tests.test("a_sneak_click_behind_the_look_adds_no_corner", 20, StretchTests::cornerBehind);
+        tests.test("a_sneak_use_in_the_air_clears_the_start_and_its_corners", 20, StretchTests::clears);
     }
 
     private static void straight(GameTestHelper helper) {
@@ -204,26 +206,74 @@ final class StretchTests {
         helper.succeed();
     }
 
-    private static void startGesture(GameTestHelper helper) {
+    // Looking east, a corner three ahead, then an end two north of it: the second leg heads east
+    // from the corner and turns north at once.
+    private static void corner(GameTestHelper helper) {
+        var player = started(helper, Direction.EAST);
+        var corner = START.east(3);
+        player.setShiftKeyDown(true);
+        var plan = planOf(helper, player, corner);
+        if (plan == null || plan.isRefused() || plan.blocks().size() != 4) {
+            helper.fail("a sneak-click's stretch to a corner was planned as " + (plan == null ? "nothing" : plan.refusal()), corner);
+            return;
+        }
+        player.heard.clear();
+        click(helper, player, corner);
+        var stack = player.getMainHandItem();
+        if (!List.of(helper.absolutePos(corner)).equals(stack.get(ComponentContent.STRETCH_CORNERS.get()))
+                || !helper.absolutePos(START).equals(stack.get(ComponentContent.BELT_START.get()))) {
+            helper.fail("a sneak-click stored corners " + stack.get(ComponentContent.STRETCH_CORNERS.get())
+                    + " and start " + stack.get(ComponentContent.BELT_START.get()), corner);
+            return;
+        }
+        if (!helper.getBlockState(corner).isAir() || count(player, ItemContent.tileFor(BeltTier.BELT)) != TILES) {
+            helper.fail("a sneak-click adding a corner placed or spent a tile", corner);
+            return;
+        }
+        if (!player.heard.equals(List.of("message.belts.stretch_corner"))) {
+            helper.fail("adding a corner told the player " + player.heard, corner);
+            return;
+        }
+        player.setShiftKeyDown(false);
+        if (accepted(helper, player, corner.north(2), 6) == null) return;
+        if (facing(helper, START.east(2)) != Direction.EAST || facing(helper, corner) != Direction.NORTH
+                || facing(helper, corner.north(2)) != Direction.NORTH) {
+            helper.fail("a stretch through a corner faces " + facing(helper, START.east(2)) + " then "
+                    + facing(helper, corner) + " then " + facing(helper, corner.north(2)), corner);
+        }
+        if (player.getMainHandItem().has(ComponentContent.STRETCH_CORNERS.get())) {
+            helper.fail("a laid stretch left its corners stored", corner);
+        }
+        helper.succeed();
+    }
+
+    private static void cornerBehind(GameTestHelper helper) {
+        var player = started(helper, Direction.EAST);
+        player.setShiftKeyDown(true);
+        var stored = player.getMainHandItem().getComponents();
+        player.heard.clear();
+        click(helper, player, START.west(2));
+        if (!Objects.equals(stored, player.getMainHandItem().getComponents())) {
+            helper.fail("a sneak-click behind the look changed the stored start or corners", START.west(2));
+        }
+        if (!player.heard.equals(List.of("message.belts.stretch_behind"))) {
+            helper.fail("a sneak-click behind the look told the player " + player.heard, START.west(2));
+        }
+        helper.succeed();
+    }
+
+    private static void clears(GameTestHelper helper) {
         var player = started(helper, Direction.EAST);
         var stack = player.getMainHandItem();
         player.setShiftKeyDown(true);
-        player.setYRot(Direction.NORTH.toYRot());
-        helper.useBlock(START.east(3).below(), player, hit(helper, START.east(3).below()));
-        if (!helper.absolutePos(START).equals(stack.get(ComponentContent.BELT_START.get()))
-                || stack.get(ComponentContent.BELT_DIR.get()) != Direction.EAST) {
-            helper.fail("a second sneak-click left the start at " + stack.get(ComponentContent.BELT_START.get())
-                    + " facing " + stack.get(ComponentContent.BELT_DIR.get()), START.east(3));
-        }
-        if (!helper.getBlockState(START.east(3)).isAir()) {
-            helper.fail("a sneak-click placed " + helper.getBlockState(START.east(3)), START.east(3));
-        }
+        click(helper, player, START.east(3));
         stack.getItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
-        if (stack.has(ComponentContent.BELT_START.get()) || stack.has(ComponentContent.BELT_DIR.get())) {
-            helper.fail("a sneak-use in the air left a start stored", START.east(3));
+        if (stack.has(ComponentContent.BELT_START.get()) || stack.has(ComponentContent.BELT_DIR.get())
+                || stack.has(ComponentContent.STRETCH_CORNERS.get())) {
+            helper.fail("a sneak-use in the air left a start or corner stored", START.east(3));
         }
         if (count(player, ItemContent.tileFor(BeltTier.BELT)) != TILES) {
-            helper.fail("storing, keeping and clearing a start spent tiles", START);
+            helper.fail("storing a start and a corner and clearing them spent tiles", START);
         }
         helper.succeed();
     }
