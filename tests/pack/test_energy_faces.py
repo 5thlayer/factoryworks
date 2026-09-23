@@ -33,7 +33,7 @@ arithmetic under the faces is Minecraft-free and is held by `FurnaceEnergyBuffer
 
 A powered loader's face is not here: it is the SimpleBelts fork's, whose source is not in this
 repo, and it cannot use `LongSnapshotJournal`, since the fork never depends on the pack. It journals
-its own buffer, and `gametest/BeltPowerTests` holds the probe and the charge in a world (#348).
+its own buffer, and `gametest/BeltTileTests` holds the probe and the charge in a world (#348).
 """
 
 import pathlib

@@ -9,8 +9,8 @@ import rearth.belts.items.SplitterItem;
 
 /**
  * The SimpleBelts fork's splitter, which plans its own placement (ADR-0069). The fork's
- * {@code place} executes the fork's own plan, which also names the belts the splitter cuts (#361);
- * this is that plan's blocks and refusal. Loaded only when the fork is.
+ * {@code place} executes the fork's own plan; this is that plan's blocks and refusal. Loaded only
+ * when the fork is.
  */
 final class SplitterPlans {
 
@@ -30,11 +30,8 @@ final class SplitterPlans {
         List<PlacementPlan.Placed> blocks = plan.halves().stream()
                 .map(half -> new PlacementPlan.Placed(half.pos(), half.state()))
                 .toList();
-        if (plan.blocked()) {
-            return PlacementPlan.refused(blocks, PlacementPlan.Refusal.FOOTPRINT_BLOCKED);
-        }
-        return plan.refused()
-                ? PlacementPlan.refused(blocks, PlacementPlan.Refusal.BELT_CROSSING)
+        return plan.blocked()
+                ? PlacementPlan.refused(blocks, PlacementPlan.Refusal.FOOTPRINT_BLOCKED)
                 : PlacementPlan.accepted(blocks);
     }
 }

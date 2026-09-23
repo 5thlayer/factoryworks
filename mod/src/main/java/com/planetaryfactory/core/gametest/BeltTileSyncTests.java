@@ -112,13 +112,13 @@ final class BeltTileSyncTests {
         helper.startSequence()
                 .thenIdle(FLOWING_WARMUP_TICKS)
                 .thenExecute(() -> {
-                    arrivedBefore[0] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target));
+                    arrivedBefore[0] = BeltTileTests.count(BeltTileTests.chest(helper, target));
                     watch(helper, tiles);
                 })
                 .thenIdle(FLOWING_TICKS)
                 .thenExecute(() -> {
                     int updates = stop(helper, tiles);
-                    if (BeltHandoffTests.count(BeltHandoffTests.chest(helper, target)) == arrivedBefore[0]) {
+                    if (BeltTileTests.count(BeltTileTests.chest(helper, target)) == arrivedBefore[0]) {
                         helper.fail("nothing was delivered, so this proves nothing", target);
                     }
                     if (updates != 0) {
@@ -138,7 +138,7 @@ final class BeltTileSyncTests {
         helper.startSequence()
                 .thenIdle(SAVED_AFTER_TICKS)
                 .thenExecute(() -> {
-                    if (BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE)) != 0) {
+                    if (BeltTileTests.count(BeltTileTests.chest(helper, SOURCE)) != 0) {
                         helper.fail("the source still holds items, so the line is still loading", SOURCE);
                     }
                     Map<BlockPos, CompoundTag> saved = save(helper, tiles);
@@ -232,7 +232,7 @@ final class BeltTileSyncTests {
                     for (BlockPos tile : far) onFar += tileAt(helper, tile).held().size();
                     if (onFar == 0) helper.fail("no item is on the far chunk's tiles, so this proves little", far.getFirst());
                     conserved(helper, target);
-                    deliveredAtUnload[0] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target));
+                    deliveredAtUnload[0] = BeltTileTests.count(BeltTileTests.chest(helper, target));
                     saved.putAll(save(helper, far));
                     List<BlockEntity> going = new ArrayList<>();
                     for (BlockPos tile : far) going.add(tileAt(helper, tile));
@@ -246,7 +246,7 @@ final class BeltTileSyncTests {
                                 + (line == null ? "none" : line.tileCount()) + " tiles, expected the " + near
                                 + " on the loaded side", EDGE_FIRST_TILE);
                     }
-                    int delivered = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target));
+                    int delivered = BeltTileTests.count(BeltTileTests.chest(helper, target));
                     if (delivered != deliveredAtUnload[0]) {
                         helper.fail("the target received " + (delivered - deliveredAtUnload[0])
                                 + " items through an unloaded chunk", target);
@@ -264,7 +264,7 @@ final class BeltTileSyncTests {
                     conserved(helper, target);
                 })
                 .thenWaitUntil(() -> {
-                    int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target));
+                    int arrived = BeltTileTests.count(BeltTileTests.chest(helper, target));
                     if (arrived != EDGE_SUPPLY) {
                         helper.fail("the target holds " + arrived + " of " + EDGE_SUPPLY, target);
                     }
@@ -283,8 +283,8 @@ final class BeltTileSyncTests {
     // Every item is in the source, on the line or in the target: none lost, none made.
     private static void conserved(GameTestHelper helper, BlockPos target) {
         TransportLine<ItemStack> line = tileAt(helper, EDGE_FIRST_TILE).line();
-        int total = BeltHandoffTests.count(BeltHandoffTests.chest(helper, EDGE_SOURCE))
-                + BeltHandoffTests.count(BeltHandoffTests.chest(helper, target))
+        int total = BeltTileTests.count(BeltTileTests.chest(helper, EDGE_SOURCE))
+                + BeltTileTests.count(BeltTileTests.chest(helper, target))
                 + (line == null ? 0 : line.size());
         if (total != EDGE_SUPPLY) {
             helper.fail("the source, the line and the target hold " + total + " items, expected " + EDGE_SUPPLY,

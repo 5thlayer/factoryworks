@@ -125,12 +125,12 @@ final class BeltSideLoadTests {
 
     private static void fill(GameTestHelper helper, BlockPos chest, Item item, int items) {
         for (int slot = 0; items > 0; slot++, items -= 64) {
-            BeltHandoffTests.chest(helper, chest).setItem(slot, new ItemStack(item, Math.min(items, 64)));
+            BeltTileTests.chest(helper, chest).setItem(slot, new ItemStack(item, Math.min(items, 64)));
         }
     }
 
     private static int count(GameTestHelper helper, BlockPos chest, Item item) {
-        var container = BeltHandoffTests.chest(helper, chest);
+        var container = BeltTileTests.chest(helper, chest);
         int total = 0;
         for (int slot = 0; slot < container.getContainerSize(); slot++) {
             var stack = container.getItem(slot);

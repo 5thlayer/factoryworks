@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0084
 ---
 
 # Belts are bounded splines between grid-aligned supports

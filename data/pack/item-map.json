@@ -317,9 +317,9 @@
     },
     "express-transport-belt": {
       "kind": "item",
-      "target": "belts:express_belt",
+      "target": "belts:express_belt_tile",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-3 belt, at Factorio's 45 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table."
+      "note": "The SimpleBelts fork's tier-3 belt tile, one block of belt at Factorio's 45 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
     },
     "express-underground-belt": {
       "status": "native_mechanic",
@@ -339,9 +339,9 @@
     },
     "fast-transport-belt": {
       "kind": "item",
-      "target": "belts:improved_belt",
+      "target": "belts:improved_belt_tile",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-2 belt, at Factorio's 30 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table."
+      "note": "The SimpleBelts fork's tier-2 belt tile, one block of belt at Factorio's 30 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
     },
     "fast-underground-belt": {
       "status": "native_mechanic",
@@ -908,9 +908,9 @@
     },
     "transport-belt": {
       "kind": "item",
-      "target": "belts:belt",
+      "target": "belts:belt_tile",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-1 belt, at Factorio's 15 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table."
+      "note": "The SimpleBelts fork's tier-1 belt tile, one block of belt at Factorio's 15 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
     },
     "turbo-splitter": {
       "kind": "item",
@@ -921,14 +921,14 @@
     },
     "turbo-transport-belt": {
       "kind": "item",
-      "target": "belts:turbo_belt",
+      "target": "belts:turbo_belt_tile",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-4 belt, at Factorio's 60 items/s (#345). ADR-0060 gives item logistics to the fork, which carries the tier table.",
+      "note": "The SimpleBelts fork's tier-4 belt tile, one block of belt at Factorio's 60 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table.",
       "outside_corpus": "Space Age's recipe, which needs tungsten plate from Vulcanus; the corpus is Nauvis pre-launch (#72), so the belt ships with no recipe (#341)."
     },
     "underground-belt": {
       "status": "not_emitted",
-      "note": "Excluded by ADR-0044, restated by ADR-0060 and ADR-0078: an underground solves weaving past another belt in two dimensions, and Minecraft has a Y axis, so a belt that must cross another goes over it. The SimpleBelts fork ships none. docs/factorio-mechanics.md records the sub-rule as `excluded`."
+      "note": "Excluded by ADR-0044, restated by ADR-0060: an underground solves weaving past another belt in two dimensions, and Minecraft has a Y axis. Tile belts are flat (ADR-0084), so whether a belt crosses another by climbing over it is #412's. The SimpleBelts fork ships none. docs/factorio-mechanics.md records the sub-rule as `excluded`."
     },
     "uranium-235": {
       "status": "undecided",

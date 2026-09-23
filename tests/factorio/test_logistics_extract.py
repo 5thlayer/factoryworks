@@ -14,10 +14,10 @@ re-runs it. Every figure the fork and its GameTest type is re-derived from the c
     swing's joules come from the rule under `documented.swing`, which must reproduce the wiki's
     own table, and are divided by the hand size. Tier 1 is built from the burner inserter and
     draws no power.
-  - **the GameTest's typed figures.** `BeltHandoffTests` types each tier's items a second and 512,
-    `BeltPowerTests` tier 2's joules per item and drain, and `SplitterTests` tier 1's belt and
-    splitter rates, rather than reading them off the fork; they are asserted here against the
-    derivation.
+  - **the GameTest's typed figures.** `BeltTileTests` types each tier's items a second, 512, and
+    tier 2's joules per item and drain, and `SplitterTileTests` tier 1's rate, which is both the
+    belt's and the splitter's, rather than reading them off the fork; they are asserted here against
+    the derivation.
 """
 
 import json
@@ -49,9 +49,8 @@ EXPECTED_FE_PER_ITEM = {2: 66.5, 3: 81.2, 4: 116.0}
 EXPECTED_DRAIN_FE_PER_SECOND = {2: 4.0, 3: 5.0, 4: 10.0}
 
 GAMETESTS = ROOT / "mod" / "src" / "main" / "java" / "com" / "planetaryfactory" / "core" / "gametest"
-GAMETEST = GAMETESTS / "BeltHandoffTests.java"
-POWER_GAMETEST = GAMETESTS / "BeltPowerTests.java"
-SPLITTER_GAMETEST = GAMETESTS / "SplitterTests.java"
+GAMETEST = GAMETESTS / "BeltTileTests.java"
+SPLITTER_GAMETEST = GAMETESTS / "SplitterTileTests.java"
 
 
 def joules(raw):
@@ -169,26 +168,21 @@ def main():
     source = GAMETEST.read_text(encoding="utf-8")
     typed_rates = [(f"TIER_{tier}_ITEMS_PER_SECOND", rates.get(belt_name))
                    for tier, belt_name in enumerate(EXPECTED_ITEMS_PER_SECOND, start=1)]
-    for name, want in typed_rates + [("LONG_BELT_BLOCKS", LONG_BELT_BLOCKS),
-                                     ("LONG_BELT_HOLDS", holds)]:
+    for name, want in typed_rates + [("LONG_LINE_TILES", LONG_BELT_BLOCKS),
+                                     ("LONG_LINE_HOLDS", holds),
+                                     ("TIER_2_JOULES_PER_ITEM", round(EXPECTED_FE_PER_ITEM[2] * JOULES_PER_FE)),
+                                     ("TIER_2_DRAIN_WATTS", round(EXPECTED_DRAIN_FE_PER_SECOND[2] * JOULES_PER_FE)),
+                                     ("JOULES_PER_FE", JOULES_PER_FE)]:
         typed = typed_int(source, name)
         if typed != want:
-            failures.append(f"BeltHandoffTests types {name} = {typed}, the corpus derives {want}")
+            failures.append(f"BeltTileTests types {name} = {typed}, the corpus derives {want}")
 
-    power = POWER_GAMETEST.read_text(encoding="utf-8")
-    for name, want in (("TIER_2_JOULES_PER_ITEM", round(EXPECTED_FE_PER_ITEM[2] * JOULES_PER_FE)),
-                       ("TIER_2_DRAIN_WATTS", round(EXPECTED_DRAIN_FE_PER_SECOND[2] * JOULES_PER_FE)),
-                       ("JOULES_PER_FE", JOULES_PER_FE)):
-        typed = typed_int(power, name)
+    typed = typed_int(SPLITTER_GAMETEST.read_text(encoding="utf-8"), "TIER_1_ITEMS_PER_SECOND")
+    for name, want in (("the tier-1 belt", rates.get("transport-belt")),
+                       ("the tier-1 splitter", splitter_rates.get("splitter"))):
         if typed != want:
-            failures.append(f"BeltPowerTests types {name} = {typed}, the corpus derives {want}")
-
-    splitter_source = SPLITTER_GAMETEST.read_text(encoding="utf-8")
-    for name, want in (("TIER_1_ITEMS_PER_SECOND", rates.get("transport-belt")),
-                       ("TIER_1_SPLITTER_ITEMS_PER_SECOND", splitter_rates.get("splitter"))):
-        typed = typed_int(splitter_source, name)
-        if typed != want:
-            failures.append(f"SplitterTests types {name} = {typed}, the corpus derives {want}")
+            failures.append(f"SplitterTileTests types TIER_1_ITEMS_PER_SECOND = {typed}, "
+                            f"the corpus derives {want} for {name}")
 
     for failure in failures:
         print(f"FAIL  {failure}")

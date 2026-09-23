@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -167,61 +167,20 @@ one Fill Recipe can set and it can hold, while a `crafting-with-fluid` one is re
 dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Every one is also held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
 (#330), and a non-assembling id or a locked recipe is refused there with a message and leaves the Held
 recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
-And that the SimpleBelts fork loads and a loader, a belt and a second loader carry a chest's items
-into another chest -- at exactly 15, 30, 45 and 60 items/s at tiers 1 to 4 (#345), that a
-line of mixed tiers runs at its slowest piece, whether that is the loaders or the belt (#347), and that a
-backed-up 64-block belt holds 512 (#344), across two spans, since a span reaches 32 blocks at most. The figures are typed, `tests/factorio/test_logistics_extract.py` derives them from
-Factorio's belt prototypes, and the 64-block belt stands on the generator's second template,
-`long_platform`. The belt model, the tier table and a loader's own cap are Minecraft-free and unit-tested in the fork
-(`BeltContentsTest`, `BeltTierTest`, `FlowLimitTest`, `MixedTierTest`). Typing 44 or 511 turns the matching test red, and the capacity is read once
-after the belt settles, because polled it passes on the way through 511. And that no `belts:`
-recipe survives the stock-recipe sweep, against the pack's express belt recipe as a control;
-matching the pack's own namespace instead turns it red.
-And that placing a belt through the belt item charges one item per block, five for a five-block belt,
-and refuses a player holding four with nothing charged, and that breaking either loader through the
-player's game mode puts those five and every item on the belt into the breaker's inventory and
-leaves the other loader standing and free. A charge of one item or a refund dropped on the ground
-turns all four red. The rounding is the fork's `BeltCostTest`.
-And that a belt laid onto open ground takes each loader it places from the inventory, the belt's own
-tier first, then the nearest higher tier, then the nearest lower one, and places and charges nothing
-when a loader is short (`BeltLoaderCostTests`, #354). Before the fix every open end got a free tier-1
-loader, which turned five of its six red. The choice is the fork's `LoaderChoiceTest`. An open end
-becomes a loader only against an inventory and a support otherwise (#366), so those fixtures stand
-chests beyond their ends, a seventh test lays one with none and gets two supports, and an eighth
-clicks the end facing its chest rather than back along the belt and still gets a loader.
-And that a belt laid through the belt item in a shape outside one of ADR-0078's four bounds -- too
-steep, climbing and turning at once, turning tighter than a block, reaching past 32 -- changes no
-block, links neither loader, charges nothing and names its bound to the player, and that a mid-belt
-support sneak-clicked past a bound is not planned (`BeltShapeTests`).
-The world is read before the click as well as after. Every other belt fixture is laid through the
-same rule and fails if it is refused; dropping the midpoint support from the 64-block belt turns it
-red. The rule, and where each bound falls, is the fork's `BeltPathTest`, and whether the preview
-turns red with it is a human check on delivery.
-And that a support is a belt end (`BeltSupportTests`, #366): a tier-1 belt joined to a tier-3 one at a
-support delivers 15 items/s either way round and loses nothing, a belt ending on a support with none
-leaving backs up to 44 items, and each refused click in #366's table, and a sneak-click on a placed
-support, changes no block and no slot, charges nothing and names its refusal. A belt laid through the
-item from a chest ends on a free support, charges only its length, plans its mid-belt support, and
-carries on from the end; breaking either support through the player's game mode refunds the belt and
-its items to the breaker; and a free support facing east turns west to start or end a belt running
-west. Disabling the join and dropping the mid-belt link turned exactly six red, and keeping a free
-support's old facing and dropping the loader's other-side check turned exactly three. The slot table and the open-end choice are the fork's `SupportSlotsTest`, the join's rate
-`JoinTest`, and whether the chaining gesture feels right is a human check on delivery.
-And that the belt item's click executes the plan its preview draws (`BeltPlanTests`, #372): each test
-asks `BeltItem.plan` and then clicks. A refused plan changes no block, slot or stored point and tells
-the player its reason. An accepted one places every block it names in the state it names and charges
-what it names. A used loader answers the click by setting its filter, so the item plans nothing there.
-Skipping a free support's turn in the click turns the plan test red. Whether the preview draws right
-is a human check on delivery.
 And that a run of belt **tiles** -- one block of belt per block, facing the way it travels, merged
 into a transport line that ticks once for the whole run -- carries a chest's items into another
 chest between two loaders, at exactly 15, 30, 45 and 60 items/s at tiers 1 to 4, at its slowest
 piece when the loaders' tier or the tiles' differ, and that a backed-up 64-tile line holds 512
-(`BeltTileTests`, #398). The loaders' ledger holds on tiles too: tier 1 moves items with no pole and
-has no energy face, tier 2 with no FE puts nothing on the line, and a pole-fed tier 2 draws 66.5 FE
-per item plus its drain. The figures are typed. Dropping the merge -- scanning a tile as a line of
-itself -- turns eleven of those twelve red, the tier-2 stall alone staying green, which is what it
-is for. A line built wholly through a player's clicks -- a loader sneak-clicked onto each chest,
+(`BeltTileTests`, #398), the 64-tile line standing on the generator's second template,
+`long_platform`. The loaders' ledger holds on tiles too (#348): tier 1 moves items with no pole and
+has no energy face, tier 2 with no FE puts nothing on the line, a pole's demand probe leaves a loader
+nothing, and a pole-fed tier 2 draws 66.5 FE per item plus its drain. The face is the fork's, so the
+two static FE checks cannot read it. The figures are typed, and
+`tests/factorio/test_logistics_extract.py` derives them from Factorio's belt and inserter prototypes.
+Dropping the merge -- scanning a tile as a line of itself -- turns eleven of the twelve rate,
+capacity and ledger tests red, the tier-2 stall alone staying green, which is what it is for. The
+same file holds that no `belts:` recipe survives the stock-recipe sweep, against the pack's express
+belt recipe as a control. A line built wholly through a player's clicks -- a loader sneak-clicked onto each chest,
 tiles on the floor between -- delivers every item. A tile placed through its own item faces the
 player's look; Rotate is `RotateTests`', and a sneak-click stores a stretch's start rather than
 placing one (`StretchTests`). Two more
@@ -233,10 +192,9 @@ dropping the head's rescan when its run changed turns both red. That last one is
 rebuilding the run before handing each tile its share drops the whole downstream half, and it turns
 red. The merge that makes the joined case work is order-independent by construction rather than by
 test: every tile of a run lets go before any is drained. The merge rule and the line's rate,
-capacity and rebuild are the fork's `LineScanTest` and `TransportLineTest`. Whether a tile looks
-like a belt is a human check on delivery, and the demand probe's clause of #348 stays
-`BeltPowerTests`', since the loader is unchanged. The spline belt and its item still work beside
-the tiles until #397.
+capacity and rebuild are the fork's `LineScanTest` and `TransportLineTest`, the tier table and a
+loader's own cap `BeltTierTest`, `FlowLimitTest` and `MixedTierTest`, and the loader's ledger
+`LoaderEnergyTest`. Whether a tile looks like a belt is a human check on delivery.
 And that a loader carries no items (`LoaderMouthTests`, #408): a loading line's item is first seen
 on its first tile at the back edge, where the loader's mouth is, and a line backed up against a full
 chest holds its head flush with the last tile's front edge, and delivers once the chest
@@ -291,7 +249,9 @@ tiles loaded back into the world make one line holding every item; a tile placed
 tick after the line formed joins it; a moving line marks every chunk it crosses for saving, since a
 chunk not marked is skipped by the next save and its tiles would reload stale; and a line crossing into a chunk that unloads runs over the
 loaded side's tiles only, delivers nothing through the gap, and when the chunk loads is one line
-again that delivers every item with none lost or made. The harness cannot unload a test's chunk, so
+again that delivers every item with none lost or made. No server API reports a block update being
+sent, so `mixin/minecraft/ServerLevelMixin` counts them for the positions `BlockUpdateWatch` is
+watching. The harness cannot unload a test's chunk, so
 that test saves the far chunk's tiles, lets them go through the fork's `chunkUnloading` -- what its
 `ChunkEvent.Unload` listener calls -- and puts back block entities read from the saves. A tick that
 sends a block update turns the first two red, a tile saving only what no line holds the third, the
@@ -301,50 +261,20 @@ go the sixth. The per-tile shares, the cut at an edge and the rejoin, the client
 each item are the fork's `TileLineSyncTest`. Whether the items are drawn on the belt, move smoothly
 and cross tiles with no jump is a human check on delivery.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
-that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
-Both were red on upstream's filter, which the off hand reset.
-And that a tier-1 loader moves items with no pole and has no energy face, that a tier-2 loader with no
-FE takes nothing, that a pole's demand probe leaves a loader nothing, and that a pole-fed tier-2
-loader draws 66.5 FE per item plus its drain (`BeltPowerTests`, #348). The face is the fork's, so
-the two static FE checks cannot read it and say so. Dropping the charge gate, the journal or the
-charge each turns one red. The ledger is the fork's `LoaderEnergyTest`.
-And that a splitter splits one tier-1 belt evenly, sends all 15 items/s to the free side when the
-other backs up, and caps a tier-3 line at its own tier's 15, and that it places both halves or,
-blocked at one, neither, and broken at either half leaves neither standing and drops one item
-(`SplitterTests`). Dropping the output alternation, the fallback to the free side, the rate cap, the
-fit check or the other half's teardown each turns its test red. The rule is the fork's `SplitterTest`,
-which also builds a 4x4 balancer from four splitters.
-Each half is a block of belt of the splitter's tier (#373): a splitter fed on both sides with no belt
-leaving backs up to 8 items a half, breaking it at either half hands its items, the items on the belts
-into it and those belts' refund to the breaker with nothing on the ground, a half saved and loaded holds
-every entry, and a hand held on a half's first segment takes 15 items/s. The half's two segments, the
-midline and a hand anywhere along it are the fork's `SplitterTest`; whether items are drawn crossing it
-and a player is carried is a human check on delivery.
-A splitter placed across a running belt cuts it (#361): in each of #361's four layouts every belt
-through a half ends at it and a belt of the rest starts from it, and items reach every output; a
-backed-up nine-block belt cut four blocks along keeps 32 behind the half, 8 on it and 32 past it, the
-ones behind where they were; and a five-block belt cut two along refunds the placer one belt and each
-end two when broken. Skipping the cut in the fork's `place` turns all six red. The crossing and the
-cut are the fork's `BeltCrossingTest` and `BeltCutTest`, and whether the preview shows the cut and the
-gesture feels right is a human check on delivery.
+that both loaders of a tile line read as in use while a free loader does not (`BeltFilterTests`). A
+loader is in use while a tile in front of it runs along its facing, which the client reads from its
+own world. The filter test was red on upstream's filter, which the off hand reset.
 A splitter meets belt tiles face to face (`SplitterTileTests`, #394): between tile lines it splits
 one tier-1 line evenly, sends all 15 items/s to the free side and caps a tier-3 line at 15, and broken
 at either half leaves neither standing, hands its items to the breaker and drops one splitter. Placed
 by hand across a backed-up line of seven tiles it takes the middle tile's place, refunds that tile,
 keeps its items, and every item reaches the end or the right half, which no line leaves. Aimed across the
 line at a tile's top, facing either way, it places nothing, neither on the tile nor above it. A line's last
-tile hands into a half's back and a half with no spline belt leaving feeds the tile line ahead; with
-the first handoff dropped all six turn red. `SplitterTest` runs the split, merge, fallback, cap,
-balancer and loss checks over tile lines as well. Whether a splitter between tiles reads as part of
+tile hands into a half's back and a half feeds the tile line ahead; with
+the first handoff dropped all six turn red. The fork's `SplitterTest` runs the split, merge, fallback,
+cap, 4x4 balancer and loss checks over tile lines, and holds a half's two segments of eight items, its
+midline and a hand anywhere along it (#373). Whether a splitter between tiles reads as part of
 the same belt is a human check on delivery.
-And that a belt held at its middle fills the holder's inventory at the belt's 15 items/s while the source
-keeps loading and only what was already past the hand reaches the end, and that a hand with room for four
-takes four and then lets the belt run on to its end, losing nothing (`BeltHandTests`). A hand that never
-takes turns both red, and one that re-arms after a refusal turns the second red. The point itself is the
-fork's `BeltContentsTest`; the client's ray and how the gesture feels are a human check on delivery.
-A belt whose far inventory is full stops its last item inside the far loader's back plate, where no
-aim reaches, so a hand on that belt holds its end instead (#360): held a second on its last block, it
-takes that item and 15 items/s. The old jar turns it red.
 The hand and riding carry over to tiles (`BeltTileHandTests`, #396). A hand on a tile holds the whole
 tile, its point the tile's front, so it takes whatever is on the tile at the line's rate. Only what was already
 past the tile reaches the end, a hand with room for four takes four and loses nothing, and a hand on a
@@ -352,13 +282,6 @@ backed-up line's last tile takes 15 items/s. No far-end rule is needed, since th
 with its last tile's front. An item entity on a tile rides it and rides round a corner. A tile ticking with no hand turns the three hand
 tests red, and one registering no ride the two ride tests. The point is the fork's `TransportLineTest`,
 and whether aiming at a tile and riding one feel right is a human check on delivery.
-And that a belt moving items sends no block update, whether or not it is also loading and delivering,
-and that a belt saved and loaded holds every entry, by id, item and position (`BeltSyncTests`). A
-client learns what a belt gains and loses from the fork's own payload and advances it itself. No
-server API reports a block update being sent, so `mixin/minecraft/ServerLevelMixin` counts them for
-the positions `BlockUpdateWatch` is watching. Sending one each tick the belt moves turns both sync
-tests red. The client's copy is the fork's `BeltSyncTest`, and whether it renders smoothly is a
-human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
@@ -424,8 +347,7 @@ What the player breaks at full Reach (16) rather than vanilla's 4.5 is the
 writes `data/factorio/building.json`, every Factorio item that places an entity, and
 `scripts/build-building-tag.py` joins its Buildings onto `data/pack/item-map.json` by the block of
 the target's own id. A missing, `undecided`, `not_emitted`, `native_mechanic` or `blocked_by` row,
-and a target that places no block of its id, is a recorded skip, which is why the belt tiles wait
-for #397 to repoint the transport-belt rows. `tests/pack/test_building_tag.py` runs the `--check`,
+and a target that places no block of its id, is a recorded skip. `tests/pack/test_building_tag.py` runs the `--check`,
 traces each entry to a Building row, names the families the rule exists for and re-extracts when the
 dump is on disk. `ReachTests` holds the rule in a world: through `handleBlockBreakAction`, stone 6
 blocks off is refused with the block and inventory unchanged, a Stone Furnace 6 off and stone 4 off
@@ -462,9 +384,7 @@ flattening the rig to a single layer turns two more, dropping the pump's water q
 and giving up on the other-group column walk turns another. The fork's splitter and its tile item's
 stretch (#393, `StretchTests`) are the other mod's items with a plan. The splitter's (#355): `PlacementPlanTests.Splitters`, registered only with the fork loaded,
 holds that both halves go down, and that a splitter blocked at its second half changes nothing; a
-plan naming only the first half turns both red. Across belts (#361), its plan names the belts it cuts and the
-click cuts exactly those, and a belt against its facing, at an angle, through its side or on a curve
-refuses it with its reason named, changing no block, slot or belt. The Assembling Machine's two (#326) are
+plan naming only the first half turns both red. The Assembling Machine's two (#326) are
 the rig's pair for its 2x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
 red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
 after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Three fixtures are load-bearing rather

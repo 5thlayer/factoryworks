@@ -54,8 +54,6 @@ public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nulla
         FOOTPRINT_BLOCKED,
         /** An Offshore Pump with no adjacent source to pump (#213, ADR-0050). */
         NO_FLUID_SOURCE,
-        /** A splitter over a belt it would not cut: against its facing, at an angle, through a side or on a curve (#361). */
-        BELT_CROSSING,
         /** A Pumpjack anywhere but over an oil well (ADR-0081). */
         NOT_ON_WELL,
         /** A Fast Replace whose player has no room for what it hands back (ADR-0082). */

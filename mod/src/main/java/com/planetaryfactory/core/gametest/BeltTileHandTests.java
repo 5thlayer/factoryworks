@@ -23,7 +23,7 @@ import rearth.belts.model.TransportLine;
 /**
  * The belt hand and riding on tiles (#396). A hand held on a tile takes whatever is on it at the
  * line's rate, fed once a tick as the client resends it; an item entity standing on a tile is
- * carried along it and round a corner. Rates are typed, as in {@link BeltHandTests}.
+ * carried along it and round a corner. Rates are typed.
  */
 final class BeltTileHandTests {
 
@@ -83,8 +83,8 @@ final class BeltTileHandTests {
                 .thenIdle(WARMUP_TICKS)
                 .thenExecute(() -> {
                     pastTheTile[0] = onTilesPast(helper);
-                    arrivedBefore[0] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET));
-                    suppliedBefore[0] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE));
+                    arrivedBefore[0] = BeltTileTests.count(BeltTileTests.chest(helper, TARGET));
+                    suppliedBefore[0] = BeltTileTests.count(BeltTileTests.chest(helper, SOURCE));
                     if (pastTheTile[0] == 0) helper.fail("nothing is past the held tile, so this proves nothing", TO);
                 })
                 .thenExecuteFor(HOLD_TICKS, () -> held.holdHand(player))
@@ -94,12 +94,12 @@ final class BeltTileHandTests {
                         helper.fail("holding a tier-1 tile for " + HOLD_TICKS + " ticks took " + taken
                                 + " items, expected " + HELD_ITEMS, HELD);
                     }
-                    int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET)) - arrivedBefore[0];
+                    int arrived = BeltTileTests.count(BeltTileTests.chest(helper, TARGET)) - arrivedBefore[0];
                     if (arrived != pastTheTile[0]) {
                         helper.fail(arrived + " items reached the line's end while a tile was held, expected the "
                                 + pastTheTile[0] + " already past it", TARGET);
                     }
-                    int loaded = suppliedBefore[0] - BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE));
+                    int loaded = suppliedBefore[0] - BeltTileTests.count(BeltTileTests.chest(helper, SOURCE));
                     if (Math.abs(loaded - HELD_ITEMS) > 1) {
                         helper.fail("the source loaded " + loaded + " items while the tile was held, expected "
                                 + HELD_ITEMS, SOURCE);
@@ -122,20 +122,20 @@ final class BeltTileHandTests {
         int[] arrivedBefore = new int[1];
         helper.startSequence()
                 .thenIdle(WARMUP_TICKS)
-                .thenExecute(() -> arrivedBefore[0] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET)))
+                .thenExecute(() -> arrivedBefore[0] = BeltTileTests.count(BeltTileTests.chest(helper, TARGET)))
                 .thenExecuteFor(HOLD_TICKS, () -> held.holdHand(player))
                 .thenExecute(() -> {
                     int taken = cobblestone(player) - (64 - ROOM);
                     if (taken != ROOM) helper.fail("a hand with room for " + ROOM + " took " + taken, HELD);
-                    int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET)) - arrivedBefore[0];
+                    int arrived = BeltTileTests.count(BeltTileTests.chest(helper, TARGET)) - arrivedBefore[0];
                     if (Math.abs(arrived - (HELD_ITEMS - ROOM)) > 1) {
                         helper.fail("once the hand was full " + arrived + " items reached the line's end in "
                                 + HOLD_TICKS + " ticks, expected " + (HELD_ITEMS - ROOM), TARGET);
                     }
                     var line = held.line();
                     int onLine = line == null ? 0 : line.size();
-                    int delivered = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET));
-                    int loaded = SUPPLY - BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE));
+                    int delivered = BeltTileTests.count(BeltTileTests.chest(helper, TARGET));
+                    int loaded = SUPPLY - BeltTileTests.count(BeltTileTests.chest(helper, SOURCE));
                     if (loaded != onLine + delivered + taken) {
                         helper.fail("the source loaded " + loaded + " items, but only " + (onLine + delivered + taken)
                                 + " are on the line, at its end or in the hand", HELD);
@@ -236,7 +236,7 @@ final class BeltTileHandTests {
         helper.setBlock(TARGET, Blocks.CHEST);
         BeltTileTests.fill(helper, SOURCE, SUPPLY);
         if (targetFull) {
-            var target = BeltHandoffTests.chest(helper, TARGET);
+            var target = BeltTileTests.chest(helper, TARGET);
             for (int slot = 0; slot < target.getContainerSize(); slot++) target.setItem(slot, new ItemStack(Items.DIRT, 64));
         }
     }

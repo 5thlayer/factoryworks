@@ -36,9 +36,8 @@ import rearth.belts.items.SplitterItem;
 import rearth.belts.model.BeltTier;
 
 /**
- * A splitter between belt tiles (#394): {@link SplitterTests}' split, fallback, cap and break with
- * tile lines in place of spline belts, and a splitter placed across a tile line taking the place of
- * the tile under it.
+ * A splitter between belt tiles (#394): its split, fallback, cap and break, and a splitter placed
+ * across a tile line taking the place of the tile under it.
  *
  * <p>Items flow east. A chest and a loader feed a line of tiles into the splitter's left half, and a
  * line of tiles leaves each half for a loader with a chest behind it or not. The rates are typed.
@@ -203,7 +202,7 @@ final class SplitterTileTests {
         BlockHitResult hit = new BlockHitResult(Vec3.atBottomCenterOf(tile).add(0, 6 / 16d, 0), Direction.UP, tile, false);
         var plan = ((SplitterItem) player.getMainHandItem().getItem())
                 .plan(new BlockPlaceContext(player, InteractionHand.MAIN_HAND, player.getMainHandItem(), hit));
-        if (plan == null || !plan.refused() || !plan.halves().getFirst().pos().equals(tile)) {
+        if (plan == null || !plan.blocked() || !plan.halves().getFirst().pos().equals(tile)) {
             helper.fail("a splitter facing " + facing + " is not planned refused on the tile it was aimed at", LEFT);
         }
         helper.useBlock(LEFT, player, hit);
@@ -299,7 +298,7 @@ final class SplitterTileTests {
 
     private static int delivered(GameTestHelper helper, BlockPos end) {
         return helper.getBlockState(end.east()).is(Blocks.CHEST)
-                ? BeltHandoffTests.count(BeltHandoffTests.chest(helper, end.east())) : 0;
+                ? BeltTileTests.count(BeltTileTests.chest(helper, end.east())) : 0;
     }
 
     /** Every item on a tile of the splitter's row, each line counted once. */

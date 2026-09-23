@@ -7,7 +7,7 @@
       "count": 10
     },
     {
-      "ingredient": "belts:improved_belt",
+      "ingredient": "belts:improved_belt_tile",
       "count": 1
     }
   ],
@@ -19,7 +19,7 @@
   ],
   "results": [
     {
-      "id": "belts:express_belt",
+      "id": "belts:express_belt_tile",
       "count": 1
     }
   ],
