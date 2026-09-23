@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372) and `BeltTileTests` (#398), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398) and `LoaderFloorTests` (#399), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -234,6 +234,14 @@ capacity and rebuild are the fork's `LineScanTest` and `TransportLineTest`. Whet
 like a belt is a human check on delivery, and the demand probe's clause of #348 stays
 `BeltPowerTests`', since the loader is unchanged. The spline belt and its item still work beside
 the tiles until #397.
+And that a loader draws a belt floor to meet its tile (`LoaderFloorTests`, #399), read off its
+`floor` blockstate as a player builds and breaks a line through the game mode: loading behind a
+line's first tile and unloading past its last at all four tiers, set whichever of the loader and
+the tile went down first and cleared when the tile is broken, and none with no tile or a tile
+running across. With the floor never set, the first two turn red; the third guards against a floor
+drawn where none belongs. A loader the spline belt item places beside a tile draws none until #397
+retires that item. Whether the floor reads as one belt and scrolls the right way is a human check
+on delivery.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
 that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
 Both were red on upstream's filter, which the off hand reset.
