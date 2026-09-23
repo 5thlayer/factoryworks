@@ -159,7 +159,7 @@ A single link carrying items from one belt end to another along a curve, shaped 
 _Avoid_: conveyor, belt segment, lane
 
 **Tile**:
-One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, or back toward them while sneaking. A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). It stands beside the spline belt until #397 replaces it.
+One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, or back toward them while sneaking. A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). It stands beside the spline belt until #397 replaces it.
 _Avoid_: belt block, conveyor block, segment
 
 **Tier colour**:
@@ -167,8 +167,12 @@ The colour a belt tier is painted in: yellow, red, blue, green for tiers 1 to 4.
 _Avoid_: stripe colour, tier tint
 
 **Transport line**:
-The contiguous run of tiles of one direction of travel, merged at runtime so the whole run ticks once rather than each tile ticking for itself. A line is derived state, rebuilt whenever a tile is placed or broken; each tile keeps its own share of the items, so merging and splitting a line loses nothing. A line runs at its slowest tile and holds eight items a tile, and it is loaded by the loader behind its first tile and unloaded by the one past its last (#398).
+The contiguous run of tiles each feeding the next, around corners as well as straight, merged at runtime so the whole run ticks once rather than each tile ticking for itself. A line is derived state, rebuilt whenever a tile is placed or broken; each tile keeps its own share of the items, so merging and splitting a line loses nothing. A line runs at its slowest tile and holds eight items a tile, and it is loaded by the loader behind its first tile and unloaded by the one past its last (#398). A line closed on itself is a ring, with no first tile and no last (#391).
 _Avoid_: belt line, chain, run
+
+**Side-load**:
+A tile or other belt piece feeding the side of a straight tile. It does not join the line it feeds: two lines meet there, and the side-loading line's items merge into gaps on the other, which goes first. The pack's one lane has no far lane to fill, so this is Factorio's side-load reduced to a merge.
+_Avoid_: T-junction, merge belt
 
 **Support**:
 A block on the block grid, facing along one of its axes, that a belt passes through or ends at. Supports are where a belt's shape is decided; the curve between them only joins them. A support holds at most one belt arriving and one leaving: with both it joins two belts, with only one arriving it is a dead end where items back up. Supports are placed by the belt itself and cost nothing (ADR-0078).
