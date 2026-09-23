@@ -127,6 +127,10 @@ final class BeltTileTests {
                 BeltTileTests::placingATileMergesTwoLines);
         tests.test("breaking_a_mid_line_tile_splits_it_and_keeps_both_halves_items",
                 MERGE_FILL_TICKS + 20, BeltTileTests::breakingATileSplitsTheLine);
+        tests.test("a_tile_placed_past_an_empty_lines_end_joins_it", 200,
+                helper -> tilePlacedPastTheEnd(helper, false));
+        tests.test("a_tile_placed_past_a_loaded_lines_end_joins_it", 200,
+                helper -> tilePlacedPastTheEnd(helper, true));
     }
 
     // The probe's fourth clause of #348 is `BeltPowerTests`': the loader itself is unchanged here,
@@ -250,6 +254,46 @@ final class BeltTileTests {
             }
             helper.succeed();
         });
+    }
+
+    /**
+     * A line of three, then a fourth tile placed by hand past its end on a later tick (#392). The
+     * old last tile is not the head, so the head learns of the new tile only through it.
+     */
+    private static void tilePlacedPastTheEnd(GameTestHelper helper, boolean loaded) {
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(FROM, loader(BeltTier.BELT, Direction.EAST));
+        for (int tile = 0; tile < TILES; tile++) {
+            helper.setBlock(FIRST_TILE.east(tile), tile(BeltTier.BELT, Direction.EAST));
+        }
+        if (loaded) fill(helper, SOURCE, ITEMS);
+        BlockPos added = FIRST_TILE.east(TILES);
+        BlockPos target = added.east(2);
+
+        helper.startSequence().thenIdle(40).thenExecute(() -> {
+            if (loaded && held(helper, FIRST_TILE) == 0) {
+                helper.fail("the line carries nothing before the new tile, so this proves little", FIRST_TILE);
+            }
+            ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
+            player.setGameMode(GameType.SURVIVAL);
+            player.setYRot(Direction.EAST.toYRot());
+            player.setShiftKeyDown(false);
+            use(helper, player, new ItemStack(ItemContent.tileFor(BeltTier.BELT)), added.below(), Direction.UP);
+            helper.setBlock(added.east(), loader(BeltTier.BELT, Direction.WEST));
+            helper.setBlock(target, Blocks.CHEST);
+            if (!loaded) fill(helper, SOURCE, ITEMS);
+        }).thenIdle(MERGE_SETTLE_TICKS).thenExecute(() -> {
+            var line = helper.getBlockEntity(FIRST_TILE, BeltTileBlockEntity.class).line();
+            if (line == null || line.tileCount() != TILES + 1) {
+                helper.fail("a tile placed past a line of " + TILES + " left a line of "
+                        + (line == null ? "none" : line.tileCount()) + " tiles, expected " + (TILES + 1), added);
+            }
+        }).thenIdle(120).thenExecute(() -> {
+            int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target));
+            if (arrived != ITEMS) {
+                helper.fail("the extended line delivered " + arrived + " of " + ITEMS, target);
+            }
+        }).thenSucceed();
     }
 
     private static void click(GameTestHelper helper, Player player, BlockPos target) {
