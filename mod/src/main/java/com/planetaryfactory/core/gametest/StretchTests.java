@@ -86,7 +86,7 @@ final class StretchTests {
                     player.getMainHandItem().setCount(3);
                 }, START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
         tests.test("a_creative_stretch_charges_nothing", 20, StretchTests::creative);
-        tests.test("a_sneak_click_moves_the_start_and_a_sneak_use_in_the_air_clears_it", 20, StretchTests::startGesture);
+        tests.test("a_second_sneak_click_keeps_the_start_and_a_sneak_use_in_the_air_clears_it", 20, StretchTests::startGesture);
     }
 
     private static void straight(GameTestHelper helper) {
@@ -210,8 +210,8 @@ final class StretchTests {
         player.setShiftKeyDown(true);
         player.setYRot(Direction.NORTH.toYRot());
         helper.useBlock(START.east(3).below(), player, hit(helper, START.east(3).below()));
-        if (!helper.absolutePos(START.east(3)).equals(stack.get(ComponentContent.BELT_START.get()))
-                || stack.get(ComponentContent.BELT_DIR.get()) != Direction.NORTH) {
+        if (!helper.absolutePos(START).equals(stack.get(ComponentContent.BELT_START.get()))
+                || stack.get(ComponentContent.BELT_DIR.get()) != Direction.EAST) {
             helper.fail("a second sneak-click left the start at " + stack.get(ComponentContent.BELT_START.get())
                     + " facing " + stack.get(ComponentContent.BELT_DIR.get()), START.east(3));
         }
@@ -223,7 +223,7 @@ final class StretchTests {
             helper.fail("a sneak-use in the air left a start stored", START.east(3));
         }
         if (count(player, ItemContent.tileFor(BeltTier.BELT)) != TILES) {
-            helper.fail("storing, moving and clearing a start spent tiles", START);
+            helper.fail("storing, keeping and clearing a start spent tiles", START);
         }
         helper.succeed();
     }
