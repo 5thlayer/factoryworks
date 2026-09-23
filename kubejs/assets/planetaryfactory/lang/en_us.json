@@ -156,5 +156,8 @@
   "gui.planetaryfactory.belt_tile.line": "Line: %s tiles at %s items/s",
   "gui.planetaryfactory.belt_tile.empty": "Empty",
   "gui.planetaryfactory.belt_tile.holds_one": "Holds %s \u00d7 %s",
-  "gui.planetaryfactory.belt_tile.holds": "Holds %s items"
+  "gui.planetaryfactory.belt_tile.holds": "Holds %s items",
+  "key.category.planetaryfactory.planetaryfactory": "Planetary Factory",
+  "key.planetaryfactory.rotate": "Rotate",
+  "key.planetaryfactory.reverse_rotate": "Reverse Rotate"
 }

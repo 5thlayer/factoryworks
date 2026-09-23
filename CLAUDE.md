@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395) and `LoaderFloorTests` (#399), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `LoaderFloorTests` (#399) and `RotateTests` (#386), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -223,7 +223,7 @@ per item plus its drain. The figures are typed. Dropping the merge -- scanning a
 itself -- turns eleven of those twelve red, the tier-2 stall alone staying green, which is what it
 is for. A line built wholly through a player's clicks -- a loader sneak-clicked onto each chest,
 tiles on the floor between -- delivers every item. A tile placed through its own item faces the
-player's look, and back toward them while sneaking, which stands in for the rotate key. Two more
+player's look, sneaking or not; Rotate is `RotateTests`'. Two more
 hold the line being rebuilt: two loaded lines joined by two tiles become one run of eight, carrying at least what
 the two held with nothing on the ground; and a mid-line tile broken leaves 8 upstream and 8
 downstream, the tiles past the break keeping what they carried. That last one is the defect check --
@@ -242,6 +242,14 @@ running across. With the floor never set, the first two turn red; the third guar
 drawn where none belongs. A loader the spline belt item places beside a tile draws none until #397
 retires that item. Whether the floor reads as one belt and scrolls the right way is a human check
 on delivery.
+And that a stack pressed with Rotate 0 to 3 times (`RotateTests`, #386, ADR-0083) plans and places a
+belt tile facing the look turned that many quarters clockwise, sneaking or not, and a Stone Furnace
+facing back at the turned look, the plan's state being the placed one; that the turn stays on the
+rest of a stack and goes with its last item; and that a stick takes no turn and a turn back to none
+leaves no component. The turn is a mixin on `BlockPlaceContext`'s look, so the plan and the click
+read one answer; making `HeldTurn.turn` return the look unturned turns the first red. The
+arithmetic is `QuarterTurnTest`, and whether `R` and `Shift+R` reach the server and the preview
+redraws is a human check on delivery.
 And that a tile line costs the server no block updates and survives a save and an unloaded chunk
 (`BeltTileSyncTests`, #395): a line moving one item, and a line loading and delivering, send none
 from its tiles or loaders; each tile saves its own items and where in the tile they sit, and the

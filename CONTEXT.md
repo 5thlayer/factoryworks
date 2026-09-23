@@ -334,6 +334,14 @@ _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechan
 Placing a block over a placed one of the same **Replace Group** but another tier, which swaps it in place, up a tier or down. It takes one item and gives the old one back, per entity, so a whole pole column swaps for one item and keeps its height and wires. The new block keeps everything of the old one's it can hold, the Assembling Machine's recipe included where the new tier can craft it, and the rest goes to the player; if the player cannot take it, nothing is replaced. The new block keeps the old one's facing. A plain right-click with another tier of the group in hand replaces, rather than opening the block's screen, and on a multiblock any of its blocks answers; a sneak-right-click still places beside. The **Placement Preview** draws a replace in a colour of its own.
 _Avoid_: upgrade (it goes down a tier too), swap, overwrite
 
+**Rotate**:
+One of the pack's two rotation actions, on a key of its own (`R` by default) and reused by everything with an orientation. Held: it turns the facing of what is about to be placed, a quarter turn each press, and the **Placement Preview** redraws with it. The turn is relative to the way the player looks, not a compass direction as Factorio's is, because Factorio's camera never turns and the player's does. Placed: with nothing rotatable held, it turns the block under the crosshair in place, and what turning means is the block's own -- a belt tile turns, an underground belt swaps its ends, a machine keeps its contents. A block whose turned shape does not fit is refused with its reason and nothing changes; there is no preview of a placed rotation. Factorio's rule for which target the key takes: the held item if it is rotatable, otherwise the aimed block.
+_Avoid_: wrench rotate (a departed GregTech verb, #386), turn, rotate key
+
+**Reverse Rotate**:
+**Rotate** the other way (`Shift+R` by default), on both targets. A separate action rather than a modifier so it can be rebound alone, as in Factorio.
+_Avoid_: counter-rotate, rotate back
+
 **Replace Group**:
 The blocks that can **Fast Replace** each other, read from Factorio's `fast_replaceable_group` rather than chosen: the small and medium poles are one group and the substation is alone; the three furnaces are one; the three Assembling Machine tiers are one; belts and splitters of every tier are one; loaders of every tier are one.
 _Avoid_: family, tier ladder (a ladder is one kind's tiers; a group can hold two kinds, as belts and splitters do)

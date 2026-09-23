@@ -102,6 +102,7 @@ public final class PFGameTests {
         if (ModList.get().isLoaded("belts")) {
             BeltHandoffTests.register(registrar);
             BeltTileTests.register(registrar);
+            RotateTests.register(registrar);
             BeltTileSyncTests.register(registrar);
             LoaderFloorTests.register(registrar);
             BeltCostTests.register(registrar);
