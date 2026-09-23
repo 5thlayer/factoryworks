@@ -44,8 +44,8 @@ public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nulla
     public enum Refusal {
         /** Vanilla would refuse: no room, the state cannot survive, the context is not placeable. */
         VANILLA,
-        /** A pole aimed at a pole of another tier, which is not fast replace (ADR-0069). */
-        WRONG_TIER,
+        /** A pole aimed at a pole column outside its Replace Group (ADR-0082). */
+        OTHER_REPLACE_GROUP,
         /** A pole column already at {@code PoleColumn.MAX_SEGMENTS}. */
         COLUMN_FULL,
         /** A pole column whose next segment's position is occupied. */
@@ -79,7 +79,12 @@ public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nulla
 
     /** A Fast Replace, or its refusal when {@code refusal} is not null. */
     public static PlacementPlan replacing(Placed block, @Nullable Refusal refusal) {
-        return new PlacementPlan(List.of(block), List.of(block.pos()), refusal);
+        return replacing(List.of(block), refusal);
+    }
+
+    /** A Fast Replace of several blocks as one, like a pole column; refused whole. */
+    public static PlacementPlan replacing(List<Placed> blocks, @Nullable Refusal refusal) {
+        return new PlacementPlan(blocks, blocks.stream().map(Placed::pos).toList(), refusal);
     }
 
     /** A one-block plan that would go through. */

@@ -149,6 +149,7 @@
   "block.planetaryfactory.oil_well": "Oil Well",
   "message.planetaryfactory.pumpjack.no_well": "A Pumpjack must stand on an oil well.",
   "message.planetaryfactory.replace.no_room": "No room in the inventory for what the replaced block hands back.",
+  "message.planetaryfactory.replace.other_group": "A %s cannot replace a %s column.",
   "map.planetaryfactory.patch.crude_oil": "Crude oil",
   "map.planetaryfactory.patch.yield": "%s: %s yield",
   "gui.planetaryfactory.belt_tile.tier": "Tier %s belt \u2014 %s items/s",
