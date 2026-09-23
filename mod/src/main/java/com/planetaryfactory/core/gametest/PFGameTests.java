@@ -116,6 +116,7 @@ public final class PFGameTests {
             SplitterTests.register(registrar);
             SplitterTileTests.register(registrar);
             BeltHandTests.register(registrar);
+            BeltTileHandTests.register(registrar);
             BeltSyncTests.register(registrar);
             BeltShapeTests.register(registrar);
             BeltSupportTests.register(registrar);
