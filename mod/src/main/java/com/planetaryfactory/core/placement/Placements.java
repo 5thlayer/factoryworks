@@ -21,17 +21,18 @@ import org.jspecify.annotations.Nullable;
  * The one entry point to a {@link PlacementPlan} (#297, ADR-0069), and the vanilla plan every pack
  * block that places normally is served by.
  *
- * <h2>Every pack block gets a plan; no other mod's does, but the belts fork's splitter</h2>
+ * <h2>Every pack block and every belts fork block gets a plan; no other mod's does</h2>
  *
  * <p>The gate is the <em>block</em>'s namespace, not the item's. It has to be: the mechanism is
  * generic and keyed on "this held item places a {@code planetaryfactory:} block", which is what
  * makes a new pack block previewable with no code at all. Other mods' placement refusals are
- * theirs, and owning them is unbounded. The SimpleBelts fork's splitter is the one exception,
- * because the pack owns the fork (ADR-0069).
+ * theirs, and owning them is unbounded. The SimpleBelts fork is the exception, because the pack
+ * owns the fork (ADR-0069, ADR-0083).
  */
 public final class Placements {
 
-    private static final boolean BELTS = ModList.get().isLoaded("belts");
+    private static final String BELTS_NAMESPACE = "belts";
+    private static final boolean BELTS = ModList.get().isLoaded(BELTS_NAMESPACE);
 
     private Placements() {
     }
@@ -48,7 +49,7 @@ public final class Placements {
         if (BELTS && SplitterPlans.isSplitter(stack.getItem())) {
             return SplitterPlans.plan(stack.getItem(), new BlockPlaceContext(level, player, hand, stack, hit));
         }
-        if (!(stack.getItem() instanceof BlockItem item) || !isPackBlock(item.getBlock())) {
+        if (!(stack.getItem() instanceof BlockItem item) || !isPlanned(item.getBlock())) {
             return null;
         }
         BlockPlaceContext context = new BlockPlaceContext(level, player, hand, stack, hit);
@@ -64,9 +65,10 @@ public final class Placements {
         return vanillaPlan(item, context);
     }
 
-    /** Whether this block is the pack's own, which is who gets a preview, the splitter aside. */
-    public static boolean isPackBlock(Block block) {
-        return BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(PlanetaryFactoryCore.NAMESPACE);
+    /** Whether this block is the pack's own or the belts fork's, which is who gets a preview. */
+    public static boolean isPlanned(Block block) {
+        String namespace = BuiltInRegistries.BLOCK.getKey(block).getNamespace();
+        return namespace.equals(PlanetaryFactoryCore.NAMESPACE) || BELTS && namespace.equals(BELTS_NAMESPACE);
     }
 
     /**

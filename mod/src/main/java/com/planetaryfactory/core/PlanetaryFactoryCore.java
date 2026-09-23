@@ -119,6 +119,7 @@ public final class PlanetaryFactoryCore {
             // Factorio's build preview (#297): what placing the held block would do, drawn before
             // the click. It draws the same plan the click executes, so it cannot drift from it.
             PlacementPreviewClient.register();
+            com.planetaryfactory.core.placement.client.RotateKeys.register(modBus);
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,
             // so vanilla's intuitions about what burns are wrong in both directions.
             FuelTooltip.register();

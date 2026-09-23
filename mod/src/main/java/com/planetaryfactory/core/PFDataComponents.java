@@ -1,8 +1,11 @@
 package com.planetaryfactory.core;
 
+import com.mojang.serialization.Codec;
+import com.planetaryfactory.core.placement.QuarterTurn;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -36,6 +39,17 @@ public final class PFDataComponents {
                     () -> DataComponentType.<GlobalPos>builder()
                             .persistent(GlobalPos.CODEC)
                             .networkSynchronized(GlobalPos.STREAM_CODEC)
+                            .build());
+
+    /**
+     * How far the held stack's placement is turned from the look (ADR-0083). Absent means no turn,
+     * and a turn back to none removes it, so a turned stack stacks again with an unturned one.
+     */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<QuarterTurn>>
+            QUARTER_TURN = DATA_COMPONENTS.register("quarter_turn",
+                    () -> DataComponentType.<QuarterTurn>builder()
+                            .persistent(Codec.intRange(0, 3).xmap(QuarterTurn::new, QuarterTurn::quarters))
+                            .networkSynchronized(ByteBufCodecs.VAR_INT.map(QuarterTurn::of, QuarterTurn::quarters))
                             .build());
 
     private PFDataComponents() {

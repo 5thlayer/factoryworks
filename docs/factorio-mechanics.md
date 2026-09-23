@@ -218,15 +218,12 @@ Sub-rules:
   pipe-connection verb on the pipe block's own path: ADR-0017 gives fluid and item logistics to
   Simplebelts, GregTech's pipes left with its power layer, and ADR-0034's sweep leaves them unobtainable,
   so it would be declared against blocks Terra does not ship.
-- **Rotating a placed entity (`R`)** — `shipped`, #168. The Engineer's Pick declares NeoForge's
-  `wrench_rotate` ability, which is what GregTech gates the verb on; the wrench item tags never
-  carried it, so until #168 the rotation overlay drew on every machine while the right-click did
-  nothing. Declaring the ability was necessary and not sufficient: GregTech only sets a front face
-  for a **sneaking** player, while vanilla skips a block's interaction entirely when a sneaking
-  player holds a non-empty stack, so the one gesture GregTech accepts was the one that never
-  arrived. The Pick answers `doesSneakBypassUse` to get past that, which is the hook NeoForge
-  provides where GregTech's own tools use `onItemUseFirst`. Confirmed turning a machine in-game.
-  *This entry read "`planned`, no owner yet".*
+- **Rotating a placed entity (`R`)** — `planned`, #386. Two pack actions, **Rotate** and **Reverse
+  Rotate** (`CONTEXT.md`), on `R` and `Shift+R`, for the held item's facing and the aimed block in
+  place. The held half shipped with #386 (ADR-0083); the placed half is #405. *This entry read "`shipped`, #168":
+  #168 declared NeoForge's `wrench_rotate` ability on the Engineer's Pick, which GregTech gated the
+  verb on, and GregTech left with ADR-0060. Nothing consumes the ability now, so the row is planned
+  again and the ability goes with #404.*
 
 ### Trees and wood
 

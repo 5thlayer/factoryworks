@@ -122,8 +122,6 @@ final class BeltTileTests {
                 BeltTileTests::tierTwoStallsUnpowered);
         tests.test("pole_fed_tier_2_loader_on_tiles_draws_66_5_fe_per_item",
                 FED_WARMUP_TICKS + DRAW_WINDOW_TICKS + 20, BeltTileTests::fedLoaderDrawsPerItem);
-        tests.test("a_tile_placed_with_its_item_faces_the_look_or_back_when_sneaking", 20,
-                BeltTileTests::placedTileFacesTheLook);
         tests.test("a_line_built_by_hand_carries_items", 200, BeltTileTests::lineBuiltByHand);
         tests.test("a_tile_placed_between_two_lines_merges_them", MERGE_FILL_TICKS + 20,
                 BeltTileTests::placingATileMergesTwoLines);
@@ -134,35 +132,6 @@ final class BeltTileTests {
     // The probe's fourth clause of #348 is `BeltPowerTests`': the loader itself is unchanged here,
     // and its probe is answered with no belt and no line in front of it at all.
 
-    /** Placed by the item rather than by {@code setBlock}: the facing is the gesture's, not a field's. */
-    private static void placedTileFacesTheLook(GameTestHelper helper) {
-        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-        player.setItemInHand(InteractionHand.MAIN_HAND,
-                new ItemStack(ItemContent.tileFor(BeltTier.BELT), 4));
-
-        for (boolean sneaking : List.of(false, true)) {
-            player.setShiftKeyDown(sneaking);
-            for (Direction look : List.of(Direction.EAST, Direction.SOUTH)) {
-                BlockPos at = FIRST_TILE.east(sneaking ? 4 : 0).south(look == Direction.EAST ? 0 : 2);
-                player.setYRot(look.toYRot());
-                click(helper, player, at.below());
-                BlockState placed = helper.getBlockState(at);
-                if (!(placed.getBlock() instanceof BeltTileBlock)) {
-                    helper.fail("the tile item placed " + placed.getBlock() + " looking " + look, at);
-                    return;
-                }
-                Direction expected = sneaking ? look.getOpposite() : look;
-                Direction facing = placed.getValue(HorizontalDirectionalBlock.FACING);
-                if (facing != expected) {
-                    helper.fail("a tile placed looking " + look + (sneaking ? " sneaking" : "")
-                            + " faces " + facing + ", expected " + expected, at);
-                    return;
-                }
-            }
-        }
-        helper.succeed();
-    }
-
     /** Every block but the chests placed by a sneaking player's clicks, as a player builds a line. */
     private static void lineBuiltByHand(GameTestHelper helper) {
         List<BeltTier> tiles = tiers(BeltTier.BELT);
@@ -172,7 +141,7 @@ final class BeltTileTests {
         ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
         player.setGameMode(GameType.SURVIVAL);
         player.setYRot(Direction.EAST.toYRot());
-        // Sneaking past the chest's menu for the loaders only: a sneaking tile runs the other way.
+        // Sneaking past the chest's menu for the loaders.
         player.setShiftKeyDown(true);
         use(helper, player, new ItemStack(BlockContent.loaderFor(BeltTier.BELT).asItem()), SOURCE, Direction.EAST);
         player.setShiftKeyDown(false);
