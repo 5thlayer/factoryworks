@@ -226,7 +226,9 @@ tiles on the floor between -- delivers every item. A tile placed through its own
 player's look, sneaking or not; Rotate is `RotateTests`'. Two more
 hold the line being rebuilt: two loaded lines joined by two tiles become one run of eight, carrying at least what
 the two held with nothing on the ground; and a mid-line tile broken leaves 8 upstream and 8
-downstream, the tiles past the break keeping what they carried. That last one is the defect check --
+downstream, the tiles past the break keeping what they carried. A tile placed by hand past a line of three a
+tick after it formed, empty or loaded, makes a line of four that delivers into a chest past the new end (#392);
+dropping the head's rescan when its run changed turns both red. That last one is the defect check --
 rebuilding the run before handing each tile its share drops the whole downstream half, and it turns
 red. The merge that makes the joined case work is order-independent by construction rather than by
 test: every tile of a run lets go before any is drained. The merge rule and the line's rate,
