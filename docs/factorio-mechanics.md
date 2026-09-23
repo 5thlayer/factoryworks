@@ -617,8 +617,11 @@ Sub-rules:
   undergrounds and for the same reason (ADR-0044). *This entry read `by-consequence` of Create
   having no lane model; the ledger now owns a reason of its own.*
   The fork *draws* a belt's items in two lanes of four per block, so they read at a size a player
-  can see without overlapping, but the belt is one lane: nothing side-loads, and no lane fills or
-  empties apart from the other (#344).
+  can see without overlapping, but the belt is one lane: no lane fills or empties apart from the
+  other (#344).
+- **Side-loading** — `adapted`. A belt feeding the side of a straight tile merges into the line it
+  feeds, into its gaps, with the line from behind going first; a full line backs the side up. With
+  one lane there is no far lane to fill, so it is Factorio's side-load reduced to a merge (#409).
 - **Belt as buffer** — `shipped`. A backed-up belt queues from its end at eight items per block at
   every tier, so a 64-block belt holds 512, as a 64-tile belt does (#344). *This entry read `excluded`,
   against Create's one item per block.*
