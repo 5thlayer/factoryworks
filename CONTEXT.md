@@ -159,8 +159,12 @@ A single link carrying items from one belt end to another along a curve, shaped 
 _Avoid_: conveyor, belt segment, lane
 
 **Tile**:
-One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, turned by Rotate (ADR-0083). A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). It stands beside the spline belt until #397 replaces it.
+One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, turned by Rotate (ADR-0083). A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). A player or item entity standing on a tile is carried along it at that tile's speed, around a corner along its arc, and off the end of the line (#396). It stands beside the spline belt until #397 replaces it.
 _Avoid_: belt block, conveyor block, segment
+
+**Belt hand**:
+Holding the use key on a belt piece with anything but a belt piece in hand: the holder takes the items reaching the aimed point at the belt's rate, while what was already past it runs on. On a tile the whole tile is aimed at, so the hand takes whatever is on it. A full inventory stops taking and lets the belt run on, losing nothing (#350, #396).
+_Avoid_: grab, pick up from belt
 
 **Stretch**:
 The tiles one drag of the tile item lays, placed, charged and refused as one. A sneak-click stores its start and the way the player looks; the next click lays it to the aimed spot, in one straight leg or two joined by one corner, the first leg along the stored look. Each sneak-click before that adds a corner where the stretch would end, and the stretch runs on from it the same way, heading the way its last tile travels. It is level, and no leg turns back on its heading. A tile already on its path is turned to it, or replaced when of another tier (#393).

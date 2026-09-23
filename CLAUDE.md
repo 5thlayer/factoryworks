@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -345,6 +345,13 @@ fork's `BeltContentsTest`; the client's ray and how the gesture feels are a huma
 A belt whose far inventory is full stops its last item inside the far loader's back plate, where no
 aim reaches, so a hand on that belt holds its end instead (#360): held a second on its last block, it
 takes that item and 15 items/s. The old jar turns it red.
+The hand and riding carry over to tiles (`BeltTileHandTests`, #396). A hand on a tile holds the whole
+tile, its point the tile's front, so it takes whatever is on the tile at the line's rate. Only what was already
+past the tile reaches the end, a hand with room for four takes four and loses nothing, and a hand on a
+backed-up line's last tile takes 15 items/s. No far-end rule is needed, since the line's head sits flush
+with its last tile's front. An item entity on a tile rides it and rides round a corner. A tile ticking with no hand turns the three hand
+tests red, and one registering no ride the two ride tests. The point is the fork's `TransportLineTest`,
+and whether aiming at a tile and riding one feel right is a human check on delivery.
 And that a belt moving items sends no block update, whether or not it is also loading and delivering,
 and that a belt saved and loaded holds every entry, by id, item and position (`BeltSyncTests`). A
 client learns what a belt gains and loses from the fork's own payload and advances it itself. No
