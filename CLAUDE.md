@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398) and `LoaderFloorTests` (#399), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395) and `LoaderFloorTests` (#399), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -242,6 +242,22 @@ running across. With the floor never set, the first two turn red; the third guar
 drawn where none belongs. A loader the spline belt item places beside a tile draws none until #397
 retires that item. Whether the floor reads as one belt and scrolls the right way is a human check
 on delivery.
+And that a tile line costs the server no block updates and survives a save and an unloaded chunk
+(`BeltTileSyncTests`, #395): a line moving one item, and a line loading and delivering, send none
+from its tiles or loaders; each tile saves its own items and where in the tile they sit, and the
+tiles loaded back into the world make one line holding every item; a tile placed past a line's end a
+tick after the line formed joins it; a moving line marks every chunk it crosses for saving, since a
+chunk not marked is skipped by the next save and its tiles would reload stale; and a line crossing into a chunk that unloads runs over the
+loaded side's tiles only, delivers nothing through the gap, and when the chunk loads is one line
+again that delivers every item with none lost or made. The harness cannot unload a test's chunk, so
+that test saves the far chunk's tiles, lets them go through the fork's `chunkUnloading` -- what its
+`ChunkEvent.Unload` listener calls -- and puts back block entities read from the saves. A tick that
+sends a block update turns the first two red, a tile saving only what no line holds the third, the
+head not rebuilding for a run it does not hold the fourth, marking only the head's chunk the fifth
+(its fixture is a dead end, because a loader marks its own chunk), and an unload that lets nothing
+go the sixth. The per-tile shares, the cut at an edge and the rejoin, the client's copy and where it draws
+each item are the fork's `TileLineSyncTest`. Whether the items are drawn on the belt, move smoothly
+and cross tiles with no jump is a human check on delivery.
 And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
 that both loaders of a belt read as in use from the update tag the client is sent (`BeltFilterTests`).
 Both were red on upstream's filter, which the off hand reset.

@@ -445,7 +445,7 @@ final class BeltTileTests {
         return FIRST_TILE.east(tiles.size() + 1);
     }
 
-    private static void fill(GameTestHelper helper, BlockPos chest, int items) {
+    static void fill(GameTestHelper helper, BlockPos chest, int items) {
         for (int slot = 0; items > 0; slot++, items -= 64) {
             BeltHandoffTests.chest(helper, chest).setItem(slot, new ItemStack(Items.COBBLESTONE, Math.min(items, 64)));
         }
@@ -457,12 +457,12 @@ final class BeltTileTests {
         return line == null ? 0 : line.size();
     }
 
-    private static BlockState loader(BeltTier tier, Direction facing) {
+    static BlockState loader(BeltTier tier, Direction facing) {
         return BlockContent.loaderFor(tier).defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, facing);
     }
 
-    private static BlockState tile(BeltTier tier, Direction facing) {
+    static BlockState tile(BeltTier tier, Direction facing) {
         return BlockContent.tileFor(tier).defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, facing);
     }
