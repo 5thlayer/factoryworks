@@ -29,6 +29,8 @@ MUST_HOLD = {
                             "planetaryfactory:assembling_machine_2",
                             "planetaryfactory:assembling_machine_3"),
     "loaders": ("belts:chute", "belts:improved_chute", "belts:express_chute", "belts:turbo_chute"),
+    "belts": ("belts:belt_tile", "belts:improved_belt_tile", "belts:express_belt_tile",
+              "belts:turbo_belt_tile"),
     "splitters": ("belts:splitter", "belts:improved_splitter", "belts:express_splitter",
                   "belts:turbo_splitter"),
     "chests": ("minecraft:chest", "planetaryfactory:iron_chest", "planetaryfactory:steel_chest"),

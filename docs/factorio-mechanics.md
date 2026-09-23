@@ -558,33 +558,25 @@ ADR-0029 gives the Assembler speed 1 with durations of `energy_required x 20` un
 ### Transport belts
 
 - **verdict**: `adapted`
-- **notice**: a belt carries Factorio's items per second and holds Factorio's buffer, but in one
-  lane, and a belt is a bounded spline between grid-aligned supports rather than a row of tiles — so
-  the lane-and-underground patterns a Factorio player has memorised do not transfer (ADR-0044,
-  ADR-0076, ADR-0078).
+- **notice**: a belt is a row of tiles carrying Factorio's items per second and holding Factorio's
+  buffer, but in one lane and with no undergrounds, so the lane-and-underground patterns a Factorio
+  player has memorised do not transfer (ADR-0044, ADR-0076, ADR-0084).
 - **where**: all bodies
 - **via**: `belts` (the pack's SimpleBelts fork, ADR-0060)
-- **owner**: ADR-0076, ADR-0044, ADR-0078, #341
+- **owner**: ADR-0076, ADR-0044, ADR-0084, #341
 
 Sub-rules:
 
-- **Belt shape** — `shipped` (#362). Factorio's tile grid is not reproduced; the belt's control
-  points sit on the block grid and the curve between them is bounded, as Satisfactory bounds its
-  conveyors: each span turns no tighter than one block, climbs no steeper than 35° at its steepest
-  point, never turns and climbs at once, and reaches at most 32 blocks. An out-of-bounds layout is
-  refused, not bent (ADR-0078). Optional drawing modes are #365.
-- **Belt ends** — `adapted` (#366). Factorio's belt ends where its tiles do; here a belt ends on a
-  loader against an inventory or on a support otherwise. A support takes one belt arriving and one
-  leaving: with both it joins them at the slower belt's rate and draws no power, and with only one
-  arriving it is a dead end the belt backs up against, as a Factorio belt ending in nothing does.
-  Merging and splitting stay the splitter's. A support takes its direction from its belts, so a free
-  one turns to take a belt either way. Supports are free and have no recipe, since the belt item
-  places them; a belt ending on a free support carries on from it, and a sneak-click plans one
-  mid-belt. An end loader against an inventory is placed whichever way the player faces. Breaking
-  any support a belt uses breaks that belt, refunded as breaking a loader is (ADR-0078).
+- **Belt shape** — `shipped` (#383). Factorio's tile: one block of belt per block, straight or a
+  one-block corner, the corner derived from what feeds the tile (#391). Contiguous tiles merge at
+  runtime into one transport line that ticks once (#398). A two-click stretch lays straight legs
+  joined by corners, only over solid ground (#393). Belts are flat; climbing is #412 (ADR-0084).
+- **Belt ends** — `shipped` (#383). A belt ends where its tiles do: at a loader, which a player
+  places against an inventory, at a splitter half, or at its last tile, where it backs up as a
+  Factorio belt ending in nothing does (ADR-0084).
 
-- **Belt tiers** — `shipped` for tiers 1 and 2. The fork's four belts, `belt`, `improved_belt`,
-  `express_belt` and `turbo_belt`, carry Factorio's 15, 30, 45 and 60 items/s under Factorio's names
+- **Belt tiers** — `shipped` for tiers 1 and 2. The fork's four belt tiles, `belt_tile`, `improved_belt_tile`,
+  `express_belt_tile` and `turbo_belt_tile`, carry Factorio's 15, 30, 45 and 60 items/s under Factorio's names
   (#345, ADR-0076). `logistics-2` and `logistics-3` unlock the fast and express recipes on the
   Assembling surface. Express needs lubricant, so it is a `crafting-with-fluid` recipe, which
   Assembling Machine 2 and 3 craft (#295). The turbo
@@ -600,16 +592,15 @@ Sub-rules:
   through a tier-1 splitter (#347, #349, ADR-0076).
 - **Underground belts** — `excluded`. Not for want of a Create block: undergrounds solve a *weaving*
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
-  Minecraft has a Y axis and Create has sloped belt runs, so a belt that must cross another goes
-  over it. Argued from the medium, not from a mod's shortfall (ADR-0044).
+  Argued from the medium, not from a mod's shortfall (ADR-0044). Tile belts are flat (ADR-0084), so
+  whether a belt crosses another by climbing over it, and whether this row stands, is #412's.
 - **Splitters** — `shipped`. Four tiers from Factorio's four splitter recipes, turbo registered
   with no recipe. A splitter is two blocks wide, placed and broken as one; each half ends one belt at
   its back and starts one at its front, and items pass from an input's end to an output's head with
   nothing held between. It splits evenly, merges evenly, sends everything to the free side when the
   other backs up, draws no power, and each side passes no more than its tier's items/s (#349,
-  ADR-0076). The placement preview is #355. Placed across a running belt it cuts the belt, as
-  Factorio's does, but refuses a belt against its facing rather than turning to match (#361). It
-  meets belt tiles face to face, and placed across a straight tile line takes the tile's place (#394). *This entry read `adapted` to Create's tunnels, which
+  ADR-0076). The placement preview is #355. It meets belt tiles face to face, and placed across a
+  straight tile line running its way takes the tile's place (#394). *This entry read `adapted` to Create's tunnels, which
   left with ADR-0060.*
 - **Balancers** — `shipped`. A balancer is built from splitters, not bought as a block: chained
   splitters make Factorio's 2x2 and 4x4 balancers (#349).
@@ -625,13 +616,11 @@ Sub-rules:
   feeds, into its gaps, with the line from behind going first; a full line backs the side up. With
   one lane there is no far lane to fill, so it is Factorio's side-load reduced to a merge (#409).
 - **Belt as buffer** — `shipped`. A backed-up belt queues from its end at eight items per block at
-  every tier, so a 64-block belt holds 512, as a 64-tile belt does (#344). *This entry read `excluded`,
+  every tier, so a 64-tile belt holds 512 (#344). *This entry read `excluded`,
   against Create's one item per block.*
-- **Cost per length** — `shipped`. A belt costs one belt item of its tier per block of its length,
-  rounded up, as a Factorio belt costs one item per tile. Placing one the player cannot pay for is
-  refused with a message and charges nothing. Supports cost nothing (#366). Breaking either end, or
-  any support the belt passes through, puts the refund and the belt's items into the breaker's
-  inventory and leaves the other end standing, free to relink (#346, #366). *Upstream
+- **Cost per length** — `shipped`. A belt costs one tile of its tier per block, as a Factorio belt
+  costs one item per tile. A stretch the player cannot pay for is refused with a message and charges
+  nothing (#393). Breaking a tile returns it and the items on it (#346, ADR-0084). *Upstream
   SimpleBelts charged one item whatever the length.*
 
 `logistics`, `logistics-2` and `logistics-3` are declared in `researchd.js`; each unlocks its
@@ -690,9 +679,8 @@ Sub-rules:
 - **A held block previews where it lands, red where refused** — `shipped`, #297. The pack's term
   is **Placement Preview**, not ghost: a ghost is the excluded robot-built entity under
   [Construction robots and blueprints](#construction-robots-and-blueprints).
-- **A held belt previews the belt, loaders and supports it would place, red where refused** —
-  `shipped`, #372. The belt item's click executes the plan its preview draws, and the refusal's
-  reason is on the action bar.
+- **A held belt previews the tiles it would place, red where refused** — `shipped`, #393. The tile
+  item's click executes the plan its preview draws, and the refusal's reason is on the action bar.
 - **A held pole previews the wires it would add** — `planned`, #298.
 - **A held pole shows its supply area and those of the poles around it** — `planned`, #158.
 - **Fast replace: placing another furnace tier over a furnace swaps it in place** — `shipped`,

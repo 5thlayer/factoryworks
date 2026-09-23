@@ -155,11 +155,11 @@ footprint are 2D problems this pack does not have, and ADR-0044 records why.
 _Avoid_: belt puzzle, the logistics game
 
 **Belt**:
-A single link carrying items from one belt end to another along a curve, shaped by supports and paid for at one belt item per block of its length. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per block, so a belt is a buffer as well as a route (ADR-0060). Its curve is free between supports but bounded: it turns no tighter than one block, climbs no steeper than 35°, and never turns and climbs at once. A layout outside those bounds is refused, not bent to fit (#362).
+A run of tiles carrying items from one belt end to another, paid for at one belt item per tile. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per tile, so a belt is a buffer as well as a route (ADR-0060). It is flat: a stretch does not climb (ADR-0084).
 _Avoid_: conveyor, belt segment, lane
 
 **Tile**:
-One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, turned by Rotate (ADR-0083). A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). A player or item entity standing on a tile is carried along it at that tile's speed, around a corner along its arc, and off the end of the line (#396). It stands beside the spline belt until #397 replaces it.
+One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, turned by Rotate (ADR-0083). A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). A player or item entity standing on a tile is carried along it at that tile's speed, around a corner along its arc, and off the end of the line (#396). A stretch lays a tile only over a block with a sturdy top face (ADR-0084).
 _Avoid_: belt block, conveyor block, segment
 
 **Belt hand**:
@@ -171,39 +171,27 @@ The tiles one drag of the tile item lays, placed, charged and refused as one. A 
 _Avoid_: run, zoop, drag (the gesture, not what it lays), tile path
 
 **Tier colour**:
-The colour a belt tier is painted in: yellow, red, blue, green for tiers 1 to 4. The belt shows it as the stripes along its edges, and every other belt piece of that tier shows it on its own body: the loader's gate, the splitter's divider. Factorio's convention. Structure standing on the ground, such as supports and legs, stays slate.
+The colour a belt tier is painted in: yellow, red, blue, green for tiers 1 to 4. The belt shows it as the stripes along its edges, and every other belt piece of that tier shows it on its own body: the loader's band, the splitter's divider. Factorio's convention. A loader's housing stays slate.
 _Avoid_: stripe colour, tier tint
 
 **Transport line**:
-The contiguous run of tiles each feeding the next, around corners as well as straight, merged at runtime so the whole run ticks once rather than each tile ticking for itself. A line is derived state, rebuilt whenever a tile is placed or broken; each tile keeps its own share of the items, so merging and splitting a line loses nothing. A line runs at its slowest tile and holds eight items a tile, and it is loaded by the loader behind its first tile and unloaded by the one past its last (#398). A line closed on itself is a ring, with no first tile and no last (#391).
+The contiguous run of tiles each feeding the next, around corners as well as straight, merged at runtime so the whole run ticks once rather than each tile ticking for itself. A line is derived state, rebuilt whenever a tile is placed or broken; each tile keeps its own share of the items, so merging and splitting a line loses nothing. A line runs at its slowest tile and holds eight items a tile, and it is loaded by the loader behind its first tile and unloaded by the one past its last (#398). A line closed on itself is a ring, with no first tile and no last (#391). A line never spans an unloaded chunk (#395).
 _Avoid_: belt line, chain, run
 
 **Side-load**:
 A tile or other belt piece feeding the side of a straight tile. It does not join the line it feeds: two lines meet there, and the side-loading line's items merge into gaps on the other, which goes first. The pack's one lane has no far lane to fill, so this is Factorio's side-load reduced to a merge.
 _Avoid_: T-junction, merge belt
 
-**Support**:
-A block on the block grid, facing along one of its axes, that a belt passes through or ends at. Supports are where a belt's shape is decided; the curve between them only joins them. A support holds at most one belt arriving and one leaving: with both it joins two belts, with only one arriving it is a dead end where items back up. Supports are placed by the belt itself and cost nothing (ADR-0078).
-_Avoid_: pole, midpoint, control point
-
-**Free support**:
-A support with no belt arriving or leaving. It has no direction of its own: the next belt through it sets its facing.
-_Avoid_: empty support, unused support
-
 **Belt end**:
-Where a belt starts or stops: a loader, set against an inventory; a support, set against another belt or nothing; or a splitter half, set against another belt.
+Where a belt starts or stops: a loader, set against an inventory; a splitter half; or its last tile with nothing in front of it, where the line backs up (ADR-0084).
 _Avoid_: terminator, endpoint
-
-**Span**:
-The stretch of a belt between two consecutive supports or ends. A span either climbs or turns, never both, and is at most two chunks long (#362).
-_Avoid_: segment, belt segment
 
 **Loader**:
 A belt end set against an inventory: it pulls onto the belt from the inventory behind it, or pushes into it. It has tiers of its own that cap what it moves, and from tier 2 it draws power for each item. The pack's inserter; there is no swing arm. It carries no items itself: like Factorio's 1×1 loader, whose belt distance is 0, it hands items straight between the inventory and the tile at its mouth, so a line's capacity is its tiles' alone. It is drawn as a solid housing with a low mouth at belt height on the tile face.
 _Avoid_: chute, inserter, funnel
 
 **Splitter**:
-A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power. Placed across a running belt, it cuts it: the belt ends at the half's back face, the rest starts from its front, and the block it takes is refunded. It cuts only a belt running straight, level and its own way through it.
+A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power. Placed across a straight tile line running its way, it takes the tile's place, refunds it and keeps its items (#394).
 _Avoid_: merger, tunnel
 
 **Input priority**:
@@ -343,11 +331,11 @@ A connection between two **Supply Area Pole**s that makes them one **Electric Ne
 _Avoid_: link, cable, connection
 
 **Placement Plan**:
-What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole. A plan may read what an earlier click stored on the item: a belt's plan is its ends, its supports and its curve, from the stored start to the aimed spot.
+What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole. A plan may read what an earlier click stored on the item: a stretch's plan is its tiles, from the stored start to the aimed spot.
 _Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state
 
 **Placement Preview**:
-What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the belt, its ends and its supports. It shows what placing would do and changes nothing in the world.
+What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the tiles of its stretch. It shows what placing would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
 **Fast Replace**:

@@ -4,9 +4,7 @@ import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +14,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -25,9 +22,9 @@ import rearth.belts.blocks.ChuteBlockEntity;
 import rearth.belts.model.BeltTier;
 
 /**
- * A loader's item filter, set by clicking it with the item, holds through the rest of the click.
- * A client that does not know the loader is in use goes on to try the empty off hand, which the
- * server used to read as a reset.
+ * A loader's item filter, set by clicking it with the item, holds through the rest of the click,
+ * where the client goes on to try the empty off hand. A loader takes the filter click only while a
+ * tile line runs from or into it.
  */
 final class BeltFilterTests {
 
@@ -35,6 +32,7 @@ final class BeltFilterTests {
     private static final BlockPos FROM = new BlockPos(3, 1, 3);
     private static final BlockPos TO = new BlockPos(7, 1, 3);
     private static final BlockPos TARGET = new BlockPos(8, 1, 3);
+    private static final BlockPos FREE = new BlockPos(3, 1, 5);
 
     private static final int RUN_TICKS = 100;
 
@@ -44,8 +42,7 @@ final class BeltFilterTests {
     static void register(PFGameTests.Registrar tests) {
         tests.test("a_loaders_filter_survives_the_empty_off_hand", RUN_TICKS + 20,
                 BeltFilterTests::filterSurvivesEmptyOffHand);
-        tests.test("both_loaders_of_a_belt_read_as_used_to_the_client", 20,
-                BeltFilterTests::bothEndsReadAsUsedToTheClient);
+        tests.test("both_loaders_of_a_tile_line_read_as_used", 20, BeltFilterTests::bothEndsReadAsUsed);
     }
 
     // Cobblestone sits in the first slot, so an unfiltered loader takes it first.
@@ -73,36 +70,34 @@ final class BeltFilterTests {
         }).thenSucceed();
     }
 
-    // What a client knows of a loader is its update tag; a loader it thinks is free takes no click.
-    private static void bothEndsReadAsUsedToTheClient(GameTestHelper helper) {
+    // What the loader reads is the world, which the client holds too, so both sides agree.
+    private static void bothEndsReadAsUsed(GameTestHelper helper) {
         placeBelt(helper);
+        helper.setBlock(FREE, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
+                .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
         helper.runAfterDelay(2, () -> {
             for (BlockPos end : List.of(FROM, TO)) {
-                if (!asTheClientSeesIt(helper, end).isUsed()) {
-                    helper.fail("the client reads this loader as free while it is part of a belt", end);
+                if (!helper.getBlockEntity(end, ChuteBlockEntity.class).isUsed()) {
+                    helper.fail("this loader reads as free while a tile line runs through it", end);
                 }
+            }
+            if (helper.getBlockEntity(FREE, ChuteBlockEntity.class).isUsed()) {
+                helper.fail("a loader with no tile in front of it reads as used", FREE);
             }
             helper.succeed();
         });
     }
 
-    private static ChuteBlockEntity asTheClientSeesIt(GameTestHelper helper, BlockPos pos) {
-        ChuteBlockEntity server = helper.getBlockEntity(pos, ChuteBlockEntity.class);
-        CompoundTag tag = server.getUpdateTag(helper.getLevel().registryAccess());
-        tag.putString("id", BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(server.getType()).toString());
-        BlockEntity copy = BlockEntity.loadStatic(server.getBlockPos(), server.getBlockState(), tag,
-                helper.getLevel().registryAccess());
-        return (ChuteBlockEntity) copy;
-    }
-
     private static void placeBelt(GameTestHelper helper) {
         helper.setBlock(SOURCE, Blocks.CHEST);
         helper.setBlock(TARGET, Blocks.CHEST);
-        helper.setBlock(FROM, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
-                .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
         helper.setBlock(TO, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
-        BeltHandoffTests.link(helper, FROM, TO, List.of(), BeltTier.BELT);
+        for (BlockPos tile = TO.west(); tile.getX() > FROM.getX(); tile = tile.west()) {
+            helper.setBlock(tile, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+        }
+        helper.setBlock(FROM, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
+                .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
     }
 
     private static BlockHitResult hit(GameTestHelper helper, BlockPos pos) {

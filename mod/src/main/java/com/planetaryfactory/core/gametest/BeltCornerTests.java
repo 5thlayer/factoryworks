@@ -78,8 +78,8 @@ final class BeltCornerTests {
                         + " tiles, expected one line of " + TILES, FROM.north());
             }
         }).thenIdle(260).thenExecute(() -> {
-            int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET));
-            int left = BeltHandoffTests.count(BeltHandoffTests.chest(helper, SOURCE));
+            int arrived = BeltTileTests.count(BeltTileTests.chest(helper, TARGET));
+            int left = BeltTileTests.count(BeltTileTests.chest(helper, SOURCE));
             if (arrived != ITEMS || left != 0) {
                 helper.fail("an L delivered " + arrived + " of " + ITEMS + " and left " + left + " behind", TARGET);
             }
@@ -94,10 +94,10 @@ final class BeltCornerTests {
         int[] before = new int[1];
         helper.startSequence()
                 .thenIdle(RATE_WARMUP_TICKS)
-                .thenExecute(() -> before[0] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET)))
+                .thenExecute(() -> before[0] = BeltTileTests.count(BeltTileTests.chest(helper, TARGET)))
                 .thenIdle(RATE_WINDOW_TICKS)
                 .thenExecute(() -> {
-                    int delivered = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET)) - before[0];
+                    int delivered = BeltTileTests.count(BeltTileTests.chest(helper, TARGET)) - before[0];
                     if (delivered != expected) {
                         helper.fail("a tier-" + tier.number() + " L delivered " + delivered + " in "
                                 + RATE_WINDOW_TICKS + " ticks, expected " + expected, TARGET);
@@ -120,7 +120,7 @@ final class BeltCornerTests {
                 helper.fail("the head a loader feeds from its left is " + shape + ", expected a corner", CORNER);
             }
         }).thenIdle(260).thenExecute(() -> {
-            int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, TARGET));
+            int arrived = BeltTileTests.count(BeltTileTests.chest(helper, TARGET));
             if (arrived != ITEMS) {
                 helper.fail("a head loaded from its side delivered " + arrived + " of " + ITEMS, TARGET);
             }
@@ -161,11 +161,11 @@ final class BeltCornerTests {
                     if (shape != BeltTileBlock.Shape.STRAIGHT) {
                         helper.fail("a side-loaded tile with a tile behind it is " + shape, SIDE_LOADED);
                     }
-                    before[0] = BeltHandoffTests.count(BeltHandoffTests.chest(helper, ROW_TARGET));
+                    before[0] = BeltTileTests.count(BeltTileTests.chest(helper, ROW_TARGET));
                 })
                 .thenIdle(RATE_WINDOW_TICKS)
                 .thenExecute(() -> {
-                    int delivered = BeltHandoffTests.count(BeltHandoffTests.chest(helper, ROW_TARGET)) - before[0];
+                    int delivered = BeltTileTests.count(BeltTileTests.chest(helper, ROW_TARGET)) - before[0];
                     if (delivered != expected) {
                         helper.fail("the side-loaded row delivered " + delivered + ", expected " + expected, ROW_TARGET);
                     }

@@ -259,7 +259,7 @@ fromFactorio('logistics', {
 });
 
 fromFactorio('logistics-2', {
-  icon: 'belts:improved_belt',
+  icon: 'belts:improved_belt_tile',
   unlocks: [
     'planetaryfactory:assembling/fast_transport_belt',
     'planetaryfactory:assembling/fast_splitter'
@@ -267,7 +267,7 @@ fromFactorio('logistics-2', {
 });
 
 fromFactorio('logistics-3', {
-  icon: 'belts:express_belt',
+  icon: 'belts:express_belt_tile',
   unlocks: [
     'planetaryfactory:assembling/express_transport_belt',
     'planetaryfactory:assembling/express_splitter'

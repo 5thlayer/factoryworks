@@ -102,7 +102,6 @@ public final class PFGameTests {
             PumpjackTests.register(registrar);
         }
         if (ModList.get().isLoaded("belts")) {
-            BeltHandoffTests.register(registrar);
             BeltTileTests.register(registrar);
             BeltCornerTests.register(registrar);
             BeltSideLoadTests.register(registrar);
@@ -110,18 +109,9 @@ public final class PFGameTests {
             StretchTests.register(registrar);
             BeltTileSyncTests.register(registrar);
             LoaderMouthTests.register(registrar);
-            BeltCostTests.register(registrar);
-            BeltLoaderCostTests.register(registrar);
             BeltFilterTests.register(registrar);
-            BeltPowerTests.register(registrar);
-            SplitterTests.register(registrar);
             SplitterTileTests.register(registrar);
-            BeltHandTests.register(registrar);
             BeltTileHandTests.register(registrar);
-            BeltSyncTests.register(registrar);
-            BeltShapeTests.register(registrar);
-            BeltSupportTests.register(registrar);
-            BeltPlanTests.register(registrar);
             PlacementPlanTests.Splitters.register(registrar);
         }
     }
