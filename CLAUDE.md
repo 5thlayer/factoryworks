@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -327,6 +327,15 @@ ones behind where they were; and a five-block belt cut two along refunds the pla
 end two when broken. Skipping the cut in the fork's `place` turns all six red. The crossing and the
 cut are the fork's `BeltCrossingTest` and `BeltCutTest`, and whether the preview shows the cut and the
 gesture feels right is a human check on delivery.
+A splitter meets belt tiles face to face (`SplitterTileTests`, #394): between tile lines it splits
+one tier-1 line evenly, sends all 15 items/s to the free side and caps a tier-3 line at 15, and broken
+at either half leaves neither standing, hands its items to the breaker and drops one splitter. Placed
+by hand across a backed-up line of seven tiles it takes the middle tile's place, refunds that tile,
+keeps its items, and every item reaches the end or the right half, which no line leaves. A line's last
+tile hands into a half's back and a half with no spline belt leaving feeds the tile line ahead; with
+the first handoff dropped all six turn red. `SplitterTest` runs the split, merge, fallback, cap,
+balancer and loss checks over tile lines as well. Whether a splitter between tiles reads as part of
+the same belt is a human check on delivery.
 And that a belt held at its middle fills the holder's inventory at the belt's 15 items/s while the source
 keeps loading and only what was already past the hand reaches the end, and that a hand with room for four
 takes four and then lets the belt run on to its end, losing nothing (`BeltHandTests`). A hand that never
