@@ -10,9 +10,9 @@ import rearth.belts.items.BeltTileItem;
 import rearth.belts.items.StretchPlan;
 
 /**
- * The SimpleBelts fork's tile item (#393). A plain click with a stored start lays the fork's
- * stretch, which this is the plan of; without one it places a tile as vanilla would, and a
- * sneak-click stores a start and places nothing. Loaded only when the fork is.
+ * The SimpleBelts fork's tile item (#393). With a stored start, a click lays the fork's stretch and
+ * a sneak-click adds a corner where it would end, so both are drawn as that stretch; without one a
+ * click places a tile as vanilla would and a sneak-click stores a start. Loaded only when the fork is.
  */
 final class TilePlans {
 
@@ -25,13 +25,11 @@ final class TilePlans {
 
     @Nullable
     static PlacementPlan plan(Item item, BlockPlaceContext context) {
-        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()) {
-            return null;
-        }
         BeltTileItem tile = (BeltTileItem) item;
         StretchPlan stretch = tile.stretch(context);
         if (stretch == null) {
-            return Placements.vanillaPlan(tile, context);
+            boolean sneaking = context.getPlayer() != null && context.getPlayer().isShiftKeyDown();
+            return sneaking ? null : Placements.vanillaPlan(tile, context);
         }
         if (stretch.tiles().isEmpty()) {
             return null;

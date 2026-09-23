@@ -163,7 +163,7 @@ One block of belt, placed and broken on its own, facing the way items travel thr
 _Avoid_: belt block, conveyor block, segment
 
 **Stretch**:
-The tiles one drag of the tile item lays, placed, charged and refused as one. A sneak-click stores its start and the way the player looks; the next click lays it to the aimed spot, in one straight leg or two joined by one corner, the first leg along the stored look. It is level, and never starts by turning back on its look. A tile already on its path is turned to it, or replaced when of another tier (#393).
+The tiles one drag of the tile item lays, placed, charged and refused as one. A sneak-click stores its start and the way the player looks; the next click lays it to the aimed spot, in one straight leg or two joined by one corner, the first leg along the stored look. Each sneak-click before that adds a corner where the stretch would end, and the stretch runs on from it the same way, heading the way its last tile travels. It is level, and no leg turns back on its heading. A tile already on its path is turned to it, or replaced when of another tier (#393).
 _Avoid_: run, zoop, drag (the gesture, not what it lays), tile path
 
 **Tier colour**:
