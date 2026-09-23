@@ -331,7 +331,8 @@ A splitter meets belt tiles face to face (`SplitterTileTests`, #394): between ti
 one tier-1 line evenly, sends all 15 items/s to the free side and caps a tier-3 line at 15, and broken
 at either half leaves neither standing, hands its items to the breaker and drops one splitter. Placed
 by hand across a backed-up line of seven tiles it takes the middle tile's place, refunds that tile,
-keeps its items, and every item reaches the end or the right half, which no line leaves. A line's last
+keeps its items, and every item reaches the end or the right half, which no line leaves. Aimed across the
+line at a tile's top, facing either way, it places nothing, neither on the tile nor above it. A line's last
 tile hands into a half's back and a half with no spline belt leaving feeds the tile line ahead; with
 the first handoff dropped all six turn red. `SplitterTest` runs the split, merge, fallback, cap,
 balancer and loss checks over tile lines as well. Whether a splitter between tiles reads as part of
