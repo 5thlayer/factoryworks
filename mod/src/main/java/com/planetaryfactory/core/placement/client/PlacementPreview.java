@@ -66,8 +66,8 @@ import org.jspecify.annotations.Nullable;
  * <h2>The cache</h2>
  *
  * <p>A rig's plan is a few hundred block reads and this runs every frame, so the plan is kept until
- * the item, the aimed position, the hit face or the player's horizontal facing changes -- the four
- * things a plan is a function of. A world edit under a still cursor is a stale frame and resolves
+ * the item, the aimed position, the hit face, the player's horizontal facing or their sneaking
+ * changes -- the things a plan is a function of. A world edit under a still cursor is a stale frame and resolves
  * on the next change; a preview is not authoritative and the click re-asks on the server.
  */
 public final class PlacementPreview {
@@ -95,14 +95,17 @@ public final class PlacementPreview {
     private PlacementPreview() {
     }
 
-    /** The four things a plan is a function of, so the cache turns over exactly when it must. */
-    private record Key(ItemStack stack, BlockPos aimed, Direction face, Direction facing) {
+    /** The things a plan is a function of, so the cache turns over exactly when it must. */
+    private record Key(ItemStack stack, BlockPos aimed, Direction face, Direction facing, boolean sneaking) {
     }
 
     public static void onSubmitGeometry(SubmitCustomGeometryEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         ClientLevel level = minecraft.level;
+        if (BELTS && player != null) {
+            PreviewStretchStart.draw(event, player.getMainHandItem());
+        }
         if (player == null || level == null
                 || !(minecraft.hitResult instanceof BlockHitResult hit)
                 || hit.getType() != HitResult.Type.BLOCK) {
@@ -112,7 +115,7 @@ public final class PlacementPreview {
             return;
         }
         ItemStack stack = player.getMainHandItem();
-        Key now = new Key(stack, hit.getBlockPos(), hit.getDirection(), player.getDirection());
+        Key now = new Key(stack, hit.getBlockPos(), hit.getDirection(), player.getDirection(), player.isShiftKeyDown());
         if (key == null || !sameKey(key, now)) {
             key = now;
             cached = Placements.planFor(level, player, InteractionHand.MAIN_HAND, stack, hit);
@@ -194,7 +197,8 @@ public final class PlacementPreview {
         return ItemStack.isSameItemSameComponents(a.stack(), b.stack())
                 && a.aimed().equals(b.aimed())
                 && a.face() == b.face()
-                && a.facing() == b.facing();
+                && a.facing() == b.facing()
+                && a.sneaking() == b.sneaking();
     }
 
     private static int tint(PlacementPlan plan) {
@@ -204,10 +208,15 @@ public final class PlacementPreview {
         return plan.isReplace() ? REPLACE_TINT : ACCEPTED_TINT;
     }
 
+    private static int tint(PlacementPlan plan, BlockPos pos) {
+        if (plan.isRefused()) {
+            return REFUSED_TINT;
+        }
+        return plan.replaces().contains(pos) ? REPLACE_TINT : ACCEPTED_TINT;
+    }
+
     private static void draw(SubmitCustomGeometryEvent event, ClientLevel level, PlacementPlan plan) {
         Vec3 camera = event.getLevelRenderState().cameraRenderState.pos;
-        QuadInstance instance = new QuadInstance();
-        instance.setColor(tint(plan));
 
         PoseStack poseStack = event.getPoseStack();
         SubmitNodeCollector collector = event.getSubmitNodeCollector();
@@ -227,6 +236,9 @@ public final class PlacementPreview {
             if (parts.isEmpty()) {
                 continue;
             }
+            // Per block, since a belt stretch replaces some of its tiles and places the rest (#393).
+            QuadInstance instance = new QuadInstance();
+            instance.setColor(tint(plan, pos));
             poseStack.pushPose();
             poseStack.translate(pos.getX() - camera.x(), pos.getY() - camera.y(), pos.getZ() - camera.z());
             if (plan.replaces().contains(pos)) {

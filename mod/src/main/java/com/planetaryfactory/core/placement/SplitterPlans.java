@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 import rearth.belts.items.SplitterItem;
 
 /**
- * The SimpleBelts fork's splitter, the one other mod's item with a plan (ADR-0069). The fork's
+ * The SimpleBelts fork's splitter, which plans its own placement (ADR-0069). The fork's
  * {@code place} executes the fork's own plan, which also names the belts the splitter cuts (#361);
  * this is that plan's blocks and refusal. Loaded only when the fork is.
  */

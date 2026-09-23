@@ -49,6 +49,9 @@ public final class Placements {
         if (BELTS && SplitterPlans.isSplitter(stack.getItem())) {
             return SplitterPlans.plan(stack.getItem(), new BlockPlaceContext(level, player, hand, stack, hit));
         }
+        if (BELTS && TilePlans.isTile(stack.getItem())) {
+            return TilePlans.plan(stack.getItem(), new BlockPlaceContext(level, player, hand, stack, hit));
+        }
         if (!(stack.getItem() instanceof BlockItem item) || !isPlanned(item.getBlock())) {
             return null;
         }
