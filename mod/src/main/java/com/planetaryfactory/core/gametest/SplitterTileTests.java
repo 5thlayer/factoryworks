@@ -27,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import rearth.belts.BlockContent;
 import rearth.belts.ItemContent;
+import rearth.belts.blocks.BeltTileBlock;
 import rearth.belts.blocks.BeltTileBlockEntity;
 import rearth.belts.blocks.ChuteBlockEntity;
 import rearth.belts.blocks.SplitterBlock;
@@ -79,6 +80,10 @@ final class SplitterTileTests {
                 WARMUP_TICKS + WINDOW_TICKS + 20, SplitterTileTests::capsTheLine);
         tests.test("splitter_placed_across_a_tile_line_replaces_the_tile_and_loses_nothing",
                 CROSSED_FILL_TICKS + CROSSED_DRAIN_TICKS + 20, SplitterTileTests::placedAcrossALine);
+        tests.test("splitter_aimed_across_a_tile_line_facing_north_places_nothing", 20,
+                helper -> refusedAcrossALine(helper, Direction.NORTH));
+        tests.test("splitter_aimed_across_a_tile_line_facing_south_places_nothing", 20,
+                helper -> refusedAcrossALine(helper, Direction.SOUTH));
         tests.test("splitter_between_tiles_broken_at_its_left_half_hands_its_items_to_the_breaker",
                 WARMUP_TICKS + 20, helper -> breaks(helper, LEFT));
         tests.test("splitter_between_tiles_broken_at_its_right_half_hands_its_items_to_the_breaker",
@@ -179,6 +184,35 @@ final class SplitterTileTests {
                     }
                 })
                 .thenSucceed();
+    }
+
+    /**
+     * A splitter facing across a line of east-running tiles, clicked on a tile's top: whichever
+     * side its second half falls on, it goes neither on the tile nor above it.
+     */
+    private static void refusedAcrossALine(GameTestHelper helper, Direction facing) {
+        for (BlockPos at = FROM.east(); at.getX() < LEFT_END.getX(); at = at.east()) {
+            helper.setBlock(at, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+        }
+        ServerPlayer player = player(helper, "pf_splitter_tile_across_" + facing.getSerializedName());
+        player.setYRot(facing.toYRot());
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.SPLITTER.get()));
+        BlockPos tile = helper.absolutePos(LEFT);
+        helper.useBlock(LEFT, player, new BlockHitResult(
+                Vec3.atBottomCenterOf(tile).add(0, 6 / 16d, 0), Direction.UP, tile, false));
+
+        for (BlockPos at = FROM.east(); at.getX() < LEFT_END.getX(); at = at.east()) {
+            if (!(helper.getBlockState(at).getBlock() instanceof BeltTileBlock)) {
+                helper.fail("a splitter facing " + facing + " replaced the tile at " + at, at);
+            }
+            if (!helper.getBlockState(at.above()).isAir()) {
+                helper.fail("a splitter facing " + facing + " went on top of the line at " + at, at.above());
+            }
+        }
+        if (player.getMainHandItem().getCount() != 1) {
+            helper.fail("a refused splitter was spent", LEFT);
+        }
+        helper.succeed();
     }
 
     /** Both halves fed by tile lines with no line leaving either, then broken at one half. */
