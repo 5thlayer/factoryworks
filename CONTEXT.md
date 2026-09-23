@@ -243,8 +243,16 @@ _Avoid_: abstraction, going virtual
 
 ### Handling things
 
+**Reach**:
+How far the player places a block, uses a block and breaks a **Building**: 16 blocks, one chunk. Longer than Factorio's build distance of 10, as Satisfactory builds from far off. Anything that is not a Building breaks only within Minecraft's own reach of 4.5, so ore, trees and terrain are dug up close. Entities are reached at vanilla's 3 (#413).
+_Avoid_: build distance, range, interaction range
+
+**Building**:
+A block the player places as part of the factory: every machine, belt piece, pole, pipe, rail, chest and wall. Factorio's own split: what it places as an entity is a Building, and what it lays as a tile, such as stone brick, concrete or landfill, is not. Ore, trees and terrain are not Buildings, and neither is a building block such as bricks, planks or glass, placed or not.
+_Avoid_: entity, structure, machine (a Building that runs)
+
 **Quick transfer**:
-The gesture that moves the held stack into the block the player is looking at, or — with an empty hand — takes out everything that block will give up, without opening its screen. Reach is the player's own, so the gesture and the screen answer to the same ray trace. It reads and writes through the target's item handler and imposes no slot policy of its own, which is why it can never strip a furnace of its fuel or of an input it has not smelted yet, and why a GregTech machine mid-recipe has nothing left to take back.
+The gesture that moves the held stack into the block the player is looking at, or — with an empty hand — takes out everything that block will give up, without opening its screen. **Reach** is the player's own, so the gesture and the screen answer to the same ray trace. It reads and writes through the target's item handler and imposes no slot policy of its own, which is why it can never strip a furnace of its fuel or of an input it has not smelted yet, and why a GregTech machine mid-recipe has nothing left to take back.
 _Avoid_: fast entity transfer, ctrl-click, quick insert, fast transfer
 
 **Quick split**:
