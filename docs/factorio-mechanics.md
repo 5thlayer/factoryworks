@@ -676,9 +676,9 @@ once every planet's puzzle is done — it is not a logistic-robot analogue and i
 
 - **verdict**: `planned`
 - **notice**: a held pack block draws translucent where placing would put it and red where placing
-  would be refused (#297), and a furnace or pole column of another tier placed over one swaps it in
-  place, drawn blue (#388, #389); the wires and supply area drawn on top of it, and fast replace for
-  Assembling Machines, are not here yet.
+  would be refused (#297), and a furnace, pole column or Assembling Machine of another tier placed
+  over one swaps it in place, drawn blue (#388, #389, #390); the wires and supply area drawn on top
+  of it are not here yet.
 - **where**: all bodies
 - **via**: `pack`
 - **owner**: #297, #298, #299
@@ -701,8 +701,11 @@ Sub-rules:
   in place** — `shipped`, #389. Every segment swaps for the one item a column costs, the column keeps
   its height and every wire, and a substation, alone in its Replace Group, is refused with its reason
   on the action bar.
-- **Fast replace: placing another tier over an Assembling Machine swaps it in place** — `planned`,
-  #299.
+- **Fast replace: placing another tier over an Assembling Machine swaps it in place** — `shipped`,
+  #390. Any of its four blocks answers. The machine keeps its facing, its craft's fraction done, its
+  FE, its output and its Oritech addons, and the Held recipe when the new tier can hold it; otherwise
+  the recipe clears and its inputs go to the player. The tank empties when the new tier has none, and
+  a player with no room for what comes back is refused on the action bar.
 
 ### Construction robots and blueprints
 
