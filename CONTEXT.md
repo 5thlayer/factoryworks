@@ -162,6 +162,10 @@ _Avoid_: conveyor, belt segment, lane
 One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, or back toward them while sneaking. A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). It stands beside the spline belt until #397 replaces it.
 _Avoid_: belt block, conveyor block, segment
 
+**Tier colour**:
+The colour a belt tier is painted in: yellow, red, blue, green for tiers 1 to 4. The belt shows it as the stripes along its edges, and every other belt piece of that tier shows it on its own body: the loader's gate, the splitter's divider. Factorio's convention. Structure standing on the ground, such as supports and legs, stays slate.
+_Avoid_: stripe colour, tier tint
+
 **Transport line**:
 The contiguous run of tiles of one direction of travel, merged at runtime so the whole run ticks once rather than each tile ticking for itself. A line is derived state, rebuilt whenever a tile is placed or broken; each tile keeps its own share of the items, so merging and splitting a line loses nothing. A line runs at its slowest tile and holds eight items a tile, and it is loaded by the loader behind its first tile and unloaded by the one past its last (#398).
 _Avoid_: belt line, chain, run
