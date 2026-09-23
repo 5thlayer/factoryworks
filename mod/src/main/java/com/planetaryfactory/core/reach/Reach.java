@@ -9,6 +9,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
@@ -38,21 +39,25 @@ public final class Reach {
     }
 
     /**
-     * Fires on both sides, so a refused break shows no cracking. Only the start is asked: a break
-     * begun in reach finishes as vanilla's does, since the client's hold is never asked again. The
-     * server allows vanilla's own 1.0 for the position it lags the client by, because a start the
-     * client allowed and the server refused leaves a ghost break.
+     * Only the start is asked: a break begun in reach finishes as vanilla's does, since the client's
+     * hold is never asked again.
      */
     public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getAction() != PlayerInteractEvent.LeftClickBlock.Action.START) return;
-        Level level = event.getLevel();
-        double reach = Attributes.BLOCK_INTERACTION_RANGE.value().getDefaultValue()
-                + (level.isClientSide() ? 0.0 : SERVER_LENIENCE);
-        BlockPos pos = event.getPos();
-        if (!isBuilding(level, pos)
-                && new AABB(pos).distanceToSqr(event.getEntity().getEyePosition()) >= reach * reach) {
+        if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START
+                && refusesBreak(event.getEntity(), event.getPos())) {
             event.setCanceled(true);
         }
+    }
+
+    /**
+     * The server allows vanilla's own 1.0 for the position it lags the client by, because a start the
+     * client allowed and the server refused leaves a ghost break.
+     */
+    public static boolean refusesBreak(Player player, BlockPos pos) {
+        Level level = player.level();
+        double reach = Attributes.BLOCK_INTERACTION_RANGE.value().getDefaultValue()
+                + (level.isClientSide() ? 0.0 : SERVER_LENIENCE);
+        return !isBuilding(level, pos) && new AABB(pos).distanceToSqr(player.getEyePosition()) >= reach * reach;
     }
 
     /** A footprint's part blocks and a rig's are the machine their anchor is. */

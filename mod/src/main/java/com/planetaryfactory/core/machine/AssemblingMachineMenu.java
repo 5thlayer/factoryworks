@@ -335,7 +335,8 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         if (machine != null && machine.isRemoved()) {
             return false;
         }
-        return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;
+        // Vanilla's buffer in Container.stillValidBlockEntity, so a screen opened at full Reach stays open (#413).
+        return player.isWithinBlockInteractionRange(pos, 4.0);
     }
 
     /**

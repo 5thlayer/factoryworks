@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.PFItems;
+import com.planetaryfactory.core.machine.AssemblingTier;
+import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.mining.rig.RigPartBlock;
 import com.planetaryfactory.core.mining.rig.RigTier;
 import com.planetaryfactory.core.smelting.FurnaceTier;
@@ -18,6 +20,8 @@ import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket.Action;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
@@ -140,5 +144,38 @@ final class ReachTests {
             stacks.add(player.getInventory().getItem(slot).copy());
         }
         return stacks;
+    }
+
+    /** A machine's screen stays open as far off as the player reaches it. */
+    static final class Screens {
+
+        private static final BlockPos ANCHOR = new BlockPos(3, 1, 3);
+
+        private Screens() {
+        }
+
+        static void register(PFGameTests.Registrar tests) {
+            tests.test("an_assembling_machine_12_blocks_off_stays_open", 20,
+                    helper -> screen(helper, PFBlocks.assemblingFootprint(AssemblingTier.ONE), 12, true));
+            tests.test("an_assembling_machine_22_blocks_off_closes", 20,
+                    helper -> screen(helper, PFBlocks.assemblingFootprint(AssemblingTier.ONE), 22, false));
+            tests.test("a_steam_engine_12_blocks_off_stays_open", 20,
+                    helper -> screen(helper, PFBlocks.STEAM_ENGINE_FOOTPRINT, 12, true));
+            tests.test("a_steam_engine_22_blocks_off_closes", 20,
+                    helper -> screen(helper, PFBlocks.STEAM_ENGINE_FOOTPRINT, 22, false));
+        }
+
+        /** The menu is made directly: a fake player opens none. */
+        private static void screen(GameTestHelper helper, FootprintMachine footprint, int blocksOff,
+                boolean open) {
+            footprint.placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), Direction.NORTH);
+            ListeningPlayer player = new ListeningPlayer(helper);
+            Vec3 feet = helper.absoluteVec(Vec3.atBottomCenterOf(ANCHOR).add(-blocksOff, 0, 0));
+            player.setPos(feet.x, feet.y, feet.z);
+            MenuProvider machine = (MenuProvider) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));
+            AbstractContainerMenu menu = machine.createMenu(0, player.getInventory(), player);
+            helper.assertValueEqual(menu.stillValid(player), open, "the screen " + blocksOff + " blocks off is open");
+            helper.succeed();
+        }
     }
 }

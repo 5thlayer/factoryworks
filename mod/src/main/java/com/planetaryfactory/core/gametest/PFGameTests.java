@@ -97,6 +97,7 @@ public final class PFGameTests {
             AssemblingFluidTests.register(registrar);
             PlacementPlanTests.AssemblingReplaces.register(registrar);
             FootprintBreakTests.register(registrar);
+            ReachTests.Screens.register(registrar);
             RadarTests.register(registrar);
             PumpjackTests.register(registrar);
         }
