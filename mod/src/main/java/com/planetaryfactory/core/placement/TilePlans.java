@@ -5,6 +5,8 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jspecify.annotations.Nullable;
 import rearth.belts.items.BeltTileItem;
 import rearth.belts.items.StretchPlan;
@@ -12,7 +14,8 @@ import rearth.belts.items.StretchPlan;
 /**
  * The SimpleBelts fork's tile item (#393). With a stored start, a click lays the fork's stretch and
  * a sneak-click adds a corner where it would end, so both are drawn as that stretch; without one a
- * click places a tile as vanilla would and a sneak-click stores a start. Loaded only when the fork is.
+ * click places a tile as vanilla would and a sneak-click stores a start, drawn as the tile there
+ * facing the look. Loaded only when the fork is.
  */
 final class TilePlans {
 
@@ -29,7 +32,12 @@ final class TilePlans {
         StretchPlan stretch = tile.stretch(context);
         if (stretch == null) {
             boolean sneaking = context.getPlayer() != null && context.getPlayer().isShiftKeyDown();
-            return sneaking ? null : Placements.vanillaPlan(tile, context);
+            if (!sneaking) {
+                return Placements.vanillaPlan(tile, context);
+            }
+            BlockState start = tile.getBlock().defaultBlockState()
+                    .setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection());
+            return new PlacementPlan(List.of(new PlacementPlan.Placed(BeltTileItem.aimedTile(context), start)), List.of(), null);
         }
         if (stretch.tiles().isEmpty()) {
             return null;

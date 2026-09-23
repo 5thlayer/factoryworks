@@ -88,6 +88,8 @@ final class StretchTests {
         tests.test("a_creative_stretch_charges_nothing", 20, StretchTests::creative);
         tests.test("a_sneak_click_adds_a_corner_the_stretch_runs_on_from", 20, StretchTests::corner);
         tests.test("a_sneak_click_behind_the_look_adds_no_corner", 20, StretchTests::cornerBehind);
+        tests.test("a_sneak_click_behind_the_look_keeps_the_stretch_to_its_last_corner_in_the_plan", 20, StretchTests::behindKeepsCorners);
+        tests.test("a_sneak_with_no_start_plans_the_start_tile", 20, StretchTests::startPreview);
         tests.test("a_sneak_use_in_the_air_clears_the_start_and_its_corners", 20, StretchTests::clears);
     }
 
@@ -258,6 +260,35 @@ final class StretchTests {
         }
         if (!player.heard.equals(List.of("message.belts.stretch_behind"))) {
             helper.fail("a sneak-click behind the look told the player " + player.heard, START.west(2));
+        }
+        helper.succeed();
+    }
+
+    // A corner three ahead, then an end behind it: the plan still names the four tiles to the corner.
+    private static void behindKeepsCorners(GameTestHelper helper) {
+        var player = started(helper, Direction.EAST);
+        player.setShiftKeyDown(true);
+        click(helper, player, START.east(3));
+        var plan = planOf(helper, player, START.east(1));
+        if (plan == null || plan.refusal() != PlacementPlan.Refusal.BEHIND_LOOK || plan.blocks().size() != 4) {
+            helper.fail("an end behind a corner was planned as " + (plan == null ? "nothing"
+                    : plan.refusal() + " over " + plan.blocks().size() + " tiles"), START.east(1));
+            return;
+        }
+        helper.succeed();
+    }
+
+    private static void startPreview(GameTestHelper helper) {
+        var player = new ListeningPlayer(helper);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.tileFor(BeltTier.BELT), TILES));
+        player.setYRot(Direction.SOUTH.toYRot());
+        player.setShiftKeyDown(true);
+        var plan = planOf(helper, player, START);
+        if (plan == null || plan.isRefused() || plan.blocks().size() != 1
+                || !plan.blocks().getFirst().pos().equals(helper.absolutePos(START))
+                || plan.blocks().getFirst().state().getValue(BlockStateProperties.HORIZONTAL_FACING) != Direction.SOUTH) {
+            helper.fail("a sneak with no start was planned as " + (plan == null ? "nothing" : plan.blocks()), START);
+            return;
         }
         helper.succeed();
     }
