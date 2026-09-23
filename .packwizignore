@@ -131,3 +131,5 @@ __pycache__/
 *.jar.disabled
 *.jar.meta
 mods/.replaced/
+allowed_symlinks.txt
+debug-profile.json
