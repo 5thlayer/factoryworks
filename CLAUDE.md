@@ -221,8 +221,10 @@ piece when the loaders' tier or the tiles' differ, and that a backed-up 64-tile 
 has no energy face, tier 2 with no FE puts nothing on the line, and a pole-fed tier 2 draws 66.5 FE
 per item plus its drain. The figures are typed. Dropping the merge -- scanning a tile as a line of
 itself -- turns eleven of those twelve red, the tier-2 stall alone staying green, which is what it
-is for. Three more hold the line being rebuilt: a tile placed through its own item faces the
-player's look; two loaded lines joined by two tiles become one run of eight, carrying at least what
+is for. A line built wholly through a player's clicks -- a loader sneak-clicked onto each chest,
+tiles on the floor between -- delivers every item. A tile placed through its own item faces the
+player's look, and back toward them while sneaking, which stands in for the rotate key. Two more
+hold the line being rebuilt: two loaded lines joined by two tiles become one run of eight, carrying at least what
 the two held with nothing on the ground; and a mid-line tile broken leaves 8 upstream and 8
 downstream, the tiles past the break keeping what they carried. That last one is the defect check --
 rebuilding the run before handing each tile its share drops the whole downstream half, and it turns

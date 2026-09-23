@@ -159,7 +159,7 @@ A single link carrying items from one belt end to another along a curve, shaped 
 _Avoid_: conveyor, belt segment, lane
 
 **Tile**:
-One block of belt, placed and broken on its own, facing the way items travel through it. A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). It stands beside the spline belt until #397 replaces it.
+One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, or back toward them while sneaking. A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). It stands beside the spline belt until #397 replaces it.
 _Avoid_: belt block, conveyor block, segment
 
 **Transport line**:

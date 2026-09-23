@@ -17,10 +17,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import rearth.belts.BlockContent;
 import rearth.belts.ItemContent;
@@ -120,8 +122,9 @@ final class BeltTileTests {
                 BeltTileTests::tierTwoStallsUnpowered);
         tests.test("pole_fed_tier_2_loader_on_tiles_draws_66_5_fe_per_item",
                 FED_WARMUP_TICKS + DRAW_WINDOW_TICKS + 20, BeltTileTests::fedLoaderDrawsPerItem);
-        tests.test("a_tile_placed_with_its_item_faces_the_players_look", 20,
+        tests.test("a_tile_placed_with_its_item_faces_the_look_or_back_when_sneaking", 20,
                 BeltTileTests::placedTileFacesTheLook);
+        tests.test("a_line_built_by_hand_carries_items", 200, BeltTileTests::lineBuiltByHand);
         tests.test("a_tile_placed_between_two_lines_merges_them", MERGE_FILL_TICKS + 20,
                 BeltTileTests::placingATileMergesTwoLines);
         tests.test("breaking_a_mid_line_tile_splits_it_and_keeps_both_halves_items",
@@ -135,24 +138,66 @@ final class BeltTileTests {
     private static void placedTileFacesTheLook(GameTestHelper helper) {
         Player player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND,
-                new ItemStack(ItemContent.tileFor(BeltTier.BELT), 2));
+                new ItemStack(ItemContent.tileFor(BeltTier.BELT), 4));
 
-        for (Direction look : List.of(Direction.EAST, Direction.SOUTH)) {
-            BlockPos at = look == Direction.EAST ? FIRST_TILE : FIRST_TILE.south(2);
-            player.setYRot(look.toYRot());
-            click(helper, player, at.below());
-            BlockState placed = helper.getBlockState(at);
-            if (!(placed.getBlock() instanceof BeltTileBlock)) {
-                helper.fail("the tile item placed " + placed.getBlock() + " looking " + look, at);
-                return;
-            }
-            Direction facing = placed.getValue(HorizontalDirectionalBlock.FACING);
-            if (facing != look) {
-                helper.fail("a tile placed looking " + look + " faces " + facing, at);
-                return;
+        for (boolean sneaking : List.of(false, true)) {
+            player.setShiftKeyDown(sneaking);
+            for (Direction look : List.of(Direction.EAST, Direction.SOUTH)) {
+                BlockPos at = FIRST_TILE.east(sneaking ? 4 : 0).south(look == Direction.EAST ? 0 : 2);
+                player.setYRot(look.toYRot());
+                click(helper, player, at.below());
+                BlockState placed = helper.getBlockState(at);
+                if (!(placed.getBlock() instanceof BeltTileBlock)) {
+                    helper.fail("the tile item placed " + placed.getBlock() + " looking " + look, at);
+                    return;
+                }
+                Direction expected = sneaking ? look.getOpposite() : look;
+                Direction facing = placed.getValue(HorizontalDirectionalBlock.FACING);
+                if (facing != expected) {
+                    helper.fail("a tile placed looking " + look + (sneaking ? " sneaking" : "")
+                            + " faces " + facing + ", expected " + expected, at);
+                    return;
+                }
             }
         }
         helper.succeed();
+    }
+
+    /** Every block but the chests placed by a sneaking player's clicks, as a player builds a line. */
+    private static void lineBuiltByHand(GameTestHelper helper) {
+        List<BeltTier> tiles = tiers(BeltTier.BELT);
+        BlockPos target = targetOf(tiles);
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(target, Blocks.CHEST);
+        ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        player.setGameMode(GameType.SURVIVAL);
+        player.setYRot(Direction.EAST.toYRot());
+        // Sneaking past the chest's menu for the loaders only: a sneaking tile runs the other way.
+        player.setShiftKeyDown(true);
+        use(helper, player, new ItemStack(BlockContent.loaderFor(BeltTier.BELT).asItem()), SOURCE, Direction.EAST);
+        player.setShiftKeyDown(false);
+        for (int tile = 0; tile < tiles.size(); tile++) {
+            use(helper, player, new ItemStack(ItemContent.tileFor(BeltTier.BELT)),
+                    FIRST_TILE.east(tile).below(), Direction.UP);
+        }
+        player.setShiftKeyDown(true);
+        use(helper, player, new ItemStack(BlockContent.loaderFor(BeltTier.BELT).asItem()), target, Direction.WEST);
+        player.setShiftKeyDown(false);
+        fill(helper, SOURCE, ITEMS);
+        helper.startSequence().thenIdle(100).thenExecute(() -> {
+            int arrived = BeltHandoffTests.count(BeltHandoffTests.chest(helper, target));
+            if (arrived != ITEMS) {
+                helper.fail("a line built by hand delivered " + arrived + " of " + ITEMS + "; from "
+                        + helper.getBlockState(FROM) + ", into " + helper.getBlockState(target.west()), target);
+            }
+        }).thenSucceed();
+    }
+
+    private static void use(GameTestHelper helper, ServerPlayer player, ItemStack stack, BlockPos on, Direction face) {
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        BlockPos absolute = helper.absolutePos(on);
+        player.gameMode.useItemOn(player, helper.getLevel(), stack, InteractionHand.MAIN_HAND,
+                new BlockHitResult(Vec3.atCenterOf(absolute).relative(face, 0.5), face, absolute, false));
     }
 
     /**
