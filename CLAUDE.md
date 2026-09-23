@@ -278,7 +278,7 @@ nothing and one of another tier replaced for one, its item handed back; both are
 and keep the item they carried; in creative nothing is charged or handed back. Behind the look,
 through a block or a loader, over no ground, short of tiles and with no room to hand a tile back each
 change no block, slot or stored start and name their reason, and a stretch both blocked and short
-names the block, the first reason met; another sneak-click moves the start and a sneak-use in the air clears it. Stretches that never turn
+names the block, the first reason met; another sneak-click keeps the start and a sneak-use in the air clears it. Stretches that never turn
 turned the L and sideways tests red, and a replace that drops the carried item the replace test. The
 path is the fork's `StretchTest`, and whether the preview draws the stretch and its start is a human
 check on delivery.
