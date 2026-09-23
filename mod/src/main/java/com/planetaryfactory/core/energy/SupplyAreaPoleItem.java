@@ -2,7 +2,10 @@ package com.planetaryfactory.core.energy;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -15,7 +18,10 @@ import org.jspecify.annotations.Nullable;
 import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.Placements;
 import com.planetaryfactory.core.placement.PlansPlacement;
+import com.planetaryfactory.core.placement.ReplaceGroups;
+import com.planetaryfactory.core.placement.ReplaceHandoff;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -62,24 +68,31 @@ public class SupplyAreaPoleItem extends BlockItem implements PlansPlacement {
      * base raises a pole past the player's own reach, and a preview drawn beside the base would
      * describe a placement the pack does not perform.
      *
-     * <p>All three of the column's refusals draw at the position the segment was headed for, which
-     * is the only place a refusal about a column means anything.
+     * <p>A pole of another tier in the same Replace Group plans a Fast Replace of the whole column
+     * instead (ADR-0082). The column's other refusals draw at the position the segment was headed
+     * for, which is the only place a refusal about a column means anything.
+     *
+     * <p>A sneak places beside, because a sneaking player's click never reaches the block's
+     * {@code useItemOn}.
      */
     @Override
     public @Nullable PlacementPlan plan(BlockPlaceContext context) {
         Level level = context.getLevel();
         BlockPos aimed = Placements.aimedPos(context);
         BlockState aimedState = level.getBlockState(aimed);
-        if (!(aimedState.getBlock() instanceof SupplyAreaPoleBlock)) {
+        if (!(aimedState.getBlock() instanceof SupplyAreaPoleBlock) || context.isSecondaryUseActive()) {
             return Placements.vanillaPlan(this, context);
         }
         if (!aimedState.is(getBlock())) {
-            // Not fast replace (ADR-0069): a different tier aimed at a column is refused outright,
-            // and is drawn at the segment the player was plainly asking for.
+            if (ReplaceGroups.get().canReplace(id(getBlock()), id(aimedState.getBlock()))) {
+                return replacePlan(context, aimed, aimedState.getBlock());
+            }
+            // Refused rather than placed beside, which would look exactly like the extension the
+            // player asked for; drawn at the segment the player was plainly asking for.
             BlockPos top = PoleColumn.topOf(level, aimed);
             BlockPos at = top == null ? aimed.above() : top.above();
             return PlacementPlan.refused(at, getBlock().defaultBlockState(),
-                    PlacementPlan.Refusal.WRONG_TIER);
+                    PlacementPlan.Refusal.OTHER_REPLACE_GROUP);
         }
         BlockPos top = PoleColumn.topOf(level, aimed);
         if (top == null) {
@@ -96,8 +109,28 @@ public class SupplyAreaPoleItem extends BlockItem implements PlansPlacement {
         return PlacementPlan.accepted(next, segment);
     }
 
+    /** Every segment of the aimed column swapped in place, for the one item a column costs (ADR-0036, ADR-0082). */
+    private PlacementPlan replacePlan(BlockPlaceContext context, BlockPos aimed, Block replaced) {
+        Level level = context.getLevel();
+        BlockPos base = PoleColumn.baseOf(level, aimed);
+        int height = PoleColumn.height(level, aimed);
+        BlockState segment = getBlock().defaultBlockState();
+        List<PlacementPlan.Placed> blocks = new ArrayList<>(height);
+        for (int i = 0; i < height; i++) {
+            blocks.add(new PlacementPlan.Placed(base.above(i), segment));
+        }
+        Player player = context.getPlayer();
+        boolean fits = player == null
+                || ReplaceHandoff.fits(player, context.getHand(), new ItemStack(replaced), List.of());
+        return PlacementPlan.replacing(blocks, fits ? null : PlacementPlan.Refusal.NO_ROOM_TO_RETURN);
+    }
+
+    private static String id(Block block) {
+        return BuiltInRegistries.BLOCK.getKey(block).toString();
+    }
+
     @Override
-    public void appendHoverText(net.minecraft.world.item.ItemStack stack, TooltipContext context, TooltipDisplay display,
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, display, tooltip, flag);
         PoleTier tier = tier();

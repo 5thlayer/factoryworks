@@ -13,6 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.Placements;
+import com.planetaryfactory.core.placement.ReplaceHandoff;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -48,6 +51,9 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
 
     /** A pole is a post, not a cube -- 6/16 square and full height. */
     private static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 16.0D, 11.0D);
+
+    private static final String OTHER_GROUP_KEY = "message.planetaryfactory.replace.other_group";
+    private static final String NO_ROOM_KEY = "message.planetaryfactory.replace.no_room";
 
     private final PoleTier tier;
 
@@ -90,7 +96,8 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
      * that poles were left short. Breaking the column pays back the one item it cost, since a
      * segment dropped by the cascade carries no loot.
      *
-     * <p>A pole of a <em>different</em> tier does nothing at all, rather than falling through to
+     * <p>A pole of another tier in the same Replace Group swaps the whole column in place
+     * (ADR-0082). Any other pole does nothing at all, and says why, rather than falling through to
      * ordinary placement. Falling through would set a second, separate pole against the side of this
      * column, with its own supply area and its own block entity, and it would look exactly like the
      * extension the player was asking for.
@@ -109,11 +116,27 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
 
         // The column rule is asked for, not restated (ADR-0069): this executes the same plan the
         // preview draws, so the two cannot disagree about where a segment lands or whether one
-        // may. A different tier is refused here rather than falling through, which would set a
-        // second, separate pole against the side of this column looking exactly like the extension
-        // the player asked for.
+        // may.
         PlacementPlan plan = Placements.planFor(item, new BlockPlaceContext(level, player, hand, stack, hit));
-        if (plan == null || plan.isRefused() || plan.blocks().size() != 1) {
+        if (plan != null && plan.isRefused() && player instanceof ServerPlayer server) {
+            String reason = switch (plan.refusal()) {
+                case OTHER_REPLACE_GROUP -> OTHER_GROUP_KEY;
+                case NO_ROOM_TO_RETURN -> NO_ROOM_KEY;
+                default -> null;
+            };
+            if (reason != null) {
+                server.sendSystemMessage(Component.translatable(reason,
+                        Component.translatable(item.getBlock().getDescriptionId()),
+                        Component.translatable(getDescriptionId())), true);
+            }
+        }
+        if (plan == null || plan.isRefused()) {
+            return InteractionResult.CONSUME;
+        }
+        if (plan.isReplace()) {
+            return replace(plan, state, level, player, hand);
+        }
+        if (plan.blocks().size() != 1) {
             return InteractionResult.CONSUME;
         }
         PlacementPlan.Placed segment = plan.blocks().getFirst();
@@ -128,6 +151,26 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
         // decision rather than a cost (ADR-0036). Paying a pole per segment made raising one
         // punishing enough that players left poles short. The other half of "one pole" is the
         // teardown below: a broken column pays out exactly the one item it cost.
+        return InteractionResult.SUCCESS;
+    }
+
+    /**
+     * Swaps every segment in place without the removal and placement hooks, which would cut the
+     * base's wires and wire the new one afresh: a replaced column keeps its wires (#389). The new
+     * base's block entity reporting to its network is what rebuilds it with the new tier.
+     */
+    private InteractionResult replace(PlacementPlan plan, BlockState state, Level level, Player player,
+                                      InteractionHand hand) {
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
+        for (PlacementPlan.Placed segment : plan.blocks()) {
+            level.setBlock(segment.pos(), segment.state(), Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_ON_PLACE);
+        }
+        ReplaceHandoff.execute(player, hand, new ItemStack(state.getBlock()), List.of());
+        BlockPos base = plan.blocks().getFirst().pos();
+        level.playSound(null, base, getSoundType(state, level, base, player).getPlaceSound(),
+                net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
         return InteractionResult.SUCCESS;
     }
 

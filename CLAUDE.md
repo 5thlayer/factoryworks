@@ -353,7 +353,7 @@ bearing -- the preview's two failure modes are promising a placement that does n
 refusing one that does. Each test was checked against the defect it exists for: forcing the pole
 to the vanilla plan turns four red, forcing the rig's footprint to always fit turns one red,
 flattening the rig to a single layer turns two more, dropping the pump's water question turns one,
-and giving up on the wrong-tier column walk turns another. The fork's splitter is the one other
+and giving up on the other-group column walk turns another. The fork's splitter is the one other
 mod's item with a plan (#355): `PlacementPlanTests.Splitters`, registered only with the fork loaded,
 holds that both halves go down, and that a splitter blocked at its second half changes nothing; a
 plan naming only the first half turns both red. Across belts (#361), its plan names the belts it cuts and the
@@ -362,7 +362,7 @@ refuses it with its reason named, changing no block, slot or belt. The Assemblin
 the rig's pair for its 2x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
 red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
 after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Three fixtures are load-bearing rather
-than arbitrary -- the wrong-tier column is three tall because on a one-tall column "the top of the
+than arbitrary -- the other-group column is three tall because on a one-tall column "the top of the
 column" and "just above the block I hit" are the same block, the rig's size is compared against
 `RigGeometry`'s own footprint rather than a floor, and the rig's obstruction sits a block *up*,
 where a player cannot see it. The geometry underneath stays Minecraft-free (`RigGeometry`,
@@ -375,6 +375,12 @@ over, the last held item's freed slot, and a full inventory refused with nothing
 reason on the action bar. A sneak places beside, and a same-tier furnace or another group's block
 replaces nothing. Skipping the handover or letting the inventory check pass turns three red. The
 blue the preview draws a replace in is a human check on delivery.
+`PlacementPlanTests.PoleReplaces` holds the pole column's (#389): a three-segment small column
+clicked at its base, middle or top becomes a medium one of the same height, and back, keeping
+exactly the wires touching it, for one item spent and one returned. A substation on a small column
+and a small pole on a substation, and a full inventory, change nothing and name their reason. The
+fixture stands a third pole wired past the neighbour, since a base wired afresh would take it first;
+swapping with the block's placement and removal hooks turns both replaces red.
 
 Run it after editing anything under `core/placement/`, and re-run `scripts/check-datapack-load.py`
 too when the platform moves, since the same server reads it.

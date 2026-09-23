@@ -45,12 +45,13 @@ public final class PreviewWires {
     }
 
     /**
-     * Draws the wires the plan's pole would add, or nothing: a refused plan puts no pole down, and
-     * a placement that only grows a column adds no wire (#309).
+     * Draws the wires the plan's pole would add, or nothing: a refused plan puts no pole down, a
+     * placement that only grows a column adds no wire (#309), and a replaced column keeps its own
+     * (#389).
      */
     public static void draw(SubmitNodeCollector collector, PoseStack poseStack, ClientLevel level,
             Vec3 camera, PlacementPlan plan) {
-        if (plan.isRefused()) {
+        if (plan.isRefused() || plan.isReplace()) {
             return;
         }
         for (PlacementPlan.Placed placed : plan.blocks()) {
