@@ -78,6 +78,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 | [The technology tree](#the-technology-tree) | `shipped` | pack-wide |
 | [Rocket silo and rocket launch](#rocket-silo-and-rocket-launch) | `planned` | all bodies |
 | [Character movement on foot](#character-movement-on-foot) | `adapted` | all bodies |
+| [Character reach](#character-reach) | `adapted` | all bodies |
 | [Personal transport](#personal-transport) | `blocked` | — |
 | [Terrain modification](#terrain-modification) | `adapted` | all bodies |
 | [Repair and entity damage](#repair-and-entity-damage) | `blocked` | — |
@@ -1250,6 +1251,25 @@ indicators) and #158 (pole supply-area overlay), not movement.
 Sprinting is not counted above. It burns hunger, and #183 has not decided whether Minecraft's hunger
 mechanic stays in the pack at all; a budget that assumed sprinting would be load-bearing on an
 undecided mechanic.
+
+### Character reach
+
+- **verdict**: `adapted`
+- **where**: all bodies
+- **via**: `native_mechanic`
+- **owner**: #413
+- **notice**: build and reach distance 10 → **16**, one chunk, following Satisfactory's generous
+  Build Gun; resource reach 2.7 → Minecraft's own **4.5**, extended to every block that is not a
+  Building, because Minecraft has terrain and Factorio does not.
+
+Factorio's character carries four distances: `build_distance` 10, `reach_distance` 10,
+`reach_resource_distance` 2.7 and `enter_vehicle_distance` 3. The pack keeps one reach of 16 for
+placing any block, using any block and breaking a **Building** -- a block whose Factorio item has a
+`place_result`, or a rail planner's `rails`, generated into the `planetaryfactory:buildings` block
+tag. Anything else, ore, trees and terrain included, breaks only within 4.5, in every game mode.
+Entity reach stays at vanilla's 3, which is Factorio's `enter_vehicle_distance`, and raising it would
+also raise melee reach against the biters [Enemies and evolution](#enemies-and-evolution) is balanced
+on. Research or equipment that raises reach is not here.
 
 ### Personal transport
 
