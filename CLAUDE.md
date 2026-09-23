@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `LoaderMouthTests` (#408), `BeltCornerTests` (#391) and `RotateTests` (#386), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, and `BeltHandoffTests` (#342), `BeltCostTests` (#346), `BeltPowerTests` (#348), `SplitterTests` (#349), `BeltHandTests` (#350), `BeltSyncTests` (#351), `BeltShapeTests` (#362), `BeltSupportTests` (#366), `BeltPlanTests` (#372), `BeltTileTests` (#398), `BeltTileSyncTests` (#395), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409) and `RotateTests` (#386), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -248,8 +248,16 @@ its side with a tile behind it stays straight and its row carries 15 items/s. Fo
 straight turns the four L tests red and leaves the side-load one green, which is what it is for. The
 fixtures place downstream first, since a tile's shape is set by the placement of what feeds it. The
 rule, a line following what feeds what, a ring's scan and motion, and the arc an item is drawn along
-are the fork's `TileShapeTest`, `LineScanTest` and `TransportLineTest`. A ring's GameTest waits for
-#409, and whether a corner reads as a Factorio corner is a human check on delivery.
+are the fork's `TileShapeTest`, `LineScanTest` and `TransportLineTest`, and whether a corner reads
+as a Factorio corner is a human check on delivery.
+And that a side-load merges into the line it feeds (`BeltSideLoadTests`, #409): a T-junction
+delivers both chests' items with nothing on the ground, and none of the side's while the line from
+behind is still loading; and a ring of eight tiles, loaded from a column into its side, holds 64 and
+moves a tier-1 step a tick. The ring's last tile is placed in its corner shape, since a ring has no
+downstream to place first. A side item placed at the fed tile's centre rather than against its
+neighbour leaves slivers no item fits, and turned the ring red at 63. The gap and priority rule is
+the fork's `TransportLineTest`, the client placing a side-loaded item by position `BeltSyncTest`,
+and whether items are drawn joining from the side is a human check on delivery.
 And that a stack pressed with Rotate 0 to 3 times (`RotateTests`, #386, ADR-0083) plans and places a
 belt tile facing the look turned that many quarters clockwise, sneaking or not, and a Stone Furnace
 facing back at the turned look, the plan's state being the placed one; that the turn stays on the
