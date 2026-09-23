@@ -17,6 +17,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -31,6 +32,7 @@ import rearth.belts.blocks.BeltTileBlock;
 import rearth.belts.blocks.BeltTileBlockEntity;
 import rearth.belts.blocks.ChuteBlockEntity;
 import rearth.belts.blocks.SplitterBlock;
+import rearth.belts.items.SplitterItem;
 import rearth.belts.model.BeltTier;
 
 /**
@@ -188,7 +190,7 @@ final class SplitterTileTests {
 
     /**
      * A splitter facing across a line of east-running tiles, clicked on a tile's top: whichever
-     * side its second half falls on, it goes neither on the tile nor above it.
+     * side its second half falls on, it is planned refused on the tile, and goes neither on it nor above it.
      */
     private static void refusedAcrossALine(GameTestHelper helper, Direction facing) {
         for (BlockPos at = FROM.east(); at.getX() < LEFT_END.getX(); at = at.east()) {
@@ -198,8 +200,13 @@ final class SplitterTileTests {
         player.setYRot(facing.toYRot());
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.SPLITTER.get()));
         BlockPos tile = helper.absolutePos(LEFT);
-        helper.useBlock(LEFT, player, new BlockHitResult(
-                Vec3.atBottomCenterOf(tile).add(0, 6 / 16d, 0), Direction.UP, tile, false));
+        BlockHitResult hit = new BlockHitResult(Vec3.atBottomCenterOf(tile).add(0, 6 / 16d, 0), Direction.UP, tile, false);
+        var plan = ((SplitterItem) player.getMainHandItem().getItem())
+                .plan(new BlockPlaceContext(player, InteractionHand.MAIN_HAND, player.getMainHandItem(), hit));
+        if (plan == null || !plan.refused() || !plan.halves().getFirst().pos().equals(tile)) {
+            helper.fail("a splitter facing " + facing + " is not planned refused on the tile it was aimed at", LEFT);
+        }
+        helper.useBlock(LEFT, player, hit);
 
         for (BlockPos at = FROM.east(); at.getX() < LEFT_END.getX(); at = at.east()) {
             if (!(helper.getBlockState(at).getBlock() instanceof BeltTileBlock)) {
