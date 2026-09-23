@@ -104,7 +104,7 @@ public final class PFGameTests {
             BeltTileTests.register(registrar);
             RotateTests.register(registrar);
             BeltTileSyncTests.register(registrar);
-            LoaderFloorTests.register(registrar);
+            LoaderMouthTests.register(registrar);
             BeltCostTests.register(registrar);
             BeltLoaderCostTests.register(registrar);
             BeltFilterTests.register(registrar);
