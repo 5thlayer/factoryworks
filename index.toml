@@ -41,16 +41,8 @@ file = "config/MouseTweaks.cfg"
 hash = "4069ce1a439d8c37453c1b1e9f2037e0942674c7e48723a39b37eab245792ad4"
 
 [[files]]
-file = "config/buildinggadgets2-common.toml"
-hash = "15fafb7fc5c19f7c59c7a3d56d70091195a10053454b3c7f54271df97b7e16d9"
-
-[[files]]
 file = "config/configuration-options.json"
 hash = "0b68a3b324f4a172d577a10446593b8f64f38e37199c928b0fc5aee152baee00"
-
-[[files]]
-file = "config/elevatorid-server.toml"
-hash = "078b801a1c827b779c4c67b1144c5c56e8059391e812874eae5ef7551639ee30"
 
 [[files]]
 file = "config/ferritecore-mixin.toml"
@@ -546,7 +538,7 @@ hash = "05bb9997ff87c49c5abcfdfb6473458863c4ca61a7f77918c9341c330819807c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
-hash = "99d2d80df99606e7c73296013e6cafaccc0d381ab322ae01232afb1df555a348"
+hash = "d7d9effd8b95a08f3925e045594a04ce95560a773427cba0f6fc793ba4626116"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/assembling_machine.json"
@@ -1166,7 +1158,7 @@ hash = "accaa2c2838c9220b27fc0b4736ce068f87ff337905ec0a22860c744d1a8d8df"
 
 [[files]]
 file = "kubejs/data/c/tags/item/tools/wrench.json"
-hash = "b38e85d63c5fe68da166391371f363b462ac25389ca9adb213592d1cff54cd76"
+hash = "76c54678f03cd5fde0c3a78d11f3d326206fd6b9bf75f366f62cd9843b38a7f7"
 
 [[files]]
 file = "kubejs/data/minecraft/dimension/overworld.json"
@@ -2127,11 +2119,6 @@ hash = "eb16142adc70a313cb70ab751c55db352edcf95a7d06c867ee28a2ff587cf8dc"
 metafile = true
 
 [[files]]
-file = "mods/building-gadgets.pw.toml"
-hash = "5e63f44ba5113b18ee66c51f06c5e7a56112784130aa9051d9bedaaf64654933"
-metafile = true
-
-[[files]]
 file = "mods/cloth-config.pw.toml"
 hash = "d0fae735921d88b89506a481b8368899b0f694a31188d7447428e472e476184d"
 metafile = true
@@ -2224,11 +2211,6 @@ metafile = true
 [[files]]
 file = "mods/mouse-tweaks.pw.toml"
 hash = "81d8d5d155a09efd87fcf2f06ef76c650313af0a9848175333df78b573782c58"
-metafile = true
-
-[[files]]
-file = "mods/openblocks-elevator.pw.toml"
-hash = "a525007d8aff0c5ce3fb486b58406a9d33a7aac674afd0ce6de40ec33eace917"
 metafile = true
 
 [[files]]
