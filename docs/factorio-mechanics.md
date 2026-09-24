@@ -1026,7 +1026,7 @@ Nothing here is built. **The shape changed wholesale with ADR-0055**, which reve
 entry in this row: emission was to attract *Illager raids to an Overseer at your outpost*, with no
 nest, no expansion and no evolution factor. That design existed because `minecraft:raid` is
 village-anchored and needed something to path at. It was never argued against Factorio's own loop,
-and `docs/gdd.md` §6 describing it is stale prose with no standing (ADR-0054).
+and `docs/gdd.md` §6 now points at ADR-0055 instead (#375).
 
 Factorio's loop is one mechanism: nests absorb the pollution that reaches them, and absorbed
 pollution is what buys the attack groups. The raid *is* the nest's output. The pack reproduces
@@ -1497,12 +1497,12 @@ replace them, since it reproduces neither the chunk loop nor reprocessing.
 
 - **verdict**: `blocked`
 - **where**: pack-wide
-- **via**: `pack`
+- **candidates**: Oritech: Space Age, or `planetaryfactory_core` (#340)
 - **owner**: `docs/gdd.md` §4
 - **ticket**: #340 (the wait on interplanetary travel); #111 closed
 
-Launch Terminals, Receiving Terminals and Drop Hatches as pack-authored GT machines, with unattended
-cargo held as a Flight with a travel timer rather than as a moving entity.
+Launch Terminals, Receiving Terminals and Drop Hatches, with unattended cargo held as a Flight with a
+travel timer rather than as a moving entity. What the terminals are built on waits on #340.
 
 Sub-rules:
 
@@ -1547,14 +1547,14 @@ mechanics and its absence has never been argued.
 
 - **verdict**: `planned`
 - **where**: Electro
-- **via**: `create`
+- **candidates**: `planetaryfactory_core`, as a recycler on an Oritech machine body (ADR-0060)
 - **owner**: `docs/gdd.md` §2, `docs/planets.md`
 - **ticket**: #13
 
 Sub-rules:
 
 - **Scrap recycles into a spread of unrelated outputs, and the surplus is the puzzle** — `planned`.
-  Create crushers on generated ruins.
+  Scrap comes from generated ruins; the machine that recycles it is #13's.
 - **Any item can be recycled back into a quarter of its ingredients** — `blocked`, following
   [Quality](#quality); without quality the universal recycler has no second purpose.
 - **Voiding the surplus is a legitimate answer** — `unargued`, no verdict.
