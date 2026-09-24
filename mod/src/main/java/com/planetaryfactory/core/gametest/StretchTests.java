@@ -59,27 +59,27 @@ final class StretchTests {
         tests.test("a_stretch_replaces_a_tile_of_another_tier_and_hands_it_back", 30, StretchTests::replaces);
         tests.test("a_stretch_behind_the_look_changes_nothing", 20, helper -> refused(helper,
                 player -> {}, START.west(2), PlacementPlan.Refusal.BEHIND_LOOK, "message.belts.stretch_behind"));
-        tests.test("a_stretch_through_a_block_changes_nothing", 20, helper -> refused(helper,
-                player -> helper.setBlock(START.east(3), Blocks.OAK_FENCE), START.east(5),
+        tests.test("a_stretch_through_a_block_changes_nothing", 20, helper -> refused(helper, START,
+                player -> helper.setBlock(START.east(3), Blocks.OAK_FENCE), START.east(5), START.east(3),
                 PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
         tests.test("a_stretch_follows_a_step_up_and_a_step_down", 20, StretchTests::stepUpAndDown);
         tests.test("a_stretch_climbs_a_staircase", 20, StretchTests::staircase);
         tests.test("a_stretch_under_an_overhang_stays_level", 20, StretchTests::overhang);
-        tests.test("a_stretch_up_a_two_block_step_changes_nothing", 20, helper -> refused(helper,
+        tests.test("a_stretch_up_a_two_block_step_changes_nothing", 20, helper -> refused(helper, START,
                 player -> {
                     helper.setBlock(START.east(3), Blocks.STONE);
                     helper.setBlock(START.east(3).above(), Blocks.STONE);
-                }, START.east(5), PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven"));
+                }, START.east(5), START.east(3), PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven"));
         tests.test("a_stretch_down_a_two_block_drop_changes_nothing", 20, helper -> {
             for (int i = 0; i <= 2; i++) {
                 helper.setBlock(START.east(i), Blocks.STONE);
                 helper.setBlock(START.east(i).above(), Blocks.STONE);
             }
-            refused(helper, START.above(2), player -> {}, START.east(5),
+            refused(helper, START.above(2), player -> {}, START.east(5), START.east(3).above(2),
                     PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven");
         });
-        tests.test("a_stretch_over_a_one_block_bump_changes_nothing", 20, helper -> refused(helper,
-                player -> helper.setBlock(START.east(3), Blocks.STONE), START.east(5),
+        tests.test("a_stretch_over_a_one_block_bump_changes_nothing", 20, helper -> refused(helper, START,
+                player -> helper.setBlock(START.east(3), Blocks.STONE), START.east(5), START.east(3).above(),
                 PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven"));
         tests.test("a_corner_on_a_step_is_not_stored", 20, helper -> refused(helper,
                 player -> {
@@ -425,16 +425,21 @@ final class StretchTests {
 
     private static void refused(GameTestHelper helper, Consumer<ListeningPlayer> setUp, BlockPos end,
                                 PlacementPlan.Refusal refusal, String key) {
-        refused(helper, START, setUp, end, refusal, key);
+        refused(helper, START, setUp, end, null, refusal, key);
     }
 
+    /** As above, and a refusal at {@code named} draws the tile there, last, so the player sees what cannot be laid. */
     private static void refused(GameTestHelper helper, BlockPos start, Consumer<ListeningPlayer> setUp, BlockPos end,
-                                PlacementPlan.Refusal refusal, String key) {
+                                @Nullable BlockPos named, PlacementPlan.Refusal refusal, String key) {
         var player = started(helper, Direction.EAST, start);
         setUp.accept(player);
         var plan = planOf(helper, player, end);
         if (plan == null || plan.refusal() != refusal) {
             helper.fail("the stretch was planned as " + (plan == null ? "nothing" : plan.refusal()) + ", not " + refusal, end);
+            return;
+        }
+        if (named != null && !plan.blocks().getLast().pos().equals(helper.absolutePos(named))) {
+            helper.fail("the refused stretch's plan ends at " + plan.blocks().getLast().pos() + ", not the tile it cannot lay", named);
             return;
         }
         Map<BlockPos, BlockState> before = world(helper);

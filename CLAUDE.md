@@ -242,8 +242,9 @@ and names it, and a sneak-use in the air clears the start and its corners. Stret
 turned the L and sideways tests red, and a replace that drops the carried item the replace test. A stretch follows
 the ground (#421): over a block two wide it lays a foot, two tops and a foot, up a staircase a foot,
 two middles and a top, and under an overhang it stays level; a corner stored on a step is refused,
-since a slope never turns. Laying the stretch level instead turns the six ground tests and the
-three blocked ones red. The path and the ground-following order are the fork's `StretchTest`, and
+since a slope never turns. A stretch refused by the ground or a block plans the tile it cannot lay
+last, so the preview draws it; planning only the tiles before it turns those four refusals red.
+Laying the stretch level instead turns the six ground tests and the three blocked ones red. The path and the ground-following order are the fork's `StretchTest`, and
 whether the preview draws the stretch, its start and each tile at its height is a human check on
 delivery.
 And that a tile line costs the server no block updates and survives a save and an unloaded chunk
