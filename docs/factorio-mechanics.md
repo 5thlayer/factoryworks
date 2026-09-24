@@ -48,7 +48,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 
 | mechanic | verdict | where |
 | --- | --- | --- |
-| [Resource patches and finite ore](#resource-patches-and-finite-ore) | `planned` | Terra, Ignus, Sapros |
+| [Resource patches and finite ore](#resource-patches-and-finite-ore) | `adapted` | Terra, Ignus, Sapros |
 | [Manual mining](#manual-mining) | `adapted` | all bodies |
 | [Trees and wood](#trees-and-wood) | `adapted` | all bodies |
 | [Mining drills](#mining-drills) | `adapted` | all bodies |
@@ -113,10 +113,14 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 
 ### Resource patches and finite ore
 
-- **verdict**: `planned`
+- **verdict**: `adapted`
 - **where**: Terra, Ignus, Sapros
 - **via**: `planetaryfactory_core`
 - **owner**: ADR-0007, ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045, ADR-0060
+- **notice**: a patch is one block deep, flush with the terrain, its ragged edge drawn from
+  Minecraft's noise, and an ore block shows its amount by stage and Jade line rather than a map layer.
+- **ticket**: #320, #321 and #377 closed with Terra's patches shipped; Ignus and Sapros land with #12
+  and #23
 
 Terra deals one ore shape: a filled disc of a single ore block, one deep, flush with the terrain
 surface, at Factorio's own spacing. `scripts/worldgen-check.py` asserted it against GregTech's
@@ -137,7 +141,7 @@ Sub-rules:
   "a stone patch in a world made of stone reads as a joke". ADR-0041 reverses it: the mechanism
   ADR-0021 discharged stone's bulk-material function onto was never built, and quarries exist on
   Earth because what makes one is concentration, not the rock being absent elsewhere.*
-- **Ore is visible where it lies** — `planned`, ADR-0045. Every patch is on the surface, so finding
+- **Ore is visible where it lies** — `shipped` (#313, #320), ADR-0045. Every patch is on the surface, so finding
   one is exploration and the Radar reveals map rather than detecting ore — Factorio's own Radar.
   *This row read "ore is prospected, not stumbled on", `adapted` under ADR-0019: surface indicators
   first. ADR-0045 discharges that prerequisite rather than meeting it,
@@ -673,11 +677,13 @@ once every planet's puzzle is done — it is not a logistic-robot analogue and i
 - **verdict**: `planned`
 - **notice**: a held pack block draws translucent where placing would put it and red where placing
   would be refused (#297), and a furnace, pole column or Assembling Machine of another tier placed
-  over one swaps it in place, drawn blue (#388, #389, #390); the wires and supply area drawn on top
-  of it are not here yet.
+  over one swaps it in place, drawn blue (#388, #389, #390); a held pole also draws the wires it would
+  add and its supply area (#298, #158). Belts, splitters and loaders do not fast replace yet.
 - **where**: all bodies
 - **via**: `pack`
 - **owner**: #297, #298, #299
+- **ticket**: #384 (fast replace for belts, splitters and loaders), #401; #297, #298, #158, #299
+  closed
 
 Sub-rules:
 
@@ -686,8 +692,8 @@ Sub-rules:
   [Construction robots and blueprints](#construction-robots-and-blueprints).
 - **A held belt previews the tiles it would place, red where refused** — `shipped`, #393. The tile
   item's click executes the plan its preview draws, and the refusal's reason is on the action bar.
-- **A held pole previews the wires it would add** — `planned`, #298.
-- **A held pole shows its supply area and those of the poles around it** — `planned`, #158.
+- **A held pole previews the wires it would add** — `shipped`, #298.
+- **A held pole shows its supply area and those of the poles around it** — `shipped`, #158.
 - **Fast replace: placing another furnace tier over a furnace swaps it in place** — `shipped`,
   #388. The swap keeps the facing, the items the new tier holds, the smelt's fraction done, the
   joules between the burners and FE up to the new buffer; the rest goes to the player, and a player
@@ -742,10 +748,11 @@ Sub-rules:
 - **where**: Terra
 - **via**: `railcraft`
 - **owner**: ADR-0060 (Railcraft Reborn carries trains), and #277 and #278 for which item each row names
+- **ticket**: #435 (schedules, stations and train limits)
 
 Railcraft runs on vanilla rail: `rail` is `minecraft:rail`, the locomotive is Railcraft's Steam
 Locomotive, the wagons its Cargo Minecart and Minecart with Tank, and the stop its Iron Buffer Stop
-Track. No open ticket owns the rest of the row.
+Track.
 
 Sub-rules:
 
@@ -1126,6 +1133,7 @@ inheriting a dead premise.
 - **verdict**: `blocked`
 - **where**: —
 - **owner**: `unargued`
+- **ticket**: #120
 
 `production/module` is `undecided` in `subgroup-owner.json` on one recipe, `beacon`. Factorio's module
 system has no pack analogue; #42 names a Mekanism upgrade in the `production` pack's slot list, which
@@ -1271,6 +1279,7 @@ on. Research or equipment that raises reach is not here.
 - **verdict**: `blocked`
 - **where**: —
 - **owner**: `unargued`
+- **ticket**: #121
 
 `logistics/transport` is `undecided` on one recipe, `car`. Personal transport is not an ADR-0017
 capability and no rung grants it. Factorio's car, tank and spidertron have no pack answer, and
@@ -1303,6 +1312,7 @@ Sub-rules:
 - **verdict**: `blocked`
 - **where**: —
 - **owner**: #118
+- **ticket**: #436
 
 `production/tool` is `undecided` on one recipe, `repair-pack`, and the reason this row carried —
 "nothing on Terra takes damage the way a Factorio entity does; with no biters attacking buildings,
@@ -1526,6 +1536,7 @@ Sub-rules:
 - **verdict**: `blocked`
 - **where**: —
 - **owner**: `unargued`
+- **ticket**: #122
 
 Five tiers of every item, quality modules, the recycler-plus-quality loop, and legendary as the
 end state. Nothing in the stack has an item-quality axis, and bolting one on would touch every
@@ -1667,6 +1678,7 @@ Fusion generator and reactor, craftable only on Gelida. **This row has no `via`,
 - **verdict**: `blocked`
 - **where**: Atlantis
 - **owner**: `docs/gdd.md` §7, migrated here
+- **ticket**: #131
 
 A named, orbit-only endgame destination with no defined puzzle, resource or attrition model.
 Migrated out of the GDD's Open Questions.

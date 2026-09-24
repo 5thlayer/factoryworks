@@ -44,14 +44,14 @@ print(f"{checked} ticket pointers checked", "" if fail else "-- all open")
 
 ledger_fail = sections = 0
 text = open("docs/factorio-mechanics.md").read()
-for body in re.split(r"^### ", text, flags=re.M)[1:]:
+for body in re.split(r"^##+ ", text, flags=re.M)[1:]:
     name = body.split("\n", 1)[0].strip()
     verdict = re.search(r"^- \*\*verdict\*\*: `([^`]+)`", body, re.M)
     ticket = re.search(r"^- \*\*ticket\*\*:(.*(?:\n  .*)*)", body, re.M)
-    if not verdict or verdict[1] not in ("planned", "blocked") or not ticket:
+    if not verdict or verdict[1] not in ("planned", "blocked"):
         continue
     sections += 1
-    refs = [int(n) for n in re.findall(r"#(\d+)", ticket[1])]
+    refs = [int(n) for n in re.findall(r"#(\d+)", ticket[1])] if ticket else []
     if any(issues.get(n, {}).get("state") == "OPEN" for n in refs):
         continue
     ledger_fail = 1
