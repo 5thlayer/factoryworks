@@ -192,8 +192,12 @@ The tiles one drag of the tile item lays, placed, charged and refused as one. A 
 _Avoid_: run, zoop, drag (the gesture, not what it lays), tile path
 
 **Dismantle**:
-Taking up the tiles of one line from one tile to another, both included, following its corners and slopes, in two sneak-clicks of the **Engineer's Pick**: the first stores the start, the second names the end, either way along the line. An end off the start's line -- a splitter, a loader, or a tile of any other line, one beyond a splitter included -- is refused and keeps the start; a click after the start is gone is a new start. The tiles, their wedges and every item they carry go to the inventory, and what does not fit drops at the player's feet. Loaders and splitters are never taken. The rest of the line keeps what it carries. Distinct from mining, which breaks one block and drops it (#404).
+Taking up a span of one **Dismantle Family** from one block to another, both included, in two sneak-clicks of the **Engineer's Pick**: the first stores the start, the second names the end. The span is the shortest path between them through blocks of the start's family joined to one another; an end outside the family, not joined to the start, or reached by two equally short paths is refused and keeps the start, and a click after the start is gone is a new start. What the span's blocks drop goes to the inventory, and what does not fit drops at the player's feet. Blocks outside the family, such as the machines a pipe run feeds, are never taken. On a belt the span follows the line through its corners and slopes, either way along it, and takes the tiles' wedges and every item they carry, and the rest of the line keeps what it carries. Distinct from mining, which breaks one block and drops it (#404, #431).
 _Avoid_: deconstruct, mass mine, unstretch
+
+**Dismantle Family**:
+The blocks one **Dismantle** takes up together as a single span, with the rule for which two of them are joined. By default two blocks of a family are joined when they touch face to face; a family may say otherwise. Fluid pipes are a family, joined only where their connection is open (#431). A belt's family is its line, joined along the way items travel.
+_Avoid_: dismantle group, dismantle kind, replace group (a different grouping)
 
 **Tier colour**:
 The colour a belt tier is painted in: yellow, red, blue, green for tiers 1 to 4. The belt shows it as the stripes along its edges, and every other belt piece of that tier shows it on its own body: the loader's band, the splitter's divider. Factorio's convention. A loader's housing stays slate.
@@ -360,11 +364,11 @@ What a held item would do at an aimed spot: the positions it would fill, the blo
 _Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state
 
 **Dismantle Plan**:
-What a **Dismantle** would take up at an aimed tile: the tiles of the span from the stored start, and a refusal or none. Dismantling executes a plan, and the preview draws one, so both ask one rule, as a **Placement Plan** does; the two are separate things (#404).
+What a **Dismantle** would take up at an aimed block: the blocks of the span from the stored start, and a refusal or none. Dismantling executes a plan, and the preview draws one, so both ask one rule, as a **Placement Plan** does; the two are separate things (#404).
 _Avoid_: removal plan, placement plan (for a dismantle)
 
 **Placement Preview**:
-What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the tiles of its stretch; with the **Engineer's Pick** and a dismantle's start stored, the tiles its **Dismantle Plan** would take up, in red, and none when it would be refused. It shows what placing or dismantling would do and changes nothing in the world.
+What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the tiles of its stretch; with the **Engineer's Pick** and a dismantle's start stored, the blocks its **Dismantle Plan** would take up, in red, and none when it would be refused. It shows what placing or dismantling would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
 **Fast Replace**:
@@ -402,7 +406,7 @@ The pack's one item per material — FTB Materials', for every metal. It is what
 _Avoid_: sheet, ingot, GT plate, unified plate
 
 **Engineer's Pick**:
-The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what **dismantles** a belt. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
+The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what **dismantles** a belt or a pipe run. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
 _Avoid_: pickaxe, the pick, mining tool, wrench
 
 **Burner Mining Drill**:

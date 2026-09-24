@@ -168,7 +168,7 @@ aggregate check runner, and every check is a command a person or an agent runs a
 it owns. What makes this one different in kind is that it builds the mod, resolves the Minecraft
 artifacts and boots a server — seconds rather than milliseconds — so it belongs to a change that
 touched mechanism, not to a docs edit. Run it after editing anything under `core/energy/`,
-`core/smelting/` or `core/gametest/`.
+`core/smelting/`, `core/dismantle/` or `core/gametest/`.
 
 **Where the tests live:** `mod/src/main/java/com/planetaryfactory/core/gametest/`, in the *main*
 source set rather than the test one, because a GameTest is code the game loads. `PFGameTests`

@@ -41,6 +41,14 @@ public final class PFDataComponents {
                             .networkSynchronized(GlobalPos.STREAM_CODEC)
                             .build());
 
+    /** A Dismantle's stored start (ADR-0086). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>>
+            DISMANTLE_START = DATA_COMPONENTS.register("dismantle_start",
+                    () -> DataComponentType.<GlobalPos>builder()
+                            .persistent(GlobalPos.CODEC)
+                            .networkSynchronized(GlobalPos.STREAM_CODEC)
+                            .build());
+
     /**
      * How far the held stack's placement is turned from the look (ADR-0083). Absent means no turn,
      * and a turn back to none removes it, so a turned stack stacks again with an unturned one.

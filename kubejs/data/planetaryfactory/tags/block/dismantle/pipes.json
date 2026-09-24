@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "oritech:fluid_pipe",
+    "oritech:fluid_pipe_connection",
+    "oritech:fluid_pipe_duct",
+    "oritech:framed_fluid_pipe",
+    "oritech:framed_fluid_pipe_connection"
+  ]
+}

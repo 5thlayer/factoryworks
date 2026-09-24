@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `BeltSlopeEdgeTests` (#419), `RotateTests` (#386), `StretchTests` (#393) and `DismantleTests` (#404), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377) and `PipeDismantleTests` (#431), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `BeltSlopeEdgeTests` (#419), `RotateTests` (#386), `StretchTests` (#393) and `DismantleTests` (#404), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -347,6 +347,15 @@ another line changes no block, slot or stored start and names its reason, a clic
 broke is a new start, and a sneak-use in the air clears it. Skipping the execution turns the eight
 taking tests red. The span is the fork's `DismantleTest`, and whether the red span draws over the
 tiles is a human check on delivery.
+And that two sneak-clicks of the Pick take up a span of Oritech's fluid pipes, a **Dismantle Family**
+(`PipeDismantleTests`, #431, ADR-0086), each test shaped like `DismantleTests` over
+`FamilyDismantle.plan`. A straight run, a bend, a tee's branch between the ends and one pipe clicked
+twice leave none of the plan's pipes standing, keep every pipe outside it and hand over a pipe each;
+a full inventory drops the rest at the player's feet and creative hands over nothing. Opposite
+points of a ring, a closed connection and an end on a Boiler change no block, slot or stored start
+and name their reason. A join rule that ignores Oritech's connections turns the closed-connection
+test red. The shortest path, the tie and the default join are `DismantleSpanTest`, and the red
+outline and that the Pick's plain click still toggles a connection are a human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
@@ -392,7 +401,7 @@ no input to go stale against, so the `--check` is the whole of the guard. And th
 in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
 boots a server, so it is run against a change that touched mechanism. Run it after editing
 anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`,
-`core/reach/` or `core/gametest/`.
+`core/reach/`, `core/dismantle/` or `core/gametest/`.
 
 ### Replace group check
 

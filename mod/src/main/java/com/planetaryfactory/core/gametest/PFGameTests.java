@@ -100,6 +100,7 @@ public final class PFGameTests {
             ReachTests.Screens.register(registrar);
             RadarTests.register(registrar);
             PumpjackTests.register(registrar);
+            PipeDismantleTests.register(registrar);
         }
         if (ModList.get().isLoaded("belts")) {
             BeltTileTests.register(registrar);
