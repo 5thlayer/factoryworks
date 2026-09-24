@@ -72,7 +72,6 @@ final class TilePlans {
             case BLOCKED -> PlacementPlan.Refusal.FOOTPRINT_BLOCKED;
             case NO_GROUND -> PlacementPlan.Refusal.NO_GROUND;
             case SLOPE_TURNS -> PlacementPlan.Refusal.SLOPE_TURNS;
-            case SLOPE_MEETS_LOADER -> PlacementPlan.Refusal.SLOPE_MEETS_LOADER;
             case WEDGE_BLOCKED -> PlacementPlan.Refusal.WEDGE_BLOCKED;
             case NOT_ENOUGH_TILES -> PlacementPlan.Refusal.NOT_ENOUGH_ITEMS;
             case NO_ROOM_TO_RETURN -> PlacementPlan.Refusal.NO_ROOM_TO_RETURN;

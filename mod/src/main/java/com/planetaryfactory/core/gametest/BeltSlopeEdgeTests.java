@@ -9,18 +9,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import rearth.belts.BlockContent;
 import rearth.belts.ItemContent;
 import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.SplitterBlock;
 import rearth.belts.model.BeltTier;
 
 /**
- * A slope's edges (#419, ADR-0085): a slope never turns and meets no loader or splitter, so a tile
- * placed by hand that would make one is refused with its reason and changes nothing. Each tile is
- * asked for its plan first, and the world and the stack are held to it.
+ * A slope's edges (#419, ADR-0085): a slope never turns, so a tile placed by hand that would turn a
+ * corner into one is refused with its reason and changes nothing, while a tile across another a
+ * block up is a crossing and places level. Each tile is asked for its plan first, and the world and
+ * the stack are held to it.
  */
 final class BeltSlopeEdgeTests {
 
@@ -31,32 +29,23 @@ final class BeltSlopeEdgeTests {
     }
 
     static void register(PFGameTests.Registrar tests) {
-        tests.test("a_tile_fed_from_its_side_a_block_lower_is_refused", 40, helper -> {
-            BeltWedgeTests.byHand(helper, BeltWedgeTests.player(helper), FIRST, Direction.EAST, 0);
-            refused(helper, ABOVE_AHEAD, Direction.NORTH, PlacementPlan.Refusal.SLOPE_TURNS);
+        tests.test("a_tile_across_a_line_a_block_up_is_placed_level", 40, helper -> {
+            ServerPlayer player = BeltWedgeTests.player(helper);
+            BeltWedgeTests.byHand(helper, player, FIRST, Direction.EAST, 0);
+            BeltWedgeTests.byHand(helper, player, ABOVE_AHEAD, Direction.NORTH, 0);
+            level(helper, FIRST);
+            level(helper, ABOVE_AHEAD);
+            helper.succeed();
         });
-        tests.test("a_tile_a_block_lower_facing_a_tiles_side_is_refused", 40, helper -> {
-            BeltWedgeTests.byHand(helper, BeltWedgeTests.player(helper), ABOVE_AHEAD, Direction.NORTH, 0);
-            refused(helper, FIRST, Direction.EAST, PlacementPlan.Refusal.SLOPE_TURNS);
+        tests.test("a_tile_ending_under_a_line_across_it_is_placed_level", 40, helper -> {
+            ServerPlayer player = BeltWedgeTests.player(helper);
+            BeltWedgeTests.byHand(helper, player, ABOVE_AHEAD, Direction.NORTH, 0);
+            BeltWedgeTests.byHand(helper, player, FIRST, Direction.EAST, 0);
+            level(helper, FIRST);
+            level(helper, ABOVE_AHEAD);
+            helper.succeed();
         });
         tests.test("a_tile_that_would_slope_a_corner_is_refused", 40, BeltSlopeEdgeTests::slopingACorner);
-        tests.test("a_tile_that_would_slope_a_tile_out_of_a_loader_is_refused", 40, helper -> {
-            helper.setBlock(FIRST.west(), BeltTileTests.loader(BeltTier.BELT, Direction.EAST));
-            BeltWedgeTests.byHand(helper, BeltWedgeTests.player(helper), FIRST, Direction.EAST, 0);
-            refused(helper, ABOVE_AHEAD, Direction.EAST, PlacementPlan.Refusal.SLOPE_MEETS_LOADER);
-        });
-        tests.test("a_tile_that_would_slope_a_tile_into_a_loader_is_refused", 40, helper -> {
-            helper.setBlock(ABOVE_AHEAD.east(), BeltTileTests.loader(BeltTier.BELT, Direction.WEST));
-            BeltWedgeTests.byHand(helper, BeltWedgeTests.player(helper), ABOVE_AHEAD, Direction.EAST, 0);
-            refused(helper, FIRST, Direction.EAST, PlacementPlan.Refusal.SLOPE_MEETS_LOADER);
-        });
-        tests.test("a_tile_that_would_slope_a_tile_into_a_splitter_half_is_refused", 40, helper -> {
-            BlockPos left = ABOVE_AHEAD.east();
-            helper.setBlock(left, half(SplitterBlock.Side.LEFT));
-            helper.setBlock(left.relative(Direction.EAST.getClockWise()), half(SplitterBlock.Side.RIGHT));
-            BeltWedgeTests.byHand(helper, BeltWedgeTests.player(helper), ABOVE_AHEAD, Direction.EAST, 0);
-            refused(helper, FIRST, Direction.EAST, PlacementPlan.Refusal.SLOPE_MEETS_LOADER);
-        });
     }
 
     private static void slopingACorner(GameTestHelper helper) {
@@ -86,9 +75,11 @@ final class BeltSlopeEdgeTests {
         helper.succeed();
     }
 
-    private static BlockState half(SplitterBlock.Side side) {
-        return BlockContent.splitterFor(BeltTier.BELT).defaultBlockState()
-                .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST)
-                .setValue(SplitterBlock.SIDE, side);
+    private static void level(GameTestHelper helper, BlockPos tile) {
+        BlockState state = helper.getBlockState(tile);
+        if (state.getValue(BeltTileBlock.PITCH) != BeltTileBlock.PitchState.LEVEL
+                || state.getValue(BeltTileBlock.CORNER) != BeltTileBlock.Shape.STRAIGHT) {
+            helper.fail("a tile crossing another a block up stands " + state + ", expected level and straight", tile);
+        }
     }
 }
