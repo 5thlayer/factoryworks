@@ -47,12 +47,15 @@ height per block of travel. It amends ADR-0084's consequence that belts are flat
   placement that would need it, so a slope never stands on a belt: a crossing's tops stand beside the
   crossed line, never over it. A tile's top counts as ground for the level tile over it (#420). A two-click stretch follows the ground one block up or
   down at a time, and climbs over a line across its path in five tiles: a foot, a top, a level tile
-  on the crossed line, a top and a foot. A stretch takes the lowest heights over the ground that change
+  on the crossed line, a top and a foot, leaving the crossed line as it was. Its start and its end
+  are never crossed: a start on a line is turned as before, and an end aimed at a line stops beside
+  it and feeds its side, since aiming at a line means joining it (#422). A stretch takes the lowest heights over the ground that change
   by at most a block a column, so it starts a climb early through the air to clear a wall, comes
   down a drop through the air, and widens a one-column peak into a two-tile top, since a crest does
   not connect; each slope over the air stands on a wedge, as one built tile by tile does. It is
   refused whole where no such path fits: a wall taller than the run-up to it, an end part way down
-  a drop, a dip a level tile would bridge over nothing, and a corner on a step. A block with a block entity is no ground for a stretch, as it is none for
+  a drop, a dip a level tile would bridge over nothing, a corner on a step, and a crossed line with
+  no free column each side of it for a top, such as one beside the start or a second line beside it. A block with a block entity is no ground for a stretch, as it is none for
   a wedge (#421).
 
 **Considered: underground belts.** Rejected, as ADR-0044 argued. They solve weaving on a plane, and
@@ -73,4 +76,4 @@ reads as a belt, and each needs a shape of its own.
 - A rider is lifted over each rising collision slab, since an item cannot step up. On a slope it
   climbs in small hops; whether that reads right is a human check.
 - Tile by tile ships first (#417), then the wedge and a crossing built by hand (#420), then the
-  stretch following the ground (#421); the stretch's crossing is a later slice of #412.
+  stretch following the ground (#421), then the stretch's crossing (#422).

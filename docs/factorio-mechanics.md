@@ -595,8 +595,8 @@ Sub-rules:
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
   Argued from the medium, not from a mod's shortfall (ADR-0044), and now from slopes: a belt crosses
   another by climbing over it in five tiles, a foot, a top on a wedge, a level tile on the crossed
-  tile, a top on a wedge and a foot, built by hand (#420, ADR-0085). A stretch laying the crossing
-  itself is #412's.
+  tile, a top on a wedge and a foot, built by hand (#420, ADR-0085) or laid by a stretch across the
+  line (#422).
 - **Splitters** — `shipped`. Four tiers from Factorio's four splitter recipes, turbo registered
   with no recipe. A splitter is two blocks wide, placed and broken as one; each half ends one belt at
   its back and starts one at its front, and items pass from an input's end to an output's head with

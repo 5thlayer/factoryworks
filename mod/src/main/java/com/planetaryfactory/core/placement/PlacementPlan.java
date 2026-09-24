@@ -68,6 +68,8 @@ public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nulla
         WEDGE_BLOCKED,
         /** A belt corner a placement would turn into a slope, which never turns (#419). */
         SLOPE_TURNS,
+        /** A belt stretch across a line with no room beside it for a crossing's top and foot (#422). */
+        NO_ROOM_TO_CROSS,
     }
 
     public PlacementPlan {
