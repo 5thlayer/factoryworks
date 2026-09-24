@@ -112,12 +112,6 @@ final class StretchTests {
         tests.test("a_stretch_crossing_a_line_beside_its_start_changes_nothing", 20, helper -> refused(helper, START,
                 player -> lineSouthAcross(helper, START.east(1)), START.east(5), START.east(1).above(),
                 PlacementPlan.Refusal.NO_ROOM_TO_CROSS, "message.belts.stretch_no_room_to_cross"));
-        tests.test("a_stretch_across_two_adjacent_lines_changes_nothing", 20, helper -> refused(helper, START,
-                player -> {
-                    lineSouthAcross(helper, START.east(3));
-                    lineSouthAcross(helper, START.east(4));
-                }, START.east(7), START.east(3).above(),
-                PlacementPlan.Refusal.NO_ROOM_TO_CROSS, "message.belts.stretch_no_room_to_cross"));
         tests.test("a_stretch_aimed_at_a_line_feeds_its_side", 20, StretchTests::joins);
         tests.test("a_creative_stretch_charges_nothing", 20, StretchTests::creative);
         tests.test("a_sneak_click_adds_a_corner_the_stretch_runs_on_from", 20, StretchTests::corner);

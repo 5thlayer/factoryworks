@@ -251,11 +251,11 @@ whether the preview draws the stretch, its start and each tile at its height is 
 delivery. A stretch climbs over a line across its path (#422): across a loaded line it lays a foot,
 a top on a wedge, a level tile on the crossed tile, a top on a wedge and a foot for one tile each,
 the crossed line keeps its tiles and the items it carries, and both lines deliver every item. A line
-beside the start or two lines side by side leave no room for a top, and the stretch is refused
-whole naming it; a stretch aimed at a line's tile stops beside it, leaving it as it stands. A
-same-tier tile facing back along the stretch is still turned. A terrain that sees no line across
-turns all four red. The crossing's place in the path and its refusals are the fork's `StretchTest`,
-and whether the preview draws the crossing is a human check on delivery.
+beside the start leaves no room for a top, and the stretch is refused whole naming it; a stretch
+aimed at a line's tile stops beside it, leaving it as it stands. A same-tier tile facing back along
+the stretch is still turned. A terrain that sees no line across turns all three red. Lines side by
+side crossed as one, the crossing's place in the path and its refusals are the fork's `StretchTest`
+alone, and whether the preview draws the crossing is a human check on delivery.
 And that a tile line costs the server no block updates and survives a save and an unloaded chunk
 (`BeltTileSyncTests`, #395): a line moving one item, and a line loading and delivering, send none
 from its tiles or loaders; each tile saves its own items and where in the tile they sit, and the

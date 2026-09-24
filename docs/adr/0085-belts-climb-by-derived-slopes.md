@@ -47,7 +47,8 @@ height per block of travel. It amends ADR-0084's consequence that belts are flat
   placement that would need it, so a slope never stands on a belt: a crossing's tops stand beside the
   crossed line, never over it. A tile's top counts as ground for the level tile over it (#420). A two-click stretch follows the ground one block up or
   down at a time, and climbs over a line across its path in five tiles: a foot, a top, a level tile
-  on the crossed line, a top and a foot, leaving the crossed line as it was. Its start and its end
+  on the crossed line, a top and a foot, leaving the crossed line as it was. Lines side by side
+  are crossed as one, a level tile over each. Its start and its end
   are never crossed: a start on a line is turned as before, and an end aimed at a line stops beside
   it and feeds its side, since aiming at a line means joining it (#422). A stretch takes the lowest heights over the ground that change
   by at most a block a column, so it starts a climb early through the air to clear a wall, comes
@@ -55,7 +56,7 @@ height per block of travel. It amends ADR-0084's consequence that belts are flat
   not connect; each slope over the air stands on a wedge, as one built tile by tile does. It is
   refused whole where no such path fits: a wall taller than the run-up to it, an end part way down
   a drop, a dip a level tile would bridge over nothing, a corner on a step, and a crossed line with
-  no free column each side of it for a top, such as one beside the start or a second line beside it. A block with a block entity is no ground for a stretch, as it is none for
+  no free column each side of it for a top, such as one beside the start or the end. A block with a block entity is no ground for a stretch, as it is none for
   a wedge (#421).
 
 **Considered: underground belts.** Rejected, as ADR-0044 argued. They solve weaving on a plane, and
