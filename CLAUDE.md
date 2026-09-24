@@ -300,14 +300,15 @@ a human check on delivery.
 And that a middle or top over air stands on a wedge (`BeltWedgeTests`, #420): each tile is placed
 by hand after asking `Placements` for its plan, and the world is held to every block the plan names,
 the wedges of the tiles it reshapes included. A climb of three blocks through air has a wedge under
-each middle and the top and none under the foot; breaking a top or its wedge through the player's
+each middle and the top and none under the foot, and a descent one under the top and each middle,
+rising back up it; breaking a top or its wedge through the player's
 game mode leaves neither and drops one tile; a wedge takes short grass's place; a top whose wedge
 would stand on a loader or a tile is refused with the world and the stack unchanged -- a loader is a
 full cube, so anything with a block entity is no ground; and a top levelled by breaking its foot
 loses its wedge and stays where it is. A crossing built by hand over a line, a foot, a top on a
 wedge, a level tile on the crossed tile, a top on a wedge and a foot, delivers both lines' every item
-and 15 items/s each with nothing on the ground. Dropping the tile's wedge upkeep turns all seven
-red. A tile beside a line climbing over it rather than side-loading has no world check: the top it
+and 15 items/s each with nothing on the ground. Dropping the tile's wedge upkeep turned the seven
+before the descent red. A tile beside a line climbing over it rather than side-loading has no world check: the top it
 would climb to stands over the crossed tile, where its wedge is refused, so no gesture builds it; the
 priority is the fork's `TileShapeTest` and `LineScanTest`. The wedge rule is the fork's `WedgeTest`,
 the crossing as one line over another `LineScanTest`, and whether

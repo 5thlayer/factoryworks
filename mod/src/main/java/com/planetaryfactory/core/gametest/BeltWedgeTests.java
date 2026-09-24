@@ -45,6 +45,10 @@ final class BeltWedgeTests {
     private static final List<BeltTileBlock.PitchState> THREE_BLOCK_CLIMB_PITCHES = List.of(
             BeltTileBlock.PitchState.LEVEL, BeltTileBlock.PitchState.FOOT_UP, BeltTileBlock.PitchState.MIDDLE_UP,
             BeltTileBlock.PitchState.MIDDLE_UP, BeltTileBlock.PitchState.TOP_UP, BeltTileBlock.PitchState.LEVEL);
+    private static final int[] THREE_BLOCK_DESCENT = {3, 3, 2, 1, 0, 0};
+    private static final List<BeltTileBlock.PitchState> THREE_BLOCK_DESCENT_PITCHES = List.of(
+            BeltTileBlock.PitchState.LEVEL, BeltTileBlock.PitchState.TOP_DOWN, BeltTileBlock.PitchState.MIDDLE_DOWN,
+            BeltTileBlock.PitchState.MIDDLE_DOWN, BeltTileBlock.PitchState.FOOT_DOWN, BeltTileBlock.PitchState.LEVEL);
     private static final int[] ONE_BLOCK_CLIMB = {0, 0, 1, 1};
     private static final BlockPos TOP = FIRST.east(2).above();
     private static final BlockPos TOP_WEDGE = TOP.below();
@@ -74,7 +78,10 @@ final class BeltWedgeTests {
     }
 
     static void register(PFGameTests.Registrar tests) {
-        tests.test("a_climb_through_air_stands_on_a_wedge_under_each_middle_and_the_top", 40, BeltWedgeTests::climbThroughAir);
+        tests.test("a_climb_through_air_stands_on_a_wedge_under_each_middle_and_the_top", 40,
+                helper -> throughAir(helper, THREE_BLOCK_CLIMB, THREE_BLOCK_CLIMB_PITCHES, 2, Direction.EAST));
+        tests.test("a_descent_through_air_stands_on_a_wedge_under_the_top_and_each_middle", 40,
+                helper -> throughAir(helper, THREE_BLOCK_DESCENT, THREE_BLOCK_DESCENT_PITCHES, 1, Direction.WEST));
         tests.test("breaking_a_sloped_tile_leaves_no_wedge_and_drops_one_tile", 40, helper -> breaking(helper, TOP));
         tests.test("breaking_a_wedge_leaves_no_tile_and_drops_one_tile", 40, helper -> breaking(helper, TOP_WEDGE));
         tests.test("a_wedge_takes_the_place_of_grass", 40, BeltWedgeTests::replacesGrass);
@@ -89,18 +96,20 @@ final class BeltWedgeTests {
                 RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20, BeltWedgeTests::crossingCarriesItsRate);
     }
 
-    private static void climbThroughAir(GameTestHelper helper) {
-        List<BlockPos> tiles = byHand(helper, player(helper), FIRST, Direction.EAST, THREE_BLOCK_CLIMB);
+    // Tiles from firstWedged on, three in all, stand on wedges rising the way uphill faces.
+    private static void throughAir(GameTestHelper helper, int[] heights, List<BeltTileBlock.PitchState> pitches,
+                                   int firstWedged, Direction uphill) {
+        List<BlockPos> tiles = byHand(helper, player(helper), FIRST, Direction.EAST, heights);
         for (int tile = 0; tile < tiles.size(); tile++) {
-            expectPitch(helper, tiles.get(tile), THREE_BLOCK_CLIMB_PITCHES.get(tile), "up a climb through air");
-            boolean wedged = tile >= 2 && tile <= 4;
+            expectPitch(helper, tiles.get(tile), pitches.get(tile), "along a slope through air");
+            boolean wedged = tile >= firstWedged && tile < firstWedged + 3;
             BlockState below = helper.getBlockState(tiles.get(tile).below());
             if (below.is(BlockContent.BELT_WEDGE.get()) != wedged) {
-                helper.fail("under tile " + tile + " of a climb through air stands " + below + ", expected "
+                helper.fail("under tile " + tile + " of a slope through air stands " + below + ", expected "
                         + (wedged ? "a wedge" : "no wedge"), tiles.get(tile).below());
             }
-            if (wedged && below.getValue(HorizontalDirectionalBlock.FACING) != Direction.EAST) {
-                helper.fail("a wedge under a climb east rises " + below.getValue(HorizontalDirectionalBlock.FACING),
+            if (wedged && below.getValue(HorizontalDirectionalBlock.FACING) != uphill) {
+                helper.fail("a wedge under a slope rising " + uphill + " rises " + below.getValue(HorizontalDirectionalBlock.FACING),
                         tiles.get(tile).below());
             }
         }
