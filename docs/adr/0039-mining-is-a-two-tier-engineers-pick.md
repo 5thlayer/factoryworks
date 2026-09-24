@@ -38,6 +38,8 @@ pick, so the player holds one or the other and never both.
 ore, dirt and leaves, and it is the tool that dismantles a GregTech machine. That is Factorio's
 single mining gesture wearing a pickaxe model, which is the whole trade this ADR makes: it reads as a
 pickaxe so a Minecraft player is at home, and it behaves as one gesture so a Factorio player is too.
+*(Amended by #300 — GregTech left with ADR-0060. A machine is now taken by breaking it, and a belt
+line or a pipe run by a **Dismantle**, two sneak-clicks of the Pick (#404, #431).)*
 
 **Both recipes land on the `assembling` surface**, which already has a survivor entry in
 `recipe_survivors.js` and which the Personal Assembler's predicate reaches — so both are
@@ -160,6 +162,13 @@ GregTech 7.0.2's own `en_us.json` shows the wrench doing four distinct things, n
 | Pipe connections | `"Use Wrench to set Connections, sneak to block Connections"` | **Split by #168.** This string describes `wrench_connect` on a pipe block, which is **declined** — ADR-0017 gives fluid and item logistics to Create and GT's pipes left with its power layer. The `wrench_configure*` abilities are **not** that verb, despite the string: they set a *machine's* auto-output face, and the Pick declares them. |
 | Multiblock maintenance | `"Pipe is loose. (Wrench)"` | **Already dead** — `config/gtceu.yaml:218` sets `enableMaintenance: false`. |
 
+*Amended by #300: GregTech left with ADR-0060, and the table describes a wrench no installed mod has.
+On 26.1.2 the Pick's verbs are mining every block, wiring a pole (#296), a **Dismantle** of a belt line
+or a pipe run on a sneak-click (#404, #431), and, through `c:tools/wrench`, toggling an Oritech pipe's
+connection. The ability strings #168 declared were removed by #425, since nothing read them. Rotation
+is the pack's own **Rotate** on `R`, a key rather than a Pick verb (#386, ADR-0083). This is an
+amendment rather than a superseding ADR: nothing was chosen between alternatives, a consumer left.*
+
 Rotation is **not** deletable: Factorio has a rotate verb (`R`), so a pack with no way to turn a
 machine is missing a mechanic rather than simplifying one. This ADR deferred it rather than deciding
 it, because it is a separate interaction from mining and does not block the Terra Slice. *#168 has
@@ -225,3 +234,5 @@ corpus recipes — `small-electric-pole`, `wooden-chest` and `shotgun` (the last
   *#168 has landed and closed that seam from the other end: the Pick declares `wrench_rotate`, so the
   overlay the tags already drew is now honest. The configure verbs stay undeclared, which is a
   decision rather than a remaining gap — see `docs/factorio-mechanics.md`'s Manual mining sub-rules.*
+  *GregTech has since left (ADR-0060), and #425 removed `wrench_rotate` with it; see the amendment
+  under the wrench's four verbs.*
