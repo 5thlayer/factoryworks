@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -297,6 +297,21 @@ Dropping the re-derivation of the tiles within two blocks of a change turns nine
 dropping the rider's lift over a rising slab the ride up. The pitch table and the cross-height scan
 are the fork's `TileShapeTest` and `LineScanTest`; whether a slope and the items on it look right is
 a human check on delivery.
+And that a middle or top over air stands on a wedge (`BeltWedgeTests`, #420): each tile is placed
+by hand after asking `Placements` for its plan, and the world is held to every block the plan names,
+the wedges of the tiles it reshapes included. A climb of three blocks through air has a wedge under
+each middle and the top and none under the foot; breaking a top or its wedge through the player's
+game mode leaves neither and drops one tile; a wedge takes short grass's place; a top whose wedge
+would stand on a loader or a tile is refused with the world and the stack unchanged -- a loader is a
+full cube, so anything with a block entity is no ground; and a top levelled by breaking its foot
+loses its wedge and stays where it is. A crossing built by hand over a line, a foot, a top on a
+wedge, a level tile on the crossed tile, a top on a wedge and a foot, delivers both lines' every item
+and 15 items/s each with nothing on the ground. Dropping the tile's wedge upkeep turns all seven
+red. A tile beside a line climbing over it rather than side-loading has no world check: the top it
+would climb to stands over the crossed tile, where its wedge is refused, so no gesture builds it; the
+priority is the fork's `TileShapeTest` and `LineScanTest`. The wedge rule is the fork's `WedgeTest`,
+the crossing as one line over another `LineScanTest`, and whether
+the wedge reads as a junction and a crossing as one belt over another is a human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;

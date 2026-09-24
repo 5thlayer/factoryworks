@@ -37,7 +37,10 @@ height per block of travel. It amends ADR-0084's consequence that belts are flat
   follows a line across heights, so a climb is one transport line.
 - **A slope takes no side-load,** and a loader or splitter meets only level tiles.
 - **A middle or top over air stands on a wedge,** placed with its tile for nothing and broken with
-  it, so a belt can climb through open air. A two-click stretch follows the ground one block up or
+  it, so a belt can climb through open air. It takes the place of a replaceable block such as grass,
+  and none is needed over a sturdy top. A tile, loader, splitter, machine or fluid there refuses the
+  placement that would need it, so a slope never stands on a belt: a crossing's tops stand beside the
+  crossed line, never over it. A tile's top counts as ground for the level tile over it (#420). A two-click stretch follows the ground one block up or
   down at a time, and climbs over a line across its path in five tiles: a foot, a top, a level tile
   on the crossed line, a top and a foot.
 
@@ -58,5 +61,5 @@ reads as a belt, and each needs a shape of its own.
   another by climbing over it.
 - A rider is lifted over each rising collision slab, since an item cannot step up. On a slope it
   climbs in small hops; whether that reads right is a human check.
-- Tile by tile ships first (#417); the wedge, the stretch following the ground and its crossing are
-  later slices of #412. Until the wedge lands, a middle or top over air has nothing drawn under it.
+- Tile by tile ships first (#417), then the wedge and a crossing built by hand (#420); the stretch
+  following the ground and its crossing are later slices of #412.
