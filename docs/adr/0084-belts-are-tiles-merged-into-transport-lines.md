@@ -45,7 +45,8 @@ a tile standing on the ground needs no post.
 
 **Consequences.**
 
-- Belts are flat. A stretch refuses to climb, and height is #412's.
+- Belts are flat. A stretch refuses to climb, and height is #412's. *Amended by ADR-0085: a tile
+  climbs by a derived slope.*
 - ADR-0044 excluded undergrounds because a spline climbed over another belt. With flat tiles that
   argument waits on #412.
 - A tile whose ground is removed after it is placed stays where it is.

@@ -282,6 +282,17 @@ backed-up line's last tile takes 15 items/s. No far-end rule is needed, since th
 with its last tile's front. An item entity on a tile rides it and rides round a corner. A tile ticking with no hand turns the three hand
 tests red, and one registering no ride the two ride tests. The point is the fork's `TransportLineTest`,
 and whether aiming at a tile and riding one feel right is a human check on delivery.
+And that a belt climbs a step tile by tile (#417, ADR-0085): a tile a player places a block above
+and ahead of a line's end is a top on the same tick and turns the tile below into a foot, one below
+and ahead makes the mirrored descent, and breaking either end levels the other; a crest and a
+valley connect to neither. A line over a climb delivers 15 and 60 items/s at tiers 1 and 4, a
+backed-up one up and down a step holds 8 a tile, a hand on a foot takes 15 items/s, an item rides
+up and down a step, and a line with a step reloads from its tiles' saves and rejoins across an
+unloaded chunk with every item (`BeltTileTests`, `BeltTileHandTests`, `BeltTileSyncTests`).
+Dropping the re-derivation of the tiles within two blocks of a change turns nine of them red, and
+dropping the rider's lift over a rising slab the ride up. The pitch table and the cross-height scan
+are the fork's `TileShapeTest` and `LineScanTest`; whether a slope and the items on it look right is
+a human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;

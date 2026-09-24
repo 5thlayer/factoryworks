@@ -560,17 +560,20 @@ ADR-0029 gives the Assembler speed 1 with durations of `energy_required x 20` un
 - **verdict**: `adapted`
 - **notice**: a belt is a row of tiles carrying Factorio's items per second and holding Factorio's
   buffer, but in one lane and with no undergrounds, so the lane-and-underground patterns a Factorio
-  player has memorised do not transfer (ADR-0044, ADR-0076, ADR-0084).
+  player has memorised do not transfer (ADR-0044, ADR-0076, ADR-0084, ADR-0085).
 - **where**: all bodies
 - **via**: `belts` (the pack's SimpleBelts fork, ADR-0060)
-- **owner**: ADR-0076, ADR-0044, ADR-0084, #341
+- **owner**: ADR-0076, ADR-0044, ADR-0084, ADR-0085, #341
 
 Sub-rules:
 
 - **Belt shape** — `shipped` (#383). Factorio's tile: one block of belt per block, straight or a
   one-block corner, the corner derived from what feeds the tile (#391). Contiguous tiles merge at
   runtime into one transport line that ticks once (#398). A two-click stretch lays straight legs
-  joined by corners, only over solid ground (#393). Belts are flat; climbing is #412 (ADR-0084).
+  joined by corners, only over solid ground (#393). A tile placed a block above or below and ahead
+  of a line's end makes a slope, one block of line like any tile; the pitch is derived as the corner
+  is (#417, ADR-0085). The wedge under a slope over air, and a stretch that follows the ground and
+  climbs over a crossed line, are #412's.
 - **Belt ends** — `shipped` (#383). A belt ends where its tiles do: at a loader, which a player
   places against an inventory, at a splitter half, or at its last tile, where it backs up as a
   Factorio belt ending in nothing does (ADR-0084).
@@ -592,8 +595,8 @@ Sub-rules:
   through a tier-1 splitter (#347, #349, ADR-0076).
 - **Underground belts** — `excluded`. Not for want of a Create block: undergrounds solve a *weaving*
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
-  Argued from the medium, not from a mod's shortfall (ADR-0044). Tile belts are flat (ADR-0084), so
-  whether a belt crosses another by climbing over it, and whether this row stands, is #412's.
+  Argued from the medium, not from a mod's shortfall (ADR-0044). A belt crosses another by climbing
+  over it on slopes (ADR-0085); the crossing itself, a top over air on a wedge, is #412's.
 - **Splitters** — `shipped`. Four tiers from Factorio's four splitter recipes, turbo registered
   with no recipe. A splitter is two blocks wide, placed and broken as one; each half ends one belt at
   its back and starts one at its front, and items pass from an input's end to an output's head with
