@@ -301,12 +301,10 @@ def main():
               "%s is registered but nothing crafts it -- under ADR-0034's sweep there is no stock "
               "recipe to fall back on" % item)
 
-    # The wrench verb ADR-0039 absorbs is two tag entries, not code: Create reads the NeoForge tag
-    # and GregTech reads its own. A pick in neither dismantles no machine, and the pack has no
-    # other wrench to reach for.
-    # The fork's Dismantle (#404) is offered to whatever is in its tag; a pick left out takes up no belt.
-    for tag in ("c/tags/item/tools/wrench.json", "gtceu/tags/item/crafting_tools/wrench.json",
-                "belts/tags/item/dismantles_belts.json"):
+    # Each of the Pick's two verbs is a tag entry, not code: left out of `c:tools/wrench` it
+    # dismantles no machine (ADR-0039), and the pack has no other wrench to reach for; left out of
+    # the fork's tag it takes up no belt (#404).
+    for tag in ("c/tags/item/tools/wrench.json", "belts/tags/item/dismantles_belts.json"):
         path = DATA / tag
         if check(path.is_file(), "%s is missing, so the Pick lacks the verb it carries" % tag):
             values = set(json.loads(path.read_text())["values"])

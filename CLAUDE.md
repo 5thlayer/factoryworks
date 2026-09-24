@@ -133,10 +133,8 @@ reaches the run through **KubeJS**, on the dev runtime classpath with Rhino, rea
 run (#338). KubeJS resolves `kubejs/` against the game directory with no setting to move it, and
 `mod/run/` is untracked, so the link is built rather than committed. There is no second copy: the
 startup scripts register the pack's items, the server scripts run the recipe sweep, and every file
-under `kubejs/data/` loads, the dead `gtceu/`, `gt_materials/` and `gcyr/` subtrees included, which
-name no registry and so load as nothing. That is what lets a test assert against the recipe the pack
-ships rather than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the
-game read. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
+under `kubejs/data/` loads. That is what lets a test assert against the recipe the pack ships rather
+than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
 vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
 five blocks above the floor; without it no test block places and the run hangs rather than fails.
 And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the
@@ -1079,8 +1077,8 @@ converter still lists `pack` as foreign, which its own check reads from it rathe
 run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
 `recipe_survivors.js` admits and carry `category: crafting` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
-has its model, texture, lang key, the two wrench tags that carry the dismantle verb and the block
-tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
+has its model, texture, lang key, `c:tools/wrench` and `belts:dismantles_belts`, the two tags that
+carry its verbs, and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
 the Steel Pick's `netherite_pickaxe` (#241, applied on #323). The Steel Pick used to wear GTCEu's
 Damascus Steel pickaxe, flattened by a generator because GT's tool art is three greyscale layers
 that only become a material under a colour handler our item never reaches; GregTech left with
