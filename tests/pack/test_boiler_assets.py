@@ -1,17 +1,11 @@
 #!/usr/bin/env python3
 """Assert Terra's Boiler has the pack-side files it needs, and the numbers it was built on (#224).
 
-This is a `planetaryfactory:` block, so **GregTech's model provider does not serve it** -- every
-hop from blockstate to model to texture is the pack's own, and a missing one reaches the player as
-a purple-and-black cube with no error in any log. The `test_machine_assets.py` and
-`test_pump_assets.py` pattern, applied to the one block ADR-0048 puts at the head of the steam
-chain.
-
 Four things are asserted, and each fails differently:
 
-  - **The asset hops.** Blockstate covering every `facing`, a model per variant, an item model, a
-    lang key and a loot table. A Boiler with no loot table is a machine that vanishes when broken,
-    and it holds the coal it was burning.
+  - **Every facing and the screen's keys.** A blockstate covering every `facing`, and the lang keys
+    the gauge reads. Whether each hop from blockstate to texture, the item model and the loot table
+    resolve is `test_block_assets.py`'s (#254).
   - **The item-map row.** `boiler` is `authored` and names this block. The converter hard-fails on
     an unmapped name, so what this adds is the other direction: that the row's target is the block
     the mod actually registers, and that the row is no longer `undecided` -- one of the three rows
@@ -37,7 +31,6 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "kubejs/assets/planetaryfactory"
-DATA = ROOT / "kubejs/data/planetaryfactory"
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 FLUID_CORPUS = ROOT / "data/factorio/fluid.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
@@ -62,51 +55,12 @@ LANG_KEYS = (
 MINECRAFT_TICKS_PER_SECOND = 20
 
 
-def texture_exists(texture):
-    """A `namespace:block/name` reference, resolved against the pack and against vanilla.
-
-    Vanilla's own textures are not on disk here, so a `minecraft:` reference is taken on trust --
-    the Boiler borrows the blast furnace's art, the way the pump borrows the dispenser's.
-    """
-    namespace, _, path = texture.partition(":")
-    if namespace == "minecraft":
-        return True
-    return (ROOT / f"kubejs/assets/{namespace}/textures/{path}.png").is_file()
-
-
 def check_assets(failures):
-    blockstate_path = ASSETS / f"blockstates/{BLOCK}.json"
-    if not blockstate_path.is_file():
-        failures.append(f"{blockstate_path.relative_to(ROOT)} is missing -- run the generator")
-        return
-    variants = json.loads(blockstate_path.read_text()).get("variants", {})
+    variants = json.loads((ASSETS / f"blockstates/{BLOCK}.json").read_text()).get("variants", {})
     for facing in FACINGS:
-        key = f"facing={facing}"
-        if key not in variants:
-            failures.append(f"the blockstate has no {key} variant -- that facing renders as nothing")
-            continue
-        model = variants[key].get("model")
-        model_path = ASSETS / f"models/{model.split(':', 1)[1]}.json"
-        if not model_path.is_file():
-            failures.append(f"{key} names {model}, which is not on disk")
-            continue
-        for role, texture in json.loads(model_path.read_text()).get("textures", {}).items():
-            if not texture_exists(texture):
-                failures.append(f"the block model's {role} texture {texture} is not on disk")
-
-    item_model = ASSETS / f"models/item/{BLOCK}.json"
-    if not item_model.is_file():
-        failures.append(f"{item_model.relative_to(ROOT)} is missing -- the item renders as nothing")
-
-    loot_table = DATA / f"loot_table/blocks/{BLOCK}.json"
-    if not loot_table.is_file():
-        failures.append(
-            f"{loot_table.relative_to(ROOT)} is missing -- a broken Boiler would drop nothing"
-        )
-    else:
-        dropped = json.dumps(json.loads(loot_table.read_text()))
-        if BLOCK_ID not in dropped:
-            failures.append(f"the loot table does not drop {BLOCK_ID}")
+        if f"facing={facing}" not in variants:
+            failures.append(f"the blockstate has no facing={facing} variant -- that facing renders "
+                            "as nothing")
 
     lang = json.loads((ASSETS / "lang/en_us.json").read_text())
     for key in LANG_KEYS:
@@ -200,7 +154,7 @@ def main():
         for failure in failures:
             print(f"  - {failure}")
         return 1
-    print("ok   boiler: every asset hop resolves, the item-map row names the block, "
+    print("ok   boiler: every facing and gauge key, the item-map row names the block, "
           "and the corpus still implies 60 mB/s")
     return 0
 

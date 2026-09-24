@@ -12,9 +12,8 @@ places one ore has to be named in, and the failures are all quiet:
     item an ore pays out -- the mod for a player's draw, and nothing at all for an explosion. If they
     disagree, a patch pays one item by hand and a different one to TNT, which no check but this
     one would ever see.
-  - **A stage with no sprite.** Eight blockstate variants, eight models, eight textures, per ore.
-    Vanilla renders a missing model as the purple-and-black cube, which on an ore field means a
-    player watching a patch turn into an error as they mine it.
+  - **A stage with no variant.** One blockstate variant per stage the slice deals, per ore. That
+    each variant's model and texture resolve is `test_block_assets.py`'s (#254).
   - **The tag GregTech actually scans.** `MinerLogic` reads NeoForge's `Tags.Blocks.ORES`, so
     `c:ores` is what decides whether rung 1's drill can see a pack-authored ore block at all. ADR-0041
     names this as the risk that gates the whole body, and it is one line of JSON to get wrong.
@@ -116,27 +115,11 @@ def main():
                 f"{block} has {len(variants)} blockstate variants against {stages} stages"
             )
         for stage in range(stages):
-            key = f"stage={stage}"
-            if key not in variants:
-                failures.append(f"{block} has no variant for {key}")
-                continue
-            model_id = variants[key]["model"].split(":", 1)[1]
-            model = ASSETS / "models" / f"{model_id}.json"
-            if not model.is_file():
-                failures.append(f"{block} {key} points at {model_id}, which does not exist")
-                continue
-            texture = json.loads(model.read_text())["textures"]["all"].split(":", 1)[1]
-            if not (ASSETS / "textures" / f"{texture}.png").is_file():
-                failures.append(f"{model_id} points at {texture}.png, which does not exist")
-
-        lang = json.loads((ASSETS / "lang/en_us.json").read_text())
-        if f"block.planetaryfactory.{block}" not in lang:
-            failures.append(f"{block} has no name in en_us.json")
+            if f"stage={stage}" not in variants:
+                failures.append(f"{block} has no variant for stage={stage}")
 
         loot = DATA / "planetaryfactory/loot_table/blocks" / f"{block}.json"
-        if not loot.is_file():
-            failures.append(f"{block} has no loot table, so every destruction logs a missing one")
-        elif json.loads(loot.read_text()).get("pools"):
+        if loot.is_file() and json.loads(loot.read_text()).get("pools"):
             # ADR-0041 rejects "a hand break taking one unit and destroying the remainder" because
             # it "hands the player a way to vandalise a patch for one ore". A loot table that pays
             # out is that route wearing TNT: a thousand-unit block gone for one free item. The
