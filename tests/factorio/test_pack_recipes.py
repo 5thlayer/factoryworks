@@ -301,10 +301,11 @@ def main():
               "%s is registered but nothing crafts it -- under ADR-0034's sweep there is no stock "
               "recipe to fall back on" % item)
 
-    # Each of the Pick's two verbs is a tag entry, not code: left out of `c:tools/wrench` it
-    # dismantles no machine (ADR-0039), and the pack has no other wrench to reach for; left out of
-    # the fork's tag it takes up no belt (#404).
-    for tag in ("c/tags/item/tools/wrench.json", "belts/tags/item/dismantles_belts.json"):
+    # Three of the Pick's verbs are tag entries, not code, each read by another jar or ours: left out
+    # of `c:tools/wrench` it toggles no Oritech pipe connection, out of the fork's tag it takes up no
+    # belt (#404), and out of ours no pipe run (#431).
+    for tag in ("c/tags/item/tools/wrench.json", "belts/tags/item/dismantles_belts.json",
+                "planetaryfactory/tags/item/dismantles.json"):
         path = DATA / tag
         if check(path.is_file(), "%s is missing, so the Pick lacks the verb it carries" % tag):
             values = set(json.loads(path.read_text())["values"])

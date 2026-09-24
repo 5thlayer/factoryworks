@@ -158,7 +158,8 @@ holds either way**, which is why the drills do not wait on it.
   costs one Pick swing and returns the item. The rig's facing is therefore whatever the player was
   facing when they placed it. Rotation arrives as a Factorio-shaped keybind — `R` on whatever is
   under the cursor — in #180, covering every block in the pack rather than these two, and
-  retiring the Engineer's Pick's `wrench_rotate` when it does. Note that a 2×2 and a 3×3 are
+  retiring the Engineer's Pick's `wrench_rotate` when it does. *(`wrench_rotate` went with GregTech
+  instead, #425; Rotate is #386 and #405.)* Note that a 2×2 and a 3×3 are
   rotation-invariant footprints, so rotating a rig will move its arrow and its models and never
   re-pick which ore it is working.
 

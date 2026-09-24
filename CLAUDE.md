@@ -1077,8 +1077,8 @@ converter still lists `pack` as foreign, which its own check reads from it rathe
 run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
 `recipe_survivors.js` admits and carry `category: crafting` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
-has its model, texture, lang key, `c:tools/wrench` and `belts:dismantles_belts`, the two tags that
-carry its verbs, and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
+has its model, texture, lang key, `c:tools/wrench`, `belts:dismantles_belts` and
+`planetaryfactory:dismantles`, the three tags that carry its verbs, and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
 the Steel Pick's `netherite_pickaxe` (#241, applied on #323). The Steel Pick used to wear GTCEu's
 Damascus Steel pickaxe, flattened by a generator because GT's tool art is three greyscale layers
 that only become a material under a colour handler our item never reaches; GregTech left with
