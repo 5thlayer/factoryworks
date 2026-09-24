@@ -213,8 +213,8 @@ Sub-rules:
   `character-mining-speed` effect for an `unlock-recipe` granting the Engineer's Steel Pick.
 - **Picking up a placed entity is the same gesture as mining** — `adapted`. The Engineer's Pick is
   the correct tool for every block, so a placed entity is taken by breaking it (ADR-0039), and a
-  belt line's tiles are taken up many at once by a **Dismantle**, two sneak-clicks of the Pick
-  (#404). The two wrench item tags stay on it because Oritech's pipes read them for their
+  belt line's tiles or a pipe run are taken up many at once by a **Dismantle**, two sneak-clicks of
+  the Pick (#404, #431). The two wrench item tags stay on it because Oritech's pipes read them for their
   connection toggle. *This
   entry named GregTech's wrench verbs, which #168 declared on the Pick as `ItemAbility` strings;
   GregTech left with ADR-0060 and #425 removed them.*
@@ -739,8 +739,8 @@ Sub-rules:
   construction network is that decision applied to building. The second half of that argument — "a
   network with nothing to repair" — died with ADR-0055; see
   [Repair and entity damage](#repair-and-entity-damage). ADR-0017 still carries the row on its own.
-- **Deconstruction planner** — `unargued`, no verdict. The **Dismantle** (#404) is its belt-only
-  precursor: a span of one line, in two clicks, with no marks left in the world.
+- **Deconstruction planner** — `unargued`, no verdict. The **Dismantle** (#404, #431, ADR-0086) is
+  its belt and pipe precursor: a span of one family, in two clicks, with no marks left in the world.
 
 ### Trains
 

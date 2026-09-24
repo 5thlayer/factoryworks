@@ -103,6 +103,10 @@ public final class PlacementPreview {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         ClientLevel level = minecraft.level;
+        if (player != null && level != null
+                && PreviewFamilyDismantle.draw(event, level, player.getMainHandItem(), minecraft.hitResult)) {
+            return;
+        }
         if (BELTS && player != null) {
             PreviewStretchStart.draw(event, player.getMainHandItem());
             if (level != null && PreviewDismantle.draw(event, level, player.getMainHandItem(), minecraft.hitResult)) {

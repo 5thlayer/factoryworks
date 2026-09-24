@@ -159,5 +159,10 @@
   "gui.planetaryfactory.belt_tile.holds": "Holds %s items",
   "key.category.planetaryfactory.planetaryfactory": "Planetary Factory",
   "key.planetaryfactory.rotate": "Rotate",
-  "key.planetaryfactory.reverse_rotate": "Reverse Rotate"
+  "key.planetaryfactory.reverse_rotate": "Reverse Rotate",
+  "message.planetaryfactory.dismantle.started": "Dismantle started. Sneak-click another block of this run to take up every block between.",
+  "message.planetaryfactory.dismantle.cleared": "Dismantle cleared.",
+  "message.planetaryfactory.dismantle.outside_family": "That is not part of the run the dismantle started on.",
+  "message.planetaryfactory.dismantle.not_joined": "That is not joined to the block the dismantle started on.",
+  "message.planetaryfactory.dismantle.tied": "Two routes of the same length lead there. Pick an end with only one."
 }
