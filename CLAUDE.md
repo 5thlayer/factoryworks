@@ -313,15 +313,15 @@ would climb to stands over the crossed tile, where its wedge is refused, so no g
 priority is the fork's `TileShapeTest` and `LineScanTest`. The wedge rule is the fork's `WedgeTest`,
 the crossing as one line over another `LineScanTest`, and whether
 the wedge reads as a junction and a crossing as one belt over another is a human check on delivery.
-And that a slope never turns and meets no loader (`BeltSlopeEdgeTests`, #419): a tile placed by hand
-that would face another's side from a block lower, in either order, turn a corner into a foot, or
-slope a tile whose level end is a loader, either way, or a splitter half is planned refused with its
-reason and changes no block and spends no tile. A tile a block higher facing a side is the crossing's
-approach and is not refused. `BeltSideLoadTests` holds the other half: a column facing the side of a
-foot or a descending top with nothing behind it leaves it a straight slope and feeds it nothing, its
-items waiting beside it. Letting a side feeder turn a slope into a corner turns the two side tests red,
-and skipping the edge checks in `BeltTileBlock.reshape` the six refusals. The rules are the fork's
-`TileShapeTest` and `LineScanTest`. Rotate on a slope waits for placed-block rotation (#405).
+And that a slope never turns (`BeltSlopeEdgeTests`, #419): a tile placed by hand that would turn a
+corner into a foot is planned refused with its reason and changes no block and spends no tile, while
+a tile across another a block up, placed in either order, is a crossing and places both level.
+`BeltSideLoadTests` holds the other half: a column facing the side of a foot or a descending top with
+nothing behind it leaves it a straight slope and feeds it nothing, its items waiting beside it.
+`BeltTileTests` holds a loader feeding a foot and a top feeding a loader at 15 items/s. Letting a side
+feeder turn a slope into a corner turns the two side tests red, and skipping the corner check in
+`BeltTileBlock.reshape` the refusal. The rules are the fork's `TileShapeTest` and `LineScanTest`.
+Rotate on a slope waits for placed-block rotation (#405).
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;

@@ -35,14 +35,12 @@ height per block of travel. It amends ADR-0084's consequence that belts are flat
 - **A slope is one block of line,** as a corner is. The climb is drawing only: a line over a hill
   carries its tier's 15, 30, 45 or 60 items/s and holds eight items a tile (ADR-0076). The line scan
   follows a line across heights, so a climb is one transport line.
-- **A slope takes no side-load,** and a loader or splitter meets only level tiles. A tile that
-  would be both a corner and a slope is a slope, and a tile facing its side stops there (#419).
-  A placement is refused, with its reason and nothing changed, where it would turn a corner into a
-  slope, leave a tile facing another's side from a block lower with nothing level ahead of it, or
-  slope a tile whose level end meets a loader or splitter half. A tile a block *higher* facing a
-  side is not refused: that is a crossing's first top before the level tile over the crossed line
-  is placed. Rotate refusing a slope belongs to placed-block rotation (#405), which does not exist
-  yet.
+- **A slope takes no side-load.** A tile that would be both a corner and a slope is a slope, and
+  a tile facing its side stops there. A placement that would turn a corner into a slope is refused,
+  with its reason and nothing changed (#419). A tile facing another's side a block up or down is
+  not a sloped corner but a crossing, and places level. A loader or splitter half meets a foot's or
+  a top's level end as it meets a level tile, since that end is drawn level. Rotate refusing a slope
+  belongs to placed-block rotation (#405), which does not exist yet.
 - **A middle or top over air stands on a wedge,** placed with its tile for nothing and broken with
   it, so a belt can climb through open air. It takes the place of a replaceable block such as grass,
   and none is needed over a sturdy top. A tile, loader, splitter, machine or fluid there refuses the

@@ -107,6 +107,8 @@ final class BeltTileTests {
 
     // Each tile's height above the platform, so a climb of one block is a foot and a top (#417).
     private static final int[] ONE_BLOCK_CLIMB = {0, 0, 1, 1};
+    // A foot and a top only, so a loader meets each (#419).
+    private static final int[] LOADER_TO_LOADER_CLIMB = {0, 1};
     private static final int[] OVER_A_STEP = {0, 0, 1, 1, 0, 0};
     // A foot, two middles and a top between level tiles (#418).
     private static final int[] THREE_BLOCK_CLIMB = {0, 0, 1, 2, 3, 3};
@@ -165,6 +167,9 @@ final class BeltTileTests {
         tests.test("belt_tiles_over_a_climb_tier_1_deliver_" + TIER_1_ITEMS_PER_SECOND,
                 RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
                 helper -> climbDeliversAtRate(helper, BeltTier.BELT, TIER_1_ITEMS_PER_SECOND, ONE_BLOCK_CLIMB));
+        tests.test("a_loader_feeds_a_foot_and_a_top_feeds_a_loader_at_" + TIER_1_ITEMS_PER_SECOND + "_items_s",
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> climbDeliversAtRate(helper, BeltTier.BELT, TIER_1_ITEMS_PER_SECOND, LOADER_TO_LOADER_CLIMB));
         tests.test("belt_tiles_over_a_climb_tier_4_deliver_" + TIER_4_ITEMS_PER_SECOND,
                 RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
                 helper -> climbDeliversAtRate(helper, BeltTier.TURBO, TIER_4_ITEMS_PER_SECOND, ONE_BLOCK_CLIMB));
