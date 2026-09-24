@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.gametest;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -103,6 +104,15 @@ final class BeltTileTests {
     // One tick: the buffer holds only the largest tick the loader's flow limit allows.
     private static final int DRAW_WINDOW_TICKS = 1;
 
+    // A climb of one block between the second tile and the third (#417).
+    private static final int CLIMB_TILES = 4;
+    private static final int CLIMB_STEP = 2;
+    // Up a block, level on top, then down again.
+    private static final int OVER_TILES = 6;
+    private static final int OVER_HOLDS = OVER_TILES * 8;
+    private static final int OVER_SUPPLY = 27 * 64;
+    private static final int OVER_SETTLED_TICKS = 400;
+
     private BeltTileTests() {
     }
 
@@ -141,6 +151,172 @@ final class BeltTileTests {
                 helper -> tilePlacedPastTheEnd(helper, false));
         tests.test("a_tile_placed_past_a_loaded_lines_end_joins_it", 200,
                 helper -> tilePlacedPastTheEnd(helper, true));
+        tests.test("a_tile_placed_above_ahead_makes_a_foot_and_a_top", 40, BeltTileTests::stepUpByHand);
+        tests.test("a_tile_placed_below_ahead_makes_a_descent", 40, BeltTileTests::stepDownByHand);
+        tests.test("a_crest_and_a_valley_connect_to_neither", 40, BeltTileTests::crestAndValley);
+        tests.test("belt_tiles_over_a_climb_tier_1_deliver_" + TIER_1_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> climbDeliversAtRate(helper, BeltTier.BELT, TIER_1_ITEMS_PER_SECOND));
+        tests.test("belt_tiles_over_a_climb_tier_4_deliver_" + TIER_4_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> climbDeliversAtRate(helper, BeltTier.TURBO, TIER_4_ITEMS_PER_SECOND));
+        tests.test("a_backed_up_line_up_and_down_a_step_holds_" + OVER_HOLDS, OVER_SETTLED_TICKS + 20,
+                BeltTileTests::overAStepHolds);
+    }
+
+    /**
+     * Tiles running east from {@code first}, those from {@code step} on standing a block up on stone,
+     * so the tile before the step is a foot and the one after it a top. Returns them in order.
+     */
+    static List<BlockPos> climb(GameTestHelper helper, BeltTier tier, BlockPos first, int count, int step) {
+        List<BlockPos> tiles = new ArrayList<>();
+        for (int tile = 0; tile < count; tile++) {
+            BlockPos at = first.east(tile);
+            if (tile >= step) {
+                helper.setBlock(at, Blocks.STONE);
+                at = at.above();
+            }
+            helper.setBlock(at, tile(tier, Direction.EAST));
+            tiles.add(at);
+        }
+        return tiles;
+    }
+
+    static BeltTileBlock.PitchState pitch(GameTestHelper helper, BlockPos tile) {
+        return helper.getBlockState(tile).getValue(BeltTileBlock.PITCH);
+    }
+
+    private static void expectPitch(GameTestHelper helper, BlockPos tile, BeltTileBlock.PitchState expected, String when) {
+        BeltTileBlock.PitchState pitch = pitch(helper, tile);
+        if (pitch != expected) helper.fail(when + ", the tile is " + pitch + ", expected " + expected, tile);
+    }
+
+    // Placed by a player's click on the step's top, read on the same tick: the placed state is the
+    // one derived, and the tile it reshapes is a block down and behind, which no neighbour update reaches.
+    private static void stepUpByHand(GameTestHelper helper) {
+        helper.setBlock(FIRST_TILE, tile(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(FIRST_TILE.east(), tile(BeltTier.BELT, Direction.EAST));
+        BlockPos step = FIRST_TILE.east(2);
+        helper.setBlock(step, Blocks.STONE);
+        BlockPos top = step.above();
+        ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        player.setGameMode(GameType.SURVIVAL);
+        player.setYRot(Direction.EAST.toYRot());
+        player.setShiftKeyDown(false);
+        use(helper, player, new ItemStack(ItemContent.tileFor(BeltTier.BELT)), step, Direction.UP);
+
+        expectPitch(helper, top, BeltTileBlock.PitchState.TOP_UP, "placed above and ahead");
+        expectPitch(helper, FIRST_TILE.east(), BeltTileBlock.PitchState.FOOT_UP, "with a tile placed above and ahead");
+        expectPitch(helper, FIRST_TILE, BeltTileBlock.PitchState.LEVEL, "behind a foot");
+        helper.destroyBlock(top);
+        expectPitch(helper, FIRST_TILE.east(), BeltTileBlock.PitchState.LEVEL, "with its top broken");
+        helper.succeed();
+    }
+
+    private static void stepDownByHand(GameTestHelper helper) {
+        List<BlockPos> upper = List.of(FIRST_TILE.above(), FIRST_TILE.east().above());
+        for (BlockPos tile : upper) {
+            helper.setBlock(tile.below(), Blocks.STONE);
+            helper.setBlock(tile, tile(BeltTier.BELT, Direction.EAST));
+        }
+        BlockPos foot = FIRST_TILE.east(2);
+        ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        player.setGameMode(GameType.SURVIVAL);
+        player.setYRot(Direction.EAST.toYRot());
+        player.setShiftKeyDown(false);
+        use(helper, player, new ItemStack(ItemContent.tileFor(BeltTier.BELT)), foot.below(), Direction.UP);
+
+        expectPitch(helper, foot, BeltTileBlock.PitchState.FOOT_DOWN, "placed below and ahead");
+        expectPitch(helper, upper.getLast(), BeltTileBlock.PitchState.TOP_DOWN, "with a tile placed below and ahead");
+        helper.destroyBlock(foot);
+        expectPitch(helper, upper.getLast(), BeltTileBlock.PitchState.LEVEL, "with its foot broken");
+        helper.succeed();
+    }
+
+    // Placed with commands, so a tile placed in a state it did not derive waits a tick for its own.
+    private static void crestAndValley(GameTestHelper helper) {
+        BlockPos crest = FIRST_TILE.east().above();
+        helper.setBlock(FIRST_TILE, tile(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(crest.below(), Blocks.STONE);
+        helper.setBlock(crest, tile(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(FIRST_TILE.east(2), tile(BeltTier.BELT, Direction.EAST));
+
+        BlockPos valley = FIRST_TILE.east(4).south(2);
+        for (BlockPos high : List.of(valley.west().above(), valley.east().above())) {
+            helper.setBlock(high.below(), Blocks.STONE);
+            helper.setBlock(high, tile(BeltTier.BELT, Direction.EAST));
+        }
+        helper.setBlock(valley, tile(BeltTier.BELT, Direction.EAST));
+
+        helper.startSequence().thenIdle(2).thenExecute(() -> {
+            for (BlockPos tile : List.of(FIRST_TILE, crest, FIRST_TILE.east(2), valley.west().above(), valley, valley.east().above())) {
+                expectPitch(helper, tile, BeltTileBlock.PitchState.LEVEL, "at a crest or a valley");
+            }
+            for (BlockPos alone : List.of(crest, valley)) {
+                var line = helper.getBlockEntity(alone, BeltTileBlockEntity.class).line();
+                if (line == null || line.tileCount() != 1) {
+                    helper.fail("the tile is in a line of " + (line == null ? "none" : line.tileCount())
+                            + " tiles, expected a line of its own", alone);
+                }
+            }
+        }).thenSucceed();
+    }
+
+    // A slope is one block of line, so a climb is no bottleneck (#417).
+    private static void climbDeliversAtRate(GameTestHelper helper, BeltTier tier, int itemsPerSecond) {
+        if (tier != BeltTier.BELT) helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(FROM, loader(tier, Direction.EAST));
+        List<BlockPos> tiles = climb(helper, tier, FIRST_TILE, CLIMB_TILES, CLIMB_STEP);
+        BlockPos to = tiles.getLast().east();
+        BlockPos target = to.east();
+        helper.setBlock(to.below(), Blocks.STONE);
+        helper.setBlock(target.below(), Blocks.STONE);
+        helper.setBlock(to, loader(tier, Direction.WEST));
+        helper.setBlock(target, Blocks.CHEST);
+        fill(helper, SOURCE, RATE_SUPPLY);
+
+        int expected = itemsPerSecond * RATE_WINDOW_TICKS / 20;
+        int[] before = new int[1];
+        helper.startSequence()
+                .thenIdle(RATE_WARMUP_TICKS)
+                .thenExecute(() -> {
+                    expectPitch(helper, tiles.get(CLIMB_STEP - 1), BeltTileBlock.PitchState.FOOT_UP, "before the step");
+                    expectPitch(helper, tiles.get(CLIMB_STEP), BeltTileBlock.PitchState.TOP_UP, "after the step");
+                    before[0] = count(chest(helper, target));
+                })
+                .thenIdle(RATE_WINDOW_TICKS)
+                .thenExecute(() -> {
+                    int delivered = count(chest(helper, target)) - before[0];
+                    if (delivered != expected) {
+                        helper.fail("a tier-" + tier.number() + " line over a climb delivered " + delivered + " items in "
+                                + RATE_WINDOW_TICKS + " ticks, expected " + expected, target);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    // Nothing past the last tile, so the line backs up against its own end.
+    private static void overAStepHolds(GameTestHelper helper) {
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(FROM, loader(BeltTier.BELT, Direction.EAST));
+        List<BlockPos> tiles = climb(helper, BeltTier.BELT, FIRST_TILE, OVER_TILES, CLIMB_STEP);
+        for (int tile = OVER_TILES - 2; tile < OVER_TILES; tile++) {
+            helper.setBlock(tiles.get(tile), Blocks.AIR);
+            helper.setBlock(tiles.get(tile).below(), tile(BeltTier.BELT, Direction.EAST));
+        }
+        fill(helper, SOURCE, OVER_SUPPLY);
+
+        helper.startSequence().thenIdle(OVER_SETTLED_TICKS).thenExecute(() -> {
+            expectPitch(helper, FIRST_TILE.east(OVER_TILES - 3).above(), BeltTileBlock.PitchState.TOP_DOWN, "before the descent");
+            int held = held(helper, FIRST_TILE);
+            var line = helper.getBlockEntity(FIRST_TILE, BeltTileBlockEntity.class).line();
+            int tileCount = line == null ? 0 : line.tileCount();
+            if (tileCount != OVER_TILES || held != OVER_HOLDS) {
+                helper.fail("a backed-up line up and down a step is " + tileCount + " tiles holding " + held
+                        + ", expected " + OVER_TILES + " holding " + OVER_HOLDS, FIRST_TILE);
+            }
+        }).thenSucceed();
     }
 
     /** Every block but the chests placed by a sneaking player's clicks, as a player builds a line. */

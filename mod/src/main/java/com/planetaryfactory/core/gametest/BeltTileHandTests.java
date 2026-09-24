@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.gametest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
@@ -16,6 +18,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import rearth.belts.blocks.BeltTileBlock;
 import rearth.belts.blocks.BeltTileBlockEntity;
 import rearth.belts.model.BeltTier;
 import rearth.belts.model.TransportLine;
@@ -23,7 +26,7 @@ import rearth.belts.model.TransportLine;
 /**
  * The belt hand and riding on tiles (#396). A hand held on a tile takes whatever is on it at the
  * line's rate, fed once a tick as the client resends it; an item entity standing on a tile is
- * carried along it and round a corner. Rates are typed.
+ * carried along it, round a corner and up and down a step (#417). Rates are typed.
  */
 final class BeltTileHandTests {
 
@@ -57,6 +60,17 @@ final class BeltTileHandTests {
     private static final BlockPos CORNER = new BlockPos(4, 1, 1);
     private static final int CORNER_TICKS = 100;
 
+    // Four tiles on the floor, then four a block up: the fourth is a foot and the fifth a top (#417).
+    private static final int CLIMB_STEP = 4;
+    private static final BlockPos HELD_FOOT = FIRST_TILE.east(CLIMB_STEP - 1);
+
+    // Two level tiles, a foot, then a top and two level tiles a block up; and the same down.
+    private static final BlockPos STEP_RIDE_FIRST = new BlockPos(1, 1, 1);
+    private static final int STEP_RIDE_TILES = 6;
+    private static final int STEP_RIDE_AT = 3;
+    // Past the step, and short of the line's end, at a tier-1 tile's 1.875 blocks/s.
+    private static final int STEP_RIDE_TICKS = 45;
+
     private BeltTileHandTests() {
     }
 
@@ -69,6 +83,76 @@ final class BeltTileHandTests {
                 BeltTileHandTests::lastTileOfABackedUpLine);
         tests.test("an_item_on_a_tile_rides_it", RIDE_TICKS + 20, BeltTileHandTests::itemRides);
         tests.test("an_item_on_a_tile_rides_round_a_corner", CORNER_TICKS + 20, BeltTileHandTests::itemRidesRoundACorner);
+        tests.test("a_held_slope_takes_at_its_lines_rate", WARMUP_TICKS + HOLD_TICKS + 20,
+                BeltTileHandTests::slopeFillsTheInventory);
+        tests.test("an_item_rides_up_a_step", STEP_RIDE_TICKS + 20, helper -> itemRidesAStep(helper, true));
+        tests.test("an_item_rides_down_a_step", STEP_RIDE_TICKS + 20, helper -> itemRidesAStep(helper, false));
+    }
+
+    // A hand on a foot of a line that climbs to its unloader (#417).
+    private static void slopeFillsTheInventory(GameTestHelper helper) {
+        helper.setBlock(SOURCE, Blocks.CHEST);
+        helper.setBlock(FROM, BeltTileTests.loader(BeltTier.BELT, Direction.EAST));
+        BeltTileTests.climb(helper, BeltTier.BELT, FIRST_TILE, TILES, CLIMB_STEP);
+        for (BlockPos at : List.of(TO, TARGET)) helper.setBlock(at, Blocks.STONE);
+        helper.setBlock(TO.above(), BeltTileTests.loader(BeltTier.BELT, Direction.WEST));
+        helper.setBlock(TARGET.above(), Blocks.CHEST);
+        BeltTileTests.fill(helper, SOURCE, SUPPLY);
+        ServerPlayer player = player(helper, "pf_slope_hand");
+        BeltTileBlockEntity held = helper.getBlockEntity(HELD_FOOT, BeltTileBlockEntity.class);
+
+        helper.startSequence()
+                .thenIdle(WARMUP_TICKS)
+                .thenExecute(() -> {
+                    if (BeltTileTests.pitch(helper, HELD_FOOT) != BeltTileBlock.PitchState.FOOT_UP) {
+                        helper.fail("the held tile is " + BeltTileTests.pitch(helper, HELD_FOOT) + ", not a foot", HELD_FOOT);
+                    }
+                    if (BeltTileTests.count(BeltTileTests.chest(helper, TARGET.above())) == 0) {
+                        helper.fail("nothing reached the top of the climb, so this proves little", TARGET.above());
+                    }
+                })
+                .thenExecuteFor(HOLD_TICKS, () -> held.holdHand(player))
+                .thenExecute(() -> {
+                    int taken = cobblestone(player);
+                    if (Math.abs(taken - HELD_ITEMS) > 1) {
+                        helper.fail("holding a tier-1 foot for " + HOLD_TICKS + " ticks took " + taken
+                                + " items, expected " + HELD_ITEMS, HELD_FOOT);
+                    }
+                    nothingOnTheGround(helper);
+                })
+                .thenSucceed();
+    }
+
+    // Read by height as well as distance: a rider stuck at the foot of a climb has moved east too.
+    private static void itemRidesAStep(GameTestHelper helper, boolean up) {
+        List<BlockPos> tiles = new ArrayList<>();
+        for (int tile = 0; tile < STEP_RIDE_TILES; tile++) {
+            BlockPos at = STEP_RIDE_FIRST.east(tile);
+            if (up == tile >= STEP_RIDE_AT) {
+                helper.setBlock(at, Blocks.STONE);
+                at = at.above();
+            }
+            helper.setBlock(at, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+            tiles.add(at);
+        }
+        ItemEntity item = rider(helper, tiles.getFirst());
+        BlockPos last = tiles.getLast();
+        Vec3 end = helper.absoluteVec(last.getBottomCenter());
+        helper.startSequence()
+                .thenIdle(STEP_RIDE_TICKS)
+                .thenExecute(() -> {
+                    Vec3 step = helper.absoluteVec(tiles.get(STEP_RIDE_AT).getBottomCenter());
+                    if (item.getX() < step.x) {
+                        helper.fail("an item riding " + (up ? "up" : "down") + " a step is at x " + item.getX()
+                                + ", short of the step's far side at " + step.x, tiles.get(STEP_RIDE_AT));
+                    }
+                    if (item.getY() < end.y || item.getY() > end.y + 0.6) {
+                        helper.fail("an item ridden " + (up ? "up" : "down") + " a step is at y " + item.getY()
+                                + ", expected on the tiles past it at " + end.y, last);
+                    }
+                    if (Math.abs(item.getZ() - end.z) > 0.2) helper.fail("the rider drifted off the line", last);
+                })
+                .thenSucceed();
     }
 
     private static void fillsTheInventory(GameTestHelper helper) {

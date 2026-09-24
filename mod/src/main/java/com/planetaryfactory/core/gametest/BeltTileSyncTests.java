@@ -61,6 +61,11 @@ final class BeltTileSyncTests {
     // The front on the last tile and still moving: a dense stream into a dead end stops all at once.
     private static final int EDGE_MOVING_TICKS = 205;
 
+    // Tiles from this index on stand a block up, so the line climbs a step (#417); at the line's
+    // length there is none.
+    private static final int SAVED_STEP = 3;
+    private static final int EDGE_STEP = 10;
+
     private BeltTileSyncTests() {
     }
 
@@ -70,16 +75,20 @@ final class BeltTileSyncTests {
         tests.test("a_loading_and_delivering_tile_line_sends_no_block_update",
                 FLOWING_WARMUP_TICKS + FLOWING_TICKS + 20, BeltTileSyncTests::flowingSendsNothing);
         tests.test("each_tile_saves_its_own_items_and_a_reloaded_line_holds_them_all", SAVED_AFTER_TICKS + 40,
-                BeltTileSyncTests::savedTilesRestore);
+                helper -> savedTilesRestore(helper, SAVED_TILES));
+        tests.test("a_line_with_a_step_reloads_from_its_tiles_holding_every_item", SAVED_AFTER_TICKS + 40,
+                helper -> savedTilesRestore(helper, SAVED_STEP));
         tests.test("a_tile_placed_past_a_lines_end_extends_it", 40, BeltTileSyncTests::tilePlacedPastTheEnd);
         tests.test("a_moving_line_marks_every_chunk_it_crosses_for_saving", EDGE_MOVING_TICKS + 20,
                 PFGameTests.LONG_PLATFORM, BeltTileSyncTests::everyChunkMarked);
         tests.test("a_line_stops_at_an_unloaded_chunk_and_rejoins_when_it_loads", 900,
-                PFGameTests.LONG_PLATFORM, BeltTileSyncTests::unloadedChunk);
+                PFGameTests.LONG_PLATFORM, helper -> unloadedChunk(helper, EDGE_TILES));
+        tests.test("a_line_with_a_step_rejoins_across_an_unloaded_chunk", 900,
+                PFGameTests.LONG_PLATFORM, helper -> unloadedChunk(helper, EDGE_STEP));
     }
 
     private static void movingSendsNothing(GameTestHelper helper) {
-        List<BlockPos> tiles = line(helper, SOURCE, FROM, FIRST_TILE, TILES, false);
+        List<BlockPos> tiles = line(helper, SOURCE, FROM, FIRST_TILE, TILES, false, TILES);
         BeltTileTests.fill(helper, SOURCE, 1);
 
         double[] before = new double[1];
@@ -104,7 +113,7 @@ final class BeltTileSyncTests {
     }
 
     private static void flowingSendsNothing(GameTestHelper helper) {
-        List<BlockPos> tiles = line(helper, SOURCE, FROM, FIRST_TILE, TILES, true);
+        List<BlockPos> tiles = line(helper, SOURCE, FROM, FIRST_TILE, TILES, true, TILES);
         BlockPos target = FIRST_TILE.east(TILES + 1);
         BeltTileTests.fill(helper, SOURCE, FULL_CHEST);
 
@@ -131,8 +140,8 @@ final class BeltTileSyncTests {
 
     // Through each block entity's own save and load, then put back in the world in place of the
     // ones that saved; whether the save is reached at all is everyChunkMarked's.
-    private static void savedTilesRestore(GameTestHelper helper) {
-        List<BlockPos> tiles = line(helper, SOURCE, FROM, FIRST_TILE, SAVED_TILES, false);
+    private static void savedTilesRestore(GameTestHelper helper, int step) {
+        List<BlockPos> tiles = line(helper, SOURCE, FROM, FIRST_TILE, SAVED_TILES, false, step);
         BeltTileTests.fill(helper, SOURCE, SAVED_SUPPLY);
 
         helper.startSequence()
@@ -172,7 +181,7 @@ final class BeltTileSyncTests {
 
     // Placed a tick after the line formed, so the line has to learn of it.
     private static void tilePlacedPastTheEnd(GameTestHelper helper) {
-        line(helper, SOURCE, FROM, FIRST_TILE, 2, false);
+        line(helper, SOURCE, FROM, FIRST_TILE, 2, false, 2);
         helper.startSequence()
                 .thenIdle(SETTLE_TICKS)
                 .thenExecute(() -> helper.setBlock(FIRST_TILE.east(2), BeltTileTests.tile(BeltTier.BELT, Direction.EAST)))
@@ -191,7 +200,7 @@ final class BeltTileSyncTests {
     // at the last one and a reload would lose or repeat what moved since.
     // A dead end, since a loader in a chunk marks it itself on every item it takes.
     private static void everyChunkMarked(GameTestHelper helper) {
-        List<BlockPos> tiles = line(helper, EDGE_SOURCE, EDGE_FROM, EDGE_FIRST_TILE, EDGE_TILES, false);
+        List<BlockPos> tiles = line(helper, EDGE_SOURCE, EDGE_FROM, EDGE_FIRST_TILE, EDGE_TILES, false, EDGE_TILES);
         BeltTileTests.fill(helper, EDGE_SOURCE, EDGE_SUPPLY);
         Map<ChunkPos, BlockPos> crossed = new LinkedHashMap<>();
         for (BlockPos tile : tiles) crossed.putIfAbsent(ChunkPos.containing(helper.absolutePos(tile)), tile);
@@ -213,9 +222,9 @@ final class BeltTileSyncTests {
                 .thenSucceed();
     }
 
-    private static void unloadedChunk(GameTestHelper helper) {
-        List<BlockPos> tiles = line(helper, EDGE_SOURCE, EDGE_FROM, EDGE_FIRST_TILE, EDGE_TILES, true);
-        BlockPos target = EDGE_FIRST_TILE.east(EDGE_TILES + 1);
+    private static void unloadedChunk(GameTestHelper helper, int step) {
+        List<BlockPos> tiles = line(helper, EDGE_SOURCE, EDGE_FROM, EDGE_FIRST_TILE, EDGE_TILES, true, step);
+        BlockPos target = tiles.getLast().east(2);
         BeltTileTests.fill(helper, EDGE_SOURCE, EDGE_SUPPLY);
 
         ChunkPos farChunk = ChunkPos.containing(helper.absolutePos(tiles.getLast()));
@@ -292,19 +301,23 @@ final class BeltTileSyncTests {
         }
     }
 
-    /** A chest, an east-facing loader, tiles running east, and, if asked, a loader and a chest past them. */
+    /**
+     * A chest, an east-facing loader, tiles running east with those from {@code step} on a block up,
+     * and, if asked, a loader and a chest past them at the last tile's height.
+     */
     private static List<BlockPos> line(GameTestHelper helper, BlockPos source, BlockPos from, BlockPos first, int count,
-            boolean delivering) {
+            boolean delivering, int step) {
         helper.setBlock(source, Blocks.CHEST);
         helper.setBlock(from, BeltTileTests.loader(BeltTier.BELT, Direction.EAST));
-        List<BlockPos> tiles = new ArrayList<>();
-        for (int tile = 0; tile < count; tile++) {
-            helper.setBlock(first.east(tile), BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
-            tiles.add(first.east(tile));
-        }
+        List<BlockPos> tiles = BeltTileTests.climb(helper, BeltTier.BELT, first, count, step);
         if (delivering) {
-            helper.setBlock(first.east(count), BeltTileTests.loader(BeltTier.BELT, Direction.WEST));
-            helper.setBlock(first.east(count + 1), Blocks.CHEST);
+            BlockPos to = tiles.getLast().east();
+            if (step < count) {
+                helper.setBlock(to.below(), Blocks.STONE);
+                helper.setBlock(to.east().below(), Blocks.STONE);
+            }
+            helper.setBlock(to, BeltTileTests.loader(BeltTier.BELT, Direction.WEST));
+            helper.setBlock(to.east(), Blocks.CHEST);
         }
         return tiles;
     }
