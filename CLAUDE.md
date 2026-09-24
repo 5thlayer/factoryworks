@@ -234,14 +234,18 @@ ahead, one turning once, one beside its start and one ending on it place every t
 its state, charge one tile each and clear the start. A tile of the held tier on the path is turned for
 nothing and one of another tier replaced for one, its item handed back; both are named in `replaces`
 and keep the item they carried; in creative nothing is charged or handed back. Behind the look,
-through a block or a loader, over no ground, short of tiles and with no room to hand a tile back each
-change no block, slot or stored start and name their reason, and a stretch both blocked and short
-names the block, the first reason met; a sneak-click with a start stored adds a **corner** where the stretch it previews would end,
+through a fence or a loader, up a two-block step, down a two-block drop, over a one-block bump, short
+of tiles and with no room to hand a tile back each change no block, slot or stored start and name
+their reason, and a stretch both blocked and short names the block, the first reason met; a sneak-click with a start stored adds a **corner** where the stretch it previews would end,
 placing and spending nothing, and the laid stretch runs on through it; one behind the look adds none
 and names it, and a sneak-use in the air clears the start and its corners. Stretches that never turn
-turned the L and sideways tests red, and a replace that drops the carried item the replace test. The
-path is the fork's `StretchTest`, and whether the preview draws the stretch and its start is a human
-check on delivery.
+turned the L and sideways tests red, and a replace that drops the carried item the replace test. A stretch follows
+the ground (#421): over a block two wide it lays a foot, two tops and a foot, up a staircase a foot,
+two middles and a top, and under an overhang it stays level; a corner stored on a step is refused,
+since a slope never turns. Laying the stretch level instead turns the six ground tests and the
+three blocked ones red. The path and the ground-following order are the fork's `StretchTest`, and
+whether the preview draws the stretch, its start and each tile at its height is a human check on
+delivery.
 And that a tile line costs the server no block updates and survives a save and an unloaded chunk
 (`BeltTileSyncTests`, #395): a line moving one item, and a line loading and delivering, send none
 from its tiles or loaders; each tile saves its own items and where in the tile they sit, and the

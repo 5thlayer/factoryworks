@@ -563,12 +563,13 @@ Sub-rules:
 - **Belt shape** — `shipped` (#383). Factorio's tile: one block of belt per block, straight or a
   one-block corner, the corner derived from what feeds the tile (#391). Contiguous tiles merge at
   runtime into one transport line that ticks once (#398). A two-click stretch lays straight legs
-  joined by corners, only over solid ground (#393). A tile placed a block above or below and ahead
+  joined by corners (#393), following the ground a block up or down at a time and refused where it
+  steps more (#421). A tile placed a block above or below and ahead
   of a line's end makes a slope, one block of line like any tile; the pitch is derived as the corner
   is (#417, ADR-0085), and a climb of more than a block has a middle per extra block (#418). A middle or
   top over air stands on a wedge, placed and broken with it (#420). A slope never turns and takes no
-  side-load, and a placement that would turn a corner into one is refused (#419). A stretch that follows the ground
-  and climbs over a crossed line is #412's.
+  side-load, and a placement that would turn a corner into one is refused (#419). A stretch that climbs over a crossed
+  line is #412's.
 - **Belt ends** — `shipped` (#383). A belt ends where its tiles do: at a loader, which a player
   places against an inventory, at a splitter half, or at its last tile, where it backs up as a
   Factorio belt ending in nothing does (ADR-0084).
