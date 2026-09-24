@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
@@ -124,13 +122,13 @@ public final class PlacementPreview {
         if (key == null || !sameKey(key, now)) {
             key = now;
             cached = Placements.planFor(level, player, InteractionHand.MAIN_HAND, stack, hit);
-            outside = cached == null ? Map.of() : shownFaces(level, cached.blocks());
+            outside = cached == null ? Map.of() : shownFaces(level, cached);
         }
         PlacementPlan plan = cached;
         if (plan == null || plan.blocks().isEmpty()) {
             return;
         }
-        draw(event, plan);
+        draw(event, level, plan);
         if (BELTS) {
             PreviewSplitterBelts.draw(event, plan, tint(plan));
         }
@@ -220,24 +218,13 @@ public final class PlacementPreview {
         return plan.replaces().contains(pos) ? REPLACE_TINT : ACCEPTED_TINT;
     }
 
-    private static void draw(SubmitCustomGeometryEvent event, PlacementPlan plan) {
-        drawBlocks(event, plan.blocks(), outside, pos -> tint(plan, pos), plan.replaces()::contains);
-    }
-
-    /** A red block over each of {@code blocks} as it stands, for a Dismantle Plan (#404). */
-    static void drawRefused(SubmitCustomGeometryEvent event, ClientLevel level, List<PlacementPlan.Placed> blocks) {
-        drawBlocks(event, blocks, shownFaces(level, blocks), pos -> REFUSED_TINT, pos -> true);
-    }
-
-    private static void drawBlocks(SubmitCustomGeometryEvent event, List<PlacementPlan.Placed> blocks,
-                                   Map<BlockPos, Set<Direction>> outside, Function<BlockPos, Integer> tint,
-                                   Predicate<BlockPos> over) {
+    private static void draw(SubmitCustomGeometryEvent event, ClientLevel level, PlacementPlan plan) {
         Vec3 camera = event.getLevelRenderState().cameraRenderState.pos;
 
         PoseStack poseStack = event.getPoseStack();
         SubmitNodeCollector collector = event.getSubmitNodeCollector();
         RandomSource random = RandomSource.create();
-        for (PlacementPlan.Placed placed : blocks) {
+        for (PlacementPlan.Placed placed : plan.blocks()) {
             BlockPos pos = placed.pos();
             Set<Direction> shown = outside.getOrDefault(pos, Set.of());
             BlockStateModel model = Minecraft.getInstance().getModelManager()
@@ -254,11 +241,11 @@ public final class PlacementPreview {
             }
             // Per block, since a belt stretch replaces some of its tiles and places the rest (#393).
             QuadInstance instance = new QuadInstance();
-            instance.setColor(tint.apply(pos));
+            instance.setColor(tint(plan, pos));
             poseStack.pushPose();
             poseStack.translate(pos.getX() - camera.x(), pos.getY() - camera.y(), pos.getZ() - camera.z());
-            if (over.test(pos)) {
-                // Drawn over the block standing there, so a hair larger or the two faces z-fight.
+            if (plan.replaces().contains(pos)) {
+                // Drawn over the block it replaces, so a hair larger or the two faces z-fight.
                 poseStack.translate(0.5, 0.5, 0.5);
                 poseStack.scale(REPLACE_SCALE, REPLACE_SCALE, REPLACE_SCALE);
                 poseStack.translate(-0.5, -0.5, -0.5);
@@ -283,9 +270,9 @@ public final class PlacementPreview {
      * The plan's outside faces, less those the world already hides -- a rig's underside against the
      * ground -- so the preview draws what the placed blocks will (#311).
      */
-    private static Map<BlockPos, Set<Direction>> shownFaces(ClientLevel level, List<PlacementPlan.Placed> blocks) {
+    private static Map<BlockPos, Set<Direction>> shownFaces(ClientLevel level, PlacementPlan plan) {
         Map<BlockPos, BlockState> states = new HashMap<>();
-        for (PlacementPlan.Placed placed : blocks) {
+        for (PlacementPlan.Placed placed : plan.blocks()) {
             states.put(placed.pos(), placed.state());
         }
         Map<BlockPos, Set<Direction>> faces = new HashMap<>();
