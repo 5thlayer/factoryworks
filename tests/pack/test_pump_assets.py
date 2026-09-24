@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Assert the Offshore Pump's generated halves still agree with what registers it (#213, ADR-0050).
 
-`docs/testing/what-to-check.md`'s "cross-file references resolve" claim, for the one block that is
-the origin of every drop of water in the factory. Four things are asserted, and they fail in
-different ways:
+The one block that is the origin of every drop of water in the factory. Three things are asserted,
+and they fail in different ways:
 
   - **The corpus number.** `scripts/build-pump-assets.py` copies the `pumps` row out of
     `data/factorio/machine.json` (#210) into a resource the mod reads at class-init. That copy is
@@ -19,10 +18,9 @@ different ways:
     that places and then silently produces nothing reaches the player as a dead factory three
     machines later. A missing lang key does not fail: it renders the raw key. So the key the item
     actually asks for is read out of the item's source rather than typed here.
-  - **The pack-side files.** It is a `planetaryfactory:` block, so GregTech's model provider does
-    not serve it and every hop is ours: blockstate to model to texture, a lang key, a loot table.
-    Each way of breaking those fails quietly -- a black-and-magenta cube, a raw translation key as
-    the block's name, or a block that breaks into nothing.
+
+Whether its blockstate, models, textures, lang key and loot table resolve is
+`test_block_assets.py`'s (#254).
 
 Usage: tests/pack/test_pump_assets.py
 """
@@ -40,7 +38,6 @@ ITEM_MAP = ROOT / "data/pack/item-map.json"
 GENERATOR = ROOT / "scripts/build-pump-assets.py"
 PUMP_ITEM = ROOT / "mod/src/main/java/com/planetaryfactory/core/fluid/OffshorePumpItem.java"
 ASSETS = ROOT / "kubejs/assets/planetaryfactory"
-DATA = ROOT / "kubejs/data/planetaryfactory"
 
 FACTORIO_NAME = "offshore-pump"
 BLOCK_NAME = "offshore_pump"
@@ -63,20 +60,6 @@ REFUSAL_KEY_RE = re.compile(r'[A-Z_]+_KEY\s*=\s*"([a-z_.]+)"')
 # One refusal: no pumpable source. Counted so that a second refusal added to the item without a
 # lang entry, or the one there silently renamed, fails here.
 REFUSAL_KEY_COUNT = 1
-
-
-def resolves(path):
-    return path.is_file()
-
-
-def texture_path(reference):
-    namespace, _, name = reference.partition(":")
-    if not name:
-        namespace, name = "minecraft", reference
-    if namespace == "minecraft":
-        # Vanilla's own art, served from the jar; nothing pack-side to resolve.
-        return None
-    return ROOT / f"kubejs/assets/{namespace}/textures/{name}.png"
 
 
 def check_corpus(failures):
@@ -159,42 +142,6 @@ def check_refusal_message(lang, failures):
             )
 
 
-def check_assets(lang, failures):
-    blockstate = ASSETS / f"blockstates/{BLOCK_NAME}.json"
-    if not resolves(blockstate):
-        failures.append(f"{BLOCK_NAME} has no blockstate")
-    else:
-        variants = json.loads(blockstate.read_text()).get("variants") or {}
-        if not variants:
-            failures.append(f"{BLOCK_NAME}'s blockstate declares no variants")
-        for variant, definition in variants.items():
-            entry = definition if isinstance(definition, dict) else definition[0]
-            model = entry["model"]
-            model_path = ASSETS / f"models/{model.split(':', 1)[-1]}.json"
-            if not resolves(model_path):
-                failures.append(f"{BLOCK_NAME}[{variant}] names model {model}, which is missing")
-                continue
-            declared = json.loads(model_path.read_text())
-            for slot, reference in (declared.get("textures") or {}).items():
-                texture = texture_path(reference)
-                if texture is not None and not resolves(texture):
-                    failures.append(f"{model}'s {slot} texture {reference} is missing")
-
-    if not resolves(ASSETS / f"models/item/{BLOCK_NAME}.json"):
-        failures.append(f"{BLOCK_NAME} has no item model -- it would be invisible in the hand")
-
-    loot = DATA / f"loot_table/blocks/{BLOCK_NAME}.json"
-    if not resolves(loot):
-        failures.append(f"{BLOCK_NAME} has no loot table -- breaking it would drop nothing")
-    else:
-        names = json.dumps(json.loads(loot.read_text()))
-        if BLOCK_ID not in names:
-            failures.append(f"{BLOCK_NAME}'s loot table does not drop itself")
-
-    if not lang.get(f"block.planetaryfactory.{BLOCK_NAME}"):
-        failures.append(f"{BLOCK_NAME} has no lang entry -- it would show its raw key")
-
-
 def main():
     failures = []
     lang = json.loads((ASSETS / "lang/en_us.json").read_text())
@@ -213,7 +160,6 @@ def main():
     check_corpus(failures)
     check_item_map(failures)
     check_refusal_message(lang, failures)
-    check_assets(lang, failures)
 
     if failures:
         print(f"FAIL {len(failures)}:")
@@ -221,7 +167,7 @@ def main():
             print(f"  - {failure}")
         return 1
     print("ok   offshore pump: corpus row extracted, item map names the block, refusal message "
-          "and every asset hop resolve")
+          "resolves")
     return 0
 
 

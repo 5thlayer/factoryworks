@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Assert both mining rigs' generated halves still agree with what registers them (#192, #193).
 
-`docs/testing/what-to-check.md`'s "cross-file references resolve" claim, for the rig seam
-(ADR-0043). Two different generated things are asserted here, and they fail in different ways:
+The rig seam (ADR-0043). Two different generated things are asserted here, and they fail in different ways:
 
   - **Every corpus number.** `scripts/build-rig-assets.py` copies a `drills` row out of
     `data/factorio/machine.json` (#188, widened by #193) into a resource the mod reads at
@@ -21,14 +20,12 @@
     never turns, and neither half fails anywhere else. The fuel table is default-deny and category
     filtered, so "there are fuel files" is not the assertion -- "at least one names a `chemical`
     fuel against a real item" is.
-  - **The pack-side files.** Both rigs are `planetaryfactory:` blocks, so GregTech's model provider
-    does not serve them and every hop is ours: blockstate to model to texture, a lang key, and a
-    loot table. Each way of breaking those fails quietly -- an untextured black-and-magenta cube
-    with a client-side warning, a raw translation key as the block's name, or a block that breaks
-    into nothing and reads as a game bug rather than a packaging one.
+  - **The facing is visible.** Each rig and part model names a `front` texture and its blockstate
+    turns it through all four quarters. Whether every hop from blockstate to texture, the lang key
+    and the loot table resolve is `test_block_assets.py`'s (#254).
 
 The tier list is read out of `RigTier.java` rather than typed here, so a third rung added to the
-enum fails this check instead of silently shipping without assets.
+enum is held to the corpus too.
 
 Usage: tests/pack/test_rig_assets.py
 """
@@ -47,7 +44,6 @@ FUEL = ROOT / "kubejs/data/planetaryfactory/fuel"
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 GENERATOR = ROOT / "scripts/build-rig-assets.py"
 ASSETS = ROOT / "kubejs/assets/planetaryfactory"
-DATA = ROOT / "kubejs/data/planetaryfactory"
 
 # `BURNER("burner-mining-drill", 2),` -- the enum constant, the corpus key it reads its ground size
 # from, and the one number here the corpus cannot supply: how many blocks tall it stands.
@@ -59,20 +55,6 @@ def registered_tiers():
     if not tiers:
         raise AssertionError(f"no rig tiers parsed out of {RIG_TIER} -- has the enum moved?")
     return {name.lower(): (factorio, int(tall)) for name, factorio, tall in tiers}
-
-
-def resolves(path):
-    return path.is_file()
-
-
-def texture_path(reference):
-    namespace, _, name = reference.partition(":")
-    if not name:
-        namespace, name = "minecraft", reference
-    if namespace == "minecraft":
-        # Vanilla's own art, served from the jar; nothing pack-side to resolve.
-        return None
-    return ROOT / f"kubejs/assets/{namespace}/textures/{name}.png"
 
 
 def check_item_map(tiers, item_map, failures):
@@ -227,37 +209,22 @@ def main():
 
         block = f"{tier}_mining_drill"
         for name in (block, f"{block}_part"):
-            blockstate = ASSETS / f"blockstates/{name}.json"
-            if not resolves(blockstate):
-                failures.append(f"{name} has no blockstate")
-                continue
-            variants = json.loads(blockstate.read_text()).get("variants") or {}
-            if not variants:
-                failures.append(f"{name}'s blockstate declares no variants")
+            variants = json.loads((ASSETS / f"blockstates/{name}.json").read_text()).get("variants") or {}
             seen_rotations = set()
-            for variant, definition in variants.items():
+            for definition in variants.values():
                 entry = definition if isinstance(definition, dict) else definition[0]
                 model = entry["model"]
                 seen_rotations.add(entry.get("y", 0))
-                model_path = ASSETS / f"models/{model.split(':', 1)[-1]}.json"
-                if not resolves(model_path):
-                    failures.append(f"{name}[{variant}] names model {model}, which is missing")
-                    continue
                 # THE FACING HAS TO BE VISIBLE ON THE BLOCK. ADR-0043 gives a rig one output tile
                 # and makes placement a decision the player gets right or wrong; a `cube_all` model
                 # renders every side the same, so a mis-faced rig looks exactly like a correct one
-                # until it fails to fill anything. Nothing else in the pack can catch that -- the
-                # blockstate rotates a model that does not care, and every other hop still resolves.
-                declared = json.loads(model_path.read_text())
+                # until it fails to fill anything.
+                declared = json.loads((ASSETS / f"models/{model.split(':', 1)[-1]}.json").read_text())
                 if not (declared.get("textures") or {}).get("front"):
                     failures.append(
                         f"{name}'s model {model} declares no `front` texture -- its facing would "
                         "be invisible, and a mis-faced rig would look identical to a correct one"
                     )
-                for slot, reference in (declared.get("textures") or {}).items():
-                    texture = texture_path(reference)
-                    if texture is not None and not resolves(texture):
-                        failures.append(f"{model}'s {slot} texture {reference} is missing")
 
             if seen_rotations != {0, 90, 180, 270}:
                 failures.append(
@@ -265,13 +232,6 @@ def main():
                     "than all four quarters -- the front face would point the wrong way on "
                     "at least one facing"
                 )
-            if f"block.planetaryfactory.{name}" not in lang:
-                failures.append(f"{name} has no lang key -- it would ship its raw translation key")
-            if not resolves(DATA / f"loot_table/blocks/{name}.json"):
-                failures.append(f"{name} has no loot table -- it would break into nothing")
-
-        if not resolves(ASSETS / f"models/item/{block}.json"):
-            failures.append(f"{block} has no item model")
 
     stray = set(rows) - {factorio for factorio, _ in tiers.values()}
     if stray:
@@ -289,7 +249,7 @@ def main():
         print(f"FAIL {index}: {failure}")
     if failures:
         return 1
-    print(f"ok   {len(tiers)} rigs, every number matches the corpus, every asset hop resolves")
+    print(f"ok   {len(tiers)} rigs, every number matches the corpus, every facing is visible")
     return 0
 
 

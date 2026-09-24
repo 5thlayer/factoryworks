@@ -92,12 +92,23 @@ which marshland carries which tree and that no stromatolite drops ore — with n
 after any edit to the trees, the stromatolites or the five biomes. The worldgen half is read from
 `kubejs/parked/` while Sapros is parked (ADR-0060).
 
+### Block asset check
+
+`tests/pack/test_block_assets.py` walks every block the mod registers (#254): blockstate, model
+parents and textures (the pack's, the installed jars' and the client jar's), lang key, item model
+where the block has an item, and a loot table unless it is registered with `noLootTable`; a block
+with an item of its own name must drop exactly it. The block list is parsed from every
+`DeferredRegister.createBlocks` source and each ladder's names evaluated from its enum's
+`blockName()`, so a new block is walked with no edit here, and a registration it cannot name fails.
+Blocks with no item are the `NO_ITEM` patterns, each with its reason. Each machine's own
+`test_*_assets.py` keeps only what a generic walker cannot judge.
+Run it after adding a block or editing any blockstate, model, texture, lang key or loot table.
+
 ### Furnace ladder check
 
 `tests/pack/test_furnace_assets.py` asserts the three furnace tiers `FurnaceTier.java` registers
-have their pack-side files: a blockstate covering both `facing` and `lit`, a model per state, an
-item model, a lang key and a loot table. Two of its assertions are the ladder's own rather than
-generic plumbing -- the Electric tier wears no texture a burner tier wears, so it reads as a
+have a blockstate covering both `facing` and `lit`; that each file resolves is the block asset
+check's. Two of its assertions are the ladder's own -- the Electric tier wears no texture a burner tier wears, so it reads as a
 different machine at a glance, and every texture it names is in the pack's namespace and credited
 in `NOTICE`, since the art is copied from a CC BY-NC-SA repository (#324).
 `tests/pack/test_smelting_type.py` holds the recipe type itself: that the pack's recipe class is **not** assignable to vanilla's
@@ -635,8 +646,8 @@ which launches the game: `tests/factorio/test_resource_extract.py` re-derives ev
 from Factorio's own committed formula rather than trusting the number;
 `mod/src/test/java/com/planetaryfactory/core/ore/` asserts a block pays out exactly what it holds
 and that an exhausted position retires its delta, since a delta left behind is inherited by the next
-block placed there; `tests/pack/test_ore_assets.py` walks all forty blockstate/model/texture hops,
-asserts every ore block is in `c:ores`, and resolves every drop against the installed jars, since an
+block placed there; `tests/pack/test_ore_assets.py` asserts a blockstate variant per stage,
+that every ore block is in `c:ores`, and resolves every drop against the installed jars, since an
 id nothing registers pays air rather than throwing (#321);
 `MiningSpeedTest` asserts a field costs its *amount* times the tier's seconds rather than its
 block count; and `OutfieldAmountTest` asserts an outfield disc's uniform amount, read at its centre's
@@ -789,8 +800,7 @@ of 60), and `energy_consumption` is per *second* against a buffer drained per ti
 is the stall #224 names as mattering as much as the rate — a full steam tank makes no steam, burns
 no fuel and, because water and room are asked *before* the fuel buffer is, lights no item either;
 a boiler quietly eating coal into a full tank is a leak with no symptom.
-`tests/pack/test_boiler_assets.py` is the pack side: the blockstate/model/texture/lang/loot hops,
-which GregTech's model provider does not serve for a `planetaryfactory:` block, that `boiler`'s
+`tests/pack/test_boiler_assets.py` is the pack side: every `facing` and the gauge's lang keys, that `boiler`'s
 item-map row is `authored` and names the block the mod registers rather than the LP Solid Boiler it
 replaces, and a **second, independent derivation** of the 60 mB/s straight from the corpus. Run both
 after editing `core/fluid/`, `scripts/build-steam-assets.py` or the corpus. Whether a placed Boiler

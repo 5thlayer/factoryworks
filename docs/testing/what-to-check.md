@@ -47,17 +47,18 @@ and needs no JVM.
 writing the assertion. This is the opposite of the fixture row below, and the difference is real —
 do not read the fixture check's "a new body adds data, not code" rule as covering both.
 
-**Block hops are walked per machine, pending one generic walker (#254).** Eight files walk the
-blockstate/model/texture/lang/loot hops by hand, each a near-copy of the others, and a block nobody
-wrote a walker for gets none. #254 replaces the mechanical half with one check that enumerates every
-block the mod registers. **The judgement assertions stay** in their files -- the ones no generic
-walker could make and which are the reason those files exist: the Boiler's independent 60 mB/s
-derivation from the corpus, the Offshore Pump's refusal-message lang key read out of
-`OffshorePumpItem`, the ore blocks' `c:ores` membership, each generated resource held against the
+**Block hops are one generic walker.** `tests/pack/test_block_assets.py` (#254) reads every block
+the mod registers, each tier ladder's names out of its enum, and walks blockstate, model parents,
+textures, lang key, item model and loot table for all of them; a registration it cannot name fails
+rather than being skipped. **The judgement assertions stay** in each machine's own file -- the ones
+no generic walker could make and which are the reason those files exist: which states a block's
+blockstate must cover, the Boiler's independent 60 mB/s derivation from the corpus, the Offshore
+Pump's refusal-message lang key read out of `OffshorePumpItem`, the ore blocks' `c:ores` membership,
+the Electric Furnace's credited art, a rig's visible front, each generated resource held against the
 corpus.
 
 A hop that is present but rejected by the game is `scripts/check-client-assets.py`'s (#276); a hop
-that is simply absent is logged nowhere, so it needs a static walker. The item model definition is
+that is simply absent is logged nowhere, so it needs the static walker. The item model definition is
 `test_data_formats.py`'s.
 
 ### This is emitted into a world

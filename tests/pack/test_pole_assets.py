@@ -1,25 +1,14 @@
 #!/usr/bin/env python3
-"""Assert every supply-area pole the mod registers has the pack-side files it needs.
+"""Assert what the pole ladder's files have to say beyond resolving (ADR-0036, #147).
 
-`docs/testing/what-to-check.md`'s "cross-file references resolve" claim, for the pole seam
-(ADR-0036, #147).
+Whether each pole's blockstate, models, textures, lang key and loot table resolve is
+`test_block_assets.py`'s (#254). What stays here is the ladder's own: the tiers are Factorio's
+supply areas, the dropped big pole leaves nothing behind, every key the pole's tooltip and Jade
+line translate exists and takes the arguments it is given, and the creative pole is a derived
+sprite, not a tier, and craftable nowhere.
 
-The pole is split across the boundary ADR-0015 draws: `planetaryfactory_core` registers the block
-because a radius scan is mechanism, and everything a designer would tune -- model, texture, name,
-drop -- is data under `kubejs/`. That split is the reason this file exists. Nothing checks the two
-halves against each other at build time, and each way of breaking them apart fails quietly:
-
-  - a missing blockstate or model renders the untextured black-and-magenta cube, with only a
-    client-side warning
-  - a missing texture does the same one hop further down
-  - a missing lang key ships the raw translation key as the block's name, and nothing logs it
-  - a missing loot table makes the block break into nothing, which reads as a game bug rather
-    than a packaging one
-
-The tier list is read out of `PoleTier.java` rather than typed here, so adding a fourth tier fails
-this check instead of silently shipping without assets. The reverse -- a tier *removed* from the
-enum -- is checked too: the files it left behind stop being reachable from the tier list, so they
-have to be asserted absent by name.
+The tier list is read out of `PoleTier.java`. A tier *removed* from the enum leaves files no tier
+list reaches, so those are asserted absent by name.
 """
 
 import json
@@ -52,13 +41,7 @@ def registered_tiers():
 
 
 def creative_pole_name():
-    """The creative pole's registry path, read out of the block rather than typed here.
-
-    It is a pole -- one block, one block entity type, the same five files -- but deliberately not a
-    `PoleTier`, since the tier ladder is Factorio's own footprints (ADR-0036) and a dev tool has no
-    row in it (#272). So it is read from its own source and folded into the same hops below: left
-    out, its blockstate, models, lang key and loot table would be asserted by nothing at all.
-    """
+    """The creative pole's registry path: a pole, but deliberately not a `PoleTier` (#272)."""
     source = CREATIVE_POLE.read_text(encoding="utf-8")
     found = re.search(r'BLOCK_NAME\s*=\s*"([a-z_]+)"', source)
     if not found:
@@ -104,9 +87,6 @@ def translatable_calls(source):
 class PoleAssets(unittest.TestCase):
     def setUp(self):
         self.tiers = registered_tiers()
-        # Every block that ships a pole's file set: the tiers, plus the creative pole, which has no
-        # supply size of its own to assert because it wears the substation's.
-        self.poles = sorted(set(self.tiers) | {creative_pole_name()})
 
     def test_the_three_shipped_tiers_are_registered(self):
         self.assertEqual(
@@ -136,63 +116,6 @@ class PoleAssets(unittest.TestCase):
 
         lang = json.loads((ASSETS / "lang" / "en_us.json").read_text(encoding="utf-8"))
         self.assertNotIn("block.planetaryfactory.big_electric_pole", lang)
-
-    def test_every_pole_has_a_blockstate_naming_a_model_that_exists(self):
-        for name in self.poles:
-            with self.subTest(pole=name):
-                blockstate = ASSETS / "blockstates" / f"{name}.json"
-                self.assertTrue(blockstate.is_file(), f"{blockstate} is missing")
-                variants = json.loads(blockstate.read_text(encoding="utf-8"))["variants"]
-                for variant in variants.values():
-                    model = variant["model"]
-                    self.assertTrue(model.startswith("planetaryfactory:"), model)
-                    path = ASSETS / "models" / (model.split(":", 1)[1] + ".json")
-                    self.assertTrue(path.is_file(), f"{blockstate} names {model}, which is missing")
-
-    def test_every_model_names_textures_that_exist(self):
-        for name in self.poles:
-            for kind in ("block", "item"):
-                with self.subTest(pole=name, model=kind):
-                    path = ASSETS / "models" / kind / f"{name}.json"
-                    self.assertTrue(path.is_file(), f"{path} is missing")
-                    model = json.loads(path.read_text(encoding="utf-8"))
-                    for texture in model.get("textures", {}).values():
-                        self.assertTrue(texture.startswith("planetaryfactory:"), texture)
-                        png = ASSETS / "textures" / (texture.split(":", 1)[1] + ".png")
-                        self.assertTrue(png.is_file(), f"{path} names {texture}, which is missing")
-
-    def test_the_item_model_resolves_to_a_model_that_exists(self):
-        for name in self.poles:
-            with self.subTest(pole=name):
-                model = json.loads(
-                    (ASSETS / "models" / "item" / f"{name}.json").read_text(encoding="utf-8"))
-                parent = model["parent"]
-                self.assertTrue(parent.startswith("planetaryfactory:"), parent)
-                path = ASSETS / "models" / (parent.split(":", 1)[1] + ".json")
-                self.assertTrue(path.is_file(), f"the item model names {parent}, which is missing")
-
-    def test_every_pole_is_named(self):
-        lang = json.loads((ASSETS / "lang" / "en_us.json").read_text(encoding="utf-8"))
-        for name in self.poles:
-            with self.subTest(pole=name):
-                key = f"block.planetaryfactory.{name}"
-                self.assertIn(key, lang, f"{key} has no translation, so the block shows its key")
-                self.assertTrue(lang[key].strip(), f"{key} is blank")
-
-    def test_every_pole_drops_itself(self):
-        for name in self.poles:
-            with self.subTest(pole=name):
-                path = DATA / "loot_table" / "blocks" / f"{name}.json"
-                self.assertTrue(path.is_file(), f"{path} is missing, so the pole breaks into nothing")
-                table = json.loads(path.read_text(encoding="utf-8"))
-                dropped = {
-                    entry["name"]
-                    for pool in table["pools"]
-                    for entry in pool["entries"]
-                    if entry.get("type") == "minecraft:item"
-                }
-                self.assertEqual({f"planetaryfactory:{name}"}, dropped)
-
 
     def test_every_translation_key_the_pole_uses_exists(self):
         # The pole is the only block in the pack that explains itself -- no cable to trace, no GUI,
