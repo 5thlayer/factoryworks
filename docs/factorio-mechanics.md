@@ -61,7 +61,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 | [Transport belts](#transport-belts) | `adapted` | all bodies |
 | [Inserters](#inserters) | `adapted` | all bodies |
 | [Logistic robots](#logistic-robots) | `excluded` | — |
-| [Construction robots and blueprints](#construction-robots-and-blueprints) | `adapted` | all bodies |
+| [Construction robots and blueprints](#construction-robots-and-blueprints) | `excluded` | all bodies |
 | [Building by hand: placement preview and fast replace](#building-by-hand-placement-preview-and-fast-replace) | `planned` | all bodies |
 | [Trains](#trains) | `planned` | Terra |
 | [Circuit network](#circuit-network) | `adapted` | all bodies |
@@ -710,26 +710,23 @@ Sub-rules:
 
 ### Construction robots and blueprints
 
-- **verdict**: `adapted`
-- **notice**: you copy a shape and paste it yourself, paying for it out of your own inventory on the
-  spot — there is no ghost to leave behind, nothing builds it while you are elsewhere, and nothing
-  rebuilds or repairs it later.
+- **verdict**: `excluded`
 - **where**: all bodies
-- **via**: `native_mechanic` (Building Gadgets 2)
-- **owner**: `unargued`
+- **owner**: [#144](https://github.com/adamico/planetary-factory/issues/144)
 
-Building Gadgets 2 is installed (`mods/building-gadgets.pw.toml`, indexed) and is the pack's closest
-thing to a blueprint: copy a region, paste it elsewhere. That covers the *shape* half of a blueprint
-and none of the *logistics* half.
+Nothing in the pack copies a built shape. Building Gadgets 2 was the closest thing to a blueprint,
+covering the *shape* half and none of the *logistics* half, and it left the manifest with #144:
+the stock-recipe sweep had already made its gadgets uncraftable, and it was removed rather than
+re-authored.
 
-**Create's Schematicannon is not this row.** It is vanilla Create and therefore already in the pack,
-but a Schematicannon prints a structure block-by-block from a chest at a fixed position — it is a
-building tool with a hopper, not a construction network, and the two mechanics are not
+**Create's Schematicannon is not this row.** Create left with ADR-0060, and a Schematicannon was a
+building tool with a hopper, not a construction network, so the two mechanics were never
 interchangeable with Factorio's.
 
 Sub-rules:
 
-- **Copy a built shape and stamp it down again** — `adapted`, via Building Gadgets.
+- **Copy a built shape and stamp it down again** — `excluded`. Building Gadgets 2 left the manifest
+  (#144).
 - **A blueprint is an item you can hand to another player, or keep in a library** — `unargued`,
   no verdict.
 - **Pasting leaves ghosts that something else fills in** — `excluded`. This is the half that makes
