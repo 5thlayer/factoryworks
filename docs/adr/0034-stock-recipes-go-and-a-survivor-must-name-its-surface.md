@@ -139,6 +139,8 @@ premise only ever meant *the four tech mods*, they stay and are uncraftable, bec
 was never the right word" applies to them too. **Neither reading is a decision anyone has taken**, and
 the tail is where the great majority of the pack's surviving recipes actually live.
 
+**Decided by `#441`**: see §*The tail, decided*, below.
+
 ## What the rule does not reach
 
 **Recipe removal binds recipes.** It does not bind loot tables, villager and wandering-trader trades,
@@ -292,6 +294,59 @@ recipes and nothing else.** This is the same fact as §1's, read from the other 
   swap survive in game, where skipping three of them would have broken the cycle by deleting the
   return trip. `tests/factorio/test_grid_recipes.py` asserts the property over the **union** the
   Assembler actually loads. Any future admission has to clear the same bar.
+
+## The tail, decided
+
+**Amendment, [`#441`](https://github.com/adamico/planetary-factory/issues/441), for
+[`#144`](https://github.com/adamico/planetary-factory/issues/144).** §7 is no longer open. The
+manifest it described went with ADR-0060, and the tail is now the jars on the 26.1.2 manifest that
+ship recipes, plus vanilla.
+
+### The rule: re-author, never keep as shipped
+
+**A kept stock recipe is re-authored as a pack recipe on the pack's own surface**, which is the
+Assembling Machine's type, with category `crafting` where the recipe is hand-made so the Personal
+Assembler plans it. This is `#172`'s route above, taken for the whole tail rather than chosen entry
+by entry. The line reads the recipe out of the installed jar, flattens a shaped pattern without
+changing a count, and swaps every ingredient outside ADR-0021's alphabet through a committed
+substitutions file, each swap with its reason. Which stock recipes are admitted is a committed list,
+so a later admission adds a row rather than code (`#442`).
+
+**No stock recipe survives as shipped.** The survivor shape is unchanged and `recipe_survivors.js`
+gains no row: every re-authored recipe is a `planetaryfactory:` recipe on a surface it already names.
+The union of re-authored and corpus recipes carries the bar `#172` set: one hand recipe per item and
+no cycle.
+
+### What is kept, and the ticket that re-authors it
+
+| kept | from | ticket | why |
+| --- | --- | --- | --- |
+| smart filter | FTB Filter System | [`#442`](https://github.com/adamico/planetary-factory/issues/442) | the SimpleBelts fork's loader reads it as its filter; the first row, and the line the others reuse |
+| stairs (stone, cobblestone, stone bricks, and each log Terra grows) | vanilla | [`#444`](https://github.com/adamico/planetary-factory/issues/444) | traversal and base building |
+| ladders | vanilla | [`#444`](https://github.com/adamico/planetary-factory/issues/444) | traversal |
+| sand, glass, glass panes | vanilla | [`#445`](https://github.com/adamico/planetary-factory/issues/445) | sand on the Assembling Machine, glass a smelt on `planetaryfactory:smelting` since the vanilla furnace is inert, panes a hand recipe |
+
+`#444` and `#445` rewrite rather than flatten: planks and sticks are not kept, so vanilla's stairs,
+ladder and pane recipes name inputs nothing makes, and each count and yield is chosen and recorded
+there.
+
+### What keeps nothing, recorded as a decision
+
+- **SimpleBelts fork.** The pack authors the belts (`#398`).
+- **Railcraft Reborn.** Its plates and gears are already removed (ADR-0060), and the train rows the
+  corpus maps are emitted by the converter. The rest of rail is
+  [`#435`](https://github.com/adamico/planetary-factory/issues/435)'s.
+- **FTB Materials.** The corpus already authors the forms the pack keeps: plate, gear, rod and wire
+  (ADR-0061). Its own stock routes to them are not kept.
+- **Oritech.** Nothing beyond the rows the item map already names, which the converter emits. Its
+  addons wait on the Modules and beacons row (`#120`). Its decorative and other non-Factorio blocks go.
+- **FTB Quests.** The quest book arrives in the starting kit, so no recipe is kept.
+- **Vanilla, outside the kept set above.** Planks, sticks, fences and fence gates, doors, trapdoors,
+  pressure plates, boats, torches, walls, beds and campfires are deliberately uncraftable. Factorio's
+  wood is terminal, feeding five recipes and no processing chain, and none of these is a Factorio
+  item.
+- **OpenBlocks Elevator and Building Gadgets 2.** Removed from the manifest under `#144` rather than
+  re-authored, so there is nothing left to decide for them.
 
 ## The state on the ground, recorded because it is not what the docs imply
 
