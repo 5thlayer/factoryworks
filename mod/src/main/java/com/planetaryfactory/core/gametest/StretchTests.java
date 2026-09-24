@@ -36,7 +36,7 @@ import rearth.belts.model.BeltTier;
 import rearth.belts.model.TransportLine;
 
 /**
- * A stretch of belt tiles (#393, ADR-0069): each test sneak-clicks a start, perhaps corners, asks
+ * A stretch of belt tiles over the ground (#393, #421, ADR-0069): each test sneak-clicks a start, perhaps corners, asks
  * {@link Placements} for the plan of the next click, clicks, then holds the world, the inventory and
  * the stored start to the plan. An accepted plan puts every tile it names down in the state it names
  * and charges one held-tier tile for each one placed or replaced; a refused plan changes no block, no
@@ -60,11 +60,32 @@ final class StretchTests {
         tests.test("a_stretch_behind_the_look_changes_nothing", 20, helper -> refused(helper,
                 player -> {}, START.west(2), PlacementPlan.Refusal.BEHIND_LOOK, "message.belts.stretch_behind"));
         tests.test("a_stretch_through_a_block_changes_nothing", 20, helper -> refused(helper,
-                player -> helper.setBlock(START.east(3), Blocks.STONE), START.east(5),
+                player -> helper.setBlock(START.east(3), Blocks.OAK_FENCE), START.east(5),
                 PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
-        tests.test("a_stretch_over_no_ground_changes_nothing", 20, helper -> refused(helper,
-                player -> helper.setBlock(START.east(3).below(), Blocks.AIR), START.east(5),
-                PlacementPlan.Refusal.NO_GROUND, "message.belts.stretch_no_ground"));
+        tests.test("a_stretch_follows_a_step_up_and_a_step_down", 20, StretchTests::stepUpAndDown);
+        tests.test("a_stretch_climbs_a_staircase", 20, StretchTests::staircase);
+        tests.test("a_stretch_under_an_overhang_stays_level", 20, StretchTests::overhang);
+        tests.test("a_stretch_up_a_two_block_step_changes_nothing", 20, helper -> refused(helper,
+                player -> {
+                    helper.setBlock(START.east(3), Blocks.STONE);
+                    helper.setBlock(START.east(3).above(), Blocks.STONE);
+                }, START.east(5), PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven"));
+        tests.test("a_stretch_down_a_two_block_drop_changes_nothing", 20, helper -> {
+            for (int i = 0; i <= 2; i++) {
+                helper.setBlock(START.east(i), Blocks.STONE);
+                helper.setBlock(START.east(i).above(), Blocks.STONE);
+            }
+            refused(helper, START.above(2), player -> {}, START.east(5),
+                    PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven");
+        });
+        tests.test("a_stretch_over_a_one_block_bump_changes_nothing", 20, helper -> refused(helper,
+                player -> helper.setBlock(START.east(3), Blocks.STONE), START.east(5),
+                PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven"));
+        tests.test("a_corner_on_a_step_is_not_stored", 20, helper -> refused(helper,
+                player -> {
+                    helper.setBlock(START.east(3), Blocks.STONE);
+                    player.setShiftKeyDown(true);
+                }, START.east(3).above(), PlacementPlan.Refusal.SLOPE_TURNS, "message.belts.slope_turns"));
         tests.test("a_stretch_short_of_tiles_changes_nothing", 20, helper -> refused(helper,
                 player -> player.getMainHandItem().setCount(3), START.east(5),
                 PlacementPlan.Refusal.NOT_ENOUGH_ITEMS, "message.belts.stretch_not_enough"));
@@ -82,7 +103,7 @@ final class StretchTests {
                 START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
         tests.test("a_stretch_both_blocked_and_short_names_the_block", 20, helper -> refused(helper,
                 player -> {
-                    helper.setBlock(START.east(3), Blocks.STONE);
+                    helper.setBlock(START.east(3), Blocks.OAK_FENCE);
                     player.getMainHandItem().setCount(3);
                 }, START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
         tests.test("a_creative_stretch_charges_nothing", 20, StretchTests::creative);
@@ -103,6 +124,52 @@ final class StretchTests {
             }
         }
         helper.succeed();
+    }
+
+    // A block two wide, two ahead: a foot, two tops and a foot, each on the ground.
+    private static void stepUpAndDown(GameTestHelper helper) {
+        helper.setBlock(START.east(2), Blocks.STONE);
+        helper.setBlock(START.east(3), Blocks.STONE);
+        var player = started(helper, Direction.EAST);
+        if (accepted(helper, player, START.east(5), 6) == null) return;
+        pitched(helper, START, BeltTileBlock.PitchState.LEVEL);
+        pitched(helper, START.east(1), BeltTileBlock.PitchState.FOOT_UP);
+        pitched(helper, START.east(2).above(), BeltTileBlock.PitchState.TOP_UP);
+        pitched(helper, START.east(3).above(), BeltTileBlock.PitchState.TOP_DOWN);
+        pitched(helper, START.east(4), BeltTileBlock.PitchState.FOOT_DOWN);
+        pitched(helper, START.east(5), BeltTileBlock.PitchState.LEVEL);
+        helper.succeed();
+    }
+
+    // Three steps of one block up to a ledge, the end clicked on the ledge.
+    private static void staircase(GameTestHelper helper) {
+        for (int i = 2; i <= 6; i++) {
+            for (int y = 0; y < Math.min(i - 1, 3); y++) helper.setBlock(START.east(i).above(y), Blocks.STONE);
+        }
+        var player = started(helper, Direction.EAST);
+        if (accepted(helper, player, START.east(6).above(3), 7) == null) return;
+        pitched(helper, START.east(1), BeltTileBlock.PitchState.FOOT_UP);
+        pitched(helper, START.east(2).above(1), BeltTileBlock.PitchState.MIDDLE_UP);
+        pitched(helper, START.east(3).above(2), BeltTileBlock.PitchState.MIDDLE_UP);
+        pitched(helper, START.east(4).above(3), BeltTileBlock.PitchState.TOP_UP);
+        pitched(helper, START.east(6).above(3), BeltTileBlock.PitchState.LEVEL);
+        helper.succeed();
+    }
+
+    // A block hanging a block over the floor, over the path.
+    private static void overhang(GameTestHelper helper) {
+        helper.setBlock(START.east(2).above(), Blocks.STONE);
+        var player = started(helper, Direction.EAST);
+        if (accepted(helper, player, START.east(4), 5) == null) return;
+        for (int i = 0; i <= 4; i++) pitched(helper, START.east(i), BeltTileBlock.PitchState.LEVEL);
+        helper.succeed();
+    }
+
+    private static void pitched(GameTestHelper helper, BlockPos pos, BeltTileBlock.PitchState pitch) {
+        BlockState state = helper.getBlockState(pos);
+        if (!(state.getBlock() instanceof BeltTileBlock) || state.getValue(BeltTileBlock.PITCH) != pitch) {
+            helper.fail("the stretch left " + state + " here, not a " + pitch + " tile", pos);
+        }
     }
 
     // Looking east, an end two ahead and two south turns right where the first leg meets it.
@@ -309,14 +376,18 @@ final class StretchTests {
         helper.succeed();
     }
 
-    /** A survival player holding tier-1 tiles who has sneak-clicked a start at {@link #START} looking {@code look}. */
     private static ListeningPlayer started(GameTestHelper helper, Direction look) {
+        return started(helper, look, START);
+    }
+
+    /** A survival player holding tier-1 tiles who has sneak-clicked a start at {@code start} looking {@code look}. */
+    private static ListeningPlayer started(GameTestHelper helper, Direction look, BlockPos start) {
         var player = new ListeningPlayer(helper);
         player.setGameMode(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ItemContent.tileFor(BeltTier.BELT), TILES));
         player.setYRot(look.toYRot());
         player.setShiftKeyDown(true);
-        helper.useBlock(START.below(), player, hit(helper, START.below()));
+        helper.useBlock(start.below(), player, hit(helper, start.below()));
         player.setShiftKeyDown(false);
         return player;
     }
@@ -354,7 +425,12 @@ final class StretchTests {
 
     private static void refused(GameTestHelper helper, Consumer<ListeningPlayer> setUp, BlockPos end,
                                 PlacementPlan.Refusal refusal, String key) {
-        var player = started(helper, Direction.EAST);
+        refused(helper, START, setUp, end, refusal, key);
+    }
+
+    private static void refused(GameTestHelper helper, BlockPos start, Consumer<ListeningPlayer> setUp, BlockPos end,
+                                PlacementPlan.Refusal refusal, String key) {
+        var player = started(helper, Direction.EAST, start);
         setUp.accept(player);
         var plan = planOf(helper, player, end);
         if (plan == null || plan.refusal() != refusal) {

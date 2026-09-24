@@ -47,7 +47,10 @@ height per block of travel. It amends ADR-0084's consequence that belts are flat
   placement that would need it, so a slope never stands on a belt: a crossing's tops stand beside the
   crossed line, never over it. A tile's top counts as ground for the level tile over it (#420). A two-click stretch follows the ground one block up or
   down at a time, and climbs over a line across its path in five tiles: a foot, a top, a level tile
-  on the crossed line, a top and a foot.
+  on the crossed line, a top and a foot. A stretch is refused whole where the ground steps more than
+  a block, where a tile would be a crest or a valley, which does not connect, and where a corner
+  would stand on a step. A block with a block entity is no ground for a stretch, as it is none for
+  a wedge (#421).
 
 **Considered: underground belts.** Rejected, as ADR-0044 argued. They solve weaving on a plane, and
 this medium has a third axis.
@@ -66,5 +69,5 @@ reads as a belt, and each needs a shape of its own.
   another by climbing over it.
 - A rider is lifted over each rising collision slab, since an item cannot step up. On a slope it
   climbs in small hops; whether that reads right is a human check.
-- Tile by tile ships first (#417), then the wedge and a crossing built by hand (#420); the stretch
-  following the ground and its crossing are later slices of #412.
+- Tile by tile ships first (#417), then the wedge and a crossing built by hand (#420), then the
+  stretch following the ground (#421); the stretch's crossing is a later slice of #412.

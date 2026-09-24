@@ -70,7 +70,7 @@ final class TilePlans {
         return switch (reason) {
             case BEHIND_LOOK -> PlacementPlan.Refusal.BEHIND_LOOK;
             case BLOCKED -> PlacementPlan.Refusal.FOOTPRINT_BLOCKED;
-            case NO_GROUND -> PlacementPlan.Refusal.NO_GROUND;
+            case UNEVEN -> PlacementPlan.Refusal.UNEVEN_GROUND;
             case SLOPE_TURNS -> PlacementPlan.Refusal.SLOPE_TURNS;
             case WEDGE_BLOCKED -> PlacementPlan.Refusal.WEDGE_BLOCKED;
             case NOT_ENOUGH_TILES -> PlacementPlan.Refusal.NOT_ENOUGH_ITEMS;
