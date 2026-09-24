@@ -682,9 +682,12 @@ An `undecided` item-map row is a recorded skip only while the ticket it names is
 for good behind a pointer that looks live. `scripts/item-map-ticket-check.sh` fails every row whose
 `ticket` or `blocked_by` names a closed or missing issue, with that issue's title. When a ticket
 closes, each row naming it is rewritten to a target, made `not_emitted` or `native_mechanic`, or
-pointed at a new open ticket -- never at the reopened old one. It needs an authenticated `gh`, so
-run it after closing a ticket or editing `data/pack/item-map.json`; it is in no batch. The
-mechanic ledger's pointers are #379's.
+pointed at a new open ticket -- never at the reopened old one. The same command checks
+`docs/factorio-mechanics.md` (#379): a `planned` or `blocked` section must name at least one open
+issue in its `ticket` field, which is prose keeping closed refs as history; `owner` and the inline
+sub-rule verdicts are not read. A failing section is re-verdicted or pointed at a new open ticket
+the same way. It needs an authenticated `gh`, so run it after closing a ticket or editing either
+file; it is in no batch.
 
 ### Transfer-face check
 

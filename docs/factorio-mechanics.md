@@ -52,7 +52,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 | [Manual mining](#manual-mining) | `adapted` | all bodies |
 | [Trees and wood](#trees-and-wood) | `adapted` | all bodies |
 | [Mining drills](#mining-drills) | `adapted` | all bodies |
-| [Water as a resource](#water-as-a-resource) | `planned` | all bodies |
+| [Water as a resource](#water-as-a-resource) | `adapted` | all bodies |
 | [Fluid handling](#fluid-handling) | `planned` | all bodies |
 | [Oil processing](#oil-processing) | `planned` | Terra, Ignus, Gelida |
 | [Smelting](#smelting) | `planned` | all bodies |
@@ -82,7 +82,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 | [Personal transport](#personal-transport) | `blocked` | — |
 | [Terrain modification](#terrain-modification) | `adapted` | all bodies |
 | [Repair and entity damage](#repair-and-entity-damage) | `blocked` | — |
-| [Radar and map exploration](#radar-and-map-exploration) | `planned` | Terra |
+| [Radar and map exploration](#radar-and-map-exploration) | `adapted` | Terra |
 | [The logistic request and trash system](#the-logistic-request-and-trash-system) | `excluded` | — |
 | [Day and night cycle](#day-and-night-cycle) | `shipped` | Terra, Sapros |
 | [Controls](#controls) | `planned` | all bodies |
@@ -314,11 +314,13 @@ Sub-rules:
 
 ### Water as a resource
 
-- **verdict**: `planned`
+- **verdict**: `adapted`
 - **where**: all bodies
 - **via**: `pack` (the Offshore Pump), vanilla water, `create` for pipes
 - **owner**: ADR-0050
-- **ticket**: #200
+- **notice**: Minecraft water forms new sources and fills buckets, so source formation is off and
+  there is no bucket; water enters the factory only through the Offshore Pump.
+- **ticket**: #200, closed with ADR-0050's design shipped (#210–#213)
 
 Factorio's water is infinite in volume and **fixed in place** — that property is the whole reason the
 offshore pump exists and why shoreline is a siting concern. ADR-0050 keeps it with one rule: **water
@@ -361,7 +363,7 @@ Sub-rules:
 - **via**: `create`
 - **owner**: ADR-0017 as amended by #101 (Create owns fluid handling entire — pipes and pumps for
   moving, tanks for storing; Mekanism had no fluid role, and left the pack entirely with ADR-0035)
-- **ticket**: #106
+- **ticket**: #293 (the in-line pump); #106 (the barrel) closed
 
 Sub-rules:
 
@@ -400,7 +402,7 @@ Sub-rules:
 - **where**: all bodies
 - **via**: `planetaryfactory_core` — the three tiers are pack blocks (#91, #149, #155)
 - **owner**: #91
-- **ticket**: #155
+- **ticket**: #432 (the burner tiers' world check); #155 closed
 
 Sub-rules:
 
@@ -445,13 +447,13 @@ Sub-rules:
 - **where**: all bodies
 - **via**: `planetaryfactory_core`, `oritech`
 - **owner**: ADR-0026, ADR-0029, ADR-0056, ADR-0060, ADR-0075
-- **ticket**: #87 (the machines are registered; the recipe conversion is not); #326 registers
+- **ticket**: #120, which tier 3's recipe waits on for `speed-module`. Closed: #87 converts the
+  recipes; #326 registers
   tier 1 as `planetaryfactory:assembling_machine` on Oritech's base, placed and inert (ADR-0071,
   ADR-0072); #327 gives it a Held recipe and #328 crafts it at `assembling-machine-1`'s speed 0.5
   and 75 kW, stalling without consuming; #331 emits the recipes naming it, and refuses it every
   `crafting-with-fluid` one, which tier 1's `crafting_categories` does not list; #295 adds tiers 2
-  and 3 as blocks of their own (ADR-0075), which craft with a fluid. Tier 3's recipe waits on
-  `speed-module` (#120)
+  and 3 as blocks of their own (ADR-0075), which craft with a fluid
 
 Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
 (ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes GregTech out of the pack and
@@ -883,7 +885,7 @@ Sub-rules:
   Mekanism, which registers no generator block at all, so the clause naming it never named anything.
   **`gregtech` was struck by ADR-0048**: the boiler is the pack's, and `create` is now on the row for
   the rotation the pack's Steam Engine emits rather than for an engine of Create's own.
-- **ticket**: #104, #189, #224
+- **ticket**: #135 (the Steam Turbine), #283 (the accumulator), #7 (solar); #104, #189, #224 closed
 
 Sub-rules:
 
@@ -980,7 +982,7 @@ Sub-rules:
 - **where**: all bodies
 - **via**: `kubejs`, `pack`
 - **owner**: ADR-0055 (supersedes ADR-0005)
-- **ticket**: #109, #118
+- **ticket**: #433; #109, #118 closed
 
 GregTech 7.0.2 has no pollution system — the mod contains nothing matching `pollut` — so Emission is
 ours and none of it is built yet.
@@ -1011,7 +1013,7 @@ Sub-rules:
 - **where**: Terra
 - **via**: `pack`, `native_mechanic`
 - **owner**: ADR-0055
-- **ticket**: #118
+- **ticket**: #434, after #227 and #433; #118 closed
 
 Nothing here is built. **The shape changed wholesale with ADR-0055**, which reversed the previous
 entry in this row: emission was to attract *Illager raids to an Overseer at your outpost*, with no
@@ -1139,7 +1141,8 @@ argument has not been had.
 - **where**: all bodies
 - **via**: `pack`, `kubejs`
 - **owner**: ADR-0018, ADR-0022
-- **ticket**: #66, #82, #103
+- **ticket**: #260 (Researchd on 26.1.2), #217 (the Lab on the grid), #228 (Military science);
+  #66, #82, #103 closed
 
 Four packs plus an unscienced rung 0, gated by Researchd's Research Lab, fed by pipe and consumed
 unattended.
@@ -1313,11 +1316,13 @@ two.
 
 ### Radar and map exploration
 
-- **verdict**: `planned`
+- **verdict**: `adapted`
 - **where**: Terra
 - **via**: `pack`
 - **owner**: #116
-- **ticket**: #116
+- **notice**: the nearby area is 9x9 sectors rather than Factorio's 7x7, and it is charted once
+  rather than kept live, so the map shows it as first charted.
+- **ticket**: #116, confirmed on a player's map; the art is #367
 
 Factorio's Radar (ADR-0045, ADR-0079): a 3x3x3 `planetaryfactory:radar` drawing 150 FE/t that
 charts map at range for its owner's team. It detects nothing hidden, since ore lies on the surface.
@@ -1325,8 +1330,7 @@ charts map at range for its owner's team. It detects nothing hidden, since ore l
 FTB Chunks map, late joiners included. Since #370 each outfield patch whose centre is in the chart,
 or in a chunk the player has walked into view, gets a marker on both maps showing the resource's
 drop item, name and what is left, as of when it was last charted or walked past; starting fields
-get none, and a mined-out patch's marker is removed (#371). The row stays `planned` until a player has
-seen the map drawn.
+get none, and a mined-out patch's marker is removed (#371).
 
 **This row is the proof case for the two axes never reading each other.** `combat/defensive-structure`
 is `not_emitted` in `subgroup-owner.json`, and a ledger that read its verdicts out of that file would
@@ -1334,7 +1338,7 @@ have recorded "radar: excluded" — which is wrong whatever this row's verdict t
 
 Sub-rules:
 
-- **Reveals map by scanning distant sectors** — `planned`. One 32-block sector per 10 MJ within 14
+- **Reveals map by scanning distant sectors** — `shipped`. One 32-block sector per 10 MJ within 14
   sectors, beyond the nearby area, in square rings outward from each ring's top-left sector
   clockwise, unexplored sectors first and then a re-scan in turn, which changes no map while a
   charted sector is never re-sent. Charted on the server since #368
@@ -1485,7 +1489,7 @@ replace them, since it reproduces neither the chunk loop nor reprocessing.
 - **where**: pack-wide
 - **via**: `pack`
 - **owner**: `docs/gdd.md` §4
-- **ticket**: #111
+- **ticket**: #340 (the wait on interplanetary travel); #111 closed
 
 Launch Terminals, Receiving Terminals and Drop Hatches as pack-authored GT machines, with unattended
 cargo held as a Flight with a travel timer rather than as a moving entity.
