@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.gametest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -104,14 +105,21 @@ final class BeltTileTests {
     // One tick: the buffer holds only the largest tick the loader's flow limit allows.
     private static final int DRAW_WINDOW_TICKS = 1;
 
-    // A climb of one block between the second tile and the third (#417).
-    private static final int CLIMB_TILES = 4;
-    private static final int CLIMB_STEP = 2;
-    // Up a block, level on top, then down again.
-    private static final int OVER_TILES = 6;
-    private static final int OVER_HOLDS = OVER_TILES * 8;
-    private static final int OVER_SUPPLY = 27 * 64;
-    private static final int OVER_SETTLED_TICKS = 400;
+    // Each tile's height above the platform, so a climb of one block is a foot and a top (#417).
+    private static final int[] ONE_BLOCK_CLIMB = {0, 0, 1, 1};
+    private static final int[] OVER_A_STEP = {0, 0, 1, 1, 0, 0};
+    // A foot, two middles and a top between level tiles (#418).
+    private static final int[] THREE_BLOCK_CLIMB = {0, 0, 1, 2, 3, 3};
+    private static final int[] THREE_BLOCK_DESCENT = {3, 3, 2, 1, 0, 0};
+    private static final List<BeltTileBlock.PitchState> THREE_BLOCK_CLIMB_PITCHES = List.of(
+            BeltTileBlock.PitchState.LEVEL, BeltTileBlock.PitchState.FOOT_UP, BeltTileBlock.PitchState.MIDDLE_UP,
+            BeltTileBlock.PitchState.MIDDLE_UP, BeltTileBlock.PitchState.TOP_UP, BeltTileBlock.PitchState.LEVEL);
+    private static final List<BeltTileBlock.PitchState> THREE_BLOCK_DESCENT_PITCHES = List.of(
+            BeltTileBlock.PitchState.LEVEL, BeltTileBlock.PitchState.TOP_DOWN, BeltTileBlock.PitchState.MIDDLE_DOWN,
+            BeltTileBlock.PitchState.MIDDLE_DOWN, BeltTileBlock.PitchState.FOOT_DOWN, BeltTileBlock.PitchState.LEVEL);
+    private static final int CLIMB_HOLDS = 6 * 8;
+    private static final int CLIMB_SUPPLY = 27 * 64;
+    private static final int CLIMB_SETTLED_TICKS = 400;
 
     private BeltTileTests() {
     }
@@ -156,12 +164,22 @@ final class BeltTileTests {
         tests.test("a_crest_and_a_valley_connect_to_neither", 40, BeltTileTests::crestAndValley);
         tests.test("belt_tiles_over_a_climb_tier_1_deliver_" + TIER_1_ITEMS_PER_SECOND,
                 RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
-                helper -> climbDeliversAtRate(helper, BeltTier.BELT, TIER_1_ITEMS_PER_SECOND));
+                helper -> climbDeliversAtRate(helper, BeltTier.BELT, TIER_1_ITEMS_PER_SECOND, ONE_BLOCK_CLIMB));
         tests.test("belt_tiles_over_a_climb_tier_4_deliver_" + TIER_4_ITEMS_PER_SECOND,
                 RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
-                helper -> climbDeliversAtRate(helper, BeltTier.TURBO, TIER_4_ITEMS_PER_SECOND));
-        tests.test("a_backed_up_line_up_and_down_a_step_holds_" + OVER_HOLDS, OVER_SETTLED_TICKS + 20,
-                BeltTileTests::overAStepHolds);
+                helper -> climbDeliversAtRate(helper, BeltTier.TURBO, TIER_4_ITEMS_PER_SECOND, ONE_BLOCK_CLIMB));
+        tests.test("a_backed_up_line_up_and_down_a_step_holds_" + CLIMB_HOLDS, CLIMB_SETTLED_TICKS + 20,
+                helper -> backedUpClimbHolds(helper, OVER_A_STEP));
+        tests.test("a_three_block_staircase_makes_a_foot_two_middles_and_a_top", 40, BeltTileTests::staircaseByHand);
+        tests.test("breaking_a_middle_connects_nothing_across_the_gap", 40, BeltTileTests::breakingAMiddle);
+        tests.test("belt_tiles_over_a_three_block_climb_tier_1_deliver_" + TIER_1_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> climbDeliversAtRate(helper, BeltTier.BELT, TIER_1_ITEMS_PER_SECOND, THREE_BLOCK_CLIMB));
+        tests.test("belt_tiles_over_a_three_block_climb_tier_4_deliver_" + TIER_4_ITEMS_PER_SECOND,
+                RATE_WARMUP_TICKS + RATE_WINDOW_TICKS + 20,
+                helper -> climbDeliversAtRate(helper, BeltTier.TURBO, TIER_4_ITEMS_PER_SECOND, THREE_BLOCK_CLIMB));
+        tests.test("a_backed_up_line_over_a_three_block_climb_holds_" + CLIMB_HOLDS, CLIMB_SETTLED_TICKS + 20,
+                helper -> backedUpClimbHolds(helper, THREE_BLOCK_CLIMB));
     }
 
     /**
@@ -169,17 +187,26 @@ final class BeltTileTests {
      * so the tile before the step is a foot and the one after it a top. Returns them in order.
      */
     static List<BlockPos> climb(GameTestHelper helper, BeltTier tier, BlockPos first, int count, int step) {
+        int[] heights = new int[count];
+        Arrays.fill(heights, step, count, 1);
+        return stairs(helper, tier, first, heights);
+    }
+
+    /** Tiles running east from {@code first}, each on a column of stone as tall as its height. */
+    static List<BlockPos> stairs(GameTestHelper helper, BeltTier tier, BlockPos first, int... heights) {
         List<BlockPos> tiles = new ArrayList<>();
-        for (int tile = 0; tile < count; tile++) {
-            BlockPos at = first.east(tile);
-            if (tile >= step) {
-                helper.setBlock(at, Blocks.STONE);
-                at = at.above();
-            }
+        for (int tile = 0; tile < heights.length; tile++) {
+            BlockPos at = stone(helper, first.east(tile), heights[tile]);
             helper.setBlock(at, tile(tier, Direction.EAST));
             tiles.add(at);
         }
         return tiles;
+    }
+
+    // Returns the block on top of the column.
+    private static BlockPos stone(GameTestHelper helper, BlockPos base, int height) {
+        for (int block = 0; block < height; block++) helper.setBlock(base.above(block), Blocks.STONE);
+        return base.above(height);
     }
 
     static BeltTileBlock.PitchState pitch(GameTestHelper helper, BlockPos tile) {
@@ -189,6 +216,12 @@ final class BeltTileTests {
     private static void expectPitch(GameTestHelper helper, BlockPos tile, BeltTileBlock.PitchState expected, String when) {
         BeltTileBlock.PitchState pitch = pitch(helper, tile);
         if (pitch != expected) helper.fail(when + ", the tile is " + pitch + ", expected " + expected, tile);
+    }
+
+    private static void expectLine(GameTestHelper helper, BlockPos tile, int tiles, String when) {
+        var line = helper.getBlockEntity(tile, BeltTileBlockEntity.class).line();
+        int count = line == null ? 0 : line.tileCount();
+        if (count != tiles) helper.fail(when + ", the tile is in a line of " + count + ", expected " + tiles, tile);
     }
 
     // Placed by a player's click on the step's top, read on the same tick: the placed state is the
@@ -263,15 +296,17 @@ final class BeltTileTests {
     }
 
     // A slope is one block of line, so a climb is no bottleneck (#417).
-    private static void climbDeliversAtRate(GameTestHelper helper, BeltTier tier, int itemsPerSecond) {
+    private static void climbDeliversAtRate(GameTestHelper helper, BeltTier tier, int itemsPerSecond, int[] heights) {
         if (tier != BeltTier.BELT) helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
         helper.setBlock(SOURCE, Blocks.CHEST);
         helper.setBlock(FROM, loader(tier, Direction.EAST));
-        List<BlockPos> tiles = climb(helper, tier, FIRST_TILE, CLIMB_TILES, CLIMB_STEP);
-        BlockPos to = tiles.getLast().east();
-        BlockPos target = to.east();
-        helper.setBlock(to.below(), Blocks.STONE);
-        helper.setBlock(target.below(), Blocks.STONE);
+        List<BlockPos> tiles = stairs(helper, tier, FIRST_TILE, heights);
+        int top = heights[heights.length - 1];
+        BlockPos to = stone(helper, FIRST_TILE.east(heights.length), top);
+        BlockPos target = stone(helper, FIRST_TILE.east(heights.length + 1), top);
+        // The far loader is out of the first pole's area.
+        if (tier != BeltTier.BELT) helper.setBlock(stone(helper, FIRST_TILE.east(heights.length).south(), top),
+                PFBlocks.CREATIVE_POLE.get());
         helper.setBlock(to, loader(tier, Direction.WEST));
         helper.setBlock(target, Blocks.CHEST);
         fill(helper, SOURCE, RATE_SUPPLY);
@@ -281,8 +316,7 @@ final class BeltTileTests {
         helper.startSequence()
                 .thenIdle(RATE_WARMUP_TICKS)
                 .thenExecute(() -> {
-                    expectPitch(helper, tiles.get(CLIMB_STEP - 1), BeltTileBlock.PitchState.FOOT_UP, "before the step");
-                    expectPitch(helper, tiles.get(CLIMB_STEP), BeltTileBlock.PitchState.TOP_UP, "after the step");
+                    expectLine(helper, FIRST_TILE, tiles.size(), "over a climb");
                     before[0] = count(chest(helper, target));
                 })
                 .thenIdle(RATE_WINDOW_TICKS)
@@ -297,26 +331,64 @@ final class BeltTileTests {
     }
 
     // Nothing past the last tile, so the line backs up against its own end.
-    private static void overAStepHolds(GameTestHelper helper) {
+    private static void backedUpClimbHolds(GameTestHelper helper, int[] heights) {
         helper.setBlock(SOURCE, Blocks.CHEST);
         helper.setBlock(FROM, loader(BeltTier.BELT, Direction.EAST));
-        List<BlockPos> tiles = climb(helper, BeltTier.BELT, FIRST_TILE, OVER_TILES, CLIMB_STEP);
-        for (int tile = OVER_TILES - 2; tile < OVER_TILES; tile++) {
-            helper.setBlock(tiles.get(tile), Blocks.AIR);
-            helper.setBlock(tiles.get(tile).below(), tile(BeltTier.BELT, Direction.EAST));
-        }
-        fill(helper, SOURCE, OVER_SUPPLY);
+        stairs(helper, BeltTier.BELT, FIRST_TILE, heights);
+        fill(helper, SOURCE, CLIMB_SUPPLY);
 
-        helper.startSequence().thenIdle(OVER_SETTLED_TICKS).thenExecute(() -> {
-            expectPitch(helper, FIRST_TILE.east(OVER_TILES - 3).above(), BeltTileBlock.PitchState.TOP_DOWN, "before the descent");
+        helper.startSequence().thenIdle(CLIMB_SETTLED_TICKS).thenExecute(() -> {
+            expectLine(helper, FIRST_TILE, heights.length, "backed up over a climb");
             int held = held(helper, FIRST_TILE);
-            var line = helper.getBlockEntity(FIRST_TILE, BeltTileBlockEntity.class).line();
-            int tileCount = line == null ? 0 : line.tileCount();
-            if (tileCount != OVER_TILES || held != OVER_HOLDS) {
-                helper.fail("a backed-up line up and down a step is " + tileCount + " tiles holding " + held
-                        + ", expected " + OVER_TILES + " holding " + OVER_HOLDS, FIRST_TILE);
+            if (held != CLIMB_HOLDS) {
+                helper.fail("a backed-up line over a climb holds " + held + ", expected " + CLIMB_HOLDS, FIRST_TILE);
             }
         }).thenSucceed();
+    }
+
+    // Placed by a player's clicks upstream first and read on the same tick, as stepUpByHand is.
+    private static void staircaseByHand(GameTestHelper helper) {
+        ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        player.setGameMode(GameType.SURVIVAL);
+        player.setYRot(Direction.EAST.toYRot());
+        player.setShiftKeyDown(false);
+        List<BlockPos> up = stairsByHand(helper, player, FIRST_TILE.north(2), THREE_BLOCK_CLIMB);
+        List<BlockPos> down = stairsByHand(helper, player, FIRST_TILE.south(2), THREE_BLOCK_DESCENT);
+
+        for (int tile = 0; tile < up.size(); tile++) {
+            expectPitch(helper, up.get(tile), THREE_BLOCK_CLIMB_PITCHES.get(tile), "up a three-block staircase");
+            expectPitch(helper, down.get(tile), THREE_BLOCK_DESCENT_PITCHES.get(tile), "down a three-block staircase");
+        }
+        helper.succeed();
+    }
+
+    private static List<BlockPos> stairsByHand(GameTestHelper helper, ServerPlayer player, BlockPos first, int[] heights) {
+        List<BlockPos> tiles = new ArrayList<>();
+        for (int tile = 0; tile < heights.length; tile++) tiles.add(stone(helper, first.east(tile), heights[tile]));
+        for (BlockPos tile : tiles) {
+            use(helper, player, new ItemStack(ItemContent.tileFor(BeltTier.BELT)), tile.below(), Direction.UP);
+        }
+        return tiles;
+    }
+
+    // The tiles either side of the gap are two blocks apart, which is no step.
+    private static void breakingAMiddle(GameTestHelper helper) {
+        List<BlockPos> tiles = stairs(helper, BeltTier.BELT, FIRST_TILE, THREE_BLOCK_CLIMB);
+        helper.startSequence()
+                .thenIdle(MERGE_SETTLE_TICKS)
+                .thenExecute(() -> {
+                    expectLine(helper, FIRST_TILE, tiles.size(), "up a three-block climb");
+                    helper.destroyBlock(tiles.get(2));
+                })
+                .thenIdle(MERGE_SETTLE_TICKS)
+                .thenExecute(() -> {
+                    expectPitch(helper, tiles.get(1), BeltTileBlock.PitchState.LEVEL, "below a broken middle");
+                    expectPitch(helper, tiles.get(3), BeltTileBlock.PitchState.FOOT_UP, "above a broken middle");
+                    expectPitch(helper, tiles.get(4), BeltTileBlock.PitchState.TOP_UP, "at the top of a broken climb");
+                    expectLine(helper, tiles.get(1), 2, "below a broken middle");
+                    expectLine(helper, tiles.get(3), 3, "above a broken middle");
+                })
+                .thenSucceed();
     }
 
     /** Every block but the chests placed by a sneaking player's clicks, as a player builds a line. */

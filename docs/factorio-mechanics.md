@@ -572,7 +572,7 @@ Sub-rules:
   runtime into one transport line that ticks once (#398). A two-click stretch lays straight legs
   joined by corners, only over solid ground (#393). A tile placed a block above or below and ahead
   of a line's end makes a slope, one block of line like any tile; the pitch is derived as the corner
-  is (#417, ADR-0085). The wedge under a slope over air, and a stretch that follows the ground and
+  is (#417, ADR-0085), and a climb of more than a block has a middle per extra block (#418). The wedge under a slope over air, and a stretch that follows the ground and
   climbs over a crossed line, are #412's.
 - **Belt ends** — `shipped` (#383). A belt ends where its tiles do: at a loader, which a player
   places against an inventory, at a splitter half, or at its last tile, where it backs up as a
