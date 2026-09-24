@@ -546,7 +546,7 @@ hash = "05bb9997ff87c49c5abcfdfb6473458863c4ca61a7f77918c9341c330819807c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
-hash = "b7b2fcbf614c66439583398589ea8f080e0b80b9fa5531917ff4b7a9e77147d1"
+hash = "99d2d80df99606e7c73296013e6cafaccc0d381ab322ae01232afb1df555a348"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/assembling_machine.json"
@@ -1153,6 +1153,10 @@ file = "kubejs/config/web_server.json"
 hash = "c143fb8b2ce84da8c834b2cd3a9435246dae66e025e5e7a439f463e170310f3a"
 
 [[files]]
+file = "kubejs/data/belts/tags/item/dismantles_belts.json"
+hash = "482d7efe825a64d314bf9d11ac23b6ee8fc8c819b7cdda952b55abb4f5094ac5"
+
+[[files]]
 file = "kubejs/data/c/tags/block/ores.json"
 hash = "2162a7586822786fe1e9d1781eb7b6feb931f854423c4b2942bb373ead76ec67"
 
@@ -1163,38 +1167,6 @@ hash = "accaa2c2838c9220b27fc0b4736ce068f87ff337905ec0a22860c744d1a8d8df"
 [[files]]
 file = "kubejs/data/c/tags/item/tools/wrench.json"
 hash = "b38e85d63c5fe68da166391371f363b462ac25389ca9adb213592d1cff54cd76"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/heavy_oil_deposit.json"
-hash = "e9339ba672e781881721b8f8b37722c0c18aa5850f8c28610ea053c2eef3e6e9"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/lava_deposit.json"
-hash = "1ebea858da28db09511790463c9b4bdd2839551332941f57edcadca8fef7ce47"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/light_oil_deposit.json"
-hash = "6015e42fbcc57c424a01aa93bddebbcef0524002dc3da490463d52a442c44a23"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/natural_gas_deposit.json"
-hash = "d68472f5ed0228e16356c13c36c6acd91ce6333264077e6b25152ca27f150922"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/oil_deposit.json"
-hash = "b424f217425f75e5ec552610d6e3cfae1f29148308020e15687ca71dfa4e9d4e"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/raw_oil_deposit.json"
-hash = "130e0b347ce0d0a13e74f1ff82737366033104179f8484b267bd91370452f43c"
-
-[[files]]
-file = "kubejs/data/gtceu/gtceu/bedrock_fluid/salt_water_deposit.json"
-hash = "42f9187f5ce44b866cd4de2977e39339cde5d4c4a1e902d424c9eda2067122e4"
-
-[[files]]
-file = "kubejs/data/gtceu/tags/item/crafting_tools/wrench.json"
-hash = "6b9dbbb95424062a17c3fa0579624522c4b152f9cad980e73e4efc7c0ee29e60"
 
 [[files]]
 file = "kubejs/data/minecraft/dimension/overworld.json"
@@ -1291,50 +1263,6 @@ hash = "276e2bb54a9e55f32b1ad8241e2ed18a354e85db93a0dc213d69e4a5ff1329fa"
 [[files]]
 file = "kubejs/data/planetaryfactory/gt_materials/scrap.json"
 hash = "4e6d7a3754dbc3652a54048fbbe1c7970dfeb9f1ff2c74e21d656012f55a50fc"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_fluid/electro_petroleum_deposit.json"
-hash = "98e13d85ce4b9860bbdb50de451d3c70c93aaabdb7a605764f8788068cc232e7"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_fluid/ignus_sulfuric_acid_geyser.json"
-hash = "6c837f1cdbb591a0cb77a7465edc5d780cee240fc217768c402d598d44c3eafd"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_fluid/terra_crude_oil_deposit.json"
-hash = "91dc790ac8d1eda59adcc63820e700fde29e39b160603fae42e8f0261b64bca5"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_ore/electro_scrap_deposit.json"
-hash = "fd357cc41cad54f5ea44c10941804fdb3615e01bf6a291e8341986294e082e67"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_ore/ignus_calcite_deposit.json"
-hash = "744c4357fc98432e2a54fd9d5778c0d926c9af870a3c52f555404d7887b89b69"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_ore/ignus_coal_deposit.json"
-hash = "82aaf691ad292f84be72886bd07ec32193ea1dca99500a4f621916b668aaf021"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/bedrock_ore/ignus_tungsten_deposit.json"
-hash = "2812c703cf8af135dea94621b70f42b2136b5470f830369730cbce0e56b2a47f"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_calcite.json"
-hash = "fe38536639cef5496d917a80b393cc5039073f6f14c84b0b93cf23814a7a6d3d"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_coal.json"
-hash = "30454b236de18568a50865d8be35e85ca989fa95e2f13960aa9182cd9957039f"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_scheelite.json"
-hash = "95794eef4f3b8e710857eca6cdedaea998289f1fc982685b15d11f611ef35251"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_sulfur.json"
-hash = "30c242f669d75fbd585c23edf1e26362eb88db71c39e597d3c7a00887abc6241"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/loot_table/blocks/assembling_machine.json"
@@ -1797,6 +1725,10 @@ file = "kubejs/data/planetaryfactory/tags/block/buildings.json"
 hash = "0efc5cadbb182e2854674509b686ca9227c51458bb0e7e596189ba5cf50c1d85"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/tags/block/dismantle/pipes.json"
+hash = "72b6eb58f5762ac4fc640eaf813ee74ca8cae938b6f5f19e5d1bdd6160f88fbb"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/tags/block/factorio_mining_time.json"
 hash = "cbab82c4d2472193b5e4bddb109e2067a46f02e300f69791dca54b9fa991dcc1"
 
@@ -1807,6 +1739,10 @@ hash = "c60b14abc03d117f0183d09cd271a8b4c263dcbf07ddf92befe9f5266ec36fe4"
 [[files]]
 file = "kubejs/data/planetaryfactory/tags/block/generators.json"
 hash = "7bc6f8f7b55863c4d270f518ddfdd480aac926d6de673b5df0562597ee388537"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/tags/item/dismantles.json"
+hash = "482d7efe825a64d314bf9d11ac23b6ee8fc8c819b7cdda952b55abb4f5094ac5"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/tags/worldgen/biome/terra_land.json"
@@ -1923,14 +1859,6 @@ hash = "b311849910b0e628d2f9c171570143f8c2f7ef3c2849840c0fd3a998ed1d28fd"
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/template_pool/terra_start_stone.json"
 hash = "2897ad933481a4bcd4bd75a2b0447d923e1e4df79543fd82913f5c4b45e13e68"
-
-[[files]]
-file = "kubejs/data/remove-nether-end-worldgen.zip"
-hash = "5c86857ad57a80c0d22393a30c0d1d046f608e1063d96b126b9e6bc6dbbc609c"
-
-[[files]]
-file = "kubejs/data/remove-stock-bodies.zip"
-hash = "7c202d1fdd213e8d3b6d7ce5c585b45bee7774a836008d4cf0c5af4b5ab0db71"
 
 [[files]]
 file = "kubejs/parked/data/planetaryfactory/dimension/aquilo.json"
@@ -2181,7 +2109,7 @@ metafile = true
 
 [[files]]
 file = "mods/belts-neoforge-2.0.0-exp1-pf.1.jar"
-hash = "3c08c67c2716184e9b4e1512f0e2b46aabdd789adea4c278d228d3b2fa96e94a"
+hash = "1bc9e67353c0d29b49ab56e2c0ff1e9ef7fe376d20bed87339c87dc30a27f881"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
@@ -2352,14 +2280,6 @@ metafile = true
 file = "mods/trashslot.pw.toml"
 hash = "71c920bbbf7464754a2e7beb48e8dae545795cc6c36206623a45188a8072e03b"
 metafile = true
-
-[[files]]
-file = "packs/remove-nether-end-worldgen/pack.mcmeta"
-hash = "a6b3987906ad7931ab0d711e00a66eb16a7b97cf57be97629b30319e117677ff"
-
-[[files]]
-file = "packs/remove-stock-bodies/pack.mcmeta"
-hash = "82bf39a093a255109cc0340a9d1f47b396697e8fefa98a63611b76fc42761336"
 
 [[files]]
 file = "realms_persistence.json"
