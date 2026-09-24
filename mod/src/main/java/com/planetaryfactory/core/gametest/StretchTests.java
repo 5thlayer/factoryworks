@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +38,7 @@ import rearth.belts.model.BeltTier;
 import rearth.belts.model.TransportLine;
 
 /**
- * A stretch of belt tiles over the ground (#393, #421, ADR-0069): each test sneak-clicks a start, perhaps corners, asks
+ * A stretch of belt tiles over the ground and over the lines across it (#393, #421, #422, ADR-0069): each test sneak-clicks a start, perhaps corners, asks
  * {@link Placements} for the plan of the next click, clicks, then holds the world, the inventory and
  * the stored start to the plan. An accepted plan puts every tile it names down in the state it names
  * and charges one held-tier tile for each one placed or replaced; a refused plan changes no block, no
@@ -106,6 +107,18 @@ final class StretchTests {
                     helper.setBlock(START.east(3), Blocks.OAK_FENCE);
                     player.getMainHandItem().setCount(3);
                 }, START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
+        tests.test("a_stretch_climbs_over_a_loaded_line_and_both_deliver_every_item",
+                LOAD_TICKS + DELIVERY_TICKS + 20, StretchTests::crossesALoadedLine);
+        tests.test("a_stretch_crossing_a_line_beside_its_start_changes_nothing", 20, helper -> refused(helper, START,
+                player -> lineSouthAcross(helper, START.east(1)), START.east(5), START.east(1).above(),
+                PlacementPlan.Refusal.NO_ROOM_TO_CROSS, "message.belts.stretch_no_room_to_cross"));
+        tests.test("a_stretch_across_two_adjacent_lines_changes_nothing", 20, helper -> refused(helper, START,
+                player -> {
+                    lineSouthAcross(helper, START.east(3));
+                    lineSouthAcross(helper, START.east(4));
+                }, START.east(7), START.east(3).above(),
+                PlacementPlan.Refusal.NO_ROOM_TO_CROSS, "message.belts.stretch_no_room_to_cross"));
+        tests.test("a_stretch_aimed_at_a_line_feeds_its_side", 20, StretchTests::joins);
         tests.test("a_creative_stretch_charges_nothing", 20, StretchTests::creative);
         tests.test("a_sneak_click_adds_a_corner_the_stretch_runs_on_from", 20, StretchTests::corner);
         tests.test("a_sneak_click_behind_the_look_adds_no_corner", 20, StretchTests::cornerBehind);
@@ -267,19 +280,115 @@ final class StretchTests {
 
     private static void turns(GameTestHelper helper) {
         var turned = START.east(2);
-        helper.setBlock(turned, tile(BeltTier.BELT, Direction.NORTH));
+        helper.setBlock(turned, tile(BeltTier.BELT, Direction.WEST));
         helper.getBlockEntity(turned, BeltTileBlockEntity.class)
                 .carry(List.of(new TransportLine.Share<>(0.5, new ItemStack(Items.IRON_INGOT))));
         var player = started(helper, Direction.EAST);
         var plan = accepted(helper, player, START.east(4), 4);
         if (plan == null) return;
         if (!plan.replaces().equals(List.of(helper.absolutePos(turned)))) {
-            helper.fail("the plan names " + plan.replaces() + " as turned, not the one tile facing north", turned);
+            helper.fail("the plan names " + plan.replaces() + " as turned, not the one tile facing back", turned);
         }
         if (facing(helper, turned) != Direction.EAST) {
             helper.fail("the turned tile faces " + facing(helper, turned), turned);
         }
         keepsItsItem(helper, START, 5, turned);
+    }
+
+    private static void lineSouthAcross(GameTestHelper helper, BlockPos centre) {
+        for (int dz = 1; dz >= -1; dz--) helper.setBlock(centre.south(dz), tile(BeltTier.BELT, Direction.SOUTH));
+    }
+
+    // A line running south at x = 8 between its own loaders, crossed at z = 3 by a stretch east from x = 5 to 11.
+    private static final int CROSSED_X = 8;
+    private static final BlockPos CROSSED_SOURCE = new BlockPos(CROSSED_X, 1, 0);
+    private static final BlockPos CROSSED_TARGET = new BlockPos(CROSSED_X, 1, 6);
+    private static final BlockPos CROSSED_TILE = new BlockPos(CROSSED_X, 1, 3);
+    private static final BlockPos CROSSING_SOURCE = new BlockPos(3, 1, 3);
+    private static final BlockPos CROSSING_FIRST = CROSSING_SOURCE.east(2);
+    private static final int[] CROSSING_RISE = {0, 0, 1, 1, 1, 0, 0};
+    private static final List<BeltTileBlock.PitchState> CROSSING_PITCHES = List.of(
+            BeltTileBlock.PitchState.LEVEL, BeltTileBlock.PitchState.FOOT_UP, BeltTileBlock.PitchState.TOP_UP,
+            BeltTileBlock.PitchState.LEVEL, BeltTileBlock.PitchState.TOP_DOWN, BeltTileBlock.PitchState.FOOT_DOWN,
+            BeltTileBlock.PitchState.LEVEL);
+    private static final BlockPos CROSSING_TARGET = CROSSING_FIRST.east(CROSSING_RISE.length + 1);
+    private static final int ITEMS = 64;
+    private static final int LOAD_TICKS = 60;
+    private static final int DELIVERY_TICKS = 400;
+
+    private static void crossesALoadedLine(GameTestHelper helper) {
+        helper.setBlock(CROSSED_TARGET, Blocks.CHEST);
+        helper.setBlock(CROSSED_TARGET.north(), BeltTileTests.loader(BeltTier.BELT, Direction.NORTH));
+        for (int z = 4; z >= 2; z--) helper.setBlock(new BlockPos(CROSSED_X, 1, z), tile(BeltTier.BELT, Direction.SOUTH));
+        helper.setBlock(CROSSED_SOURCE.south(), BeltTileTests.loader(BeltTier.BELT, Direction.SOUTH));
+        helper.setBlock(CROSSED_SOURCE, Blocks.CHEST);
+        helper.setBlock(CROSSING_SOURCE, Blocks.CHEST);
+        helper.setBlock(CROSSING_SOURCE.east(), BeltTileTests.loader(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(CROSSING_TARGET.west(), BeltTileTests.loader(BeltTier.BELT, Direction.WEST));
+        helper.setBlock(CROSSING_TARGET, Blocks.CHEST);
+        BeltTileTests.chest(helper, CROSSED_SOURCE).setItem(0, new ItemStack(Items.IRON_INGOT, ITEMS));
+
+        helper.startSequence().thenIdle(LOAD_TICKS).thenExecute(() -> {
+            Map<BlockPos, BlockState> crossed = new HashMap<>();
+            for (int z = 2; z <= 4; z++) crossed.put(new BlockPos(CROSSED_X, 1, z), helper.getBlockState(new BlockPos(CROSSED_X, 1, z)));
+            var line = helper.getBlockEntity(CROSSED_TILE, BeltTileBlockEntity.class).line();
+            int carried = line == null ? 0 : line.size();
+            if (carried == 0) helper.fail("the crossed line carries nothing before the stretch is laid", CROSSED_TILE);
+
+            var player = started(helper, Direction.EAST, CROSSING_FIRST);
+            if (accepted(helper, player, CROSSING_FIRST.east(CROSSING_RISE.length - 1), CROSSING_RISE.length) == null) return;
+            crossed.forEach((pos, state) -> {
+                if (!helper.getBlockState(pos).equals(state)) {
+                    helper.fail("the crossed line's tile became " + helper.getBlockState(pos), pos);
+                }
+            });
+            var after = helper.getBlockEntity(CROSSED_TILE, BeltTileBlockEntity.class).line();
+            if (after == null || after.size() != carried) {
+                helper.fail("the crossed line carried " + carried + " items and holds " + (after == null ? 0 : after.size()), CROSSED_TILE);
+            }
+            for (int i = 0; i < CROSSING_RISE.length; i++) {
+                pitched(helper, CROSSING_FIRST.east(i).above(CROSSING_RISE[i]), CROSSING_PITCHES.get(i));
+            }
+            wedged(helper, CROSSING_FIRST.east(2), CROSSING_FIRST.east(4));
+            BeltTileTests.chest(helper, CROSSING_SOURCE).setItem(0, new ItemStack(Items.COBBLESTONE, ITEMS));
+        }).thenIdle(DELIVERY_TICKS).thenExecute(() -> {
+            int over = count(helper, CROSSING_TARGET, Items.COBBLESTONE);
+            int under = count(helper, CROSSED_TARGET, Items.IRON_INGOT);
+            int mixed = count(helper, CROSSING_TARGET, Items.IRON_INGOT) + count(helper, CROSSED_TARGET, Items.COBBLESTONE);
+            int onGround = helper.getLevel().getEntitiesOfClass(ItemEntity.class, helper.getBounds().inflate(2.0)).size();
+            if (over != ITEMS || under != ITEMS || mixed != 0 || onGround != 0) {
+                helper.fail("a stretch's crossing delivered " + over + " of " + ITEMS + " over and " + under + " of " + ITEMS
+                        + " under, " + mixed + " into the other line's chest and " + onGround + " on the ground", CROSSED_TILE);
+            }
+        }).thenSucceed();
+    }
+
+    private static void joins(GameTestHelper helper) {
+        BlockPos aimed = START.east(3);
+        lineSouthAcross(helper, aimed);
+        Map<BlockPos, BlockState> before = new HashMap<>();
+        for (int dz = -1; dz <= 1; dz++) before.put(aimed.south(dz), helper.getBlockState(aimed.south(dz)));
+        var player = started(helper, Direction.EAST);
+        if (accepted(helper, player, aimed, 3) == null) return;
+        before.forEach((pos, state) -> {
+            if (!helper.getBlockState(pos).equals(state)) helper.fail("the aimed line's tile became " + helper.getBlockState(pos), pos);
+        });
+        for (int i = 0; i < 3; i++) {
+            if (facing(helper, START.east(i)) != Direction.EAST) {
+                helper.fail("tile " + i + " of a stretch aimed at a line faces " + facing(helper, START.east(i)), START.east(i));
+            }
+            pitched(helper, START.east(i), BeltTileBlock.PitchState.LEVEL);
+        }
+        helper.succeed();
+    }
+
+    private static int count(GameTestHelper helper, BlockPos chest, Item item) {
+        var container = BeltTileTests.chest(helper, chest);
+        int total = 0;
+        for (int slot = 0; slot < container.getContainerSize(); slot++) {
+            if (container.getItem(slot).is(item)) total += container.getItem(slot).getCount();
+        }
+        return total;
     }
 
     private static void replaces(GameTestHelper helper) {
