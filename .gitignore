@@ -140,3 +140,4 @@ kubejs/config/probe-settings.json
 # `git add -A` from the repo root would otherwise commit every session's copy of it.
 .claude/worktrees/
 .rtk/
+debug-profile.json
