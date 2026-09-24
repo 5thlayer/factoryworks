@@ -191,6 +191,10 @@ A belt end set against an inventory: it pulls onto the belt from the inventory b
 _Avoid_: chute, inserter, funnel
 
 **Splitter**:
+**Dismantle**:
+Taking up the tiles of one line from one tile to another, both included, following its corners and slopes, in two sneak-clicks of the **Engineer's Pick**: the first stores the start, the second names the end, either way along the line. An end off the start's line -- a splitter, a loader, or a tile of any other line, one beyond a splitter included -- is refused and keeps the start; a click after the start is gone is a new start. The tiles, their wedges and every item they carry go to the inventory, and what does not fit drops at the player's feet. Loaders and splitters are never taken. The rest of the line keeps what it carries. Distinct from mining, which breaks one block and drops it (#404).
+_Avoid_: deconstruct, mass mine, unstretch
+
 A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power. Placed across a straight tile line running its way, it takes the tile's place, refunds it and keeps its items (#394).
 _Avoid_: merger, tunnel
 
@@ -335,7 +339,7 @@ What a held item would do at an aimed spot: the positions it would fill, the blo
 _Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state
 
 **Placement Preview**:
-What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the tiles of its stretch. It shows what placing would do and changes nothing in the world.
+What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the tiles of its stretch; with the **Engineer's Pick** and a dismantle's start stored, the tiles its **Dismantle Plan** would take up, in red, and none when it would be refused. It shows what placing or dismantling would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
 **Fast Replace**:
@@ -355,6 +359,10 @@ The blocks that can **Fast Replace** each other, read from Factorio's `fast_repl
 _Avoid_: family, tier ladder (a ladder is one kind's tiers; a group can hold two kinds, as belts and splitters do)
 
 **Supply Area Box**:
+**Dismantle Plan**:
+What a **Dismantle** would take up at an aimed tile: the tiles of the span from the stored start, and a refusal or none. Dismantling executes a plan, and the preview draws one, so both ask one rule, as a **Placement Plan** does; the two are separate things (#404).
+_Avoid_: removal plan, placement plan (for a dismantle)
+
 The bright yellow wireframe of a **Supply Area Pole**'s area — the whole volume it covers, anchored at the base, plus an outline around every machine the pole reaches. Shown while holding a pole or looking at a placed one (ADR-0070). It says where the area lands and what is inside it, never whether anything inside is being *fed*, which is the Jade line's answer on the machine.
 _Avoid_: supply area overlay, footprint overlay, coverage grid, range indicator
 
@@ -373,7 +381,7 @@ The pack's one item per material — FTB Materials', for every metal. It is what
 _Avoid_: sheet, ingot, GT plate, unified plate
 
 **Engineer's Pick**:
-The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what dismantles a GregTech machine. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
+The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what **dismantles** a belt. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
 _Avoid_: pickaxe, the pick, mining tool, wrench
 
 **Burner Mining Drill**:
