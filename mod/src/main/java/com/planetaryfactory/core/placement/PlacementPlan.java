@@ -66,6 +66,10 @@ public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nulla
         NOT_ENOUGH_ITEMS,
         /** A belt slope whose wedge would stand on anything but air, a plant or snow (#420). */
         WEDGE_BLOCKED,
+        /** A belt tile that would be both a corner and a slope, which never turns (#419). */
+        SLOPE_TURNS,
+        /** A belt slope that would meet a loader or splitter, which meets only a level tile (#419). */
+        SLOPE_MEETS_LOADER,
     }
 
     public PlacementPlan {

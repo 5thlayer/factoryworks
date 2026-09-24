@@ -46,12 +46,55 @@ final class BeltSideLoadTests {
     private static final double TIER_1_BLOCKS_PER_TICK = 0.09375;
     private static final int MOVE_TICKS = 5;
 
+    // A slope on the platform, or a block above it when it descends, with a column facing its north side.
+    private static final BlockPos SLOPE = new BlockPos(3, 1, 6);
+    private static final int SLOPE_SIDE_TICKS = 200;
+
     private BeltSideLoadTests() {
     }
 
     static void register(PFGameTests.Registrar tests) {
         tests.test("a_t_junction_delivers_both_inputs_through_line_first", 400, BeltSideLoadTests::tJunction);
         tests.test("a_side_loaded_ring_holds_8_a_tile_and_moves", RING_FILL_TICKS + MOVE_TICKS + 20, BeltSideLoadTests::sideLoadedRing);
+        tests.test("a_tile_facing_the_side_of_a_foot_does_not_feed_it", SLOPE_SIDE_TICKS + 20,
+                helper -> slopeTakesNoSideLoad(helper, 1, BeltTileBlock.PitchState.FOOT_UP));
+        tests.test("a_tile_facing_the_side_of_a_top_does_not_feed_it", SLOPE_SIDE_TICKS + 20,
+                helper -> slopeTakesNoSideLoad(helper, -1, BeltTileBlock.PitchState.TOP_DOWN));
+    }
+
+    /**
+     * A slope with nothing behind it, stepping {@code rise} to a level tile and a chest, and a column
+     * of tiles from a loaded chest facing its side (#419). Placed downstream first.
+     */
+    private static void slopeTakesNoSideLoad(GameTestHelper helper, int rise, BeltTileBlock.PitchState expected) {
+        BlockPos slope = SLOPE.above(Math.max(0, -rise));
+        BlockPos next = slope.east().above(rise);
+        helper.setBlock(next.below(), Blocks.STONE);
+        helper.setBlock(next.east(2).east(), Blocks.CHEST);
+        helper.setBlock(next.east(2), BeltTileTests.loader(BeltTier.BELT, Direction.WEST));
+        helper.setBlock(next.east(), BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(next, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+        if (rise < 0) helper.setBlock(slope.below(), Blocks.STONE);
+        helper.setBlock(slope, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+        for (int tile = 1; tile <= COLUMN; tile++) helper.setBlock(slope.north(tile), BeltTileTests.tile(BeltTier.BELT, Direction.SOUTH));
+        helper.setBlock(slope.north(COLUMN + 1), BeltTileTests.loader(BeltTier.BELT, Direction.SOUTH));
+        helper.setBlock(slope.north(COLUMN + 2), Blocks.CHEST);
+        fill(helper, slope.north(COLUMN + 2), Items.IRON_INGOT, SIDE_ITEMS);
+        helper.startSequence().thenIdle(SLOPE_SIDE_TICKS).thenExecute(() -> {
+            var state = helper.getBlockState(slope);
+            if (state.getValue(BeltTileBlock.PITCH) != expected || state.getValue(BeltTileBlock.CORNER) != BeltTileBlock.Shape.STRAIGHT) {
+                helper.fail("a tile facing a slope's side left it " + state + ", expected a straight " + expected, slope);
+            }
+            int fed = count(helper, next.east(2).east(), Items.IRON_INGOT);
+            var line = helper.getBlockEntity(slope, BeltTileBlockEntity.class).line();
+            int onSlope = line == null ? -1 : line.size();
+            var column = helper.getBlockEntity(slope.north(), BeltTileBlockEntity.class).line();
+            int waiting = column == null ? 0 : column.size();
+            if (fed != 0 || onSlope != 0 || waiting == 0) {
+                helper.fail("a tile facing a slope's side fed " + fed + " items through and left " + onSlope
+                        + " on the slope's line and " + waiting + " waiting beside it", slope);
+            }
+        }).thenSucceed();
     }
 
     private static void tJunction(GameTestHelper helper) {

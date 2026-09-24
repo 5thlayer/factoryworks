@@ -113,6 +113,7 @@ public final class PFGameTests {
             SplitterTileTests.register(registrar);
             BeltTileHandTests.register(registrar);
             BeltWedgeTests.register(registrar);
+            BeltSlopeEdgeTests.register(registrar);
             PlacementPlanTests.Splitters.register(registrar);
         }
     }

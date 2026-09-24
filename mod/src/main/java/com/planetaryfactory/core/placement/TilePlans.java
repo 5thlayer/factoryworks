@@ -35,7 +35,7 @@ final class TilePlans {
         if (stretch == null) {
             boolean sneaking = context.getPlayer() != null && context.getPlayer().isShiftKeyDown();
             if (!sneaking) {
-                return withWedges(Placements.vanillaPlan(tile, context), tile.single(context));
+                return reshaped(Placements.vanillaPlan(tile, context), tile.single(context));
             }
             BlockState start = tile.getBlock().defaultBlockState()
                     .setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection());
@@ -55,14 +55,14 @@ final class TilePlans {
     }
 
     @Nullable
-    private static PlacementPlan withWedges(@Nullable PlacementPlan vanilla, BeltTileBlock.@Nullable Wedges wedges) {
-        if (vanilla == null || vanilla.refusal() != null || wedges == null) {
+    private static PlacementPlan reshaped(@Nullable PlacementPlan vanilla, BeltTileBlock.@Nullable Reshape reshape) {
+        if (vanilla == null || vanilla.refusal() != null || reshape == null) {
             return vanilla;
         }
         List<PlacementPlan.Placed> blocks = new ArrayList<>(vanilla.blocks());
-        wedges.placed().forEach((pos, state) -> blocks.add(new PlacementPlan.Placed(pos, state)));
-        return wedges.refused()
-                ? PlacementPlan.refused(blocks, PlacementPlan.Refusal.WEDGE_BLOCKED)
+        reshape.wedges().forEach((pos, state) -> blocks.add(new PlacementPlan.Placed(pos, state)));
+        return reshape.refused()
+                ? PlacementPlan.refused(blocks, refusal(reshape.refusal()))
                 : PlacementPlan.accepted(blocks);
     }
 
@@ -71,6 +71,8 @@ final class TilePlans {
             case BEHIND_LOOK -> PlacementPlan.Refusal.BEHIND_LOOK;
             case BLOCKED -> PlacementPlan.Refusal.FOOTPRINT_BLOCKED;
             case NO_GROUND -> PlacementPlan.Refusal.NO_GROUND;
+            case SLOPE_TURNS -> PlacementPlan.Refusal.SLOPE_TURNS;
+            case SLOPE_MEETS_LOADER -> PlacementPlan.Refusal.SLOPE_MEETS_LOADER;
             case WEDGE_BLOCKED -> PlacementPlan.Refusal.WEDGE_BLOCKED;
             case NOT_ENOUGH_TILES -> PlacementPlan.Refusal.NOT_ENOUGH_ITEMS;
             case NO_ROOM_TO_RETURN -> PlacementPlan.Refusal.NO_ROOM_TO_RETURN;

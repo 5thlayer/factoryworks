@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `BeltSlopeEdgeTests` (#419), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -313,6 +313,15 @@ would climb to stands over the crossed tile, where its wedge is refused, so no g
 priority is the fork's `TileShapeTest` and `LineScanTest`. The wedge rule is the fork's `WedgeTest`,
 the crossing as one line over another `LineScanTest`, and whether
 the wedge reads as a junction and a crossing as one belt over another is a human check on delivery.
+And that a slope never turns and meets no loader (`BeltSlopeEdgeTests`, #419): a tile placed by hand
+that would face another's side from a block lower, in either order, turn a corner into a foot, or
+slope a tile whose level end is a loader, either way, or a splitter half is planned refused with its
+reason and changes no block and spends no tile. A tile a block higher facing a side is the crossing's
+approach and is not refused. `BeltSideLoadTests` holds the other half: a column facing the side of a
+foot or a descending top with nothing behind it leaves it a straight slope and feeds it nothing, its
+items waiting beside it. Letting a side feeder turn a slope into a corner turns the two side tests red,
+and skipping the edge checks in `BeltTileBlock.reshape` the six refusals. The rules are the fork's
+`TileShapeTest` and `LineScanTest`. Rotate on a slope waits for placed-block rotation (#405).
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
