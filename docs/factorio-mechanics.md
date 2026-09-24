@@ -264,6 +264,10 @@ Sub-rules:
   sapling and the forest stays renewable through the recipe.
 - **Trees are not a fuel or a science input beyond Factorio's own use** — `shipped`. The fuel table
   already carries `wood` as the tag `minecraft:logs` (ADR-0047).
+- **A log is not processed into planks or sticks** — `excluded`, ADR-0034's tail (#441). Factorio's
+  wood has no processing chain, so vanilla's planks, sticks and the wooden blocks made from them are
+  deliberately uncraftable. Wooden stairs are the one exception, made straight from each species'
+  log (#444).
 
 ### Mining drills
 
