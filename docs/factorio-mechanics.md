@@ -572,8 +572,9 @@ Sub-rules:
   runtime into one transport line that ticks once (#398). A two-click stretch lays straight legs
   joined by corners, only over solid ground (#393). A tile placed a block above or below and ahead
   of a line's end makes a slope, one block of line like any tile; the pitch is derived as the corner
-  is (#417, ADR-0085), and a climb of more than a block has a middle per extra block (#418). The wedge under a slope over air, and a stretch that follows the ground and
-  climbs over a crossed line, are #412's.
+  is (#417, ADR-0085), and a climb of more than a block has a middle per extra block (#418). A middle or
+  top over air stands on a wedge, placed and broken with it (#420). A stretch that follows the ground
+  and climbs over a crossed line is #412's.
 - **Belt ends** — `shipped` (#383). A belt ends where its tiles do: at a loader, which a player
   places against an inventory, at a splitter half, or at its last tile, where it backs up as a
   Factorio belt ending in nothing does (ADR-0084).
@@ -595,8 +596,10 @@ Sub-rules:
   through a tier-1 splitter (#347, #349, ADR-0076).
 - **Underground belts** — `excluded`. Not for want of a Create block: undergrounds solve a *weaving*
   problem — two lanes past each other in a fixed footprint — that exists only in two dimensions.
-  Argued from the medium, not from a mod's shortfall (ADR-0044). A belt crosses another by climbing
-  over it on slopes (ADR-0085); the crossing itself, a top over air on a wedge, is #412's.
+  Argued from the medium, not from a mod's shortfall (ADR-0044), and now from slopes: a belt crosses
+  another by climbing over it in five tiles, a foot, a top on a wedge, a level tile on the crossed
+  tile, a top on a wedge and a foot, built by hand (#420, ADR-0085). A stretch laying the crossing
+  itself is #412's.
 - **Splitters** — `shipped`. Four tiers from Factorio's four splitter recipes, turbo registered
   with no recipe. A splitter is two blocks wide, placed and broken as one; each half ends one belt at
   its back and starts one at its front, and items pass from an input's end to an output's head with

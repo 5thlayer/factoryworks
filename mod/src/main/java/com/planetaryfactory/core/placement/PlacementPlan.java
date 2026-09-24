@@ -64,6 +64,8 @@ public record PlacementPlan(List<Placed> blocks, List<BlockPos> replaces, @Nulla
         NO_GROUND,
         /** A placement costing more items than the player holds (#393). */
         NOT_ENOUGH_ITEMS,
+        /** A belt slope whose wedge would stand on anything but air, a plant or snow (#420). */
+        WEDGE_BLOCKED,
     }
 
     public PlacementPlan {

@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.placement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.core.BlockPos;
@@ -8,6 +9,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jspecify.annotations.Nullable;
+import rearth.belts.blocks.BeltTileBlock;
 import rearth.belts.items.BeltTileItem;
 import rearth.belts.items.StretchPlan;
 
@@ -33,7 +35,7 @@ final class TilePlans {
         if (stretch == null) {
             boolean sneaking = context.getPlayer() != null && context.getPlayer().isShiftKeyDown();
             if (!sneaking) {
-                return Placements.vanillaPlan(tile, context);
+                return withWedges(Placements.vanillaPlan(tile, context), tile.single(context));
             }
             BlockState start = tile.getBlock().defaultBlockState()
                     .setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection());
@@ -46,10 +48,22 @@ final class TilePlans {
                 .map(placed -> new PlacementPlan.Placed(placed.pos(), placed.state()))
                 .toList();
         List<BlockPos> replaces = stretch.tiles().stream()
-                .filter(placed -> placed.action() != StretchPlan.Action.PLACE)
+                .filter(placed -> placed.action() == StretchPlan.Action.TURN || placed.action() == StretchPlan.Action.REPLACE)
                 .map(StretchPlan.Tile::pos)
                 .toList();
         return new PlacementPlan(blocks, replaces, stretch.refused() ? refusal(stretch.refusal().reason()) : null);
+    }
+
+    @Nullable
+    private static PlacementPlan withWedges(@Nullable PlacementPlan vanilla, BeltTileBlock.@Nullable Wedges wedges) {
+        if (vanilla == null || vanilla.refusal() != null || wedges == null) {
+            return vanilla;
+        }
+        List<PlacementPlan.Placed> blocks = new ArrayList<>(vanilla.blocks());
+        wedges.placed().forEach((pos, state) -> blocks.add(new PlacementPlan.Placed(pos, state)));
+        return wedges.refused()
+                ? PlacementPlan.refused(blocks, PlacementPlan.Refusal.WEDGE_BLOCKED)
+                : PlacementPlan.accepted(blocks);
     }
 
     private static PlacementPlan.Refusal refusal(StretchPlan.Reason reason) {
@@ -57,6 +71,7 @@ final class TilePlans {
             case BEHIND_LOOK -> PlacementPlan.Refusal.BEHIND_LOOK;
             case BLOCKED -> PlacementPlan.Refusal.FOOTPRINT_BLOCKED;
             case NO_GROUND -> PlacementPlan.Refusal.NO_GROUND;
+            case WEDGE_BLOCKED -> PlacementPlan.Refusal.WEDGE_BLOCKED;
             case NOT_ENOUGH_TILES -> PlacementPlan.Refusal.NOT_ENOUGH_ITEMS;
             case NO_ROOM_TO_RETURN -> PlacementPlan.Refusal.NO_ROOM_TO_RETURN;
         };
