@@ -155,19 +155,40 @@ footprint are 2D problems this pack does not have, and ADR-0044 records why.
 _Avoid_: belt puzzle, the logistics game
 
 **Belt**:
-A run of tiles carrying items from one belt end to another, paid for at one belt item per tile. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per tile, so a belt is a buffer as well as a route (ADR-0060). It is flat: a stretch does not climb (ADR-0084).
+A run of tiles carrying items from one belt end to another, paid for at one belt item per tile. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per tile, so a belt is a buffer as well as a route (ADR-0060). It climbs and descends by **slopes**, one block of height per tile, which is how one belt crosses another (#412).
 _Avoid_: conveyor, belt segment, lane
 
 **Tile**:
-One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, turned by Rotate (ADR-0083). A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). A player or item entity standing on a tile is carried along it at that tile's speed, around a corner along its arc, and off the end of the line (#396). A stretch lays a tile only over a block with a sturdy top face (ADR-0084).
+One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, turned by Rotate (ADR-0083). A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). Its **pitch** is derived the same way, and a corner is always level. A player or item entity standing on a tile is carried along it at that tile's speed, around a corner along its arc, and off the end of the line (#396). A stretch lays a tile only over a block with a sturdy top face (ADR-0084).
 _Avoid_: belt block, conveyor block, segment
+
+**Pitch**:
+Whether a tile rises, is level or descends along its travel, derived from the height of the tile feeding it and of the tile it feeds, one block up, level or one block down. A tile whose feeder and fed tile are both higher, or both lower, does not connect to them: there is no crest and no valley (#412).
+_Avoid_: incline, grade
+
+**Slope**:
+A tile whose pitch is not level: a **foot**, a **middle** or a **top**. Together they draw one straight 45° line, one block of height per block of travel. A slope is one block of line like any tile, as a corner is, however long its surface draws; the climb is fiction, not arithmetic. It carries riders and a hand as a level tile does. It never turns, is never rotated, takes no side-load, and a loader or splitter never meets one (#412).
+_Avoid_: ramp, incline, half slope, full slope
+
+**Foot**:
+The last tile at the lower height of a climb: level for its back six pixels, then rising to its block's top. Placing the tile above and ahead of a level tile turns that tile into a foot (#412).
+
+**Middle**:
+A slope rising a whole block within its own block, between a foot and a top when a climb is more than one block high (#412).
+
+**Top**:
+The first tile at the upper height of a climb: rising six pixels from its block's floor, then level. A foot turned half round (#412).
+
+**Wedge**:
+The block drawn under a middle or a top that stands over air, reading as the junction between two slopes. It is part of its tile: placed with it for nothing, and broken with it. It needs nothing under it, so a belt can climb through open air, and it takes a replaceable block's place but never a solid one's (#412).
+_Avoid_: support, pillar, scaffold
 
 **Belt hand**:
 Holding the use key on a belt piece with anything but a belt piece in hand: the holder takes the items reaching the aimed point at the belt's rate, while what was already past it runs on. On a tile the whole tile is aimed at, so the hand takes whatever is on it. A full inventory stops taking and lets the belt run on, losing nothing (#350, #396).
 _Avoid_: grab, pick up from belt
 
 **Stretch**:
-The tiles one drag of the tile item lays, placed, charged and refused as one. A sneak-click stores its start and the way the player looks; the next click lays it to the aimed spot, in one straight leg or two joined by one corner, the first leg along the stored look. Each sneak-click before that adds a corner where the stretch would end, and the stretch runs on from it the same way, heading the way its last tile travels. It is level, and no leg turns back on its heading. A tile already on its path is turned to it, or replaced when of another tier (#393).
+The tiles one drag of the tile item lays, placed, charged and refused as one. A sneak-click stores its start and the way the player looks; the next click lays it to the aimed spot, in one straight leg or two joined by one corner, the first leg along the stored look. Each sneak-click before that adds a corner where the stretch would end, and the stretch runs on from it the same way, heading the way its last tile travels. It follows the ground, each tile one block up, level or one block down from the one before, and is refused whole at a step it cannot climb. A line running across its path is climbed over in five tiles, a foot, a top, a level tile on the line, a top and a foot, and a stretch with no room for them is refused (#412). No leg turns back on its heading. Any other tile already on its path is turned to it, or replaced when of another tier (#393).
 _Avoid_: run, zoop, drag (the gesture, not what it lays), tile path
 
 **Dismantle**:
