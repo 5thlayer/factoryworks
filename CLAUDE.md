@@ -145,7 +145,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `BeltSlopeEdgeTests` (#419), `RotateTests` (#386) and `StretchTests` (#393), registered only when the
+`FootprintBreakTests` (#352), `RadarTests` (#368) and `PumpjackTests` (#377), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `BeltSlopeEdgeTests` (#419), `RotateTests` (#386), `StretchTests` (#393) and `DismantleTests` (#404), registered only when the
 pack's SimpleBelts fork (`belts`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -329,6 +329,17 @@ nothing behind it leaves it a straight slope and feeds it nothing, its items wai
 feeder turn a slope into a corner turns the two side tests red, and skipping the corner check in
 `BeltTileBlock.reshape` the refusal. The rules are the fork's `TileShapeTest` and `LineScanTest`.
 Rotate on a slope waits for placed-block rotation (#405).
+And that two sneak-clicks of the Engineer's Pick take up a span of one belt line (`DismantleTests`,
+#404): each test stores a start through the player's game mode, asks `Dismantling.plan` for the end,
+clicks, and holds the world, the inventory and the stored start to it. A straight span, one taken
+end to start, one tile, one round a corner and one up a slope leave none of the plan's tiles or
+wedges standing and hand over a tile each and every item carried; a span out of a line's middle
+leaves both sides holding their items and delivering; a full inventory drops the rest at the
+player's feet and creative hands over nothing. An end on a splitter, beyond one, on a loader or on
+another line changes no block, slot or stored start and names its reason, a click after the start
+broke is a new start, and a sneak-use in the air clears it. Skipping the execution turns the eight
+taking tests red. The span is the fork's `DismantleTest`, and whether the red span draws over the
+tiles is a human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
@@ -1057,8 +1068,7 @@ that only become a material under a colour handler our item never reaches; GregT
 ADR-0060 and took the source with it, so `scripts/build-pick-textures.py` and its `--check` are
 gone rather than restated. The tier list is read out of `PickTier.java`. The pick's arithmetic —
 that Factorio's seconds survive Minecraft's break-time formula — is `MiningSpeedTest` under
-`./gradlew :planetaryfactory_core:test`. Whether the Pick mines every block class, dismantles a GT
-machine and satisfies Create's wrench is a world load. See
+`./gradlew :planetaryfactory_core:test`. Whether the Pick mines every block class is a world load. See
 `docs/testing/hand-written-recipe-check.md`.
 
 ### Item map check

@@ -170,6 +170,10 @@ _Avoid_: grab, pick up from belt
 The tiles one drag of the tile item lays, placed, charged and refused as one. A sneak-click stores its start and the way the player looks; the next click lays it to the aimed spot, in one straight leg or two joined by one corner, the first leg along the stored look. Each sneak-click before that adds a corner where the stretch would end, and the stretch runs on from it the same way, heading the way its last tile travels. It is level, and no leg turns back on its heading. A tile already on its path is turned to it, or replaced when of another tier (#393).
 _Avoid_: run, zoop, drag (the gesture, not what it lays), tile path
 
+**Dismantle**:
+Taking up the tiles of one line from one tile to another, both included, following its corners and slopes, in two sneak-clicks of the **Engineer's Pick**: the first stores the start, the second names the end, either way along the line. An end off the start's line -- a splitter, a loader, or a tile of any other line, one beyond a splitter included -- is refused and keeps the start; a click after the start is gone is a new start. The tiles, their wedges and every item they carry go to the inventory, and what does not fit drops at the player's feet. Loaders and splitters are never taken. The rest of the line keeps what it carries. Distinct from mining, which breaks one block and drops it (#404).
+_Avoid_: deconstruct, mass mine, unstretch
+
 **Tier colour**:
 The colour a belt tier is painted in: yellow, red, blue, green for tiers 1 to 4. The belt shows it as the stripes along its edges, and every other belt piece of that tier shows it on its own body: the loader's band, the splitter's divider. Factorio's convention. A loader's housing stays slate.
 _Avoid_: stripe colour, tier tint
@@ -191,10 +195,6 @@ A belt end set against an inventory: it pulls onto the belt from the inventory b
 _Avoid_: chute, inserter, funnel
 
 **Splitter**:
-**Dismantle**:
-Taking up the tiles of one line from one tile to another, both included, following its corners and slopes, in two sneak-clicks of the **Engineer's Pick**: the first stores the start, the second names the end, either way along the line. An end off the start's line -- a splitter, a loader, or a tile of any other line, one beyond a splitter included -- is refused and keeps the start; a click after the start is gone is a new start. The tiles, their wedges and every item they carry go to the inventory, and what does not fit drops at the player's feet. Loaders and splitters are never taken. The rest of the line keeps what it carries. Distinct from mining, which breaks one block and drops it (#404).
-_Avoid_: deconstruct, mass mine, unstretch
-
 A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power. Placed across a straight tile line running its way, it takes the tile's place, refunds it and keeps its items (#394).
 _Avoid_: merger, tunnel
 
@@ -338,6 +338,10 @@ _Avoid_: link, cable, connection
 What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole. A plan may read what an earlier click stored on the item: a stretch's plan is its tiles, from the stored start to the aimed spot.
 _Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state
 
+**Dismantle Plan**:
+What a **Dismantle** would take up at an aimed tile: the tiles of the span from the stored start, and a refusal or none. Dismantling executes a plan, and the preview draws one, so both ask one rule, as a **Placement Plan** does; the two are separate things (#404).
+_Avoid_: removal plan, placement plan (for a dismantle)
+
 **Placement Preview**:
 What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the tiles of its stretch; with the **Engineer's Pick** and a dismantle's start stored, the tiles its **Dismantle Plan** would take up, in red, and none when it would be refused. It shows what placing or dismantling would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
@@ -359,10 +363,6 @@ The blocks that can **Fast Replace** each other, read from Factorio's `fast_repl
 _Avoid_: family, tier ladder (a ladder is one kind's tiers; a group can hold two kinds, as belts and splitters do)
 
 **Supply Area Box**:
-**Dismantle Plan**:
-What a **Dismantle** would take up at an aimed tile: the tiles of the span from the stored start, and a refusal or none. Dismantling executes a plan, and the preview draws one, so both ask one rule, as a **Placement Plan** does; the two are separate things (#404).
-_Avoid_: removal plan, placement plan (for a dismantle)
-
 The bright yellow wireframe of a **Supply Area Pole**'s area — the whole volume it covers, anchored at the base, plus an outline around every machine the pole reaches. Shown while holding a pole or looking at a placed one (ADR-0070). It says where the area lands and what is inside it, never whether anything inside is being *fed*, which is the Jade line's answer on the machine.
 _Avoid_: supply area overlay, footprint overlay, coverage grid, range indicator
 
