@@ -4,6 +4,10 @@ status: accepted
 
 # Placement is a plan, and the preview draws it
 
+> **Belt part moved to Beltworks.** How a belt piece plans its placement now lives in Beltworks
+> (adamico/SimpleBelts), as its ADR 0006. The plan and preview seam for the pack's own blocks
+> stays here.
+
 Factorio draws what placing a block would do before the click. #297 brings that in as the
 **Placement Preview**, and #158 (the supply area) and #298 (a pole's wires) draw on top of it. The
 obvious shape -- a client renderer that works out where the block would land -- is a second copy of

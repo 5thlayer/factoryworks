@@ -65,7 +65,7 @@ resolves the layer like any other.
 
 ## What it cannot prove
 
-That the Pick mines a given block class, that GregTech accepts it as a wrench, that Simplebelts does, and
+That the Pick mines a given block class, that GregTech accepts it as a wrench, that Create does, and
 that the flat second an ore feels right in the hand (2.0s was tried first, and did not). The first three are a world load — ADR-0039's
 GameTests, which #165 names and which nobody has written; the harness they would run on exists as
 of #271 (`./gradlew :planetaryfactory_core:runGameTestServer`), so what is missing is the tests. The last is a human

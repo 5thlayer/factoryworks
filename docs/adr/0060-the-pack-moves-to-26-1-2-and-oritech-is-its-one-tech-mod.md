@@ -5,9 +5,12 @@ supersedes: [28, 148, 156, 178]
 
 # The pack moves to Minecraft 26.1.2, and Oritech is its one tech mod
 
+> **Belt section moved to Beltworks.** The decision in *Why a SimpleBelts fork* now lives in
+> Beltworks (adamico/SimpleBelts), as its ADR 0003. The rest of this ADR is the pack's.
+
 Two surveys, `docs/research/oritech-coverage.md` and `docs/research/simplebelts-coverage.md`, each
 priced a hypothesis without deciding it. The first asked what Oritech could carry if the machines were
-its. The second asked what SimpleBelts could carry if Simplebelts's belts went. Together they found that the
+its. The second asked what SimpleBelts could carry if Create's belts went. Together they found that the
 pack could lose Create entirely. **And once Create goes, nothing ties the pack to Minecraft 1.21.1.**
 This ADR adopts both hypotheses and the version change they make possible.
 
@@ -33,7 +36,7 @@ FTB Filter System, FTB Quests, KubeJS, Block Runner, and plumbing that has no me
 ## Why 26.1.2
 
 **Nothing forces 1.21.1, and 1.21.1 is an old version.** The only thing tying the pack to it was
-Simplebelts: its GitHub carries `mc1.21.1/*` branches and nothing later. SimpleBelts removes Simplebelts's last
+Create: its GitHub carries `mc1.21.1/*` branches and nothing later. SimpleBelts removes Create's last
 job, so the tie is gone.
 
 The two mods the pack now builds on are *developed* on 26.1.2. SimpleBelts' 1.21.1 line ended at
@@ -71,7 +74,7 @@ subclass away (its fact 9). It **unblocks** Modules and beacons, and it reopens 
 bonus. MI was adopted by ADR-0056 for its recipe lookup, and that lookup is the one thing the Oritech
 survey rebuilds in a subclass: first match plus output locking (its fact 3).
 
-## Why a SimpleBelts fork, and not Simplebelts's belts
+## Why a SimpleBelts fork, and not Create's belts
 
 ADR-0044 kept Create because the puzzle Factorio's belt carries is mostly two-dimensional, and that
 argument still holds. **Undergrounds and lanes stay `excluded`, argued from the medium.** What changed
@@ -122,7 +125,7 @@ These rulings from the SimpleBelts survey are part of this decision:
   logistics to Oritech, power generation to Oritech plus the pack's engine, and the machine chassis to
   Oritech. The rule itself is unchanged, and it is the reason for this ADR's one-tech-mod choice.
 - **ADR-0035's energy reasoning is reversed; its removal of Mekanism is not.** FE was demoted because
-  nothing distributed it. With Oritech, Power Grid and Simplebelts gone, there is no EU, no volts and no
+  nothing distributed it. With GregTech, Power Grid and Create gone, there is no EU, no volts and no
   rotation, and **FE is the pack's only energy currency**. ADR-0036's pole distributes it once it
   stops asking for GregTech's capability.
 - **ADR-0048's rotation clause falls.** Its only argument for a steam engine that emits rotation was
@@ -238,7 +241,7 @@ are re-derived, not carried over.
 
 ## Considered alternatives
 
-- **Drop Simplebelts and stay on 1.21.1**, with Oritech 1.2.12 and a fork of SimpleBelts 0.2.2. The belt
+- **Drop Create and stay on 1.21.1**, with Oritech 1.2.12 and a fork of SimpleBelts 0.2.2. The belt
   decision does not require the version change. Rejected because nothing requires staying either: both
   mods develop on 26.1.2, the belt fork would start from a frozen line, and the pack is pre-release,
   so no world depends on the old version.

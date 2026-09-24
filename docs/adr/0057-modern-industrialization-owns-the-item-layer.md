@@ -14,7 +14,7 @@ recipes pointing at `gtceu:` items that will not exist. This ADR supplies the re
 
 **Modern Industrialization supplies the item layer for the ADR-0021 alphabet, and the pack registers
 only the gaps.** AlmostUnified stays, and its job is unchanged: it arbitrates between MI, Create and
-vanilla, exactly as it arbitrated between GregTech, Simplebelts and vanilla.
+vanilla, exactly as it arbitrated between GregTech, Create and vanilla.
 
 ## Why a mod owns this at all, again
 
@@ -41,9 +41,9 @@ with ADR-0036's Supply Area Pole.
 
 ## What this resolves rather than fixes
 
-**#220 dissolves.** The pack ships two plate items per material because GregTech and Simplebelts both
+**#220 dissolves.** The pack ships two plate items per material because GregTech and Create both
 supply them and unification replaces rather than broadens (ADR-0053's second error, and the one that
-shipped). With GregTech gone the pair is MI-and-Simplebelts rather than GregTech-and-Simplebelts — one pair,
+shipped). With GregTech gone the pair is MI-and-Create rather than GregTech-and-Create — one pair,
 not two — and the arbiter has one overlap to resolve instead of a three-way. That is a smaller
 problem, not an absent one: **AlmostUnified stays**, because Create still ships sheets and vanilla
 still ships ingots.

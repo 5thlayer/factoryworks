@@ -129,7 +129,7 @@ is loud rather than silent.
 ### 7. The tail, which is not decided at all
 
 The manifest is 111 entries. Across every ADR and every closed ticket, the mods whose recipes are
-decided are GregTech, Simplebelts, Mekanism, Electro, GCyR, AE2 (terminals), Sophisticated Backpacks (the
+decided are GregTech, Create, Mekanism, Electro, GCyR, AE2 (terminals), Sophisticated Backpacks (the
 Crafting Upgrade), Crafting on a Stick and CraftingTweaks — nine. **Building Gadgets is explicitly
 kept** (ADR-0025 leans on it for the refinery), and its recipe is a shaped one. So are Akashic Tome's,
 Carry On's, the gravestone's, the elevator's, the backpacks' own.

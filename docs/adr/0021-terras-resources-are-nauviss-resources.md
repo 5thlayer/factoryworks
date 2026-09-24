@@ -7,7 +7,7 @@ status: accepted
 Terra is the Nauvis analogue. Its ore has never been Nauvis's ore: twenty-three GregTech veins
 running from iron down to olivine, Mekanism's six worldgen toggles, Create's two stripe features and
 — because Terra had no noise settings of its own until ADR-0019 — the entire vanilla ore set on top.
-That is GregTech's spread, Mekanism's spread, Simplebelts's spread and Minecraft's spread stacked in one
+That is GregTech's spread, Mekanism's spread, Create's spread and Minecraft's spread stacked in one
 world, and a Factorio-literate player reads none of it as meaningful.
 
 > **Amended by ADR-0041 — stone is a patch, not the ground.** The clause "stone as the ground
@@ -45,7 +45,7 @@ sprawl. This ADR generalises a doctrine the pack already had rather than inventi
 The framing this started from was "the 23 GregTech veins". Those are a minority of Terra's ore, and
 they are the only ore anything in this design can see:
 
-- **Prospecting reads GregTech's vein cache.** A Mekanism, Simplebelts or vanilla ore body is not on the
+- **Prospecting reads GregTech's vein cache.** A Mekanism, Create or vanilla ore body is not on the
   map.
 - **Depletion is GregTech's `depleted` flag, flipped by a GregTech Miner.** Nothing else can be
   marked worked-out.

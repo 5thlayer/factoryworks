@@ -93,7 +93,7 @@ move the ore vein weights already made, shipping as datapack overrides because
   not know about it, and makes every future pack material another fork release.
 - **Substitute an existing GT material.** Reverses the tier-3 reasoning that introduced scrap:
   its whole role is to be one distinct input recycling into a spread of unrelated outputs, and no
-  GregTech, Mekanism or Simplebelts material plays that part.
+  GregTech, Mekanism or Create material plays that part.
 - **Defer `MaterialRegistry.close()` with a mixin.** Does not work. Item generation has already
   run by the time the close happens, so a material admitted late would exist with no dust item —
   closing before item generation is what the flag is for.

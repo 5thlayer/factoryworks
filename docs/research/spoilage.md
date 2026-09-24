@@ -172,7 +172,7 @@ only bounded. Factorio's spoilage is deterministic; ours is not.
 **Yes, natively, in every mod — because freshness is item identity.**
 
 This question was originally scoped to GregTech. Scoping it there was a mistake: resource processing
-in this pack happens across Simplebelts, Mekanism, GregTech and Integrated Dynamics, with multiple
+in this pack happens across Create, Mekanism, GregTech and Integrated Dynamics, with multiple
 optional paths, so any answer that works only in GT would silently bias which path a player picks.
 
 Four sibling items answer it for all of them at once. A recipe that accepts any freshness references
@@ -284,7 +284,7 @@ The 120× spread between bacteria and bioflux is what forces a frequent sweep, a
 | **Shipping Mrbysco/Spoiled unmodified** | Overworld-only (`SpoilHandler.java:42`), so it cannot act on Sapros at all. |
 | **Forking Food Spoilage instead** | **All Rights Reserved**, no public source. Also food-oriented (everything decays to rotten flesh), config-driven rather than datapack-driven, and built on a continuous per-item freshness percentage — the model §1 rules out. Its container-preservation multipliers, the feature that makes it attractive, already exist in Spoiled as `containerModifier` / `itemContainerModifier`. |
 | **Any per-stack freshness value** (component, NBT, timestamp) | Fragments stacks unboundedly, and averaging-on-merge is not implementable (§1). |
-| **A Mixin fork to intercept merging** | ~19 vanilla mutation sites, 24 more in GregTech alone, plus AE2 and Simplebelts; breaks the `hashItemAndComponents` contract; collides with `recipeessentials`. Would work only sometimes. |
+| **A Mixin fork to intercept merging** | ~19 vanilla mutation sites, 24 more in GregTech alone, plus AE2 and Create; breaks the `hashItemAndComponents` contract; collides with `recipeessentials`. Would work only sometimes. |
 | **A registered `DataComponentType` from KubeJS** | KubeJS 2101.7.1 cannot register component types. Moot now — we store nothing. |
 | **Lazy resolution on access** | The earlier recommendation. There is no machine-boundary hook that generalises beyond GT multiblocks, so a lazily-resolved item would enter a Create or Mekanism recipe unresolved. |
 | **A single probabilistic stage** | Exponential lifetime: unbounded tail, ~63% of items dead before nominal. Four stages give Erlang-4 and halve the spread. |

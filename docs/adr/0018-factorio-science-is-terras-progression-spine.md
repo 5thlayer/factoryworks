@@ -6,7 +6,7 @@ supersedes: [55]
 # Factorio science is Terra's progression spine, and Researchd is the lab
 
 Terra runs three tech mods in series plus a grid mod, and every one of them ships its own
-progression. GregTech's is a voltage ladder, Simplebelts's is a build-complexity curve, Mekanism's is a
+progression. GregTech's is a voltage ladder, Create's is a build-complexity curve, Mekanism's is a
 processing-factor ladder. Left as they are, the pack has three ladders and no spine, and a
 Factorio-literate player — the audience this pack is for — recognises none of them.
 
