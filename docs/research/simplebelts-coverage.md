@@ -1,4 +1,4 @@
-# What SimpleBelts could carry: belts and loaders without Simplebelts
+# What SimpleBelts could carry: belts and loaders without Create
 
 Read against a clone of `Rearth/SimpleBelts` on its `26.1.2` branch at `92a97c3` (mod version
 `2.0.0-exp1`), placed beside the pack as `../simplebelts-src`. The matching jar,
@@ -12,7 +12,7 @@ item capability and its machine inventories. The rest of `oritech-coverage.md` s
 Re-reading it at 2.0 is a separate job.
 
 **This is a survey, not a decision.** No ADR is proposed and no ledger row is edited. It answers one
-question: if Simplebelts left the pack and SimpleBelts took the belts, what would carry each row of
+question: if Create left the pack and SimpleBelts took the belts, what would carry each row of
 `docs/factorio-mechanics.md` that Create carries today, and at what cost? Rulings made after the first
 pass (2026-09-11) are marked **Ruling** and are folded into the rows they settle.
 
@@ -287,7 +287,7 @@ Ledger verdicts are today's, with Create. **Level** is the cheapest level that c
 | **Output onto a moving belt with no intermediate block** (Mining drills, `shipped`) | the rig pushes into a bare Create belt's handler | a loader has no handler, so the rig's push (`RigBlockEntity#push`) finds nothing | **Native** | Reached the other way round, the way the ledger already describes for Create's funnel: a source loader set against the rig pulls through `RigItemHandler`. No code is needed. The loader has to sit against a position that answers the capability, and whether every hull position does under ADR-0059 is `world-load (human)`. |
 | *added:* **The tap** | free with Create | none (fact 1) | **postponed** (**Ruling 2026-09-11**) | The splitter covers the main bus in both directions (fact 4). It is reachable as a fork when something needs it, and nothing does while there is no swing arm. |
 | *added:* **Cost per length** | Create charges one belt item per segment | one belt item for any length (`BeltItem#createBelt`, `stack.shrink(1)` at `:160`) | **Fork**, **mandatory** (**Ruling 2026-09-11**) | A precondition of adoption, not a tuning choice. `BeltData.totalLength()` is known at placement. Consume `ceil(length)` belt items, which is Factorio's one per tile, and refuse the belt if the player holds fewer. The length stays uncapped, and the cost is what limits it. |
-| *added:* **Obstruction** | Simplebelts belts are blocks | nothing checked: `BeltItem`'s only refusals are a loader already in use and a duplicate support (`items/BeltItem.java:69,105`); the endpoints only need to be replaceable (`:124,174,183`) | **Fork** | At placement, sample the spline every `SAMPLE_LENGTH` (the walk `BeltCollisionRegistry` already does) and refuse on a solid block or on another belt's registered segment. The curve through open air stays, and it is the one thing SimpleBelts does better than a Factorio belt. |
+| *added:* **Obstruction** | Create belts are blocks | nothing checked: `BeltItem`'s only refusals are a loader already in use and a duplicate support (`items/BeltItem.java:69,105`); the endpoints only need to be replaceable (`:124,174,183`) | **Fork** | At placement, sample the spline every `SAMPLE_LENGTH` (the walk `BeltCollisionRegistry` already does) and refuse on a solid block or on another belt's registered segment. The curve through open air stays, and it is the one thing SimpleBelts does better than a Factorio belt. |
 
 **What survives natively:** the belt backs up visibly at the target end (`outputQueue`, drawn with
 spacing). That is the compression diagnostic, a belt that shows where the slow machine is. Filtering
@@ -334,7 +334,7 @@ Create carries today leaves without a recorded owner.
 
 | row (ADR-0017's table, or the ledger) | Create carries today | under S2 |
 | --- | --- | --- |
-| **Trains** (ledger `planned`; outfield patches are "reached by rail", ADR-0045) | Simplebelts trains | **not SimpleBelts → Railcraft Reborn**. Its repo has a `26.1.x` branch. It is not yet in pf2612. |
+| **Trains** (ledger `planned`; outfield patches are "reached by rail", ADR-0045) | Create trains | **not SimpleBelts → Railcraft Reborn**. Its repo has a `26.1.x` branch. It is not yet in pf2612. |
 | **Fluid logistics** | pipes, pumps | **not SimpleBelts → Oritech** pipes (`oritech-coverage.md` option (c), now forced). The Offshore Pump and Boiler move to the transfer API (fact 9). |
 | **Bulk storage (fluid)** | Fluid Tank, three blocks to one Factorio tank (ADR-0037) | **not SimpleBelts → Oritech** or core. Unsized. |
 | **Bulk storage (item)** | Item Vault | **unowned**. Factorio's chests are `containers` in `machine.json`, so a core block, or vanilla chests at the corpus's slot counts. Unsized. |
@@ -393,7 +393,7 @@ What pf2612 already runs is **proven to load together**. The rest is what adopti
 - **Moved elsewhere**: trains to Railcraft Reborn; fluids to Oritech. Item bulk storage, rung 2's
   packages and barrelling are left without an owner.
 
-**The finding in one line:** SimpleBelts is a thinner belt than Simplebelts's, a link between two loaders.
+**The finding in one line:** SimpleBelts is a thinner belt than Create's, a link between two loaders.
 But everything the pack needs from it is *reachable in one fork*, at Factorio's own numbers, which
 Create's RPM-driven belt never was. Tiers, a known items/s, belt as buffer, a real splitter, the stack
 bonus, and energy spent on moving items all move from `adapted` or `excluded` to reachable. The inserter

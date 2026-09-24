@@ -5,6 +5,9 @@ supersedes: [362, 366]
 
 # Belts are tiles, merged at runtime into transport lines
 
+> **Moved to Beltworks.** The belt decision now lives in Beltworks (adamico/SimpleBelts), as its
+> ADR 0004. This ADR stays as history.
+
 ADR-0078 kept the fork's belt a spline between grid-aligned supports and bounded its curve. It read
 as organic rather than as a factory: curves of every size, posts at every corner, belts in the air.
 Supports were the shape's control points, the only belt end that was not an inventory, and the only

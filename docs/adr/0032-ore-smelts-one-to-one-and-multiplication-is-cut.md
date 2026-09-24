@@ -7,7 +7,7 @@ supersedes: [27, 37]
 
 Terra runs three mods that each ship an ore-multiplication ladder. GregTech's is macerate-wash-
 centrifuge, Mekanism's is enrichment → purification → injection → dissolution at 2x/3x/4x/5x, and
-Simplebelts's is a Crushing Wheel pair at 2x. ADR-0017 already recipe-removed GregTech's line and split
+Create's is a Crushing Wheel pair at 2x. ADR-0017 already recipe-removed GregTech's line and split
 the rest between Create at rung 0 and Mekanism from rung 1.
 
 **Factorio has no ore-multiplication ladder.** Ore smelts 1:1 and always has. Every yield gain in

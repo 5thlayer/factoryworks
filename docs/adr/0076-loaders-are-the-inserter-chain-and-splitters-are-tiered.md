@@ -4,6 +4,10 @@ status: accepted
 
 # Loaders are the inserter chain, and splitters are tiered
 
+> **Moved to Beltworks.** The mixed-tier rule now lives in Beltworks (adamico/SimpleBelts), as its
+> ADR 0003, and the rest of what the Mod does -- tiered splitters, a half as a block of belt, the
+> loader tiers as blocks -- as its ADR 0007. The loaders' recipes and technologies stay here.
+
 ADR-0060 replaces the inserter with the **loader**. Its tiers 2 to 4 draw FE per item, anchored on
 `fast-inserter` for tier 2 and `bulk-inserter` for tiers 3 and 4. That left open where a loader
 comes from, since Factorio's own loaders are hidden and have no recipe.

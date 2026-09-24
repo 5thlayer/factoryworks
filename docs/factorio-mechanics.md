@@ -613,7 +613,7 @@ Sub-rules:
   left with ADR-0060.*
 - **Balancers** — `shipped`. A balancer is built from splitters, not bought as a block: chained
   splitters make Factorio's 2x2 and 4x4 balancers (#349).
-- **Splitter priority and filter** — `planned` on #357.
+- **Splitter priority and filter** — `planned` on adamico/SimpleBelts#19.
 - **Two lanes per belt** — `excluded`. Lane balancing is a compression trick for a conveyor one tile
   wide on a plane — what you do when the only free axis runs along the belt. It goes with the
   undergrounds and for the same reason (ADR-0044). *This entry read `by-consequence` of Create

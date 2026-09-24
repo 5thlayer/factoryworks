@@ -148,95 +148,21 @@ _Avoid_: unlock, planet flag, safe flag
 
 ### Moving things
 
+The belt vocabulary -- belt, tile, slope, stretch, transport line, loader, splitter and the rest -- is Beltworks', the pack's SimpleBelts fork, and is defined in its `CONTEXT.md` (adamico/SimpleBelts). The terms below are the pack's own.
+
 **Logistics puzzle**:
 The production-chain routing problem — what feeds what, at what ratio, over what distance. Explicitly
 not the belt-lane micro-puzzle: lane balancing, sushi belts and weaving undergrounds through a fixed
 footprint are 2D problems this pack does not have, and ADR-0044 records why.
 _Avoid_: belt puzzle, the logistics game
 
-**Belt**:
-A run of tiles carrying items from one belt end to another, paid for at one belt item per tile. It carries its tier's whole throughput in one lane, 15, 30, 45 or 60 items/s, and holds eight items per tile, so a belt is a buffer as well as a route (ADR-0060). It climbs and descends by **slopes**, one block of height per tile, which is how one belt crosses another (#412).
-_Avoid_: conveyor, belt segment, lane
-
-**Tile**:
-One block of belt, placed and broken on its own, facing the way items travel through it: the way the player looks when placing it, turned by Rotate (ADR-0083). A tile holds eight items and carries them at its tier's speed, 15, 30, 45 or 60 items/s. Factorio's belt shape: a belt is a run of tiles rather than a curve between ends (#383). A tile fed from exactly one side, with nothing feeding it from behind, is a **corner** and turns the line through one block; otherwise it is straight. Its shape is derived from its neighbours, never chosen, and is re-derived when a neighbour is placed, broken or turned. A corner is one block of line like any tile (#391). Its **pitch** is derived the same way, and a corner is always level. A player or item entity standing on a tile is carried along it at that tile's speed, around a corner along its arc, and off the end of the line (#396). A stretch lays a tile only over a block with a sturdy top face (ADR-0084).
-_Avoid_: belt block, conveyor block, segment
-
-**Pitch**:
-Whether a tile rises, is level or descends along its travel, derived from the height of the tile feeding it and of the tile it feeds, one block up, level or one block down. A tile whose feeder and fed tile are both higher, or both lower, does not connect to them: there is no crest and no valley (#412).
-_Avoid_: incline, grade
-
-**Slope**:
-A tile whose pitch is not level: a **foot**, a **middle** or a **top**. Together they draw one straight 45° line, one block of height per block of travel. A slope is one block of line like any tile, as a corner is, however long its surface draws; the climb is fiction, not arithmetic. It carries riders and a hand as a level tile does. It never turns, is never rotated, takes no side-load, and a loader or splitter never meets one (#412).
-_Avoid_: ramp, incline, half slope, full slope
-
-**Foot**:
-The last tile at the lower height of a climb: level for its back six pixels, then rising to its block's top. Placing the tile above and ahead of a level tile turns that tile into a foot (#412).
-
-**Middle**:
-A slope rising a whole block within its own block, between a foot and a top when a climb is more than one block high (#412).
-
-**Top**:
-The first tile at the upper height of a climb: rising six pixels from its block's floor, then level. A foot turned half round (#412).
-
-**Wedge**:
-The block drawn under a middle or a top that stands over air, reading as the junction between two slopes. It is part of its tile: placed with it for nothing, and broken with it. It needs nothing under it, so a belt can climb through open air, and it takes a replaceable block's place but never a solid one's (#412).
-_Avoid_: support, pillar, scaffold
-
-**Belt hand**:
-Holding the use key on a belt piece with anything but a belt piece in hand: the holder takes the items reaching the aimed point at the belt's rate, while what was already past it runs on. On a tile the whole tile is aimed at, so the hand takes whatever is on it. A full inventory stops taking and lets the belt run on, losing nothing (#350, #396).
-_Avoid_: grab, pick up from belt
-
-**Stretch**:
-The tiles one drag of the tile item lays, placed, charged and refused as one. A sneak-click stores its start and the way the player looks; the next click lays it to the aimed spot, in one straight leg or two joined by one corner, the first leg along the stored look. Each sneak-click before that adds a corner where the stretch would end, and the stretch runs on from it the same way, heading the way its last tile travels. It follows the ground, each tile one block up, level or one block down from the one before, and is refused whole at a step it cannot climb. A line running across its path is climbed over in five tiles, a foot, a top, a level tile on the line, a top and a foot, and a stretch with no room for them is refused (#412). No leg turns back on its heading. Any other tile already on its path is turned to it, or replaced when of another tier (#393).
-_Avoid_: run, zoop, drag (the gesture, not what it lays), tile path
-
 **Dismantle**:
-Taking up a span of one **Dismantle Family** from one block to another, both included, in two sneak-clicks of the **Engineer's Pick**: the first stores the start, the second names the end. The span is the shortest path between them through blocks of the start's family joined to one another; an end outside the family, not joined to the start, or reached by two equally short paths is refused and keeps the start, and a click after the start is gone is a new start. What the span's blocks drop goes to the inventory, and what does not fit drops at the player's feet. Blocks outside the family, such as the machines a pipe run feeds, are never taken. On a belt the span follows the line through its corners and slopes, either way along it, and takes the tiles' wedges and every item they carry, and the rest of the line keeps what it carries. Distinct from mining, which breaks one block and drops it (#404, #431).
+The generalisation of Beltworks' belt Dismantle to any **Dismantle Family**: taking up a span of one family from one block to another, both included, in two sneak-clicks of the **Engineer's Pick**: the first stores the start, the second names the end. The span is the shortest path between them through blocks of the start's family joined to one another; an end outside the family, not joined to the start, or reached by two equally short paths is refused and keeps the start, and a click after the start is gone is a new start. What the span's blocks drop goes to the inventory, and what does not fit drops at the player's feet. Blocks outside the family, such as the machines a pipe run feeds, are never taken. A belt line is Beltworks' own Dismantle, taken with the same Pick. Distinct from mining, which breaks one block and drops it (#404, #431).
 _Avoid_: deconstruct, mass mine, unstretch
 
 **Dismantle Family**:
-The blocks one **Dismantle** takes up together as a single span, with the rule for which two of them are joined. By default two blocks of a family are joined when they touch face to face; a family may say otherwise. Fluid pipes are a family, joined only where their connection is open (#431). A belt's family is its line, joined along the way items travel.
+The blocks one **Dismantle** takes up together as a single span, with the rule for which two of them are joined. By default two blocks of a family are joined when they touch face to face; a family may say otherwise. Fluid pipes are a family, joined only where their connection is open (#431).
 _Avoid_: dismantle group, dismantle kind, replace group (a different grouping)
-
-**Tier colour**:
-The colour a belt tier is painted in: yellow, red, blue, green for tiers 1 to 4. The belt shows it as the stripes along its edges, and every other belt piece of that tier shows it on its own body: the loader's band, the splitter's divider. Factorio's convention. A loader's housing stays slate.
-_Avoid_: stripe colour, tier tint
-
-**Transport line**:
-The contiguous run of tiles each feeding the next, around corners as well as straight, merged at runtime so the whole run ticks once rather than each tile ticking for itself. A line is derived state, rebuilt whenever a tile is placed or broken; each tile keeps its own share of the items, so merging and splitting a line loses nothing. A line runs at its slowest tile and holds eight items a tile, and it is loaded by the loader behind its first tile and unloaded by the one past its last (#398). A line closed on itself is a ring, with no first tile and no last (#391). A line never spans an unloaded chunk (#395).
-_Avoid_: belt line, chain, run
-
-**Side-load**:
-A tile or other belt piece feeding the side of a straight tile. It does not join the line it feeds: two lines meet there, and the side-loading line's items merge into gaps on the other, which goes first. The pack's one lane has no far lane to fill, so this is Factorio's side-load reduced to a merge.
-_Avoid_: T-junction, merge belt
-
-**Belt end**:
-Where a belt starts or stops: a loader, set against an inventory; a splitter half; or its last tile with nothing in front of it, where the line backs up (ADR-0084).
-_Avoid_: terminator, endpoint
-
-**Loader**:
-A belt end set against an inventory: it pulls onto the belt from the inventory behind it, or pushes into it. It has tiers of its own that cap what it moves, and from tier 2 it draws power for each item. The pack's inserter; there is no swing arm. It carries no items itself: like Factorio's 1×1 loader, whose belt distance is 0, it hands items straight between the inventory and the tile at its mouth, so a line's capacity is its tiles' alone. It is drawn as a solid housing with a low mouth at belt height on the tile face.
-_Avoid_: chute, inserter, funnel
-
-**Splitter**:
-A block two wide whose halves are each a block of belt of its tier: each holds eight items and carries them, and whatever stands on it, at its tier's speed. It joins two belts in to two belts out at its midline, splitting evenly, merging, and sending everything to one side when the other backs up. It draws no power. Placed across a straight tile line running its way, it takes the tile's place, refunds it and keeps its items (#394).
-_Avoid_: merger, tunnel
-
-**Input priority**:
-A splitter's preference for one of its two inputs: it takes from that side first, and from the other whenever that side cannot move. None, left or right. Lost when the splitter is broken.
-_Avoid_: input filter
-
-**Output priority**:
-A splitter's preference for one of its two outputs: everything goes to that side, and to the other only when that side is backed up. None, left or right. Lost when the splitter is broken.
-
-**Splitter filter**:
-An item, or a filter item standing for several, set on a splitter with an output priority side. What it matches goes only to that side, and everything else only to the other; either waits when its side is backed up, never overflowing. Clearing the output priority clears the filter. Matches by item, as a loader's filter does.
-_Avoid_: sorter, filter splitter
-
-**Balancer**:
-A pattern of splitters that spreads several belts evenly across several others. Built by the player, never a block.
-_Avoid_: balancer block
 
 **Launch Terminal**:
 The structure cargo and fuel are loaded into for a journey subject to a travel timer.
@@ -360,7 +286,7 @@ A connection between two **Supply Area Pole**s that makes them one **Electric Ne
 _Avoid_: link, cable, connection
 
 **Placement Plan**:
-What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole. A plan may read what an earlier click stored on the item: a stretch's plan is its tiles, from the stored start to the aimed spot.
+What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole. A belt piece's plan is Beltworks' own Placement Plan, asked through the same entry point.
 _Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state
 
 **Dismantle Plan**:
@@ -368,7 +294,7 @@ What a **Dismantle** would take up at an aimed block: the blocks of the span fro
 _Avoid_: removal plan, placement plan (for a dismantle)
 
 **Placement Preview**:
-What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; for a belt, the tiles of its stretch; with the **Engineer's Pick** and a dismantle's start stored, the blocks its **Dismantle Plan** would take up, in red, and none when it would be refused. It shows what placing or dismantling would do and changes nothing in the world.
+What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; with the **Engineer's Pick** and a dismantle's start stored, the blocks its **Dismantle Plan** would take up, in red, and none when it would be refused. It shows what placing or dismantling would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
 **Fast Replace**:
@@ -376,7 +302,7 @@ Placing a block over a placed one of the same **Replace Group** but another tier
 _Avoid_: upgrade (it goes down a tier too), swap, overwrite
 
 **Rotate**:
-One of the pack's two rotation actions, on a key of its own (`R` by default) and reused by everything with an orientation. Held: it turns the facing of what is about to be placed, a quarter turn each press, and the **Placement Preview** redraws with it. The turn is relative to the way the player looks, not a compass direction as Factorio's is, because Factorio's camera never turns and the player's does. Placed: with nothing rotatable held, it turns the block under the crosshair in place, and what turning means is the block's own -- a belt tile turns, an underground belt swaps its ends, a machine keeps its contents. A block whose turned shape does not fit is refused with its reason and nothing changes; there is no preview of a placed rotation. Factorio's rule for which target the key takes: the held item if it is rotatable, otherwise the aimed block.
+One of the pack's two rotation actions, on a key of its own (`R` by default) and reused by everything with an orientation. Held: it turns the facing of what is about to be placed, a quarter turn each press, and the **Placement Preview** redraws with it. The turn is relative to the way the player looks, not a compass direction as Factorio's is, because Factorio's camera never turns and the player's does. Placed: with nothing rotatable held, it turns the block under the crosshair in place, and what turning means is the block's own -- a belt tile turns, a machine keeps its contents. A block whose turned shape does not fit is refused with its reason and nothing changes; there is no preview of a placed rotation. Factorio's rule for which target the key takes: the held item if it is rotatable, otherwise the aimed block.
 _Avoid_: wrench rotate (a departed GregTech verb, #386), turn, rotate key
 
 **Reverse Rotate**:
@@ -406,7 +332,7 @@ The pack's one item per material — FTB Materials', for every metal. It is what
 _Avoid_: sheet, ingot, GT plate, unified plate
 
 **Engineer's Pick**:
-The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what **dismantles** a belt or a pipe run. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
+The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what **dismantles** a pipe run, and a belt line through Beltworks' own Dismantle. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
 _Avoid_: pickaxe, the pick, mining tool, wrench
 
 **Burner Mining Drill**:

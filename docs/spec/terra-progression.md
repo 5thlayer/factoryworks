@@ -105,7 +105,7 @@ a research hands it over.
 then "Create's Steam Engine as prime mover". ADR-0040 deleted the LP Steam Miner and ADR-0043 made
 both rungs of the drill ladder the pack's; ADR-0047 and `#155` made the furnace ladder the pack's
 rather than a re-skinned vanilla block; and ADR-0048 made Terra's steam two pack-owned fluids on a
-pack-authored chain, which took the boiler off GregTech and the engine off Simplebelts. **Simplebelts's Steam
+pack-authored chain, which took the boiler off GregTech and the engine off Create. **Create's Steam
 Engine could never have held that slot**: Create has no steam fluid, and its engine mounts on a
 water-filled Fluid Tank rather than consuming steam from a pipe. The rewrite lands with `#190`;
 `#193` is the ticket that made the first of these true in the game.*

@@ -11,7 +11,7 @@ they start with `data/`. Oritech is **CC0** (`LICENSE.md`), which matters for an
 mechanic-bearing palette were reduced to Create, Oritech and `planetaryfactory_core`, which rows of
 `docs/factorio-mechanics.md` could Oritech carry, and at what cost.
 
-**Adopted by ADR-0060**, with one change: Simplebelts's logistics row went to a SimpleBelts fork and
+**Adopted by ADR-0060**, with one change: Create's logistics row went to a SimpleBelts fork and
 Railcraft Reborn (`simplebelts-coverage.md`), and the pack moves to 26.1.2. The citations below are
 still at 1.2.12, and re-reading them at 2.0 is one of that ADR's open items.
 
@@ -23,7 +23,7 @@ still at 1.2.12, and re-reading them at 2.0 is one of that ADR's open items.
 | machines | Oritech |
 | everything Oritech does not cover and cannot be customised to | `planetaryfactory_core` |
 
-**Leaves:** GCyR, Simplebelts: Power Grid, Modern Industrialization, and Oritech's leftovers.
+**Leaves:** GCyR, Create: Power Grid, Modern Industrialization, and GregTech's leftovers.
 **Stays:** Researchd, Respoiled (the Decay fork), Building Gadgets 2, Block Runner, and all plumbing
 with no mechanic of its own — KubeJS, EMI/JEI, FTB, Jade, libraries, performance mods.
 

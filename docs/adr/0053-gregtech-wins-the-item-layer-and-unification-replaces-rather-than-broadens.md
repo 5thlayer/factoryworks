@@ -27,7 +27,7 @@ Every word there matters, and none of it is visible from any file in this repo:
 - **Replaces.** `"item": "gtceu:iron_plate"` in an emitted recipe becomes `"item":
   "create:iron_sheet"` at load. The GT plate is not *also* accepted — it is accepted **nowhere**.
   The losing item becomes an orphan that no recipe in the pack will take.
-- **Only inside recipes.** The jar ships a `GregTechModernRecipeUnifier` alongside its Simplebelts one,
+- **Only inside recipes.** The jar ships a `GregTechModernRecipeUnifier` alongside its Create one,
   so the pack's `assembling/` and `chemical_plant/` GT recipes are rewritten like any other. Nothing
   outside a recipe is. A literal item id in KubeJS, in `planetaryfactory_core`, or in a research
   trigger is left exactly as written, pointing at whichever item unification just orphaned.
@@ -54,7 +54,7 @@ plate with opposite liveness and nothing marking which was which.
 
 `mod_priorities` becomes `minecraft, kubejs, gtceu, simplebelts`.
 
-- **`gtceu` is added**, which is the whole fix. It was absent, so Simplebelts won every tag it appeared
+- **`gtceu` is added**, which is the whole fix. It was absent, so Create won every tag it appeared
   in by default rather than by choice.
 - **`mekanism` is dropped.** The mod left the pack under ADR-0035; the entry has been dead since.
 - **`minecraft` stays first, deliberately rather than by inheritance.** Vanilla keeps `c:ingots/*`,
@@ -64,7 +64,7 @@ plate with opposite liveness and nothing marking which was which.
 - **`kubejs` is inert and stays where it is.** `items.js` registers fourteen items and applies no
   tags, so no KubeJS item carries a `c:` material tag. The position is recorded as harmless rather
   than as meaningful.
-- **GregTech beats Simplebelts** on every tag where both appear. GT's `TagPrefix` emits eleven of the
+- **GregTech beats Create** on every tag where both appear. GT's `TagPrefix` emits eleven of the
   twelve — every one except `wires`, which is Power Grid's alone and which adding `gtceu` therefore
   cannot touch.
 
@@ -76,7 +76,7 @@ plate with opposite liveness and nothing marking which was which.
 Two such sites exist today — `researchd.js`'s `has:` and `icon:` ids, and `StartingKit.java` — and
 both were wrong. The check named below is what keeps that at two-and-correct rather than growing.
 
-## Why GregTech and not Simplebelts
+## Why GregTech and not Create
 
 Create winning was the live alternative, and it is the status quo, so it needed beating rather than
 merely differing from.
@@ -86,7 +86,7 @@ merely differing from.
   plate — and that split is visible to the player in a way the current one is not.
 - **It makes the repo's own text true.** `recipe/copper_plate.json` says `gtceu:copper_plate` and
   the player holds `gtceu:copper_plate`. Every emitted recipe, every `data/pack/item-map.json`
-  target and the whole corpus converter already name `gtceu:`. Under a Simplebelts win those files stay
+  target and the whole corpus converter already name `gtceu:`. Under a Create win those files stay
   as written and are rewritten at load — which is exactly the invisibility this ADR exists to end,
   preserved as policy.
 - **It repairs the kit by doing nothing to the kit.** The sixteen items become live untouched.
@@ -124,7 +124,7 @@ merely differing from.
 Static, launch-free, and it asserts the general rule rather than this instance: **every literal item
 id outside recipe JSON names a mod that `mod_priorities` ranks at or above every other mod holding
 an item in that id's `c:` tag.** It re-derives the winner from the installed jars and GT's
-`TagPrefix`, so a GregTech or Simplebelts update that changes a tag's membership fails the check.
+`TagPrefix`, so a GregTech or Create update that changes a tag's membership fails the check.
 
 - `tests/factorio/test_research_unlocks.py` — `researchd.js`'s `has:` and `icon:` ids. That file
   already covers `unlocks:` ids and never covered these.
