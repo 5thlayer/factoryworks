@@ -10,29 +10,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.item.ItemInstance;
 
 /**
  * Factorio's single mining gesture, wearing a pickaxe model (ADR-0039).
  *
  * <p><b>One tool, all block classes.</b> There is no axe, shovel, shears or hoe in this pack, so
  * this item is the correct tool for everything -- {@code requires_correct_tool_for_drops} is fixed
- * at block registration and no datapack reaches it, which is why the answer lives in the jar. It is
- * also the tool that dismantles a GregTech machine: that half is the two wrench item tags in
- * {@code kubejs/data}, not code, because GregTech and Create both ask a tag.
- *
- * <p><b>It also turns machines.</b> Rotation is a NeoForge {@code ItemAbility} rather than a tag,
- * which is why the wrench tags alone never delivered it; {@link PickAbilities} holds which verbs the
- * Pick claims and why the pipe-connection ones are declined (#168).
+ * at block registration and no datapack reaches it, which is why the answer lives in the jar.
  *
  * <p><b>Indestructible.</b> No durability component at all, so there is no bar to read and nothing
  * to repair. Factorio's engineer never sharpens anything.
@@ -90,44 +79,6 @@ public final class EngineersPick extends Item {
      */
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return true;
-    }
-
-    /**
-     * Rotation, and none of the wrench's other gated verbs.
-     *
-     * <p>GregTech asks this before it will turn a machine, and until it was answered the pack had a
-     * verb it advertised without performing: the rotation overlay draws on
-     * {@code getToolTypes(stack).contains(WRENCH) || canPerformAction(WRENCH_ROTATE)}, an OR whose
-     * first half the Pick's wrench tags already satisfied -- so the highlight appeared on every
-     * machine while the right-click did nothing.
-     *
-     * <p>The tier is not consulted. Turning a machine is not work, so there is nothing for the
-     * research to double.
-     */
-    @Override
-    public boolean canPerformAction(ItemInstance stack, ItemAbility ability) {
-        return PickAbilities.grants(ability.name());
-    }
-
-    /**
-     * Sneaking does not hide the block from this tool, which is what makes rotation reachable.
-     *
-     * <p>Declaring {@code wrench_rotate} was necessary and not sufficient. GregTech's
-     * {@code onWrenchClick} only sets a machine's front face when the player is sneaking -- a plain
-     * click falls through to the configure verbs this pack declines -- but vanilla's
-     * {@code ServerPlayerGameMode.useItemOn} skips the block's interaction entirely when a sneaking
-     * player holds a non-empty stack. So the one gesture GregTech accepts was the one gesture that
-     * never arrived, and rotation was unreachable by any input: the overlay drew, both clicks did
-     * nothing. GregTech's own tools dodge this by implementing {@code onItemUseFirst}, which runs
-     * before that check; this is the same escape through the hook NeoForge provides for it.
-     *
-     * <p>The Pick places nothing, so there is no block-placement gesture for this to swallow -- the
-     * usual reason an item wants sneak to bypass a container is exactly the reason this one does.
-     */
-    @Override
-    public boolean doesSneakBypassUse(ItemStack stack, LevelReader level, BlockPos pos,
-                                      Player player) {
         return true;
     }
 

@@ -207,24 +207,17 @@ Sub-rules:
   `steel-axe` is a trigger technology costing no packs; the pack declares it as `CheckItemPresence`
   on 50 steel plates, because Researchd has no craft-triggered research method, and swaps its
   `character-mining-speed` effect for an `unlock-recipe` granting the Engineer's Steel Pick.
-- **Picking up a placed entity is the same gesture as mining** — `adapted`. The Engineer's Pick
-  absorbs GregTech's wrench dismantle verb, which rides the ordinary break path and is delivered by
-  the two wrench item tags (ADR-0039). *This entry read "the wrench's rotate and pipe-connection
-  verbs are `planned` and unowned"; #168 settled them.* The Pick also declares GregTech's
-  `wrench_configure*` abilities, which set a **machine's** auto-output face — which side it pushes
-  items or fluids into. *#168 first declined those, reading GregTech's "Use Wrench to set Connections"
-  string as meaning pipes; they are not pipes, and the decline was reversed in the same ticket once
-  a machine turned out to have no way to be pointed at a Create belt. Create owning the belts is why
-  the verb is needed, not why it is moot.* What stays declined is `wrench_connect`, the actual
-  pipe-connection verb on the pipe block's own path: ADR-0017 gives fluid and item logistics to
-  Simplebelts, GregTech's pipes left with its power layer, and ADR-0034's sweep leaves them unobtainable,
-  so it would be declared against blocks Terra does not ship.
+- **Picking up a placed entity is the same gesture as mining** — `adapted`. The Engineer's Pick is
+  the correct tool for every block, so a placed entity is taken by breaking it (ADR-0039). The two
+  wrench item tags stay on it because Oritech's pipes read them for their connection toggle. *This
+  entry named GregTech's wrench verbs, which #168 declared on the Pick as `ItemAbility` strings;
+  GregTech left with ADR-0060 and #425 removed them.*
 - **Rotating a placed entity (`R`)** — `planned`, #386. Two pack actions, **Rotate** and **Reverse
   Rotate** (`CONTEXT.md`), on `R` and `Shift+R`, for the held item's facing and the aimed block in
   place. The held half shipped with #386 (ADR-0083); the placed half is #405. *This entry read "`shipped`, #168":
   #168 declared NeoForge's `wrench_rotate` ability on the Engineer's Pick, which GregTech gated the
-  verb on, and GregTech left with ADR-0060. Nothing consumes the ability now, so the row is planned
-  again and the ability goes with #404.*
+  verb on, and GregTech left with ADR-0060. Nothing consumed the ability after that, so the row is
+  planned again and #425 removed it.*
 
 ### Trees and wood
 
