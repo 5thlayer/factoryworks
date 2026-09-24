@@ -236,7 +236,7 @@ final class BeltWedgeTests {
     }
 
     /** Tiles placed by hand upstream first, from {@code first} along {@code facing}, each at its height, through air. */
-    private static List<BlockPos> byHand(GameTestHelper helper, ServerPlayer player, BlockPos first, Direction facing, int... heights) {
+    static List<BlockPos> byHand(GameTestHelper helper, ServerPlayer player, BlockPos first, Direction facing, int... heights) {
         player.setYRot(facing.toYRot());
         List<BlockPos> tiles = new ArrayList<>();
         for (int tile = 0; tile < heights.length; tile++) {
@@ -259,7 +259,7 @@ final class BeltWedgeTests {
         return tiles;
     }
 
-    private static ServerPlayer player(GameTestHelper helper) {
+    static ServerPlayer player(GameTestHelper helper) {
         ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
         player.setGameMode(GameType.SURVIVAL);
         player.setShiftKeyDown(false);
@@ -272,17 +272,17 @@ final class BeltWedgeTests {
         return new BlockHitResult(Vec3.atCenterOf(absolute), Direction.UP, absolute, false);
     }
 
-    private static PlacementPlan planOf(GameTestHelper helper, ServerPlayer player, ItemStack stack, BlockPos at) {
+    static PlacementPlan planOf(GameTestHelper helper, ServerPlayer player, ItemStack stack, BlockPos at) {
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
         return Placements.planFor(helper.getLevel(), player, InteractionHand.MAIN_HAND, stack, hit(helper, at));
     }
 
-    private static void use(GameTestHelper helper, ServerPlayer player, ItemStack stack, BlockPos at) {
+    static void use(GameTestHelper helper, ServerPlayer player, ItemStack stack, BlockPos at) {
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
         player.gameMode.useItemOn(player, helper.getLevel(), stack, InteractionHand.MAIN_HAND, hit(helper, at));
     }
 
-    private static Map<BlockPos, BlockState> around(GameTestHelper helper, BlockPos centre) {
+    static Map<BlockPos, BlockState> around(GameTestHelper helper, BlockPos centre) {
         Map<BlockPos, BlockState> states = new HashMap<>();
         for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-2, -2, -2), centre.offset(2, 2, 2))) {
             states.put(pos.immutable(), helper.getBlockState(pos));
