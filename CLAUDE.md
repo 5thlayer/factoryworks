@@ -288,7 +288,11 @@ and ahead makes the mirrored descent, and breaking either end levels the other; 
 valley connect to neither. A line over a climb delivers 15 and 60 items/s at tiers 1 and 4, a
 backed-up one up and down a step holds 8 a tile, a hand on a foot takes 15 items/s, an item rides
 up and down a step, and a line with a step reloads from its tiles' saves and rejoins across an
-unloaded chunk with every item (`BeltTileTests`, `BeltTileHandTests`, `BeltTileSyncTests`).
+unloaded chunk with every item (`BeltTileTests`, `BeltTileHandTests`, `BeltTileSyncTests`). A
+three-block staircase placed by hand is a foot, two middles and a top, and its mirror the descending
+shapes; breaking a middle levels the tile below it and leaves two lines; and a line over the climb
+delivers 15 and 60 items/s and holds 48 (#418). Dropping the middle cells from the pitch table turns
+those five red and leaves #417's green.
 Dropping the re-derivation of the tiles within two blocks of a change turns nine of them red, and
 dropping the rider's lift over a rising slab the ride up. The pitch table and the cross-height scan
 are the fork's `TileShapeTest` and `LineScanTest`; whether a slope and the items on it look right is
