@@ -38,17 +38,32 @@ neoForge {
     }
 }
 
+// The checkouts it swaps in are included by `settings.gradle` (#466).
+def siblingBuilds = providers.gradleProperty('siblingBuilds').present
+
 configurations {
     devRunMods
     runtimeClasspath.extendsFrom devRunMods
+    // Asks for the jar rather than the classes directory, since `nestedRange` reads its jarjar metadata.
+    siblingBeltworks {
+        canBeConsumed = false
+        attributes {
+            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, Usage.JAVA_RUNTIME))
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.LIBRARY))
+            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements, LibraryElements.JAR))
+        }
+    }
 }
 
 // Compile-time jars are taken from `mods/` rather than from a maven, so the build stays offline and
-// always compiles against exactly the jars the pack ships.
-def beltworksJars = fileTree(dir: rootProject.file('mods'), include: 'beltworks-*.jar')
+// always compiles against exactly the jars the pack ships -- except under -PsiblingBuilds.
+def beltworksJars = siblingBuilds
+        ? configurations.siblingBeltworks
+        : fileTree(dir: rootProject.file('mods'), include: 'beltworks-*.jar')
 
 // The version range Beltworks nests `artifact` under, so `neoforge.mods.toml` requires what loads
-// without the pack naming a version of it (ADR-0024).
+// without the pack naming a version of it (ADR-0024). Read from the metadata, since a checkout's
+// nested jar is named differently from a released one.
 def nestedRange = { String artifact ->
     def metadata = beltworksJars.files.collectMany {
         zipTree(it).matching { include 'META-INF/jarjar/metadata.json' }.files
@@ -56,7 +71,9 @@ def nestedRange = { String artifact ->
     def nested = metadata.collectMany { new groovy.json.JsonSlurper().parse(it).jars }
             .find { it.identifier.artifact == artifact }
     if (nested == null) {
-        throw new GradleException("no Beltworks jar in mods/ nests ${artifact} -- run scripts/sync-local-jars.py")
+        throw new GradleException(siblingBuilds
+                ? "the Beltworks checkout nests no ${artifact}"
+                : "no Beltworks jar in mods/ nests ${artifact} -- run scripts/sync-local-jars.py")
     }
     nested.version.range
 }
@@ -87,8 +104,15 @@ dependencies {
                       'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar',
                       'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar',
                       'ftb-chunks-neoforge-26.1.2.8.jar'])
-    compileOnly beltworksJars
-    compileOnly files({ beltworksJars.files.collect { zipTree(it).matching { include 'META-INF/jarjar/*.jar' } } })
+    if (siblingBuilds) {
+        compileOnly('io.github.5thlayer:beltworks') { transitive = false }
+        compileOnly('io.github.5thlayer:groundworks') { transitive = false }
+        siblingBeltworks('io.github.5thlayer:beltworks') { transitive = false }
+        devRunMods('io.github.5thlayer:beltworks') { transitive = false }
+    } else {
+        compileOnly beltworksJars
+        compileOnly files({ beltworksJars.files.collect { zipTree(it).matching { include 'META-INF/jarjar/*.jar' } } })
+    }
     // FTB Materials, and the library it requires, on every dev run's classpath -- the GameTest server
     // included. ADR-0061 gives the item layer to FTB Materials, so the pack's emitted smelts name
     // `ftbmaterials:` items, and a server that is only vanilla plus this jar rejects all three at
@@ -100,7 +124,8 @@ dependencies {
     //
     // Oritech, Railcraft Reborn and Beltworks join it for the same reason (#277): the emitted
     // assembling recipes name their pipes, signals and belts, and a server without the jars rejects
-    // every one of them, which would leave this check unable to tell a real id from a typo. Athena
+    // every one of them, which would leave this check unable to tell a real id from a typo. Under
+    // -PsiblingBuilds Beltworks is the checkout's instead, so there is never a second one. Athena
     // and GeckoLib are what Oritech requires to load. FTB Filter System for the same reason: the
     // re-authored smart filter recipe makes its item (#442).
     //
@@ -112,10 +137,10 @@ dependencies {
             dir: rootProject.file('mods'),
             include: ['ftb-materials-*.jar', 'ftb-library-neoforge-*.jar',
                       'oritech-*.jar', 'athena-*.jar', 'geckolib-neoforge-*.jar',
-                      'railcraft-reborn-*.jar', 'beltworks-*.jar',
+                      'railcraft-reborn-*.jar',
                       'ftb-filter-system-neoforge-*.jar',
                       'kubejs-neoforge-*.jar', 'rhino-*.jar',
-                      'better-advanced-tooltips-*.jar'])
+                      'better-advanced-tooltips-*.jar'] + (siblingBuilds ? [] : ['beltworks-*.jar']))
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather
     // than a Minecraft type, so the Assembler's attachment codec can be round-tripped on a plain
     // JVM -- which is what ADR-0038's "round-trip the data attachment" asks for. Minecraft itself
@@ -193,17 +218,37 @@ def modMetadata = [
 ]
 
 tasks.named('processResources', ProcessResources).configure {
-    def metadata = modMetadata + [groundworks_version_range: nestedRange('groundworks')]
-    inputs.properties metadata
-    filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand metadata
+    if (siblingBuilds) {
+        // The checkout's jar is built by this run, so its metadata is read when the task runs.
+        def range = providers.provider { nestedRange('groundworks') }
+        inputs.files beltworksJars
+        inputs.properties modMetadata
+        inputs.property 'groundworks_version_range', range
+        filesMatching(['META-INF/neoforge.mods.toml']) {
+            expand modMetadata + [groundworks_version_range: "${-> range.get()}"]
+        }
+    } else {
+        def metadata = modMetadata + [groundworks_version_range: nestedRange('groundworks')]
+        inputs.properties metadata
+        filesMatching(['META-INF/neoforge.mods.toml']) {
+            expand metadata
+        }
     }
 }
 
 // The pack loads jars from `mods/`, which is gitignored. Build straight into it so
 // `./gradlew build` is the whole install step.
-tasks.register('installToPack', Copy) {
-    dependsOn tasks.named('jar')
-    from tasks.named('jar')
-    into rootProject.file('mods')
+if (siblingBuilds) {
+    tasks.register('installToPack') {
+        doFirst {
+            throw new GradleException('installToPack refuses under -PsiblingBuilds: this jar is built '
+                    + 'against the Groundworks and Beltworks checkouts, not the pinned jar in mods/')
+        }
+    }
+} else {
+    tasks.register('installToPack', Copy) {
+        dependsOn tasks.named('jar')
+        from tasks.named('jar')
+        into rootProject.file('mods')
+    }
 }

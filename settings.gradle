@@ -15,3 +15,39 @@ rootProject.name = 'planetaryfactory'
 
 include 'planetaryfactory_core'
 project(':planetaryfactory_core').projectDir = file('mod')
+
+// -PsiblingBuilds builds and runs against the Groundworks and Beltworks checkouts in place of the
+// pinned jar in mods/, so a change crossing the three repos is tried before either is released (#466).
+if (providers.gradleProperty('siblingBuilds').present) {
+    def checkout = { String property, String fallback ->
+        def path = providers.gradleProperty(property).getOrElse(fallback)
+        def dir = new File(path.replaceFirst('^~', System.getProperty('user.home'))).canonicalFile
+        if (!dir.isDirectory()) {
+            throw new GradleException("-P${property}: ${dir} is not a directory")
+        }
+        dir
+    }
+    def describe = { String name, File dir ->
+        def properties = new File(dir, 'gradle.properties')
+        if (!properties.isFile()) {
+            throw new GradleException("-P${name}Dir: ${dir} has no gradle.properties, so it is not a ${name} checkout")
+        }
+        def props = new Properties()
+        properties.withInputStream { props.load(it) }
+        def git = { String... args ->
+            providers.exec {
+                commandLine(['git', '-C', dir.path] + args.toList())
+                ignoreExitValue = true
+            }.standardOutput.asText.get().trim()
+        }
+        def dirty = git('status', '--porcelain') ? ' +uncommitted' : ''
+        "${name} ${props.mod_version} at ${git('rev-parse', '--short', 'HEAD')}${dirty} (${dir})"
+    }
+    // Beltworks' own settings may include Groundworks too; the composite holds one Groundworks only
+    // while both inclusions name the same directory.
+    def groundworks = checkout('groundworksDir', '~/placementpreview')
+    def beltworks = checkout('beltworksDir', '~/minecraft_mods/simplebelts-src')
+    includeBuild groundworks
+    includeBuild beltworks
+    println "siblingBuilds: not the pinned jars -- ${describe('groundworks', groundworks)}, ${describe('beltworks', beltworks)}"
+}
