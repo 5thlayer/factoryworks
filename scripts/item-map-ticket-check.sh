@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# Assert every item-map row that waits on a ticket names an open one (#278), and every `planned`
-# or `blocked` mechanic-ledger section names at least one open issue in its `ticket` (#379).
+# Assert every item-map row that waits on a ticket names an open one (#278), every `planned` or
+# `blocked` mechanic-ledger section names at least one open issue in its `ticket` (#379), and every
+# row of `data/pack/mechanic-obtainable.json` names an open one (#453).
 #
 # An `undecided` row's `ticket` and any row's `blocked_by` both say "the converter skips this
 # until that ticket lands". Once the ticket closes, the skip is permanent and the pointer lies.
 # A ledger `ticket` is prose that keeps closed refs as history, so one open ref is enough.
 #
 # Network-touching: needs an authenticated `gh`. Run it after closing a ticket, or after editing
-# `data/pack/item-map.json` or `docs/factorio-mechanics.md` -- it is not part of any offline check.
+# `data/pack/item-map.json`, `data/pack/mechanic-obtainable.json` or `docs/factorio-mechanics.md`
+# -- it is not part of any offline check.
 set -uo pipefail
 
 cd "$(dirname "$0")/.."
@@ -39,6 +41,17 @@ for name, row in sorted(rows.items()):
         elif issue["state"] != "OPEN":
             print(f"CLOSED  {name}: {field} #{ticket} -- {issue['title']}")
             fail = 1
+
+for row in json.load(open("data/pack/mechanic-obtainable.json"))["rows"]:
+    checked += 1
+    ticket = row.get("ticket")
+    issue = issues.get(ticket) if isinstance(ticket, int) else None
+    if issue is None:
+        print(f"MISSING mechanic {row.get('id')}: ticket {ticket!r} names no issue")
+        fail = 1
+    elif issue["state"] != "OPEN":
+        print(f"CLOSED  mechanic {row.get('id')}: ticket #{ticket} -- {issue['title']}")
+        fail = 1
 
 print(f"{checked} ticket pointers checked", "" if fail else "-- all open")
 

@@ -76,6 +76,8 @@ Checks: `tests/pack/test_ore_assets.py`, `tests/factorio/test_resource_extract.p
 |---|---|
 | `gen-flora-textures.py` | placeholder 16×16 flora sprites for Sapros's trees (stdlib, meant to be redrawn) |
 | `build-filter-pack.sh` | rebuilds `kubejs/data/<name>.zip` from `packs/<name>/` (pack.mcmeta filter sections) |
+| `jar-registry-extract.py` | every item and fluid id the installed jars register → `data/jars/` (ADR-0088) |
+| `build-obtainable-index.py` | EMI's Obtainable allowlist → `kubejs/assets/planetaryfactory/emi/index/stacks/` (ADR-0088) |
 
 ## Manifest + config integrity checks
 

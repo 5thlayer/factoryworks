@@ -1,0 +1,251 @@
+{
+  "disable": true,
+  "added": [
+    {
+      "stack": "item:beltworks:belt_tile"
+    },
+    {
+      "stack": "item:beltworks:express_belt_tile"
+    },
+    {
+      "stack": "item:beltworks:express_loader"
+    },
+    {
+      "stack": "item:beltworks:express_splitter"
+    },
+    {
+      "stack": "item:beltworks:improved_belt_tile"
+    },
+    {
+      "stack": "item:beltworks:improved_loader"
+    },
+    {
+      "stack": "item:beltworks:improved_splitter"
+    },
+    {
+      "stack": "item:beltworks:loader"
+    },
+    {
+      "stack": "item:beltworks:splitter"
+    },
+    {
+      "stack": "item:beltworks:turbo_loader"
+    },
+    {
+      "stack": "item:ftbfiltersystem:smart_filter"
+    },
+    {
+      "stack": "item:ftbmaterials:copper_plate"
+    },
+    {
+      "stack": "item:ftbmaterials:copper_wire"
+    },
+    {
+      "stack": "item:ftbmaterials:iron_gear"
+    },
+    {
+      "stack": "item:ftbmaterials:iron_plate"
+    },
+    {
+      "stack": "item:ftbmaterials:iron_rod"
+    },
+    {
+      "stack": "item:ftbmaterials:steel_plate"
+    },
+    {
+      "stack": "item:ftbmaterials:uranium_raw_ore"
+    },
+    {
+      "stack": "item:ftbquests:book"
+    },
+    {
+      "stack": "item:minecraft:acacia_log"
+    },
+    {
+      "stack": "item:minecraft:acacia_sapling"
+    },
+    {
+      "stack": "item:minecraft:acacia_stairs"
+    },
+    {
+      "stack": "item:minecraft:birch_log"
+    },
+    {
+      "stack": "item:minecraft:birch_sapling"
+    },
+    {
+      "stack": "item:minecraft:birch_stairs"
+    },
+    {
+      "stack": "item:minecraft:chest"
+    },
+    {
+      "stack": "item:minecraft:coal"
+    },
+    {
+      "stack": "item:minecraft:cobblestone"
+    },
+    {
+      "stack": "item:minecraft:cobblestone_stairs"
+    },
+    {
+      "stack": "item:minecraft:gray_concrete"
+    },
+    {
+      "stack": "item:minecraft:ladder"
+    },
+    {
+      "stack": "item:minecraft:light_gray_concrete"
+    },
+    {
+      "stack": "item:minecraft:oak_log"
+    },
+    {
+      "stack": "item:minecraft:oak_sapling"
+    },
+    {
+      "stack": "item:minecraft:oak_stairs"
+    },
+    {
+      "stack": "item:minecraft:orange_concrete"
+    },
+    {
+      "stack": "item:minecraft:rail"
+    },
+    {
+      "stack": "item:minecraft:raw_copper"
+    },
+    {
+      "stack": "item:minecraft:raw_iron"
+    },
+    {
+      "stack": "item:minecraft:stone_brick_stairs"
+    },
+    {
+      "stack": "item:minecraft:stone_bricks"
+    },
+    {
+      "stack": "item:minecraft:stone_stairs"
+    },
+    {
+      "stack": "item:minecraft:yellow_concrete"
+    },
+    {
+      "stack": "item:oritech:big_solar_panel"
+    },
+    {
+      "stack": "item:oritech:fluid_pipe"
+    },
+    {
+      "stack": "item:oritech:industrial_light"
+    },
+    {
+      "stack": "item:oritech:large_storage"
+    },
+    {
+      "stack": "item:oritech:portable_tank"
+    },
+    {
+      "stack": "item:planetaryfactory:advanced_circuit"
+    },
+    {
+      "stack": "item:planetaryfactory:assembling_machine"
+    },
+    {
+      "stack": "item:planetaryfactory:assembling_machine_2"
+    },
+    {
+      "stack": "item:planetaryfactory:barrel"
+    },
+    {
+      "stack": "item:planetaryfactory:boiler"
+    },
+    {
+      "stack": "item:planetaryfactory:burner_mining_drill"
+    },
+    {
+      "stack": "item:planetaryfactory:electric_engine_unit"
+    },
+    {
+      "stack": "item:planetaryfactory:electric_furnace"
+    },
+    {
+      "stack": "item:planetaryfactory:electric_mining_drill"
+    },
+    {
+      "stack": "item:planetaryfactory:electronic_circuit"
+    },
+    {
+      "stack": "item:planetaryfactory:engine_unit"
+    },
+    {
+      "stack": "item:planetaryfactory:engineers_iron_pick"
+    },
+    {
+      "stack": "item:planetaryfactory:engineers_steel_pick"
+    },
+    {
+      "stack": "item:planetaryfactory:iron_chest"
+    },
+    {
+      "stack": "item:planetaryfactory:low_density_structure"
+    },
+    {
+      "stack": "item:planetaryfactory:medium_electric_pole"
+    },
+    {
+      "stack": "item:planetaryfactory:offshore_pump"
+    },
+    {
+      "stack": "item:planetaryfactory:pumpjack"
+    },
+    {
+      "stack": "item:planetaryfactory:radar"
+    },
+    {
+      "stack": "item:planetaryfactory:small_electric_pole"
+    },
+    {
+      "stack": "item:planetaryfactory:steam_engine"
+    },
+    {
+      "stack": "item:planetaryfactory:steel_chest"
+    },
+    {
+      "stack": "item:planetaryfactory:steel_furnace"
+    },
+    {
+      "stack": "item:planetaryfactory:stone_furnace"
+    },
+    {
+      "stack": "item:planetaryfactory:substation_electric_pole"
+    },
+    {
+      "stack": "item:railcraft:block_signal"
+    },
+    {
+      "stack": "item:railcraft:cargo_minecart"
+    },
+    {
+      "stack": "item:railcraft:distant_signal"
+    },
+    {
+      "stack": "item:railcraft:iron_buffer_stop_track"
+    },
+    {
+      "stack": "item:railcraft:steam_locomotive"
+    },
+    {
+      "stack": "item:railcraft:tank_minecart"
+    },
+    {
+      "stack": "fluid:minecraft:water"
+    },
+    {
+      "stack": "fluid:oritech:still_oil"
+    },
+    {
+      "stack": "fluid:planetaryfactory:steam"
+    }
+  ]
+}
