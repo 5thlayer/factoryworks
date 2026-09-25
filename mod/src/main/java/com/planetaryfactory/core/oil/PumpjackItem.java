@@ -3,8 +3,8 @@ package com.planetaryfactory.core.oil;
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.machine.footprint.FootprintItem;
 import com.planetaryfactory.core.placement.PackRefusal;
-import io.github._5thlayer.placementpreview.PlacementPlan;
-import io.github._5thlayer.placementpreview.Placements;
+import io.github._5thlayer.groundworks.PlacementPlan;
+import io.github._5thlayer.groundworks.Placements;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

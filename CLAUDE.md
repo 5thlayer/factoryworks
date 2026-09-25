@@ -292,7 +292,7 @@ the positions a held item would fill, the blockstate at each, and a refusal or n
 draws a plan and the click executes one, so the two cannot drift -- a preview that lies is worse
 than none, because a player builds against it. The plan, its drawing and the vanilla plan
 (deferring to `BlockPlaceContext` for facing, replaceable blocks and state survival) are the
-placementpreview library's, which Beltworks bundles and the pack compiles against from `mavenLocal()`
+Groundworks library's, which Beltworks bundles and the pack compiles against from `mavenLocal()`
 (#446). `Placements.planFor` is the one entry point, and every `planetaryfactory:` block is opted into
 the vanilla plan in `PlanetaryFactoryCore`. Only an item whose placement is *not* vanilla's implements
 `PlansPlacement` -- the pole's column, the rig's footprint, the pump's dry site -- and its refusals are

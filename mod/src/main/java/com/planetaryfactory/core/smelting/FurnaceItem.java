@@ -1,8 +1,8 @@
 package com.planetaryfactory.core.smelting;
 
-import io.github._5thlayer.placementpreview.PlacementPlan;
-import io.github._5thlayer.placementpreview.Placements;
-import io.github._5thlayer.placementpreview.PlansPlacement;
+import io.github._5thlayer.groundworks.PlacementPlan;
+import io.github._5thlayer.groundworks.Placements;
+import io.github._5thlayer.groundworks.PlansPlacement;
 import com.planetaryfactory.core.placement.PackRefusal;
 import com.planetaryfactory.core.placement.ReplaceGroups;
 import com.planetaryfactory.core.placement.ReplaceHandoff;

@@ -51,7 +51,7 @@ side = "BOTH"
 
 # Beltworks bundles it, and the range is Beltworks' own, so the two resolve to one loaded version.
 [[dependencies.${mod_id}]]
-modId = "placementpreview"
+modId = "groundworks"
 type = "required"
 versionRange = "[0.1,0.2)"
 ordering = "NONE"

@@ -98,7 +98,7 @@ dependencies {
                       'kubejs-neoforge-*.jar', 'rhino-*.jar',
                       'better-advanced-tooltips-*.jar'])
     // Not bundled: the pack gets it from Beltworks, which bundles it (#446).
-    compileOnly 'io.github.5thlayer:placementpreview:0.1.0'
+    compileOnly 'io.github.5thlayer:groundworks:0.1.0'
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather
     // than a Minecraft type, so the Assembler's attachment codec can be round-tripped on a plain
     // JVM -- which is what ADR-0038's "round-trip the data attachment" asks for. Minecraft itself
@@ -111,7 +111,7 @@ dependencies {
 }
 
 repositories {
-    // placementpreview, until it is released (5thlayer/placementpreview#2).
+    // Groundworks, until it is released (5thlayer/groundworks#2).
     mavenLocal {
         content { includeGroup 'io.github.5thlayer' }
     }
