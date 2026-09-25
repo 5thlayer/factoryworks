@@ -5,7 +5,10 @@ Obtainable is derived from every output of every recipe the pack emits, every it
 grants, and `data/pack/mechanic-obtainable.json`, the hand-kept rows for what a mechanic produces
 with no recipe. Worldgen and mob drops are #454's and #455's. Reads only committed files.
 
-EMI skips an `added` entry that is a bare string, so each is a `{"stack": ...}` object.
+EMI reads index stacks only under the `emi` namespace, and applies a file's `filters` before its
+`added`, so a filter matching every id empties the index and `added` refills it. `disable` would
+also hide every recipe naming a filtered stack, so it is left off. An `added` entry that is a bare
+string is skipped, so each is a `{"stack": ...}` object.
 
 Usage:
 
@@ -22,7 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RECIPES = ROOT / "kubejs/data/planetaryfactory/recipe"
 KIT = ROOT / "mod/src/main/java/com/planetaryfactory/core/start/StartingKit.java"
 MECHANICS = ROOT / "data/pack/mechanic-obtainable.json"
-INDEX = ROOT / "kubejs/assets/planetaryfactory/emi/index/stacks/obtainable.json"
+INDEX = ROOT / "kubejs/assets/emi/index/stacks/obtainable.json"
 
 
 def recipe_outputs():
@@ -55,7 +58,7 @@ def mechanic_rows():
 def index():
     stacks = derived() | {row["id"] for row in mechanic_rows()}
     ordered = sorted(stacks, key=lambda stack: (not stack.startswith("item:"), stack))
-    return {"disable": True, "added": [{"stack": stack} for stack in ordered]}
+    return {"filters": ["/.*/"], "added": [{"stack": stack} for stack in ordered]}
 
 
 def main():

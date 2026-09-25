@@ -107,8 +107,13 @@ class ObtainableIndex(unittest.TestCase):
         self.assertNotIn("zipfile", source)
         self.assertNotIn(".jar", source)
 
+    def test_the_index_is_where_emi_reads(self):
+        self.assertEqual(KUBEJS / "assets/emi/index/stacks",
+                         self.generator.INDEX.parent)
+
     def test_the_index_is_an_allowlist(self):
-        self.assertIs(True, self.index["disable"])
+        self.assertEqual(["/.*/"], self.index["filters"])
+        self.assertNotIn("disable", self.index)
         self.assertEqual(len(self.added), len(set(self.added)))
 
     def test_every_recipe_output_and_kit_item_is_listed(self):

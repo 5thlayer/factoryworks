@@ -10,7 +10,7 @@ item every jar registers: nine vanilla wooden stairs where Terra grows three spe
 of what exists to be had, and builds plans against it (#173).
 
 **Decision (#173).** EMI's index lists only **Obtainable** items and fluids, as an allowlist:
-`disable: true` empties the index and `added` names each Obtainable stack by bare id. Obtainable is
+a filter matching every id empties the index and `added` names each Obtainable stack by bare id. Obtainable is
 derived, never typed, from five sources: a pack recipe's output, the starting kit, a drop of a
 block the live worldgen places, a drop of a mob the live biomes spawn, and a mechanic that produces
 it with no recipe (a filled bucket, a Pumpjack's crude, a Boiler's steam, an outfield disc's ore).
