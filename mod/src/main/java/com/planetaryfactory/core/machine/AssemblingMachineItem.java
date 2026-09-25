@@ -8,8 +8,9 @@ import com.planetaryfactory.core.PFItems;
 import com.planetaryfactory.core.machine.footprint.FootprintItem;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.machine.footprint.FootprintPartBlock;
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
+import com.planetaryfactory.core.placement.PackRefusal;
 import com.planetaryfactory.core.placement.ReplaceGroups;
 import com.planetaryfactory.core.placement.ReplaceHandoff;
 
@@ -76,7 +77,7 @@ public class AssemblingMachineItem extends FootprintItem {
         // recipe hands back; the server's plan is the one the click executes (ADR-0082).
         boolean fits = player == null || ReplaceHandoff.fits(player, context.getHand(),
                 new ItemStack(PFItems.assemblingMachine(machine.tier()).get()), machine.retierExtras(tier));
-        return PlacementPlan.replacing(blocks, fits ? null : PlacementPlan.Refusal.NO_ROOM_TO_RETURN);
+        return PlacementPlan.replacing(blocks, fits ? null : PackRefusal.NO_ROOM_TO_RETURN);
     }
 
     /**
@@ -86,7 +87,7 @@ public class AssemblingMachineItem extends FootprintItem {
      */
     InteractionResult replace(PlacementPlan plan, Level level, BlockPos anchor, Player player, InteractionHand hand) {
         if (plan.isRefused()) {
-            if (plan.refusal() == PlacementPlan.Refusal.NO_ROOM_TO_RETURN && player instanceof ServerPlayer server) {
+            if (plan.refusal() == PackRefusal.NO_ROOM_TO_RETURN && player instanceof ServerPlayer server) {
                 server.sendSystemMessage(Component.translatable(NO_ROOM_KEY), true);
             }
             // CONSUME rather than FAIL: a failed use falls through to the item, which would place beside (ADR-0082).

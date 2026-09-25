@@ -62,6 +62,29 @@ class RigGeometryTest {
         }
     }
 
+    /** The preview draws a footprint's outer faces only, so every rig has to be a solid box. */
+    @Test
+    void everyRigAtEveryFacingIsASolidBox() {
+        for (RigTier tier : RigTier.values()) {
+            RigCorpus.Row row = RigCorpus.get().rowOf(tier);
+            int volume = row.width() * row.height() * tier.blocksTall();
+            for (RigFacing facing : RigFacing.values()) {
+                Set<Offset> cells = Set.copyOf(
+                        RigGeometry.footprint(row.width(), row.height(), tier.blocksTall(), facing));
+                int spanX = span(cells.stream().mapToInt(Offset::dx).toArray());
+                int spanY = span(cells.stream().mapToInt(Offset::dy).toArray());
+                int spanZ = span(cells.stream().mapToInt(Offset::dz).toArray());
+                assertEquals(volume, cells.size(), tier + " " + facing);
+                assertEquals(volume, spanX * spanY * spanZ, tier + " " + facing + " is not a box");
+            }
+        }
+    }
+
+    private static int span(int[] values) {
+        return java.util.Arrays.stream(values).max().orElseThrow()
+                - java.util.Arrays.stream(values).min().orElseThrow() + 1;
+    }
+
     @Test
     void theBurnerRigIsACubeTwoTallAndTheElectricOneThree() {
         // The vertical extent is chosen rather than extracted (RigTier#blocksTall), so this is the

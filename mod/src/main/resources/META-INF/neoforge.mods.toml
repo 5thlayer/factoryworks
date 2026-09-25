@@ -49,6 +49,14 @@ versionRange = "[2.0.0-exp6]"
 ordering = "AFTER"
 side = "BOTH"
 
+# Beltworks bundles it, and the range is Beltworks' own, so the two resolve to one loaded version.
+[[dependencies.${mod_id}]]
+modId = "placementpreview"
+type = "required"
+versionRange = "[0.1,0.2)"
+ordering = "NONE"
+side = "BOTH"
+
 [[mixins]]
 config = "planetaryfactory_core.mixins.json"
 

@@ -15,9 +15,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
-import com.planetaryfactory.core.placement.PlansPlacement;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
+import io.github._5thlayer.placementpreview.PlansPlacement;
+import com.planetaryfactory.core.placement.PackRefusal;
 import com.planetaryfactory.core.placement.ReplaceGroups;
 import com.planetaryfactory.core.placement.ReplaceHandoff;
 
@@ -92,7 +93,7 @@ public class SupplyAreaPoleItem extends BlockItem implements PlansPlacement {
             BlockPos top = PoleColumn.topOf(level, aimed);
             BlockPos at = top == null ? aimed.above() : top.above();
             return PlacementPlan.refused(at, getBlock().defaultBlockState(),
-                    PlacementPlan.Refusal.OTHER_REPLACE_GROUP);
+                    PackRefusal.OTHER_REPLACE_GROUP);
         }
         BlockPos top = PoleColumn.topOf(level, aimed);
         if (top == null) {
@@ -101,10 +102,10 @@ public class SupplyAreaPoleItem extends BlockItem implements PlansPlacement {
         BlockPos next = top.above();
         BlockState segment = getBlock().defaultBlockState();
         if (PoleColumn.height(level, aimed) >= PoleColumn.MAX_SEGMENTS) {
-            return PlacementPlan.refused(next, segment, PlacementPlan.Refusal.COLUMN_FULL);
+            return PlacementPlan.refused(next, segment, PackRefusal.COLUMN_FULL);
         }
         if (!level.getBlockState(next).canBeReplaced()) {
-            return PlacementPlan.refused(next, segment, PlacementPlan.Refusal.BLOCKED_TOP);
+            return PlacementPlan.refused(next, segment, PackRefusal.BLOCKED_TOP);
         }
         return PlacementPlan.accepted(next, segment);
     }
@@ -122,7 +123,7 @@ public class SupplyAreaPoleItem extends BlockItem implements PlansPlacement {
         Player player = context.getPlayer();
         boolean fits = player == null
                 || ReplaceHandoff.fits(player, context.getHand(), new ItemStack(replaced), List.of());
-        return PlacementPlan.replacing(blocks, fits ? null : PlacementPlan.Refusal.NO_ROOM_TO_RETURN);
+        return PlacementPlan.replacing(blocks, fits ? null : PackRefusal.NO_ROOM_TO_RETURN);
     }
 
     private static String id(Block block) {

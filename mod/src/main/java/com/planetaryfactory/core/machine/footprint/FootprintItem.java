@@ -1,7 +1,7 @@
 package com.planetaryfactory.core.machine.footprint;
 
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.PlansPlacement;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.PlansPlacement;
 
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;

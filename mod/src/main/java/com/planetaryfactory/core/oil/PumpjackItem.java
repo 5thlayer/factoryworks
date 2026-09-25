@@ -2,8 +2,9 @@ package com.planetaryfactory.core.oil;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.machine.footprint.FootprintItem;
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
+import com.planetaryfactory.core.placement.PackRefusal;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +28,7 @@ public class PumpjackItem extends FootprintItem {
             return plan;
         }
         if (!context.getLevel().getBlockState(plan.blocks().getFirst().pos().below()).is(PFBlocks.OIL_WELL.get())) {
-            return PlacementPlan.refused(plan.blocks(), PlacementPlan.Refusal.NOT_ON_WELL);
+            return PlacementPlan.refused(plan.blocks(), PackRefusal.NOT_ON_WELL);
         }
         return plan;
     }
@@ -35,7 +36,7 @@ public class PumpjackItem extends FootprintItem {
     @Override
     public InteractionResult place(BlockPlaceContext context) {
         PlacementPlan plan = Placements.planFor(this, context);
-        if (plan != null && plan.refusal() == PlacementPlan.Refusal.NOT_ON_WELL
+        if (plan != null && plan.refusal() == PackRefusal.NOT_ON_WELL
                 && context.getPlayer() instanceof ServerPlayer player) {
             player.sendSystemMessage(Component.translatable(NO_WELL_KEY), true);
         }

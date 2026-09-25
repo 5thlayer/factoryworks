@@ -23,8 +23,9 @@ import com.planetaryfactory.core.fluid.SteamEngineFootprint;
 import com.planetaryfactory.core.mining.rig.RigCorpus;
 import com.planetaryfactory.core.mining.rig.RigGeometry;
 import com.planetaryfactory.core.mining.rig.RigTier;
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
+import com.planetaryfactory.core.placement.PackRefusal;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
 import com.planetaryfactory.core.oil.PumpjackBlockEntity;
 import com.planetaryfactory.core.oil.PumpjackFootprint;
 import com.planetaryfactory.core.radar.RadarBlockEntity;
@@ -161,7 +162,7 @@ final class PlacementPlanTests {
     private static void poleColumnFull(GameTestHelper helper) {
         column(helper, PoleColumn.MAX_SEGMENTS);
         refusal(check(helper, pole(PoleTier.SMALL), ABOVE_FLOOR, Direction.NORTH, true),
-                PlacementPlan.Refusal.COLUMN_FULL, helper);
+                PackRefusal.COLUMN_FULL, helper);
         helper.succeed();
     }
 
@@ -169,7 +170,7 @@ final class PlacementPlanTests {
         column(helper, 1);
         helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
         refusal(check(helper, pole(PoleTier.SMALL), ABOVE_FLOOR, Direction.NORTH, true),
-                PlacementPlan.Refusal.BLOCKED_TOP, helper);
+                PackRefusal.BLOCKED_TOP, helper);
         helper.succeed();
     }
 
@@ -185,7 +186,7 @@ final class PlacementPlanTests {
     private static void poleOtherGroup(GameTestHelper helper) {
         column(helper, 3);
         PlacementPlan plan = check(helper, pole(PoleTier.SUBSTATION), ABOVE_FLOOR, Direction.NORTH, true);
-        refusal(plan, PlacementPlan.Refusal.OTHER_REPLACE_GROUP, helper);
+        refusal(plan, PackRefusal.OTHER_REPLACE_GROUP, helper);
         BlockPos refusedAt = plan.blocks().getFirst().pos();
         if (refusedAt.getY() != helper.absolutePos(ABOVE_FLOOR).getY() + 3) {
             helper.fail("the other-group refusal was drawn somewhere other than the top of the "
@@ -222,7 +223,7 @@ final class PlacementPlanTests {
     private static void rigRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.rig(RigTier.BURNER).get()),
-                FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
+                FLOOR, Direction.UP, true), PackRefusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }
 
@@ -267,7 +268,7 @@ final class PlacementPlanTests {
     private static void assemblingMachineRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(AssemblingMachineFootprint.TALL - 1), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.assemblingMachine(AssemblingTier.ONE).get()),
-                FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
+                FLOOR, Direction.UP, true), PackRefusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }
 
@@ -299,7 +300,7 @@ final class PlacementPlanTests {
     private static void steamEngineRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.STEAM_ENGINE.get()),
-                FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
+                FLOOR, Direction.UP, true), PackRefusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }
 
@@ -336,7 +337,7 @@ final class PlacementPlanTests {
     /** The same click on stone refuses the whole Pumpjack and changes nothing. */
     private static void pumpjackRefusesOffAWell(GameTestHelper helper) {
         refusal(check(helper, new ItemStack(PFItems.PUMPJACK.get()),
-                FLOOR, Direction.UP, true), PlacementPlan.Refusal.NOT_ON_WELL, helper);
+                FLOOR, Direction.UP, true), PackRefusal.NOT_ON_WELL, helper);
         helper.succeed();
     }
 
@@ -344,7 +345,7 @@ final class PlacementPlanTests {
     private static void radarRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.offset(1, 2, 1), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.RADAR.get()),
-                FLOOR, Direction.UP, true), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, helper);
+                FLOOR, Direction.UP, true), PackRefusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }
 
@@ -365,7 +366,7 @@ final class PlacementPlanTests {
      */
     private static void pumpRefusesADrySite(GameTestHelper helper) {
         refusal(check(helper, new ItemStack(PFBlocks.OFFSHORE_PUMP.get()), FLOOR, Direction.UP, true),
-                PlacementPlan.Refusal.NO_FLUID_SOURCE, helper);
+                PackRefusal.NO_FLUID_SOURCE, helper);
         helper.succeed();
     }
 
@@ -424,7 +425,7 @@ final class PlacementPlanTests {
         return plan;
     }
 
-    private static void refusal(PlacementPlan plan, PlacementPlan.Refusal expected,
+    private static void refusal(PlacementPlan plan, PackRefusal expected,
                                 GameTestHelper helper) {
         if (plan.refusal() != expected) {
             helper.fail("expected the refusal " + expected + " but the plan gave " + plan.refusal(),
@@ -523,7 +524,7 @@ final class PlacementPlanTests {
             player.setItemInHand(InteractionHand.MAIN_HAND, held);
             BlockHitResult hit = hit(helper, Direction.NORTH);
             PlacementPlan plan = plan(helper, player, hit);
-            if (plan.refusal() != PlacementPlan.Refusal.NO_ROOM_TO_RETURN || !plan.isReplace()) {
+            if (plan.refusal() != PackRefusal.NO_ROOM_TO_RETURN || !plan.isReplace()) {
                 helper.fail("a full inventory planned " + plan, AT);
             }
             BlockState before = helper.getBlockState(AT);
@@ -754,13 +755,13 @@ final class PlacementPlanTests {
                     helper -> replaces(helper, PoleTier.SMALL, PoleTier.MEDIUM, 2));
             tests.test("replace_pole_refuses_a_substation_on_a_small_column", 20,
                     helper -> refuses(helper, PoleTier.SMALL, 3, PoleTier.SUBSTATION, 2, false,
-                            PlacementPlan.Refusal.OTHER_REPLACE_GROUP, OTHER_GROUP_KEY));
+                            PackRefusal.OTHER_REPLACE_GROUP, OTHER_GROUP_KEY));
             tests.test("replace_pole_refuses_a_small_pole_on_a_substation", 20,
                     helper -> refuses(helper, PoleTier.SUBSTATION, 1, PoleTier.SMALL, 0, false,
-                            PlacementPlan.Refusal.OTHER_REPLACE_GROUP, OTHER_GROUP_KEY));
+                            PackRefusal.OTHER_REPLACE_GROUP, OTHER_GROUP_KEY));
             tests.test("replace_pole_refused_with_no_room_changes_nothing", 20,
                     helper -> refuses(helper, PoleTier.SMALL, 3, PoleTier.MEDIUM, 2, true,
-                            PlacementPlan.Refusal.NO_ROOM_TO_RETURN, NO_ROOM_KEY));
+                            PackRefusal.NO_ROOM_TO_RETURN, NO_ROOM_KEY));
         }
 
         /** A three-segment column of {@code from}, clicked at segment {@code aimed} with {@code to}. */
@@ -817,7 +818,7 @@ final class PlacementPlanTests {
         }
 
         private static void refuses(GameTestHelper helper, PoleTier standing, int height, PoleTier held,
-                                    int aimed, boolean full, PlacementPlan.Refusal expected, String reason) {
+                                    int aimed, boolean full, PackRefusal expected, String reason) {
             standing(helper, standing, height);
             ListeningPlayer player = new ListeningPlayer(helper);
             if (full) {
@@ -827,7 +828,7 @@ final class PlacementPlanTests {
             BlockPos target = ABOVE_FLOOR.above(aimed);
             BlockHitResult hit = hit(helper, target);
             PlacementPlan plan = plan(helper, player, hit, target);
-            if (plan.refusal() != expected || plan.isReplace() != (expected == PlacementPlan.Refusal.NO_ROOM_TO_RETURN)) {
+            if (plan.refusal() != expected || plan.isReplace() != (expected == PackRefusal.NO_ROOM_TO_RETURN)) {
                 helper.fail("expected the refusal " + expected + " but the plan was " + plan, target);
             }
             Map<BlockPos, BlockState> world = world(helper);
@@ -1034,7 +1035,7 @@ final class PlacementPlanTests {
             player.setItemInHand(InteractionHand.MAIN_HAND, stack(AssemblingTier.ONE, 1));
             BlockHitResult hit = hit(helper, ANCHOR);
             PlacementPlan plan = plan(helper, player, hit);
-            if (plan.refusal() != PlacementPlan.Refusal.NO_ROOM_TO_RETURN || !plan.isReplace()) {
+            if (plan.refusal() != PackRefusal.NO_ROOM_TO_RETURN || !plan.isReplace()) {
                 helper.fail("a full inventory planned " + plan, ANCHOR);
             }
             Map<BlockPos, BlockState> world = footprint(helper);
