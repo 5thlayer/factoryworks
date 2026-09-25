@@ -5,6 +5,8 @@ import com.planetaryfactory.core.PFDataComponents;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Property;
 
 /** The held stack's {@link QuarterTurn}, read and written on the stack itself (ADR-0083). */
 public final class HeldTurn {
@@ -16,11 +18,21 @@ public final class HeldTurn {
         return QuarterTurn.orNone(stack.get(PFDataComponents.QUARTER_TURN.get()));
     }
 
+    /**
+     * Whether the stack places a block with a facing, an axis or a rotation. Vanilla cannot say
+     * whether a block's placement reads the look, so a block with one of those is taken to (ADR-0087).
+     */
     public static boolean turns(ItemStack stack) {
-        return stack.getItem() instanceof BlockItem;
+        return stack.getItem() instanceof BlockItem item
+                && item.getBlock().defaultBlockState().getProperties().stream().anyMatch(HeldTurn::orients);
     }
 
-    /** Rotate, or Reverse Rotate, the stack; false and unchanged if it is not placeable. */
+    private static boolean orients(Property<?> property) {
+        return property.getValueClass() == Direction.class || property.getValueClass() == Direction.Axis.class
+                || property == BlockStateProperties.ROTATION_16;
+    }
+
+    /** Rotate, or Reverse Rotate, the stack; false and unchanged if it is not rotatable. */
     public static boolean press(ItemStack stack, boolean reverse) {
         if (!turns(stack)) {
             return false;

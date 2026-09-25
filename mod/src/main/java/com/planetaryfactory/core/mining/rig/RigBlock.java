@@ -3,6 +3,7 @@ package com.planetaryfactory.core.mining.rig;
 import javax.annotation.Nullable;
 
 import com.planetaryfactory.core.PFBlockEntities;
+import com.planetaryfactory.core.machine.footprint.FootprintTurn;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,7 +40,7 @@ import net.minecraft.server.level.ServerLevel;
  * parts and defeat the whole idiom. Rotation after placement is out of scope (ADR-0043): a
  * mis-faced rig is broken and re-placed.
  */
-public class RigBlock extends BaseEntityBlock {
+public class RigBlock extends BaseEntityBlock implements FootprintTurn {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 

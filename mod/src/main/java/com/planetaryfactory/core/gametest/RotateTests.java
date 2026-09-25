@@ -63,8 +63,11 @@ final class RotateTests {
         tests.test("rotate_refuses_a_splitter_half_with_nothing_changed", 20, RotateTests::splitterRefused);
         tests.test("rotate_refuses_a_foot_a_top_and_its_wedge_with_nothing_changed", 20, RotateTests::slopeRefused);
         tests.test("rotate_refuses_a_turn_that_would_slope_a_corner", 20, RotateTests::cornerSlopeRefused);
+        tests.test("rotate_refuses_a_turn_whose_wedge_would_stand_on_a_loader", 20, RotateTests::wedgeBlockedRefused);
         tests.test("rotate_with_a_placeable_held_turns_the_stack_not_the_aimed_block", 20,
                 RotateTests::heldBeforeAimed);
+        tests.test("rotate_with_a_block_that_has_no_facing_held_turns_the_aimed_block", 20,
+                RotateTests::unrotatableHeldTurnsAimed);
     }
 
     private static void placedFacesTheTurnedLook(GameTestHelper helper) {
@@ -264,22 +267,41 @@ final class RotateTests {
         BeltWedgeTests.byHand(helper, player, corner.north(), Direction.SOUTH, 0);
         BeltWedgeTests.byHand(helper, player, corner, Direction.EAST, 0);
         BeltWedgeTests.byHand(helper, player, across, Direction.NORTH, 0);
-        if (helper.getBlockState(corner).getValue(BeltTileBlock.CORNER) == BeltTileBlock.Shape.STRAIGHT
-                || BeltTileTests.pitch(helper, across) != BeltTileBlock.PitchState.LEVEL) {
-            helper.fail("the fixture is " + helper.getBlockState(corner) + " under " + helper.getBlockState(across)
-                    + ", expected a corner under a level tile", corner);
+        if (helper.getBlockState(corner).getValue(BeltTileBlock.CORNER) == BeltTileBlock.Shape.STRAIGHT) {
+            helper.fail("the tile fed from its side stands " + helper.getBlockState(corner) + ", expected a corner", corner);
             return;
         }
-        Map<BlockPos, BlockState> before = BeltWedgeTests.around(helper, corner);
-        ListeningPlayer turner = standingAt(helper, corner.south(2));
-        RotatePress.press(turner, helper.absolutePos(across), false);
-        if (!BeltWedgeTests.around(helper, corner).equals(before)) {
-            helper.fail("a turn that would slope a corner changed the world to " + helper.getBlockState(corner)
-                    + " under " + helper.getBlockState(across), across);
+        refitRefused(helper, corner, across, StretchPlan.Reason.SLOPE_TURNS);
+    }
+
+    // A level tile above a loader, turned to continue the line below it, would be a top standing on the loader (#420).
+    private static void wedgeBlockedRefused(GameTestHelper helper) {
+        BlockPos first = new BlockPos(3, 1, 3);
+        BlockPos loader = first.east(2);
+        BlockPos above = loader.above();
+        helper.setBlock(loader, BeltTileTests.loader(BeltTier.BELT, Direction.NORTH));
+        ServerPlayer player = BeltWedgeTests.player(helper);
+        BeltWedgeTests.byHand(helper, player, first, Direction.EAST, 0, 0);
+        BeltWedgeTests.byHand(helper, player, above, Direction.NORTH, 0);
+        refitRefused(helper, first, above, StretchPlan.Reason.WEDGE_BLOCKED);
+    }
+
+    /** Rotate once at {@code turned} is refused for {@code reason} and changes nothing around {@code centre}. */
+    private static void refitRefused(GameTestHelper helper, BlockPos centre, BlockPos turned, StretchPlan.Reason reason) {
+        if (BeltTileTests.pitch(helper, turned) != BeltTileBlock.PitchState.LEVEL) {
+            helper.fail("the tile to turn stands " + helper.getBlockState(turned) + ", expected level", turned);
             return;
         }
-        if (!turner.heard.equals(List.of(StretchPlan.Reason.SLOPE_TURNS.messageKey()))) {
-            helper.fail("a turn that would slope a corner named " + turner.heard, across);
+        Map<BlockPos, BlockState> before = BeltWedgeTests.around(helper, centre);
+        ListeningPlayer turner = standingAt(helper, centre.south(2));
+        RotatePress.press(turner, helper.absolutePos(turned), false);
+        if (!BeltWedgeTests.around(helper, centre).equals(before)) {
+            helper.fail("a turn refused for " + reason + " changed the world; the turned tile stands "
+                    + helper.getBlockState(turned), turned);
+            return;
+        }
+        if (!turner.heard.equals(List.of(reason.messageKey()))) {
+            helper.fail("a turn refused for " + reason + " named " + turner.heard, turned);
             return;
         }
         helper.succeed();
@@ -324,6 +346,25 @@ final class RotateTests {
         }
         if (!helper.getBlockState(tile).equals(placed)) {
             helper.fail("a press with a tile held turned the aimed tile to " + helper.getBlockState(tile), tile);
+            return;
+        }
+        helper.succeed();
+    }
+
+    // Stone places a block with nothing to face, so it is not rotatable, as in Factorio.
+    private static void unrotatableHeldTurnsAimed(GameTestHelper helper) {
+        BlockPos tile = new BlockPos(2, 1, 2);
+        helper.setBlock(tile, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+        ListeningPlayer player = standingAt(helper, tile.north(2));
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STONE, 2));
+        RotatePress.press(player, helper.absolutePos(tile), false);
+        if (player.getMainHandItem().has(PFDataComponents.QUARTER_TURN.get())) {
+            helper.fail("a press with stone held turned the stone", tile);
+            return;
+        }
+        Direction facing = helper.getBlockState(tile).getValue(BlockStateProperties.HORIZONTAL_FACING);
+        if (facing != Direction.SOUTH) {
+            helper.fail("a press with stone held left the aimed tile facing " + facing + ", expected SOUTH", tile);
             return;
         }
         helper.succeed();
