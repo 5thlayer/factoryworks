@@ -98,6 +98,21 @@ it. Run against the live `mods/`, that empties the playable instance and permane
 the game" to "have packwiz working" — against a tool with no releases. The three local jars fall out
 of the sieve unmatched and `refresh` sweeps up the two that are indexed.
 
+## A local jar is pinned, and the Pack compiles against what it nests
+
+*Added by #465.* A local jar from a 5thlayer repo reaches the Pack through the local maven
+repository (`~/.m2`), at a version that is never republished (5thlayer/beltworks#53,
+5thlayer/groundworks#17). `data/pack/local-jars.json` pins the version, and
+`scripts/sync-local-jars.py` installs it. Before, a jar was copied out of a build folder by hand
+under a name that could stand for two builds: the installed `beltworks-26.1.2-0.1.0.jar` nested
+Groundworks 0.1 while the build of the same name nested 0.3. The sha256 against `~/.m2` is how the
+Pack sees the never-republished rule broken.
+
+The Pack compiles against the Groundworks jar nested in the installed Beltworks jar, not against a
+Groundworks coordinate, and reads the range `neoforge.mods.toml` requires from Beltworks' jarjar
+metadata. The nested jar is the one that loads, so the API compiled against is the API that runs,
+and Beltworks' pin is the only one: a second pin on Groundworks could only go stale against it.
+
 ## What is deferred, and why it is written down
 
 **Publish is a separate ticket.** The issue asked for track, update and publish; only track is

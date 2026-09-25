@@ -302,9 +302,9 @@ def main():
               "recipe to fall back on" % item)
 
     # Three of the Pick's verbs are tag entries, not code, each read by another jar or ours: left out
-    # of `c:tools/wrench` it toggles no Oritech pipe connection, out of the fork's tag it takes up no
-    # belt (#404), and out of ours no pipe run (#431).
-    for tag in ("c/tags/item/tools/wrench.json", "beltworks/tags/item/dismantles_belts.json",
+    # of `c:tools/wrench` it toggles no Oritech pipe connection, out of Groundworks' tag it takes up
+    # no belt (#404), and out of ours no pipe run (#431).
+    for tag in ("c/tags/item/tools/wrench.json", "groundworks/tags/item/dismantles.json",
                 "planetaryfactory/tags/item/dismantles.json"):
         path = DATA / tag
         if check(path.is_file(), "%s is missing, so the Pick lacks the verb it carries" % tag):

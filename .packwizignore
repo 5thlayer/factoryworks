@@ -46,10 +46,9 @@ build/
 # its own right.
 mods/*.jar
 
-# ...except the forks, which have no metafile because they exist on no public
-# index. Their hash in index.toml is the only record of which build is installed.
-!mods/gcyr-*.jar
-!mods/Respoiled-*.jar
+# ...except the local jars, which have no metafile because they exist on no public
+# index. Their hash in index.toml is the record of which build is installed, held
+# to data/pack/local-jars.json by scripts/sync-local-jars.py --check.
 !mods/beltworks-*.jar
 
 # `planetaryfactory_core` stays excluded even though it is also local (ADR-0024):
@@ -69,6 +68,8 @@ mods/*.jar
 # that name at ANY depth, which silently swallowed kubejs/assets and kubejs/data.
 /.probe/
 /.mixin.out/
+# NeoForge's unpacked jar-in-jar copies, rewritten when a nesting jar changes.
+/.cache/
 /.curseclient
 /assets/
 /datapacks/

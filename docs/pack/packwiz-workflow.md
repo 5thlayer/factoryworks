@@ -43,13 +43,12 @@ the `*client*.toml` files) is excluded too — it is not pack behaviour.
 metafiles and that an installer fetches the jars. Here the pack root *is* the playable instance, so
 the jars sit right next to their metafiles — and `refresh` would happily index each managed mod
 twice, once as its metafile and once as a raw hashed jar (465 index entries become 586). So
-`.packwizignore` carries `mods/*.jar`, with negations re-including only the two forks, whose hash is
-the sole record of which build is installed:
+`.packwizignore` carries `mods/*.jar`, with a negation re-including only the local jar, whose hash
+records which build is installed:
 
 ```
 mods/*.jar
-!mods/gcyr-*.jar
-!mods/Respoiled-*.jar
+!mods/beltworks-*.jar
 ```
 
 A consequence worth knowing: because `refresh` cannot see the managed jars, it cannot notice one
@@ -58,13 +57,11 @@ for.
 
 ## The local jars
 
-Four jars are built rather than downloaded, and none exists on a public index.
+Two jars are built rather than downloaded, and neither exists on a public index.
 
 | Jar | How it is tracked |
 | --- | --- |
-| `gcyr` fork | unmanaged entry in `index.toml` — path plus sha256, no metafile |
-| `Respoiled` fork | unmanaged entry in `index.toml` — path plus sha256, no metafile |
-| `beltworks` fork (Beltworks, `5thlayer/beltworks` branch `main`) | unmanaged entry in `index.toml` — path plus sha256, no metafile |
+| `beltworks` local jar (`5thlayer/beltworks`) | pinned in `data/pack/local-jars.json`, installed from `~/.m2`; unmanaged entry in `index.toml` — path plus sha256, no metafile |
 | `planetaryfactory_core` | **not indexed at all** |
 
 `planetaryfactory_core` is excluded in `.packwizignore`. It is rebuilt into `mods/` by
@@ -75,12 +72,35 @@ nothing git does not already have.
 `packwiz update --all` prints this for the unmanaged jars:
 
 ```
-A supported update system for "gcyr-1.21.1-0.2.4+gt7.0.2-src.jar" cannot be found.
+A supported update system for "beltworks-0.1.1.jar" cannot be found.
 ```
 
-**That is expected, non-fatal and non-mutating.** It is not a defect to fix. Publishing the forks as
-GitHub release assets would make them ordinary updatable mods, and that is deliberately deferred —
-see ADR-0024 and the publish ticket.
+**That is expected, non-fatal and non-mutating.** It is not a defect to fix. Publishing the local
+jars as GitHub release assets would make them ordinary updatable mods, and that is deliberately
+deferred — see ADR-0024 and the publish ticket.
+
+### Taking a new Beltworks
+
+A 5thlayer mod reaches the Pack through the local maven repository, at a version that never changes
+once published there. `data/pack/local-jars.json` pins the version the Pack runs, one row per mod;
+Groundworks has no row, because the Pack compiles against the Groundworks nested in the Beltworks jar
+(ADR-0024).
+
+```sh
+scripts/sync-local-jars.py beltworks=0.2.0   # pin, install, refresh the manifest, rebuild the core mod
+scripts/sync-local-jars.py                   # re-install whatever is pinned
+scripts/sync-local-jars.py --check           # assert mods/ matches the pins; no writes
+```
+
+A sync copies each pinned jar out of `~/.m2`, never out of a build folder, removes every other jar
+its row's pattern matches, runs `scripts/pack-check.sh --fix` and then `installToPack`, and says
+whether the core mod compiled. It runs no GameTests. Review the manifest diff before committing it:
+`--fix` absorbs unrelated drift too. Don't run it while the game is running.
+
+`--check` fails when the jar in `mods/` is not the pinned one, differs from `~/.m2`'s by sha256
+(a version republished, or a jar copied by hand), or nests nothing its row names. It skips the
+sha256, and says so, on a machine whose `~/.m2` lacks the pin, and names newer versions `~/.m2`
+holds without failing.
 
 ## Checking for drift
 
@@ -92,8 +112,8 @@ scripts/pack-check.sh --prune  # drop the metafiles whose jar is gone, then --fi
 
 It checks three things, because none alone is enough:
 
-1. **`packwiz refresh` changed something tracked** — an edit to indexed pack content, or to one of
-   the two unmanaged fork jars.
+1. **`packwiz refresh` changed something tracked** — an edit to indexed pack content, or to the
+   unmanaged local jar.
 2. **MISSING** — a metafile names a jar that is not installed. `refresh` hashes the *metafiles*, not
    the jars they point at, so a metafile bumped to a version nobody downloaded refreshes perfectly
    clean.
@@ -170,7 +190,7 @@ packwiz mr install <slug>       # from Modrinth
 
 Then commit the new `mods/<slug>.pw.toml` along with the changed `index.toml` and `pack.toml`.
 
-For a jar with no index entry — a new fork, a hand-built jar — add a `!mods/<name>` negation to
+For a jar with no index entry — a new local jar, a hand-built one — add a `!mods/<name>` negation to
 `.packwizignore` first, then run `scripts/pack-check.sh --fix`. Without the negation the jar is
 excluded along with every other managed jar and `refresh` will not index it; the check reports it as
 STRAY until you decide which it is.

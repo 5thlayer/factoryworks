@@ -1,0 +1,14 @@
+{
+  "jars": [
+    {
+      "mod": "beltworks",
+      "group": "io.github.5thlayer",
+      "artifact": "beltworks",
+      "version": "0.1.1",
+      "pattern": "beltworks-*.jar",
+      "nests": [
+        "groundworks"
+      ]
+    }
+  ]
+}

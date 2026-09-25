@@ -8,7 +8,7 @@
 #
 # Three separate things are checked, because none alone is enough:
 #   1. refresh changed something tracked — catches edits to indexed pack content
-#      and to the two unmanaged fork jars
+#      and to the unmanaged local jar
 #   2. MISSING: a metafile names a jar that is not installed — refresh hashes the
 #      *metafiles*, not the jars they point at, so a metafile bumped to a version
 #      nobody downloaded refreshes perfectly clean
@@ -138,7 +138,7 @@ missing = [f"{v} -> {k}" for k, v in sorted(named.items())
            if not os.path.exists(os.path.join("mods", k))]
 
 # A jar is accounted for if a metafile names it, if the index hashes it directly
-# (the two forks), or if it is the first-party mod, which is deliberately not
+# (the local jar), or if it is the first-party mod, which is deliberately not
 # indexed at all.
 index = open("index.toml").read() if os.path.exists("index.toml") else ""
 stray = [os.path.basename(j) for j in sorted(glob.glob("mods/*.jar"))
