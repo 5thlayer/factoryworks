@@ -41,6 +41,10 @@ file = "config/MouseTweaks.cfg"
 hash = "4069ce1a439d8c37453c1b1e9f2037e0942674c7e48723a39b37eab245792ad4"
 
 [[files]]
+file = "config/beltworks-server.toml"
+hash = "3e852d93dff2f2e578df7047c4dfb1d1f988f1e6db97557aa7b371e8341f90c6"
+
+[[files]]
 file = "config/configuration-options.json"
 hash = "0b68a3b324f4a172d577a10446593b8f64f38e37199c928b0fc5aee152baee00"
 
@@ -2108,7 +2112,7 @@ metafile = true
 
 [[files]]
 file = "mods/beltworks-26.1.2-0.1.0.jar"
-hash = "f174db70e457cc0e47beeb5e5d7024687634b92fe3d051fd716a1e7517b73552"
+hash = "bc5abfa500885e8800df1425daa70a4b7d04af361a0cf16ce9073ddf57b01c3d"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"

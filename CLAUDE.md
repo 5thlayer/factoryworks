@@ -145,7 +145,7 @@ run (#338). KubeJS resolves `kubejs/` against the game directory with no setting
 `mod/run/` is untracked, so the link is built rather than committed. There is no second copy: the
 startup scripts register the pack's items, the server scripts run the recipe sweep, and every file
 under `kubejs/data/` loads. That is what lets a test assert against the recipe the pack ships rather
-than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
+than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml`, linked in by `linkBeltworksConfig`: loaders need power only because the pack's config says so, and Beltworks' default is off (#447). Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
 vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
 five blocks above the floor; without it no test block places and the run hangs rather than fails.
 And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the

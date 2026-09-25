@@ -143,8 +143,22 @@ tasks.register('linkKubeJS') {
     }
 }
 
+// A dev run reads its server configs from `mod/run/config/`, so the harness would test Beltworks'
+// defaults rather than the pack's: loaders need power only because the pack's config says so (#447).
+// A run writes a missing config out with its defaults, so a real file here is one of those.
+tasks.register('linkBeltworksConfig') {
+    description = 'Links the dev runs\' Beltworks server config to the pack\'s.'
+    def link = file('run/config/beltworks-server.toml').toPath()
+    def target = rootProject.file('config/beltworks-server.toml').toPath()
+    doLast {
+        java.nio.file.Files.deleteIfExists(link)
+        java.nio.file.Files.createDirectories(link.parent)
+        java.nio.file.Files.createSymbolicLink(link, link.parent.relativize(target))
+    }
+}
+
 tasks.matching { it.name.startsWith('prepare') && it.name.endsWith('Run') }.configureEach {
-    dependsOn tasks.named('linkKubeJS')
+    dependsOn tasks.named('linkKubeJS'), tasks.named('linkBeltworksConfig')
 }
 
 // `neoforge.mods.toml` is the one place a version string has to be interpolated;
