@@ -1,6 +1,8 @@
 package com.planetaryfactory.core.gametest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.PFDataComponents;
@@ -8,11 +10,13 @@ import com.planetaryfactory.core.placement.HeldTurn;
 import com.planetaryfactory.core.placement.PlacementPlan;
 import com.planetaryfactory.core.placement.Placements;
 import com.planetaryfactory.core.placement.QuarterTurn;
+import com.planetaryfactory.core.placement.RotatePress;
 import com.planetaryfactory.core.smelting.FurnaceTier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -20,18 +24,26 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import rearth.belts.BlockContent;
 import rearth.belts.ComponentContent;
 import rearth.belts.ItemContent;
+import rearth.belts.blocks.BeltTileBlock;
+import rearth.belts.blocks.SplitterBlock;
+import rearth.belts.items.StretchPlan;
 import rearth.belts.model.BeltTier;
 
 /**
  * Rotate on the held stack (#386, ADR-0083): what a stack turned by the presses places, and where
- * the turn goes as the stack is spent. The presses go through {@link HeldTurn#press}, which is what
- * the key's payload calls; the key itself is a human check on delivery.
+ * the turn goes as the stack is spent. And on the aimed block (#405, ADR-0087): turned in place, or
+ * refused with nothing changed. The presses go through {@link HeldTurn#press} and
+ * {@link RotatePress#press}, which is what the key's payload calls; the key itself is a human check
+ * on delivery.
  */
 final class RotateTests {
 
@@ -46,6 +58,13 @@ final class RotateTests {
         tests.test("a_turn_stays_on_the_rest_of_a_stack_and_goes_with_its_last_item", 20,
                 RotateTests::turnGoesWithTheLastItem);
         tests.test("rotate_leaves_an_unplaceable_stack_alone", 20, RotateTests::unplaceableIsLeftAlone);
+        tests.test("rotate_turns_an_aimed_tile_and_loader_a_quarter_each_press_both_ways", 20,
+                RotateTests::aimedTurnsInPlace);
+        tests.test("rotate_refuses_a_splitter_half_with_nothing_changed", 20, RotateTests::splitterRefused);
+        tests.test("rotate_refuses_a_foot_a_top_and_its_wedge_with_nothing_changed", 20, RotateTests::slopeRefused);
+        tests.test("rotate_refuses_a_turn_that_would_slope_a_corner", 20, RotateTests::cornerSlopeRefused);
+        tests.test("rotate_with_a_placeable_held_turns_the_stack_not_the_aimed_block", 20,
+                RotateTests::heldBeforeAimed);
     }
 
     private static void placedFacesTheTurnedLook(GameTestHelper helper) {
@@ -170,6 +189,152 @@ final class RotateTests {
             return;
         }
         helper.succeed();
+    }
+
+    private static void aimedTurnsInPlace(GameTestHelper helper) {
+        BlockPos tile = new BlockPos(2, 1, 2);
+        BlockPos loader = new BlockPos(5, 1, 2);
+        helper.setBlock(tile, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(loader, BeltTileTests.loader(BeltTier.BELT, Direction.EAST));
+        ListeningPlayer player = standingAt(helper, new BlockPos(3, 1, 4));
+        for (BlockPos aimed : List.of(tile, loader)) {
+            BlockEntity entity = helper.getBlockEntity(aimed, BlockEntity.class);
+            for (boolean reverse : List.of(false, true)) {
+                Direction expected = Direction.EAST;
+                for (int press = 0; press < OFFSETS; press++) {
+                    expected = reverse ? expected.getCounterClockWise() : expected.getClockWise();
+                    RotatePress.press(player, helper.absolutePos(aimed), reverse);
+                    Direction facing = helper.getBlockState(aimed).getValue(BlockStateProperties.HORIZONTAL_FACING);
+                    if (facing != expected) {
+                        helper.fail((reverse ? "Reverse Rotate" : "Rotate") + " press " + (press + 1) + " left "
+                                + helper.getBlockState(aimed) + " facing " + facing + ", expected " + expected, aimed);
+                        return;
+                    }
+                }
+            }
+            if (helper.getBlockEntity(aimed, BlockEntity.class) != entity) {
+                helper.fail("turning " + helper.getBlockState(aimed) + " replaced its block entity", aimed);
+                return;
+            }
+        }
+        if (!player.heard.isEmpty()) {
+            helper.fail("a turn that went through named a refusal: " + player.heard);
+            return;
+        }
+        helper.succeed();
+    }
+
+    private static void splitterRefused(GameTestHelper helper) {
+        BlockPos left = new BlockPos(3, 1, 2);
+        BlockPos right = left.relative(Direction.EAST.getClockWise());
+        helper.setBlock(left, splitterHalf(SplitterBlock.Side.LEFT));
+        helper.setBlock(right, splitterHalf(SplitterBlock.Side.RIGHT));
+        refusedUnchanged(helper, List.of(left, right), List.of(left, right), "message.planetaryfactory.rotate.splitter");
+    }
+
+    private static BlockState splitterHalf(SplitterBlock.Side side) {
+        return BlockContent.splitterFor(BeltTier.BELT).defaultBlockState()
+                .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST)
+                .setValue(SplitterBlock.SIDE, side);
+    }
+
+    // Laid by hand through air, so the top stands on a wedge.
+    private static void slopeRefused(GameTestHelper helper) {
+        List<BlockPos> tiles = BeltWedgeTests.byHand(helper, BeltWedgeTests.player(helper), new BlockPos(3, 1, 3),
+                Direction.EAST, 0, 0, 1, 1);
+        BlockPos foot = tiles.get(1);
+        BlockPos top = tiles.get(2);
+        if (BeltTileTests.pitch(helper, foot) != BeltTileBlock.PitchState.FOOT_UP
+                || BeltTileTests.pitch(helper, top) != BeltTileBlock.PitchState.TOP_UP
+                || !helper.getBlockState(top.below()).is(BlockContent.BELT_WEDGE.get())) {
+            helper.fail("the climb stands as " + BeltTileTests.pitch(helper, foot) + " and "
+                    + BeltTileTests.pitch(helper, top) + " over " + helper.getBlockState(top.below())
+                    + ", expected a foot and a top on a wedge", foot);
+            return;
+        }
+        refusedUnchanged(helper, List.of(foot, top, top.below()), List.copyOf(BeltWedgeTests.around(helper, foot).keySet()),
+                "message.planetaryfactory.rotate.slope");
+    }
+
+    // A level tile across a corner's line a block up, turned to continue it, would slope the corner (#419).
+    private static void cornerSlopeRefused(GameTestHelper helper) {
+        BlockPos corner = new BlockPos(3, 1, 3);
+        BlockPos across = corner.east().above();
+        ServerPlayer player = BeltWedgeTests.player(helper);
+        BeltWedgeTests.byHand(helper, player, corner.north(), Direction.SOUTH, 0);
+        BeltWedgeTests.byHand(helper, player, corner, Direction.EAST, 0);
+        BeltWedgeTests.byHand(helper, player, across, Direction.NORTH, 0);
+        if (helper.getBlockState(corner).getValue(BeltTileBlock.CORNER) == BeltTileBlock.Shape.STRAIGHT
+                || BeltTileTests.pitch(helper, across) != BeltTileBlock.PitchState.LEVEL) {
+            helper.fail("the fixture is " + helper.getBlockState(corner) + " under " + helper.getBlockState(across)
+                    + ", expected a corner under a level tile", corner);
+            return;
+        }
+        Map<BlockPos, BlockState> before = BeltWedgeTests.around(helper, corner);
+        ListeningPlayer turner = standingAt(helper, corner.south(2));
+        RotatePress.press(turner, helper.absolutePos(across), false);
+        if (!BeltWedgeTests.around(helper, corner).equals(before)) {
+            helper.fail("a turn that would slope a corner changed the world to " + helper.getBlockState(corner)
+                    + " under " + helper.getBlockState(across), across);
+            return;
+        }
+        if (!turner.heard.equals(List.of(StretchPlan.Reason.SLOPE_TURNS.messageKey()))) {
+            helper.fail("a turn that would slope a corner named " + turner.heard, across);
+            return;
+        }
+        helper.succeed();
+    }
+
+    /** Presses both ways at each of {@code aimed}, holding every block of {@code watched} to its state before. */
+    private static void refusedUnchanged(GameTestHelper helper, List<BlockPos> aimed, List<BlockPos> watched,
+                                         String reason) {
+        Map<BlockPos, BlockState> before = new HashMap<>();
+        watched.forEach(pos -> before.put(pos, helper.getBlockState(pos)));
+        for (BlockPos pos : aimed) {
+            for (boolean reverse : List.of(false, true)) {
+                ListeningPlayer player = standingAt(helper, pos.north(2));
+                RotatePress.press(player, helper.absolutePos(pos), reverse);
+                for (BlockPos kept : watched) {
+                    if (!helper.getBlockState(kept).equals(before.get(kept))) {
+                        helper.fail("a refused turn changed " + before.get(kept) + " to " + helper.getBlockState(kept), kept);
+                        return;
+                    }
+                }
+                if (!player.heard.equals(List.of(reason))) {
+                    helper.fail("a refused turn named " + player.heard + ", expected " + reason, pos);
+                    return;
+                }
+            }
+        }
+        helper.succeed();
+    }
+
+    private static void heldBeforeAimed(GameTestHelper helper) {
+        BlockPos tile = new BlockPos(2, 1, 2);
+        BlockState placed = BeltTileTests.tile(BeltTier.BELT, Direction.EAST);
+        helper.setBlock(tile, placed);
+        ListeningPlayer player = standingAt(helper, tile.north(2));
+        ItemStack stack = new ItemStack(ItemContent.tileFor(BeltTier.BELT), 2);
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        RotatePress.press(player, helper.absolutePos(tile), false);
+        if (!HeldTurn.of(player.getMainHandItem()).equals(QuarterTurn.of(1))) {
+            helper.fail("a press with a tile held left it turned " + HeldTurn.of(player.getMainHandItem())
+                    + ", expected a quarter", tile);
+            return;
+        }
+        if (!helper.getBlockState(tile).equals(placed)) {
+            helper.fail("a press with a tile held turned the aimed tile to " + helper.getBlockState(tile), tile);
+            return;
+        }
+        helper.succeed();
+    }
+
+    private static ListeningPlayer standingAt(GameTestHelper helper, BlockPos at) {
+        ListeningPlayer player = new ListeningPlayer(helper);
+        player.setGameMode(GameType.SURVIVAL);
+        Vec3 feet = Vec3.atBottomCenterOf(helper.absolutePos(at));
+        player.setPos(feet.x, feet.y, feet.z);
+        return player;
     }
 
     private static BlockHitResult hit(GameTestHelper helper, BlockPos floor) {

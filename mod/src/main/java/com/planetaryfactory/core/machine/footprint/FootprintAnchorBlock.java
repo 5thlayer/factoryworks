@@ -14,7 +14,7 @@ import rearth.oritech.block.base.block.MultiblockMachine;
  * Oritech's block and controller code reads it unguarded, and a state without it would throw. The
  * anchor is placed with it already set (ADR-0071).
  */
-public abstract class FootprintAnchorBlock extends MultiblockMachine {
+public abstract class FootprintAnchorBlock extends MultiblockMachine implements FootprintTurn {
 
     private final Supplier<FootprintMachine> machine;
 

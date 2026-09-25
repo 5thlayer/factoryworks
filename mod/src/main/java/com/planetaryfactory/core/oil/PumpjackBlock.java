@@ -3,6 +3,7 @@ package com.planetaryfactory.core.oil;
 import com.mojang.serialization.MapCodec;
 import com.planetaryfactory.core.PFBlockEntities;
 import com.planetaryfactory.core.PFBlocks;
+import com.planetaryfactory.core.machine.footprint.FootprintTurn;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import org.jspecify.annotations.Nullable;
 
 /** The Pumpjack's anchor (ADR-0081): the footprint block over the well, holding {@link PumpjackBlockEntity}. */
-public class PumpjackBlock extends HorizontalDirectionalBlock implements EntityBlock {
+public class PumpjackBlock extends HorizontalDirectionalBlock implements EntityBlock, FootprintTurn {
 
     private static final MapCodec<PumpjackBlock> CODEC = simpleCodec(PumpjackBlock::new);
 

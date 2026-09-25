@@ -236,7 +236,13 @@ rest of a stack and goes with its last item; and that a stick takes no turn and 
 leaves no component. The turn is a mixin on `BlockPlaceContext`'s look, so the plan and the click
 read one answer; making `HeldTurn.turn` return the look unturned turns the first red. The
 arithmetic is `QuarterTurnTest`, and whether `R` and `Shift+R` reach the server and the preview
-redraws is a human check on delivery.
+redraws is a human check on delivery. With nothing placeable held, a press turns the aimed block
+(#405, ADR-0087): a belt tile and a loader turn a quarter each press both ways and keep their block
+entity, a splitter half, a foot, a top and its wedge are refused with nothing changed and their
+reason heard, a level tile turned to slope a corner is refused with the fork's placement reason
+(#419), and a press with a tile held turns the stack and not the block. Dropping the slope denial,
+the wedge's, the refit and the held stack's precedence each turn one red. The deny list and dispatch order are
+`PlacedTurnTest`, and whether the refusal reaches the action bar is a human check on delivery.
 And that a tile item lays a **stretch** in two clicks (`StretchTests`, #393): each test sneak-clicks a
 start, asks `Placements` for the next click's plan, clicks, and holds the world to it. A stretch straight
 ahead, one turning once, one beside its start and one ending on it place every tile the plan names in

@@ -3,6 +3,7 @@ package com.planetaryfactory.core.radar;
 import com.mojang.serialization.MapCodec;
 import com.planetaryfactory.core.PFBlockEntities;
 import com.planetaryfactory.core.PFBlocks;
+import com.planetaryfactory.core.machine.footprint.FootprintTurn;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import org.jspecify.annotations.Nullable;
 
 /** The Radar's anchor (#368): the footprint block that holds {@link RadarBlockEntity}. */
-public class RadarBlock extends HorizontalDirectionalBlock implements EntityBlock {
+public class RadarBlock extends HorizontalDirectionalBlock implements EntityBlock, FootprintTurn {
 
     private static final MapCodec<RadarBlock> CODEC = simpleCodec(RadarBlock::new);
 
