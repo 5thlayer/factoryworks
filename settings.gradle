@@ -46,7 +46,7 @@ if (providers.gradleProperty('siblingBuilds').present) {
     // Beltworks' own settings may include Groundworks too; the composite holds one Groundworks only
     // while both inclusions name the same directory.
     def groundworks = checkout('groundworksDir', '~/minecraft_mods/groundworks')
-    def beltworks = checkout('beltworksDir', '~/minecraft_mods/simplebelts-src')
+    def beltworks = checkout('beltworksDir', '~/minecraft_mods/beltworks')
     includeBuild groundworks
     includeBuild beltworks
     println "siblingBuilds: not the pinned jars -- ${describe('groundworks', groundworks)}, ${describe('beltworks', beltworks)}"
