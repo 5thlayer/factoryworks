@@ -3,6 +3,7 @@ package com.planetaryfactory.core;
 import com.planetaryfactory.core.assembler.AssemblerTicker;
 import com.planetaryfactory.core.machine.PaintLock;
 import com.planetaryfactory.core.dismantle.PipeFamily;
+import com.planetaryfactory.core.stretch.OritechPipeLegs;
 import com.planetaryfactory.core.assembler.client.AssemblerClient;
 import com.planetaryfactory.core.crafting.client.InventoryGridBlank;
 import com.planetaryfactory.core.felling.TreeFelling;
@@ -32,6 +33,7 @@ import io.github._5thlayer.groundworks.Rotate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -114,6 +116,9 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onDatapackSync);
         NeoForge.EVENT_BUS.addListener(PaintLock::onRightClickBlock);
         PipeFamily.register();
+        if (ModList.get().isLoaded("oritech")) {
+            OritechPipeLegs.register();
+        }
         NeoForge.EVENT_BUS.addListener(Reach::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onServerTick);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
