@@ -26,14 +26,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import rearth.belts.BlockContent;
-import rearth.belts.ItemContent;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.blocks.ChuteBlockEntity;
-import rearth.belts.blocks.SplitterBlock;
-import rearth.belts.items.SplitterItem;
-import rearth.belts.model.BeltTier;
+import io.github._5thlayer.beltworks.BlockContent;
+import io.github._5thlayer.beltworks.ItemContent;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.blocks.BeltEndBlockEntity;
+import io.github._5thlayer.beltworks.blocks.SplitterBlock;
+import io.github._5thlayer.beltworks.items.SplitterItem;
+import io.github._5thlayer.beltworks.model.BeltTier;
 
 /**
  * A splitter between belt tiles (#394): its split, fallback, cap and break, and a splitter placed
@@ -314,7 +314,7 @@ final class SplitterTileTests {
     }
 
     private static int half(GameTestHelper helper, BlockPos pos) {
-        return helper.getBlockEntity(pos, ChuteBlockEntity.class).getHalf().size();
+        return helper.getBlockEntity(pos, BeltEndBlockEntity.class).getHalf().size();
     }
 
     private static int onGround(GameTestHelper helper) {

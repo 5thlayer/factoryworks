@@ -10,9 +10,9 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import rearth.belts.ItemContent;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.model.BeltTier;
+import io.github._5thlayer.beltworks.ItemContent;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.model.BeltTier;
 
 /**
  * A slope's edges (#419, ADR-0085): a slope never turns, so a tile placed by hand that would turn a

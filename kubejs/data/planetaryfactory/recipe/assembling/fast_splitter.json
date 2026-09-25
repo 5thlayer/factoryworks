@@ -3,7 +3,7 @@
   "category": "crafting",
   "ingredients": [
     {
-      "ingredient": "belts:splitter",
+      "ingredient": "beltworks:splitter",
       "count": 1
     },
     {
@@ -17,7 +17,7 @@
   ],
   "results": [
     {
-      "id": "belts:improved_splitter",
+      "id": "beltworks:improved_splitter",
       "count": 1
     }
   ],

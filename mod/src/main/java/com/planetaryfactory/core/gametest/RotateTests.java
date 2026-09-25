@@ -30,13 +30,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import rearth.belts.BlockContent;
-import rearth.belts.ComponentContent;
-import rearth.belts.ItemContent;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.SplitterBlock;
-import rearth.belts.items.StretchPlan;
-import rearth.belts.model.BeltTier;
+import io.github._5thlayer.beltworks.BlockContent;
+import io.github._5thlayer.beltworks.ComponentContent;
+import io.github._5thlayer.beltworks.ItemContent;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.SplitterBlock;
+import io.github._5thlayer.beltworks.items.StretchPlan;
+import io.github._5thlayer.beltworks.model.BeltTier;
 
 /**
  * Rotate on the held stack (#386, ADR-0083): what a stack turned by the presses places, and where

@@ -102,7 +102,7 @@ public final class PFGameTests {
             PumpjackTests.register(registrar);
             PipeDismantleTests.register(registrar);
         }
-        if (ModList.get().isLoaded("belts")) {
+        if (ModList.get().isLoaded("beltworks")) {
             BeltTileTests.register(registrar);
             BeltCornerTests.register(registrar);
             BeltSideLoadTests.register(registrar);

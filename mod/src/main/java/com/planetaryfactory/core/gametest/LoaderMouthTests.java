@@ -16,11 +16,11 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import rearth.belts.BlockContent;
-import rearth.belts.ItemContent;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.model.BeltTier;
-import rearth.belts.model.TransportLine;
+import io.github._5thlayer.beltworks.BlockContent;
+import io.github._5thlayer.beltworks.ItemContent;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.model.BeltTier;
+import io.github._5thlayer.beltworks.model.TransportLine;
 
 /**
  * A loader carries no items (#408): a loading line takes each item on at its first tile's back

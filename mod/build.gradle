@@ -53,8 +53,7 @@ dependencies {
     // Jade's jar ships with a capital J, so the pattern carries both spellings rather than relying
     // on a case-insensitive filesystem to paper over it.
     //
-    // The SimpleBelts fork, and the Architectury API its registry fields are typed by, for the belt
-    // GameTest (#342).
+    // Beltworks, for the belt GameTest (#342).
     //
     // FTB Teams, and the library its API names, for whose chart a Radar charts into (#368). Reached
     // only from `core/radar/ftb/`, which loads only when `ftbteams` does.
@@ -68,7 +67,7 @@ dependencies {
             dir: rootProject.file('mods'),
             include: ['oritech-*.jar', 'researchd-*.jar', 'emi-*.jar', 'jei-*.jar',
                       'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar',
-                      'belts-neoforge-*.jar', 'architectury-neoforge-*.jar',
+                      'beltworks-*.jar',
                       'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar',
                       'ftb-chunks-neoforge-26.1.2.8.jar'])
     // FTB Materials, and the library it requires, on every dev run's classpath -- the GameTest server
@@ -80,11 +79,11 @@ dependencies {
     // On `runtimeClasspath` only, through its own configuration: `runtimeOnly` would also land on
     // `test`'s classpath, making `mods/` an input of a task `installToPack` writes into.
     //
-    // Oritech, Railcraft Reborn and SimpleBelts join it for the same reason (#277): the emitted
+    // Oritech, Railcraft Reborn and Beltworks join it for the same reason (#277): the emitted
     // assembling recipes name their pipes, signals and belts, and a server without the jars rejects
-    // every one of them, which would leave this check unable to tell a real id from a typo. Athena,
-    // GeckoLib and Architectury are what those three require to load. FTB Filter System for the
-    // same reason: the re-authored smart filter recipe makes its item (#442).
+    // every one of them, which would leave this check unable to tell a real id from a typo. Athena
+    // and GeckoLib are what Oritech requires to load. FTB Filter System for the same reason: the
+    // re-authored smart filter recipe makes its item (#442).
     //
     // KubeJS and Rhino because KubeJS is how the pack's data and registered items reach the game,
     // in the pack and in the harness alike (#338). Better Advanced Tooltips too: KubeJS declares it
@@ -94,8 +93,8 @@ dependencies {
             dir: rootProject.file('mods'),
             include: ['ftb-materials-*.jar', 'ftb-library-neoforge-*.jar',
                       'oritech-*.jar', 'athena-*.jar', 'geckolib-neoforge-*.jar',
-                      'railcraft-reborn-*.jar', 'belts-neoforge-*.jar',
-                      'ftb-filter-system-neoforge-*.jar', 'architectury-neoforge-*.jar',
+                      'railcraft-reborn-*.jar', 'beltworks-*.jar',
+                      'ftb-filter-system-neoforge-*.jar',
                       'kubejs-neoforge-*.jar', 'rhino-*.jar',
                       'better-advanced-tooltips-*.jar'])
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather

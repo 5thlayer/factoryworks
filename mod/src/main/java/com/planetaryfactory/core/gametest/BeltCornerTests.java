@@ -6,9 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.block.Blocks;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.model.BeltTier;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.model.BeltTier;
 
 /**
  * One-block corners by Factorio's rule (#391): an L of tiles, up a column and along a row, is one

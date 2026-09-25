@@ -10,8 +10,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 import org.jspecify.annotations.Nullable;
-import rearth.belts.items.DismantlePlan;
-import rearth.belts.items.Dismantling;
+import io.github._5thlayer.beltworks.items.DismantlePlan;
+import io.github._5thlayer.beltworks.items.Dismantling;
 
 /**
  * A held item that dismantles belts, with a start stored (#404): the tiles and wedges its Dismantle

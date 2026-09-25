@@ -43,7 +43,7 @@ public final class FamilyDismantle {
 
     private static final Map<Identifier, JoinRule> JOIN_RULES = new HashMap<>();
 
-    private static final boolean BELTS = ModList.get().isLoaded("belts");
+    private static final boolean BELTS = ModList.get().isLoaded("beltworks");
 
     static {
         if (ModList.get().isLoaded("oritech")) {

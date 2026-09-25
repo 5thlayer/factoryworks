@@ -1,5 +1,5 @@
 {
-  "__comment": "Oritech's pipes are the one reader (GenericPipeBlock.useItemOn): a plain click with the Pick toggles a pipe's connection. The Pick's other verbs are not carried here -- breaking rides isCorrectToolForDrops, and a Dismantle is belts:dismantles_belts and planetaryfactory:dismantles (ADR-0039, #300).",
+  "__comment": "Oritech's pipes are the one reader (GenericPipeBlock.useItemOn): a plain click with the Pick toggles a pipe's connection. The Pick's other verbs are not carried here -- breaking rides isCorrectToolForDrops, and a Dismantle is beltworks:dismantles_belts and planetaryfactory:dismantles (ADR-0039, #300).",
   "replace": false,
   "values": [
     "planetaryfactory:engineers_iron_pick",

@@ -254,12 +254,12 @@ fromFactorio('plastics', {
 // no pack recipe.
 
 fromFactorio('logistics', {
-  icon: 'belts:splitter',
+  icon: 'beltworks:splitter',
   unlocks: ['planetaryfactory:assembling/splitter']
 });
 
 fromFactorio('logistics-2', {
-  icon: 'belts:improved_belt_tile',
+  icon: 'beltworks:improved_belt_tile',
   unlocks: [
     'planetaryfactory:assembling/fast_transport_belt',
     'planetaryfactory:assembling/fast_splitter'
@@ -267,7 +267,7 @@ fromFactorio('logistics-2', {
 });
 
 fromFactorio('logistics-3', {
-  icon: 'belts:express_belt_tile',
+  icon: 'beltworks:express_belt_tile',
   unlocks: [
     'planetaryfactory:assembling/express_transport_belt',
     'planetaryfactory:assembling/express_splitter'
@@ -279,11 +279,11 @@ fromFactorio('logistics-3', {
 // Factorio, and `electronics` grants the inserter's above.
 
 fromFactorio('fast-inserter', {
-  icon: 'belts:express_chute',
+  icon: 'beltworks:express_loader',
   unlocks: ['planetaryfactory:assembling/fast_inserter']
 });
 
 fromFactorio('bulk-inserter', {
-  icon: 'belts:turbo_chute',
+  icon: 'beltworks:turbo_loader',
   unlocks: ['planetaryfactory:assembling/bulk_inserter']
 });

@@ -12,8 +12,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -117,7 +117,7 @@ public class BeltTileJadePlugin implements IWailaPlugin {
     // a Jade install without it gets no provider rather than a NoClassDefFoundError in its scan.
     @Override
     public void register(IWailaCommonRegistration registration) {
-        if (!ModList.get().isLoaded("belts")) {
+        if (!ModList.get().isLoaded("beltworks")) {
             return;
         }
         registration.registerBlockDataProvider(DATA, BeltTileBlockEntity.class);
@@ -125,7 +125,7 @@ public class BeltTileJadePlugin implements IWailaPlugin {
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
-        if (!ModList.get().isLoaded("belts")) {
+        if (!ModList.get().isLoaded("beltworks")) {
             return;
         }
         registration.registerBlockComponent(TOOLTIP, BeltTileBlock.class);

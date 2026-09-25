@@ -15,8 +15,8 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import rearth.belts.BlockContent;
-import rearth.belts.model.BeltTier;
+import io.github._5thlayer.beltworks.BlockContent;
+import io.github._5thlayer.beltworks.model.BeltTier;
 
 /**
  * A loader's item filter, set by clicking it with the item, holds through the rest of the click,
@@ -69,7 +69,7 @@ final class BeltFilterTests {
 
     private static void freeLoaderTakesFilter(GameTestHelper helper) {
         helper.setBlock(SOURCE, Blocks.CHEST);
-        helper.setBlock(FROM, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
+        helper.setBlock(FROM, BlockContent.LOADER_BLOCK.get().defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
         Container source = chest(helper, SOURCE);
         source.setItem(0, new ItemStack(Items.COBBLESTONE, 32));
@@ -94,12 +94,12 @@ final class BeltFilterTests {
     private static void placeBelt(GameTestHelper helper) {
         helper.setBlock(SOURCE, Blocks.CHEST);
         helper.setBlock(TARGET, Blocks.CHEST);
-        helper.setBlock(TO, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
+        helper.setBlock(TO, BlockContent.LOADER_BLOCK.get().defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.WEST));
         for (BlockPos tile = TO.west(); tile.getX() > FROM.getX(); tile = tile.west()) {
             helper.setBlock(tile, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
         }
-        helper.setBlock(FROM, BlockContent.CHUTE_BLOCK.get().defaultBlockState()
+        helper.setBlock(FROM, BlockContent.LOADER_BLOCK.get().defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
     }
 

@@ -86,7 +86,7 @@ public final class PlacementPreview {
 
     private static final float REPLACE_SCALE = 1.004F;
 
-    private static final boolean BELTS = ModList.get().isLoaded("belts");
+    private static final boolean BELTS = ModList.get().isLoaded("beltworks");
 
     private static @Nullable Key key;
     private static @Nullable PlacementPlan cached;

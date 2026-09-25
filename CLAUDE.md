@@ -149,13 +149,13 @@ than a fixture written to pass, and what `scripts/check-datapack-load.py` watche
 vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
 five blocks above the floor; without it no test block places and the run hangs rather than fails.
 And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the
-classpath too. Oritech, Railcraft Reborn, SimpleBelts and FTB Materials are there because the pack's
+classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there because the pack's
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
 `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377) and `PipeDismantleTests` (#431), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `BeltSlopeEdgeTests` (#419), `RotateTests` (#386), `StretchTests` (#393) and `DismantleTests` (#404), registered only when the
-pack's SimpleBelts fork (`belts`) is loaded,
+pack's Beltworks fork (`beltworks`) is loaded,
 and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
 (forcing the graph empty turns it red); that a pole's
@@ -188,7 +188,7 @@ two static FE checks cannot read it. The figures are typed, and
 `tests/factorio/test_logistics_extract.py` derives them from Factorio's belt and inserter prototypes.
 Dropping the merge -- scanning a tile as a line of itself -- turns eleven of the twelve rate,
 capacity and ledger tests red, the tier-2 stall alone staying green, which is what it is for. The
-same file holds that no `belts:` recipe survives the stock-recipe sweep, against the pack's express
+same file holds that no `beltworks:` recipe survives the stock-recipe sweep, against the pack's express
 belt recipe as a control. A line built wholly through a player's clicks -- a loader sneak-clicked onto each chest,
 tiles on the floor between -- delivers every item. A tile placed through its own item faces the
 player's look; Rotate is `RotateTests`', and a sneak-click stores a stretch's start rather than
@@ -1094,7 +1094,7 @@ converter still lists `pack` as foreign, which its own check reads from it rathe
 run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
 `recipe_survivors.js` admits and carry `category: crafting` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
-has its model, texture, lang key, `c:tools/wrench`, `belts:dismantles_belts` and
+has its model, texture, lang key, `c:tools/wrench`, `beltworks:dismantles_belts` and
 `planetaryfactory:dismantles`, the three tags that carry its verbs, and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
 the Steel Pick's `netherite_pickaxe` (#241, applied on #323). The Steel Pick used to wear GTCEu's
 Damascus Steel pickaxe, flattened by a generator because GT's tool art is three greyscale layers

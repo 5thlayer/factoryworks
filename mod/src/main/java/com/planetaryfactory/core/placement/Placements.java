@@ -31,8 +31,8 @@ import org.jspecify.annotations.Nullable;
  */
 public final class Placements {
 
-    private static final String BELTS_NAMESPACE = "belts";
-    private static final boolean BELTS = ModList.get().isLoaded(BELTS_NAMESPACE);
+    private static final String BELTWORKS_NAMESPACE = "beltworks";
+    private static final boolean BELTS = ModList.get().isLoaded(BELTWORKS_NAMESPACE);
 
     private Placements() {
     }
@@ -71,7 +71,7 @@ public final class Placements {
     /** Whether this block is the pack's own or the belts fork's, which is who gets a preview. */
     public static boolean isPlanned(Block block) {
         String namespace = BuiltInRegistries.BLOCK.getKey(block).getNamespace();
-        return namespace.equals(PlanetaryFactoryCore.NAMESPACE) || BELTS && namespace.equals(BELTS_NAMESPACE);
+        return namespace.equals(PlanetaryFactoryCore.NAMESPACE) || BELTS && namespace.equals(BELTWORKS_NAMESPACE);
     }
 
     /**

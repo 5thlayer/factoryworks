@@ -3,7 +3,7 @@
   "category": "crafting-with-fluid",
   "ingredients": [
     {
-      "ingredient": "belts:improved_splitter",
+      "ingredient": "beltworks:improved_splitter",
       "count": 1
     },
     {
@@ -23,7 +23,7 @@
   ],
   "results": [
     {
-      "id": "belts:express_splitter",
+      "id": "beltworks:express_splitter",
       "count": 1
     }
   ],

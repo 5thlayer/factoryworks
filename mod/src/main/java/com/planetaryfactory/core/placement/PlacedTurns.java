@@ -12,7 +12,7 @@ import net.neoforged.fml.ModList;
 /** Rotate on a placed block (#405, ADR-0087): {@link PlacedTurn}'s rule over the world. */
 public final class PlacedTurns {
 
-    private static final boolean BELTS = ModList.get().isLoaded("belts");
+    private static final boolean BELTS = ModList.get().isLoaded("beltworks");
     private static final List<PlacedTurn.Denial<BlockState>> DENIALS = BELTS ? BeltTurns.denials() : List.of();
 
     private PlacedTurns() {

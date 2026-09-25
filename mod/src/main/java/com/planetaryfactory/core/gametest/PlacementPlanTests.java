@@ -29,7 +29,7 @@ import com.planetaryfactory.core.oil.PumpjackBlockEntity;
 import com.planetaryfactory.core.oil.PumpjackFootprint;
 import com.planetaryfactory.core.radar.RadarBlockEntity;
 import com.planetaryfactory.core.radar.RadarFootprint;
-import rearth.belts.ItemContent;
+import io.github._5thlayer.beltworks.ItemContent;
 import rearth.oritech.block.base.block.MultiblockMachine;
 import com.planetaryfactory.core.machine.HeldRecipe;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
