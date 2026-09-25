@@ -6,7 +6,6 @@
     "minecraft.BlockPlaceContextMixin",
     "minecraft.GameTestServerMixin",
     "minecraft.InventoryMenuMixin",
-    "minecraft.ServerLevelMixin",
     "minecraft.UseOnContextMixin"
   ],
   "client": [

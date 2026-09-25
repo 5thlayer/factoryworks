@@ -31,9 +31,9 @@ the mod's test source set has no NeoForge on its classpath by design (`mod/build
 arithmetic under the faces is Minecraft-free and is held by `FurnaceEnergyBufferTest` and
 `NetworkBalanceTest`.
 
-A powered loader's face is not here: it is the SimpleBelts fork's, whose source is not in this
-repo, and it cannot use `LongSnapshotJournal`, since the fork never depends on the pack. It journals
-its own buffer, and `gametest/BeltTileTests` holds the probe and the charge in a world (#348).
+A powered loader's face is not here: it is Beltworks', whose source is not in this repo, and it
+cannot use `LongSnapshotJournal`, since Beltworks never depends on the pack. It journals its own
+buffer, and `gametest/BeltworksPackTests` holds a pole's probe against it in a world.
 """
 
 import pathlib

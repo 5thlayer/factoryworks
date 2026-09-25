@@ -154,9 +154,9 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377) and `PipeDismantleTests` (#431), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltTileTests` (#398), `BeltFilterTests`, `BeltTileSyncTests` (#395), `SplitterTileTests` (#394), `LoaderMouthTests` (#408), `BeltCornerTests` (#391), `BeltSideLoadTests` (#409), `BeltTileHandTests` (#396), `BeltWedgeTests` (#420), `BeltSlopeEdgeTests` (#419), `RotateTests` (#386), `StretchTests` (#393) and `DismantleTests` (#404), registered only when the
-pack's Beltworks fork (`beltworks`) is loaded,
-and only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
+`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377) and `PipeDismantleTests` (#431), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltworksPackTests` and `RotateTests` (#386), registered only when
+Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
+(#438). What is here is only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
 (forcing the graph empty turns it red); that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
@@ -176,58 +176,9 @@ one Fill Recipe can set and it can hold, while a `crafting-with-fluid` one is re
 dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Every one is also held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
 (#330), and a non-assembling id or a locked recipe is refused there with a message and leaves the Held
 recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
-And that a run of belt **tiles** -- one block of belt per block, facing the way it travels, merged
-into a transport line that ticks once for the whole run -- carries a chest's items into another
-chest between two loaders, at exactly 15, 30, 45 and 60 items/s at tiers 1 to 4, at its slowest
-piece when the loaders' tier or the tiles' differ, and that a backed-up 64-tile line holds 512
-(`BeltTileTests`, #398), the 64-tile line standing on the generator's second template,
-`long_platform`. The loaders' ledger holds on tiles too (#348): tier 1 moves items with no pole and
-has no energy face, tier 2 with no FE puts nothing on the line, a pole's demand probe leaves a loader
-nothing, and a pole-fed tier 2 draws 66.5 FE per item plus its drain. The face is the fork's, so the
-two static FE checks cannot read it. The figures are typed, and
-`tests/factorio/test_logistics_extract.py` derives them from Factorio's belt and inserter prototypes.
-Dropping the merge -- scanning a tile as a line of itself -- turns eleven of the twelve rate,
-capacity and ledger tests red, the tier-2 stall alone staying green, which is what it is for. The
-same file holds that no `beltworks:` recipe survives the stock-recipe sweep, against the pack's express
-belt recipe as a control. A line built wholly through a player's clicks -- a loader on the ground beside each chest,
-facing away from it, tiles on the floor between -- delivers every item. A tile placed through its own item faces the
-player's look; Rotate is `RotateTests`', and a sneak-click stores a stretch's start rather than
-placing one (`StretchTests`). Two more
-hold the line being rebuilt: two loaded lines joined by two tiles become one run of eight, carrying at least what
-the two held with nothing on the ground; and a mid-line tile broken leaves 8 upstream and 8
-downstream, the tiles past the break keeping what they carried. A tile placed by hand past a line of three a
-tick after it formed, empty or loaded, makes a line of four that delivers into a chest past the new end (#392);
-dropping the head's rescan when its run changed turns both red. That last one is the defect check --
-rebuilding the run before handing each tile its share drops the whole downstream half, and it turns
-red. The merge that makes the joined case work is order-independent by construction rather than by
-test: every tile of a run lets go before any is drained. The merge rule and the line's rate,
-capacity and rebuild are the fork's `LineScanTest` and `TransportLineTest`, the tier table and a
-loader's own cap `BeltTierTest`, `FlowLimitTest` and `MixedTierTest`, and the loader's ledger
-`LoaderEnergyTest`. Whether a tile looks like a belt is a human check on delivery.
-And that a loader carries no items (`LoaderMouthTests`, #408): a loading line's item is first seen
-on its first tile at the back edge, where the loader's mouth is, and a line backed up against a full
-chest holds its head flush with the last tile's front edge, and delivers once the chest
-has room. The loader is a slate housing inside its own block with a tier-coloured band round its
-mouth; whether it reads as a solid machine and the items seem to come out of it is a human check on
-delivery.
-And that a tile fed from exactly one side, with nothing behind it, is a corner inside its line
-(`BeltCornerTests`, #391): an L of six tiles, up a column and along a row, is one line of six,
-delivers every item and 15 and 60 items/s at tiers 1 and 4, and backed up holds 48; a loader beside a
-line's head turns it and loads it; a tile fed from
-its side with a tile behind it stays straight and its row carries 15 items/s. Forcing every tile
-straight turns the four L tests red and leaves the side-load one green, which is what it is for. The
-fixtures place downstream first, since a tile's shape is set by the placement of what feeds it. The
-rule, a line following what feeds what, a ring's scan and motion, and the arc an item is drawn along
-are the fork's `TileShapeTest`, `LineScanTest` and `TransportLineTest`, and whether a corner reads
-as a Factorio corner is a human check on delivery.
-And that a side-load merges into the line it feeds (`BeltSideLoadTests`, #409): a T-junction
-delivers both chests' items with nothing on the ground, and none of the side's while the line from
-behind is still loading; and a ring of eight tiles, loaded from a column into its side, holds 64 and
-moves a tier-1 step a tick. The ring's last tile is placed in its corner shape, since a ring has no
-downstream to place first. A side item placed at the fed tile's centre rather than against its
-neighbour leaves slivers no item fits, and turned the ring red at 63. The gap and priority rule is
-the fork's `TransportLineTest`, the client placing a side-loaded item by position `BeltSyncTest`,
-and whether items are drawn joining from the side is a human check on delivery.
+And that a small pole's demand probe leaves a Beltworks loader no FE, and that no `beltworks:` recipe
+survives the stock-recipe sweep, against the pack's express belt recipe as a control
+(`BeltworksPackTests`). The loader's face is Beltworks', so the two static FE checks cannot read it.
 And that a stack pressed with Rotate 0 to 3 times (`RotateTests`, #386, ADR-0083) plans and places a
 belt tile facing the look turned that many quarters clockwise, or sneaking stores a stretch's start
 facing that way, and a Stone Furnace
@@ -244,128 +195,10 @@ with the fork's placement reason (#419, #420), a press with a tile held turns th
 block, and one with stone held, which has nothing to face, turns the block. Dropping the slope
 denial, the wedge's, either refit reason and the held stack's precedence each turn one red. The deny list and dispatch order are
 `PlacedTurnTest`, and whether the refusal reaches the action bar is a human check on delivery.
-And that a tile item lays a **stretch** in two clicks (`StretchTests`, #393): each test sneak-clicks a
-start, asks `Placements` for the next click's plan, clicks, and holds the world to it. A stretch straight
-ahead, one turning once, one beside its start and one ending on it place every tile the plan names in
-its state, charge one tile each and clear the start. A tile of the held tier on the path is turned for
-nothing and one of another tier replaced for one, its item handed back; both are named in `replaces`
-and keep the item they carried; in creative nothing is charged or handed back. Behind the look,
-through a fence or a loader, into a wall with no run-up, ending part way down a drop, short
-of tiles and with no room to hand a tile back each change no block, slot or stored start and name
-their reason, and a stretch both blocked and short names the block, the first reason met; a sneak-click with a start stored adds a **corner** where the stretch it previews would end,
-placing and spending nothing, and the laid stretch runs on through it; one behind the look adds none
-and names it, and a sneak-use in the air clears the start and its corners. Stretches that never turn
-turned the L and sideways tests red, and a replace that drops the carried item the replace test. A stretch follows
-the ground (#421): over a block two wide it lays a foot, two tops and a foot, up a staircase a foot,
-two middles and a top, and under an overhang it stays level. It takes the lowest path that changes
-a block a column, so it climbs a two-block step and descends a two-block drop through the air on
-wedges, and crosses a one-block bump by a two-tile top; a corner stored on a step is refused, since a
-slope never turns. A stretch refused by the ground or a block plans the tile it cannot lay, so the
-preview draws it. The previous rule, one column at a time, turns the three climbs and the two
-refusals red. The path and the ground-following order are the fork's `StretchTest`, and
-whether the preview draws the stretch, its start and each tile at its height is a human check on
-delivery. A stretch climbs over a line across its path (#422): across a loaded line it lays a foot,
-a top on a wedge, a level tile on the crossed tile, a top on a wedge and a foot for one tile each,
-the crossed line keeps its tiles and the items it carries, and both lines deliver every item. A line
-beside the start leaves no room for a top, and the stretch is refused whole naming it; a stretch
-aimed at a line's tile stops beside it, leaving it as it stands. A same-tier tile facing back along
-the stretch is still turned. A terrain that sees no line across turns all three red. Lines side by
-side crossed as one, the crossing's place in the path and its refusals are the fork's `StretchTest`
-alone, and whether the preview draws the crossing is a human check on delivery.
-And that a tile line costs the server no block updates and survives a save and an unloaded chunk
-(`BeltTileSyncTests`, #395): a line moving one item, and a line loading and delivering, send none
-from its tiles or loaders; each tile saves its own items and where in the tile they sit, and the
-tiles loaded back into the world make one line holding every item; a tile placed past a line's end a
-tick after the line formed joins it; a moving line marks every chunk it crosses for saving, since a
-chunk not marked is skipped by the next save and its tiles would reload stale; and a line crossing into a chunk that unloads runs over the
-loaded side's tiles only, delivers nothing through the gap, and when the chunk loads is one line
-again that delivers every item with none lost or made. No server API reports a block update being
-sent, so `mixin/minecraft/ServerLevelMixin` counts them for the positions `BlockUpdateWatch` is
-watching. The harness cannot unload a test's chunk, so
-that test saves the far chunk's tiles, lets them go through the fork's `chunkUnloading` -- what its
-`ChunkEvent.Unload` listener calls -- and puts back block entities read from the saves. A tick that
-sends a block update turns the first two red, a tile saving only what no line holds the third, the
-head not rebuilding for a run it does not hold the fourth, marking only the head's chunk the fifth
-(its fixture is a dead end, because a loader marks its own chunk), and an unload that lets nothing
-go the sixth. The per-tile shares, the cut at an edge and the rejoin, the client's copy and where it draws
-each item are the fork's `TileLineSyncTest`. Whether the items are drawn on the belt, move smoothly
-and cross tiles with no jump is a human check on delivery.
-And that a loader's filter survives the empty off hand a client tries after the main hand set it, and
-is taken by a loader no line reaches yet, holding once the line is built (`BeltFilterTests`,
-ADR-0084). The first was red on upstream's filter, which the off hand reset, and the second on a
-filter taken only by a loader a tile line ran through.
-A splitter meets belt tiles face to face (`SplitterTileTests`, #394): between tile lines it splits
-one tier-1 line evenly, sends all 15 items/s to the free side and caps a tier-3 line at 15, and broken
-at either half leaves neither standing, hands its items to the breaker and drops one splitter. Placed
-by hand across a backed-up line of seven tiles it takes the middle tile's place, refunds that tile,
-keeps its items, and every item reaches the end or the right half, which no line leaves. Aimed across the
-line at a tile's top, facing either way, it places nothing, neither on the tile nor above it. A line's last
-tile hands into a half's back and a half feeds the tile line ahead; with
-the first handoff dropped all six turn red. The fork's `SplitterTest` runs the split, merge, fallback,
-cap, 4x4 balancer and loss checks over tile lines, and holds a half's two segments of eight items, its
-midline and a hand anywhere along it (#373). Whether a splitter between tiles reads as part of
-the same belt is a human check on delivery.
-The hand and riding carry over to tiles (`BeltTileHandTests`, #396). A hand on a tile holds the whole
-tile, its point the tile's front, so it takes whatever is on the tile at the line's rate. Only what was already
-past the tile reaches the end, a hand with room for four takes four and loses nothing, and a hand on a
-backed-up line's last tile takes 15 items/s. No far-end rule is needed, since the line's head sits flush
-with its last tile's front. An item entity on a tile rides it and rides round a corner. A tile ticking with no hand turns the three hand
-tests red, and one registering no ride the two ride tests. The point is the fork's `TransportLineTest`,
-and whether aiming at a tile and riding one feel right is a human check on delivery.
-And that a belt climbs a step tile by tile (#417, ADR-0085): a tile a player places a block above
-and ahead of a line's end is a top on the same tick and turns the tile below into a foot, one below
-and ahead makes the mirrored descent, and breaking either end levels the other; a crest and a
-valley connect to neither. A line over a climb delivers 15 and 60 items/s at tiers 1 and 4, a
-backed-up one up and down a step holds 8 a tile, a hand on a foot takes 15 items/s, an item rides
-up and down a step, and a line with a step reloads from its tiles' saves and rejoins across an
-unloaded chunk with every item (`BeltTileTests`, `BeltTileHandTests`, `BeltTileSyncTests`). A
-three-block staircase placed by hand is a foot, two middles and a top, and its mirror the descending
-shapes; breaking a middle levels the tile below it and leaves two lines; and a line over the climb
-delivers 15 and 60 items/s and holds 48 (#418). Dropping the middle cells from the pitch table turns
-those five red and leaves #417's green.
-Dropping the re-derivation of the tiles within two blocks of a change turns nine of them red, and
-dropping the rider's lift over a rising slab the ride up. The pitch table and the cross-height scan
-are the fork's `TileShapeTest` and `LineScanTest`; whether a slope and the items on it look right is
-a human check on delivery.
-And that a middle or top over air stands on a wedge (`BeltWedgeTests`, #420): each tile is placed
-by hand after asking `Placements` for its plan, and the world is held to every block the plan names,
-the wedges of the tiles it reshapes included. A climb of three blocks through air has a wedge under
-each middle and the top and none under the foot, and a descent one under the top and each middle,
-rising back up it; breaking a top or its wedge through the player's
-game mode leaves neither and drops one tile; a wedge takes short grass's place; a top whose wedge
-would stand on a loader or a tile is refused with the world and the stack unchanged -- a loader is a
-full cube, so anything with a block entity is no ground; and a top levelled by breaking its foot
-loses its wedge and stays where it is. A crossing built by hand over a line, a foot, a top on a
-wedge, a level tile on the crossed tile, a top on a wedge and a foot, delivers both lines' every item
-and 15 items/s each with nothing on the ground. Dropping the tile's wedge upkeep turned the seven
-before the descent red. A tile beside a line climbing over it rather than side-loading has no world check: the top it
-would climb to stands over the crossed tile, where its wedge is refused, so no gesture builds it; the
-priority is the fork's `TileShapeTest` and `LineScanTest`. The wedge rule is the fork's `WedgeTest`,
-the crossing as one line over another `LineScanTest`, and whether
-the wedge reads as a junction and a crossing as one belt over another is a human check on delivery.
-And that a slope never turns (`BeltSlopeEdgeTests`, #419): a tile placed by hand that would turn a
-corner into a foot is planned refused with its reason and changes no block and spends no tile, while
-a tile across another a block up, placed in either order, is a crossing and places both level.
-`BeltSideLoadTests` holds the other half: a column facing the side of a foot or a descending top with
-nothing behind it leaves it a straight slope and feeds it nothing, its items waiting beside it.
-`BeltTileTests` holds a loader feeding a foot and a top feeding a loader at 15 items/s. Letting a side
-feeder turn a slope into a corner turns the two side tests red, and skipping the corner check in
-`BeltTileBlock.reshape` the refusal. The rules are the fork's `TileShapeTest` and `LineScanTest`.
-Rotate on a slope waits for placed-block rotation (#405).
-And that two sneak-clicks of the Engineer's Pick take up a span of one belt line (`DismantleTests`,
-#404): each test stores a start through the player's game mode, asks `Dismantling.plan` for the end,
-clicks, and holds the world, the inventory and the stored start to it. A straight span, one taken
-end to start, one tile, one round a corner and one up a slope leave none of the plan's tiles or
-wedges standing and hand over a tile each and every item carried; a span out of a line's middle
-leaves both sides holding their items and delivering; a full inventory drops the rest at the
-player's feet and creative hands over nothing. An end on a splitter, beyond one, on a loader or on
-another line changes no block, slot or stored start and names its reason, a click after the start
-broke is a new start, and a sneak-use in the air clears it. Skipping the execution turns the eight
-taking tests red. The span is the fork's `DismantleTest`, and whether the red span draws over the
-tiles is a human check on delivery.
 And that two sneak-clicks of the Pick take up a span of Oritech's fluid pipes, a **Dismantle Family**
-(`PipeDismantleTests`, #431, ADR-0086), each test shaped like `DismantleTests` over
-`FamilyDismantle.plan`. A straight run, a bend, a tee's branch between the ends and one pipe clicked
+(`PipeDismantleTests`, #431, ADR-0086): each test stores a start through the player's game mode,
+asks `FamilyDismantle.plan` for the end, clicks, and holds the world, the inventory and the stored
+start to it. A straight run, a bend, a tee's branch between the ends and one pipe clicked
 twice leave none of the plan's pipes standing, keep every pipe outside it and hand over a pipe each;
 a full inventory drops the rest at the player's feet and creative hands over nothing. Opposite
 points of a ring, a closed connection and an end on a Boiler change no block, slot or stored start
@@ -471,10 +304,9 @@ bearing -- the preview's two failure modes are promising a placement that does n
 refusing one that does. Each test was checked against the defect it exists for: forcing the pole
 to the vanilla plan turns four red, forcing the rig's footprint to always fit turns one red,
 flattening the rig to a single layer turns two more, dropping the pump's water question turns one,
-and giving up on the other-group column walk turns another. The fork's splitter and its tile item's
-stretch (#393, `StretchTests`) are the other mod's items with a plan. The splitter's (#355): `PlacementPlanTests.Splitters`, registered only with the fork loaded,
-holds that both halves go down, and that a splitter blocked at its second half changes nothing; a
-plan naming only the first half turns both red. The Assembling Machine's two (#326) are
+and giving up on the other-group column walk turns another. The Pack's own plans for Beltworks'
+splitter and stretch, `SplitterPlans` and `TilePlans`, have no world check until #446 deletes them;
+Beltworks' GameTests hold its own. The Assembling Machine's two (#326) are
 the rig's pair for its 2x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
 red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
 after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Three fixtures are load-bearing rather

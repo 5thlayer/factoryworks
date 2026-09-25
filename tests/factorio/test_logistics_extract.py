@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Assert the logistics corpus still derives the belt fork's figures (#344).
+"""Assert the logistics corpus still derives the belt figures (#344).
 
 `scripts/factorio-logistics-extract.py` reads a dump that is not in the repo, so nothing here
-re-runs it. Every figure the fork and its GameTest type is re-derived from the committed rows:
+re-runs it. Each figure is re-derived from the committed rows:
 
   - **belt rates.** A belt's `speed` is tiles per Factorio tick; at 60 ticks a second and eight
     items a tile, the four tiers carry 15, 30, 45 and 60 items a second, and each splitter and
@@ -14,10 +14,6 @@ re-runs it. Every figure the fork and its GameTest type is re-derived from the c
     swing's joules come from the rule under `documented.swing`, which must reproduce the wiki's
     own table, and are divided by the hand size. Tier 1 is built from the burner inserter and
     draws no power.
-  - **the GameTest's typed figures.** `BeltTileTests` types each tier's items a second, 512, and
-    tier 2's joules per item and drain, and `SplitterTileTests` tier 1's rate, which is both the
-    belt's and the splitter's, rather than reading them off the fork; they are asserted here against
-    the derivation.
 """
 
 import json
@@ -48,11 +44,6 @@ LOADER_INSERTERS = {1: "burner-inserter", 2: "inserter", 3: "fast-inserter", 4: 
 EXPECTED_FE_PER_ITEM = {2: 66.5, 3: 81.2, 4: 116.0}
 EXPECTED_DRAIN_FE_PER_SECOND = {2: 4.0, 3: 5.0, 4: 10.0}
 
-GAMETESTS = ROOT / "mod" / "src" / "main" / "java" / "com" / "planetaryfactory" / "core" / "gametest"
-GAMETEST = GAMETESTS / "BeltTileTests.java"
-SPLITTER_GAMETEST = GAMETESTS / "SplitterTileTests.java"
-
-
 def joules(raw):
     """Factorio's own `5kJ`/`0.4kW` strings, in J or W."""
     match = re.fullmatch(r"([0-9.]+)(k|M)?(J|W)", raw)
@@ -67,11 +58,6 @@ def swing_kj(inserter, spike_ticks):
     rotation = 2 * half_spin_ticks * joules(inserter["energy_per_rotation"]) * inserter["rotation_speed"]
     movement = 2 * spike_ticks * joules(inserter["energy_per_movement"]) * inserter["extension_speed"]
     return (rotation + movement) / 1e3
-
-
-def typed_int(source, name):
-    match = re.search(rf"\b{name}\s*=\s*(\d+)\s*;", source)
-    return int(match[1]) if match else None
 
 
 def main():
@@ -164,25 +150,6 @@ def main():
         if drain != EXPECTED_DRAIN_FE_PER_SECOND[tier]:
             failures.append(f"loader tier {tier} ({name}) drains {drain} FE/s idle, expected "
                             f"{EXPECTED_DRAIN_FE_PER_SECOND[tier]}")
-
-    source = GAMETEST.read_text(encoding="utf-8")
-    typed_rates = [(f"TIER_{tier}_ITEMS_PER_SECOND", rates.get(belt_name))
-                   for tier, belt_name in enumerate(EXPECTED_ITEMS_PER_SECOND, start=1)]
-    for name, want in typed_rates + [("LONG_LINE_TILES", LONG_BELT_BLOCKS),
-                                     ("LONG_LINE_HOLDS", holds),
-                                     ("TIER_2_JOULES_PER_ITEM", round(EXPECTED_FE_PER_ITEM[2] * JOULES_PER_FE)),
-                                     ("TIER_2_DRAIN_WATTS", round(EXPECTED_DRAIN_FE_PER_SECOND[2] * JOULES_PER_FE)),
-                                     ("JOULES_PER_FE", JOULES_PER_FE)]:
-        typed = typed_int(source, name)
-        if typed != want:
-            failures.append(f"BeltTileTests types {name} = {typed}, the corpus derives {want}")
-
-    typed = typed_int(SPLITTER_GAMETEST.read_text(encoding="utf-8"), "TIER_1_ITEMS_PER_SECOND")
-    for name, want in (("the tier-1 belt", rates.get("transport-belt")),
-                       ("the tier-1 splitter", splitter_rates.get("splitter"))):
-        if typed != want:
-            failures.append(f"SplitterTileTests types TIER_1_ITEMS_PER_SECOND = {typed}, "
-                            f"the corpus derives {want} for {name}")
 
     for failure in failures:
         print(f"FAIL  {failure}")

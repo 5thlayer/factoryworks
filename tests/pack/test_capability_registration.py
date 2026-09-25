@@ -32,9 +32,9 @@ source set has no NeoForge on its classpath by design (`mod/build.gradle`).
 
 Whether a pipe placed against a Boiler actually moves steam is a world load.
 
-The loaders' `Energy` face is registered by the SimpleBelts fork, not in `PFBlockEntities`, so it
-has no row in `FACES`: this repo holds none of that source. `gametest/BeltTileTests` asserts a
-pole finds it and tier 1 has none (#348).
+The loaders' `Energy` face is registered by Beltworks, not in `PFBlockEntities`, so it has no row
+in `FACES`: this repo holds none of that source. Beltworks' own GameTests hold the face, and
+`gametest/BeltworksPackTests` a pole's demand probe against it.
 """
 
 import pathlib

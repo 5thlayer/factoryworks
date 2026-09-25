@@ -31,9 +31,7 @@ DATA_VERSION = 4790  # 26.1.2, world_version in the client jar's version.json.
 # vertical reach from a machine standing on it, and the pole's own MAX_SEGMENTS column with a block
 # to spare above it, which is what the Placement Preview's column tests need to reach the cap (#297).
 SIZE = (23, 7, 7)
-# A straight 64-block belt, loader to loader, with a chest behind each (#344): 66 long.
-LONG_SIZE = (66, 3, 3)
-TEMPLATES = {"platform.nbt": SIZE, "long_platform.nbt": LONG_SIZE}
+TEMPLATES = {"platform.nbt": SIZE}
 FLOOR = "minecraft:stone"
 
 
