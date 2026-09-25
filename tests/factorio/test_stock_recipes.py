@@ -10,6 +10,9 @@ admits as a `planetaryfactory:assembling` recipe, swapping its ingredients throu
     `keep` row, which records the block that drops it
   - every output is an item an installed jar defines
   - no re-authored recipe has more item ingredients than the Assembling Machine has input slots
+  - the wooden stairs are one recipe per species Terra's biomes grow, each from its own logs
+    (#444), with the species read as the sapling recipes' are
+  - no re-authored recipe makes a wall: walls are not kept (#441)
   - over the union of every emitted hand recipe, corpus and re-authored alike, no hand route is a
     cycle: the Personal Assembler has no way out of a loop (ADR-0038). A second hand route to one
     item is `test_recipe_duplication.py`'s.
@@ -23,6 +26,9 @@ import subprocess
 import sys
 import zipfile
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import test_pack_recipes  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
@@ -108,6 +114,39 @@ def check_stock(recipes, keep):
                   "%s makes `%s`, which no installed jar defines an item for" % (name, output))
 
 
+def vanilla_item_tag(name):
+    if not CLIENT_JAR.is_file():
+        return None
+    with zipfile.ZipFile(CLIENT_JAR) as jar:
+        return set(json.loads(jar.read("data/minecraft/tags/item/%s.json" % name))["values"])
+
+
+def check_wooden_stairs(recipes):
+    """One stairs recipe per species Terra grows, so a species it stops growing drops its stairs."""
+    wooden_stairs = vanilla_item_tag("wooden_stairs")
+    if not check(wooden_stairs is not None,
+                 "the client jar is not at %s, so the wooden stairs are unchecked" % CLIENT_JAR):
+        return
+    grown = test_pack_recipes.terra_species()
+    wooden = {name.rsplit("/", 1)[1]: recipe for name, recipe in recipes.items()
+              if name.startswith("assembling/stock/") and set(outputs_of(recipe)) & wooden_stairs}
+    check(set(wooden) == {"%s_stairs" % species for species in grown},
+          "wooden stairs %s, and Terra grows %s" % (sorted(wooden), sorted(grown)))
+    for name, recipe in sorted(wooden.items()):
+        species = name[: -len("_stairs")]
+        check(ingredients_of(recipe) == ["#minecraft:%s_logs" % species],
+              "%s takes %s; a species' stairs are made from that species' logs"
+              % (name, ingredients_of(recipe)))
+
+
+def check_no_walls(recipes):
+    for name, recipe in sorted(recipes.items()):
+        if name.startswith("assembling/stock/"):
+            for output in outputs_of(recipe):
+                check(not output.endswith("_wall"), "%s makes %s, and walls are not kept (#441)"
+                      % (name, output))
+
+
 def check_hand_graph(recipes):
     """No hand route that needs its own output."""
     makers = {}
@@ -144,6 +183,8 @@ def main():
     keep = json.loads(SUBSTITUTIONS.read_text())["keep"]
     if check(STOCK.is_dir(), "kubejs/data/planetaryfactory/recipe/assembling/stock/ does not exist"):
         check_stock(recipes, keep)
+        check_wooden_stairs(recipes)
+        check_no_walls(recipes)
     check_hand_graph(recipes)
 
     for failure in failures:

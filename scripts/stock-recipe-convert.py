@@ -5,6 +5,8 @@ Reads each recipe `data/pack/stock-admissions.json` admits out of the installed 
 (a mod jar, or the client jar for vanilla) and writes it under
 `kubejs/data/planetaryfactory/recipe/assembling/stock/`. Nothing is decided here: which recipes are
 kept is the admissions file, and what each ingredient becomes is `data/pack/stock-substitutions.json`.
+An admission with a `rewrite` takes its ingredients and yield from that row instead of the jar's
+(#444); only its output is read from the jar, and each ingredient must be a `keep` row.
 
 Usage: scripts/stock-recipe-convert.py [--check] [--quiet]
   --check  write nothing; fail if the files on disk differ from what would be written
@@ -83,27 +85,31 @@ def convert(recipes, admit, subs, problems):
         if category is None:
             problems.append("%s is a %s, which the line does not re-author" % (recipe_id, recipe["type"]))
             continue
+        rewrite = admit[recipe_id].get("rewrite")
+        if rewrite:
+            sources, yields = rewrite["ingredients"].items(), rewrite["count"]
+        else:
+            sources, yields = flatten(recipe_id, recipe, problems), recipe["result"].get("count", 1)
         merged = {}
-        for source, count in flatten(recipe_id, recipe, problems):
+        for source, count in sources:
             used.add(source)
             if source in keep:
                 target = source
-            elif source in substitute:
+            elif source in substitute and not rewrite:
                 target = substitute[source]["to"]
             else:
-                problems.append("%s takes `%s`, which stock-substitutions.json neither keeps nor "
-                                "substitutes" % (recipe_id, source))
+                problems.append("%s takes `%s`, which stock-substitutions.json %s" % (
+                    recipe_id, source, "does not keep" if rewrite else "neither keeps nor substitutes"))
                 continue
             merged[target] = merged.get(target, 0) + count
         stem = recipe_id.split(":", 1)[1]
         if stem in emitted:
             problems.append("two admitted recipes are both named %s" % stem)
-        result = recipe["result"]
         emitted[stem] = {
             "type": "planetaryfactory:assembling",
             "category": category,
             "ingredients": [{"ingredient": item, "count": count} for item, count in merged.items()],
-            "results": [{"id": result["id"], "count": result.get("count", 1)}],
+            "results": [{"id": recipe["result"]["id"], "count": yields}],
             "time": admit[recipe_id]["time"],
         }
     return emitted, used
@@ -130,6 +136,13 @@ def main():
         if not row.get("reason") or not isinstance(row.get("time"), int) or row["time"] <= 0:
             problems.append("stock-admissions.json row %s needs a `reason` and a positive `time`"
                             % recipe_id)
+        rewrite = row.get("rewrite")
+        if rewrite is not None and not (
+                isinstance(rewrite, dict) and rewrite.get("reason") and isinstance(rewrite.get("count"), int) and rewrite["count"] > 0
+                and rewrite.get("ingredients")
+                and all(isinstance(n, int) and n > 0 for n in rewrite["ingredients"].values())):
+            problems.append("stock-admissions.json row %s's `rewrite` needs `ingredients` with "
+                            "positive counts, a positive `count` and a `reason`" % recipe_id)
     for source, row in sorted(subs["substitute"].items()):
         if not row.get("to") or not row.get("reason"):
             problems.append("stock-substitutions.json `substitute` row %s needs `to` and `reason`"
@@ -137,6 +150,10 @@ def main():
     for source, reason in sorted(subs["keep"].items()):
         if not reason:
             problems.append("stock-substitutions.json `keep` row %s needs a reason" % source)
+    if problems:
+        for problem in problems:
+            print("FAIL: " + problem)
+        return 1
     recipes = read_stock(admit, problems)
     emitted, used = convert(recipes, admit, subs, problems)
     if len(recipes) == len(admit):

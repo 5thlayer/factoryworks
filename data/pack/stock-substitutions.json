@@ -13,7 +13,14 @@
     "Counts are never changed. An ingredient in neither table fails the line, and so does a row",
     "no admitted recipe reads."
   ],
-  "keep": {},
+  "keep": {
+    "minecraft:cobblestone": "Mined stone drops it. The corpus's `stone`.",
+    "minecraft:stone_bricks": "The pack's smelt `recipe/stone_brick.json`, 2 cobblestone to 1 (ADR-0046).",
+    "#minecraft:logs": "Felled from Terra's trees (ADR-0051). The corpus's `wood`.",
+    "#minecraft:oak_logs": "Felled from Terra's oaks (ADR-0051).",
+    "#minecraft:birch_logs": "Felled from Terra's birches (ADR-0051).",
+    "#minecraft:acacia_logs": "Felled from Terra's acacias (ADR-0051)."
+  },
   "substitute": {
     "minecraft:stick": {
       "to": "ftbmaterials:iron_rod",
