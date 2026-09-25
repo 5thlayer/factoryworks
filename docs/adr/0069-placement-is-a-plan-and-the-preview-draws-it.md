@@ -5,7 +5,7 @@ status: accepted
 # Placement is a plan, and the preview draws it
 
 > **Belt part moved to Beltworks.** How a belt piece plans its placement now lives in Beltworks
-> (adamico/SimpleBelts), as its ADR 0006. The plan and preview seam for the pack's own blocks
+> (5thlayer/beltworks), as its ADR 0006. The plan and preview seam for the pack's own blocks
 > stays here.
 >
 > **The mechanism moved to placementpreview** (#446). The plan, the vanilla plan, the opt-in and

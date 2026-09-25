@@ -4,7 +4,7 @@ status: accepted
 
 # Loaders are the inserter chain, and splitters are tiered
 
-> **Moved to Beltworks.** The mixed-tier rule now lives in Beltworks (adamico/SimpleBelts), as its
+> **Moved to Beltworks.** The mixed-tier rule now lives in Beltworks (5thlayer/beltworks), as its
 > ADR 0003, and the rest of what the Mod does -- tiered splitters, a half as a block of belt, the
 > loader tiers as blocks -- as its ADR 0007. The loaders' recipes and technologies stay here.
 

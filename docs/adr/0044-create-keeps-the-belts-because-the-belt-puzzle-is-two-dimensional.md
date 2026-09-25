@@ -4,7 +4,7 @@ status: provisional
 
 # Create keeps the belts, because the puzzle they carry is two-dimensional
 
-> **Moved to Beltworks.** The belt decision now lives in Beltworks (adamico/SimpleBelts), as its
+> **Moved to Beltworks.** The belt decision now lives in Beltworks (5thlayer/beltworks), as its
 > ADR 0003. This ADR stays as history.
 
 `#178` asked the question ADR-0043 carved out and refused to answer: does this pack ship Create's

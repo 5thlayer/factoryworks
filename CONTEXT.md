@@ -148,7 +148,7 @@ _Avoid_: unlock, planet flag, safe flag
 
 ### Moving things
 
-The belt vocabulary -- belt, tile, slope, stretch, transport line, loader, splitter and the rest -- is Beltworks', the pack's SimpleBelts fork, and is defined in its `CONTEXT.md` (adamico/SimpleBelts). The terms below are the pack's own.
+The belt vocabulary -- belt, tile, slope, stretch, transport line, loader, splitter and the rest -- is Beltworks', and is defined in its `CONTEXT.md` (5thlayer/beltworks). The terms below are the pack's own.
 
 **Logistics puzzle**:
 The production-chain routing problem — what feeds what, at what ratio, over what distance. Explicitly
