@@ -396,7 +396,7 @@ final class BeltTileTests {
                 .thenSucceed();
     }
 
-    /** Every block but the chests placed by a sneaking player's clicks, as a player builds a line. */
+    /** Every block but the chests placed by a player's clicks, as a player builds a line. */
     private static void lineBuiltByHand(GameTestHelper helper) {
         List<BeltTier> tiles = tiers(BeltTier.BELT);
         BlockPos target = targetOf(tiles);
@@ -404,18 +404,15 @@ final class BeltTileTests {
         helper.setBlock(target, Blocks.CHEST);
         ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
         player.setGameMode(GameType.SURVIVAL);
+        // A loader on the ground faces the player, so each is placed looking at its chest.
+        player.setYRot(Direction.WEST.toYRot());
+        use(helper, player, new ItemStack(BlockContent.loaderFor(BeltTier.BELT).asItem()), FROM.below(), Direction.UP);
         player.setYRot(Direction.EAST.toYRot());
-        // Sneaking past the chest's menu for the loaders.
-        player.setShiftKeyDown(true);
-        use(helper, player, new ItemStack(BlockContent.loaderFor(BeltTier.BELT).asItem()), SOURCE, Direction.EAST);
-        player.setShiftKeyDown(false);
         for (int tile = 0; tile < tiles.size(); tile++) {
             use(helper, player, new ItemStack(ItemContent.tileFor(BeltTier.BELT)),
                     FIRST_TILE.east(tile).below(), Direction.UP);
         }
-        player.setShiftKeyDown(true);
-        use(helper, player, new ItemStack(BlockContent.loaderFor(BeltTier.BELT).asItem()), target, Direction.WEST);
-        player.setShiftKeyDown(false);
+        use(helper, player, new ItemStack(BlockContent.loaderFor(BeltTier.BELT).asItem()), target.west().below(), Direction.UP);
         fill(helper, SOURCE, ITEMS);
         helper.startSequence().thenIdle(100).thenExecute(() -> {
             int arrived = count(chest(helper, target));

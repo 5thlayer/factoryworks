@@ -189,8 +189,8 @@ two static FE checks cannot read it. The figures are typed, and
 Dropping the merge -- scanning a tile as a line of itself -- turns eleven of the twelve rate,
 capacity and ledger tests red, the tier-2 stall alone staying green, which is what it is for. The
 same file holds that no `beltworks:` recipe survives the stock-recipe sweep, against the pack's express
-belt recipe as a control. A line built wholly through a player's clicks -- a loader sneak-clicked onto each chest,
-tiles on the floor between -- delivers every item. A tile placed through its own item faces the
+belt recipe as a control. A line built wholly through a player's clicks -- a loader on the ground beside each chest,
+facing away from it, tiles on the floor between -- delivers every item. A tile placed through its own item faces the
 player's look; Rotate is `RotateTests`', and a sneak-click stores a stretch's start rather than
 placing one (`StretchTests`). Two more
 hold the line being rebuilt: two loaded lines joined by two tiles become one run of eight, carrying at least what
