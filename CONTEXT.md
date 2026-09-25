@@ -190,6 +190,10 @@ _Avoid_: abstraction, going virtual
 
 ### Handling things
 
+**Obtainable**:
+An item or fluid a player can come to hold on a live body without creative mode: a pack recipe makes it, the starting kit grants it, a block the live worldgen places drops it, a mob the live biomes spawn drops it, or a mechanic produces it (a filled bucket, a Pumpjack's crude, a Boiler's steam). A parked body's worldgen does not count until it is live. Only an Obtainable item is listed in the recipe viewer's index (#173).
+_Avoid_: reachable (that is **Reach**), available, craftable (a mob drop is Obtainable and not craftable)
+
 **Reach**:
 How far the player places a block, uses a block and breaks a **Building**: 16 blocks, one chunk. Longer than Factorio's build distance of 10, as Satisfactory builds from far off. Anything that is not a Building breaks only within Minecraft's own reach of 4.5, so ore, trees and terrain are dug up close. Entities are reached at vanilla's 3 (#413).
 _Avoid_: build distance, range, interaction range
