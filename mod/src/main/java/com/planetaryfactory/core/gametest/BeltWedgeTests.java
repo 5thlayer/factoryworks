@@ -24,11 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import rearth.belts.BlockContent;
-import rearth.belts.ItemContent;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.model.BeltTier;
+import io.github._5thlayer.beltworks.BlockContent;
+import io.github._5thlayer.beltworks.ItemContent;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.model.BeltTier;
 
 /**
  * A middle or top over air stands on a wedge (#420, ADR-0085): placed with its tile for nothing,

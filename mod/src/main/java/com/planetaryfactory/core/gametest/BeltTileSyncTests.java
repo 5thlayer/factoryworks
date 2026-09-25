@@ -14,10 +14,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.model.BeltContents;
-import rearth.belts.model.BeltTier;
-import rearth.belts.model.TransportLine;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.model.BeltContents;
+import io.github._5thlayer.beltworks.model.BeltTier;
+import io.github._5thlayer.beltworks.model.TransportLine;
 
 /**
  * A line of tiles costs the server no block updates, saves tile by tile, and stops at a chunk that

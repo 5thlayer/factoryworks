@@ -8,9 +8,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.BeltWedgeBlock;
-import rearth.belts.blocks.SplitterBlock;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.BeltWedgeBlock;
+import io.github._5thlayer.beltworks.blocks.SplitterBlock;
 
 /** The belts fork's blocks whose vanilla turn is wrong (#405). Loaded only when the fork is. */
 final class BeltTurns {

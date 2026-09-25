@@ -568,7 +568,7 @@ ADR-0029 gives the Assembler speed 1 with durations of `energy_required x 20` un
   buffer, but in one lane and with no undergrounds, so the lane-and-underground patterns a Factorio
   player has memorised do not transfer (ADR-0044, ADR-0076, ADR-0084, ADR-0085).
 - **where**: all bodies
-- **via**: `belts` (the pack's SimpleBelts fork, ADR-0060)
+- **via**: `beltworks` (Beltworks, the pack's SimpleBelts fork, ADR-0060)
 - **owner**: ADR-0076, ADR-0044, ADR-0084, ADR-0085, #341
 
 Sub-rules:
@@ -647,13 +647,13 @@ splitter, and the last two their belt tier (#345, #349). Their underground belts
   belt into one. There is no swing arm, so nothing moves between two inventories directly and there
   is no reach across a belt.
 - **where**: all bodies
-- **via**: `belts` (the pack's SimpleBelts fork, ADR-0060)
+- **via**: `beltworks` (Beltworks, the pack's SimpleBelts fork, ADR-0060)
 - **owner**: ADR-0076, ADR-0060, #341
 
 Sub-rules:
 
-- **The inserter chain** — `adapted` as the loader. The fork's four loaders, `chute`,
-  `improved_chute`, `express_chute` and `turbo_chute`, read as Loader, Fast loader, Express loader and
+- **The inserter chain** — `adapted` as the loader. The fork's four loaders, `loader`,
+  `improved_loader`, `express_loader` and `turbo_loader`, read as Loader, Fast loader, Express loader and
   Turbo loader, and are crafted from the `burner-inserter`, `inserter`, `fast-inserter` and
   `bulk-inserter` recipes on the Assembling surface, each unlocked by its inserter's technology
   (#347, ADR-0076). A loader moves its tier's 15, 30, 45 or 60 items/s whatever belt it is on.

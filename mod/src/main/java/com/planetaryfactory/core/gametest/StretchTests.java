@@ -28,14 +28,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import rearth.belts.BlockContent;
-import rearth.belts.ComponentContent;
-import rearth.belts.ItemContent;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.BeltWedgeBlock;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.model.BeltTier;
-import rearth.belts.model.TransportLine;
+import io.github._5thlayer.beltworks.BlockContent;
+import io.github._5thlayer.beltworks.ComponentContent;
+import io.github._5thlayer.beltworks.ItemContent;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.BeltWedgeBlock;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.model.BeltTier;
+import io.github._5thlayer.beltworks.model.TransportLine;
 
 /**
  * A stretch of belt tiles over the ground and over the lines across it (#393, #421, #422, ADR-0069): each test sneak-clicks a start, perhaps corners, asks
@@ -60,10 +60,10 @@ final class StretchTests {
         tests.test("a_stretch_turns_a_tile_of_its_tier_for_nothing", 20, StretchTests::turns);
         tests.test("a_stretch_replaces_a_tile_of_another_tier_and_hands_it_back", 30, StretchTests::replaces);
         tests.test("a_stretch_behind_the_look_changes_nothing", 20, helper -> refused(helper,
-                player -> {}, START.west(2), PlacementPlan.Refusal.BEHIND_LOOK, "message.belts.stretch_behind"));
+                player -> {}, START.west(2), PlacementPlan.Refusal.BEHIND_LOOK, "message.beltworks.stretch_behind"));
         tests.test("a_stretch_through_a_block_changes_nothing", 20, helper -> refused(helper, START,
                 player -> helper.setBlock(START.east(3), Blocks.OAK_FENCE), START.east(5), START.east(3),
-                PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
+                PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.beltworks.stretch_blocked"));
         tests.test("a_stretch_follows_a_step_up_and_a_step_down", 20, StretchTests::stepUpAndDown);
         tests.test("a_stretch_climbs_a_staircase", 20, StretchTests::staircase);
         tests.test("a_stretch_under_an_overhang_stays_level", 20, StretchTests::overhang);
@@ -76,20 +76,20 @@ final class StretchTests {
                         helper.setBlock(START.east(i), Blocks.STONE);
                         helper.setBlock(START.east(i).above(), Blocks.STONE);
                     }
-                }, START.east(3).above(2), START.east(1).above(2), PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven"));
+                }, START.east(3).above(2), START.east(1).above(2), PlacementPlan.Refusal.UNEVEN_GROUND, "message.beltworks.stretch_uneven"));
         tests.test("a_stretch_ending_part_way_down_a_drop_changes_nothing", 20, helper -> {
             pillars(helper, 2);
             refused(helper, START.above(2), player -> {}, START.east(3), START.east(3).above(),
-                    PlacementPlan.Refusal.UNEVEN_GROUND, "message.belts.stretch_uneven");
+                    PlacementPlan.Refusal.UNEVEN_GROUND, "message.beltworks.stretch_uneven");
         });
         tests.test("a_corner_on_a_step_is_not_stored", 20, helper -> refused(helper,
                 player -> {
                     helper.setBlock(START.east(3), Blocks.STONE);
                     player.setShiftKeyDown(true);
-                }, START.east(3).above(), PlacementPlan.Refusal.SLOPE_TURNS, "message.belts.slope_turns"));
+                }, START.east(3).above(), PlacementPlan.Refusal.SLOPE_TURNS, "message.beltworks.slope_turns"));
         tests.test("a_stretch_short_of_tiles_changes_nothing", 20, helper -> refused(helper,
                 player -> player.getMainHandItem().setCount(3), START.east(5),
-                PlacementPlan.Refusal.NOT_ENOUGH_ITEMS, "message.belts.stretch_not_enough"));
+                PlacementPlan.Refusal.NOT_ENOUGH_ITEMS, "message.beltworks.stretch_not_enough"));
         tests.test("a_stretch_with_no_room_to_hand_back_changes_nothing", 20, helper -> refused(helper,
                 player -> {
                     helper.setBlock(START.east(2), tile(BeltTier.IMPROVED, Direction.EAST));
@@ -98,20 +98,20 @@ final class StretchTests {
                             player.getInventory().setItem(slot, new ItemStack(Items.DIRT, 64));
                         }
                     }
-                }, START.east(5), PlacementPlan.Refusal.NO_ROOM_TO_RETURN, "message.belts.stretch_no_room"));
+                }, START.east(5), PlacementPlan.Refusal.NO_ROOM_TO_RETURN, "message.beltworks.stretch_no_room"));
         tests.test("a_stretch_through_a_loader_changes_nothing", 20, helper -> refused(helper,
                 player -> helper.setBlock(START.east(3), BlockContent.loaderFor(BeltTier.BELT).defaultBlockState()),
-                START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
+                START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.beltworks.stretch_blocked"));
         tests.test("a_stretch_both_blocked_and_short_names_the_block", 20, helper -> refused(helper,
                 player -> {
                     helper.setBlock(START.east(3), Blocks.OAK_FENCE);
                     player.getMainHandItem().setCount(3);
-                }, START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.belts.stretch_blocked"));
+                }, START.east(5), PlacementPlan.Refusal.FOOTPRINT_BLOCKED, "message.beltworks.stretch_blocked"));
         tests.test("a_stretch_climbs_over_a_loaded_line_and_both_deliver_every_item",
                 LOAD_TICKS + DELIVERY_TICKS + 20, StretchTests::crossesALoadedLine);
         tests.test("a_stretch_crossing_a_line_beside_its_start_changes_nothing", 20, helper -> refused(helper, START,
                 player -> lineSouthAcross(helper, START.east(1)), START.east(5), START.east(1).above(),
-                PlacementPlan.Refusal.NO_ROOM_TO_CROSS, "message.belts.stretch_no_room_to_cross"));
+                PlacementPlan.Refusal.NO_ROOM_TO_CROSS, "message.beltworks.stretch_no_room_to_cross"));
         tests.test("a_stretch_aimed_at_a_line_feeds_its_side", 20, StretchTests::joins);
         tests.test("a_creative_stretch_charges_nothing", 20, StretchTests::creative);
         tests.test("a_sneak_click_adds_a_corner_the_stretch_runs_on_from", 20, StretchTests::corner);
@@ -458,7 +458,7 @@ final class StretchTests {
             helper.fail("a sneak-click adding a corner placed or spent a tile", corner);
             return;
         }
-        if (!player.heard.equals(List.of("message.belts.stretch_corner"))) {
+        if (!player.heard.equals(List.of("message.beltworks.stretch_corner"))) {
             helper.fail("adding a corner told the player " + player.heard, corner);
             return;
         }
@@ -484,7 +484,7 @@ final class StretchTests {
         if (!Objects.equals(stored, player.getMainHandItem().getComponents())) {
             helper.fail("a sneak-click behind the look changed the stored start or corners", START.west(2));
         }
-        if (!player.heard.equals(List.of("message.belts.stretch_behind"))) {
+        if (!player.heard.equals(List.of("message.beltworks.stretch_behind"))) {
             helper.fail("a sneak-click behind the look told the player " + player.heard, START.west(2));
         }
         helper.succeed();

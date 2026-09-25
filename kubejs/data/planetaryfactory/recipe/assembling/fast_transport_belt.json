@@ -7,13 +7,13 @@
       "count": 5
     },
     {
-      "ingredient": "belts:belt_tile",
+      "ingredient": "beltworks:belt_tile",
       "count": 1
     }
   ],
   "results": [
     {
-      "id": "belts:improved_belt_tile",
+      "id": "beltworks:improved_belt_tile",
       "count": 1
     }
   ],

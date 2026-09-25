@@ -50,7 +50,7 @@ mods/*.jar
 # index. Their hash in index.toml is the only record of which build is installed.
 !mods/gcyr-*.jar
 !mods/Respoiled-*.jar
-!mods/belts-neoforge-*.jar
+!mods/beltworks-*.jar
 
 # `planetaryfactory_core` stays excluded even though it is also local (ADR-0024):
 # `installToPack` rebuilds it into mods/ on every `./gradlew build` and Gradle

@@ -4,8 +4,8 @@ import com.planetaryfactory.core.placement.PlacementPlan;
 
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
-import rearth.belts.blocks.SplitterBlock;
-import rearth.belts.client.renderers.ChuteBeltRenderer;
+import io.github._5thlayer.beltworks.blocks.SplitterBlock;
+import io.github._5thlayer.beltworks.client.renderers.BeltEndRenderer;
 
 /**
  * A planned splitter half's belt surface, which the fork draws with a block entity renderer rather
@@ -20,7 +20,7 @@ final class PreviewSplitterBelts {
         Vec3 camera = event.getLevelRenderState().cameraRenderState.pos;
         for (PlacementPlan.Placed placed : plan.blocks()) {
             if (placed.state().getBlock() instanceof SplitterBlock splitter) {
-                ChuteBeltRenderer.submitPlannedSplitter(event.getPoseStack(), event.getSubmitNodeCollector(), camera,
+                BeltEndRenderer.submitPlannedSplitter(event.getPoseStack(), event.getSubmitNodeCollector(), camera,
                         placed.pos(), placed.state().getValue(SplitterBlock.FACING), splitter.tier(), tint);
             }
         }

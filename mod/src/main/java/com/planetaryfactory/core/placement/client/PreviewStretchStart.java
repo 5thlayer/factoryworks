@@ -16,8 +16,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 import org.joml.Vector3f;
-import rearth.belts.ComponentContent;
-import rearth.belts.items.BeltTileItem;
+import io.github._5thlayer.beltworks.ComponentContent;
+import io.github._5thlayer.beltworks.items.BeltTileItem;
 
 /**
  * The start a held tile stack has stored (#393): an outline round the tile there and an arrow the

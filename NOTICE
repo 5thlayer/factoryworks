@@ -68,13 +68,13 @@ Source:  https://github.com/malcolmriley/unused-textures
 Licence: Creative Commons Attribution 4.0 International
          https://creativecommons.org/licenses/by/4.0/
 
-SimpleBelts fork (#342)
------------------------
+Beltworks (#342, #447)
+----------------------
 
-Files:   mods/belts-neoforge-2.0.0-exp1-pf.1.jar (built from the fork, not committed; its sha256
-         is in index.toml)
-Author:  Rearth, with modifications by the Planetary Factory authors
+Files:   mods/beltworks-26.1.2-0.1.0.jar (built from the fork, not committed; its sha256 is in
+         index.toml)
+Author:  5thlayer, building on Simple Conveyor Belts by Rearth; its own NOTICE credits both works
 Source:  https://github.com/Rearth/SimpleBelts, forked at https://github.com/adamico/SimpleBelts
          branch `planetaryfactory`
-Licence: Creative Commons Attribution 4.0 International
-         https://creativecommons.org/licenses/by/4.0/
+Licence: MIT for the code, Creative Commons Attribution 4.0 International for the assets and
+         Rearth's code (https://creativecommons.org/licenses/by/4.0/)

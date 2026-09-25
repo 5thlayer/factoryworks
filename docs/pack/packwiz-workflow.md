@@ -64,7 +64,7 @@ Four jars are built rather than downloaded, and none exists on a public index.
 | --- | --- |
 | `gcyr` fork | unmanaged entry in `index.toml` — path plus sha256, no metafile |
 | `Respoiled` fork | unmanaged entry in `index.toml` — path plus sha256, no metafile |
-| `belts` fork (SimpleBelts, `adamico/SimpleBelts` branch `planetaryfactory`) | unmanaged entry in `index.toml` — path plus sha256, no metafile |
+| `beltworks` fork (Beltworks, `adamico/SimpleBelts` branch `planetaryfactory`) | unmanaged entry in `index.toml` — path plus sha256, no metafile |
 | `planetaryfactory_core` | **not indexed at all** |
 
 `planetaryfactory_core` is excluded in `.packwizignore`. It is rebuilt into `mods/` by

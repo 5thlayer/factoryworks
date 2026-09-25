@@ -133,15 +133,15 @@
     },
     "bulk-inserter": {
       "kind": "item",
-      "target": "belts:turbo_chute",
+      "target": "beltworks:turbo_loader",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-4 loader, crafted from the bulk inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
+      "note": "Beltworks' tier-4 loader, crafted from the bulk inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "burner-inserter": {
       "kind": "item",
-      "target": "belts:chute",
+      "target": "beltworks:loader",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-1 loader, crafted from the burner inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
+      "note": "Beltworks' tier-1 loader, crafted from the burner inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "burner-mining-drill": {
       "kind": "item",
@@ -311,15 +311,15 @@
     },
     "express-splitter": {
       "kind": "item",
-      "target": "belts:express_splitter",
+      "target": "beltworks:express_splitter",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-3 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 45 items/s (#349, ADR-0076)."
+      "note": "Beltworks' tier-3 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 45 items/s (#349, ADR-0076)."
     },
     "express-transport-belt": {
       "kind": "item",
-      "target": "belts:express_belt_tile",
+      "target": "beltworks:express_belt_tile",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-3 belt tile, one block of belt at Factorio's 45 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
+      "note": "Beltworks' tier-3 belt tile, one block of belt at Factorio's 45 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
     },
     "express-underground-belt": {
       "status": "native_mechanic",
@@ -327,21 +327,21 @@
     },
     "fast-inserter": {
       "kind": "item",
-      "target": "belts:express_chute",
+      "target": "beltworks:express_loader",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-3 loader, crafted from the fast inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
+      "note": "Beltworks' tier-3 loader, crafted from the fast inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "fast-splitter": {
       "kind": "item",
-      "target": "belts:improved_splitter",
+      "target": "beltworks:improved_splitter",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-2 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 30 items/s (#349, ADR-0076)."
+      "note": "Beltworks' tier-2 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 30 items/s (#349, ADR-0076)."
     },
     "fast-transport-belt": {
       "kind": "item",
-      "target": "belts:improved_belt_tile",
+      "target": "beltworks:improved_belt_tile",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-2 belt tile, one block of belt at Factorio's 30 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
+      "note": "Beltworks' tier-2 belt tile, one block of belt at Factorio's 30 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
     },
     "fast-underground-belt": {
       "status": "native_mechanic",
@@ -432,9 +432,9 @@
     },
     "inserter": {
       "kind": "item",
-      "target": "belts:improved_chute",
+      "target": "beltworks:improved_loader",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-2 loader, crafted from the inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
+      "note": "Beltworks' tier-2 loader, crafted from the inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
     },
     "iron-chest": {
       "kind": "item",
@@ -805,9 +805,9 @@
     },
     "splitter": {
       "kind": "item",
-      "target": "belts:splitter",
+      "target": "beltworks:splitter",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-1 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 15 items/s (#349, ADR-0076)."
+      "note": "Beltworks' tier-1 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 15 items/s (#349, ADR-0076)."
     },
     "steam-engine": {
       "kind": "item",
@@ -908,22 +908,22 @@
     },
     "transport-belt": {
       "kind": "item",
-      "target": "belts:belt_tile",
+      "target": "beltworks:belt_tile",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-1 belt tile, one block of belt at Factorio's 15 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
+      "note": "Beltworks' tier-1 belt tile, one block of belt at Factorio's 15 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
     },
     "turbo-splitter": {
       "kind": "item",
-      "target": "belts:turbo_splitter",
+      "target": "beltworks:turbo_splitter",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-4 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 60 items/s (#349, ADR-0076).",
+      "note": "Beltworks' tier-4 splitter: two blocks wide, two belts in and two out, splitting and merging evenly and sending everything to the free side when one backs up, each side capped at its tier's 60 items/s (#349, ADR-0076).",
       "outside_corpus": "Space Age's recipe, which needs tungsten plate from Vulcanus; the corpus is Nauvis pre-launch (#72), so the splitter ships with no recipe (#341)."
     },
     "turbo-transport-belt": {
       "kind": "item",
-      "target": "belts:turbo_belt_tile",
+      "target": "beltworks:turbo_belt_tile",
       "source": "borrowed",
-      "note": "The SimpleBelts fork's tier-4 belt tile, one block of belt at Factorio's 60 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table.",
+      "note": "Beltworks' tier-4 belt tile, one block of belt at Factorio's 60 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table.",
       "outside_corpus": "Space Age's recipe, which needs tungsten plate from Vulcanus; the corpus is Nauvis pre-launch (#72), so the belt ships with no recipe (#341)."
     },
     "underground-belt": {

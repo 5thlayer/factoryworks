@@ -11,13 +11,13 @@
       "count": 5
     },
     {
-      "ingredient": "belts:belt_tile",
+      "ingredient": "beltworks:belt_tile",
       "count": 4
     }
   ],
   "results": [
     {
-      "id": "belts:splitter",
+      "id": "beltworks:splitter",
       "count": 1
     }
   ],

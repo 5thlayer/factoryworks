@@ -31,12 +31,12 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
-import rearth.belts.BlockContent;
-import rearth.belts.ItemContent;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.blocks.ChuteBlockEntity;
-import rearth.belts.model.BeltTier;
+import io.github._5thlayer.beltworks.BlockContent;
+import io.github._5thlayer.beltworks.ItemContent;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.blocks.BeltEndBlockEntity;
+import io.github._5thlayer.beltworks.model.BeltTier;
 
 /**
  * A line of belt tiles carrying items between two loaders (#398): chest, loader, tiles, loader,
@@ -670,7 +670,7 @@ final class BeltTileTests {
         helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
         place(helper, tiers(BeltTier.IMPROVED), BeltTier.IMPROVED, RATE_SUPPLY);
         BlockPos target = targetOf(tiers(BeltTier.IMPROVED));
-        ChuteBlockEntity loader = helper.getBlockEntity(FROM, ChuteBlockEntity.class);
+        BeltEndBlockEntity loader = helper.getBlockEntity(FROM, BeltEndBlockEntity.class);
         long[] before = new long[2];
         helper.startSequence()
                 .thenIdle(FED_WARMUP_TICKS)
@@ -729,9 +729,9 @@ final class BeltTileTests {
             helper.fail(EXPRESS_BELT_RECIPE + " is not loaded, so this proves nothing");
             return;
         }
-        List<String> survivors = loaded.stream().filter(id -> id.startsWith("belts:")).sorted().toList();
+        List<String> survivors = loaded.stream().filter(id -> id.startsWith("beltworks:")).sorted().toList();
         if (!survivors.isEmpty()) {
-            helper.fail("SimpleBelts' own recipes survived the sweep: " + survivors);
+            helper.fail("Beltworks' own recipes survived the sweep: " + survivors);
             return;
         }
         helper.succeed();

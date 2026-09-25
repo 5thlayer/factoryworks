@@ -11,13 +11,13 @@
       "count": 2
     },
     {
-      "ingredient": "belts:improved_chute",
+      "ingredient": "beltworks:improved_loader",
       "count": 1
     }
   ],
   "results": [
     {
-      "id": "belts:express_chute",
+      "id": "beltworks:express_loader",
       "count": 1
     }
   ],

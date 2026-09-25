@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import org.jspecify.annotations.Nullable;
-import rearth.belts.items.SplitterItem;
+import io.github._5thlayer.beltworks.items.SplitterItem;
 
 /**
  * The SimpleBelts fork's splitter, which plans its own placement (ADR-0069). The fork's

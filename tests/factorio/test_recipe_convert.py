@@ -65,8 +65,8 @@ NAMESPACES = {"minecraft", "planetaryfactory", "ftbmaterials",
               "researchd", "planetary_factory",
               # Oritech is the pack's tech mod (ADR-0060): its engine (#282), pipes, tanks and fluids.
               "oritech",
-              # Railcraft Reborn's signals and SimpleBelts' belts, ADR-0060's logistics (#277).
-              "railcraft", "belts"}
+              # Railcraft Reborn's signals and Beltworks' belts, ADR-0060's logistics (#277).
+              "railcraft", "beltworks"}
 
 
 def mod_registered_blocks():

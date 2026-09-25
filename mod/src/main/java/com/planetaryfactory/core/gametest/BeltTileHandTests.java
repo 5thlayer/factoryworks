@@ -18,10 +18,10 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.model.BeltTier;
-import rearth.belts.model.TransportLine;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.model.BeltTier;
+import io.github._5thlayer.beltworks.model.TransportLine;
 
 /**
  * The belt hand and riding on tiles (#396). A hand held on a tile takes whatever is on it at the

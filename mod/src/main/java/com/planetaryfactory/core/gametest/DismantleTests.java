@@ -27,16 +27,16 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import rearth.belts.BlockContent;
-import rearth.belts.ComponentContent;
-import rearth.belts.ItemContent;
-import rearth.belts.blocks.BeltTileBlockEntity;
-import rearth.belts.blocks.BeltWedgeBlock;
-import rearth.belts.blocks.SplitterBlock;
-import rearth.belts.items.DismantlePlan;
-import rearth.belts.items.Dismantling;
-import rearth.belts.model.BeltTier;
-import rearth.belts.model.TransportLine;
+import io.github._5thlayer.beltworks.BlockContent;
+import io.github._5thlayer.beltworks.ComponentContent;
+import io.github._5thlayer.beltworks.ItemContent;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlockEntity;
+import io.github._5thlayer.beltworks.blocks.BeltWedgeBlock;
+import io.github._5thlayer.beltworks.blocks.SplitterBlock;
+import io.github._5thlayer.beltworks.items.DismantlePlan;
+import io.github._5thlayer.beltworks.items.Dismantling;
+import io.github._5thlayer.beltworks.model.BeltTier;
+import io.github._5thlayer.beltworks.model.TransportLine;
 
 /**
  * A Dismantle (#404): each test sneak-clicks a start with the Engineer's Pick through the player's
@@ -49,7 +49,7 @@ final class DismantleTests {
 
     private static final BlockPos START = new BlockPos(2, 1, 3);
     private static final Identifier PICK = Identifier.fromNamespaceAndPath("planetaryfactory", "engineers_iron_pick");
-    private static final String OFF_LINE = "message.belts.dismantle_off_line";
+    private static final String OFF_LINE = "message.beltworks.dismantle_off_line";
 
     private DismantleTests() {
     }

@@ -9,9 +9,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jspecify.annotations.Nullable;
-import rearth.belts.blocks.BeltTileBlock;
-import rearth.belts.items.BeltTileItem;
-import rearth.belts.items.StretchPlan;
+import io.github._5thlayer.beltworks.blocks.BeltTileBlock;
+import io.github._5thlayer.beltworks.items.BeltTileItem;
+import io.github._5thlayer.beltworks.items.StretchPlan;
 
 /**
  * The SimpleBelts fork's tile item (#393). With a stored start, a click lays the fork's stretch and
