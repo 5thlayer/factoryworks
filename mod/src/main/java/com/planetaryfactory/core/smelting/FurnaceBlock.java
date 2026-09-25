@@ -4,8 +4,9 @@ import javax.annotation.Nullable;
 
 import com.planetaryfactory.core.PFBlockEntities;
 
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
+import com.planetaryfactory.core.placement.PackRefusal;
 import com.planetaryfactory.core.placement.ReplaceHandoff;
 
 import net.minecraft.core.BlockPos;
@@ -141,7 +142,7 @@ public class FurnaceBlock extends BaseEntityBlock {
         }
         // CONSUME rather than FAIL: a failed use falls through to the item, which would place beside (ADR-0082).
         if (plan.isRefused()) {
-            if (plan.refusal() == PlacementPlan.Refusal.NO_ROOM_TO_RETURN && player instanceof ServerPlayer server) {
+            if (plan.refusal() == PackRefusal.NO_ROOM_TO_RETURN && player instanceof ServerPlayer server) {
                 server.sendSystemMessage(Component.translatable(NO_ROOM_KEY), true);
             }
             return InteractionResult.CONSUME;

@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
+import com.planetaryfactory.core.placement.PackRefusal;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -128,7 +129,7 @@ public record FootprintMachine(Footprint footprint, Supplier<? extends Block> an
         }
         return fits
                 ? PlacementPlan.accepted(blocks)
-                : PlacementPlan.refused(blocks, PlacementPlan.Refusal.FOOTPRINT_BLOCKED);
+                : PlacementPlan.refused(blocks, PackRefusal.FOOTPRINT_BLOCKED);
     }
 
     /**

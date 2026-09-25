@@ -290,10 +290,15 @@ fix. Run them after re-extracting the corpus or editing the item map.
 Placement is computed as a **plan** and executed separately (#297, ADR-0069): a `PlacementPlan` is
 the positions a held item would fill, the blockstate at each, and a refusal or none. The preview
 draws a plan and the click executes one, so the two cannot drift -- a preview that lies is worse
-than none, because a player builds against it. `core/placement/Placements` is the one entry point
-and the vanilla plan (deferring to `BlockPlaceContext` for facing, replaceable blocks and state
-survival); only an item whose placement is *not* vanilla's implements `PlansPlacement` -- the pole's
-column, the rig's footprint, the pump's dry site.
+than none, because a player builds against it. The plan, its drawing and the vanilla plan
+(deferring to `BlockPlaceContext` for facing, replaceable blocks and state survival) are the
+placementpreview library's, which Beltworks bundles and the pack compiles against from `mavenLocal()`
+(#446). `Placements.planFor` is the one entry point, and every `planetaryfactory:` block is opted into
+the vanilla plan in `PlanetaryFactoryCore`. Only an item whose placement is *not* vanilla's implements
+`PlansPlacement` -- the pole's column, the rig's footprint, the pump's dry site -- and its refusals are
+`PackRefusal`. What the pack draws beside a plan is `placement/client/`, on the library's
+`PlacementPreviewEvent`: the supply area, mining area and wires as an `Overlay`, a family dismantle
+as a `Takeover`.
 
 `gametest/PlacementPlanTests` is the check ADR-0069 asks for by name, and the only one that can
 exist: ask each item for a plan, then use the block the way a player does, then hold the world to
@@ -304,9 +309,8 @@ bearing -- the preview's two failure modes are promising a placement that does n
 refusing one that does. Each test was checked against the defect it exists for: forcing the pole
 to the vanilla plan turns four red, forcing the rig's footprint to always fit turns one red,
 flattening the rig to a single layer turns two more, dropping the pump's water question turns one,
-and giving up on the other-group column walk turns another. The Pack's own plans for Beltworks'
-splitter and stretch, `SplitterPlans` and `TilePlans`, have no world check until #446 deletes them;
-Beltworks' GameTests hold its own. The Assembling Machine's two (#326) are
+and giving up on the other-group column walk turns another. A belt piece plans itself, and
+Beltworks' GameTests hold it. The Assembling Machine's two (#326) are
 the rig's pair for its 2x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
 red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
 after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Three fixtures are load-bearing rather
@@ -344,7 +348,7 @@ too when the platform moves, since the same server reads it.
 
 The platform grew from five blocks tall to seven so a column can reach `MAX_SEGMENTS`; re-run
 `scripts/build-gametest-structures.py` if it moves again. Whether the preview **draws** correctly is
-a human check on delivery -- no check here claims it, and `PlacementPreview` is on
+a human check on delivery -- no check here claims it, and the library draws on
 `SubmitCustomGeometryEvent` rather than the `RenderLevelStageEvent` ADR-0069 names, because 26.1's
 collector pipeline is reached through the former.
 

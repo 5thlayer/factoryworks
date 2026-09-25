@@ -7,6 +7,11 @@ status: accepted
 > **Belt part moved to Beltworks.** How a belt piece plans its placement now lives in Beltworks
 > (adamico/SimpleBelts), as its ADR 0006. The plan and preview seam for the pack's own blocks
 > stays here.
+>
+> **The mechanism moved to placementpreview** (#446). The plan, the vanilla plan, the opt-in and
+> the drawing are the 5thlayer/placementpreview library's, per its ADR 0001 and Beltworks' ADR 0010,
+> so a belt piece and a pack block preview through one renderer. The decision below stands; the pack
+> keeps its own items' plans, its refusals and what it draws beside a plan.
 
 Factorio draws what placing a block would do before the click. #297 brings that in as the
 **Placement Preview**, and #158 (the supply area) and #298 (a pole's wires) draw on top of it. The

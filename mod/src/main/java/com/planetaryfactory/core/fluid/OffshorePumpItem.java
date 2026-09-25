@@ -1,9 +1,10 @@
 package com.planetaryfactory.core.fluid;
 
 import com.planetaryfactory.core.PFBlocks;
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
-import com.planetaryfactory.core.placement.PlansPlacement;
+import com.planetaryfactory.core.placement.PackRefusal;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
+import io.github._5thlayer.placementpreview.PlansPlacement;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -55,7 +56,7 @@ public class OffshorePumpItem extends BlockItem implements PlansPlacement {
         }
         PlacementPlan.Placed at = plan.blocks().getFirst();
         if (OffshorePumpBlock.siteOf(context.getLevel(), at.pos()).isEmpty()) {
-            return PlacementPlan.refused(at.pos(), at.state(), PlacementPlan.Refusal.NO_FLUID_SOURCE);
+            return PlacementPlan.refused(at.pos(), at.state(), PackRefusal.NO_FLUID_SOURCE);
         }
         return plan;
     }
@@ -76,7 +77,7 @@ public class OffshorePumpItem extends BlockItem implements PlansPlacement {
             // Above the hotbar rather than in chat: it is feedback on a gesture the player just
             // made, not a log line. 26.1 moved the overlay form onto ServerPlayer, which is also
             // the only side worth sending it from.
-            if (plan != null && plan.refusal() == PlacementPlan.Refusal.NO_FLUID_SOURCE
+            if (plan != null && plan.refusal() == PackRefusal.NO_FLUID_SOURCE
                     && context.getPlayer() instanceof ServerPlayer player) {
                 player.sendSystemMessage(Component.translatable(NO_SOURCE_KEY), true);
             }

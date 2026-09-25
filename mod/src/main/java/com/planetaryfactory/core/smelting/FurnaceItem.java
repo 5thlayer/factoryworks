@@ -1,8 +1,9 @@
 package com.planetaryfactory.core.smelting;
 
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
-import com.planetaryfactory.core.placement.PlansPlacement;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
+import io.github._5thlayer.placementpreview.PlansPlacement;
+import com.planetaryfactory.core.placement.PackRefusal;
 import com.planetaryfactory.core.placement.ReplaceGroups;
 import com.planetaryfactory.core.placement.ReplaceHandoff;
 
@@ -52,7 +53,7 @@ public class FurnaceItem extends BlockItem implements PlansPlacement {
         boolean fits = player == null || ReplaceHandoff.fits(player, context.getHand(),
                 new ItemStack(placed.getBlock()), furnace.handOver(tier()).extras());
         return PlacementPlan.replacing(new PlacementPlan.Placed(aimed, state),
-                fits ? null : PlacementPlan.Refusal.NO_ROOM_TO_RETURN);
+                fits ? null : PackRefusal.NO_ROOM_TO_RETURN);
     }
 
     private static String id(Block block) {

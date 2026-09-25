@@ -11,8 +11,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
+import com.planetaryfactory.core.placement.PackRefusal;
 import com.planetaryfactory.core.placement.ReplaceHandoff;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -120,8 +121,8 @@ public class SupplyAreaPoleBlock extends Block implements EntityBlock {
         PlacementPlan plan = Placements.planFor(item, new BlockPlaceContext(level, player, hand, stack, hit));
         if (plan != null && plan.isRefused() && player instanceof ServerPlayer server) {
             String reason = switch (plan.refusal()) {
-                case OTHER_REPLACE_GROUP -> OTHER_GROUP_KEY;
-                case NO_ROOM_TO_RETURN -> NO_ROOM_KEY;
+                case PackRefusal.OTHER_REPLACE_GROUP -> OTHER_GROUP_KEY;
+                case PackRefusal.NO_ROOM_TO_RETURN -> NO_ROOM_KEY;
                 default -> null;
             };
             if (reason != null) {

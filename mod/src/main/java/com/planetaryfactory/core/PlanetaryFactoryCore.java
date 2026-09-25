@@ -26,6 +26,8 @@ import com.planetaryfactory.core.worldgen.PFWorldgen;
 import com.planetaryfactory.core.worldgen.TerraStartingArea;
 import com.planetaryfactory.core.radar.ChartDeliveries;
 import com.planetaryfactory.core.reach.Reach;
+import io.github._5thlayer.placementpreview.Placements;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -71,6 +73,7 @@ public final class PlanetaryFactoryCore {
         // see PFFluids' own javadoc for why that order is load-bearing here.
         PFFluidTypes.register(modBus);
         PFFluids.register(modBus);
+        Placements.optIn(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(NAMESPACE));
         modBus.addListener(PFItems::addToCreativeTabs);
         modBus.addListener(PFBlockEntities::registerCapabilities);
         modBus.addListener(PFItems::registerCapabilities);
@@ -126,8 +129,6 @@ public final class PlanetaryFactoryCore {
             BoilerClient.register(modBus);
             // The wire between linked poles (#281); cosmetic, the balance never reads it.
             PoleWireClient.register(modBus);
-            // Factorio's build preview (#297): what placing the held block would do, drawn before
-            // the click. It draws the same plan the click executes, so it cannot drift from it.
             PlacementPreviewClient.register();
             com.planetaryfactory.core.placement.client.RotateKeys.register(modBus);
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,

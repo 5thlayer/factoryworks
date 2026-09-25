@@ -3,9 +3,10 @@ package com.planetaryfactory.core.mining.rig;
 import java.util.List;
 
 import com.planetaryfactory.core.PFBlocks;
-import com.planetaryfactory.core.placement.PlacementPlan;
-import com.planetaryfactory.core.placement.Placements;
-import com.planetaryfactory.core.placement.PlansPlacement;
+import com.planetaryfactory.core.placement.PackRefusal;
+import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.placementpreview.Placements;
+import io.github._5thlayer.placementpreview.PlansPlacement;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -87,7 +88,7 @@ public class RigBlockItem extends BlockItem implements PlansPlacement {
         }
         return fits
                 ? PlacementPlan.accepted(blocks)
-                : PlacementPlan.refused(blocks, PlacementPlan.Refusal.FOOTPRINT_BLOCKED);
+                : PlacementPlan.refused(blocks, PackRefusal.FOOTPRINT_BLOCKED);
     }
 
     /**
