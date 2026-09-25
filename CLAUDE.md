@@ -239,9 +239,10 @@ arithmetic is `QuarterTurnTest`, and whether `R` and `Shift+R` reach the server 
 redraws is a human check on delivery. With nothing placeable held, a press turns the aimed block
 (#405, ADR-0087): a belt tile and a loader turn a quarter each press both ways and keep their block
 entity, a splitter half, a foot, a top and its wedge are refused with nothing changed and their
-reason heard, a level tile turned to slope a corner is refused with the fork's placement reason
-(#419), and a press with a tile held turns the stack and not the block. Dropping the slope denial,
-the wedge's, the refit and the held stack's precedence each turn one red. The deny list and dispatch order are
+reason heard, a level tile turned to slope a corner or to stand a top's wedge on a loader is refused
+with the fork's placement reason (#419, #420), a press with a tile held turns the stack and not the
+block, and one with stone held, which has nothing to face, turns the block. Dropping the slope
+denial, the wedge's, either refit reason and the held stack's precedence each turn one red. The deny list and dispatch order are
 `PlacedTurnTest`, and whether the refusal reaches the action bar is a human check on delivery.
 And that a tile item lays a **stretch** in two clicks (`StretchTests`, #393): each test sneak-clicks a
 start, asks `Placements` for the next click's plan, clicks, and holds the world to it. A stretch straight

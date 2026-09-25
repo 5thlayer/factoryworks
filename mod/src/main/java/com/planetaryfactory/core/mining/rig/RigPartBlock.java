@@ -2,6 +2,8 @@ package com.planetaryfactory.core.mining.rig;
 
 import javax.annotation.Nullable;
 
+import com.planetaryfactory.core.machine.footprint.FootprintTurn;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -35,7 +37,7 @@ import net.minecraft.world.phys.BlockHitResult;
  * RigPartBlockEntity#preRemoveSideEffects}, so that exactly one item drops regardless of which
  * block of the footprint the player actually broke. See {@link RigBreaker}.
  */
-public class RigPartBlock extends BaseEntityBlock {
+public class RigPartBlock extends BaseEntityBlock implements FootprintTurn {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
