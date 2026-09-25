@@ -26,7 +26,7 @@ import com.planetaryfactory.core.worldgen.PFWorldgen;
 import com.planetaryfactory.core.worldgen.TerraStartingArea;
 import com.planetaryfactory.core.radar.ChartDeliveries;
 import com.planetaryfactory.core.reach.Reach;
-import io.github._5thlayer.placementpreview.Placements;
+import io.github._5thlayer.groundworks.Placements;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;

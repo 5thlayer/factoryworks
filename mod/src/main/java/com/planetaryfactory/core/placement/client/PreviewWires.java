@@ -11,7 +11,7 @@ import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.energy.PoleWiring;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.client.WireGeometry;
-import io.github._5thlayer.placementpreview.PlacementPlan;
+import io.github._5thlayer.groundworks.PlacementPlan;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.SubmitNodeCollector;

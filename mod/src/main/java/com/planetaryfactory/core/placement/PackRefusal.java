@@ -1,6 +1,6 @@
 package com.planetaryfactory.core.placement;
 
-import io.github._5thlayer.placementpreview.Refusal;
+import io.github._5thlayer.groundworks.Refusal;
 
 /** Why one of the pack's own items would not place (ADR-0069). */
 public enum PackRefusal implements Refusal {

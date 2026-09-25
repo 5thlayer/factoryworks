@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.planetaryfactory.core.dismantle.DismantlePlan;
 import com.planetaryfactory.core.dismantle.FamilyDismantle;
-import io.github._5thlayer.placementpreview.client.Outline;
-import io.github._5thlayer.placementpreview.client.PlacementPreviewEvent;
+import io.github._5thlayer.groundworks.client.Outline;
+import io.github._5thlayer.groundworks.client.PlacementPreviewEvent;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;

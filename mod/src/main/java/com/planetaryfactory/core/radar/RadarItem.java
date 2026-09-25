@@ -2,8 +2,8 @@ package com.planetaryfactory.core.radar;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
-import io.github._5thlayer.placementpreview.PlacementPlan;
-import io.github._5thlayer.placementpreview.PlansPlacement;
+import io.github._5thlayer.groundworks.PlacementPlan;
+import io.github._5thlayer.groundworks.PlansPlacement;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;

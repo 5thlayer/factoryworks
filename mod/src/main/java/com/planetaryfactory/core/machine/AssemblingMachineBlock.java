@@ -2,8 +2,8 @@ package com.planetaryfactory.core.machine;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.machine.footprint.FootprintAnchorBlock;
-import io.github._5thlayer.placementpreview.PlacementPlan;
-import io.github._5thlayer.placementpreview.Placements;
+import io.github._5thlayer.groundworks.PlacementPlan;
+import io.github._5thlayer.groundworks.Placements;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

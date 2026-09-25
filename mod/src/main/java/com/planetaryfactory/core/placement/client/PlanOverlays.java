@@ -3,8 +3,8 @@ package com.planetaryfactory.core.placement.client;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.client.SupplyAreaBox;
 import com.planetaryfactory.core.mining.rig.client.MiningAreaOverlay;
-import io.github._5thlayer.placementpreview.PlacementPlan;
-import io.github._5thlayer.placementpreview.client.PlacementPreviewEvent;
+import io.github._5thlayer.groundworks.PlacementPlan;
+import io.github._5thlayer.groundworks.client.PlacementPreviewEvent;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
