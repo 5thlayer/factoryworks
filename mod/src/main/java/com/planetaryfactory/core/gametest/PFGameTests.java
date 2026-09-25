@@ -99,7 +99,6 @@ public final class PFGameTests {
         }
         if (ModList.get().isLoaded("beltworks")) {
             BeltworksPackTests.register(registrar);
-            RotateTests.register(registrar);
         }
     }
 

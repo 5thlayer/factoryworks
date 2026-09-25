@@ -10,14 +10,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.planetaryfactory.core.PFBlocks;
-import com.planetaryfactory.core.PFDataComponents;
-import com.planetaryfactory.core.dismantle.DismantlePlan;
-import com.planetaryfactory.core.dismantle.DismantleSpan;
-import com.planetaryfactory.core.dismantle.FamilyDismantle;
+import com.planetaryfactory.core.dismantle.PipeFamily;
+import io.github._5thlayer.groundworks.DismantleSpan;
+import io.github._5thlayer.groundworks.DismantleStart;
+import io.github._5thlayer.groundworks.Dismantles;
+import io.github._5thlayer.groundworks.Groundworks;
+import io.github._5thlayer.groundworks.Refusal;
+import io.github._5thlayer.groundworks.ShortestPath;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
@@ -38,9 +40,10 @@ import rearth.oritech.block.blocks.pipes.AbstractPipeBlock;
 import rearth.oritech.block.blocks.pipes.GenericPipeBlock;
 
 /**
- * A Dismantle of Oritech's fluid pipes (#431, ADR-0086): each test sneak-clicks a start with the
- * Engineer's Pick through the player's game mode, asks {@link FamilyDismantle#plan} for the end,
- * sneak-clicks it, and holds the world, the inventory and the stored start to the plan.
+ * A Dismantle of Oritech's fluid pipes as Groundworks runs it for the pipe family (#448, ADR-0086):
+ * each test sneak-clicks a start with the Engineer's Pick through the player's game mode, asks
+ * {@link Dismantles#spanTo} for the end, clicks it, and holds the world, the inventory and the
+ * stored start to the span.
  */
 final class PipeDismantleTests {
 
@@ -75,23 +78,24 @@ final class PipeDismantleTests {
             for (int z = 1; z < 3; z++) pipe(helper, START.east(2).south(z));
             for (int x = 1; x >= 0; x--) pipe(helper, START.east(x).south(2));
             pipe(helper, START.south(1));
-            refused(helper, START, START.east(2).south(2), DismantleSpan.Refusal.TIED, "message.planetaryfactory.dismantle.tied");
+            refused(helper, START, START.east(2).south(2), ShortestPath.Refused.TIED, "message.planetaryfactory.dismantle.tied");
         });
         tests.test("a_pipe_dismantle_across_a_closed_connection_changes_nothing", 20, helper -> {
             List<BlockPos> run = row(helper, 4);
             close(helper, run.get(1), Direction.EAST);
             close(helper, run.get(2), Direction.WEST);
-            refused(helper, run.getFirst(), run.getLast(), DismantleSpan.Refusal.NOT_JOINED, "message.planetaryfactory.dismantle.not_joined");
+            refused(helper, run.getFirst(), run.getLast(), ShortestPath.Refused.NOT_JOINED, "message.planetaryfactory.dismantle.not_joined");
         });
         tests.test("a_pipe_dismantle_ending_on_a_machine_changes_nothing", 20, helper -> {
             helper.setBlock(START.east(3), PFBlocks.BOILER.get());
             row(helper, 3);
-            refused(helper, START, START.east(3), DismantleSpan.Refusal.OUTSIDE_FAMILY, "message.planetaryfactory.dismantle.outside_family");
+            refused(helper, START, START.east(3), Refusal.Dismantle.NOT_SAME_KIND, "message.groundworks.dismantle_not_same_kind");
         });
         tests.test("a_pipe_dismantle_with_no_room_drops_the_rest_at_the_players_feet", 20, PipeDismantleTests::fullInventory);
         tests.test("a_creative_pipe_dismantle_hands_over_nothing", 20, PipeDismantleTests::creative);
-        tests.test("a_click_after_the_start_pipe_broke_is_a_new_start", 20, PipeDismantleTests::staleStart);
+        tests.test("a_sneak_click_after_the_start_pipe_broke_is_a_new_start", 20, PipeDismantleTests::staleStart);
         tests.test("a_sneak_use_in_the_air_clears_the_pipe_dismantle_start", 20, PipeDismantleTests::clears);
+        tests.test("a_vanilla_pickaxe_stores_no_pipe_dismantle_start", 20, PipeDismantleTests::pickaxe);
     }
 
     private static void fullInventory(GameTestHelper helper) {
@@ -139,15 +143,14 @@ final class PipeDismantleTests {
         List<BlockPos> run = row(helper, 4);
         var player = started(helper, run.getFirst());
         helper.destroyBlock(run.getFirst());
-        click(helper, player, run.get(2));
-        if (!Objects.equals(stored(helper, run.get(2)), player.getMainHandItem().get(PFDataComponents.DISMANTLE_START.get()))) {
-            helper.fail("a click after the start broke stored " + player.getMainHandItem().get(PFDataComponents.DISMANTLE_START.get())
-                    + ", not the clicked pipe", run.get(2));
+        sneakClick(helper, player, run.get(2));
+        if (!Objects.equals(helper.absolutePos(run.get(2)), storedStart(player))) {
+            helper.fail("a sneak-click after the start broke stored " + storedStart(player) + ", not the clicked pipe", run.get(2));
             return;
         }
         for (BlockPos pos : run.subList(1, run.size())) {
-            if (FamilyDismantle.familyOf(helper.getBlockState(pos)).isEmpty()) {
-                helper.fail("a click after the start broke took up a pipe", pos);
+            if (!helper.getBlockState(pos).is(PipeFamily.PIPES)) {
+                helper.fail("a sneak-click after the start broke took up a pipe", pos);
                 return;
             }
         }
@@ -159,35 +162,48 @@ final class PipeDismantleTests {
         var player = started(helper, run.getFirst());
         player.setShiftKeyDown(true);
         player.gameMode.useItem(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND);
-        if (player.getMainHandItem().has(PFDataComponents.DISMANTLE_START.get())) {
+        if (storedStart(player) != null) {
             helper.fail("a sneak-use in the air left the dismantle's start stored", run.getFirst());
             return;
         }
         helper.succeed();
     }
 
+    // Beltworks adds every pickaxe to the tool tag, and the Pack trims it to the Picks (#448).
+    private static void pickaxe(GameTestHelper helper) {
+        List<BlockPos> run = row(helper, 3);
+        var player = new ListeningPlayer(helper);
+        player.setGameMode(GameType.SURVIVAL);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_PICKAXE));
+        sneakClick(helper, player, run.getFirst());
+        if (storedStart(player) != null) {
+            helper.fail("a sneak-click with an iron pickaxe stored a dismantle start", run.getFirst());
+            return;
+        }
+        helper.succeed();
+    }
+
     /**
-     * Asks the plan of a sneak-click at {@code end} from {@code start}, clicks, and holds the world to
-     * it: exactly {@code taken} gone, {@code kept} still pipes, a pipe item for each taken block, and
-     * the start cleared.
+     * Asks the span of a click at {@code end} from {@code start}, clicks, and holds the world to it:
+     * exactly {@code taken} gone, {@code kept} still pipes, a pipe item for each taken block, and the
+     * start cleared.
      */
     private static void takesUp(GameTestHelper helper, BlockPos start, BlockPos end, List<BlockPos> taken, List<BlockPos> kept) {
         var player = started(helper, start);
-        DismantlePlan plan = planOf(helper, player, end);
+        DismantleSpan span = spanOf(helper, player, end);
         List<BlockPos> expected = taken.stream().map(helper::absolutePos).toList();
-        if (plan == null || plan.refused() || !Objects.equals(Set.copyOf(expected), Set.copyOf(plan.blocks()))) {
-            helper.fail("the dismantle to " + end + " was planned as "
-                    + (plan == null ? "nothing" : plan.refused() ? plan.refusal() : plan.blocks()) + ", not " + expected, end);
+        if (span == null || span.isRefused() || !Objects.equals(Set.copyOf(expected), Set.copyOf(span.takes()))) {
+            helper.fail("the dismantle to " + end + " was planned as " + described(span) + ", not " + expected, end);
             return;
         }
         click(helper, player, end);
         BlockPos left = standing(helper, taken);
         if (left != null) {
-            helper.fail("the plan named " + left + " and the click left " + helper.getBlockState(left), left);
+            helper.fail("the span named " + left + " and the click left " + helper.getBlockState(left), left);
             return;
         }
         for (BlockPos pos : kept) {
-            if (FamilyDismantle.familyOf(helper.getBlockState(pos)).isEmpty()) {
+            if (!helper.getBlockState(pos).is(PipeFamily.PIPES)) {
                 helper.fail("the dismantle took " + pos + ", which is outside its span", pos);
                 return;
             }
@@ -201,19 +217,18 @@ final class PipeDismantleTests {
             helper.fail("the dismantle left items on the ground", end);
             return;
         }
-        if (player.getMainHandItem().has(PFDataComponents.DISMANTLE_START.get())) {
+        if (storedStart(player) != null) {
             helper.fail("a dismantle left its start stored", end);
             return;
         }
         helper.succeed();
     }
 
-    private static void refused(GameTestHelper helper, BlockPos start, BlockPos end, DismantleSpan.Refusal refusal, String message) {
+    private static void refused(GameTestHelper helper, BlockPos start, BlockPos end, Refusal refusal, String message) {
         var player = started(helper, start);
-        DismantlePlan plan = planOf(helper, player, end);
-        if (plan == null || plan.refusal() != refusal || !plan.blocks().isEmpty()) {
-            helper.fail("the dismantle to " + end + " was planned as "
-                    + (plan == null ? "nothing" : plan.refused() ? plan.refusal() : plan.blocks()) + ", not " + refusal, end);
+        DismantleSpan span = spanOf(helper, player, end);
+        if (span == null || span.refusal() != refusal || !span.takes().isEmpty()) {
+            helper.fail("the dismantle to " + end + " was planned as " + described(span) + ", not " + refusal, end);
             return;
         }
         Map<BlockPos, BlockState> before = world(helper);
@@ -272,24 +287,36 @@ final class PipeDismantleTests {
         player.setGameMode(GameType.SURVIVAL);
         player.setPos(helper.absoluteVec(new Vec3(START.getX() + 0.5, START.getY(), START.getZ() - 1.5)));
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(BuiltInRegistries.ITEM.getValue(PICK)));
-        click(helper, player, start);
-        if (!Objects.equals(stored(helper, start), player.getMainHandItem().get(PFDataComponents.DISMANTLE_START.get()))) {
-            helper.fail("a sneak-click on a pipe stored " + player.getMainHandItem().get(PFDataComponents.DISMANTLE_START.get())
-                    + " as the start", start);
+        sneakClick(helper, player, start);
+        if (!helper.absolutePos(start).equals(storedStart(player))) {
+            helper.fail("a sneak-click on a pipe stored " + storedStart(player) + " as the start", start);
         }
         return player;
     }
 
-    private static GlobalPos stored(GameTestHelper helper, BlockPos at) {
-        return GlobalPos.of(helper.getLevel().dimension(), helper.absolutePos(at));
+    private static @Nullable BlockPos storedStart(ListeningPlayer player) {
+        DismantleStart start = player.getMainHandItem().get(Groundworks.DISMANTLE_START.get());
+        return start == null ? null : start.pos();
     }
 
-    private static @Nullable DismantlePlan planOf(GameTestHelper helper, ListeningPlayer player, BlockPos end) {
-        return FamilyDismantle.plan(helper.getLevel(), player.getMainHandItem(), helper.absolutePos(end));
+    private static @Nullable DismantleSpan spanOf(GameTestHelper helper, ListeningPlayer player, BlockPos end) {
+        return Dismantles.spanTo(helper.getLevel(), player.getMainHandItem(), helper.absolutePos(end));
+    }
+
+    private static Object described(@Nullable DismantleSpan span) {
+        return span == null ? "nothing" : span.isRefused() ? span.refusal() : span.takes();
+    }
+
+    private static void sneakClick(GameTestHelper helper, ListeningPlayer player, BlockPos at) {
+        use(helper, player, at, true);
     }
 
     private static void click(GameTestHelper helper, ListeningPlayer player, BlockPos at) {
-        player.setShiftKeyDown(true);
+        use(helper, player, at, false);
+    }
+
+    private static void use(GameTestHelper helper, ListeningPlayer player, BlockPos at, boolean sneaking) {
+        player.setShiftKeyDown(sneaking);
         BlockPos absolute = helper.absolutePos(at);
         player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND,
                 new BlockHitResult(Vec3.atCenterOf(absolute), Direction.UP, absolute, false));

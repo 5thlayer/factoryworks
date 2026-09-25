@@ -154,15 +154,8 @@
   "message.planetaryfactory.replace.other_group": "A %s cannot replace a %s column.",
   "map.planetaryfactory.patch.crude_oil": "Crude oil",
   "map.planetaryfactory.patch.yield": "%s: %s yield",
-  "key.category.planetaryfactory.planetaryfactory": "Planetary Factory",
-  "key.planetaryfactory.rotate": "Rotate",
-  "key.planetaryfactory.reverse_rotate": "Reverse Rotate",
-  "message.planetaryfactory.dismantle.started": "Dismantle started. Sneak-click another block of this run to take up every block between.",
-  "message.planetaryfactory.dismantle.cleared": "Dismantle cleared.",
   "message.planetaryfactory.dismantle.outside_family": "That is not part of the run the dismantle started on.",
   "message.planetaryfactory.dismantle.not_joined": "That is not joined to the block the dismantle started on.",
   "message.planetaryfactory.dismantle.tied": "Two routes of the same length lead there. Pick an end with only one.",
-  "message.planetaryfactory.rotate.footprint": "A machine of more than one block cannot be turned in place.",
-  "message.planetaryfactory.rotate.splitter": "A splitter cannot be turned in place.",
-  "message.planetaryfactory.rotate.slope": "A belt on a slope cannot be turned: it would break the climb."
+  "message.planetaryfactory.rotate.footprint": "A machine of more than one block cannot be turned in place."
 }

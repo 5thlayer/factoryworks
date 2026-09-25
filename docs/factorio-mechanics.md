@@ -213,15 +213,15 @@ Sub-rules:
   `character-mining-speed` effect for an `unlock-recipe` granting the Engineer's Steel Pick.
 - **Picking up a placed entity is the same gesture as mining** — `adapted`. The Engineer's Pick is
   the correct tool for every block, so a placed entity is taken by breaking it (ADR-0039), and a
-  belt line's tiles or a pipe run are taken up many at once by a **Dismantle**, two sneak-clicks of
-  the Pick (#404, #431). The two wrench item tags stay on it because Oritech's pipes read them for their
+  belt line's tiles or a pipe run are taken up many at once by a **Dismantle**, a sneak-click then a
+  click of the Pick (#404, #431, #448). The two wrench item tags stay on it because Oritech's pipes read them for their
   connection toggle. *This
   entry named GregTech's wrench verbs, which #168 declared on the Pick as `ItemAbility` strings;
   GregTech left with ADR-0060 and #425 removed them.*
 - **Rotating a placed entity (`R`)** — `planned`, #406, #407. Two pack actions, **Rotate** and **Reverse
   Rotate** (`CONTEXT.md`), on `R` and `Shift+R`, for the held item's facing and the aimed block in
-  place. The held half shipped with #386 (ADR-0083) and the placed half with #405 (ADR-0087); the
-  footprint machines (#406) and the splitter (#407) are refused until they turn whole. *This entry read "`shipped`, #168":
+  place. The held half shipped with #386 (ADR-0083) and the placed half with #405 (ADR-0087), and
+  both now run in Groundworks (#451); the footprint machines (#406) and the splitter (#407) are refused until they turn whole. *This entry read "`shipped`, #168":
   #168 declared NeoForge's `wrench_rotate` ability on the Engineer's Pick, which GregTech gated the
   verb on, and GregTech left with ADR-0060. Nothing consumed the ability after that, so the row is
   planned again and #425 removed it.*

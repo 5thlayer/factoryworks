@@ -9,7 +9,6 @@ public final class PlacementPreviewClient {
     }
 
     public static void register() {
-        NeoForge.EVENT_BUS.addListener(PreviewFamilyDismantle::onTakeover);
         NeoForge.EVENT_BUS.addListener(PlanOverlays::onOverlay);
     }
 }

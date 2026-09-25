@@ -2,7 +2,7 @@ hash-format = "sha256"
 
 [[files]]
 file = "NOTICE"
-hash = "d7cfb61a00795c5fb061a0ede601c82565ad9d69edc14ea9afdcb9df5391e1cd"
+hash = "b95d24be3cb36b2771de2a55cd067a6393481b036c774656757e0dcd4376d61c"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -250,7 +250,7 @@ hash = "85d1e59caef6d788ae0acdc23f74350c22a2394730d0b3d0d4f77c9ecd2bd56d"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "747664c03c7fc6c70a37a78a15fb4d5c312ad5b9034a5fc34e7e9a9e564a6a2c"
+hash = "a9b4a5fd2aa0abac3d1349757d9faa0a14747765879233503c877fc4a529cb74"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -1765,10 +1765,6 @@ file = "kubejs/data/planetaryfactory/tags/block/generators.json"
 hash = "7bc6f8f7b55863c4d270f518ddfdd480aac926d6de673b5df0562597ee388537"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/tags/item/dismantles.json"
-hash = "482d7efe825a64d314bf9d11ac23b6ee8fc8c819b7cdda952b55abb4f5094ac5"
-
-[[files]]
 file = "kubejs/data/planetaryfactory/tags/worldgen/biome/terra_land.json"
 hash = "e4ad01421e92f7849826eb707bd2d122ca11b13cb7865418e125def16678a61e"
 
@@ -2127,8 +2123,8 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
-file = "mods/beltworks-0.1.1.jar"
-hash = "b0625d773d1af08cf15d83fb367404f59d7bd19f356d4037fc230acb288c2f3a"
+file = "mods/beltworks-0.2.2.jar"
+hash = "08af966432a909a712434706ccf938ece1c4ffbe5cec6c5d72302d778f850aa3"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
