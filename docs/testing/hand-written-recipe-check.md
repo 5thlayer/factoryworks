@@ -39,7 +39,7 @@ otherwise sit next to them.
 | The subtree is exactly the registered tiers | The exception is narrow on purpose. A third file here is a decision ADR-0039 did not make. |
 | The steel recipe consumes the iron pick | ADR-0039 states it in one line, and nothing else in the repo would notice both tiers being holdable at once. |
 | Each tier has a model, texture and lang key | The missing-texture checkerboard and a raw translation key. Neither is an error. The texture is resolved per namespace — ours against the file, a mod's against the jar the pack ships, vanilla's against nothing — because the pack borrows art elsewhere and the next `layer0` here may not be vanilla's. Both picks wear vanilla's today (#323). |
-| Both picks are in `c:tools/wrench`, `beltworks:dismantles_belts` and `planetaryfactory:dismantles` | The Pick stops toggling an Oritech pipe's connection, stops taking up a belt line, or stops taking up a pipe run. Each tag is read by a jar, and none logs a missing member. |
+| Both picks are in `c:tools/wrench`, `groundworks:dismantles` and `planetaryfactory:dismantles` | The Pick stops toggling an Oritech pipe's connection, stops taking up a belt line, or stops taking up a pipe run. Each tag is read by a jar, and none logs a missing member. |
 | The block tag `EngineersPick` names by id exists and is non-empty | An absent tag is an empty one: every block falls back to vanilla hardness and the flat mining time is gone with nothing logged. |
 
 The tier list is parsed out of `PickTier.java`, so a third tier fails this check rather than

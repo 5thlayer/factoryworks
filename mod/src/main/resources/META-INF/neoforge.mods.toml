@@ -49,11 +49,12 @@ versionRange = "[2.0.0-exp6]"
 ordering = "AFTER"
 side = "BOTH"
 
-# Beltworks bundles it, and the range is Beltworks' own, so the two resolve to one loaded version.
+# The range is read from the Beltworks jar that nests it, so the two resolve to one loaded version
+# (ADR-0024).
 [[dependencies.${mod_id}]]
 modId = "groundworks"
 type = "required"
-versionRange = "[0.1,0.2)"
+versionRange = "${groundworks_version_range}"
 ordering = "NONE"
 side = "BOTH"
 

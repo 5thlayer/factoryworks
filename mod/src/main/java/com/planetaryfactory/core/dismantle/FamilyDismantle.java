@@ -91,7 +91,7 @@ public final class FamilyDismantle {
         return new DismantlePlan(span.path(), span.refusal());
     }
 
-    /** Whether a sneak-click at {@code pos} is this gesture's rather than the belt fork's. */
+    /** Whether a sneak-click at {@code pos} is this gesture's rather than Groundworks' belt family's. */
     public static boolean claims(Level level, BlockPos pos, ItemStack held) {
         return !(BELTS && BeltClaim.claims(level, pos, held));
     }

@@ -44,6 +44,22 @@ configurations {
 
 // Compile-time jars are taken from `mods/` rather than from a maven, so the build stays offline and
 // always compiles against exactly the jars the pack ships.
+def beltworksJars = fileTree(dir: rootProject.file('mods'), include: 'beltworks-*.jar')
+
+// The version range Beltworks nests `artifact` under, so `neoforge.mods.toml` requires what loads
+// without the pack naming a version of it (ADR-0024).
+def nestedRange = { String artifact ->
+    def metadata = beltworksJars.files.collectMany {
+        zipTree(it).matching { include 'META-INF/jarjar/metadata.json' }.files
+    }
+    def nested = metadata.collectMany { new groovy.json.JsonSlurper().parse(it).jars }
+            .find { it.identifier.artifact == artifact }
+    if (nested == null) {
+        throw new GradleException("no Beltworks jar in mods/ nests ${artifact} -- run scripts/sync-local-jars.py")
+    }
+    nested.version.range
+}
+
 dependencies {
     // EMI and JEI are here for the recipe-viewer lock annotation (issue #75), and Jade for the
     // pole's live HUD line (#147). All three plugin classes are found by their own host's
@@ -53,7 +69,8 @@ dependencies {
     // Jade's jar ships with a capital J, so the pattern carries both spellings rather than relying
     // on a case-insensitive filesystem to paper over it.
     //
-    // Beltworks, for the belt GameTest (#342).
+    // Beltworks, for the belt GameTest (#342), and the Groundworks it nests: that is the one that
+    // loads, and it keeps Beltworks' pin the only one (ADR-0024).
     //
     // FTB Teams, and the library its API names, for whose chart a Radar charts into (#368). Reached
     // only from `core/radar/ftb/`, which loads only when `ftbteams` does.
@@ -67,9 +84,10 @@ dependencies {
             dir: rootProject.file('mods'),
             include: ['oritech-*.jar', 'researchd-*.jar', 'emi-*.jar', 'jei-*.jar',
                       'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar',
-                      'beltworks-*.jar',
                       'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar',
                       'ftb-chunks-neoforge-26.1.2.8.jar'])
+    compileOnly beltworksJars
+    compileOnly files({ beltworksJars.files.collect { zipTree(it).matching { include 'META-INF/jarjar/*.jar' } } })
     // FTB Materials, and the library it requires, on every dev run's classpath -- the GameTest server
     // included. ADR-0061 gives the item layer to FTB Materials, so the pack's emitted smelts name
     // `ftbmaterials:` items, and a server that is only vanilla plus this jar rejects all three at
@@ -97,8 +115,6 @@ dependencies {
                       'ftb-filter-system-neoforge-*.jar',
                       'kubejs-neoforge-*.jar', 'rhino-*.jar',
                       'better-advanced-tooltips-*.jar'])
-    // Not bundled: the pack gets it from Beltworks, which bundles it (#446).
-    compileOnly 'io.github.5thlayer:groundworks:0.1.0'
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather
     // than a Minecraft type, so the Assembler's attachment codec can be round-tripped on a plain
     // JVM -- which is what ADR-0038's "round-trip the data attachment" asks for. Minecraft itself
@@ -111,10 +127,6 @@ dependencies {
 }
 
 repositories {
-    // Groundworks, until it is released (5thlayer/groundworks#2).
-    mavenLocal {
-        content { includeGroup 'io.github.5thlayer' }
-    }
     mavenCentral()
 }
 
@@ -180,9 +192,10 @@ def modMetadata = [
 ]
 
 tasks.named('processResources', ProcessResources).configure {
-    inputs.properties modMetadata
+    def metadata = modMetadata + [groundworks_version_range: nestedRange('groundworks')]
+    inputs.properties metadata
     filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand modMetadata
+        expand metadata
     }
 }
 

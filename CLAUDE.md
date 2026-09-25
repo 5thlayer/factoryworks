@@ -292,8 +292,8 @@ the positions a held item would fill, the blockstate at each, and a refusal or n
 draws a plan and the click executes one, so the two cannot drift -- a preview that lies is worse
 than none, because a player builds against it. The plan, its drawing and the vanilla plan
 (deferring to `BlockPlaceContext` for facing, replaceable blocks and state survival) are the
-Groundworks library's, which Beltworks bundles and the pack compiles against from `mavenLocal()`
-(#446). `Placements.planFor` is the one entry point, and every `planetaryfactory:` block, and every
+Groundworks library's, which Beltworks bundles and the pack compiles against as it is nested in the
+installed Beltworks jar (#446, #465). `Placements.planFor` is the one entry point, and every `planetaryfactory:` block, and every
 other block with a facing, an axis or a rotation (`Oriented`, #450), is opted into the vanilla plan in
 `PlanetaryFactoryCore`; a door or bed draws one half, an accepted quirk. Only an item whose placement is *not* vanilla's implements
 `PlansPlacement` -- the pole's column, the rig's footprint, the pump's dry site -- and its refusals are
@@ -949,7 +949,7 @@ converter still lists `pack` as foreign, which its own check reads from it rathe
 run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
 `recipe_survivors.js` admits and carry `category: crafting` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
-has its model, texture, lang key, `c:tools/wrench`, `beltworks:dismantles_belts` and
+has its model, texture, lang key, `c:tools/wrench`, `groundworks:dismantles` and
 `planetaryfactory:dismantles`, the three tags that carry its verbs, and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
 the Steel Pick's `netherite_pickaxe` (#241, applied on #323). The Steel Pick used to wear GTCEu's
 Damascus Steel pickaxe, flattened by a generator because GT's tool art is three greyscale layers
@@ -1013,9 +1013,20 @@ declared name exists — run it after re-extracting or after editing `researchd.
 
 The jar set is a packwiz manifest tracked in git (ADR-0024) — `pack.toml`, `index.toml` and one
 `mods/*.pw.toml` per externally-sourced mod. `mods/*` is gitignored with `!mods/*.pw.toml` re-included;
-never rewrite that as a bare `mods`, or the manifest silently stops being tracked. The two forked jars
-are unmanaged hashed entries and `planetaryfactory_core` is not indexed at all. `scripts/pack-check.sh`
-asserts the installed jars still match. See `docs/pack/packwiz-workflow.md`.
+never rewrite that as a bare `mods`, or the manifest silently stops being tracked. The local
+Beltworks jar is an unmanaged hashed entry and `planetaryfactory_core` is not indexed at all.
+`scripts/pack-check.sh` asserts the installed jars still match. See `docs/pack/packwiz-workflow.md`.
+
+### Local jar check
+
+Beltworks is a **local jar**: `data/pack/local-jars.json` pins the version the Pack runs, and
+`scripts/sync-local-jars.py beltworks=<version>` writes the pin, copies that jar out of `~/.m2` into
+`mods/`, refreshes the manifest and rebuilds the core mod (#465, ADR-0024). The Pack names no
+Groundworks version: it compiles against the Groundworks nested in the installed Beltworks jar, and
+reads the range it requires from Beltworks' jarjar metadata. `tests/pack/test_local_jars.py` runs
+the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
+holds it, and nests Groundworks; a newer version in `~/.m2` is named without failing. Run it after
+the sync or any change to `mods/`. Take a new Beltworks with the sync, never by copying a jar.
 
 ### First-party mod
 

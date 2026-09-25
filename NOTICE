@@ -71,8 +71,8 @@ Licence: Creative Commons Attribution 4.0 International
 Beltworks (#342, #447)
 ----------------------
 
-Files:   mods/beltworks-26.1.2-0.1.0.jar (built from the fork, not committed; its sha256 is in
-         index.toml)
+Files:   mods/beltworks-<version>.jar, the version data/pack/local-jars.json pins (a local jar,
+         not committed; its sha256 is in index.toml)
 Author:  5thlayer, building on Simple Conveyor Belts by Rearth; its own NOTICE credits both works
 Source:  https://github.com/Rearth/SimpleBelts, forked at https://github.com/5thlayer/beltworks
          branch `main`
