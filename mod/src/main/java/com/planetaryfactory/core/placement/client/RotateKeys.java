@@ -1,14 +1,19 @@
 package com.planetaryfactory.core.placement.client;
 
+import java.util.Optional;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
-import com.planetaryfactory.core.network.RotateHeldPacket;
+import com.planetaryfactory.core.network.RotatePacket;
 import com.planetaryfactory.core.placement.HeldTurn;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
@@ -18,7 +23,7 @@ import net.neoforged.neoforge.client.settings.KeyModifier;
 import net.neoforged.neoforge.common.NeoForge;
 import org.lwjgl.glfw.GLFW;
 
-/** The held half of Rotate and Reverse Rotate (ADR-0083); the aimed block's is #405. */
+/** The keys for Rotate and Reverse Rotate (ADR-0083, ADR-0087). */
 public final class RotateKeys {
 
     private static final KeyMapping.Category CATEGORY = new KeyMapping.Category(
@@ -54,8 +59,13 @@ public final class RotateKeys {
     }
 
     private static void send(LocalPlayer player, boolean reverse) {
-        if (player != null && HeldTurn.turns(player.getMainHandItem())) {
-            ClientPacketDistributor.sendToServer(new RotateHeldPacket(reverse));
+        if (player == null) {
+            return;
+        }
+        Optional<BlockPos> aimed = Minecraft.getInstance().hitResult instanceof BlockHitResult hit
+                && hit.getType() == HitResult.Type.BLOCK ? Optional.of(hit.getBlockPos()) : Optional.empty();
+        if (HeldTurn.turns(player.getMainHandItem()) || aimed.isPresent()) {
+            ClientPacketDistributor.sendToServer(new RotatePacket(reverse, aimed));
         }
     }
 }

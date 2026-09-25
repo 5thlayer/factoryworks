@@ -29,7 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
  * entity: {@link #PART} and {@link #FACING} together name where the anchor is, so nothing is stored
  * that a reload could lose. Never held and never placed on its own.
  */
-public class FootprintPartBlock extends Block implements EnergyOwnerBlock {
+public class FootprintPartBlock extends Block implements EnergyOwnerBlock, FootprintTurn {
 
     /** The most parts one footprint may have; the property is declared before any machine is known. */
     public static final int MAX_PARTS = 26;
