@@ -11,6 +11,7 @@ import com.planetaryfactory.core.fluid.PFFluidTypes;
 import com.planetaryfactory.core.fluid.PFFluids;
 import com.planetaryfactory.core.fluid.WaterConservation;
 import com.planetaryfactory.core.energy.client.PoleWireClient;
+import com.planetaryfactory.core.placement.Oriented;
 import com.planetaryfactory.core.placement.client.PlacementPreviewClient;
 import com.planetaryfactory.core.fluid.client.BoilerClient;
 import com.planetaryfactory.core.fluid.client.SteamFluidClient;
@@ -73,7 +74,8 @@ public final class PlanetaryFactoryCore {
         // see PFFluids' own javadoc for why that order is load-bearing here.
         PFFluidTypes.register(modBus);
         PFFluids.register(modBus);
-        Placements.optIn(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(NAMESPACE));
+        Placements.optIn(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(NAMESPACE)
+                || Oriented.is(block));
         modBus.addListener(PFItems::addToCreativeTabs);
         modBus.addListener(PFBlockEntities::registerCapabilities);
         modBus.addListener(PFItems::registerCapabilities);

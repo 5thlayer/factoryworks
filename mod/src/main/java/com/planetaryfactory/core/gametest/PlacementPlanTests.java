@@ -123,6 +123,14 @@ final class PlacementPlanTests {
                 PlacementPlanTests::boilerMatchesPlacement);
         tests.test("plan_refuses_a_pump_on_a_dry_site", 20,
                 PlacementPlanTests::pumpRefusesADrySite);
+        tests.test("plan_matches_placement_for_vanilla_stairs", 20,
+                helper -> vanillaMatchesPlacement(helper, Items.OAK_STAIRS));
+        tests.test("plan_matches_placement_for_a_vanilla_chest", 20,
+                helper -> vanillaMatchesPlacement(helper, Items.CHEST));
+        tests.test("plan_matches_placement_for_a_vanilla_log", 20,
+                helper -> vanillaMatchesPlacement(helper, Items.OAK_LOG));
+        tests.test("plan_is_none_for_an_unoriented_foreign_block", 20,
+                PlacementPlanTests::unorientedHasNoPlan);
         Replaces.register(tests);
         PoleReplaces.register(tests);
     }
@@ -367,6 +375,24 @@ final class PlacementPlanTests {
     private static void pumpRefusesADrySite(GameTestHelper helper) {
         refusal(check(helper, new ItemStack(PFBlocks.OFFSHORE_PUMP.get()), FLOOR, Direction.UP, true),
                 PackRefusal.NO_FLUID_SOURCE, helper);
+        helper.succeed();
+    }
+
+    /** A block from outside the pack is drawn when it has a facing, an axis or a rotation (#450). */
+    private static void vanillaMatchesPlacement(GameTestHelper helper, Item item) {
+        check(helper, new ItemStack(item), FLOOR, Direction.UP, false);
+        helper.succeed();
+    }
+
+    private static void unorientedHasNoPlan(GameTestHelper helper) {
+        ItemStack stone = new ItemStack(Items.STONE);
+        BlockPos absolute = helper.absolutePos(FLOOR);
+        BlockHitResult hit = new BlockHitResult(
+                Vec3.atCenterOf(absolute).relative(Direction.UP, 0.5), Direction.UP, absolute, false);
+        if (Placements.planFor(helper.getLevel(), helper.makeMockPlayer(GameType.SURVIVAL),
+                InteractionHand.MAIN_HAND, stone, hit) != null) {
+            helper.fail("stone, which has no orientation, got a plan", FLOOR);
+        }
         helper.succeed();
     }
 
