@@ -24,9 +24,10 @@ neoForge {
         server { server(); programArgument '--nogui' }
         gameTestServer {
             type = 'gameTestServer'
-            // 26.1 dropped `neoforge.enabledGameTestNamespaces`; with no `--tests` selector the
-            // server runs every registered test, which here is the mod's own plus vanilla's
-            // `minecraft:always_pass`. The pack's data reaches it through KubeJS; see `linkKubeJS`.
+            // Groundworks' and Beltworks' tests also register here, and some check cases the Pack's
+            // settings rule out on purpose; each repo's own run holds them (#448). The pack's data
+            // reaches it through KubeJS; see `linkKubeJS`.
+            programArguments.addAll '--tests', 'planetaryfactory:*'
         }
     }
 

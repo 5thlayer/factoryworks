@@ -22,7 +22,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public final class PFNetwork {
 
     /** Bumped when a payload's shape changes; clients on the old shape are refused, not confused. */
-    private static final String VERSION = "8";
+    private static final String VERSION = "9";
 
     private PFNetwork() {
     }
@@ -33,7 +33,6 @@ public final class PFNetwork {
         registrar.playToServer(HoldRecipePacket.TYPE, HoldRecipePacket.STREAM_CODEC, HoldRecipePacket::handle);
         registrar.playToServer(PlanCraftPacket.TYPE, PlanCraftPacket.STREAM_CODEC, PlanCraftPacket::handle);
         registrar.playToServer(PlanCancelPacket.TYPE, PlanCancelPacket.STREAM_CODEC, PlanCancelPacket::handle);
-        registrar.playToServer(RotatePacket.TYPE, RotatePacket.STREAM_CODEC, RotatePacket::handle);
         registrar.playToClient(PlanUpdatePacket.TYPE, PlanUpdatePacket.STREAM_CODEC, PlanUpdatePacket::handle);
         registrar.playToClient(QueueSyncPacket.TYPE, QueueSyncPacket.STREAM_CODEC, QueueSyncPacket::handle);
         registrar.playToClient(HandRecipeSetPacket.TYPE, HandRecipeSetPacket.STREAM_CODEC, HandRecipeSetPacket::handle);

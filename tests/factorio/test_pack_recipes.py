@@ -301,17 +301,23 @@ def main():
               "%s is registered but nothing crafts it -- under ADR-0034's sweep there is no stock "
               "recipe to fall back on" % item)
 
-    # Three of the Pick's verbs are tag entries, not code, each read by another jar or ours: left out
-    # of `c:tools/wrench` it toggles no Oritech pipe connection, out of Groundworks' tag it takes up
-    # no belt (#404), and out of ours no pipe run (#431).
-    for tag in ("c/tags/item/tools/wrench.json", "groundworks/tags/item/dismantles.json",
-                "planetaryfactory/tags/item/dismantles.json"):
+    # Two of the Pick's verbs are tag entries, not code, each read by another jar: left out of
+    # `c:tools/wrench` it toggles no Oritech pipe connection, and out of Groundworks' tag it takes up
+    # no belt or pipe run (#448).
+    for tag in ("c/tags/item/tools/wrench.json", "groundworks/tags/item/dismantles.json"):
         path = DATA / tag
         if check(path.is_file(), "%s is missing, so the Pick lacks the verb it carries" % tag):
             values = set(json.loads(path.read_text())["values"])
             for item in sorted(picks):
                 check(("%s:%s" % (NAMESPACE, item)) in values,
                       "%s is not in %s, so it lacks the verb that tag carries" % (item, tag))
+
+    # Beltworks adds every pickaxe and wrench to Groundworks' tag; only the Picks dismantle here.
+    dismantles = json.loads((DATA / "groundworks/tags/item/dismantles.json").read_text())
+    check(dismantles.get("replace") is True
+          and set(dismantles["values"]) == {"%s:%s" % (NAMESPACE, item) for item in picks},
+          "groundworks:dismantles is not replaced by exactly the Picks, so a vanilla pickaxe "
+          "dismantles belts and pipes (#448)")
 
     # Every name KubeJS will scan, lowercase. This is not about tidiness: the validator refuses an
     # uppercase letter with an ERROR, and the world does not load.

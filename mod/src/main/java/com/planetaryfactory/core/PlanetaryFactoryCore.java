@@ -2,7 +2,7 @@ package com.planetaryfactory.core;
 
 import com.planetaryfactory.core.assembler.AssemblerTicker;
 import com.planetaryfactory.core.machine.PaintLock;
-import com.planetaryfactory.core.dismantle.FamilyDismantle;
+import com.planetaryfactory.core.dismantle.PipeFamily;
 import com.planetaryfactory.core.assembler.client.AssemblerClient;
 import com.planetaryfactory.core.crafting.client.InventoryGridBlank;
 import com.planetaryfactory.core.felling.TreeFelling;
@@ -28,9 +28,9 @@ import com.planetaryfactory.core.worldgen.TerraStartingArea;
 import com.planetaryfactory.core.radar.ChartDeliveries;
 import com.planetaryfactory.core.reach.Reach;
 import io.github._5thlayer.groundworks.Placements;
+import io.github._5thlayer.groundworks.Rotate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.common.Mod;
@@ -76,6 +76,8 @@ public final class PlanetaryFactoryCore {
         PFFluids.register(modBus);
         Placements.optIn(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(NAMESPACE)
                 || Oriented.is(block));
+        // Every block turns in place, as it did before the library owned Rotate (ADR-0087, #451).
+        Rotate.turnsInPlace(block -> true);
         modBus.addListener(PFItems::addToCreativeTabs);
         modBus.addListener(PFBlockEntities::registerCapabilities);
         modBus.addListener(PFItems::registerCapabilities);
@@ -111,11 +113,7 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onLogin);
         NeoForge.EVENT_BUS.addListener(AssemblerTicker::onDatapackSync);
         NeoForge.EVENT_BUS.addListener(PaintLock::onRightClickBlock);
-        // Ahead of the belt fork's Dismantle, heard through Architectury at HIGH, which refuses any
-        // click while its own start is stored; and still heard once the fork has cleared its start
-        // in the air (ADR-0086).
-        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, false, FamilyDismantle::onRightClickBlock);
-        NeoForge.EVENT_BUS.addListener(EventPriority.NORMAL, true, FamilyDismantle::onRightClickItem);
+        PipeFamily.register();
         NeoForge.EVENT_BUS.addListener(Reach::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onServerTick);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
@@ -132,7 +130,6 @@ public final class PlanetaryFactoryCore {
             // The wire between linked poles (#281); cosmetic, the balance never reads it.
             PoleWireClient.register(modBus);
             PlacementPreviewClient.register();
-            com.planetaryfactory.core.placement.client.RotateKeys.register(modBus);
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,
             // so vanilla's intuitions about what burns are wrong in both directions.
             FuelTooltip.register();

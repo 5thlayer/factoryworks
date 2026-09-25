@@ -39,3 +39,13 @@ key acts at once and names a refusal, as the grilling decided.
 **Consequences.** A block whose vanilla `rotate` is the identity ignores the key silently, as a
 Factorio entity that cannot rotate does; the three furnaces are such blocks. A block entity is kept across the turn, since the block does not change. A new
 foreign block whose vanilla turn is wrong turns wrongly until it is added to the deny list.
+
+## Amended by Groundworks ADR 0003
+
+The mechanism now lives in the Groundworks library as **Rotate in Place** (#451). The order this
+ADR decides is the library's: the claim guard, a block's own contract (Groundworks' `TurnsInPlace`),
+then vanilla's turn unless it does not stand. A block turns only where a Consumer has stated it
+does, and the Pack states every block, so `R` turns in place what it did before. The footprint
+machines and rigs implement the library's contract and keep refusing with their reason until they
+turn whole (#406). The belt deny list left the Pack: Beltworks refuses its own splitter halves,
+slopes and wedges through the same contract.

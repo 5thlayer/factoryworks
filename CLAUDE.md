@@ -131,7 +131,9 @@ test fails. The tests are in `mod/src/main/java/com/planetaryfactory/core/gamete
 **main** source set — a GameTest is code the game loads, so it cannot live in the Minecraft-free
 test source set. 26.1 has no `@GameTestHolder` and no `neoforge.enabledGameTestNamespaces`: a test
 is an entry in the `test_instance` datapack registry, registered through NeoForge's
-`RegisterGameTestsEvent`, and with no `--tests` selector every registered test runs.
+`RegisterGameTestsEvent`. Groundworks and Beltworks register tests too, some of them for cases the
+Pack's settings rule out on purpose, so the run selects `--tests planetaryfactory:*` and each repo's
+own run holds its tests (#448). The selector takes one wildcard pattern, not a list.
 `PFGameTestInstance` is the shape that event has no answer for — vanilla's `function` instance
 resolves a `Consumer` out of the `test_function` registry, which is populated during `Bootstrap`,
 before any mod is loaded.
@@ -154,7 +156,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377) and `PipeDismantleTests` (#431), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltworksPackTests` and `RotateTests` (#386), registered only when
+`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377) and `PipeDismantleTests` (#431), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). What is here is only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -179,32 +181,21 @@ recipe alone; making `HoldVerdict.of` always answer held turns that test red. Th
 And that a small pole's demand probe leaves a Beltworks loader no FE, and that no `beltworks:` recipe
 survives the stock-recipe sweep, against the pack's express belt recipe as a control
 (`BeltworksPackTests`). The loader's face is Beltworks', so the two static FE checks cannot read it.
-And that a stack pressed with Rotate 0 to 3 times (`RotateTests`, #386, ADR-0083) plans and places a
-belt tile facing the look turned that many quarters clockwise, or sneaking stores a stretch's start
-facing that way, and a Stone Furnace
-facing back at the turned look, the plan's state being the placed one; that the turn stays on the
-rest of a stack and goes with its last item; and that a stick takes no turn and a turn back to none
-leaves no component. The turn is a mixin on `BlockPlaceContext`'s look, so the plan and the click
-read one answer; making `HeldTurn.turn` return the look unturned turns the first red. The
-arithmetic is `QuarterTurnTest`, and whether `R` and `Shift+R` reach the server and the preview
-redraws is a human check on delivery. With nothing placeable held, a press turns the aimed block
-(#405, ADR-0087): a belt tile and a loader turn a quarter each press both ways and keep their block
-entity, a splitter half, a foot, a top and its wedge are refused with nothing changed and their
-reason heard, a level tile turned to slope a corner or to stand a top's wedge on a loader is refused
-with the fork's placement reason (#419, #420), a press with a tile held turns the stack and not the
-block, and one with stone held, which has nothing to face, turns the block. Dropping the slope
-denial, the wedge's, either refit reason and the held stack's precedence each turn one red. The deny list and dispatch order are
-`PlacedTurnTest`, and whether the refusal reaches the action bar is a human check on delivery.
-And that two sneak-clicks of the Pick take up a span of Oritech's fluid pipes, a **Dismantle Family**
-(`PipeDismantleTests`, #431, ADR-0086): each test stores a start through the player's game mode,
-asks `FamilyDismantle.plan` for the end, clicks, and holds the world, the inventory and the stored
-start to it. A straight run, a bend, a tee's branch between the ends and one pipe clicked
-twice leave none of the plan's pipes standing, keep every pipe outside it and hand over a pipe each;
-a full inventory drops the rest at the player's feet and creative hands over nothing. Opposite
-points of a ring, a closed connection and an end on a Boiler change no block, slot or stored start
-and name their reason. A join rule that ignores Oritech's connections turns the closed-connection
-test red. The shortest path, the tie and the default join are `DismantleSpanTest`, and the red
-outline and that the Pick's plain click still toggles a connection are a human check on delivery.
+Rotate is Groundworks' (#451): the Pack only states that every block turns in place, and its
+footprint machines refuse through the library's `TurnsInPlace`. The mechanism's tests are
+Groundworks' and Beltworks', in their own runs.
+And that the Pick takes up a span of Oritech's fluid pipes, a **Dismantle Family** Groundworks runs
+(`PipeDismantleTests`, #431, #448, ADR-0086): each test sneak-clicks a start through the player's
+game mode, asks `Dismantles.spanTo` for the end, clicks it plainly, and holds the world, the
+inventory and the stored start to the span. A straight run, a bend, a tee's branch between the ends
+and one pipe clicked twice leave none of the span's pipes standing, keep every pipe outside it and
+hand over a pipe each; a full inventory drops the rest at the player's feet and creative hands over
+nothing. Opposite points of a ring, a closed connection and an end on a Boiler change no block,
+slot or stored start and name their reason, and an iron pickaxe stores no start, since the Pack
+trims `groundworks:dismantles` to the Picks. A join rule that ignores Oritech's connections turns the closed-connection
+test red. The shortest path, the tie and the default join are Groundworks' `ShortestPathTest`, and
+the red outline and that the Pick's plain click with no start still toggles a connection are a
+human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
@@ -949,8 +940,8 @@ converter still lists `pack` as foreign, which its own check reads from it rathe
 run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
 `recipe_survivors.js` admits and carry `category: crafting` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
-has its model, texture, lang key, `c:tools/wrench`, `groundworks:dismantles` and
-`planetaryfactory:dismantles`, the three tags that carry its verbs, and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
+has its model, texture, lang key, `c:tools/wrench` and `groundworks:dismantles`, the two tags that
+carry its verbs, that `groundworks:dismantles` holds nothing else (#448), and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
 the Steel Pick's `netherite_pickaxe` (#241, applied on #323). The Steel Pick used to wear GTCEu's
 Damascus Steel pickaxe, flattened by a generator because GT's tool art is three greyscale layers
 that only become a material under a colour handler our item never reaches; GregTech left with

@@ -31,3 +31,12 @@ ends, a machine keeps its contents -- and that is the follow-up's decision, not 
 **Consequences.** The component stays on the stack until the last of it is placed, so a stack put
 down and picked up again is still turned. A block that ignores the look direction ignores the key.
 Placed-block rotation, footprint machines and the splitter's side priority are each their own ticket.
+
+## Amended by Groundworks ADR 0003
+
+The mechanism now lives in the Groundworks library as **Rotate the Plan** (#451). The held stack's
+quarter turn is Groundworks' `quarter_turn` component, the look is turned by the library's mixins,
+and `R` and `Shift+R` are the library's keys. What this ADR decides is unchanged: the turn is
+relative to the look, it stays on the stack until the last item is placed, and every block whose
+placement reads the look turns with no code of its own. The Pack keeps no keys, packet, component
+or mixin of its own, and what is drawn is still the Pack's Opt-in (#450).

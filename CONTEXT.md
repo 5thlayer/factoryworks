@@ -157,11 +157,11 @@ footprint are 2D problems this pack does not have, and ADR-0044 records why.
 _Avoid_: belt puzzle, the logistics game
 
 **Dismantle**:
-The generalisation of Beltworks' belt Dismantle to any **Dismantle Family**: taking up a span of one family from one block to another, both included, in two sneak-clicks of the **Engineer's Pick**: the first stores the start, the second names the end. The span is the shortest path between them through blocks of the start's family joined to one another; an end outside the family, not joined to the start, or reached by two equally short paths is refused and keeps the start, and a click after the start is gone is a new start. What the span's blocks drop goes to the inventory, and what does not fit drops at the player's feet. Blocks outside the family, such as the machines a pipe run feeds, are never taken. A belt line is Beltworks' own Dismantle, taken with the same Pick. Distinct from mining, which breaks one block and drops it (#404, #431).
+The generalisation of Beltworks' belt Dismantle to any **Dismantle Family**: taking up a span of one family from one block to another, both included, with the **Engineer's Pick**: a sneak-click stores the start, and a click names the end. Groundworks runs it for every family (#448). A pipe span is the shortest path between them through pipes joined to one another; an end outside the family, not joined to the start, or reached by two equally short paths is refused and keeps the start, and a sneak-click after the start is gone is a new start. What the span's blocks drop goes to the inventory, and what does not fit drops at the player's feet. Blocks outside the family, such as the machines a pipe run feeds, are never taken. A belt line is Beltworks' family, taken with the same Pick and the same clicks. Distinct from mining, which breaks one block and drops it (#404, #431).
 _Avoid_: deconstruct, mass mine, unstretch
 
 **Dismantle Family**:
-The blocks one **Dismantle** takes up together as a single span, with the rule for which two of them are joined. By default two blocks of a family are joined when they touch face to face; a family may say otherwise. Fluid pipes are a family, joined only where their connection is open (#431).
+The blocks one **Dismantle** takes up together as a single span, and the rule for the span between two of them. Fluid pipes are the Pack's family: the block tag `planetaryfactory:dismantle/pipes`, whose span is the shortest path, joined only where Oritech's connection is open (#431, #448). Belts are Beltworks' family.
 _Avoid_: dismantle group, dismantle kind, replace group (a different grouping)
 
 **Launch Terminal**:
@@ -294,7 +294,7 @@ What a held item would do at an aimed spot: the positions it would fill, the blo
 _Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state
 
 **Dismantle Plan**:
-What a **Dismantle** would take up at an aimed block: the blocks of the span from the stored start, and a refusal or none. Dismantling executes a plan, and the preview draws one, so both ask one rule, as a **Placement Plan** does; the two are separate things (#404).
+What a **Dismantle** would take up at an aimed block: the blocks of the span from the stored start, and a refusal or none. Dismantling executes a plan, and the preview draws one, so both ask one rule, as a **Placement Plan** does; the two are separate things. In code it is Groundworks' `DismantleSpan` (#404, #448).
 _Avoid_: removal plan, placement plan (for a dismantle)
 
 **Placement Preview**:
@@ -306,7 +306,7 @@ Placing a block over a placed one of the same **Replace Group** but another tier
 _Avoid_: upgrade (it goes down a tier too), swap, overwrite
 
 **Rotate**:
-One of the pack's two rotation actions, on a key of its own (`R` by default) and reused by everything with an orientation. Held: it turns the facing of what is about to be placed, a quarter turn each press, and the **Placement Preview** redraws with it. The turn is relative to the way the player looks, not a compass direction as Factorio's is, because Factorio's camera never turns and the player's does. Placed: with nothing rotatable held, it turns the block under the crosshair in place, and what turning means is the block's own -- a belt tile turns, a machine keeps its contents. A block whose turned shape does not fit is refused with its reason and nothing changes; there is no preview of a placed rotation. Factorio's rule for which target the key takes: the held item if it is rotatable -- it places a block with a facing, an axis or a rotation -- otherwise the aimed block.
+The Pack's name for Groundworks' **Rotate the Plan** (held) and **Rotate in Place** (placed), which the library runs (#451). One of the pack's two rotation actions, on a key of its own (`R` by default) and reused by everything with an orientation. Held: it turns the facing of what is about to be placed, a quarter turn each press, and the **Placement Preview** redraws with it. The turn is relative to the way the player looks, not a compass direction as Factorio's is, because Factorio's camera never turns and the player's does. Placed: with nothing rotatable held, it turns the block under the crosshair in place, and what turning means is the block's own -- a belt tile turns, a machine keeps its contents. A block whose turned shape does not fit is refused with its reason and nothing changes; there is no preview of a placed rotation. Factorio's rule for which target the key takes: the held item if it is rotatable -- it places a block with a facing, an axis or a rotation -- otherwise the aimed block.
 _Avoid_: wrench rotate (a departed GregTech verb, #386), turn, rotate key
 
 **Reverse Rotate**:
@@ -336,7 +336,7 @@ The pack's one item per material — FTB Materials', for every metal. It is what
 _Avoid_: sheet, ingot, GT plate, unified plate
 
 **Engineer's Pick**:
-The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what **dismantles** a pipe run, and a belt line through Beltworks' own Dismantle. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
+The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what **dismantles** a pipe run and a belt line, the only tool that does in the Pack. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
 _Avoid_: pickaxe, the pick, mining tool, wrench
 
 **Burner Mining Drill**:
