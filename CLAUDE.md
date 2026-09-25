@@ -1038,7 +1038,7 @@ build prints one `siblingBuilds:` line naming both checkouts, their version and 
 `installToPack` refuses under it, and `scripts/check-datapack-load.py --sibling-builds` forwards it.
 It never installs, and a green run under it proves nothing about the pinned jars: the change still
 ships through the release train. A Groundworks checkout outside the range Beltworks nests it under
-builds silently and is refused at load, so a Groundworks minor needs Beltworks' range moved in its
+fails the build, naming the range, so a Groundworks minor needs Beltworks' range moved in its
 checkout too.
 
 ### First-party mod
