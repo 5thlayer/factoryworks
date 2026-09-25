@@ -1,5 +1,7 @@
 {
-  "disable": true,
+  "filters": [
+    "/.*/"
+  ],
   "added": [
     {
       "stack": "item:beltworks:belt_tile"

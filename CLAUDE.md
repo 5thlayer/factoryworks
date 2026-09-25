@@ -557,15 +557,16 @@ EMI's index lists only **Obtainable** items and fluids, as an allowlist (#173, A
 `scripts/jar-registry-extract.py` writes every item and fluid id the client jar and `mods/` register
 to `data/jars/`, excluding the pack's own jar, and its `--check` re-extracts and diffs when the jars
 are on disk, so a jar update arrives as a diff to review. `scripts/build-obtainable-index.py` reads
-only committed files and writes `kubejs/assets/planetaryfactory/emi/index/stacks/obtainable.json`:
-`disable: true`, and `added` naming every emitted recipe's output, every starting-kit item and
-every row of `data/pack/mechanic-obtainable.json`. EMI skips an `added` entry that is a bare string,
-so each is a `{"stack": ...}` object. A mechanic row is `{id, mechanic, why, ticket}`, for what a
-mechanic produces with no recipe and no data source. `tests/pack/test_obtainable_index.py` runs
-both `--check`s, holds every listed stack to an id the corpus or the pack registers, and fails a
-mechanic row naming nothing or one the derivation already covers. Worldgen and mob drops are not
-derived yet (#454, #455). Run it after a jar update, a converter run, or an edit to the kit or the
-mechanic list. Whether EMI shows exactly the allowlist is a human check: F3+T on a running client.
+only committed files and writes `kubejs/assets/emi/index/stacks/obtainable.json`: a `filters` entry
+matching every id, then `added` naming every emitted recipe's output, every starting-kit item and
+every row of `data/pack/mechanic-obtainable.json`. EMI reads the file only under the `emi`
+namespace, applies `filters` before `added`, and skips an `added` entry that is a bare string, so
+each is a `{"stack": ...}` object. A mechanic row is `{id, mechanic, why, ticket}`, for what a
+mechanic produces with no recipe and no data source. `tests/pack/test_obtainable_index.py` runs both
+`--check`s, holds every listed stack to an id the corpus or the pack registers, and fails a mechanic
+row naming nothing or one the derivation already covers. Worldgen and mob drops are not derived yet
+(#454, #455). Run it after a jar update, a converter run, or an edit to the kit or the mechanic
+list. Whether EMI shows exactly the allowlist is a human check: F3+T on a running client.
 
 ### Transfer-face check
 
