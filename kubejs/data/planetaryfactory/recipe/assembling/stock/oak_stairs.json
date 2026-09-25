@@ -1,0 +1,17 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "#minecraft:oak_logs",
+      "count": 3
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:oak_stairs",
+      "count": 8
+    }
+  ],
+  "time": 10
+}

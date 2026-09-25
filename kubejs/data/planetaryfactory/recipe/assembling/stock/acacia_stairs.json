@@ -1,0 +1,17 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "#minecraft:acacia_logs",
+      "count": 3
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:acacia_stairs",
+      "count": 8
+    }
+  ],
+  "time": 10
+}

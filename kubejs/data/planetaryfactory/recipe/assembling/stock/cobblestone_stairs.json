@@ -1,0 +1,17 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:cobblestone",
+      "count": 6
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:cobblestone_stairs",
+      "count": 4
+    }
+  ],
+  "time": 10
+}

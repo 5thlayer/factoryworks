@@ -328,7 +328,8 @@ no cycle.
 
 `#444` and `#445` rewrite rather than flatten: planks and sticks are not kept, so vanilla's stairs,
 ladder and pane recipes name inputs nothing makes, and each count and yield is chosen and recorded
-there.
+there. The line reads them as admissions carrying a `rewrite`, which names the ingredients and
+the yield in place of the jar's (`#444`).
 
 The line is `scripts/stock-recipe-convert.py` over `data/pack/stock-admissions.json` and
 `data/pack/stock-substitutions.json` (`#442`). The smart filter's paper becomes an electronic circuit
