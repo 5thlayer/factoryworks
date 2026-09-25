@@ -1,0 +1,31 @@
+{
+  "_comment": [
+    "What each ingredient of an admitted stock recipe becomes on Terra (ADR-0034, #442).",
+    "",
+    "The sweep removes every recipe the pack does not author, so an item is obtainable only if a",
+    "pack recipe makes it or a block drops it. ADR-0021 closes the alphabet to iron, copper, coal,",
+    "uranium, stone and what the surface grows. An ingredient outside both is swapped here.",
+    "",
+    "  `keep`        an ingredient already obtainable, passed through. Its value names the pack",
+    "                recipe that makes it or the block that drops it.",
+    "  `substitute`  `to` is the replacement, `reason` the role it preserves.",
+    "",
+    "Counts are never changed. An ingredient in neither table fails the line, and so does a row",
+    "no admitted recipe reads."
+  ],
+  "keep": {},
+  "substitute": {
+    "minecraft:stick": {
+      "to": "ftbmaterials:iron_rod",
+      "reason": "Sticks are deliberately uncraftable (ADR-0034's tail). The smart filter's sticks are its frame, and Factorio's iron stick is the pack's structural rod. #172 made the same swap."
+    },
+    "minecraft:string": {
+      "to": "ftbmaterials:copper_wire",
+      "reason": "Nothing on Terra drops string: its spiders and cobwebs are not part of ADR-0021's surface. The filter strings it across its frame, and copper cable is the pack's only thread."
+    },
+    "minecraft:paper": {
+      "to": "planetaryfactory:electronic_circuit",
+      "reason": "Paper is a swept grid recipe from sugar cane. It carries the filter's rule, and Factorio's filter inserter paid for its filter in electronic circuits."
+    }
+  }
+}

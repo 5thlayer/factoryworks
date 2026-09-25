@@ -330,6 +330,11 @@ no cycle.
 ladder and pane recipes name inputs nothing makes, and each count and yield is chosen and recorded
 there.
 
+The line is `scripts/stock-recipe-convert.py` over `data/pack/stock-admissions.json` and
+`data/pack/stock-substitutions.json` (`#442`). The smart filter's paper becomes an electronic circuit
+rather than `#172`'s plastic bar: nothing makes plastic until the Chemical Plant (`#277`), so the
+filter would arrive a rung after the loaders that read it.
+
 ### What keeps nothing, recorded as a decision
 
 - **SimpleBelts fork.** The pack authors the belts (`#398`).

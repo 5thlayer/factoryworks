@@ -1098,6 +1098,21 @@ that Factorio's seconds survive Minecraft's break-time formula — is `MiningSpe
 `./gradlew :planetaryfactory_core:test`. Whether the Pick mines every block class is a world load. See
 `docs/testing/hand-written-recipe-check.md`.
 
+### Stock recipe re-authoring check
+
+A stock recipe the pack keeps is re-authored, never admitted as shipped (ADR-0034's tail).
+`scripts/stock-recipe-convert.py` reads each recipe `data/pack/stock-admissions.json` admits out of
+the installed jar, flattens a shaped pattern with every count kept, swaps each ingredient through
+`data/pack/stock-substitutions.json` and writes a hand recipe under
+`kubejs/data/planetaryfactory/recipe/assembling/stock/`. An ingredient in neither table, a table row
+nothing reads, and a recipe no jar or two jars ship each fail the line (#442).
+`tests/factorio/test_stock_recipes.py` runs the `--check`, holds each ingredient to an item another
+pack recipe makes or a `keep` row, each output to an item a jar defines, each recipe to the
+machine's input slots, and the union of every emitted hand recipe to no cycle; a second hand route
+is `test_recipe_duplication.py`'s. Run it after editing either file or
+after a jar update. Whether the filter appears in EMI with a route to follow is a human check on
+delivery.
+
 ### Item map check
 
 `tests/pack/test_item_map.py` holds ADR-0061: FTB Materials owns every material form, and a tech
