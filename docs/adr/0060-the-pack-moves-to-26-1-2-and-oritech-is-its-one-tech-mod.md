@@ -6,7 +6,7 @@ supersedes: [28, 148, 156, 178]
 # The pack moves to Minecraft 26.1.2, and Oritech is its one tech mod
 
 > **Belt section moved to Beltworks.** The decision in *Why a SimpleBelts fork* now lives in
-> Beltworks (adamico/SimpleBelts), as its ADR 0003. The rest of this ADR is the pack's.
+> Beltworks (5thlayer/beltworks), as its ADR 0003. The rest of this ADR is the pack's.
 
 Two surveys, `docs/research/oritech-coverage.md` and `docs/research/simplebelts-coverage.md`, each
 priced a hypothesis without deciding it. The first asked what Oritech could carry if the machines were

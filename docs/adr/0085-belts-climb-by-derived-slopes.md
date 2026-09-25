@@ -4,7 +4,7 @@ status: accepted
 
 # Belts climb by derived slopes
 
-> **Moved to Beltworks.** The belt decision now lives in Beltworks (adamico/SimpleBelts), as its
+> **Moved to Beltworks.** The belt decision now lives in Beltworks (5thlayer/beltworks), as its
 > ADR 0005. This ADR stays as history.
 
 ADR-0084 made a belt a run of flat tiles. The pack's terrain is not flat, so a belt across a hill
