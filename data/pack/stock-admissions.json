@@ -1,0 +1,18 @@
+{
+  "_comment": [
+    "The stock recipes the pack keeps, each re-authored by `scripts/stock-recipe-convert.py` as a",
+    "`planetaryfactory:assembling` recipe (ADR-0034, 'The tail, decided'). Every other stock recipe",
+    "is swept. A new admission is a row here, and its ingredients a row each in",
+    "`stock-substitutions.json`.",
+    "",
+    "The key is the stock recipe's id, read out of whichever installed jar ships it. `time` is in",
+    "ticks: a crafting-grid recipe has no duration, so each row chooses one. `reason` says why the",
+    "recipe is kept."
+  ],
+  "admit": {
+    "ftbfiltersystem:smart_filter": {
+      "time": 10,
+      "reason": "The SimpleBelts fork's loader reads the smart filter as its filter (ADR-0084), so without it no loader can be told what to move (#442). 10 ticks is Factorio's default 0.5 s."
+    }
+  }
+}

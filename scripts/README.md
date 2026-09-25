@@ -27,11 +27,12 @@ Provenance and regeneration notes are in `data/factorio/README.md`.
 ## Recipe conversion (corpus → `kubejs/data/planetaryfactory/recipe/`)
 
 Writes everything under that directory except the hand-written `assembling/pack/` and
-`assembling/sapling/` subtrees, which it leaves alone.
+`assembling/sapling/` subtrees and the re-authored `assembling/stock/`, which it leaves alone.
 
 | Script | Reads | Writes |
 |---|---|---|
 | `factorio-recipe-convert.py` | corpus, `data/pack/category-map.json`, `subgroup-owner.json`, `data/pack/item-map.json`, `recipe-overrides.json` | `recipe/` (Factorio-derived) |
+| `stock-recipe-convert.py` | the installed jars, `data/pack/stock-admissions.json`, `stock-substitutions.json` | `recipe/assembling/stock/` (kept stock recipes, ADR-0034) |
 
 **This is the script to re-run after editing `data/pack/item-map.json`.** A
 Factorio name with no item-map row is a hard failure; an `undecided`/`not_emitted`

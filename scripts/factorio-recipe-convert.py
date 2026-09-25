@@ -60,7 +60,7 @@ OUT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe"
 # an option -- the documentation for that subtree lives here and in `docs/`.
 # Each is a path RELATIVE TO OUT_DIR, and each sits under `assembling/` because its recipes are
 # `planetaryfactory:assembling` ones -- see `emitted_path` below.
-FOREIGN_SUBTREES = ("assembling/pack", "assembling/sapling")
+FOREIGN_SUBTREES = ("assembling/pack", "assembling/sapling", "assembling/stock")
 
 
 def is_ours(path):

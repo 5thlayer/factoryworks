@@ -83,7 +83,8 @@ dependencies {
     // Oritech, Railcraft Reborn and SimpleBelts join it for the same reason (#277): the emitted
     // assembling recipes name their pipes, signals and belts, and a server without the jars rejects
     // every one of them, which would leave this check unable to tell a real id from a typo. Athena,
-    // GeckoLib and Architectury are what those three require to load.
+    // GeckoLib and Architectury are what those three require to load. FTB Filter System for the
+    // same reason: the re-authored smart filter recipe makes its item (#442).
     //
     // KubeJS and Rhino because KubeJS is how the pack's data and registered items reach the game,
     // in the pack and in the harness alike (#338). Better Advanced Tooltips too: KubeJS declares it
@@ -94,7 +95,7 @@ dependencies {
             include: ['ftb-materials-*.jar', 'ftb-library-neoforge-*.jar',
                       'oritech-*.jar', 'athena-*.jar', 'geckolib-neoforge-*.jar',
                       'railcraft-reborn-*.jar', 'belts-neoforge-*.jar',
-                      'architectury-neoforge-*.jar',
+                      'ftb-filter-system-neoforge-*.jar', 'architectury-neoforge-*.jar',
                       'kubejs-neoforge-*.jar', 'rhino-*.jar',
                       'better-advanced-tooltips-*.jar'])
     // DataFixerUpper, and only DataFixerUpper. `Codec` is Mojang's serialisation library rather
