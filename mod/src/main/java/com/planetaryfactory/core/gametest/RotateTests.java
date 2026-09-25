@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.gametest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import io.github._5thlayer.beltworks.BlockContent;
 import io.github._5thlayer.beltworks.ComponentContent;
 import io.github._5thlayer.beltworks.ItemContent;
@@ -197,8 +199,8 @@ final class RotateTests {
     private static void aimedTurnsInPlace(GameTestHelper helper) {
         BlockPos tile = new BlockPos(2, 1, 2);
         BlockPos loader = new BlockPos(5, 1, 2);
-        helper.setBlock(tile, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
-        helper.setBlock(loader, BeltTileTests.loader(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(tile, tileState(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(loader, loaderState(BeltTier.BELT, Direction.EAST));
         ListeningPlayer player = standingAt(helper, new BlockPos(3, 1, 4));
         for (BlockPos aimed : List.of(tile, loader)) {
             BlockEntity entity = helper.getBlockEntity(aimed, BlockEntity.class);
@@ -243,19 +245,19 @@ final class RotateTests {
 
     // Laid by hand through air, so the top stands on a wedge.
     private static void slopeRefused(GameTestHelper helper) {
-        List<BlockPos> tiles = BeltWedgeTests.byHand(helper, BeltWedgeTests.player(helper), new BlockPos(3, 1, 3),
+        List<BlockPos> tiles = byHand(helper, builder(helper), new BlockPos(3, 1, 3),
                 Direction.EAST, 0, 0, 1, 1);
         BlockPos foot = tiles.get(1);
         BlockPos top = tiles.get(2);
-        if (BeltTileTests.pitch(helper, foot) != BeltTileBlock.PitchState.FOOT_UP
-                || BeltTileTests.pitch(helper, top) != BeltTileBlock.PitchState.TOP_UP
+        if (pitch(helper, foot) != BeltTileBlock.PitchState.FOOT_UP
+                || pitch(helper, top) != BeltTileBlock.PitchState.TOP_UP
                 || !helper.getBlockState(top.below()).is(BlockContent.BELT_WEDGE.get())) {
-            helper.fail("the climb stands as " + BeltTileTests.pitch(helper, foot) + " and "
-                    + BeltTileTests.pitch(helper, top) + " over " + helper.getBlockState(top.below())
+            helper.fail("the climb stands as " + pitch(helper, foot) + " and "
+                    + pitch(helper, top) + " over " + helper.getBlockState(top.below())
                     + ", expected a foot and a top on a wedge", foot);
             return;
         }
-        refusedUnchanged(helper, List.of(foot, top, top.below()), List.copyOf(BeltWedgeTests.around(helper, foot).keySet()),
+        refusedUnchanged(helper, List.of(foot, top, top.below()), List.copyOf(around(helper, foot).keySet()),
                 "message.planetaryfactory.rotate.slope");
     }
 
@@ -263,10 +265,10 @@ final class RotateTests {
     private static void cornerSlopeRefused(GameTestHelper helper) {
         BlockPos corner = new BlockPos(3, 1, 3);
         BlockPos across = corner.east().above();
-        ServerPlayer player = BeltWedgeTests.player(helper);
-        BeltWedgeTests.byHand(helper, player, corner.north(), Direction.SOUTH, 0);
-        BeltWedgeTests.byHand(helper, player, corner, Direction.EAST, 0);
-        BeltWedgeTests.byHand(helper, player, across, Direction.NORTH, 0);
+        ServerPlayer player = builder(helper);
+        byHand(helper, player, corner.north(), Direction.SOUTH, 0);
+        byHand(helper, player, corner, Direction.EAST, 0);
+        byHand(helper, player, across, Direction.NORTH, 0);
         if (helper.getBlockState(corner).getValue(BeltTileBlock.CORNER) == BeltTileBlock.Shape.STRAIGHT) {
             helper.fail("the tile fed from its side stands " + helper.getBlockState(corner) + ", expected a corner", corner);
             return;
@@ -279,23 +281,23 @@ final class RotateTests {
         BlockPos first = new BlockPos(3, 1, 3);
         BlockPos loader = first.east(2);
         BlockPos above = loader.above();
-        helper.setBlock(loader, BeltTileTests.loader(BeltTier.BELT, Direction.NORTH));
-        ServerPlayer player = BeltWedgeTests.player(helper);
-        BeltWedgeTests.byHand(helper, player, first, Direction.EAST, 0, 0);
-        BeltWedgeTests.byHand(helper, player, above, Direction.NORTH, 0);
+        helper.setBlock(loader, loaderState(BeltTier.BELT, Direction.NORTH));
+        ServerPlayer player = builder(helper);
+        byHand(helper, player, first, Direction.EAST, 0, 0);
+        byHand(helper, player, above, Direction.NORTH, 0);
         refitRefused(helper, first, above, StretchPlan.Reason.WEDGE_BLOCKED);
     }
 
     /** Rotate once at {@code turned} is refused for {@code reason} and changes nothing around {@code centre}. */
     private static void refitRefused(GameTestHelper helper, BlockPos centre, BlockPos turned, StretchPlan.Reason reason) {
-        if (BeltTileTests.pitch(helper, turned) != BeltTileBlock.PitchState.LEVEL) {
+        if (pitch(helper, turned) != BeltTileBlock.PitchState.LEVEL) {
             helper.fail("the tile to turn stands " + helper.getBlockState(turned) + ", expected level", turned);
             return;
         }
-        Map<BlockPos, BlockState> before = BeltWedgeTests.around(helper, centre);
+        Map<BlockPos, BlockState> before = around(helper, centre);
         ListeningPlayer turner = standingAt(helper, centre.south(2));
         RotatePress.press(turner, helper.absolutePos(turned), false);
-        if (!BeltWedgeTests.around(helper, centre).equals(before)) {
+        if (!around(helper, centre).equals(before)) {
             helper.fail("a turn refused for " + reason + " changed the world; the turned tile stands "
                     + helper.getBlockState(turned), turned);
             return;
@@ -333,7 +335,7 @@ final class RotateTests {
 
     private static void heldBeforeAimed(GameTestHelper helper) {
         BlockPos tile = new BlockPos(2, 1, 2);
-        BlockState placed = BeltTileTests.tile(BeltTier.BELT, Direction.EAST);
+        BlockState placed = tileState(BeltTier.BELT, Direction.EAST);
         helper.setBlock(tile, placed);
         ListeningPlayer player = standingAt(helper, tile.north(2));
         ItemStack stack = new ItemStack(ItemContent.tileFor(BeltTier.BELT), 2);
@@ -354,7 +356,7 @@ final class RotateTests {
     // Stone places a block with nothing to face, so it is not rotatable, as in Factorio.
     private static void unrotatableHeldTurnsAimed(GameTestHelper helper) {
         BlockPos tile = new BlockPos(2, 1, 2);
-        helper.setBlock(tile, BeltTileTests.tile(BeltTier.BELT, Direction.EAST));
+        helper.setBlock(tile, tileState(BeltTier.BELT, Direction.EAST));
         ListeningPlayer player = standingAt(helper, tile.north(2));
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.STONE, 2));
         RotatePress.press(player, helper.absolutePos(tile), false);
@@ -381,5 +383,52 @@ final class RotateTests {
     private static BlockHitResult hit(GameTestHelper helper, BlockPos floor) {
         BlockPos absolute = helper.absolutePos(floor);
         return new BlockHitResult(Vec3.atCenterOf(absolute).relative(Direction.UP, 0.5), Direction.UP, absolute, false);
+    }
+
+    private static BlockState tileState(BeltTier tier, Direction facing) {
+        return BlockContent.tileFor(tier).defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing);
+    }
+
+    private static BlockState loaderState(BeltTier tier, Direction facing) {
+        return BlockContent.loaderFor(tier).defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing);
+    }
+
+    private static BeltTileBlock.PitchState pitch(GameTestHelper helper, BlockPos tile) {
+        return helper.getBlockState(tile).getValue(BeltTileBlock.PITCH);
+    }
+
+    private static ServerPlayer builder(GameTestHelper helper) {
+        ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        player.setGameMode(GameType.SURVIVAL);
+        player.setShiftKeyDown(false);
+        return player;
+    }
+
+    private static List<BlockPos> byHand(GameTestHelper helper, ServerPlayer player, BlockPos first, Direction facing,
+                                         int... heights) {
+        player.setYRot(facing.toYRot());
+        List<BlockPos> tiles = new ArrayList<>();
+        for (int tile = 0; tile < heights.length; tile++) {
+            BlockPos at = first.relative(facing, tile).above(heights[tile]);
+            ItemStack stack = new ItemStack(ItemContent.tileFor(BeltTier.BELT));
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+            // Aimed at the spot itself, which is air, so the tile goes there whatever stands around it.
+            BlockPos absolute = helper.absolutePos(at);
+            BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(absolute), Direction.UP, absolute, false);
+            player.gameMode.useItemOn(player, helper.getLevel(), stack, InteractionHand.MAIN_HAND, hit);
+            if (!(helper.getBlockState(at).getBlock() instanceof BeltTileBlock)) {
+                helper.fail("tile " + tile + " was not placed; " + helper.getBlockState(at) + " stands there", at);
+            }
+            tiles.add(at);
+        }
+        return tiles;
+    }
+
+    private static Map<BlockPos, BlockState> around(GameTestHelper helper, BlockPos centre) {
+        Map<BlockPos, BlockState> states = new HashMap<>();
+        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-2, -2, -2), centre.offset(2, 2, 2))) {
+            states.put(pos.immutable(), helper.getBlockState(pos));
+        }
+        return states;
     }
 }
