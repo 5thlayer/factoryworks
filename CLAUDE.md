@@ -156,7 +156,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), and `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377) and `PipeDismantleTests` (#431), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltworksPackTests`, registered only when
+`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). What is here is only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -196,6 +196,14 @@ trims `groundworks:dismantles` to the Picks. A join rule that ignores Oritech's 
 test red. The shortest path, the tie and the default join are Groundworks' `ShortestPathTest`, and
 the red outline and that the Pick's plain click with no start still toggles a connection are a
 human check on delivery.
+And that Oritech's fluid pipe is laid by Groundworks' Stretch (`PipeStretchTests`, #452,
+`stretch/OritechPipeLegs`): a flat stretch and one raised 3, which stacks 3 at the start and runs
+level after, lay exactly the plan, each pipe open to the next and no end open to the air, for one
+pipe a block. A stone on the leg is gone round on the player's side, too few pipes refuse the stretch
+whole, a pipe already beside the leg is joined both ways, and a pipe's Raise reaches the Pack's 16.
+Dropping the leg's own pipes from the connection rule turns three red, and not asking Oritech's own
+rule for the rest turns the joining test red. The pipes at an interior anchor are not joined yet (#467), and whether a
+stretch with a rise and a detour previews as it lays is a human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
@@ -241,7 +249,7 @@ no input to go stale against, so the `--check` is the whole of the guard. And th
 in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
 boots a server, so it is run against a change that touched mechanism. Run it after editing
 anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`,
-`core/reach/`, `core/dismantle/` or `core/gametest/`.
+`core/reach/`, `core/dismantle/`, `core/stretch/` or `core/gametest/`.
 
 ### Replace group check
 

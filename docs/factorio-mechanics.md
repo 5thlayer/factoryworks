@@ -1420,8 +1420,10 @@ Sub-rules:
   from the inventory in survival. No work.
 - **Drop item into a machine** (`Z`) — `excluded`. It is a one-item quick transfer, and shipping both
   means two bindings differing only in magnitude.
-- **Drag-building** — `excluded`. `by-consequence`: Create's belts are placed endpoint-to-endpoint
-  rather than one tile at a time (ADR-0044), so the gesture has nothing to drag across.
+- **Drag-building** — `adapted`. Belts and Oritech's fluid pipes are laid by Groundworks' **Stretch**:
+  a sneak-click stores the start, each further sneak-click an anchor, and a click lays the line,
+  charged one item a block, with Raise and Lower setting its height and a detour round what is in
+  the way (#452). Joining pipes across an interior anchor is #467.
 
 ---
 

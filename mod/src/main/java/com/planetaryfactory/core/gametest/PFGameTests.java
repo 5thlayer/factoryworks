@@ -96,6 +96,7 @@ public final class PFGameTests {
             RadarTests.register(registrar);
             PumpjackTests.register(registrar);
             PipeDismantleTests.register(registrar);
+            PipeStretchTests.register(registrar);
         }
         if (ModList.get().isLoaded("beltworks")) {
             BeltworksPackTests.register(registrar);

@@ -157,5 +157,6 @@
   "message.planetaryfactory.dismantle.outside_family": "That is not part of the run the dismantle started on.",
   "message.planetaryfactory.dismantle.not_joined": "That is not joined to the block the dismantle started on.",
   "message.planetaryfactory.dismantle.tied": "Two routes of the same length lead there. Pick an end with only one.",
+  "message.planetaryfactory.stretch.pipe_blocked": "Something a pipe can't replace stands in the way.",
   "message.planetaryfactory.rotate.footprint": "A machine of more than one block cannot be turned in place."
 }
