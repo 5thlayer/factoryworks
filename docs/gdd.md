@@ -26,7 +26,7 @@ the packwiz manifest (ADR-0024); ADR-0060 records which of them are pre-releases
   colours, are ADR-0067.
 - **FTB Materials** — the item layer: every material form in ADR-0021's alphabet. A tech mod's
   competing plate is not the pack's plate (ADR-0061).
-- **Beltworks**, the pack's SimpleBelts fork — belts, loaders and splitters, at Factorio's
+- **Beltworks** (5thlayer/beltworks) — belts, loaders and splitters, at Factorio's
   throughput (ADR-0060, ADR-0076, ADR-0084). Its vocabulary is its own `CONTEXT.md`.
 - **Railcraft Reborn** — trains (ADR-0060).
 - **Researchd**, forked by the pack — the research tree and the Research Lab that gates it
