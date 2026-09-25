@@ -12,6 +12,14 @@ status: accepted
 > the drawing are the 5thlayer/placementpreview library's, per its ADR 0001 and Beltworks' ADR 0010,
 > so a belt piece and a pack block preview through one renderer. The decision below stands; the pack
 > keeps its own items' plans, its refusals and what it draws beside a plan.
+>
+> **Amended by #450: every oriented block is drawn, not only the pack's.** The opt-in widens from
+> the pack's namespace to any block with a facing, an axis or a sixteen-way rotation, so held stairs,
+> a chest or another mod's machine draw a preview, since the library's Rotate the Plan turns only what
+> is drawn (5thlayer/groundworks ADR 0003). Those blocks get vanilla's plan and its refusals only; the
+> pack owns no other mod's placement rules. Two quirks are accepted: a two-part block such as a door
+> or bed draws one half, and a block that sets its state after placement may draw in a state it will
+> not keep. A block from another mod with no orientation, such as stone, still draws nothing.
 
 Factorio draws what placing a block would do before the click. #297 brings that in as the
 **Placement Preview**, and #158 (the supply area) and #298 (a pole's wires) draw on top of it. The

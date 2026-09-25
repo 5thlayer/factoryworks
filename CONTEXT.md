@@ -298,7 +298,7 @@ What a **Dismantle** would take up at an aimed block: the blocks of the span fro
 _Avoid_: removal plan, placement plan (for a dismantle)
 
 **Placement Preview**:
-What a player sees while holding a placeable block and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; with the **Engineer's Pick** and a dismantle's start stored, the blocks its **Dismantle Plan** would take up, in red, and none when it would be refused. It shows what placing or dismantling would do and changes nothing in the world.
+What a player sees while holding a placeable block -- the pack's, or any block with a facing, an axis or a rotation -- and aiming at a spot: the block drawn translucent where placement would put it, red where placement would be refused; for a pole, also the wires it would add and its **Supply Area Box**; with the **Engineer's Pick** and a dismantle's start stored, the blocks its **Dismantle Plan** would take up, in red, and none when it would be refused. It shows what placing or dismantling would do and changes nothing in the world.
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
 **Fast Replace**:
