@@ -45,3 +45,14 @@ its own family. The migration has two constraints:
   taking pipes up voids nothing and leaves the rest of the network nothing to keep.
 - A new family is a tag and, if face adjacency is wrong for it, a join rule. Nothing else changes.
 - The Deconstruction planner row in `docs/factorio-mechanics.md` stays `unargued`.
+
+## Amended by Beltworks ADR 0011
+
+Belts join as a family, but not through a join rule. The family Dismantle and Beltworks' belt
+Dismantle both move into the Groundworks library (formerly placementpreview), and each family owns
+its whole span rather than a join rule inside one shared search. The pipe family keeps this ADR's
+shortest path with ties refused, now as a helper in Groundworks. The belt family keeps Beltworks'
+line scan, which takes the flow either way, so the directed-rule constraint above no longer applies.
+The two starts merge into one, as foreseen: one tool tag, `groundworks:dismantles`, and one stored
+start and queue. A pass may take up belts and pipes together. `FamilyDismantle`, its Takeover and
+`BeltClaim` leave the Pack, which supplies only the pipe family.
