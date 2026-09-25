@@ -1023,7 +1023,7 @@ A change that crosses Groundworks, Beltworks and the Pack goes through the `rele
 nothing is pushed without the user's word.
 
 `-PsiblingBuilds` is for trying such a change in the Pack before either library is released (#466).
-It includes the Groundworks and Beltworks checkouts (`-PgroundworksDir`, default `~/placementpreview`;
+It includes the Groundworks and Beltworks checkouts (`-PgroundworksDir`, default `~/minecraft_mods/groundworks`;
 `-PbeltworksDir`, default `~/minecraft_mods/simplebelts-src`) as a composite, so the compile and every
 dev run, `runGameTestServer` included, use the checkouts and never the `mods/` Beltworks jar. The
 build prints one `siblingBuilds:` line naming both checkouts, their version and HEAD.
