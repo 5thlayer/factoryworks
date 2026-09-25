@@ -1022,6 +1022,17 @@ A change that crosses Groundworks, Beltworks and the Pack goes through the `rele
 (`~/.claude/skills/release-train/`): each checkout is owned by the session working in it, and
 nothing is pushed without the user's word.
 
+`-PsiblingBuilds` is for trying such a change in the Pack before either library is released (#466).
+It includes the Groundworks and Beltworks checkouts (`-PgroundworksDir`, default `~/placementpreview`;
+`-PbeltworksDir`, default `~/minecraft_mods/simplebelts-src`) as a composite, so the compile and every
+dev run, `runGameTestServer` included, use the checkouts and never the `mods/` Beltworks jar. The
+build prints one `siblingBuilds:` line naming both checkouts, their version and HEAD.
+`installToPack` refuses under it, and `scripts/check-datapack-load.py --sibling-builds` forwards it.
+It never installs, and a green run under it proves nothing about the pinned jars: the change still
+ships through the release train. A Groundworks checkout outside the range Beltworks nests it under
+builds silently and is refused at load, so a Groundworks minor needs Beltworks' range moved in its
+checkout too.
+
 ### First-party mod
 
 `planetaryfactory_core` is a Gradle subproject in `mod/`, built from the repo root with

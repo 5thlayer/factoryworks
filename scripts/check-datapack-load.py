@@ -27,8 +27,12 @@ owns it. An unlisted rejection fails, and so does a LISTED one that no longer ap
 entry is a defect somebody fixed and a guard nobody re-armed, so the entry is deleted as part of
 the fix rather than left to excuse the next one.
 
-Usage: scripts/check-datapack-load.py
+Usage: scripts/check-datapack-load.py [--sibling-builds]
+
+--sibling-builds forwards Gradle's -PsiblingBuilds (#466): the run loads the Groundworks and Beltworks
+checkouts instead of the pinned jar, and its result says nothing about the pins.
 """
+import argparse
 import re
 import subprocess
 import sys
@@ -59,7 +63,12 @@ COMPLETED = "GAME TESTS COMPLETE"
 
 
 def main():
-    run = subprocess.run(GRADLE, cwd=ROOT, capture_output=True, text=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sibling-builds", action="store_true")
+    siblings = parser.parse_args().sibling_builds
+    gradle = GRADLE + (["-PsiblingBuilds"] if siblings else [])
+
+    run = subprocess.run(gradle, cwd=ROOT, capture_output=True, text=True)
     log = run.stdout + run.stderr
     failures = []
 
@@ -69,7 +78,7 @@ def main():
             "asserted nothing. Gradle exited %d" % (COMPLETED, run.returncode)
         )
     if run.returncode != 0:
-        failures.append("gradle %s exited %d" % (" ".join(GRADLE[1:]), run.returncode))
+        failures.append("gradle %s exited %d" % (" ".join(gradle[1:]), run.returncode))
 
     for marker in FATAL:
         if marker in log:
@@ -95,6 +104,14 @@ def main():
             "`%s` is listed as expected but the game no longer rejects it: %s. Delete the entry -- "
             "a stale one is a guard nobody re-armed" % (name, EXPECTED[name])
         )
+
+    if siblings:
+        checkouts = [line for line in log.splitlines() if line.startswith("siblingBuilds:")]
+        if checkouts:
+            print("against the checkouts, not the pinned jars: " + checkouts[0])
+        else:
+            failures.append("--sibling-builds was passed but Gradle named no checkouts, so what this "
+                            "run loaded is unknown")
 
     for failure in failures:
         print("FAIL: " + failure)
