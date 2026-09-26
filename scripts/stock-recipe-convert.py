@@ -6,7 +6,9 @@ Reads each recipe `data/pack/stock-admissions.json` admits out of the installed 
 `kubejs/data/planetaryfactory/recipe/assembling/stock/`. Nothing is decided here: which recipes are
 kept is the admissions file, and what each ingredient becomes is `data/pack/stock-substitutions.json`.
 An admission with a `rewrite` takes its ingredients and yield from that row instead of the jar's
-(#444); only its output is read from the jar, and each ingredient must be a `keep` row.
+(#444); only its output is read from the jar, and each ingredient must be a `keep` row. An
+`author` row is a recipe no jar ships, written whole from the row (#445); a smelt goes under
+`recipe/smelting/stock/`.
 
 Usage: scripts/stock-recipe-convert.py [--check] [--quiet]
   --check  write nothing; fail if the files on disk differ from what would be written
@@ -26,6 +28,7 @@ ADMISSIONS = ROOT / "data/pack/stock-admissions.json"
 SUBSTITUTIONS = ROOT / "data/pack/stock-substitutions.json"
 # `factorio-recipe-convert.py` lists this subtree in FOREIGN_SUBTREES and leaves it alone.
 OUT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe/assembling/stock"
+SMELT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe/smelting/stock"
 
 CATEGORY_OF_SOURCE = {
     "minecraft:crafting_shaped": "crafting",
@@ -115,6 +118,46 @@ def convert(recipes, admit, subs, problems):
     return emitted, used
 
 
+def author(rows, keep, problems):
+    """The recipes no jar ships, keyed by (directory, stem), and every ingredient they read."""
+    emitted, used = {}, set()
+    for output, row in sorted(rows.items()):
+        ingredients = row.get("ingredients") or {}
+        if not (row.get("reason") and isinstance(row.get("time"), int) and row["time"] > 0
+                and isinstance(row.get("count"), int) and row["count"] > 0 and ingredients
+                and all(isinstance(n, int) and n > 0 for n in ingredients.values())):
+            problems.append("stock-admissions.json `author` row %s needs `ingredients` with positive "
+                            "counts, a positive `count` and `time`, and a `reason`" % output)
+            continue
+        for source in ingredients:
+            used.add(source)
+            if source not in keep:
+                problems.append("%s takes `%s`, which stock-substitutions.json does not keep"
+                                % (output, source))
+        stem = output.split(":", 1)[1]
+        if row.get("on") == "assembling" and row.get("category"):
+            emitted[(OUT_DIR, stem)] = {
+                "type": "planetaryfactory:assembling",
+                "category": row["category"],
+                "ingredients": [{"ingredient": item, "count": n} for item, n in ingredients.items()],
+                "results": [{"id": output, "count": row["count"]}],
+                "time": row["time"],
+            }
+        elif row.get("on") == "smelting" and len(ingredients) == 1:
+            (item, n), = ingredients.items()
+            emitted[(SMELT_DIR, stem)] = {
+                "type": "planetaryfactory:smelting",
+                "ingredient": item,
+                "count": n,
+                "result": {"id": output, "count": row["count"]},
+                "cookingtime": row["time"],
+            }
+        else:
+            problems.append("stock-admissions.json `author` row %s is neither an `assembling` row "
+                            "with a `category` nor a `smelting` row with one ingredient" % output)
+    return emitted, used
+
+
 def unused_rows(used, subs, problems):
     for table in ("keep", "substitute"):
         for row in sorted(set(subs[table]) - used):
@@ -156,6 +199,13 @@ def main():
         return 1
     recipes = read_stock(admit, problems)
     emitted, used = convert(recipes, admit, subs, problems)
+    emitted = {(OUT_DIR, stem): body for stem, body in emitted.items()}
+    authored, authored_used = author(json.loads(ADMISSIONS.read_text()).get("author", {}),
+                                     subs["keep"], problems)
+    for key in emitted.keys() & authored.keys():
+        problems.append("an admitted and an authored recipe are both named %s" % key[1])
+    emitted.update(authored)
+    used |= authored_used
     if len(recipes) == len(admit):
         unused_rows(used, subs, problems)
 
@@ -164,24 +214,25 @@ def main():
             print("FAIL: " + problem)
         return 1
 
-    emitted = {stem: json.dumps(body, indent=2) + "\n" for stem, body in emitted.items()}
-    on_disk = {p.stem: p.read_text() for p in OUT_DIR.glob("*.json")} if OUT_DIR.exists() else {}
+    emitted = {key: json.dumps(body, indent=2) + "\n" for key, body in emitted.items()}
+    on_disk = {(d, p.stem): p.read_text() for d in (OUT_DIR, SMELT_DIR) if d.exists()
+               for p in d.glob("*.json")}
     if args.check:
         if on_disk != emitted:
-            print("FAIL: assembling/stock/ is stale -- re-run scripts/stock-recipe-convert.py")
+            print("FAIL: the stock subtrees are stale -- re-run scripts/stock-recipe-convert.py")
             for label, names in (("missing", set(emitted) - set(on_disk)),
                                  ("unexpected", set(on_disk) - set(emitted)),
                                  ("changed", {k for k in set(emitted) & set(on_disk)
                                               if emitted[k] != on_disk[k]})):
                 if names:
-                    print("  %s: %s" % (label, ", ".join(sorted(names))))
+                    print("  %s: %s" % (label, ", ".join(sorted(stem for _, stem in names))))
             return 1
     else:
-        for stale in set(on_disk) - set(emitted):
-            (OUT_DIR / (stale + ".json")).unlink()
-        OUT_DIR.mkdir(parents=True, exist_ok=True)
-        for stem, body in sorted(emitted.items()):
-            (OUT_DIR / (stem + ".json")).write_text(body)
+        for directory, stale in set(on_disk) - set(emitted):
+            (directory / (stale + ".json")).unlink()
+        for (directory, stem), body in sorted(emitted.items()):
+            directory.mkdir(parents=True, exist_ok=True)
+            (directory / (stem + ".json")).write_text(body)
 
     if not args.quiet:
         print("ok: %d stock recipe(s) re-authored" % len(emitted))

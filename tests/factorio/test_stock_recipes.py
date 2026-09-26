@@ -12,6 +12,8 @@ admits as a `planetaryfactory:assembling` recipe, swapping its ingredients throu
   - no re-authored recipe has more item ingredients than the Assembling Machine has input slots
   - the wooden stairs are one recipe per species Terra's biomes grow, each from its own logs
     (#444), with the species read as the sapling recipes' are
+  - each `author` row is emitted on the machine it names: sand on the Assembling Machine, glass
+    as a smelt on the pack's type (#445)
   - no re-authored recipe makes a wall: walls are not kept (#441)
   - over the union of every emitted hand recipe, corpus and re-authored alike, no hand route is a
     cycle: the Personal Assembler has no way out of a loop (ADR-0038). A second hand route to one
@@ -93,18 +95,26 @@ def check_generator():
 
 
 def check_stock(recipes, keep):
-    admitted = json.loads(ADMISSIONS.read_text())["admit"]
-    stock = {name: r for name, r in recipes.items() if name.startswith("assembling/stock/")}
-    check(len(stock) == len(admitted),
-          "%d recipe(s) under assembling/stock/ and %d admitted" % (len(stock), len(admitted)))
+    admissions = json.loads(ADMISSIONS.read_text())
+    authored = admissions.get("author", {})
+    stock = {name: r for name, r in recipes.items()
+             if name.startswith("assembling/stock/") or name.startswith("smelting/stock/")}
+    check(len(stock) == len(admissions["admit"]) + len(authored),
+          "%d recipe(s) in the stock subtrees, %d admitted and %d authored"
+          % (len(stock), len(admissions["admit"]), len(authored)))
+    for output, row in sorted(authored.items()):
+        name = "%s/stock/%s" % (row["on"], output.split(":", 1)[1])
+        check(name in stock and outputs_of(stock[name]) == [output]
+              and stock[name]["type"] == "planetaryfactory:" + row["on"],
+              "`author` row %s is not emitted as %s" % (output, name))
 
     made = {item for name, r in recipes.items() if name not in stock for item in outputs_of(r)}
     defined = defined_items()
     slots = int(re.search(r"public static final int INPUTS = (\d+);", INPUT_SLOTS.read_text()).group(1))
     for name, recipe in sorted(stock.items()):
-        check(len(recipe["ingredients"]) <= slots,
+        check(len(ingredients_of(recipe)) <= slots,
               "%s has %d item ingredients and the Assembling Machine has %d input slots (ADR-0074)"
-              % (name, len(recipe["ingredients"]), slots))
+              % (name, len(ingredients_of(recipe)), slots))
         for ingredient in ingredients_of(recipe):
             check(ingredient in made or ingredient in keep,
                   "%s takes `%s`, which no other pack recipe makes and no `keep` row names. The "

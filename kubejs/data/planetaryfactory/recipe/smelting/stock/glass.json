@@ -1,0 +1,10 @@
+{
+  "type": "planetaryfactory:smelting",
+  "ingredient": "minecraft:sand",
+  "count": 1,
+  "result": {
+    "id": "minecraft:glass",
+    "count": 1
+  },
+  "cookingtime": 64
+}
