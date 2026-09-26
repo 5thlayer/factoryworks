@@ -59,7 +59,14 @@
     },
     "minecraft:glass_pane": {
       "time": 10,
-      "reason": "Base building (#445): a window that lets light in and holds a wall line. Vanilla's 6 glass to 16 panes is kept as written, since glass is the pack's own smelt. 10 ticks is Factorio's default 0.5 s."
+      "reason": "Base building (#445): a window that lets light in and holds a wall line. 10 ticks is Factorio's default 0.5 s.",
+      "rewrite": {
+        "ingredients": {
+          "minecraft:glass": 1
+        },
+        "count": 4,
+        "reason": "Glass is a building material and never progression, so a pane is priced for building freely: 1 glass to 4 panes, where vanilla's 6 to 16 asks for a whole grid's worth at once."
+      }
     },
     "minecraft:ladder": {
       "time": 10,
