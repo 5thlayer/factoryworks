@@ -29,10 +29,10 @@
       "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files as the saplings are. 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
-          "#minecraft:acacia_logs": 3
+          "#minecraft:acacia_logs": 1
         },
         "count": 8,
-        "reason": "Planks are not kept (#441), so the stairs take the species' logs. Vanilla's 6 planks to 4 stairs is 1.5 logs to 4 at a log's 4 planks; doubled to whole logs, 3 logs to 8."
+        "reason": "Planks are not kept (#441), so the stairs take the species' logs. Stairs are for building and getting around, never progression, so they are priced for building freely, as glass panes are (#471): 1 to 8."
       }
     },
     "minecraft:birch_stairs": {
@@ -40,10 +40,10 @@
       "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files as the saplings are. 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
-          "#minecraft:birch_logs": 3
+          "#minecraft:birch_logs": 1
         },
         "count": 8,
-        "reason": "Planks are not kept (#441), so the stairs take the species' logs. Vanilla's 6 planks to 4 stairs is 1.5 logs to 4 at a log's 4 planks; doubled to whole logs, 3 logs to 8."
+        "reason": "Planks are not kept (#441), so the stairs take the species' logs. Stairs are for building and getting around, never progression, so they are priced for building freely, as glass panes are (#471): 1 to 8."
       }
     },
     "minecraft:cobblestone_stairs": {
@@ -51,10 +51,10 @@
       "reason": "Traversal and base building (#441). 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
-          "minecraft:cobblestone": 6
+          "minecraft:cobblestone": 1
         },
-        "count": 4,
-        "reason": "Vanilla's 6 to 4. Cobblestone is the corpus's `stone`, so the jar's recipe already names an input Terra yields and is kept as written."
+        "count": 8,
+        "reason": "Cobblestone is the corpus's `stone`. Stairs are for building and getting around, never progression, so they are priced for building freely, as glass panes are (#471): 1 to 8."
       }
     },
     "minecraft:glass_pane": {
@@ -75,8 +75,8 @@
         "ingredients": {
           "#minecraft:logs": 1
         },
-        "count": 3,
-        "reason": "Sticks are not kept (#441), so the ladder takes a log, the wood it is made of and the first thing a player fells. Vanilla's 7 sticks are 0.875 of a log at 4 planks a log and 2 sticks a plank; rounded up to 1 log for vanilla's 3 ladders. The corpus's iron stick would cost 3.5 iron plates for a wooden block."
+        "count": 8,
+        "reason": "Sticks are not kept (#441), so the ladder takes a log, the wood it is made of and the first thing a player fells. The ladder is traversal, never progression, so it is priced for building freely, as glass panes are (#472): 1 log to 8. The corpus's iron stick would cost 3.5 iron plates for a wooden block."
       }
     },
     "minecraft:oak_stairs": {
@@ -84,10 +84,10 @@
       "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files as the saplings are. 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
-          "#minecraft:oak_logs": 3
+          "#minecraft:oak_logs": 1
         },
         "count": 8,
-        "reason": "Planks are not kept (#441), so the stairs take the species' logs. Vanilla's 6 planks to 4 stairs is 1.5 logs to 4 at a log's 4 planks; doubled to whole logs, 3 logs to 8."
+        "reason": "Planks are not kept (#441), so the stairs take the species' logs. Stairs are for building and getting around, never progression, so they are priced for building freely, as glass panes are (#471): 1 to 8."
       }
     },
     "minecraft:stone_brick_stairs": {
@@ -95,10 +95,10 @@
       "reason": "Traversal and base building (#441). 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
-          "minecraft:stone_bricks": 6
+          "minecraft:stone_bricks": 1
         },
-        "count": 4,
-        "reason": "Vanilla's 6 to 4. Stone bricks are the pack's own smelt (ADR-0046), so the jar's recipe already names an input Terra yields and is kept as written."
+        "count": 8,
+        "reason": "Stone bricks are the pack's own smelt (ADR-0046). Stairs are for building and getting around, never progression, so they are priced for building freely, as glass panes are (#471): 1 to 8."
       }
     },
     "minecraft:stone_stairs": {
@@ -106,10 +106,10 @@
       "reason": "Traversal and base building (#441). 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
-          "minecraft:cobblestone": 6
+          "minecraft:cobblestone": 1
         },
-        "count": 4,
-        "reason": "Vanilla's 6 to 4, from cobblestone in place of smooth stone. Mined stone drops cobblestone and nothing smelts it back, so smooth stone has no route on Terra; the stairs keep their count and cost what cobblestone stairs do."
+        "count": 8,
+        "reason": "From cobblestone in place of smooth stone: mined stone drops cobblestone and nothing smelts it back, so smooth stone has no route on Terra. Stairs are for building and getting around, never progression, so they are priced for building freely, as glass panes are (#471): 1 to 8."
       }
     }
   },
