@@ -4,7 +4,7 @@
       "mod": "beltworks",
       "group": "io.github.5thlayer",
       "artifact": "beltworks",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "pattern": "beltworks-*.jar",
       "nests": [
         "groundworks"
