@@ -395,10 +395,8 @@
       "ticket": 230
     },
     "hazard-concrete": {
-      "kind": "item",
-      "target": "minecraft:yellow_concrete",
-      "source": "borrowed",
-      "note": "As `concrete`. Yellow is Factorio's hazard stripe."
+      "status": "not_emitted",
+      "note": "`not_emitted` by #473. Factorio's hazard concrete is concrete with a striped texture that turns with the tile, and vanilla has no striped block, so a plain colour would put the name on something that does not do the thing. Colour is the recolour's instead: 10 concrete to 10 of any colour (#473)."
     },
     "heat-exchanger": {
       "status": "undecided",
@@ -706,10 +704,8 @@
       "note": "As `concrete`, one shade up."
     },
     "refined-hazard-concrete": {
-      "kind": "item",
-      "target": "minecraft:orange_concrete",
-      "source": "borrowed",
-      "note": "As `hazard-concrete`, one shade up."
+      "status": "not_emitted",
+      "note": "`not_emitted` by #473. Factorio's refined hazard concrete is refined concrete with a striped texture that turns with the tile, and vanilla has no striped block, so a plain colour would put the name on something that does not do the thing. Colour is the recolour's instead: 10 concrete to 10 of any colour (#473)."
     },
     "repair-pack": {
       "status": "not_emitted",
