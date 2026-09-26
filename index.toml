@@ -238,7 +238,7 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "1ba599925a23e5201aea7158d96bf6e8b88861ce982d2c96608dd6b5cd0d0497"
+hash = "0c4775a440e71e73346a1609ae99f1166f1ebde73743d533df101b9fa5b4a978"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -250,7 +250,7 @@ hash = "85d1e59caef6d788ae0acdc23f74350c22a2394730d0b3d0d4f77c9ecd2bd56d"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "f4ba205d69b0da2d3346b11ed24bbf3637486ef1c499b9f1dad1b4a85611250f"
+hash = "076f60c7226b55886a5d79766a5dc233e16c5a5a8f272df0142e9e26ab4d933c"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -2123,8 +2123,8 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
-file = "mods/beltworks-0.3.2.jar"
-hash = "6ddef4ad6c12c283257d7af6266c34b875a07bc243799328972c8f43f998d285"
+file = "mods/beltworks-0.3.3.jar"
+hash = "151feb949c61125782b29a6ce279c38623e4b607968bc2ad3d9b7aef00db5754"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
