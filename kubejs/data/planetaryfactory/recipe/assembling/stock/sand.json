@@ -1,6 +1,6 @@
 {
   "type": "planetaryfactory:assembling",
-  "category": "advanced-crafting",
+  "category": "crafting",
   "ingredients": [
     {
       "ingredient": "minecraft:cobblestone",
@@ -10,7 +10,7 @@
   "results": [
     {
       "id": "minecraft:sand",
-      "count": 1
+      "count": 4
     }
   ],
   "time": 10

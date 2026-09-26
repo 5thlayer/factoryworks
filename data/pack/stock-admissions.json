@@ -116,13 +116,13 @@
   "author": {
     "minecraft:sand": {
       "on": "assembling",
-      "category": "advanced-crafting",
+      "category": "crafting",
       "ingredients": {
         "minecraft:cobblestone": 1
       },
-      "count": 1,
+      "count": 4,
       "time": 10,
-      "reason": "Terra's surface drops no sand the pack relies on, and Factorio has no sand, so it is ground from the corpus's `stone` (#445). 1 cobblestone to 1 sand, since vanilla treats the two as the same block's rubble. `advanced-crafting` keeps it on the Assembling Machine and out of the hand, as grinding is a machine's work; 10 ticks is Factorio's default 0.5 s."
+      "reason": "Terra's surface drops no sand the pack relies on, and Factorio has no sand, so it is ground from the corpus's `stone` (#445). Glass is a building material and never progression, so sand is priced for building freely: 1 cobblestone to 4 sand, on `crafting` so the Personal Assembler makes it as well as the Assembling Machine. 10 ticks is Factorio's default 0.5 s."
     },
     "minecraft:glass": {
       "on": "smelting",
