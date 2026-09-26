@@ -12,7 +12,12 @@
     "A `rewrite` replaces the jar's ingredients and yield with ones the row chooses (#444). Its",
     "`ingredients` map each input to its count, each a `keep` row, `count` is the yield, and `reason`",
     "records why both were chosen, even where they are the jar's own. Only the output is read from",
-    "the jar."
+    "the jar.",
+    "",
+    "`author` holds the recipes no jar ships, each written whole from its row (#445): `on` is the",
+    "machine, `assembling` or `smelting`, the key is the output, `ingredients` map each input to its",
+    "count, each a `keep` row, and `count` is the yield. An assembling row names its `category`; a",
+    "smelt takes one ingredient. `time` is in ticks, and `reason` records every choice."
   ],
   "admit": {
     "ftbfiltersystem:smart_filter": {
@@ -51,6 +56,10 @@
         "count": 4,
         "reason": "Vanilla's 6 to 4. Cobblestone is the corpus's `stone`, so the jar's recipe already names an input Terra yields and is kept as written."
       }
+    },
+    "minecraft:glass_pane": {
+      "time": 10,
+      "reason": "Base building (#445): a window that lets light in and holds a wall line. Vanilla's 6 glass to 16 panes is kept as written, since glass is the pack's own smelt. 10 ticks is Factorio's default 0.5 s."
     },
     "minecraft:ladder": {
       "time": 10,
@@ -95,6 +104,27 @@
         "count": 4,
         "reason": "Vanilla's 6 to 4, from cobblestone in place of smooth stone. Mined stone drops cobblestone and nothing smelts it back, so smooth stone has no route on Terra; the stairs keep their count and cost what cobblestone stairs do."
       }
+    }
+  },
+  "author": {
+    "minecraft:sand": {
+      "on": "assembling",
+      "category": "advanced-crafting",
+      "ingredients": {
+        "minecraft:cobblestone": 1
+      },
+      "count": 1,
+      "time": 10,
+      "reason": "Terra's surface drops no sand the pack relies on, and Factorio has no sand, so it is ground from the corpus's `stone` (#445). 1 cobblestone to 1 sand, since vanilla treats the two as the same block's rubble. `advanced-crafting` keeps it on the Assembling Machine and out of the hand, as grinding is a machine's work; 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:glass": {
+      "on": "smelting",
+      "ingredients": {
+        "minecraft:sand": 1
+      },
+      "count": 1,
+      "time": 64,
+      "reason": "Vanilla's 1 sand to 1 glass, on the pack's smelting type since the vanilla furnace is inert (#445). 64 ticks is stone brick's 3.2 s, the corpus's smelt of a building block from rubble."
     }
   }
 }

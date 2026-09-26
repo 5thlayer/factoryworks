@@ -1,0 +1,17 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:glass",
+      "count": 6
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:glass_pane",
+      "count": 16
+    }
+  ],
+  "time": 10
+}

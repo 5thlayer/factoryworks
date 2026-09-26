@@ -969,6 +969,8 @@ the installed jar, flattens a shaped pattern with every count kept, swaps each i
 nothing reads, and a recipe no jar or two jars ship each fail the line (#442). An admission can
 carry a `rewrite` instead of being flattened: its ingredients, all `keep` rows, and its yield,
 chosen and recorded with a reason, and only the output is read from the jar (#444).
+An `author` row is a recipe no jar ships, written whole from its row on the machine it names;
+sand is ground on the Assembling Machine and smelted to glass under `recipe/smelting/stock/` (#445).
 `tests/factorio/test_stock_recipes.py` runs the `--check`, holds each ingredient to an item another
 pack recipe makes or a `keep` row, each output to an item a jar defines, each recipe to the
 machine's input slots, and the union of every emitted hand recipe to no cycle; a second hand route

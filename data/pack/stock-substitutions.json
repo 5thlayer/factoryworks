@@ -19,7 +19,9 @@
     "#minecraft:logs": "Felled from Terra's trees (ADR-0051). The corpus's `wood`.",
     "#minecraft:oak_logs": "Felled from Terra's oaks (ADR-0051).",
     "#minecraft:birch_logs": "Felled from Terra's birches (ADR-0051).",
-    "#minecraft:acacia_logs": "Felled from Terra's acacias (ADR-0051)."
+    "#minecraft:acacia_logs": "Felled from Terra's acacias (ADR-0051).",
+    "minecraft:sand": "The line's own `author` row, ground from cobblestone on the Assembling Machine (#445).",
+    "minecraft:glass": "The line's own `author` row, smelted from sand (#445)."
   },
   "substitute": {
     "minecraft:stick": {

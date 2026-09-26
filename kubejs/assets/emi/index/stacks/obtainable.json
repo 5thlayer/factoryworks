@@ -91,6 +91,12 @@
       "stack": "item:minecraft:cobblestone_stairs"
     },
     {
+      "stack": "item:minecraft:glass"
+    },
+    {
+      "stack": "item:minecraft:glass_pane"
+    },
+    {
       "stack": "item:minecraft:gray_concrete"
     },
     {
@@ -119,6 +125,9 @@
     },
     {
       "stack": "item:minecraft:raw_iron"
+    },
+    {
+      "stack": "item:minecraft:sand"
     },
     {
       "stack": "item:minecraft:stone_brick_stairs"

@@ -58,9 +58,8 @@ OUT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe"
 # next to those recipes: KubeJS validates every file name under `kubejs/` and rejects an
 # uppercase letter with an error that stops a world loading, so a README beside them is not
 # an option -- the documentation for that subtree lives here and in `docs/`.
-# Each is a path RELATIVE TO OUT_DIR, and each sits under `assembling/` because its recipes are
-# `planetaryfactory:assembling` ones -- see `emitted_path` below.
-FOREIGN_SUBTREES = ("assembling/pack", "assembling/sapling", "assembling/stock")
+# Each is a path RELATIVE TO OUT_DIR, under the recipe type its files carry.
+FOREIGN_SUBTREES = ("assembling/pack", "assembling/sapling", "assembling/stock", "smelting/stock")
 
 
 def is_ours(path):
