@@ -63,14 +63,12 @@ makes the player-facing reading ("a bigger tree gives more wood") worth more tha
 - **A structure never fells.** The fill requires at least one non-persistent leaf, which a placed
   build has none of. Nether stems fall out of this as a consequence rather than by name.
 
-## Saplings are crafted, not dropped
+## No sapling, dropped or crafted
 
-Felling drops no sapling. This is Factorio's answer and not a restriction invented here: a wild tree
-yields only wood, and `tree-seed` is a **recipe** costing `wood ×2`. Replanting exists and is paid
-for in wood.
-
-Carrying that over keeps felling from being a sapling faucet while leaving the forest renewable, and
-it costs one recipe the converter can carry.
+Felling drops no sapling, and no recipe makes one. Base Factorio has no replanting: a wild tree
+yields only wood and, once felled, is gone. `tree-seed` is Space Age's agricultural recipe, and the
+pack follows the base game here, so trees are a finite resource like an ore patch. Saplings are
+neither craftable nor listed in the recipe viewer (#458).
 
 ## A Factorio `plant` is not this, and is not built here
 
