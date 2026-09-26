@@ -927,8 +927,8 @@ Sub-rules:
   not electricity on purpose: an engine that fed a pole directly would route around every mechanic
   ADR-0036 selected Power Grid for.
 - **Solar panels and accumulators** — `planned`. Both are Oritech's: `solar-panel` is the Big Solar
-  Panel and `accumulator` the Large Energy Storage, at Oritech's capacity rather than Factorio's 5 MJ
-  (ADR-0067, amending ADR-0060's core accumulator; #277). *Before ADR-0060 both were Power Grid's
+  Panel and `accumulator` the Large Energy Storage, mixed in to Factorio's 5 MJ and 300 kW
+  (ADR-0062, ADR-0067; #283). *Before ADR-0060 both were Power Grid's
   (#148).* It is also
   the *planet* Electro's identity — see [Day and night cycle](#day-and-night-cycle).
 - **Steam as a stored, pipeable intermediate** — `planned` (#189), and **two fluids rather than

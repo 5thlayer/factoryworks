@@ -19,7 +19,8 @@ machines. This spends that rule, row by row.
   belt tiers. The in-line pump (#293) and the power switch (#294) have no Oritech block that does
   Factorio's job, so they are first-party and blocked.
 - **The accumulator is Oritech's Large Energy Storage.** This amends ADR-0060, which made it a core
-  block at Factorio's 5 MJ. The capacity is Oritech's.
+  block at Factorio's 5 MJ. It is mixed in to Factorio's 5 MJ and 300 kW, as ADR-0062 states
+  (#283).
 - **The oil fluids are Oritech's Refinery fractions**: crude oil, heavy oil, light naphtha as light
   oil and diesel as petroleum gas, plus Oritech's sulfuric acid. Lubricant, which Oritech lacks,
   borrows Biofuel, the Oritech fluid in Factorio's lubricant green.

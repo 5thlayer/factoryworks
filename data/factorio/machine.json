@@ -603,6 +603,17 @@
       "tile_height": 2
     }
   ],
+  "accumulators": [
+    {
+      "name": "accumulator",
+      "type": "accumulator",
+      "buffer_capacity": 5000000.0,
+      "input_flow_limit": 300000.0,
+      "output_flow_limit": 300000.0,
+      "tile_width": 2,
+      "tile_height": 2
+    }
+  ],
   "categories": {
     "advanced-crafting": [
       "assembling-machine/assembling-machine-1",
