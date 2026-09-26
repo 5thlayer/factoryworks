@@ -3,9 +3,14 @@ package com.planetaryfactory.core.energy;
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.machine.footprint.FootprintAnchorBlock;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 /** The accumulator's anchor block (#283), holding {@link AccumulatorBlockEntity}. */
 public class AccumulatorBlock extends FootprintAnchorBlock {
@@ -24,5 +29,12 @@ public class AccumulatorBlock extends FootprintAnchorBlock {
     @Override
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
+    }
+
+    /** No screen: nothing on an accumulator is the player's to set, and its Jade line is the interface. */
+    @Override
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+                                            BlockHitResult hit) {
+        return InteractionResult.PASS;
     }
 }
