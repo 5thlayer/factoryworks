@@ -1,5 +1,9 @@
 package com.planetaryfactory.core.gametest;
 
+import java.util.Optional;
+
+import com.planetaryfactory.core.energy.AccumulatorBlockEntity;
+import com.planetaryfactory.core.energy.AccumulatorStatus;
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
@@ -48,6 +52,7 @@ final class AccumulatorTests {
                         helper.fail("the accumulator holds " + capacity + " FE, not 50,000",
                                 ACCUMULATOR);
                     }
+                    expectStatus(helper, AccumulatorStatus.NOT_IN_POLE_AREA);
                 })
                 .thenSucceed();
     }
@@ -67,6 +72,7 @@ final class AccumulatorTests {
                         helper.fail("the accumulator charged " + charged + " FE in " + WINDOW
                                 + " ticks, not 150 FE/t", ACCUMULATOR);
                     }
+                    expectStatus(helper, AccumulatorStatus.CHARGING);
                 })
                 .thenSucceed();
     }
@@ -107,6 +113,7 @@ final class AccumulatorTests {
                         helper.fail("the accumulator gave " + discharged + " FE in " + SETTLE
                                 + " ticks, past 150 FE/t", ACCUMULATOR);
                     }
+                    expectStatus(helper, AccumulatorStatus.DISCHARGING);
                 })
                 .thenSucceed();
     }
@@ -114,6 +121,14 @@ final class AccumulatorTests {
     private static void place(GameTestHelper helper) {
         PFBlocks.ACCUMULATOR_FOOTPRINT.placeAll(helper.getLevel(), helper.absolutePos(ACCUMULATOR),
                 Direction.NORTH);
+    }
+
+    private static void expectStatus(GameTestHelper helper, AccumulatorStatus expected) {
+        Optional<AccumulatorStatus> status =
+                helper.getBlockEntity(ACCUMULATOR, AccumulatorBlockEntity.class).status();
+        if (!status.equals(Optional.of(expected))) {
+            helper.fail("the accumulator's HUD names " + status + ", not " + expected, ACCUMULATOR);
+        }
     }
 
     private static EnergyHandler face(GameTestHelper helper) {

@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.energy;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.planetaryfactory.core.PFBlockEntities;
 
@@ -65,5 +66,10 @@ public class AccumulatorBlockEntity extends LargeStorageBlockEntity {
     @Override
     public List<Vec3i> getCorePositions() {
         return List.of();
+    }
+
+    public Optional<AccumulatorStatus> status() {
+        ElectricNetworks networks = ElectricNetworks.of(level);
+        return AccumulatorStatus.of(networks.chargesFrom(getBlockPos()), networks.accumulatorFlow(getBlockPos()));
     }
 }

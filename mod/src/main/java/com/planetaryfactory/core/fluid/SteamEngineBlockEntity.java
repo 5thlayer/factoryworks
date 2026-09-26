@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.fluid;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.planetaryfactory.core.PFBlockEntities;
 import com.planetaryfactory.core.energy.ElectricNetworks;
@@ -78,10 +79,9 @@ public class SteamEngineBlockEntity extends SteamEngineEntity {
         return inSlaveMode() ? master : this;
     }
 
-    public SteamEngineStatus status() {
+    public Optional<SteamEngineStatus> status() {
         SteamEngineEntity source = source();
         return SteamEngineStatus.of(steam(source) > 0,
-                source.energyStorage.getAmountAsLong() >= source.energyStorage.getCapacityAsLong(),
                 ElectricNetworks.of(level).drawsFrom(source.getBlockPos()));
     }
 
