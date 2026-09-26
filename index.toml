@@ -238,7 +238,7 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "762eff2ed72953dcf3527bf48e82f71a1a1c40eac581366b7e2f5e2c2170efe4"
+hash = "d6d99b6d3c070348440f82412df37b2b6088218fb5b21a20d8ff23d897df37c5"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -250,7 +250,7 @@ hash = "85d1e59caef6d788ae0acdc23f74350c22a2394730d0b3d0d4f77c9ecd2bd56d"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "a9b4a5fd2aa0abac3d1349757d9faa0a14747765879233503c877fc4a529cb74"
+hash = "84840f6f54274545420ccb865b87f6028e916e9257e5fc4c360cdcca83ce69fe"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -538,7 +538,7 @@ hash = "05bb9997ff87c49c5abcfdfb6473458863c4ca61a7f77918c9341c330819807c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
-hash = "18c76ca8ac3883fa23d4c639f08d40eba22ec3f1336fd92e7a3e8a034456151a"
+hash = "661f8373a2dce5cc9f5482312ef92429ad9c8aca73c9c8d50d0870e165730e46"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/assembling_machine.json"
@@ -1154,11 +1154,11 @@ hash = "accaa2c2838c9220b27fc0b4736ce068f87ff337905ec0a22860c744d1a8d8df"
 
 [[files]]
 file = "kubejs/data/c/tags/item/tools/wrench.json"
-hash = "dfd3fc3e6394de6d7237de29014e8de311c3e15e84463277f2128342ae495398"
+hash = "4c5f74370a0978b0887d1550ea16f95fb041bcdbdf0b0ed8c9ffa43e3b831d26"
 
 [[files]]
 file = "kubejs/data/groundworks/tags/item/dismantles.json"
-hash = "482d7efe825a64d314bf9d11ac23b6ee8fc8c819b7cdda952b55abb4f5094ac5"
+hash = "ca3aaf330d382a9a19091dc0f027d4f299f7d284fcff725a5f31dd19417180ec"
 
 [[files]]
 file = "kubejs/data/minecraft/dimension/overworld.json"
@@ -2123,8 +2123,8 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
-file = "mods/beltworks-0.2.2.jar"
-hash = "08af966432a909a712434706ccf938ece1c4ffbe5cec6c5d72302d778f850aa3"
+file = "mods/beltworks-0.3.0.jar"
+hash = "6a9b7dcd5bc2f2030aedbac76c81fcc9dcee59bb1c8578fa89077a40a0961f51"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
