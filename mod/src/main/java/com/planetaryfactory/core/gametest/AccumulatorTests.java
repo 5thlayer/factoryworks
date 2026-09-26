@@ -1,23 +1,29 @@
 package com.planetaryfactory.core.gametest;
 
 import com.planetaryfactory.core.PFBlocks;
+import com.planetaryfactory.core.energy.PoleTier;
+import com.planetaryfactory.core.smelting.FurnaceBlockEntity;
+import com.planetaryfactory.core.smelting.FurnaceTier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.minecraft.world.level.block.Blocks;
 
 /**
  * The accumulator (#283, ADR-0062): the mixin's figures reach the placed block through the pack's
- * subclass, and a pole charges it at them, reaching only a part. The figures are typed rather than read off
+ * subclass, a pole charges it at them, and with the generator gone a pole feeds a machine from it. The figures are typed rather than read off
  * {@code AccumulatorSpec}, so the test cannot agree with the spec by construction.
  */
 final class AccumulatorTests {
 
     private static final BlockPos CREATIVE = new BlockPos(1, 1, 3);
     private static final BlockPos ACCUMULATOR = new BlockPos(5, 1, 5);
+    /** A small pole's 5x5 area here covers the accumulator's anchor and the furnace, nothing else. */
+    private static final BlockPos SMALL_POLE = new BlockPos(5, 1, 7);
+    private static final BlockPos FURNACE = new BlockPos(6, 1, 8);
 
     /** Past one rescan interval (40) plus the tick the network is rebuilt on. */
     private static final int SETTLE = 45;
@@ -29,6 +35,8 @@ final class AccumulatorTests {
     static void register(PFGameTests.Registrar tests) {
         tests.test("accumulator_holds_5_mj", 20, AccumulatorTests::holdsFiveMegajoules);
         tests.test("accumulator_charges_at_300_kw", 100, AccumulatorTests::chargesAtThreeHundredKw);
+        tests.test("accumulator_feeds_a_machine_with_no_generator", 200,
+                AccumulatorTests::feedsAMachineWithNoGenerator);
     }
 
     private static void holdsFiveMegajoules(GameTestHelper helper) {
@@ -59,13 +67,45 @@ final class AccumulatorTests {
                         helper.fail("the accumulator charged " + charged + " FE in " + WINDOW
                                 + " ticks, not 150 FE/t", ACCUMULATOR);
                     }
-                    long offered;
-                    try (Transaction tx = Transaction.openRoot()) {
-                        offered = face(helper).extract(Integer.MAX_VALUE, tx);
+                })
+                .thenSucceed();
+    }
+
+    /**
+     * The creative pole is broken before the small pole and the furnace are placed: its 18x18 area
+     * covers the furnace too, and would feed it without the accumulator.
+     */
+    private static void feedsAMachineWithNoGenerator(GameTestHelper helper) {
+        helper.setBlock(CREATIVE, PFBlocks.CREATIVE_POLE.get());
+        place(helper);
+        long[] charged = new long[1];
+        helper.startSequence()
+                .thenIdle(SETTLE + WINDOW)
+                .thenExecute(() -> {
+                    helper.setBlock(CREATIVE, Blocks.AIR);
+                    charged[0] = face(helper).getAmountAsLong();
+                    if (charged[0] <= 0L) {
+                        helper.fail("the creative pole never charged the accumulator", ACCUMULATOR);
                     }
-                    if (offered != 150L) {
-                        helper.fail("the accumulator gives " + offered + " FE in a tick, not 150",
-                                ACCUMULATOR);
+                    helper.setBlock(SMALL_POLE, PFBlocks.pole(PoleTier.SMALL).get());
+                    helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
+                })
+                .thenIdle(SETTLE)
+                .thenExecute(() -> {
+                    long fed = helper.getBlockEntity(FURNACE, FurnaceBlockEntity.class).data()
+                            .get(FurnaceBlockEntity.DATA_ENERGY);
+                    if (fed <= 0L) {
+                        helper.fail("a furnace on a pole with only a charged accumulator holds no FE",
+                                FURNACE);
+                    }
+                    long discharged = charged[0] - face(helper).getAmountAsLong();
+                    if (discharged < fed) {
+                        helper.fail("the furnace holds " + fed + " FE but the accumulator gave only "
+                                + discharged, ACCUMULATOR);
+                    }
+                    if (discharged > 150L * SETTLE) {
+                        helper.fail("the accumulator gave " + discharged + " FE in " + SETTLE
+                                + " ticks, past 150 FE/t", ACCUMULATOR);
                     }
                 })
                 .thenSucceed();
