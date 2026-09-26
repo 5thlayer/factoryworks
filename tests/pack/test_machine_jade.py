@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Every string a machine's Jade tooltip shows has a lang entry (#333, #352).
+"""Every string a machine's Jade tooltip shows has a lang entry (#333, #352, #468).
 
 A missing key does not fail anywhere: it renders raw on the crosshair. The keys are read out of each
 plugin, and the status keys out of the status enum, whose `langKey()` the plugin asks rather than
@@ -25,6 +25,8 @@ MACHINES = {
                            CORE / "machine/AssemblingStatus.java", "AssemblingStatus"),
     "Steam Engine": ((CORE / "compat/SteamEngineJadePlugin.java",),
                      CORE / "fluid/SteamEngineStatus.java", "SteamEngineStatus"),
+    "Accumulator": ((CORE / "compat/AccumulatorJadePlugin.java",),
+                    CORE / "energy/AccumulatorStatus.java", "AccumulatorStatus"),
 }
 
 # Any key-shaped literal, not only a `translatable(` argument: a helper that takes the key as a
@@ -46,7 +48,8 @@ def main():
     for machine, (sources, status, enum) in MACHINES.items():
         source = "\n".join(path.read_text(encoding="utf-8") for path in sources)
         keys = set(KEY_RE.findall(source))
-        if not keys:
+        # A plugin whose only text is its status names no key literal of its own.
+        if not keys and "langKey()" not in source:
             failures.append(f"no lang keys parsed out of {sources[0].relative_to(ROOT)}")
         if "langKey()" not in source:
             failures.append(f"the {machine} plugin no longer asks {enum}.langKey(); the status keys are unchecked")

@@ -38,7 +38,7 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
             if (!(accessor.getBlockEntity() instanceof SteamEngineBlockEntity engine)) {
                 return;
             }
-            tag.putInt(STATUS, engine.status().ordinal());
+            tag.putInt(STATUS, engine.status().map(Enum::ordinal).orElse(-1));
             tag.putBoolean(CHAINED, engine.inSlaveMode());
         }
 
@@ -55,9 +55,8 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
             if (!data.contains(STATUS)) {
                 return;
             }
-            SteamEngineStatus status = SteamEngineStatus.fromOrdinal(data.getIntOr(STATUS, -1));
-            tooltip.add(Component.translatable(status.langKey())
-                    .withStyle(status.problem() ? ChatFormatting.RED : ChatFormatting.GREEN));
+            SteamEngineStatus.fromOrdinal(data.getIntOr(STATUS, -1)).ifPresent(status ->
+                    tooltip.add(Component.translatable(status.langKey()).withStyle(ChatFormatting.RED)));
             if (data.getBooleanOr(CHAINED, false)) {
                 tooltip.add(Component.translatable("gui.planetaryfactory.steam_engine.chained")
                         .withStyle(ChatFormatting.GRAY));

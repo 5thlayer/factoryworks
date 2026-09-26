@@ -50,6 +50,7 @@ public final class ElectricNetworks {
     private final Map<BlockPos, SupplyAreaPoleBlockEntity> poles = new LinkedHashMap<>();
     private final Map<BlockPos, Long> lastReport = new LinkedHashMap<>();
     private List<List<SupplyAreaPoleBlockEntity>> networks = List.of();
+    private Map<BlockPos, Long> accumulatorFlows = Map.of();
     private boolean dirty;
 
     private ElectricNetworks() {
@@ -91,6 +92,20 @@ public final class ElectricNetworks {
         return false;
     }
 
+    public boolean chargesFrom(BlockPos accumulator) {
+        for (SupplyAreaPoleBlockEntity pole : poles.values()) {
+            if (pole.accumulators().contains(accumulator)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** FE the accumulator took last tick, negative when it gave. */
+    public long accumulatorFlow(BlockPos accumulator) {
+        return accumulatorFlows.getOrDefault(accumulator, 0L);
+    }
+
     /**
      * Forget an unloaded level. A weak key is not enough: the poles held as values point back at
      * their level, so the key would never be collected.
@@ -130,9 +145,11 @@ public final class ElectricNetworks {
             rebuild(level);
             dirty = false;
         }
+        Map<BlockPos, Long> flows = new LinkedHashMap<>();
         for (List<SupplyAreaPoleBlockEntity> network : networks) {
-            settle(level, network);
+            settle(level, network, flows);
         }
+        accumulatorFlows = flows;
     }
 
     private void rebuild(Level level) {
@@ -152,7 +169,8 @@ public final class ElectricNetworks {
         networks = built;
     }
 
-    private static void settle(Level level, List<SupplyAreaPoleBlockEntity> network) {
+    private static void settle(Level level, List<SupplyAreaPoleBlockEntity> network,
+            Map<BlockPos, Long> accumulatorFlows) {
         Set<BlockPos> generatorPositions = new LinkedHashSet<>();
         Set<BlockPos> accumulatorPositions = new LinkedHashSet<>();
         Set<BlockPos> consumerPositions = new LinkedHashSet<>();
@@ -167,7 +185,8 @@ public final class ElectricNetworks {
         }
 
         List<EnergyHandler> generators = handlers(level, generatorPositions);
-        List<EnergyHandler> accumulators = handlers(level, accumulatorPositions);
+        List<BlockPos> accumulatorsAt = new ArrayList<>(accumulatorPositions.size());
+        List<EnergyHandler> accumulators = handlers(level, accumulatorPositions, accumulatorsAt);
         List<EnergyHandler> consumers = handlers(level, consumerPositions);
 
         // The creative poles lead the generator array as generators with no handler.
@@ -202,12 +221,14 @@ public final class ElectricNetworks {
         long produced = 0L;
         long charged = 0L;
         long discharged = 0L;
+        long[] accumulatorFlow = new long[accumulators.size()];
         try (Transaction transaction = Transaction.open(null)) {
             for (int i = 0; i < consumers.size(); i++) {
                 delivered += insert(consumers.get(i), plan.consumerGrants()[i], transaction);
             }
             for (int i = 0; i < accumulators.size(); i++) {
-                charged += insert(accumulators.get(i), plan.accumulatorCharges()[i], transaction);
+                accumulatorFlow[i] = insert(accumulators.get(i), plan.accumulatorCharges()[i], transaction);
+                charged += accumulatorFlow[i];
             }
             long owed = delivered + charged;
             for (int i = 0; i < creative && owed > 0L; i++) {
@@ -224,6 +245,7 @@ public final class ElectricNetworks {
             for (int i = 0; i < accumulators.size() && owed > 0L; i++) {
                 long drawn = extract(accumulators.get(i),
                         Math.min(owed, plan.accumulatorDischarges()[i]), transaction);
+                accumulatorFlow[i] -= drawn;
                 discharged += drawn;
                 owed -= drawn;
             }
@@ -231,6 +253,7 @@ public final class ElectricNetworks {
                 transaction.commit();
             } else {
                 delivered = produced = charged = discharged = 0L;
+                accumulatorFlow = new long[accumulators.size()];
             }
         }
 
@@ -241,6 +264,9 @@ public final class ElectricNetworks {
             stored += accumulator.getAmountAsLong();
             capacity += accumulator.getCapacityAsLong();
         }
+        for (int i = 0; i < accumulators.size(); i++) {
+            accumulatorFlows.put(accumulatorsAt.get(i), accumulatorFlow[i]);
+        }
         NetworkReading reading = new NetworkReading(produced, delivered, demanded, charged,
                 discharged, stored, capacity, accumulators.size(), network.size());
         for (SupplyAreaPoleBlockEntity pole : network) {
@@ -249,11 +275,17 @@ public final class ElectricNetworks {
     }
 
     private static List<EnergyHandler> handlers(Level level, Set<BlockPos> positions) {
+        return handlers(level, positions, new ArrayList<>());
+    }
+
+    /** @param at filled with each found handler's position, index for index */
+    private static List<EnergyHandler> handlers(Level level, Set<BlockPos> positions, List<BlockPos> at) {
         List<EnergyHandler> found = new ArrayList<>(positions.size());
         for (BlockPos pos : positions) {
             EnergyHandler handler = SupplyAreaPoleBlockEntity.handler(level, pos);
             if (handler != null) {
                 found.add(handler);
+                at.add(pos);
             }
         }
         return found;
