@@ -238,7 +238,7 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "867bf530bb3fdb7ef613c47fe107f20e8a2b79f094e9fb02a07ec3c4dbd6c0a6"
+hash = "89a51cee12e013109473972a50ba69c4e567e96db349ee6491799db64629c80c"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -250,7 +250,7 @@ hash = "03b7359744f34c9218d1cf7b321c237819556fd11d8178b01fab29fe29ff66cd"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "c6fade8c4fba9a94c943ba69ae8a3003bfe17ec6b8d4b417f94d3e5f3525ed5f"
+hash = "dd51659a49f36c766b62d391bab775d81273da3c62de0c589ffdbc32538bd921"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -262,11 +262,11 @@ hash = "d3258b12a308a2dd576c79ee70de61741c451cefec8e7dc788aa9b157c35cf22"
 
 [[files]]
 file = "data/pack/stock-admissions.json"
-hash = "9edf534c2383837a3059344db152ac7e30ce3b8a0f3007b14862c29f779cda1b"
+hash = "1bb55bcc594a0ab9832bd34005e346768ea41637eba2e65475dd1ff546ea05e4"
 
 [[files]]
 file = "data/pack/stock-substitutions.json"
-hash = "59661bd3563a03976cd27af3e746c085aae8e963deaaa905a8d57861e2fc911e"
+hash = "f0fa204af379b66f0cc9381785a673f8fea2e145fb7f327507eeb80e1cf04e52"
 
 [[files]]
 file = "data/pack/subgroup-owner.json"
@@ -282,7 +282,7 @@ hash = "989f3737ae4621b8ff6730bce4cbeeee756921e7e510e0c281c8a350501d98af"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "b15a07d014da007daa34c78e4591e466268e906e856582248f28fd15612882d1"
+hash = "cb05fb4dcc9d35075ea4c45df9a11ad258d85dc939d762514df69cd06812ec88"
 
 [[files]]
 file = "kubejs/assets/kubejs/blockstates/oil_refinery.json"
@@ -550,7 +550,7 @@ hash = "05bb9997ff87c49c5abcfdfb6473458863c4ca61a7f77918c9341c330819807c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
-hash = "759ba27e0ab95148d2869ef4b120580e6a611b599f54b0400fa4e068d9a55080"
+hash = "2df6eaf220bea7a7286fdd9124e7452bf4eb71b370e0f83db88398b19e3c89b9"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/accumulator_part.json"
@@ -1637,12 +1637,20 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/stock/cobblestone_stairs.
 hash = "74965ae2c950a42f29cbf85b8dc231156312fa90dae36b757887822c0a70ed93"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/glass_pane.json"
+hash = "eddbdd3b860582874973a8e3e02b901a4c7aa0848902b6f3081c3f7f8f787322"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/ladder.json"
 hash = "d734a649f6f2da2cb6d05897e22306ccb3c7df5bbfd8fe9b8df1cc886645c66a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/oak_stairs.json"
 hash = "7ed72c88ef3394d38fae5c29b6b920f9258cc0ec4e6c6d09d7064791e68119f9"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/sand.json"
+hash = "8bb129ce6c047a9e47e5c954cc5da6dcf31b0d5a4d980ea58fb0c536e4501453"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/smart_filter.json"
@@ -1687,6 +1695,10 @@ hash = "7210318c84d4a175e293fb01b633f9b1b20b2ea176f6d6d2e3e74ac99535a594"
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/iron_plate.json"
 hash = "d497c5dc3f7a2104987ed5c72e7ccd6561d536131006ae0e57ec42fa8fce6ac2"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/smelting/stock/glass.json"
+hash = "e563aec13990d10f4e69629557731a87c8a7af38447de5341c3138658427f00a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/steel_plate.json"
@@ -2147,8 +2159,8 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
-file = "mods/beltworks-0.3.6.jar"
-hash = "74591c33e1d3c0fe0fc4ccd98dc01cc72f638e6b9b2beb953b71c85941661751"
+file = "mods/beltworks-0.3.7.jar"
+hash = "76ebf3650d87b7c47b6dd07f54f2ea3b5849e23fa464b93f59a0468051213909"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
