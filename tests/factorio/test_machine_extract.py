@@ -40,6 +40,7 @@ game -- is whether the *committed* output still says what the decisions say it s
 Usage: tests/factorio/test_machine_extract.py
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -94,6 +95,19 @@ RADAR_PROTOTYPE = {
     "max_distance_of_nearby_sector_revealed": 3,
 }
 RADAR_SECONDS_PER_SECTOR = 33.3
+
+# The accumulator's energy source as the dump states it, for when the dump is not on disk.
+ACCUMULATOR_SOURCE = {
+    "buffer_capacity": "5MJ",
+    "input_flow_limit": "300kW",
+    "output_flow_limit": "300kW",
+}
+ACCUMULATOR_SPEC = ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/AccumulatorSpec.java"
+ACCUMULATOR_CONSTANTS = {
+    "buffer_capacity": "BUFFER_JOULES",
+    "input_flow_limit": "INPUT_FLOW_WATTS",
+    "output_flow_limit": "OUTPUT_FLOW_WATTS",
+}
 RADAR_TILES = (3, 3)
 SI = {"k": 1e3, "M": 1e6}
 
@@ -147,6 +161,32 @@ def radar_failures(radar):
             f"radar charts a sector every {seconds:.2f} s, not Factorio's "
             f"{RADAR_SECONDS_PER_SECTOR} s"
         )
+    return failures
+
+
+def accumulator_failures(accumulator):
+    """The row against the dump, and the mod's typed figures against the row (#283)."""
+    if accumulator is None:
+        return ["no accumulator -- #283's Large Energy Storage has no buffer or flow to read"]
+    failures = []
+    source = ACCUMULATOR_SOURCE
+    if DUMP.is_file():
+        source = json.loads(DUMP.read_text(encoding="utf-8"))["accumulator"]["accumulator"][
+            "energy_source"
+        ]
+    else:
+        print(f"note no dump at {DUMP}; the accumulator row is compared to the transcription")
+    java = ACCUMULATOR_SPEC.read_text(encoding="utf-8")
+    for field, constant in ACCUMULATOR_CONSTANTS.items():
+        want = si(source[field])
+        if accumulator.get(field) != want:
+            failures.append(
+                f"accumulator's {field} is {accumulator.get(field)!r}, the prototype says {want!r}"
+            )
+        match = re.search(rf"{constant}\s*=\s*([\d_]+)L", java)
+        typed = float(match.group(1).replace("_", "")) if match else None
+        if typed != want:
+            failures.append(f"AccumulatorSpec.{constant} is {typed!r}, the corpus says {want!r}")
     return failures
 
 
@@ -237,6 +277,8 @@ def main():
 
     radars = {r["name"]: r for r in data.get("radars") or []}
     failures.extend(radar_failures(radars.get("radar")))
+    accumulators = {a["name"]: a for a in data.get("accumulators") or []}
+    failures.extend(accumulator_failures(accumulators.get("accumulator")))
 
     for machine in (
         machines

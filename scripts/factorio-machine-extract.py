@@ -98,6 +98,8 @@ RADAR_TYPE = "radar"
 
 POLE_TYPE = "electric-pole"
 
+ACCUMULATOR_TYPE = "accumulator"
+
 # Factorio's default electric drain, from the engine rather than from any prototype: an
 # electric energy source with no `drain` set draws 1/30 of its `energy_usage` while idle.
 DEFAULT_DRAIN_FRACTION = 30
@@ -428,6 +430,28 @@ def extract_poles(dump, scope):
     return poles
 
 
+def extract_accumulators(dump, scope):
+    """Accumulators: the buffer and the two flow limits the pack's accumulator is calibrated to."""
+    accumulators = []
+    for name, prototype in sorted((dump.get(ACCUMULATOR_TYPE) or {}).items()):
+        if name not in scope:
+            continue
+        source = prototype.get("energy_source") or {}
+        width, height = footprint(prototype)
+        accumulators.append(
+            {
+                "name": name,
+                "type": ACCUMULATOR_TYPE,
+                "buffer_capacity": si(source.get("buffer_capacity")),
+                "input_flow_limit": si(source.get("input_flow_limit")),
+                "output_flow_limit": si(source.get("output_flow_limit")),
+                "tile_width": width,
+                "tile_height": height,
+            }
+        )
+    return accumulators
+
+
 def extract_generators(dump, scope):
     """Generators, and the one number of theirs Factorio does not state.
 
@@ -532,6 +556,7 @@ def main():
     pumps = extract_pumps(dump, scope)
     radars = extract_radars(dump, scope)
     poles = extract_poles(dump, scope)
+    accumulators = extract_accumulators(dump, scope)
     categories = extract_categories(dump)
 
     out = {
@@ -543,6 +568,7 @@ def main():
         "pumps": pumps,
         "radars": radars,
         "poles": poles,
+        "accumulators": accumulators,
         "categories": categories,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -607,6 +633,14 @@ def main():
         print(
             f"  {pole['name']:22} supply {pole['supply_area_distance']}  "
             f"group {pole['fast_replaceable_group']}  {pole['tile_width']}x{pole['tile_height']}"
+        )
+    print("\naccumulators:")
+    for accumulator in accumulators:
+        print(
+            f"  {accumulator['name']:22} {(accumulator['buffer_capacity'] or 0) / 1e6:g} MJ  "
+            f"in {(accumulator['input_flow_limit'] or 0) / 1000:g} kW  "
+            f"out {(accumulator['output_flow_limit'] or 0) / 1000:g} kW  "
+            f"{accumulator['tile_width']}x{accumulator['tile_height']}"
         )
     print("\ncategories with no crafting entity: "
           + ", ".join(n for n, who in categories.items() if not who))
