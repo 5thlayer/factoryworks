@@ -4,13 +4,13 @@
   "ingredients": [
     {
       "ingredient": "minecraft:cobblestone",
-      "count": 6
+      "count": 1
     }
   ],
   "results": [
     {
       "id": "minecraft:stone_stairs",
-      "count": 4
+      "count": 8
     }
   ],
   "time": 10
