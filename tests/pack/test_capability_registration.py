@@ -72,6 +72,8 @@ FACES = {
     # Fluid (#295): tiers 2 and 3's input tank, taking only the Held recipe's fluid.
     "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item", "Fluid")),
     "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
+    # Energy (#283): a pole charges and draws it, on every block of the footprint.
+    "accumulator": ("registerAccumulatorCapabilities", ("Energy",)),
     # Energy (#368): the scan draws FE, on every block of the footprint.
     "radar": ("registerRadarCapabilities", ("Energy",)),
     # Energy and Fluid (ADR-0081): a pole feeds it and a pipe drains crude, on every block.

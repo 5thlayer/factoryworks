@@ -46,9 +46,9 @@
   "items": {
     "accumulator": {
       "kind": "item",
-      "target": "oritech:large_storage",
+      "target": "planetaryfactory:accumulator",
       "source": "borrowed",
-      "note": "Oritech's Large Energy Storage (#277, ADR-0067, amending ADR-0060's core accumulator). Borrowed, and mixed in to Factorio's 5 MJ and 300 kW (#283, ADR-0062)."
+      "note": "The pack's block on Oritech's Large Energy Storage entity, placed whole on the footprint seam (ADR-0077) and mixed in to Factorio's 5 MJ and 300 kW (#283, ADR-0062)."
     },
     "advanced-circuit": {
       "kind": "item",

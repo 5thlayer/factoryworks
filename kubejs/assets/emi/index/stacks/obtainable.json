@@ -142,10 +142,10 @@
       "stack": "item:oritech:industrial_light"
     },
     {
-      "stack": "item:oritech:large_storage"
+      "stack": "item:oritech:portable_tank"
     },
     {
-      "stack": "item:oritech:portable_tank"
+      "stack": "item:planetaryfactory:accumulator"
     },
     {
       "stack": "item:planetaryfactory:advanced_circuit"
