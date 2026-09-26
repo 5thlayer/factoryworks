@@ -3,24 +3,21 @@ package com.planetaryfactory.core.gametest;
 import com.planetaryfactory.core.PFBlocks;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * Oritech's Large Energy Storage as the accumulator (#283, ADR-0062): the mixin's figures reach the
- * placed block, and a pole charges it at them. The figures are typed rather than read off
+ * The accumulator (#283, ADR-0062): the mixin's figures reach the placed block through the pack's
+ * subclass, and a pole charges it at them, reaching only a part. The figures are typed rather than read off
  * {@code AccumulatorSpec}, so the test cannot agree with the spec by construction.
  */
 final class AccumulatorTests {
 
-    private static final Identifier LARGE_STORAGE =
-            Identifier.fromNamespaceAndPath("oritech", "large_storage");
     private static final BlockPos CREATIVE = new BlockPos(1, 1, 3);
-    private static final BlockPos ACCUMULATOR = new BlockPos(4, 1, 3);
+    private static final BlockPos ACCUMULATOR = new BlockPos(5, 1, 5);
 
     /** Past one rescan interval (40) plus the tick the network is rebuilt on. */
     private static final int SETTLE = 45;
@@ -35,7 +32,7 @@ final class AccumulatorTests {
     }
 
     private static void holdsFiveMegajoules(GameTestHelper helper) {
-        helper.setBlock(ACCUMULATOR, BuiltInRegistries.BLOCK.getValue(LARGE_STORAGE));
+        place(helper);
         helper.startSequence()
                 .thenExecute(() -> {
                     long capacity = face(helper).getCapacityAsLong();
@@ -50,7 +47,7 @@ final class AccumulatorTests {
     /** A creative pole offers without limit, so only the accumulator's own rate holds the charge. */
     private static void chargesAtThreeHundredKw(GameTestHelper helper) {
         helper.setBlock(CREATIVE, PFBlocks.CREATIVE_POLE.get());
-        helper.setBlock(ACCUMULATOR, BuiltInRegistries.BLOCK.getValue(LARGE_STORAGE));
+        place(helper);
         long[] before = new long[1];
         helper.startSequence()
                 .thenIdle(SETTLE)
@@ -72,6 +69,11 @@ final class AccumulatorTests {
                     }
                 })
                 .thenSucceed();
+    }
+
+    private static void place(GameTestHelper helper) {
+        PFBlocks.ACCUMULATOR_FOOTPRINT.placeAll(helper.getLevel(), helper.absolutePos(ACCUMULATOR),
+                Direction.NORTH);
     }
 
     private static EnergyHandler face(GameTestHelper helper) {

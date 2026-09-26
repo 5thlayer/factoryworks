@@ -23,6 +23,8 @@ import com.planetaryfactory.core.energy.CreativeSupplyAreaPoleBlock;
 import com.planetaryfactory.core.energy.SupplyAreaPoleBlock;
 import com.planetaryfactory.core.fluid.BoilerBlock;
 import com.planetaryfactory.core.fluid.OffshorePumpBlock;
+import com.planetaryfactory.core.energy.AccumulatorBlock;
+import com.planetaryfactory.core.energy.AccumulatorFootprint;
 import com.planetaryfactory.core.fluid.SteamEngineBlock;
 import com.planetaryfactory.core.fluid.SteamEngineFootprint;
 import net.minecraft.world.level.block.Block;
@@ -115,6 +117,19 @@ public final class PFBlocks {
     public static final FootprintMachine STEAM_ENGINE_FOOTPRINT = new FootprintMachine(
             SteamEngineFootprint.FOOTPRINT, STEAM_ENGINE, STEAM_ENGINE_PART,
             () -> PFItems.STEAM_ENGINE.get());
+
+    /** The accumulator (#283): Oritech's Large Energy Storage entity, on the footprint seam. */
+    public static final DeferredHolder<Block, AccumulatorBlock> ACCUMULATOR =
+            BLOCKS.registerBlock("accumulator", props -> new AccumulatorBlock(machineProperties(props)));
+
+    public static final DeferredHolder<Block, FootprintPartBlock> ACCUMULATOR_PART =
+            BLOCKS.registerBlock("accumulator_part",
+                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
+                            () -> PFBlocks.ACCUMULATOR_FOOTPRINT));
+
+    public static final FootprintMachine ACCUMULATOR_FOOTPRINT = new FootprintMachine(
+            AccumulatorFootprint.FOOTPRINT, ACCUMULATOR, ACCUMULATOR_PART,
+            () -> PFItems.ACCUMULATOR.get());
 
     /** The Radar (#368): a pack anchor on the footprint seam, its parts drawn so the whole cube shows. */
     public static final DeferredHolder<Block, RadarBlock> RADAR =

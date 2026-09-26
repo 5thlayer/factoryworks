@@ -5,6 +5,7 @@ import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerBlockEntity;
 import com.planetaryfactory.core.fluid.BoilerItemHandler;
 import com.planetaryfactory.core.fluid.OffshorePumpBlockEntity;
+import com.planetaryfactory.core.energy.AccumulatorBlockEntity;
 import com.planetaryfactory.core.fluid.SteamEngineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineFluidHandler;
@@ -116,6 +117,12 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(SteamEngineBlockEntity::new,
                             java.util.Set.of(PFBlocks.STEAM_ENGINE.get())));
 
+    /** The accumulator's anchor (#283): Oritech's storage entity under the pack's own type. */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AccumulatorBlockEntity>>
+            ACCUMULATOR = BLOCK_ENTITIES.register("accumulator",
+                    () -> new BlockEntityType<>(AccumulatorBlockEntity::new,
+                            java.util.Set.of(PFBlocks.ACCUMULATOR.get())));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RadarBlockEntity>>
             RADAR = BLOCK_ENTITIES.register("radar",
                     () -> new BlockEntityType<>(RadarBlockEntity::new,
@@ -145,6 +152,7 @@ public final class PFBlockEntities {
         registerBoilerCapabilities(event);
         registerAssemblingMachineCapabilities(event);
         registerSteamEngineCapabilities(event);
+        registerAccumulatorCapabilities(event);
         registerRadarCapabilities(event);
         registerPumpjackCapabilities(event);
     }
@@ -305,6 +313,13 @@ public final class PFBlockEntities {
         registerOnFootprint(event, Capabilities.Fluid.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
                         ? engine.getFluidLookup(side) : null);
+    }
+
+    /** The accumulator's energy face (#283), on every block, so a pole reaching any of it finds it. */
+    private static void registerAccumulatorCapabilities(RegisterCapabilitiesEvent event) {
+        registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.ACCUMULATOR_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof AccumulatorBlockEntity accumulator
+                        ? accumulator.getEnergyLookup(null) : null);
     }
 
     /** The Radar's energy face (#368), on every block, so a pole reaching any of it feeds it. */

@@ -1,6 +1,7 @@
 package com.planetaryfactory.core;
 
 import com.planetaryfactory.core.energy.CreativeSupplyAreaPoleBlock;
+import com.planetaryfactory.core.energy.AccumulatorItem;
 import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.smelting.FurnaceItem;
 import com.planetaryfactory.core.smelting.FurnaceTier;
@@ -82,6 +83,9 @@ public final class PFItems {
             "steam_engine",
             props -> new FootprintItem(props, PFBlocks.STEAM_ENGINE_FOOTPRINT, 0.7f, "steam_engine"));
 
+    public static final DeferredHolder<Item, AccumulatorItem> ACCUMULATOR =
+            ITEMS.registerItem("accumulator", AccumulatorItem::new);
+
     public static final DeferredHolder<Item, RadarItem> RADAR = ITEMS.registerItem("radar", RadarItem::new);
 
     public static final DeferredHolder<Item, PumpjackItem> PUMPJACK = ITEMS.registerItem("pumpjack", PumpjackItem::new);
@@ -143,6 +147,7 @@ public final class PFItems {
         FUNCTIONAL.add(BARREL);
         ASSEMBLING_MACHINES.values().forEach(FUNCTIONAL::add);
         FUNCTIONAL.add(STEAM_ENGINE);
+        FUNCTIONAL.add(ACCUMULATOR);
         FUNCTIONAL.add(RADAR);
         FUNCTIONAL.add(PUMPJACK);
         // Tools sit with the machinery, not with the saplings: a pick is the first thing a player

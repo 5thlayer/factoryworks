@@ -43,6 +43,7 @@ final class FootprintBreakTests {
                 "assembling_machine_2", PFBlocks.assemblingFootprint(AssemblingTier.TWO),
                 "assembling_machine_3", PFBlocks.assemblingFootprint(AssemblingTier.THREE),
                 "steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT,
+                "accumulator", PFBlocks.ACCUMULATOR_FOOTPRINT,
                 "radar", PFBlocks.RADAR_FOOTPRINT,
                 "pumpjack", PFBlocks.PUMPJACK_FOOTPRINT);
         machines.forEach((name, machine) -> {
