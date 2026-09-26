@@ -191,8 +191,12 @@ _Avoid_: abstraction, going virtual
 ### Handling things
 
 **Obtainable**:
-An item or fluid a player can come to hold on a live body without creative mode: a pack recipe makes it, the starting kit grants it, a block the live worldgen places drops it, a mob the live biomes spawn drops it, or a mechanic produces it (a filled bucket, a Pumpjack's crude, a Boiler's steam). A parked body's worldgen does not count until it is live. Only an Obtainable item is listed in the recipe viewer's index (#173).
+An item or fluid a player can come to hold on a live body without creative mode: a pack recipe makes it, the starting kit grants it, a block the live worldgen places drops it, a mob the live biomes spawn drops it, or a mechanic produces it (a filled bucket, a Pumpjack's crude, a Boiler's steam). A parked body's worldgen does not count until it is live. Only an Obtainable item is listed in the recipe viewer's index (#173), and not every one: an item that is no part of the factory, such as the quest book, is hidden even though the starting kit grants it (#458).
 _Avoid_: reachable (that is **Reach**), available, craftable (a mob drop is Obtainable and not craftable)
+
+**Shelf**:
+Where an Obtainable stack is listed in Factorio's crafting menu: an item subgroup and an order within it. A stack takes the shelf of the Factorio item it maps to; one with no Factorio item borrows a neighbour's, listed just after it (#458).
+_Avoid_: category (that is a recipe's), group (a shelf's subgroup belongs to one)
 
 **Reach**:
 How far the player places a block, uses a block and breaks a **Building**: 16 blocks, one chunk. Longer than Factorio's build distance of 10, as Satisfactory builds from far off. Anything that is not a Building breaks only within Minecraft's own reach of 4.5, so ore, trees and terrain are dug up close. Entities are reached at vanilla's 3 (#413).
