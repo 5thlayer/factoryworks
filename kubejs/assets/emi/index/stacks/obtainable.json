@@ -79,6 +79,15 @@
       "stack": "item:minecraft:birch_stairs"
     },
     {
+      "stack": "item:minecraft:black_concrete"
+    },
+    {
+      "stack": "item:minecraft:blue_concrete"
+    },
+    {
+      "stack": "item:minecraft:brown_concrete"
+    },
+    {
       "stack": "item:minecraft:chest"
     },
     {
@@ -91,6 +100,9 @@
       "stack": "item:minecraft:cobblestone_stairs"
     },
     {
+      "stack": "item:minecraft:cyan_concrete"
+    },
+    {
       "stack": "item:minecraft:glass"
     },
     {
@@ -100,10 +112,22 @@
       "stack": "item:minecraft:gray_concrete"
     },
     {
+      "stack": "item:minecraft:green_concrete"
+    },
+    {
       "stack": "item:minecraft:ladder"
     },
     {
+      "stack": "item:minecraft:light_blue_concrete"
+    },
+    {
       "stack": "item:minecraft:light_gray_concrete"
+    },
+    {
+      "stack": "item:minecraft:lime_concrete"
+    },
+    {
+      "stack": "item:minecraft:magenta_concrete"
     },
     {
       "stack": "item:minecraft:oak_log"
@@ -118,6 +142,12 @@
       "stack": "item:minecraft:orange_concrete"
     },
     {
+      "stack": "item:minecraft:pink_concrete"
+    },
+    {
+      "stack": "item:minecraft:purple_concrete"
+    },
+    {
       "stack": "item:minecraft:rail"
     },
     {
@@ -125,6 +155,9 @@
     },
     {
       "stack": "item:minecraft:raw_iron"
+    },
+    {
+      "stack": "item:minecraft:red_concrete"
     },
     {
       "stack": "item:minecraft:sand"
@@ -137,6 +170,9 @@
     },
     {
       "stack": "item:minecraft:stone_stairs"
+    },
+    {
+      "stack": "item:minecraft:white_concrete"
     },
     {
       "stack": "item:minecraft:yellow_concrete"

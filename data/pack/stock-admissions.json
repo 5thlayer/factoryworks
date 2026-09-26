@@ -132,6 +132,126 @@
       "count": 1,
       "time": 64,
       "reason": "Vanilla's 1 sand to 1 glass, on the pack's smelting type since the vanilla furnace is inert (#445). 64 ticks is stone brick's 3.2 s, the corpus's smelt of a building block from rubble."
+    },
+    "minecraft:white_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:magenta_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:light_blue_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:lime_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:pink_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:cyan_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:purple_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:blue_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:brown_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:green_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:red_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
+    },
+    "minecraft:black_concrete": {
+      "on": "assembling",
+      "category": "crafting",
+      "ingredients": {
+        "minecraft:gray_concrete": 10
+      },
+      "count": 10,
+      "time": 10,
+      "reason": "Bases are built in colour (#473). The recolour is cosmetic, so it costs nothing and needs no dye: 10 concrete to 10, on `crafting` so the Personal Assembler makes it too. It runs from gray only, since a colour-to-colour loop is a cycle the Personal Assembler cannot plan (ADR-0038); yellow, light gray and orange are left out because the corpus's hazard and refined concrete already make them. 10 ticks is Factorio's default 0.5 s."
     }
   }
 }
