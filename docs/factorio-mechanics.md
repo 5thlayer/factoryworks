@@ -1308,10 +1308,11 @@ Sub-rules:
   bedrock band and is a project, which is roughly Factorio's cost shape. This one *is* argued.
 - **Cliffs and cliff explosives** — `excluded`. `by-consequence`: no body generates cliffs as an
   obstacle, so nothing needs removing.
-- **Concrete and its speed bonus** — `adapted`. #87 maps the four concretes onto vanilla's own
-  coloured concrete (grey, yellow for hazard, light grey and orange for the refined pair) and routes
-  their recipes to the Assembling Machine like every other `crafting-with-fluid` craft. **The
-  walking-speed bonus does have an analogue**: Block Runner gives a block a configurable
+- **Concrete and its speed bonus** — `adapted`. #87 maps concrete onto vanilla's grey concrete and
+  refined concrete onto light grey, and routes their recipes to the Assembling Machine like every
+  other `crafting-with-fluid` craft. The two hazard concretes are not emitted (#473): vanilla has no
+  striped block, and 10 grey concrete recolours into 10 of any other colour but light grey instead.
+  **The walking-speed bonus does have an analogue**: Block Runner gives a block a configurable
   walk/run speed, which is exactly what Factorio's concrete is for. The earlier `excluded` verdict
   was written before that mod was in the pack and is superseded rather than reversed on argument.
 
