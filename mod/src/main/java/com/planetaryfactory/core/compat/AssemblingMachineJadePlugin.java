@@ -28,7 +28,7 @@ import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.JadeUI;
 
 /**
- * The Assembling Machine's Held recipe, status, energy, progress and tank on the HUD (#333, #295). The status
+ * The Assembling Machine's Held recipe, status, progress and tank on the HUD (#333, #295). The status
  * is {@link AssemblingMachineBlockEntity#status}, the screen's rule; a locked recipe is its LOCKED.
  */
 @WailaPlugin
@@ -42,8 +42,6 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
     private static final String UNKNOWN = "AssemblingUnknown";
     private static final String PROGRESS = "AssemblingProgress";
     private static final String DURATION = "AssemblingDuration";
-    private static final String ENERGY = "AssemblingEnergy";
-    private static final String CAPACITY = "AssemblingCapacity";
     private static final String FLUID = "AssemblingFluid";
     private static final String TANK = "AssemblingTank";
     private static final String TANK_CAPACITY = "AssemblingTankCapacity";
@@ -58,8 +56,6 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
                 return;
             }
             tag.putInt(STATUS, machine.status().ordinal());
-            tag.putLong(ENERGY, machine.energyStorage.getAmountAsLong());
-            tag.putLong(CAPACITY, machine.energyStorage.getCapacityAsLong());
             if (machine.tier().hasFluidInput()) {
                 tag.putLong(TANK, machine.tank().getAmountAsLong(0));
                 tag.putInt(TANK_CAPACITY, machine.tier().fluidCapacity());
@@ -111,9 +107,6 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
             AssemblingStatus status = AssemblingStatus.fromOrdinal(data.getIntOr(STATUS, -1));
             tooltip.add(AssemblingStatusText.of(status, fluid).copy()
                     .withStyle(status.problem() ? ChatFormatting.RED : ChatFormatting.RESET));
-            tooltip.add(Component.translatable("gui.planetaryfactory.assembling_machine.energy",
-                    String.format("%,d", data.getLongOr(ENERGY, 0L)),
-                    String.format("%,d", data.getLongOr(CAPACITY, 0L))));
             if (data.contains(TANK_CAPACITY)) {
                 tooltip.add(AssemblingStatusText.tank(fluid, data.getLongOr(TANK, 0L), data.getIntOr(TANK_CAPACITY, 0)));
             }
