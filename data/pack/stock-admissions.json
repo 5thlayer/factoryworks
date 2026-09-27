@@ -26,7 +26,7 @@
     },
     "minecraft:acacia_stairs": {
       "time": 10,
-      "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files as the saplings are. 10 ticks is Factorio's default 0.5 s.",
+      "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files. 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
           "#minecraft:acacia_logs": 1
@@ -37,7 +37,7 @@
     },
     "minecraft:birch_stairs": {
       "time": 10,
-      "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files as the saplings are. 10 ticks is Factorio's default 0.5 s.",
+      "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files. 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
           "#minecraft:birch_logs": 1
@@ -81,7 +81,7 @@
     },
     "minecraft:oak_stairs": {
       "time": 10,
-      "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files as the saplings are. 10 ticks is Factorio's default 0.5 s.",
+      "reason": "Traversal and base building (#441). One per species Terra grows, read from its biome files. 10 ticks is Factorio's default 0.5 s.",
       "rewrite": {
         "ingredients": {
           "#minecraft:oak_logs": 1
