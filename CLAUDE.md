@@ -1022,9 +1022,11 @@ Beltworks jar is an unmanaged hashed entry and `planetaryfactory_core` is not in
 
 Beltworks is a **local jar**: `data/pack/local-jars.json` pins the version the Pack runs, and
 `scripts/sync-local-jars.py beltworks=<version>` writes the pin, copies that jar out of `~/.m2` into
-`mods/`, refreshes the manifest and rebuilds the core mod (#465, ADR-0024). The Pack names no
-Groundworks version: it compiles against the Groundworks nested in the installed Beltworks jar, and
-reads the range it requires from Beltworks' jarjar metadata. `tests/pack/test_local_jars.py` runs
+`mods/`, refreshes the manifest and rebuilds the core mod (#465, ADR-0024). The build reads the same
+table and names no Library (#475, ADR-0090): every pinned jar, and every jar its row `nests`, is on
+the compile classpath and the dev runs, and each nested artifact's range is read from the jarjar
+metadata into `neoforge.mods.toml` as `<artifact>_version_range`. So the Pack names no Groundworks
+version, and adding a Library is a row and a sync. `tests/pack/test_local_jars.py` runs
 the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
 holds it, and nests Groundworks; a newer version in `~/.m2` is named without failing. Run it after
 the sync or any change to `mods/`. Take a new Beltworks with the sync, never by copying a jar.
@@ -1032,11 +1034,12 @@ A change that crosses Groundworks, Beltworks and the Pack goes through the `rele
 (`skillworks:release-train`, from 5thlayer/skillworks): each checkout is owned by the session working in it, and
 nothing is pushed without the user's word.
 
-`-PsiblingBuilds` is for trying such a change in the Pack before either library is released (#466).
-It includes the Groundworks and Beltworks checkouts (`-PgroundworksDir`, default `~/minecraft_mods/groundworks`;
-`-PbeltworksDir`, default `~/minecraft_mods/beltworks`) as a composite, so the compile and every
-dev run, `runGameTestServer` included, use the checkouts and never the `mods/` Beltworks jar. The
-build prints one `siblingBuilds:` line naming both checkouts, their version and HEAD.
+`-PsiblingBuilds` is for trying such a change in the Pack before a library is released (#466, #475).
+It includes, as a composite, the checkout of every row of `local-jars.json` and of each jar the row
+nests, or of only the rows named (`-PsiblingBuilds=craftworks`), each at `-P<name>Dir`, default
+`~/minecraft_mods/<name>`. The compile and every dev run, `runGameTestServer` included, use those
+checkouts and never their `mods/` jars. The build prints one `siblingBuilds:` line per checkout,
+naming its version and HEAD.
 `installToPack` refuses under it, and `scripts/check-datapack-load.py --sibling-builds` forwards it.
 It never installs, and a green run under it proves nothing about the pinned jars: the change still
 ships through the release train. A Groundworks checkout outside the range Beltworks nests it under
