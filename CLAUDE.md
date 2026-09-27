@@ -555,18 +555,34 @@ any of the three files; it is in no batch.
 ### Obtainable index check
 
 EMI's index lists only **Obtainable** items and fluids, as an allowlist (#173, ADR-0088).
-`scripts/jar-registry-extract.py` writes every item and fluid id the client jar and `mods/` register
-to `data/jars/`, excluding the pack's own jar, and its `--check` re-extracts and diffs when the jars
-are on disk, so a jar update arrives as a diff to review. `scripts/build-obtainable-index.py` reads
-only committed files and writes `kubejs/assets/emi/index/stacks/obtainable.json`: a `filters` entry
-matching every id, then `added` naming every emitted recipe's output, every starting-kit item and
-every row of `data/pack/mechanic-obtainable.json`. EMI reads the file only under the `emi`
-namespace, applies `filters` before `added`, and skips an `added` entry that is a bare string, so
-each is a `{"stack": ...}` object. A mechanic row is `{id, mechanic, why, ticket}`, for what a
-mechanic produces with no recipe and no data source. `tests/pack/test_obtainable_index.py` runs both
-`--check`s, holds every listed stack to an id the corpus or the pack registers, and fails a mechanic
-row naming nothing or one the derivation already covers. Worldgen and mob drops are not derived yet
-(#454, #455). Run it after a jar update, a converter run, or an edit to the kit or the mechanic
+`scripts/jar-registry-extract.py` writes to `data/jars/` every item and fluid id the client jar and
+`mods/` register, every block tag, every block loot table reduced to its entries and conditions, and
+every placed and configured feature reduced to the block states it places and the features it names.
+The pack's own jar is excluded. Its `--check` re-extracts and diffs when the jars are on disk, so a
+jar update arrives as a diff to review. `scripts/build-obtainable-index.py` reads only committed
+files and writes `kubejs/assets/emi/index/stacks/obtainable.json`: a `filters` entry matching every
+id, then `added` naming every emitted recipe's output, every starting-kit item, every row of
+`data/pack/mechanic-obtainable.json` and every drop of a block the live worldgen places. EMI reads
+the file only under the `emi` namespace, applies `filters` before `added`, and skips an `added`
+entry that is a bare string, so each is a `{"stack": ...}` object. A mechanic row is
+`{id, mechanic, why, ticket}`, for what a mechanic produces with no recipe and no data source.
+
+The worldgen walk (#454) starts at each dimension under `kubejs/data/`, never `kubejs/parked/`: the
+noise settings' default block and fluid and its surface rule, each biome's features followed from
+placed to configured and on through the features they name, and the palettes of the live template
+pools' templates, which are the starting area's. A feature type whose blocks are not all in its
+config is in the generator's `IMPLICIT`, and a walked type in neither it nor `DATA_DRIVEN` fails
+the run. Drops resolve to a fixpoint: a `match_tool` condition passes only when an Obtainable item
+satisfies it, and any other tool predicate, silk touch included, is satisfied by nothing. So a grass
+block drops dirt and not itself. A block in `DENIED_TAGS` drops nothing, since a leaf's drop is a
+stock interaction no decision names (ADR-0051). Each drop's block and loot table are written to
+`kubejs/assets/planetaryfactory/obtainable/sources.json` for EMI's Where it is found (ADR-0091).
+
+`tests/pack/test_obtainable_index.py` runs both `--check`s, holds every listed stack to an id the
+corpus or the pack registers, and fails a mechanic row naming nothing or one the derivation already
+covers. It holds the drops to #454's named ids and the loot rule to three cases, and asserts that no
+block only a parked body places is a source. Mob drops are not derived yet (#455). Run it after a
+jar update, a converter run, an edit to the live worldgen, or an edit to the kit or the mechanic
 list. Whether EMI shows exactly the allowlist is a human check: F3+T on a running client.
 
 ### Transfer-face check

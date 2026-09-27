@@ -57,7 +57,7 @@ fuels are nothing on Terra. `tests/factorio/test_fuel_convert.py` is the check.
 |---|---|
 | `build-terra-worldgen.py` | Terra's flat, cave-free worldgen and its sea (ADR-0019, #59, #356); `--check` |
 | `build-terra-start.py` | spawn-anchored starting area `.nbt` templates (ADR-0019, #84) |
-| `nbt.py` | *library* — minimal NBT writer used by `build-terra-start.py` |
+| `nbt.py` | *library* — minimal NBT writer and reader, used by `build-terra-start.py` and `build-obtainable-index.py` |
 
 Checks: `tests/worldgen/test_start_geometry.py`, and the GameTest `WorldgenFixtureTests` for the sea.
 
@@ -76,8 +76,8 @@ Checks: `tests/pack/test_ore_assets.py`, `tests/factorio/test_resource_extract.p
 |---|---|
 | `gen-flora-textures.py` | placeholder 16×16 flora sprites for Sapros's trees (stdlib, meant to be redrawn) |
 | `build-filter-pack.sh` | rebuilds `kubejs/data/<name>.zip` from `packs/<name>/` (pack.mcmeta filter sections) |
-| `jar-registry-extract.py` | every item and fluid id the installed jars register → `data/jars/` (ADR-0088) |
-| `build-obtainable-index.py` | EMI's Obtainable allowlist → `kubejs/assets/emi/index/stacks/` (ADR-0088) |
+| `jar-registry-extract.py` | the installed jars' item and fluid ids, block tags, block loot and features → `data/jars/` (ADR-0088) |
+| `build-obtainable-index.py` | EMI's Obtainable allowlist → `kubejs/assets/emi/index/stacks/`, and each block drop's source → `kubejs/assets/planetaryfactory/obtainable/` (ADR-0088, ADR-0091) |
 
 ## Manifest + config integrity checks
 
