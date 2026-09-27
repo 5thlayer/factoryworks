@@ -53,20 +53,20 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 | [Trees and wood](#trees-and-wood) | `adapted` | all bodies |
 | [Mining drills](#mining-drills) | `adapted` | all bodies |
 | [Water as a resource](#water-as-a-resource) | `adapted` | all bodies |
-| [Fluid handling](#fluid-handling) | `planned` | all bodies |
+| [Fluid handling](#fluid-handling) | `shipped` | all bodies |
 | [Oil processing](#oil-processing) | `planned` | Terra, Ignus, Gelida |
-| [Smelting](#smelting) | `planned` | all bodies |
-| [Assembling machines and recipe categories](#assembling-machines-and-recipe-categories) | `planned` | all bodies |
-| [Handcrafting and the crafting queue](#handcrafting-and-the-crafting-queue) | `planned` | all bodies |
+| [Smelting](#smelting) | `shipped` | all bodies |
+| [Assembling machines and recipe categories](#assembling-machines-and-recipe-categories) | `shipped` | all bodies |
+| [Handcrafting and the crafting queue](#handcrafting-and-the-crafting-queue) | `shipped` | all bodies |
 | [Transport belts](#transport-belts) | `adapted` | all bodies |
 | [Inserters](#inserters) | `adapted` | all bodies |
 | [Logistic robots](#logistic-robots) | `excluded` | — |
 | [Construction robots and blueprints](#construction-robots-and-blueprints) | `excluded` | all bodies |
-| [Building by hand: placement preview and fast replace](#building-by-hand-placement-preview-and-fast-replace) | `planned` | all bodies |
-| [Trains](#trains) | `planned` | Terra |
+| [Building by hand: placement preview and fast replace](#building-by-hand-placement-preview-and-fast-replace) | `shipped` | all bodies |
+| [Trains](#trains) | `adapted` | Terra |
 | [Circuit network](#circuit-network) | `adapted` | all bodies |
 | [Electric network and transmission](#electric-network-and-transmission) | `adapted` | all bodies |
-| [Power generation](#power-generation) | `planned` | all bodies |
+| [Power generation](#power-generation) | `adapted` | all bodies |
 | [Nuclear fission](#nuclear-fission) | `adapted` | Terra |
 | [Pollution](#pollution) | `planned` | all bodies |
 | [Enemies and evolution](#enemies-and-evolution) | `planned` | Terra |
@@ -367,14 +367,19 @@ Sub-rules:
 
 ### Fluid handling
 
-- **verdict**: `planned`
+- **verdict**: `shipped`
 - **where**: all bodies
-- **via**: `create`
-- **owner**: ADR-0017 as amended by #101 (Create owns fluid handling entire — pipes and pumps for
-  moving, tanks for storing; Mekanism had no fluid role, and left the pack entirely with ADR-0035)
+- **via**: `oritech`, `planetaryfactory_core`
+- **owner**: ADR-0060 and ADR-0067 (Oritech's Fluid Pipe is `pipe` and its Portable Tank
+  `storage-tank`), ADR-0037 (the barrel), ADR-0050 (the Offshore Pump)
 - **ticket**: #293 (the in-line pump); #106 (the barrel) closed
 
 Sub-rules:
+
+- **Pipes and storage tanks** — `shipped`. Oritech's Fluid Pipe, laid by Stretch (#452) and taken up
+  by Dismantle (#431), and its Portable Tank, both crafted from Factorio's recipes.
+- **The in-line pump** — `planned`, #293. `pump` is `planetaryfactory:pump`, `blocked_by` #293,
+  since Oritech's pump is a well pump.
 
 - **Barrelling and unbarrelling** — `shipped` as `native_mechanic`; `subgroup-owner.json`'s barrel
   shelves emit nothing because the mechanic already works (#93). The container is
@@ -383,9 +388,8 @@ Sub-rules:
   accepts any fluid, because that list is a content budget for nine items and eighteen recipes, and
   the pack has one container and none.
 - **Underground pipes** — `excluded`. The same argument as underground belts, one level up: a
-  Create pipe routes freely in three dimensions, so the crossing problem Factorio's pipe-to-ground
-  exists to solve does not arise, and `create:encased_fluid_pipe` is decoration rather than a
-  buried run. `subgroup-owner.json` marks `pipe-to-ground` `not_emitted` on that reasoning.
+  pipe routes freely in three dimensions, so the crossing problem Factorio's pipe-to-ground exists to
+  solve does not arise. `subgroup-owner.json` marks `pipe-to-ground` `not_emitted` on that reasoning.
 - **Fluid mixing is forbidden in a pipe network** — `excluded`. `by-consequence`: no mod in the stack
   enforces single-fluid pipe networks, and adding it would be a pack mechanism nobody asked for.
 - **Pumps and flow rate over distance** — `unargued`, no verdict.
@@ -407,16 +411,17 @@ Sub-rules:
 
 ### Smelting
 
-- **verdict**: `planned`
+- **verdict**: `shipped`
 - **where**: all bodies
 - **via**: `planetaryfactory_core` — the three tiers are pack blocks (#91, #149, #155)
 - **owner**: #91
-- **ticket**: #432 (the burner tiers' world check); #155 closed
+- **ticket**: #432 (the burner tiers' GameTest; the Electric tier's passes, #271); #155 closed
 
 Sub-rules:
 
-- **Ore smelts one-to-one straight to plate, with no intermediate step** — `planned`. Recorded in
-  `subgroup-owner.json`; the pack does not get to add a hop.
+- **Ore smelts one-to-one straight to plate, with no intermediate step** — `shipped`. Recorded in
+  `subgroup-owner.json`; the pack does not get to add a hop. The converter emits `iron_plate` and
+  `copper_plate` as `planetaryfactory:smelting`.
 - **A furnace recipe may consume more than one item** — `shipped`, #155. Vanilla's `SmeltingRecipe`
   holds an `Ingredient` with no count, so Factorio's `steel-plate` (5 plates to 1) has no vanilla
   shape at all; the pack's three furnaces read a count-bearing `planetaryfactory:smelting` type
@@ -425,7 +430,7 @@ Sub-rules:
   is not read alongside it: under ADR-0034's sweep it carries no live recipe, which also makes
   Minecraft's food cooking gone rather than merely uncraftable (#183).
 - **A machine with a blocked output stops** — `shipped`, #155. A furnace whose output slot cannot
-  take the result does not start the smelt, burns no fuel and draws no EU; nothing is voided,
+  take the result does not start the smelt, burns no fuel and draws no FE; nothing is voided,
   overflowed or dropped. Factorio has no machine that ejects to the ground, and under ADR-0041
   Terra's ore is finite, so backing up is the only answer that does not destroy a resource the
   world cannot re-make.
@@ -452,7 +457,7 @@ Sub-rules:
 
 ### Assembling machines and recipe categories
 
-- **verdict**: `planned`
+- **verdict**: `shipped`
 - **where**: all bodies
 - **via**: `planetaryfactory_core`, `oritech`
 - **owner**: ADR-0026, ADR-0029, ADR-0056, ADR-0060, ADR-0075
@@ -465,10 +470,8 @@ Sub-rules:
   and 3 as blocks of their own (ADR-0075), which craft with a fluid
 
 Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
-(ADR-0021), not the owning mod. ~~On a GT chassis~~ — **ADR-0056 takes GregTech out of the pack and
-makes Modern Industrialization the chassis.** The three machines, their tiers and their recipe type
-stay pack-authored; what changes underneath them is which mod supplies the block and the recipe
-lookup.
+(ADR-0021), not the owning mod. The three machines, their tiers and their recipe type are
+pack-authored on Oritech's machine base (ADR-0060, ADR-0071, ADR-0072).
 
 Sub-rules:
 
@@ -531,11 +534,12 @@ Sub-rules:
 
 ### Handcrafting and the crafting queue
 
-- **verdict**: `planned`
+- **verdict**: `shipped`
 - **where**: all bodies
 - **via**: `planetaryfactory_core`
 - **owner**: ADR-0038, `docs/gdd.md` §5
-- **ticket**: #160, #161, #99, #100, #140
+- **ticket**: #99 (upgrade modules), #260 (a Locked recipe needs Researchd; the Assembler plans with
+  nothing Locked until then); #160, #161, #100, #140 closed
 
 The crafting grid is removed (#90) and the Personal Assembler replaces it permanently (#95) — it is
 the player's only hand-crafting surface, not a bootstrap crutch, and every fluid-free `crafting`
@@ -685,7 +689,7 @@ once every planet's puzzle is done — it is not a logistic-robot analogue and i
 
 ### Building by hand: placement preview and fast replace
 
-- **verdict**: `planned`
+- **verdict**: `shipped`
 - **notice**: a held pack block draws translucent where placing would put it and red where placing
   would be refused (#297), and a furnace, pole column or Assembling Machine of another tier placed
   over one swaps it in place, drawn blue (#388, #389, #390); a held pole also draws the wires it would
@@ -718,6 +722,7 @@ Sub-rules:
   FE, its output and its Oritech addons, and the Held recipe when the new tier can hold it; otherwise
   the recipe clears and its inputs go to the player. The tank empties when the new tier has none, and
   a player with no room for what comes back is refused on the action bar.
+- **Fast replace for belts, splitters and loaders** — `planned`, #384.
 
 ### Construction robots and blueprints
 
@@ -752,7 +757,9 @@ Sub-rules:
 
 ### Trains
 
-- **verdict**: `planned`
+- **verdict**: `adapted`
+- **notice**: trains are Railcraft Reborn's on vanilla rail, and a stop is a buffer stop that ends a
+  line rather than a schedule target by name.
 - **where**: Terra
 - **via**: `railcraft`
 - **owner**: ADR-0060 (Railcraft Reborn carries trains), and #277 and #278 for which item each row names
@@ -884,23 +891,14 @@ Sub-rules:
 
 ### Power generation
 
-- **verdict**: `planned`
+- **verdict**: `adapted`
+- **notice**: the Steam Engine is Oritech's engine under a pack block, calibrated by mixin to
+  Factorio's 30 mB/s and 450 FE/t, and the solar panel is Oritech's Big Solar Panel at Oritech's own
+  output.
 - **where**: all bodies
 - **via**: `pack`, `oritech`
-- **owner**: ADR-0017 as amended by #104, #148, **ADR-0048, which supersedes #101**, and ADR-0060,
-  which takes the chain off Create and Power Grid: the pack's Steam Engine emits electricity. `via`
-  is ordered along the chain: the pack's Boiler, the pack's Steam Engine, Power Grid's generator
-  assembly, the pack's Steam Turbine. *#101 read "the grid mod owns steam and solar"; ADR-0048 makes
-  both steam fluids `planetaryfactory:` and leaves the grid mod owning solar. Power Grid never
-  touches steam — its generator takes rotation in and puts volts out.* *#148: the third step was
-  Electro's Alternator, a single block; Power Grid's counterpart is a **built assembly** rather than
-  a fixed structure — a Stator of Coils on Shafts, an Armature of Rotors, a Commutator and a
-  Generator Clutch, coupled to a Create kinetic network and needing an excitation current — standing
-  in exactly the same place in the chain.* **`mekanism` was struck by #104** — the pack installs base
-  Mekanism, which registers no generator block at all, so the clause naming it never named anything.
-  **`gregtech` was struck by ADR-0048**: the boiler is the pack's, and `create` is now on the row for
-  the rotation the pack's Steam Engine emits rather than for an engine of Create's own.
-- **ticket**: #135 (the Steam Turbine), #283 (the accumulator), #7 (solar); #104, #189, #224 closed
+- **owner**: ADR-0048, ADR-0060, ADR-0062, ADR-0077
+- **ticket**: #135 (the Steam Turbine), #7 (solar); #104, #189, #224, #283 closed
 
 Sub-rules:
 
@@ -929,13 +927,15 @@ Sub-rules:
   from any boiler or from anything else. The pack authors that step. The engine emits rotation and
   not electricity on purpose: an engine that fed a pole directly would route around every mechanic
   ADR-0036 selected Power Grid for.
-- **Solar panels and accumulators** — `planned`. Both are Oritech's: `solar-panel` is the Big Solar
-  Panel and `accumulator` the Large Energy Storage, mixed in to Factorio's 5 MJ and 300 kW
-  (ADR-0062, ADR-0067; #283). *Before ADR-0060 both were Power Grid's
+- **Accumulators** — `shipped`, #283. `accumulator` is Oritech's Large Energy Storage, mixed in to
+  Factorio's 5 MJ and 300 kW.
+- **Solar panels** — `adapted`. `solar-panel` is Oritech's Big Solar Panel (ADR-0062, ADR-0067),
+  crafted from Factorio's recipe and producing at Oritech's own rate; per-body output is #7. *Before ADR-0060 both were Power Grid's
   (#148).* It is also
   the *planet* Electro's identity — see [Day and night cycle](#day-and-night-cycle).
-- **Steam as a stored, pipeable intermediate** — `planned` (#189), and **two fluids rather than
-  one**. ADR-0048 registers low-temperature steam, which the Boiler makes and the Steam Engine eats,
+- **Steam as a stored, pipeable intermediate** — `shipped` for low-temperature steam, which the
+  Boiler makes and pipes carry to the Steam Engine; high-temperature steam waits on #135. **Two
+  fluids rather than one**. ADR-0048 registers low-temperature steam, which the Boiler makes and the Steam Engine eats,
   and high-temperature steam, which ADR-0033's reactor emits and only the Steam Turbine takes — two
   registry entries rather than one fluid carrying a temperature, because Factorio has exactly two
   temperatures with exactly two consumers. Both are `planetaryfactory:`.
