@@ -86,6 +86,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 | [The logistic request and trash system](#the-logistic-request-and-trash-system) | `excluded` | — |
 | [Day and night cycle](#day-and-night-cycle) | `shipped` | Terra, Sapros |
 | [Controls](#controls) | `planned` | all bodies |
+| [Factoriopedia](#factoriopedia) | `planned` | pack-wide |
 
 ### Space Age
 
@@ -1427,6 +1428,30 @@ Sub-rules:
   a sneak-click stores the start, each further sneak-click an anchor, and a click lays the line,
   charged one item a block, with Raise and Lower setting its height and a detour round what is in
   the way (#452). Joining pipes across an interior anchor is #467.
+
+### Factoriopedia
+
+- **verdict**: `planned`
+- **where**: pack-wide
+- **via**: `emi`
+- **owner**: ADR-0088 for the index; `unargued` for where a resource is found
+- **ticket**: #478
+
+Factoriopedia is Factorio's in-game encyclopedia. For every item, fluid and entity it shows what
+makes the thing, what uses it and where it is found. EMI is the pack's recipe viewer, and it answers
+the first two questions from the recipes the pack emits. It has no answer to the third for anything
+that no recipe makes.
+
+Sub-rules:
+
+- **Made by and used in** — `adapted`, via EMI. Factoriopedia opens on a page per item. EMI opens on
+  the item's recipes and uses.
+- **Lists only what exists in the game** — `shipped`, ADR-0088. The index is the Obtainable set,
+  derived rather than typed. Worldgen and mob drops are #454 and #455.
+- **Where a raw resource is found** — `planned`, #478. Ores, logs, water, crude oil and steam come
+  from a mechanic rather than a recipe, so EMI shows nothing for them. #478 decides between hiding
+  them from the index (amending ADR-0088) and a custom EMI category like Factoriopedia's resource
+  page.
 
 ---
 
