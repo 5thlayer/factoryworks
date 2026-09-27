@@ -50,6 +50,8 @@ mods/*.jar
 # index. Their hash in index.toml is the record of which build is installed, held
 # to data/pack/local-jars.json by scripts/sync-local-jars.py --check.
 !mods/beltworks-*.jar
+!mods/researchd-*.jar
+!mods/Porting-Dead-Libs-*.jar
 
 # `planetaryfactory_core` stays excluded even though it is also local (ADR-0024):
 # `installToPack` rebuilds it into mods/ on every `./gradlew build` and Gradle
