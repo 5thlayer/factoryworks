@@ -415,7 +415,7 @@ Sub-rules:
 - **where**: all bodies
 - **via**: `planetaryfactory_core` — the three tiers are pack blocks (#91, #149, #155)
 - **owner**: #91
-- **ticket**: #432 (the burner tiers' GameTest; the Electric tier's passes, #271); #155 closed
+- **ticket**: #432 (the burner tiers' GameTests) and #271 (the Electric tier's); #155 closed
 
 Sub-rules:
 
