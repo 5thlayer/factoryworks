@@ -442,15 +442,7 @@ def main():
         "_comment": "The create-world screen builds the overworld from the preset, not from dimension/overworld.json, so Terra's palette has to be named here too.",
         "dimensions": {
             "minecraft:overworld": build_dimension(),
-            # No Nether (ADR-0094). A preset lists its dimensions whole, so leaving it out removes it.
-            "minecraft:the_end": {
-                "type": "minecraft:the_end",
-                "generator": {
-                    "type": "minecraft:noise",
-                    "settings": "minecraft:end",
-                    "biome_source": {"type": "minecraft:the_end"},
-                },
-            },
+            # No Nether and no End (ADR-0094). A preset lists its dimensions whole, so leaving it out removes it.
         },
     })
 
