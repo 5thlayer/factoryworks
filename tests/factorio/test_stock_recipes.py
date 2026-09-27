@@ -11,7 +11,7 @@ admits as a `planetaryfactory:assembling` recipe, swapping its ingredients throu
   - every output is an item an installed jar defines
   - no re-authored recipe has more item ingredients than the Assembling Machine has input slots
   - the wooden stairs are one recipe per species Terra's biomes grow, each from its own logs
-    (#444), with the species read as the sapling recipes' are
+    (#444), with the species read out of Terra's biome files
   - each `author` row is emitted on the machine it names: sand on the Assembling Machine, glass
     as a smelt on the pack's type (#445)
   - no re-authored recipe makes a wall: walls are not kept (#441)

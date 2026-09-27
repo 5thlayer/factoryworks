@@ -260,9 +260,8 @@ Sub-rules:
   no leaves at all.
 - **Felling time is halved by research** — `adapted`, ADR-0051. It rides ADR-0039's `steel-axe`
   ladder rather than declaring a second speed rule.
-- **A sapling is crafted, not dropped** — `adapted`, ADR-0051. Factorio's wild tree yields only wood
-  and `tree-seed` is a recipe costing `wood ×2`; the pack carries that over, so felling drops no
-  sapling and the forest stays renewable through the recipe.
+- **No sapling, dropped or crafted** — `excluded`, ADR-0051. Base Factorio has no replanting: a
+  wild tree yields only wood, and `tree-seed` is Space Age's. Trees are finite like an ore patch.
 - **Trees are not a fuel or a science input beyond Factorio's own use** — `shipped`. The fuel table
   already carries `wood` as the tag `minecraft:logs` (ADR-0047).
 - **A log is not processed into planks or sticks** — `excluded`, ADR-0034's tail (#441). Factorio's

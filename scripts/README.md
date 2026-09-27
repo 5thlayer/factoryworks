@@ -26,8 +26,8 @@ Provenance and regeneration notes are in `data/factorio/README.md`.
 
 ## Recipe conversion (corpus → `kubejs/data/planetaryfactory/recipe/`)
 
-Writes everything under that directory except the hand-written `assembling/pack/` and
-`assembling/sapling/` subtrees and the re-authored `assembling/stock/`, which it leaves alone.
+Writes everything under that directory except the hand-written `assembling/pack/`
+subtree and the re-authored `assembling/stock/`, which it leaves alone.
 
 | Script | Reads | Writes |
 |---|---|---|

@@ -367,11 +367,9 @@ research, and a four-log tree costing Factorio's own 0.55s exactly — the rate 
 `TreeCorpus` rather than typed, because `0.5/4 = 0.125` is the *dead* trees' and the plants' rate and
 #205 was written against it. `tests/factorio/test_tree_extract.py` re-derives the rate from the
 corpus and names the three prototypes the discriminant must exclude, each of which yields a
-different plausible-looking wrong number. `tests/factorio/test_pack_recipes.py` carries the two
-hand-written recipe subtrees and the `fellable` tag: the sapling recipes' species list is read out
-of Terra's biome files, since `oak_logs → oak_sapling` is only right while Terra grows oak, and a
-`TagKey` whose JSON is missing resolves to an empty tag rather than an error — every tree silently
-stops felling. Re-run `scripts/factorio-tree-extract.py` and then `scripts/build-tree-assets.py`
+different plausible-looking wrong number. `tests/factorio/test_pack_recipes.py` carries the
+`fellable` tag: a `TagKey` whose JSON is missing resolves to an empty tag rather than an error —
+every tree silently stops felling. Re-run `scripts/factorio-tree-extract.py` and then `scripts/build-tree-assets.py`
 after a dump refresh; the second is the copy the mod reads. Whether a tree falls in a running game
 is a world load.
 
@@ -978,7 +976,7 @@ sand is ground on the Assembling Machine and smelted to glass under `recipe/smel
 pack recipe makes or a `keep` row, each output to an item a jar defines, each recipe to the
 machine's input slots, and the union of every emitted hand recipe to no cycle; a second hand route
 is `test_recipe_duplication.py`'s. It also holds the wooden stairs to one per species Terra's biomes
-grow, read as the sapling recipes' are, and the subtree to no wall. Run it after editing either file or
+grow, read out of the biome files, and the subtree to no wall. Run it after editing either file or
 after a jar update. Whether the filter appears in EMI with a route to follow is a human check on
 delivery.
 
