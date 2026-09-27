@@ -300,6 +300,10 @@ _Avoid_: grid, power net, FE network
 A connection between two **Supply Area Pole**s that makes them one **Electric Network**. Only a wire joins poles: two poles within reach of each other but not wired are not connected. A wire can only exist between poles within wire reach. Placing a pole adds wires on its own, and the player adds or cuts one by hand with the **Engineer's Pick**. A wire belongs to its two poles and goes when either pole is broken — a column gaining a segment below its base is not a new pole and keeps its wires, while breaking any segment drops the column above it, so a broken base takes the whole column and its wires with it.
 _Avoid_: link, cable, connection
 
+**Redstone**:
+The pack's circuit network: vanilla redstone dust, laid free by a right-click with the **Engineer's Pick** wherever a dust item could go, once the `circuit-network` research is done. It is never an item: nothing crafts it, and it drops nothing when broken, washed away or left unsupported. A click the Pick already answers — a **Dismantle**'s end, a **Wire**, a pipe connection — lays none. Distinct from a **Wire**, which carries power between poles, never a signal.
+_Avoid_: wire, circuit wire, redstone dust item
+
 **Placement Plan**:
 What a held item would do at an aimed spot: the positions it would fill, the blockstate at each, and a refusal or none. Placing executes a plan, and the **Placement Preview** draws one, so both ask one rule (ADR-0069). A multiblock is one plan and refuses whole. A belt piece's plan is Beltworks' own Placement Plan, asked through the same entry point.
 _Avoid_: placement context (vanilla's own type, one input to a plan), build plan, preview state

@@ -784,66 +784,42 @@ Sub-rules:
 ### Circuit network
 
 - **verdict**: `adapted`
-- **notice**: the wires are redstone, so a signal is a strength from 0 to 15 on a block-to-block
+- **notice**: the wire is redstone, so a signal is a strength from 0 to 15 on a block-to-block
   circuit rather than a named channel on a coloured wire — there is no reading a whole belt's contents
-  off one wire, and no arithmetic on a signal beyond what a comparator does.
+  off one wire, and no arithmetic on a signal. Until #484 nothing reads or decides with it.
 - **where**: all bodies
-- **via**: `native_mechanic`, `create`, `powergrid`
-- **owner**: ADR-0030, and #148 for which block the four device rows name
+- **via**: `native_mechanic`, `planetaryfactory_core`
+- **owner**: ADR-0095
+- **ticket**: #482, with #483 for the wire, #484 for the components and #485 for a red and green wire
 
-**Factorio's circuit network is Minecraft's redstone system**, and this row belongs to redstone
-rather than to a missing mod. Vanilla supplies the wire, the comparator, the repeater and the
-observer; **Create ships its own redstone line on top** — Redstone Link, Powered Latch, Pulse
-Repeater, Threshold and Stockpile Switches, Smart Observer, Display Link and Nixie Tubes — which
-between them cover most of what Factorio's combinators, lamps and display panels are for.
+**The wire is Minecraft's redstone, laid free by the Engineer's Pick** (ADR-0095). Factorio 2.0 has
+no wire item — the corpus holds no `red-wire` or `green-wire` recipe, and a researched player lays wire
+for nothing — so redstone dust is never an item either: a right-click with the Pick lays it, and it
+drops nothing. That keeps Terra's closed alphabet (#124), which no recipe for redstone could.
 
-An earlier version of this row read `blocked` on the grounds that no installed mod owns a circuit
-network. That was a category error: it looked for one mod's capability and missed the mechanic
-sitting in the base game. ADR-0030 records the decision and that lesson.
+ADR-0030 first gave this row to vanilla redstone plus Create's redstone line, overturning a `blocked`
+that looked for one mod's capability and missed the base game. Create left with ADR-0060 and took the
+components with it, and vanilla's own need redstone or quartz, so what the wire connects is authored
+or nothing, and #484 decides which.
 
 Sub-rules:
 
-- **Read a machine's or container's contents as a signal** — `adapted`. Comparators and Create's
-  Stockpile Switch, per container, rather than one wire carrying every item type at once.
-- **Combinator logic — arithmetic, decider, constant** — `adapted`. Create's latches, switches and
-  gearshifts plus vanilla redstone logic. Arithmetic on a signal is the weakest part of the
-  substitution.
-- **Wireless signal over distance** — `shipped`, and better than Factorio's: Create's Redstone Link
-  needs no wire and no relay, where Factorio needs a wire or a radar-linked circuit.
-- **Lamps and display panels as readouts** — `adapted`. `small-lamp` is Oritech's Industrial Light;
-  `display-panel` is `not_emitted`, since the pack has no circuit network for it to show; and
-  `power-switch` is a core block joining two pole networks, #294's (#277). *Since #148 all three
-  were Power Grid's, which left with ADR-0060.*
-- **An alert that fires on a condition** — `excluded`. Factorio's programmable speaker raises an alert
-  on a circuit condition, and the pack has no circuit network; `programmable-speaker` is
-  `not_emitted` (#277). *#148 borrowed Power Grid's Alarm Bell, which left with ADR-0060.*
-- **Two independent networks on one wire (red and green)** — `excluded`. Redstone has one channel;
-  the whole trick of running two circuits down one pole has no analogue.
-- **Circuit-controlled inserters and belts** — `unargued`, no verdict, and it depends on #102's
-  answer about the Mechanical Arm.
-
-**The supply question is separate and still open.** #58 cut redstone from Terra entirely — no vein,
-empty `underground_ores` step — so the mechanic exists while its crafting material does not, and
-#62 already records the same problem hitting the authored green circuit. That is a resource question
-for #25, not a verdict on the mechanic, and the two were previously conflated in this row.
-
-**The other axis — whether the eight recipes are emitted — was settled by #148, not by this row.**
-It was open because ADR-0030 deliberately left it to `subgroup-owner.json`: a mechanic supplied by
-vanilla and Create needs no emitted recipe to exist, so `not_emitted` would have contradicted nothing.
-The Electro-to-Power-Grid swap is what put candidate blocks on the table, so the swap decided it, and
-the shelf now **splits** rather than going one way whole:
-
-- **The four rows naming a physical device the network drives are emitted**, borrowing a Power Grid
-  block — Light Fixture, Modular Display, Contactor, Alarm Bell.
-- **The four combinators are `not_emitted`.** Their job is arithmetic and decision, and Power Grid
-  ships nothing that does either: a potentiometer is a dial, a relay is a switch. Naming one anyway
-  would put a Factorio name on a block that does not do the Factorio thing, and ADR-0030 already
-  supplies the capability from the comparator and Create's switches — so the player loses a recipe
-  and keeps the mechanic. `selector-combinator` is doubly unemittable: its recipe takes five
-  `decider-combinator`.
-
-This is the same split the sub-rules above describe, seen from the recipe side: **redstone decides
-and the grid drives**, so the deciding half needs no recipe and the driven half does.
+- **Lay and cut the wire** — `adapted`. The Pick lays and breaks dust, gated on `circuit-network`
+  once #260 ports Researchd (#483).
+- **Read a machine's or container's contents as a signal** — `planned`, #484. A comparator is the
+  obvious reader and is not Obtainable.
+- **Combinator logic — arithmetic, decider, constant, selector** — `planned`, #484. The four rows are
+  `undecided` on it.
+- **Wireless signal over distance** — `planned`, #485. Create's Redstone Link, which covered it, left
+  with ADR-0060.
+- **Lamps and display panels as readouts** — `planned`, #484. `small-lamp` is Oritech's Industrial
+  Light and `display-panel` is `undecided`; `power-switch` is a core block joining two pole networks,
+  #294's.
+- **An alert that fires on a condition** — `planned`, #484. `programmable-speaker` is `undecided`.
+- **Two independent networks on one wire (red and green)** — `planned`, #485. Redstone has one
+  channel; a real red and green wire is the only way to it.
+- **Circuit-controlled inserters and belts** — `unargued`, no verdict. A loader is the inserter chain
+  (ADR-0076), and what drives one waits on #484 and #485.
 
 ### Electric network and transmission
 
@@ -1754,7 +1730,7 @@ Load-bearing `by-consequence` and `blocked` rows get their own `Grilling:` issue
 settled inside a row. Filed:
 
 - #119 — where does redstone come from, now that #58 has cut it from Terra and the circuit network
-  needs it? A resource question for #25; the row stays `adapted` whatever the answer.
+  needs it? **Answered.** ADR-0095: nowhere, since Factorio 2.0 has no wire item; the Pick lays it free.
 - #118 — does the pack have combat — biters, turrets, walls — or did Military science take them?
   **Answered.** ADR-0054 and ADR-0055: nests absorb emission and send the waves, all seven `combat/*`
   shelves come back, and Military science returns with them.
