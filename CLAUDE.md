@@ -594,7 +594,7 @@ Each drop's block and loot table are written to
 corpus or the pack registers, and fails a mechanic row naming nothing or one the derivation already
 covers. It holds the drops to #454's named ids and to terrain and logs alone, so a plant new to the
 live worldgen fails until its loot table is replaced. It holds the loot rule to three cases, and
-asserts that no block only a parked body places is a source. Mob drops are not derived yet (#455). Run it after a
+asserts that no block only a parked body places is a source. No mob drop is derived, since no mob spawns (ADR-0093). Run it after a
 jar update, a converter run, an edit to the live worldgen, or an edit to the kit or the mechanic
 list. Whether EMI shows exactly the allowlist is a human check: F3+T on a running client.
 

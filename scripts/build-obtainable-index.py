@@ -3,7 +3,7 @@
 
 Obtainable is derived from every output of every recipe the pack emits, every item the starting kit
 grants, `data/pack/mechanic-obtainable.json`, the hand-kept rows for what a mechanic produces with
-no recipe, and the drops of every block the live worldgen places. Mob drops are #455's. Reads only
+no recipe, and the drops of every block the live worldgen places. No mob spawns, so none drops (ADR-0093). Reads only
 committed files: the pack's own data and the jar corpus under `data/jars/`.
 
 The worldgen walk starts at each live dimension (`kubejs/data/`, never `kubejs/parked/`): its noise
