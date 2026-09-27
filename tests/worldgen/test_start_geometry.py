@@ -22,74 +22,21 @@ Reads the generated .nbt templates, not the generator's own tables, so it fails 
 `scripts/build-terra-start.py` is edited and not re-run.
 """
 
-import gzip
 import itertools
 import os
-import struct
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 STRUCTURES = os.path.join(ROOT, "kubejs", "data", "planetaryfactory", "structure")
+
+sys.path.insert(0, os.path.join(ROOT, "scripts"))
+import nbt  # noqa: E402
 
 STEP = {"east": (1, 0), "west": (-1, 0), "north": (0, -1), "south": (0, 1)}
 # Four fields since ADR-0041: stone is the fourth, and a fourth connector is exactly the kind of
 # addition that pushes two boxes into each other on some draws and not others.
 RESOURCES = ["iron", "copper", "coal", "stone"]
 SIZES = ["small", "medium", "large"]
-
-
-def read_nbt(path):
-    """Just enough NBT to read a structure template."""
-    with gzip.open(path, "rb") as handle:
-        data = handle.read()
-    pos = [0]
-
-    def take(n):
-        chunk = data[pos[0]:pos[0] + n]
-        pos[0] += n
-        return chunk
-
-    def name():
-        return take(struct.unpack(">H", take(2))[0]).decode("utf8")
-
-    def value(tag):
-        if tag == 1:
-            return struct.unpack(">b", take(1))[0]
-        if tag == 2:
-            return struct.unpack(">h", take(2))[0]
-        if tag == 3:
-            return struct.unpack(">i", take(4))[0]
-        if tag == 4:
-            return struct.unpack(">q", take(8))[0]
-        if tag == 5:
-            return struct.unpack(">f", take(4))[0]
-        if tag == 6:
-            return struct.unpack(">d", take(8))[0]
-        if tag == 7:
-            return take(struct.unpack(">i", take(4))[0])
-        if tag == 8:
-            return name()
-        if tag == 9:
-            element = take(1)[0]
-            return [value(element) for _ in range(struct.unpack(">i", take(4))[0])]
-        if tag == 10:
-            out = {}
-            while True:
-                inner = take(1)[0]
-                if inner == 0:
-                    return out
-                # Name first, deliberately: `out[name()] = value(inner)` would read the
-                # payload before the key, because Python evaluates the right side first.
-                key = name()
-                out[key] = value(inner)
-        if tag == 11:
-            return [struct.unpack(">i", take(4))[0]
-                    for _ in range(struct.unpack(">i", take(4))[0])]
-        raise AssertionError("unhandled tag %d" % tag)
-
-    assert take(1)[0] == 10
-    name()
-    return value(10)
 
 
 def jigsaws(template):
@@ -154,7 +101,7 @@ def overlaps(a, b):
 def main():
     failures = []
     patches = {
-        (resource, size): read_nbt(
+        (resource, size): nbt.read(
             os.path.join(STRUCTURES, "terra_start_%s_%s.nbt" % (resource, size)))
         for resource in RESOURCES for size in SIZES
     }
@@ -163,7 +110,7 @@ def main():
     assert hubs, "no hub templates -- run scripts/build-terra-start.py"
 
     for hub_file in hubs:
-        hub = read_nbt(os.path.join(STRUCTURES, hub_file))
+        hub = nbt.read(os.path.join(STRUCTURES, hub_file))
         width, _, depth = hub["size"]
         hub_box = (0, 0, width - 1, depth - 1)
         connectors = jigsaws(hub)

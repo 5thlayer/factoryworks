@@ -1,4 +1,4 @@
-"""A minimal NBT writer, enough to emit a Minecraft structure template.
+"""A minimal NBT writer and reader, enough for a Minecraft structure template.
 
 The pack authors its worldgen as data rather than in-game, and a structure template is the
 one worldgen file that is not JSON. Rather than build the starting area by hand in a creative
@@ -6,8 +6,8 @@ world and export it with a structure block -- which makes the layout unreviewabl
 and unregenerable after a tuning change -- the templates are generated, and this is the
 writer they go through.
 
-Only the tags a structure template uses are implemented: byte, int, string, list and
-compound. No reader: nothing in the pack reads NBT back.
+The writer implements only the tags a structure template uses: byte, int, string, list and
+compound. The reader takes every tag a template can hold.
 """
 
 import gzip
@@ -76,3 +76,57 @@ def write(path, root):
     data = struct.pack(">B", TAG_COMPOUND) + _utf8("") + _payload(root)
     with gzip.GzipFile(path, "wb", mtime=0) as handle:
         handle.write(data)
+
+
+def read(path):
+    """Read a gzipped structure template into dicts and lists."""
+    with gzip.open(path, "rb") as handle:
+        data = handle.read()
+    pos = [0]
+
+    def take(n):
+        chunk = data[pos[0]:pos[0] + n]
+        pos[0] += n
+        return chunk
+
+    def name():
+        return take(struct.unpack(">H", take(2))[0]).decode("utf8")
+
+    def value(tag):
+        if tag == 1:
+            return struct.unpack(">b", take(1))[0]
+        if tag == 2:
+            return struct.unpack(">h", take(2))[0]
+        if tag == 3:
+            return struct.unpack(">i", take(4))[0]
+        if tag == 4:
+            return struct.unpack(">q", take(8))[0]
+        if tag == 5:
+            return struct.unpack(">f", take(4))[0]
+        if tag == 6:
+            return struct.unpack(">d", take(8))[0]
+        if tag == 7:
+            return take(struct.unpack(">i", take(4))[0])
+        if tag == 8:
+            return name()
+        if tag == 9:
+            element = take(1)[0]
+            return [value(element) for _ in range(struct.unpack(">i", take(4))[0])]
+        if tag == 10:
+            out = {}
+            while True:
+                inner = take(1)[0]
+                if inner == 0:
+                    return out
+                # Name first, deliberately: `out[name()] = value(inner)` would read the
+                # payload before the key, because Python evaluates the right side first.
+                key = name()
+                out[key] = value(inner)
+        if tag == 11:
+            return [struct.unpack(">i", take(4))[0]
+                    for _ in range(struct.unpack(">i", take(4))[0])]
+        raise AssertionError("unhandled tag %d" % tag)
+
+    assert take(1)[0] == 10
+    name()
+    return value(10)

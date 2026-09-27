@@ -67,6 +67,9 @@
       "stack": "item:minecraft:acacia_stairs"
     },
     {
+      "stack": "item:minecraft:azure_bluet"
+    },
+    {
       "stack": "item:minecraft:birch_log"
     },
     {
@@ -82,6 +85,15 @@
       "stack": "item:minecraft:brown_concrete"
     },
     {
+      "stack": "item:minecraft:brown_mushroom"
+    },
+    {
+      "stack": "item:minecraft:cactus"
+    },
+    {
+      "stack": "item:minecraft:cactus_flower"
+    },
+    {
       "stack": "item:minecraft:chest"
     },
     {
@@ -94,7 +106,19 @@
       "stack": "item:minecraft:cobblestone_stairs"
     },
     {
+      "stack": "item:minecraft:cornflower"
+    },
+    {
       "stack": "item:minecraft:cyan_concrete"
+    },
+    {
+      "stack": "item:minecraft:dandelion"
+    },
+    {
+      "stack": "item:minecraft:dirt"
+    },
+    {
+      "stack": "item:minecraft:flint"
     },
     {
       "stack": "item:minecraft:glass"
@@ -103,13 +127,22 @@
       "stack": "item:minecraft:glass_pane"
     },
     {
+      "stack": "item:minecraft:gravel"
+    },
+    {
       "stack": "item:minecraft:gray_concrete"
     },
     {
       "stack": "item:minecraft:green_concrete"
     },
     {
+      "stack": "item:minecraft:kelp"
+    },
+    {
       "stack": "item:minecraft:ladder"
+    },
+    {
+      "stack": "item:minecraft:leaf_litter"
     },
     {
       "stack": "item:minecraft:light_blue_concrete"
@@ -133,7 +166,19 @@
       "stack": "item:minecraft:orange_concrete"
     },
     {
+      "stack": "item:minecraft:orange_tulip"
+    },
+    {
+      "stack": "item:minecraft:oxeye_daisy"
+    },
+    {
       "stack": "item:minecraft:pink_concrete"
+    },
+    {
+      "stack": "item:minecraft:pink_tulip"
+    },
+    {
+      "stack": "item:minecraft:poppy"
     },
     {
       "stack": "item:minecraft:purple_concrete"
@@ -151,7 +196,25 @@
       "stack": "item:minecraft:red_concrete"
     },
     {
+      "stack": "item:minecraft:red_mushroom"
+    },
+    {
+      "stack": "item:minecraft:red_sand"
+    },
+    {
+      "stack": "item:minecraft:red_sandstone"
+    },
+    {
+      "stack": "item:minecraft:red_tulip"
+    },
+    {
       "stack": "item:minecraft:sand"
+    },
+    {
+      "stack": "item:minecraft:sandstone"
+    },
+    {
+      "stack": "item:minecraft:stick"
     },
     {
       "stack": "item:minecraft:stone_brick_stairs"
@@ -163,7 +226,16 @@
       "stack": "item:minecraft:stone_stairs"
     },
     {
+      "stack": "item:minecraft:sugar_cane"
+    },
+    {
+      "stack": "item:minecraft:wheat_seeds"
+    },
+    {
       "stack": "item:minecraft:white_concrete"
+    },
+    {
+      "stack": "item:minecraft:white_tulip"
     },
     {
       "stack": "item:minecraft:yellow_concrete"

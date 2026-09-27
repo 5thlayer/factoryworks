@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract every item and fluid id the installed jars register into `data/jars/` (#453, ADR-0088).
+"""Extract what the installed jars register and drop into `data/jars/` (#453, #454, ADR-0088).
 
 Reads Minecraft's client jar and every jar in `mods/` except the pack's own, whose ids are the
 repo's and are resolved from its sources. The corpus is committed, so a jar update arrives as a
@@ -10,9 +10,14 @@ one, so every item a jar ships has one. A fluid has no such file. It is a source
 names, or one a `fluid.<ns>.<path>` lang key names, which is how Oritech keys its fluids; flowing
 variants are dropped, since EMI lists only the source.
 
+A block tag keeps its values, merged across jars. A block loot table keeps only its pools'
+entries and conditions. A placed or configured feature keeps the block states it places and the
+features it names. Block states under a predicate or a placement are what a feature tests for,
+not what it places, so they are left out.
+
 Usage:
 
-    scripts/jar-registry-extract.py            # writes data/jars/item.json and fluid.json
+    scripts/jar-registry-extract.py            # writes data/jars/*.json
     scripts/jar-registry-extract.py --check    # re-extracts and diffs; skips when the jars are absent
 """
 import argparse
@@ -21,6 +26,7 @@ import os
 import re
 import sys
 import zipfile
+from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -33,6 +39,12 @@ PACK_JAR = "planetaryfactory_core-"
 ITEM_DEFINITION = re.compile(r"assets/([a-z0-9_.-]+)/items/([a-z0-9_./-]+)\.json")
 FLUID_TAG = re.compile(r"data/[a-z0-9_.-]+/tags/fluid/.+\.json")
 LANG = re.compile(r"assets/([a-z0-9_.-]+)/lang/en_us\.json")
+BLOCK_TAG = re.compile(r"data/([a-z0-9_.-]+)/tags/block/([a-z0-9_./-]+)\.json")
+BLOCK_LOOT = re.compile(r"data/([a-z0-9_.-]+)/loot_table/(blocks/[a-z0-9_./-]+)\.json")
+FEATURE = re.compile(
+    r"data/([a-z0-9_.-]+)/worldgen/(placed|configured)_feature/([a-z0-9_./-]+)\.json")
+NOT_PLACED = {"placement", "predicate", "target", "if_true", "replaceable_blocks",
+              "valid_base_block"}
 
 
 def jars():
@@ -52,7 +64,7 @@ def source_fluid(fluid_id):
 
 
 def extract(archive):
-    items, fluids = set(), set()
+    items, fluids, loot, features, tags = set(), set(), {}, {}, {}
     for name in archive.namelist():
         if found := ITEM_DEFINITION.fullmatch(name):
             items.add(f"{found[1]}:{found[2]}")
@@ -65,26 +77,141 @@ def extract(archive):
             for key in read_json(archive, name) or {}:
                 if lang := re.fullmatch(rf"fluid\.({namespace})\.([a-z0-9_]+)", key):
                     fluids.add(f"{lang[1]}:{lang[2]}")
-    return items, {fluid for fluid in fluids if source_fluid(fluid)}
+        elif found := BLOCK_TAG.fullmatch(name):
+            values = (read_json(archive, name) or {}).get("values", [])
+            tags[f"{found[1]}:{found[2]}"] = {
+                value if isinstance(value, str) else value["id"] for value in values}
+        elif found := BLOCK_LOOT.fullmatch(name):
+            if (table := read_json(archive, name)) is not None:
+                loot[f"{found[1]}:{found[2]}"] = reduce_loot(table)
+        elif found := FEATURE.fullmatch(name):
+            if (feature := read_json(archive, name)) is not None:
+                features[(found[2], f"{found[1]}:{found[3]}")] = feature
+    return items, {fluid for fluid in fluids if source_fluid(fluid)}, loot, features, tags
+
+
+def reduce_condition(condition):
+    reduced = {"condition": condition["condition"]}
+    if condition["condition"] == "minecraft:match_tool":
+        reduced["predicate"] = condition.get("predicate", {})
+    if "term" in condition:
+        reduced["term"] = reduce_condition(condition["term"])
+    if "terms" in condition:
+        reduced["terms"] = [reduce_condition(term) for term in condition["terms"]]
+    return reduced
+
+
+def reduce_entry(entry):
+    reduced = {"type": entry["type"]}
+    if "name" in entry:
+        reduced["name"] = entry["name"]
+    if entry.get("conditions"):
+        reduced["conditions"] = [reduce_condition(c) for c in entry["conditions"]]
+    if "children" in entry:
+        reduced["children"] = [reduce_entry(child) for child in entry["children"]]
+    return reduced
+
+
+def reduce_loot(table):
+    pools = []
+    for pool in table.get("pools", []):
+        reduced = {"entries": [reduce_entry(entry) for entry in pool.get("entries", [])]}
+        if pool.get("conditions"):
+            reduced["conditions"] = [reduce_condition(c) for c in pool["conditions"]]
+        pools.append(reduced)
+    return pools
+
+
+def reduce_feature(kind, feature, placed_ids):
+    found = {"blocks": set(), "configured": set(), "placed": set(), "types": set()}
+
+    def placed(value):
+        inner = value.get("feature")
+        if isinstance(inner, str):
+            found["configured"].add(inner)
+        elif isinstance(inner, dict):
+            configured(inner)
+
+    def configured(value):
+        found["types"].add(value.get("type"))
+        walk(value.get("config"), None)
+
+    def walk(value, key):
+        if isinstance(value, dict):
+            if isinstance(value.get("Name"), str):
+                found["blocks"].add(value["Name"])
+            elif "feature" in value and "placement" in value:
+                placed(value)
+            elif "type" in value and "config" in value:
+                configured(value)
+            else:
+                for inner_key, inner in value.items():
+                    if inner_key != "type" and inner_key not in NOT_PLACED \
+                            and not inner_key.endswith("predicate"):
+                        walk(inner, inner_key)
+                if key and key.endswith("decorators"):
+                    found["types"].add(value.get("type"))
+        elif isinstance(value, list):
+            for inner in value:
+                walk(inner, key)
+        elif isinstance(value, str) and value in placed_ids:
+            found["placed"].add(value)
+
+    placed(feature) if kind == "placed" else configured(feature)
+    return {field: sorted(ids) for field, ids in found.items() if ids}
 
 
 def corpus():
-    items, fluids = {}, {}
+    items, fluids, loot, features, feature_jars = {}, {}, {}, {}, set()
+    tags, tag_jars = defaultdict(set), set()
     for jar in jars():
         with zipfile.ZipFile(jar) as archive:
-            jar_items, jar_fluids = extract(archive)
+            jar_items, jar_fluids, jar_loot, jar_features, jar_tags = extract(archive)
+        if jar_tags:
+            tag_jars.add(jar.name)
+            for name, values in jar_tags.items():
+                tags[name] |= values
         for by_jar, ids in ((items, jar_items), (fluids, jar_fluids)):
             if ids:
                 by_jar[jar.name] = ids
+        if jar_loot:
+            loot[jar.name] = jar_loot
+        if jar_features:
+            feature_jars.add(jar.name)
+            features.update(jar_features)
+    placed_ids = {name for kind, name in features if kind == "placed"}
+    graph = {"placed": {}, "configured": {}}
+    for (kind, name), feature in sorted(features.items()):
+        graph[kind][name] = reduce_feature(kind, feature, placed_ids)
+    tables = {}
+    for jar_loot in loot.values():
+        tables.update(jar_loot)
     return {
         "item.json": render("items", items),
         "fluid.json": render("fluids", fluids),
+        "loot.json": by_line({"jars": sorted(loot), "tables": dict(sorted(tables.items()))}),
+        "feature.json": by_line({"jars": sorted(feature_jars), **graph}),
+        "block_tag.json": by_line({"jars": sorted(tag_jars), "tags": {
+            name: sorted(values) for name, values in sorted(tags.items())}}),
     }
 
 
 def render(field, by_jar):
     data = {"jars": sorted(by_jar), field: sorted(set().union(*by_jar.values()))}
     return json.dumps(data, indent=2) + "\n"
+
+
+def by_line(data):
+    """One id a line, so a jar update diffs as the ids it changed."""
+    fields = []
+    for field, value in data.items():
+        if isinstance(value, dict):
+            lines = ",\n".join(f"    {json.dumps(key)}: {json.dumps(inner, separators=(',', ':'))}"
+                               for key, inner in value.items())
+            fields.append(f'  "{field}": {{\n{lines}\n  }}')
+        else:
+            fields.append(f'  "{field}": {json.dumps(value)}')
+    return "{\n" + ",\n".join(fields) + "\n}\n"
 
 
 def main():
@@ -104,8 +231,10 @@ def main():
         if stale:
             sys.exit(f"stale: data/jars/{', '.join(stale)} -- run scripts/jar-registry-extract.py "
                      "and review the diff")
-        print("OK -- " + ", ".join(f"{len(json.loads(text)[key])} {key}"
-                                   for key, text in zip(("items", "fluids"), files.values())))
+        print("OK -- " + ", ".join(f"{len(json.loads(files[name])[key])} {key}" for name, key in (
+            ("item.json", "items"), ("fluid.json", "fluids"), ("loot.json", "tables"),
+            ("feature.json", "placed"), ("feature.json", "configured"),
+            ("block_tag.json", "tags"))))
         return
     OUT.mkdir(parents=True, exist_ok=True)
     for name, text in files.items():

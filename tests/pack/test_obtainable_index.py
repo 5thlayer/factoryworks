@@ -6,6 +6,10 @@ what the jars register to `data/jars/`, and `scripts/build-obtainable-index.py` 
 allowlist from committed files alone. Both `--check`s run here. A mechanic-list row is the one hand-
 kept source, so each must name something registered, and none may already be derived: a row the
 derivation covers would outlive the reason it was written (#453).
+
+The drops of the live worldgen's blocks are held by the ids #454 names: what a grass block, the
+Terra trees and the stairs made from their logs give, what nothing reachable drops, and that no
+block only a parked body places is a source (#454).
 """
 import importlib.util
 import json
@@ -20,6 +24,7 @@ EXTRACTOR = ROOT / "scripts/jar-registry-extract.py"
 GENERATOR = ROOT / "scripts/build-obtainable-index.py"
 KUBEJS = ROOT / "kubejs"
 KIT = ROOT / "mod/src/main/java/com/planetaryfactory/core/start/StartingKit.java"
+PARKED = KUBEJS / "parked/data"
 PACK = "planetaryfactory"
 
 
@@ -84,6 +89,37 @@ class MechanicFailures(unittest.TestCase):
         self.assertEqual([], mechanic_failures([self.ROW], set(), {self.ROW["id"]}))
 
 
+class LootRule(unittest.TestCase):
+    SHEARS = {"condition": "minecraft:match_tool", "predicate": {"items": "minecraft:shears"}}
+    SILK = {"condition": "minecraft:match_tool", "predicate": {"predicates": {
+        "minecraft:enchantments": [{"enchantments": "minecraft:silk_touch"}]}}}
+
+    @classmethod
+    def setUpClass(cls):
+        cls.generator = load_generator()
+
+    def drops(self, entry, held=frozenset()):
+        return self.generator.table_drops([{"entries": [entry]}], set(held))
+
+    def alternatives(self, first):
+        return {"type": "minecraft:alternatives", "children": [
+            {"type": "minecraft:item", "name": "minecraft:grass_block", "conditions": [first]},
+            {"type": "minecraft:item", "name": "minecraft:dirt"}]}
+
+    def test_silk_touch_is_held_by_nothing(self):
+        self.assertEqual({"item:minecraft:dirt"}, self.drops(self.alternatives(self.SILK)))
+
+    def test_a_tool_passes_only_when_it_is_obtainable(self):
+        self.assertNotIn("item:minecraft:grass_block", self.drops(self.alternatives(self.SHEARS)))
+        self.assertEqual({"item:minecraft:grass_block", "item:minecraft:dirt"}, self.drops(
+            self.alternatives(self.SHEARS), {"item:minecraft:shears"}))
+
+    def test_an_inverted_tool_passes_bare_handed(self):
+        entry = {"type": "minecraft:item", "name": "minecraft:stick",
+                 "conditions": [{"condition": "minecraft:inverted", "term": self.SHEARS}]}
+        self.assertEqual({"item:minecraft:stick"}, self.drops(entry))
+
+
 class ObtainableIndex(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -129,6 +165,26 @@ class ObtainableIndex(unittest.TestCase):
 
     def test_every_listed_stack_is_registered(self):
         self.assertEqual([], sorted(set(self.added) - registered()))
+
+    def test_the_live_worldgen_drops_what_454_names(self):
+        for stack in ("oak_stairs", "birch_stairs", "acacia_stairs", "dirt", "oak_log"):
+            self.assertIn("item:minecraft:" + stack, self.added)
+        for stack in ("spruce_stairs", "grass_block", "diamond", "oak_leaves", "oak_sapling"):
+            self.assertNotIn("item:minecraft:" + stack, self.added)
+
+    def test_every_drop_is_listed_with_its_source(self):
+        sources = json.loads(self.generator.SOURCES.read_text(encoding="utf-8"))["stacks"]
+        self.assertEqual({"minecraft:dirt", "minecraft:grass_block"},
+                         {source["broken"] for source in sources["item:minecraft:dirt"]})
+        self.assertEqual(set(), set(sources) - set(self.added))
+
+    def test_no_block_only_a_parked_body_places_is_a_source(self):
+        live = self.generator.Worldgen([self.generator.LIVE]).walk().blocks
+        parked = self.generator.Worldgen([PARKED, self.generator.LIVE]).walk().blocks - live
+        self.assertIn("planetaryfactory:yumako_log", parked)
+        sources = json.loads(self.generator.SOURCES.read_text(encoding="utf-8"))["stacks"]
+        broken = {source["broken"] for found in sources.values() for source in found}
+        self.assertEqual(set(), broken & parked)
 
     def test_the_mechanic_list_is_live(self):
         self.assertEqual([], mechanic_failures(

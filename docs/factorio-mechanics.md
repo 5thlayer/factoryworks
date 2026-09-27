@@ -1447,7 +1447,8 @@ Sub-rules:
 - **Made by and used in** — `adapted`, via EMI. Factoriopedia opens on a page per item. EMI opens on
   the item's recipes and uses.
 - **Lists only what exists in the game** — `shipped`, ADR-0088. The index is the Obtainable set,
-  derived rather than typed. Worldgen and mob drops are #454 and #455.
+  derived rather than typed, and it takes in the drops of every block the live worldgen places
+  (#454). Mob drops are #455.
 - **Where a raw resource is found** — `planned`, ADR-0091, #479. Ores, logs, water, crude oil and
   steam come from a mechanic rather than a recipe, so EMI shows nothing for them. A pack EMI
   category, Where it is found, gives each one what extracts it and where, derived from the
