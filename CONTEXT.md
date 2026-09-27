@@ -197,6 +197,10 @@ _Avoid_: abstraction, going virtual
 An item or fluid a player can come to hold on a live body without creative mode: a pack recipe makes it, the starting kit grants it, a block the live worldgen places drops it, a mob the live biomes spawn drops it, or a mechanic produces it (a filled bucket, a Pumpjack's crude, a Boiler's steam). A parked body's worldgen does not count until it is live. Only an Obtainable item is listed in the recipe viewer's index (#173), and not every one: an item that is no part of the factory, such as the quest book, is hidden even though the starting kit grants it (#458).
 _Avoid_: reachable (that is **Reach**), available, craftable (a mob drop is Obtainable and not craftable)
 
+**Stock interaction**:
+Vanilla behaviour outside any recipe that turns an item or block into a different one: stripping a log, tilling dirt, water meeting lava, concrete powder hardening, waxing copper, a leaf's drop. None ships unless a decision names it, as a stock recipe does not (#440); a sapling growing into a tree is the one named (ADR-0051). A mechanic the pack builds, such as felling or the Offshore Pump, is not a stock interaction, and what a denied one would make is not Obtainable.
+_Avoid_: world interaction (a pole's wire and the Pick's Dismantle act on the world too), recipe
+
 **Shelf**:
 Where an Obtainable stack is listed in Factorio's crafting menu: an item subgroup and an order within it. A stack takes the shelf of the Factorio item it maps to; one with no Factorio item borrows a neighbour's, listed just after it (#458).
 _Avoid_: category (that is a recipe's), group (a shelf's subgroup belongs to one)
