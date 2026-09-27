@@ -12,7 +12,7 @@ Beltworks' own until #438 deleted them. The electric pole network is next (#476)
 
 A **Library** is a 5thlayer mod the Pack consumes. A **Binding** is the Pack's code that configures a
 Library for Factorio's rules, with the tests asserting that configuration. Both terms are defined in
-5thlayer/skills, which holds the `extract-library` procedure; this ADR holds only its rules.
+5thlayer/skillworks, which holds the `extract-library` procedure; this ADR holds only its rules.
 
 **Decision.**
 
