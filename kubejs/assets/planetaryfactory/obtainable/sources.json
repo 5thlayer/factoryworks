@@ -6,52 +6,16 @@
         "loot_table": "minecraft:blocks/acacia_log"
       }
     ],
-    "item:minecraft:azure_bluet": [
-      {
-        "broken": "minecraft:azure_bluet",
-        "loot_table": "minecraft:blocks/azure_bluet"
-      }
-    ],
     "item:minecraft:birch_log": [
       {
         "broken": "minecraft:birch_log",
         "loot_table": "minecraft:blocks/birch_log"
       }
     ],
-    "item:minecraft:brown_mushroom": [
-      {
-        "broken": "minecraft:brown_mushroom",
-        "loot_table": "minecraft:blocks/brown_mushroom"
-      }
-    ],
-    "item:minecraft:cactus": [
-      {
-        "broken": "minecraft:cactus",
-        "loot_table": "minecraft:blocks/cactus"
-      }
-    ],
-    "item:minecraft:cactus_flower": [
-      {
-        "broken": "minecraft:cactus_flower",
-        "loot_table": "minecraft:blocks/cactus_flower"
-      }
-    ],
     "item:minecraft:cobblestone": [
       {
         "broken": "minecraft:stone",
         "loot_table": "minecraft:blocks/stone"
-      }
-    ],
-    "item:minecraft:cornflower": [
-      {
-        "broken": "minecraft:cornflower",
-        "loot_table": "minecraft:blocks/cornflower"
-      }
-    ],
-    "item:minecraft:dandelion": [
-      {
-        "broken": "minecraft:dandelion",
-        "loot_table": "minecraft:blocks/dandelion"
       }
     ],
     "item:minecraft:dirt": [
@@ -64,68 +28,16 @@
         "loot_table": "minecraft:blocks/grass_block"
       }
     ],
-    "item:minecraft:flint": [
-      {
-        "broken": "minecraft:gravel",
-        "loot_table": "minecraft:blocks/gravel"
-      }
-    ],
     "item:minecraft:gravel": [
       {
         "broken": "minecraft:gravel",
         "loot_table": "minecraft:blocks/gravel"
       }
     ],
-    "item:minecraft:kelp": [
-      {
-        "broken": "minecraft:kelp",
-        "loot_table": "minecraft:blocks/kelp"
-      },
-      {
-        "broken": "minecraft:kelp_plant",
-        "loot_table": "minecraft:blocks/kelp_plant"
-      }
-    ],
-    "item:minecraft:leaf_litter": [
-      {
-        "broken": "minecraft:leaf_litter",
-        "loot_table": "minecraft:blocks/leaf_litter"
-      }
-    ],
     "item:minecraft:oak_log": [
       {
         "broken": "minecraft:oak_log",
         "loot_table": "minecraft:blocks/oak_log"
-      }
-    ],
-    "item:minecraft:orange_tulip": [
-      {
-        "broken": "minecraft:orange_tulip",
-        "loot_table": "minecraft:blocks/orange_tulip"
-      }
-    ],
-    "item:minecraft:oxeye_daisy": [
-      {
-        "broken": "minecraft:oxeye_daisy",
-        "loot_table": "minecraft:blocks/oxeye_daisy"
-      }
-    ],
-    "item:minecraft:pink_tulip": [
-      {
-        "broken": "minecraft:pink_tulip",
-        "loot_table": "minecraft:blocks/pink_tulip"
-      }
-    ],
-    "item:minecraft:poppy": [
-      {
-        "broken": "minecraft:poppy",
-        "loot_table": "minecraft:blocks/poppy"
-      }
-    ],
-    "item:minecraft:red_mushroom": [
-      {
-        "broken": "minecraft:red_mushroom",
-        "loot_table": "minecraft:blocks/red_mushroom"
       }
     ],
     "item:minecraft:red_sand": [
@@ -140,12 +52,6 @@
         "loot_table": "minecraft:blocks/red_sandstone"
       }
     ],
-    "item:minecraft:red_tulip": [
-      {
-        "broken": "minecraft:red_tulip",
-        "loot_table": "minecraft:blocks/red_tulip"
-      }
-    ],
     "item:minecraft:sand": [
       {
         "broken": "minecraft:sand",
@@ -156,30 +62,6 @@
       {
         "broken": "minecraft:sandstone",
         "loot_table": "minecraft:blocks/sandstone"
-      }
-    ],
-    "item:minecraft:stick": [
-      {
-        "broken": "minecraft:dead_bush",
-        "loot_table": "minecraft:blocks/dead_bush"
-      }
-    ],
-    "item:minecraft:sugar_cane": [
-      {
-        "broken": "minecraft:sugar_cane",
-        "loot_table": "minecraft:blocks/sugar_cane"
-      }
-    ],
-    "item:minecraft:wheat_seeds": [
-      {
-        "broken": "minecraft:short_grass",
-        "loot_table": "minecraft:blocks/short_grass"
-      }
-    ],
-    "item:minecraft:white_tulip": [
-      {
-        "broken": "minecraft:white_tulip",
-        "loot_table": "minecraft:blocks/white_tulip"
       }
     ]
   }

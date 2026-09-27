@@ -10,8 +10,7 @@ one, so every item a jar ships has one. A fluid has no such file. It is a source
 names, or one a `fluid.<ns>.<path>` lang key names, which is how Oritech keys its fluids; flowing
 variants are dropped, since EMI lists only the source.
 
-A block tag keeps its values, merged across jars. A block loot table keeps only its pools'
-entries and conditions. A placed or configured feature keeps the block states it places and the
+A block loot table keeps only its pools' entries and conditions. A placed or configured feature keeps the block states it places and the
 features it names. Block states under a predicate or a placement are what a feature tests for,
 not what it places, so they are left out.
 
@@ -26,7 +25,6 @@ import os
 import re
 import sys
 import zipfile
-from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -39,7 +37,6 @@ PACK_JAR = "planetaryfactory_core-"
 ITEM_DEFINITION = re.compile(r"assets/([a-z0-9_.-]+)/items/([a-z0-9_./-]+)\.json")
 FLUID_TAG = re.compile(r"data/[a-z0-9_.-]+/tags/fluid/.+\.json")
 LANG = re.compile(r"assets/([a-z0-9_.-]+)/lang/en_us\.json")
-BLOCK_TAG = re.compile(r"data/([a-z0-9_.-]+)/tags/block/([a-z0-9_./-]+)\.json")
 BLOCK_LOOT = re.compile(r"data/([a-z0-9_.-]+)/loot_table/(blocks/[a-z0-9_./-]+)\.json")
 FEATURE = re.compile(
     r"data/([a-z0-9_.-]+)/worldgen/(placed|configured)_feature/([a-z0-9_./-]+)\.json")
@@ -64,7 +61,7 @@ def source_fluid(fluid_id):
 
 
 def extract(archive):
-    items, fluids, loot, features, tags = set(), set(), {}, {}, {}
+    items, fluids, loot, features = set(), set(), {}, {}
     for name in archive.namelist():
         if found := ITEM_DEFINITION.fullmatch(name):
             items.add(f"{found[1]}:{found[2]}")
@@ -77,17 +74,13 @@ def extract(archive):
             for key in read_json(archive, name) or {}:
                 if lang := re.fullmatch(rf"fluid\.({namespace})\.([a-z0-9_]+)", key):
                     fluids.add(f"{lang[1]}:{lang[2]}")
-        elif found := BLOCK_TAG.fullmatch(name):
-            values = (read_json(archive, name) or {}).get("values", [])
-            tags[f"{found[1]}:{found[2]}"] = {
-                value if isinstance(value, str) else value["id"] for value in values}
         elif found := BLOCK_LOOT.fullmatch(name):
             if (table := read_json(archive, name)) is not None:
                 loot[f"{found[1]}:{found[2]}"] = reduce_loot(table)
         elif found := FEATURE.fullmatch(name):
             if (feature := read_json(archive, name)) is not None:
                 features[(found[2], f"{found[1]}:{found[3]}")] = feature
-    return items, {fluid for fluid in fluids if source_fluid(fluid)}, loot, features, tags
+    return items, {fluid for fluid in fluids if source_fluid(fluid)}, loot, features
 
 
 def reduce_condition(condition):
@@ -163,14 +156,9 @@ def reduce_feature(kind, feature, placed_ids):
 
 def corpus():
     items, fluids, loot, features, feature_jars = {}, {}, {}, {}, set()
-    tags, tag_jars = defaultdict(set), set()
     for jar in jars():
         with zipfile.ZipFile(jar) as archive:
-            jar_items, jar_fluids, jar_loot, jar_features, jar_tags = extract(archive)
-        if jar_tags:
-            tag_jars.add(jar.name)
-            for name, values in jar_tags.items():
-                tags[name] |= values
+            jar_items, jar_fluids, jar_loot, jar_features = extract(archive)
         for by_jar, ids in ((items, jar_items), (fluids, jar_fluids)):
             if ids:
                 by_jar[jar.name] = ids
@@ -191,8 +179,6 @@ def corpus():
         "fluid.json": render("fluids", fluids),
         "loot.json": by_line({"jars": sorted(loot), "tables": dict(sorted(tables.items()))}),
         "feature.json": by_line({"jars": sorted(feature_jars), **graph}),
-        "block_tag.json": by_line({"jars": sorted(tag_jars), "tags": {
-            name: sorted(values) for name, values in sorted(tags.items())}}),
     }
 
 
@@ -233,8 +219,7 @@ def main():
                      "and review the diff")
         print("OK -- " + ", ".join(f"{len(json.loads(files[name])[key])} {key}" for name, key in (
             ("item.json", "items"), ("fluid.json", "fluids"), ("loot.json", "tables"),
-            ("feature.json", "placed"), ("feature.json", "configured"),
-            ("block_tag.json", "tags"))))
+            ("feature.json", "placed"), ("feature.json", "configured"))))
         return
     OUT.mkdir(parents=True, exist_ok=True)
     for name, text in files.items():
