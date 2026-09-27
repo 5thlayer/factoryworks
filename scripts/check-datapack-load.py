@@ -27,10 +27,11 @@ owns it. An unlisted rejection fails, and so does a LISTED one that no longer ap
 entry is a defect somebody fixed and a guard nobody re-armed, so the entry is deleted as part of
 the fix rather than left to excuse the next one.
 
-Usage: scripts/check-datapack-load.py [--sibling-builds]
+Usage: scripts/check-datapack-load.py [--sibling-builds [mod,...]]
 
---sibling-builds forwards Gradle's -PsiblingBuilds (#466): the run loads the Groundworks and Beltworks
-checkouts instead of the pinned jar, and its result says nothing about the pins.
+--sibling-builds forwards Gradle's -PsiblingBuilds (#466, #475): the run loads the checkouts of every
+row of data/pack/local-jars.json, or of the rows named, instead of the pinned jars, and its result
+says nothing about those pins.
 """
 import argparse
 import re
@@ -64,9 +65,9 @@ COMPLETED = "GAME TESTS COMPLETE"
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--sibling-builds", action="store_true")
+    parser.add_argument("--sibling-builds", nargs="?", const="", metavar="mod,...")
     siblings = parser.parse_args().sibling_builds
-    gradle = GRADLE + (["-PsiblingBuilds"] if siblings else [])
+    gradle = GRADLE + ([] if siblings is None else ["-PsiblingBuilds=" + siblings])
 
     run = subprocess.run(gradle, cwd=ROOT, capture_output=True, text=True)
     log = run.stdout + run.stderr
@@ -105,10 +106,12 @@ def main():
             "a stale one is a guard nobody re-armed" % (name, EXPECTED[name])
         )
 
-    if siblings:
+    if siblings is not None:
         checkouts = [line for line in log.splitlines() if line.startswith("siblingBuilds:")]
         if checkouts:
-            print("against the checkouts, not the pinned jars: " + checkouts[0])
+            print("against the checkouts, not the pinned jars:")
+            for line in checkouts:
+                print("  " + line)
         else:
             failures.append("--sibling-builds was passed but Gradle named no checkouts, so what this "
                             "run loaded is unknown")
