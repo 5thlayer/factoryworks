@@ -1029,7 +1029,7 @@ the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2
 holds it, and nests Groundworks; a newer version in `~/.m2` is named without failing. Run it after
 the sync or any change to `mods/`. Take a new Beltworks with the sync, never by copying a jar.
 A change that crosses Groundworks, Beltworks and the Pack goes through the `release-train` skill
-(`~/.claude/skills/release-train/`): each checkout is owned by the session working in it, and
+(`skillworks:release-train`, from 5thlayer/skillworks): each checkout is owned by the session working in it, and
 nothing is pushed without the user's word.
 
 `-PsiblingBuilds` is for trying such a change in the Pack before either library is released (#466).
