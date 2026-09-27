@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0095
 ---
 
 # Factorio's circuit network is Minecraft's redstone

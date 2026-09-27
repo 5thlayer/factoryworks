@@ -57,8 +57,9 @@
       "note": "As `electronic-circuit`. ADR-0031's three tiers, one item each."
     },
     "arithmetic-combinator": {
-      "status": "not_emitted",
-      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Create's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
+      "status": "undecided",
+      "note": "A combinator decides or computes on a Redstone signal, and nothing supplies one: #148 left the row unemitted because Create's redstone line covered it, and Create left with ADR-0060 (ADR-0095). Which block it is, if any, is #484's.",
+      "ticket": 484
     },
     "assembling-machine-1": {
       "kind": "item",
@@ -215,8 +216,9 @@
       "note": "Vanilla concrete. Factorio's concrete is a walking-speed floor; Block Runner supplies that mechanic and the colour carries the hazard fiction the texture already has."
     },
     "constant-combinator": {
-      "status": "not_emitted",
-      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Create's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
+      "status": "undecided",
+      "note": "As `arithmetic-combinator`.",
+      "ticket": 484
     },
     "construction-robot": {
       "status": "undecided",
@@ -257,8 +259,9 @@
       "ticket": 114
     },
     "decider-combinator": {
-      "status": "not_emitted",
-      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Create's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'."
+      "status": "undecided",
+      "note": "As `arithmetic-combinator`.",
+      "ticket": 484
     },
     "depleted-uranium-fuel-cell": {
       "status": "undecided",
@@ -266,8 +269,9 @@
       "ticket": 135
     },
     "display-panel": {
-      "status": "not_emitted",
-      "note": "`not_emitted` by #277. A display panel exists to show a circuit-network signal; the pack has no circuit network, which is why `arithmetic-combinator` is `not_emitted`, and ADR-0030 supplies the capability from vanilla. Power Grid, whose block this row named, left with ADR-0060, and Oritech ships nothing that shows a signal (#277)."
+      "status": "undecided",
+      "note": "A display panel shows a Redstone signal, and nothing supplies one since Power Grid left with ADR-0060 and Create with it (ADR-0095). Which block it is, if any, is #484's.",
+      "ticket": 484
     },
     "electric-engine-unit": {
       "kind": "item",
@@ -657,8 +661,9 @@
       "ticket": 120
     },
     "programmable-speaker": {
-      "status": "not_emitted",
-      "note": "`not_emitted` by #277. A programmable speaker raises an alert on a circuit condition; the pack has no circuit network, which is why `arithmetic-combinator` is `not_emitted`, and ADR-0030 supplies the capability from vanilla. Power Grid, whose block this row named, left with ADR-0060, and Oritech ships nothing that shows a signal (#277)."
+      "status": "undecided",
+      "note": "A programmable speaker raises an alert on a Redstone condition, and nothing supplies one since Power Grid left with ADR-0060 (ADR-0095). Which block it is, if any, is #484's.",
+      "ticket": 484
     },
     "pump": {
       "kind": "item",
@@ -737,8 +742,9 @@
       "blocked_by": 378
     },
     "selector-combinator": {
-      "status": "not_emitted",
-      "note": "`not_emitted` by #148. This row's job is arithmetic or a decision, and Power Grid ships nothing that does either -- a potentiometer is a dial, a relay is a switch. Emitting the row against one of those would put a Factorio name on a block that does not do the Factorio thing, which costs more than leaving it unemitted: ADR-0030 already supplies the capability from vanilla's comparator and Create's Threshold Switch, Stockpile Switch and Smart Observer, so the player loses a recipe and keeps the mechanic. ADR-0030 anticipated this exact outcome -- 'a mechanic supplied by vanilla and Create needs no emitted recipe to exist, so `logistics/circuit-network` staying `not_emitted` would contradict nothing here'. It is doubly unemittable: its corpus recipe takes five `decider-combinator`, which is itself `not_emitted`, so a target here would name an ingredient nothing makes."
+      "status": "undecided",
+      "note": "As `arithmetic-combinator`. Its corpus recipe also takes five `decider-combinator`, so it waits on that row too.",
+      "ticket": 484
     },
     "shotgun": {
       "status": "undecided",
