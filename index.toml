@@ -233,12 +233,20 @@ file = "data/factorio/tree.json"
 hash = "d70e2ae769b3a06d7b8c2982f78732e25e875acc5dc6b431263509d55a59dd69"
 
 [[files]]
+file = "data/jars/feature.json"
+hash = "18895191dda8ca4a63b5eebb91b729ee9130e09912321347ca88a531619828cf"
+
+[[files]]
 file = "data/jars/fluid.json"
 hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "87fd8fc81c636aac12930321e3743402fcea49c88381530823466a86837750d7"
+hash = "4296be531325be1f4d3f9811a36da15760e011d5a6caa5bc3e5f55982b858212"
+
+[[files]]
+file = "data/jars/loot.json"
+hash = "8466a6f6822ca792ab7e6251b1179e12735dedbf432ffd2576cadc863d7aeaad"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -246,15 +254,15 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "5dde55adbf34a079a31278c524dc9efa0360337b4983f32cb6dbcc52a1a39f1d"
+hash = "174eaef72e49dbe98fb4e825af42c212d8222cb1471032596a746d9cb5920641"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "ea237abe4d0676cd7760c5db68b687600a81d334b13b7e2fde86c32795d78f35"
+hash = "08b402c7c12869725dba7721e7000b45ccb35a33323c65025cfddc3cd610022d"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
-hash = "18de6f35adb0ad0fc292b1de9056de2a34370414b5939be2c6b3f628474e0a25"
+hash = "a6a502106ba8fb42f60a0af96dcc78030f30bdd9630fb5d66e268b73fdddb09f"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -262,7 +270,7 @@ hash = "d3258b12a308a2dd576c79ee70de61741c451cefec8e7dc788aa9b157c35cf22"
 
 [[files]]
 file = "data/pack/stock-admissions.json"
-hash = "8b76d0a8667b23a97f276e0e143ea619db60b68139cad61b7037646bd9393fe6"
+hash = "16b3f5d1093005c2a8256ff9e692c723931bef013008df3dcbeaf3f1d6858916"
 
 [[files]]
 file = "data/pack/stock-substitutions.json"
@@ -270,7 +278,7 @@ hash = "2d51be022590c8e9a060aca9354ebffc66fa31f49c4a3f3317061e329bca33a3"
 
 [[files]]
 file = "data/pack/subgroup-owner.json"
-hash = "d645f6dfb7dcb9a718cba9f92f3a1c9c3fd0afc1ed8b1f821ca972fefaa8fecb"
+hash = "3dae4cca3b3cb56af153c745696a2bbd6242f7983ff37f6ba66dee02369cc93e"
 
 [[files]]
 file = "defaultconfigs/ftbessentials-server.snbt"
@@ -282,7 +290,7 @@ hash = "989f3737ae4621b8ff6730bce4cbeeee756921e7e510e0c281c8a350501d98af"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "28497664428ed1a1acece69f7b30423116565e750cb10137c13b8b71da54878c"
+hash = "860d816ff83bf25625d68acd4aefb788bd973001b4c2658e24c05829f2f6bb3f"
 
 [[files]]
 file = "kubejs/assets/kubejs/blockstates/oil_refinery.json"
@@ -901,6 +909,10 @@ file = "kubejs/assets/planetaryfactory/models/item/yumako_sapling.json"
 hash = "fea8d708b483d6dcc854abde5c379369fd48a888941f8838fd6576d9e67c4444"
 
 [[files]]
+file = "kubejs/assets/planetaryfactory/obtainable/sources.json"
+hash = "5f181ab79cb943dc4cd482bba40dfd19f995f8810d390efb9f6bdd0c4c97027d"
+
+[[files]]
 file = "kubejs/assets/planetaryfactory/textures/block/copper_stromatolite.png"
 hash = "6c50e423fd15a16b1699d4b97b261102a1a0ad0c6685fe9f9ed6fa61da090cd6"
 
@@ -1189,6 +1201,110 @@ file = "kubejs/data/minecraft/dimension_type/overworld.json"
 hash = "0bf694d80b1b5e80a8f85f580a12766765eec0186707c30c2b53dc32417ef5b9"
 
 [[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/acacia_leaves.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/azure_bluet.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/birch_leaves.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/brown_mushroom.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/cactus.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/cactus_flower.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/cornflower.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/dandelion.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/dead_bush.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/gravel.json"
+hash = "037dfde9c1db34bb38350357b977157edb6028303a95810890d1820edd966b8c"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/kelp.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/kelp_plant.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/leaf_litter.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/oak_leaves.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/orange_tulip.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/oxeye_daisy.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/pink_tulip.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/poppy.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/red_mushroom.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/red_tulip.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/seagrass.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/short_grass.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/sugar_cane.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/tall_seagrass.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/vine.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
+file = "kubejs/data/minecraft/loot_table/blocks/white_tulip.json"
+hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
+
+[[files]]
 file = "kubejs/data/minecraft/tags/block/mineable/pickaxe.json"
 hash = "22838fce07ceb0bd6cfd2fe2c9737940868ae9c3ccecc4956a408df2392cd30c"
 
@@ -1218,11 +1334,11 @@ hash = "f9078270b2a482c4525d4dec9f37ee417928d66164420ad6d53e537a35278aa4"
 
 [[files]]
 file = "kubejs/data/minecraft/world_preset/normal.json"
-hash = "bef0955f5bae9500d2795b99062e9cbce59ae88a2c5c10333da4732a04e4e123"
+hash = "9b239bc6e669bc641d0c3446a0446306a87c1f2e764e30771c68347105fb56cb"
 
 [[files]]
 file = "kubejs/data/minecraft/worldgen/noise_settings/overworld.json"
-hash = "c90de761ae3842afa117f78646dbc481df07da4b256770aecfac20af4fd9b705"
+hash = "5c1803620602f5865c232f33b2d7fe63ed2e8f309c8f4fbd979b2a473c97e63a"
 
 [[files]]
 file = "kubejs/data/oritech/neoforge/biome_modifier/oil_spring.json"
@@ -1577,18 +1693,6 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/refined_concrete.json"
 hash = "4f11944884d74c860a73ba69a02ea92c2949e6517faba8931fec2740b7ef950f"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/recipe/assembling/sapling/acacia_sapling.json"
-hash = "5e1f6af15336ce13c9a8aece4504d3fd55e8514a37ed37d3ff8a5203d002afe8"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/recipe/assembling/sapling/birch_sapling.json"
-hash = "6700b67398c8dbd0c9b9cc9b60889bbf901b570fae37a10324cf9795f888003d"
-
-[[files]]
-file = "kubejs/data/planetaryfactory/recipe/assembling/sapling/oak_sapling.json"
-hash = "70d13dfc10910f69dce9a61f5c063514c31dc9e4dc4de00f7174703bbb8a6df1"
-
-[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/small_electric_pole.json"
 hash = "ae9e13e3821d4c0d4486956070d7655e13068b8b572741559c859db3d3ab5e77"
 
@@ -1854,19 +1958,19 @@ hash = "e4ad01421e92f7849826eb707bd2d122ca11b13cb7865418e125def16678a61e"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_desert.json"
-hash = "c1e5a346bacf385762cb45d650fa831814fc436ad916e0abc6a890e13604c6bd"
+hash = "0c51e13c20fa03d36dde3b4e2c2065dfe484d7366cd03b7d5c28e7ff0104b2d1"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_dry_steppe.json"
-hash = "ed924122ec4eed85c64f0f7bd3bd16e92411bff213e39c8e370f847d8304eceb"
+hash = "43df6d135b171c26e34e89b30c6e5adcf80def5724ae653d3608dc591a365bef"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_grassland.json"
-hash = "23a5815d5a6d084813b5c576a980e04f9d1d9923b2bf799793658fcac6bfd56d"
+hash = "504785591fb57685a285b81d9ec4a7f494ea03d88a6bfb70d91029e19d9b0489"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_red_desert.json"
-hash = "fc8f3f1c547ee4bac8ad07d4c805222a72f15fd514836202b27b42f36612c408"
+hash = "569fdc0836226590f45fb0086d2c69d1ebababa45fb56694d2ab59a23fcce002"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_sea.json"
@@ -1874,11 +1978,11 @@ hash = "dbb2d8e656318793b64a8e99fd0f76b803edccee37e81dae272fffed0aee0c31"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_shore.json"
-hash = "acd167e524e0e742b1af2886974ad19f60863bb1734205224d711a328658e5a8"
+hash = "68f056da34a78e7826a580c51dc6c44b75de7cb7b0fc00a7a2d517d0add2a996"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/biome/terra_woodland.json"
-hash = "6403d08080af83d7e5d7e54a161c02af4e2eff3b78280c45c57180b23aac312a"
+hash = "81321b3fe7e3f07461a11249c59c9d1f83979b9beed920df710796b626c64450"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/worldgen/density_function/terra/factor.json"
@@ -2169,10 +2273,6 @@ file = "kubejs/server_scripts/recipes.js"
 hash = "0fcc30abcbe5893e03772a82637279d60c671b0524712396a5141fc73a8aa7f4"
 
 [[files]]
-file = "kubejs/server_scripts/research_dev_commands.js"
-hash = "f1c8fa34394e1b68631dac2ebce5eadda5915fc000df32ce84b494399ba6f6a6"
-
-[[files]]
 file = "kubejs/server_scripts/researchd.js"
 hash = "af67e912c4adedbb9dcdfb885a2636d498ec6110aab598355033b0c25da4bb0e"
 
@@ -2195,6 +2295,10 @@ hash = "f6b498b9b5e4999f7113aecbf35a6afa62a1f657816d9504bdc4869a39ba0a4f"
 [[files]]
 file = "kubejs/startup_scripts/main.js"
 hash = "5c4659e7bb368960801ccfce24ac3493fa14aae88a7e17b2a9cdfe1931985ffe"
+
+[[files]]
+file = "mods/Porting-Dead-Libs-1.1.15.jar"
+hash = "a3e161226e9d7e16dd32d02c8b58c6d6e2aa8155cd6145b5286e6add054f9183"
 
 [[files]]
 file = "mods/athena.pw.toml"
@@ -2341,6 +2445,10 @@ hash = "0972057bb910ad49222d9658f4b57458143ea1428e3235870959c73ee2fc0a98"
 metafile = true
 
 [[files]]
+file = "mods/researchd-1.3.1-26.1.jar"
+hash = "76adaeb7a1e7cd233b86a9f0415e6f206193a0ba91963c08d56af9c04ca2f190"
+
+[[files]]
 file = "mods/rhino.pw.toml"
 hash = "985a99f7465b68e43b98f3dbe1081b7113d957c7926a8caab163503528910f42"
 metafile = true
@@ -2369,6 +2477,10 @@ metafile = true
 file = "mods/trashslot.pw.toml"
 hash = "71c920bbbf7464754a2e7beb48e8dae545795cc6c36206623a45188a8072e03b"
 metafile = true
+
+[[files]]
+file = "player.env"
+hash = "64c47ffaaa82c5864238d886c4f579e7650823bea0f1870ab8d8b8411256d768"
 
 [[files]]
 file = "realms_persistence.json"

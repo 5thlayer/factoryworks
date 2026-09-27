@@ -1,5 +1,5 @@
 {
-  "jars": ["26.1.2.jar", "beltworks-0.3.8.jar", "ftb-materials-26.1.2.5.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "railcraft-reborn-26.1.2-1.4.3.jar"],
+  "jars": ["26.1.2.jar", "beltworks-0.3.8.jar", "ftb-materials-26.1.2.5.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "railcraft-reborn-26.1.2-1.4.3.jar", "researchd-1.3.1-26.1.jar"],
   "tables": {
     "beltworks:blocks/belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "beltworks:blocks/express_belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:express_belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
@@ -1785,6 +1785,7 @@
     "railcraft:blocks/zinc_carbon_battery_empty": [{"entries":[{"type":"minecraft:item","name":"railcraft:zinc_carbon_battery_empty"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "railcraft:blocks/zinc_ore": [{"entries":[{"type":"minecraft:alternatives","children":[{"type":"minecraft:item","name":"railcraft:zinc_ore","conditions":[{"condition":"minecraft:match_tool","predicate":{"predicates":{"minecraft:enchantments":[{"enchantments":"minecraft:silk_touch","levels":{"min":1}}]}}}]},{"type":"minecraft:item","name":"railcraft:zinc_raw"}]}]}],
     "railcraft:blocks/zinc_silver_battery": [{"entries":[{"type":"minecraft:item","name":"railcraft:zinc_silver_battery"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
-    "railcraft:blocks/zinc_silver_battery_empty": [{"entries":[{"type":"minecraft:item","name":"railcraft:zinc_silver_battery_empty"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]
+    "railcraft:blocks/zinc_silver_battery_empty": [{"entries":[{"type":"minecraft:item","name":"railcraft:zinc_silver_battery_empty"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
+    "researchd:blocks/research_lab_controller": [{"entries":[{"type":"minecraft:item","name":"researchd:research_lab"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]
   }
 }
