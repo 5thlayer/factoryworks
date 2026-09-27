@@ -4,7 +4,7 @@ status: superseded by ADR-0094
 
 # GregTech worldgen belongs to planets, so the Nether and the End keep their dimensions and lose their veins
 
-> **Superseded by ADR-0094.** The Nether does not exist; this record is kept for its reasoning.
+> **Superseded by ADR-0094.** The Nether and the End do not exist; this record is kept for its reasoning.
 
 The pack's progression is planetary: build a rocket, pay fuel priced by distance, arrive somewhere
 hostile, establish a supply line. Two vanilla dimensions sit outside that entirely, reachable

@@ -133,16 +133,6 @@
           ]
         }
       }
-    },
-    "minecraft:the_end": {
-      "type": "minecraft:the_end",
-      "generator": {
-        "type": "minecraft:noise",
-        "settings": "minecraft:end",
-        "biome_source": {
-          "type": "minecraft:the_end"
-        }
-      }
     }
   }
 }
