@@ -16,9 +16,9 @@ table fails the run, since the walk cannot see what it places.
 Drops resolve to a fixpoint, since a `match_tool` condition passes only when an Obtainable item
 satisfies it, and a drop can be that item. A tool predicate other than an item list, such as silk
 touch, is satisfied by nothing, since the pack has no enchanting: a grass block drops dirt and not
-itself. The conditions in `EITHER_WAY` depend on chance or the world, not on what is held. A block
-in `DENIED_TAGS` drops nothing, since its drop is a stock interaction no decision names: a leaf
-drops no sapling, stick or apple (ADR-0051). EMI's Where it is found reads `SOURCES` (ADR-0091).
+itself. The conditions in `EITHER_WAY` depend on chance or the world, not on what is held. A pack
+loot table under `kubejs/data/` replaces the jar's, which is how a placed plant drops nothing
+(ADR-0092). EMI's Where it is found reads `SOURCES` (ADR-0091).
 
 EMI reads index stacks only under the `emi` namespace, and applies a file's `filters` before its
 `added`, so a filter matching every id empties the index and `added` refills it. `disable` would
@@ -63,7 +63,6 @@ IMPLICIT = {
     "minecraft:kelp": ["minecraft:kelp", "minecraft:kelp_plant"],
     "minecraft:seagrass": ["minecraft:seagrass", "minecraft:tall_seagrass"],
 }
-DENIED_TAGS = {"minecraft:leaves"}
 EITHER_WAY = {
     "minecraft:block_state_property", "minecraft:entity_properties", "minecraft:location_check",
     "minecraft:random_chance", "minecraft:random_chance_with_enchanted_bonus",
@@ -216,25 +215,6 @@ def loot_tables():
     return tables
 
 
-@functools.cache
-def jar_block_tags():
-    return read(JARS / "block_tag.json")["tags"]
-
-
-def block_tag(name, seen=frozenset()):
-    values = set(jar_block_tags().get(name, []))
-    namespace, path = name.split(":", 1)
-    if (live := LIVE / namespace / "tags/block" / (path + ".json")).is_file():
-        data = read(live)
-        found = {value if isinstance(value, str) else value["id"] for value in data["values"]}
-        values = found if data.get("replace") else values | found
-    blocks = {value for value in values if not value.startswith("#")}
-    for inner in values - blocks:
-        if inner[1:] not in seen:
-            blocks |= block_tag(inner[1:], seen | {name})
-    return blocks
-
-
 def condition_outcomes(condition, held):
     """Whether `condition` can pass, and whether it can fail, for a player holding only `held`."""
     kind = condition["condition"]
@@ -303,8 +283,7 @@ def table_drops(pools, held):
 
 def block_drops(held):
     """Each item the placed blocks drop, with its sources, at the fixpoint over `held`."""
-    denied = set().union(*(block_tag(tag) for tag in DENIED_TAGS))
-    tables, blocks = loot_tables(), sorted(placed_blocks() - denied)
+    tables, blocks = loot_tables(), sorted(placed_blocks())
     while True:
         sources = defaultdict(list)
         for block in blocks:

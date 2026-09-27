@@ -556,7 +556,7 @@ any of the three files; it is in no batch.
 
 EMI's index lists only **Obtainable** items and fluids, as an allowlist (#173, ADR-0088).
 `scripts/jar-registry-extract.py` writes to `data/jars/` every item and fluid id the client jar and
-`mods/` register, every block tag, every block loot table reduced to its entries and conditions, and
+`mods/` register, every block loot table reduced to its entries and conditions, and
 every placed and configured feature reduced to the block states it places and the features it names.
 The pack's own jar is excluded. Its `--check` re-extracts and diffs when the jars are on disk, so a
 jar update arrives as a diff to review. `scripts/build-obtainable-index.py` reads only committed
@@ -574,14 +574,16 @@ pools' templates, which are the starting area's. A feature type whose blocks are
 config is in the generator's `IMPLICIT`, and a walked type in neither it nor `DATA_DRIVEN` fails
 the run. Drops resolve to a fixpoint: a `match_tool` condition passes only when an Obtainable item
 satisfies it, and any other tool predicate, silk touch included, is satisfied by nothing. So a grass
-block drops dirt and not itself. A block in `DENIED_TAGS` drops nothing, since a leaf's drop is a
-stock interaction no decision names (ADR-0051). Each drop's block and loot table are written to
+block drops dirt and not itself. A loot table under `kubejs/data/` replaces the jar's: every plant
+the live worldgen places, leaves included, has an empty one, and gravel drops no flint (ADR-0092).
+Each drop's block and loot table are written to
 `kubejs/assets/planetaryfactory/obtainable/sources.json` for EMI's Where it is found (ADR-0091).
 
 `tests/pack/test_obtainable_index.py` runs both `--check`s, holds every listed stack to an id the
 corpus or the pack registers, and fails a mechanic row naming nothing or one the derivation already
-covers. It holds the drops to #454's named ids and the loot rule to three cases, and asserts that no
-block only a parked body places is a source. Mob drops are not derived yet (#455). Run it after a
+covers. It holds the drops to #454's named ids and to terrain and logs alone, so a plant new to the
+live worldgen fails until its loot table is replaced. It holds the loot rule to three cases, and
+asserts that no block only a parked body places is a source. Mob drops are not derived yet (#455). Run it after a
 jar update, a converter run, an edit to the live worldgen, or an edit to the kit or the mechanic
 list. Whether EMI shows exactly the allowlist is a human check: F3+T on a running client.
 

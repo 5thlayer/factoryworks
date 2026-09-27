@@ -265,6 +265,8 @@ Sub-rules:
   wild tree yields only wood, and `tree-seed` is Space Age's. Trees are finite like an ore patch.
 - **Trees are not a fuel or a science input beyond Factorio's own use** — `shipped`. The fuel table
   already carries `wood` as the tag `minecraft:logs` (ADR-0047).
+- **A decorative drops nothing** — `adapted`, ADR-0092. Factorio's decoratives cannot be mined. A
+  plant the worldgen places, leaves included, has an empty loot table, and gravel drops no flint.
 - **A log is not processed into planks or sticks** — `excluded`, ADR-0034's tail (#441). Factorio's
   wood has no processing chain, so vanilla's planks, sticks and the wooden blocks made from them are
   deliberately uncraftable. Wooden stairs are the one exception, made straight from each species'
