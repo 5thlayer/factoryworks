@@ -6,8 +6,10 @@ status: accepted
 
 ADR-0007 kept the Nether and the End as dimensions and stripped GregTech's veins from them, so the
 planetary progression would not have a free parallel endgame behind two portals. GregTech left with
-ADR-0060, which took the whole premise away: there are no veins to strip. What was left was a portal
-reachable from spawn, before any science pack, since Terra is `minecraft:overworld` (ADR-0019).
+ADR-0060, which took the whole premise away: there are no veins to strip. When #124 was decided, a
+portal was reachable from spawn, before any science pack, since Terra is `minecraft:overworld`
+(ADR-0019). It no longer is: nothing on Terra yields obsidian, lava, flint or fire, so no portal can be
+built or lit. What is left is a dimension nobody can enter, declared for nothing.
 
 **Decision (#124, applied by #141).** The Nether is not a dimension of this pack. The world preset
 `kubejs/data/minecraft/world_preset/normal.json`, which `scripts/build-terra-worldgen.py` writes,
@@ -35,7 +37,7 @@ back, its sky is restated in that form.
   for the blaze powder, netherite and ender pearls every recipe in the stack assumed. That cost was
   never real: the pack sweeps stock recipes and authors its own (ADR-0034), so the recipes that
   needed patching do not ship. Kept, the Nether would be a place the progression counts for nothing,
-  reachable at rung 0.
+  and one a single obtainable portal ingredient would open at rung 0.
 - *Amend ADR-0007* instead of superseding it. Its argument is about GregTech's veins, which no longer
   exist, so an amendment would leave a record whose whole reasoning is dead.
 
