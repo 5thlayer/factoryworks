@@ -14,11 +14,11 @@ import net.minecraft.gametest.framework.GameTestHelper;
  * finds them there, and that a tag ingredient arrives as the items it names. A graph read off the
  * wrong type is empty with nothing logged, which is the state the port left the Assembler in.
  *
- * <p>The recipes asserted are a sapling, for its tag ingredient, and concrete, for its fluid.
+ * <p>The recipes asserted are the wooden chest, for its tag ingredient, and concrete, for its fluid.
  */
 final class HandSetTests {
 
-    private static final String OAK_SAPLING = "planetaryfactory:assembling/sapling/oak_sapling";
+    private static final String WOODEN_CHEST = "planetaryfactory:assembling/wooden_chest";
     private static final String CONCRETE = "planetaryfactory:assembling/concrete";
 
     private HandSetTests() {
@@ -30,18 +30,18 @@ final class HandSetTests {
 
     private static void handSetReadsTheAssemblingType(GameTestHelper helper) {
         RecipeGraph graph = RuntimeHandRecipes.graph(helper.getLevel());
-        HandRecipe sapling = graph.byId(OAK_SAPLING);
-        if (sapling == null) {
-            helper.fail("the hand set holds " + graph.size() + " recipe(s) and not " + OAK_SAPLING);
+        HandRecipe chest = graph.byId(WOODEN_CHEST);
+        if (chest == null) {
+            helper.fail("the hand set holds " + graph.size() + " recipe(s) and not " + WOODEN_CHEST);
             return;
         }
-        if (!sapling.inputs().getFirst().items().contains("minecraft:oak_log")) {
-            helper.fail(OAK_SAPLING + " takes " + sapling.inputs() + "; #minecraft:oak_logs should"
+        if (!chest.inputs().getFirst().items().contains("minecraft:oak_log")) {
+            helper.fail(WOODEN_CHEST + " takes " + chest.inputs() + "; #minecraft:logs should"
                     + " arrive as the logs it names");
             return;
         }
-        if (graph.makerOf("minecraft:oak_sapling") != sapling) {
-            helper.fail("the graph does not know " + OAK_SAPLING + " makes an oak sapling");
+        if (graph.makerOf("minecraft:chest") != chest) {
+            helper.fail("the graph does not know " + WOODEN_CHEST + " makes a chest");
             return;
         }
         // Loaded, but crafting-with-fluid: the machine's, never the hand's.
