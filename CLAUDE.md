@@ -159,7 +159,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
-`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltworksPackTests`, registered only when
+`FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). What is here is only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
 the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
@@ -252,7 +252,7 @@ no input to go stale against, so the `--check` is the whole of the guard. And th
 in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
 boots a server, so it is run against a change that touched mechanism. Run it after editing
 anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`,
-`core/reach/`, `core/dismantle/`, `core/stretch/` or `core/gametest/`.
+`core/reach/`, `core/dismantle/`, `core/stretch/`, `core/worldgen/` or `core/gametest/`.
 
 ### Replace group check
 
@@ -466,6 +466,17 @@ point. The terrain's thresholds in `scripts/build-terra-worldgen.py` are tuned a
 test logs each seed's continentalness quantiles for that. Run it after editing that script, whose
 `--check` asserts the generated files are current. Terra's pre-#356 noise and the old sea point
 each turn all three tests red.
+
+### Terra spawning check
+
+Terra spawns no vanilla mob on its own (#480, ADR-0093). `tests/worldgen/test_terra_spawning.py`
+runs `scripts/build-terra-worldgen.py --check`, then asserts every biome the live dimension and world
+preset name has empty spawner lists and that the noise settings' `disable_mob_generation` is on.
+`gametest/SpawningRuleTests` holds the other half: a new world starts with the spawn game rules
+`core/worldgen/VanillaSpawning` turns off. The GameTest server turns `spawn_mobs` off itself, so
+only the other three can fail there. Whether a night on Terra passes with no mob is a human check on
+delivery. Run the static check after editing the generator, and the GameTest run after editing
+`VanillaSpawning`.
 
 ### Starting-area geometry check
 

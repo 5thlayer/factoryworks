@@ -70,6 +70,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 | [Nuclear fission](#nuclear-fission) | `adapted` | Terra |
 | [Pollution](#pollution) | `planned` | all bodies |
 | [Enemies and evolution](#enemies-and-evolution) | `planned` | Terra |
+| [Wildlife and natural mob spawning](#wildlife-and-natural-mob-spawning) | `shipped` | Terra |
 | [Combat: guns, ammo, turrets, walls](#combat-guns-ammo-turrets-walls) | `planned` | Terra |
 | [Armor and the equipment grid](#armor-and-the-equipment-grid) | `planned` | Terra |
 | [Capsules](#capsules) | `planned` | Terra |
@@ -1060,6 +1061,24 @@ Sub-rules:
   mobs grief nothing, so this is ours to build, and it is bounded to the
   `planetaryfactory:destructible` tag rather than to anything in the way.
 - **Gleba's pentapods** — `unargued`, no verdict. `docs/planets.md` marks them TBD.
+
+### Wildlife and natural mob spawning
+
+- **verdict**: `shipped`
+- **where**: Terra
+- **via**: `pack`
+- **owner**: ADR-0093
+- **ticket**: #480
+
+Base Factorio has no wildlife but fish, and no enemy but the biters. Terra spawns no vanilla mob on
+its own: every biome's spawner lists are empty and chunk generation places no animal, and a new
+world starts with the mob, phantom, patrol and wandering-trader game rules off. The biters are
+[Enemies and evolution](#enemies-and-evolution), which spawns its own mobs.
+
+Sub-rules:
+
+- **Fish** — `unargued`, no verdict. Factorio's fish swim in water, are mined for raw fish and heal
+  the player. Terra's sea spawns none.
 
 ### Combat: guns, ammo, turrets, walls
 

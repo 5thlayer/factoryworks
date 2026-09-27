@@ -9,7 +9,7 @@
       "level": "0"
     }
   },
-  "disable_mob_generation": false,
+  "disable_mob_generation": true,
   "legacy_random_source": false,
   "noise": {
     "min_y": 0,
