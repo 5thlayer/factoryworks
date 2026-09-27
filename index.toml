@@ -238,7 +238,7 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "89a51cee12e013109473972a50ba69c4e567e96db349ee6491799db64629c80c"
+hash = "87fd8fc81c636aac12930321e3743402fcea49c88381530823466a86837750d7"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -246,11 +246,11 @@ hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "03b7359744f34c9218d1cf7b321c237819556fd11d8178b01fab29fe29ff66cd"
+hash = "5dde55adbf34a079a31278c524dc9efa0360337b4983f32cb6dbcc52a1a39f1d"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "dd51659a49f36c766b62d391bab775d81273da3c62de0c589ffdbc32538bd921"
+hash = "ea237abe4d0676cd7760c5db68b687600a81d334b13b7e2fde86c32795d78f35"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -262,11 +262,11 @@ hash = "d3258b12a308a2dd576c79ee70de61741c451cefec8e7dc788aa9b157c35cf22"
 
 [[files]]
 file = "data/pack/stock-admissions.json"
-hash = "1bb55bcc594a0ab9832bd34005e346768ea41637eba2e65475dd1ff546ea05e4"
+hash = "8b76d0a8667b23a97f276e0e143ea619db60b68139cad61b7037646bd9393fe6"
 
 [[files]]
 file = "data/pack/stock-substitutions.json"
-hash = "f0fa204af379b66f0cc9381785a673f8fea2e145fb7f327507eeb80e1cf04e52"
+hash = "2d51be022590c8e9a060aca9354ebffc66fa31f49c4a3f3317061e329bca33a3"
 
 [[files]]
 file = "data/pack/subgroup-owner.json"
@@ -282,7 +282,7 @@ hash = "989f3737ae4621b8ff6730bce4cbeeee756921e7e510e0c281c8a350501d98af"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "cb05fb4dcc9d35075ea4c45df9a11ad258d85dc939d762514df69cd06812ec88"
+hash = "28497664428ed1a1acece69f7b30423116565e750cb10137c13b8b71da54878c"
 
 [[files]]
 file = "kubejs/assets/kubejs/blockstates/oil_refinery.json"
@@ -302,7 +302,7 @@ hash = "6547dbec84dd0b3eb138c41c8c21f006261e46156b97092908b2f011caccb205"
 
 [[files]]
 file = "kubejs/assets/minecraft/lang/en_us.json"
-hash = "ff14e29614c9b59a80c14d13b97a64d1f6d1605c1e9fe8542b660f5f38989ed5"
+hash = "79b51b3ac405bf781a92fe280df946e82f99d276b8a9dee2a97384855ed8588b"
 
 [[files]]
 file = "kubejs/assets/oritech/lang/en_us.json"
@@ -1509,10 +1509,6 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/fluid_wagon.json"
 hash = "9dff0b2a633d8aec2a598301d625d4577b57ec977db109c4906c2bb148ca9914"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/recipe/assembling/hazard_concrete.json"
-hash = "b5aa9d1e2f57b4c024d8ad53edfde39611c02d096ce59cd03ca6c829ff4e773d"
-
-[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/inserter.json"
 hash = "58128fff63d4c20ce13bda95893714e0f1d47a2740102270a563ea80a6b6d6fe"
 
@@ -1581,10 +1577,6 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/refined_concrete.json"
 hash = "4f11944884d74c860a73ba69a02ea92c2949e6517faba8931fec2740b7ef950f"
 
 [[files]]
-file = "kubejs/data/planetaryfactory/recipe/assembling/refined_hazard_concrete.json"
-hash = "d47884cdfef58c1740d0752f140ceeb7a3e3610afb56c5ffbfc2d7e3bdf94243"
-
-[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/sapling/acacia_sapling.json"
 hash = "5e1f6af15336ce13c9a8aece4504d3fd55e8514a37ed37d3ff8a5203d002afe8"
 
@@ -1626,27 +1618,75 @@ hash = "88e6f95f91e6bfe05d3197864ca1b55b67c40df11e09ba992f7a9b9e0a9e45dd"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/acacia_stairs.json"
-hash = "f55b9b8b367744fbc2cc276da69aaf4e93eca2d02081a665648bade4cab3e406"
+hash = "8052ce21db25ee4d5367cb8e050a8b8815abb254690d297f63f74cdf57db63b1"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/birch_stairs.json"
-hash = "2e1bbe57daf830de1eec4562e71db9f1c61f03b5804fef364f1a096ebaec46af"
+hash = "0913476f1d89149f27151963516cf1503b4af99831eb63d6e56c7c217d986d92"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/black_concrete.json"
+hash = "5ebbdaac5a37dcfe26b2fbe54e5b74a4fda02f3aa588449b96fe683a8d66822f"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/blue_concrete.json"
+hash = "9000a8eb954137dbb21797db1c2478dff34561e0ef5d4663c4e191f1bcf98390"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/brown_concrete.json"
+hash = "1faa95306cda19cd3b061eaea53daebe55e45e828b2aa56d34f079a4cf6ac004"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/cobblestone_stairs.json"
-hash = "74965ae2c950a42f29cbf85b8dc231156312fa90dae36b757887822c0a70ed93"
+hash = "c05c1a4b0951a2fbbe9b156075f2113ced77f7748801029aea687bf3eefc0b93"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/cyan_concrete.json"
+hash = "138d5b7db9bd6fa9ec757c74982330b525bfa1c3a24cbaeb186d3ca5c2125fa7"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/glass_pane.json"
 hash = "eddbdd3b860582874973a8e3e02b901a4c7aa0848902b6f3081c3f7f8f787322"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/green_concrete.json"
+hash = "a76a08e5b86b0a1970fc5bbb0f6f0dba80e5eb2c518f4d0719f6bc657d8961d6"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/ladder.json"
-hash = "d734a649f6f2da2cb6d05897e22306ccb3c7df5bbfd8fe9b8df1cc886645c66a"
+hash = "23407b3ff9011cd7068fdc5b45a49bcfb705cc9063d68b38699d986793439240"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/light_blue_concrete.json"
+hash = "b74626f478d1f15fd348bff41139da3903b8f0c9d5be9d47e8b730b1288b81e7"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/lime_concrete.json"
+hash = "a4032a248010a3e281ab2fb7957f3cb1d8dea375ae6fef396613a203bde290dc"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/magenta_concrete.json"
+hash = "46f2b0c5cb0f197b1df8dfe4bd794cdfbf7ce9e8f3dccc8361a97172d16f0041"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/oak_stairs.json"
-hash = "7ed72c88ef3394d38fae5c29b6b920f9258cc0ec4e6c6d09d7064791e68119f9"
+hash = "de57753bd87a75c0f985f9319e95b9c5e2e88faf69390aff08a83bbbb12fcea9"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/orange_concrete.json"
+hash = "926e0d25e2eca609768a6e00c69f7b67cc24a2be333d5ff37f15aceb47f4a7c7"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/pink_concrete.json"
+hash = "07bab186ef74e073a4717f83de35e3f84eae8d28516bbc41ee9ec30d997393eb"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/purple_concrete.json"
+hash = "bcc6ef30da9f151f996a802785b72c2fc0183387e9d30ceb6d136a1b27397025"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/red_concrete.json"
+hash = "5b933dc05cf3bc4722456ef98c29bcbb457f3989abe52a26ac9d7f6d010bf354"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/sand.json"
@@ -1658,11 +1698,19 @@ hash = "8acdb0afc7aa5cc06ae1f38d90cb9cf3ddfab7d94c4120eb806aaac23731ef13"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/stone_brick_stairs.json"
-hash = "b3ec837ca44509297f3be2ca573ae95323b89c6aefca81b74b39c57d277bcf5f"
+hash = "5b9da41c5f4a5a9052ff90417764ea12b69bb1e56e001e4041827cff3cf0f879"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stock/stone_stairs.json"
-hash = "29914c7a27fe195f80c3456fc35231ac120b3c5c4c18968730ef5b00335de45c"
+hash = "6ab3b5ec3c15bfb1b0d3ab977679355bfc086af445c506e05b904a501597e08e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/white_concrete.json"
+hash = "03c1732ac9d5f8607affc3528b15f6f5a1d80902e1dc257cbb401e8410520df7"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/stock/yellow_concrete.json"
+hash = "575ee5c6f6cd14290bad7800bf87da4d00edd9a86c87dc02a310c8ab794351d8"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/stone_furnace.json"
@@ -2159,8 +2207,8 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
-file = "mods/beltworks-0.3.7.jar"
-hash = "76ebf3650d87b7c47b6dd07f54f2ea3b5849e23fa464b93f59a0468051213909"
+file = "mods/beltworks-0.3.8.jar"
+hash = "50e575726ce54388a651ceb855057b29076f447b510c871995087da8ad809acd"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
