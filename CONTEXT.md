@@ -13,6 +13,9 @@ recipe shape. KubeJS binds them into a stationary, automation-first loop.
 No mod is the spine. Naming one where the concept, the Factorio mechanic or another mod's capability
 is what is actually meant is the drift this file exists to prevent (`#94`).
 
+How the pack is built out of our own mods -- a **Library** and the **Binding** that configures it for
+Factorio's rules -- is 5thlayer/skillworks' vocabulary, defined in its `CONTEXT.md` (ADR-0090).
+
 ## Language
 
 ### Naming exceptions
