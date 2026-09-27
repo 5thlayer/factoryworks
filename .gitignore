@@ -141,3 +141,5 @@ kubejs/config/probe-settings.json
 .claude/worktrees/
 .rtk/
 debug-profile.json
+# The launching player for skillworks:quicklaunch; per machine, never committed.
+player.env
