@@ -118,7 +118,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 - **verdict**: `adapted`
 - **where**: Terra, Ignus, Sapros
 - **via**: `planetaryfactory_core`
-- **owner**: ADR-0007, ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045, ADR-0060
+- **owner**: ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045, ADR-0060
 - **notice**: a patch is one block deep, flush with the terrain, its ragged edge drawn from
   Minecraft's noise, and an ore block shows its amount by stage and Jade line rather than a map layer.
 - **ticket**: #320, #321 and #377 closed with Terra's patches shipped; Ignus and Sapros land with #12
