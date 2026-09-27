@@ -49,5 +49,6 @@ back, its sky is restated in that form.
   gear, and the eyes of ender that open the End. None is authored around here.
 - Circuits with no redstone are #119's question.
 - **The End is still declared, and not decided here.** It is unreachable in practice: its portal needs
-  eyes of ender, and no mob spawns to drop a pearl (ADR-0093). Whether it goes for the same reasons is
-  a separate decision.
+  eyes of ender, and no mob spawns to drop a pearl (ADR-0093). Nor does a stronghold generate to hold
+  one: its biome tag is `#minecraft:is_overworld`, which names only vanilla biomes, not Terra's.
+  Whether the End goes for the same reasons is a separate decision.
