@@ -73,6 +73,7 @@ public final class PFGameTests {
                 event.registerEnvironment(ENVIRONMENT, new TestEnvironmentDefinition.AllOf(List.of()));
         Registrar registrar = new Registrar(event, environment);
         EnergyFaceTests.register(registrar);
+        BurnerFurnaceTests.register(registrar);
         ElectricNetworkTests.register(registrar);
         PoleWireTests.register(registrar);
         HandSetTests.register(registrar);

@@ -120,8 +120,11 @@ deliberately does not have. The arithmetic and the rules are
 Minecraft-free unit tests under `mod/src/test/java/com/planetaryfactory/core/smelting/`: the
 per-tier duration, the 90 FE/t draw and its buffer, the unsided routing by item, and the stall —
 a blocked output starts no smelt, burns no fuel and voids nothing (ADR-0041). Whether the three
-blocks smelt in a running game is a world load; the Electric tier's half of that landed with
-#271's GameTests, and the two burner tiers' has not.
+blocks smelt in a running game is `gametest/EnergyFaceTests` for the Electric tier (#271) and
+`gametest/BurnerFurnaceTests` for the two burners (#432): on coal, each makes iron plate at its
+tier's rate for 4,500 J a working tick, keeps the steel smelt's 5:1, and with a full output lights
+no coal, spends no banked joule and starts no smelt. Dropping the output check, shrinking the input
+by one, or a 4,000 J tick each turns both tiers' tests red.
 
 ### GameTest harness
 
@@ -154,7 +157,7 @@ And KubeJS reads a Better Advanced Tooltips class on a server as well, so that j
 classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there because the pack's
 recipes name their items.
 
-What is there is `EnergyFaceTests` (#271), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
+What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
 `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
