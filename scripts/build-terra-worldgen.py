@@ -162,6 +162,7 @@ def build_noise_settings():
     ]
     d["aquifers_enabled"] = False
     d["ore_veins_enabled"] = False
+    d["disable_mob_generation"] = True
     d["default_block"] = {"Name": "minecraft:stone"}
     d["default_fluid"] = {"Name": "minecraft:water", "Properties": {"level": "0"}}
     d["sea_level"] = SEA_LEVEL
@@ -250,21 +251,6 @@ VEGETATION = {
     "terra_sea": ["minecraft:seagrass_normal","minecraft:kelp_warm"],
 }
 
-MONSTERS = [
-    {"type": "minecraft:spider", "weight": 100, "minCount": 4, "maxCount": 4},
-    {"type": "minecraft:zombie", "weight": 95, "minCount": 4, "maxCount": 4},
-    {"type": "minecraft:skeleton", "weight": 100, "minCount": 4, "maxCount": 4},
-    {"type": "minecraft:creeper", "weight": 100, "minCount": 4, "maxCount": 4},
-    {"type": "minecraft:enderman", "weight": 10, "minCount": 1, "maxCount": 4},
-    {"type": "minecraft:witch", "weight": 5, "minCount": 1, "maxCount": 1},
-]
-CREATURES = [
-    {"type": "minecraft:sheep", "weight": 12, "minCount": 4, "maxCount": 4},
-    {"type": "minecraft:pig", "weight": 10, "minCount": 4, "maxCount": 4},
-    {"type": "minecraft:chicken", "weight": 10, "minCount": 4, "maxCount": 4},
-    {"type": "minecraft:cow", "weight": 8, "minCount": 4, "maxCount": 4},
-]
-
 # GenerationStep.Decoration, in order. `underground_ores` is deliberately empty: Terra's ore is
 # surface discs of the pack's own blocks (ADR-0045), and vanilla ore carries no amount (ADR-0041).
 STEPS = 11
@@ -283,8 +269,9 @@ def build_biome(name, temp, hum, cont, eros, top, rain, temp_val):
         "features": features,
         "spawn_costs": {},
         "spawners": {
-            "monster": [] if name == "terra_sea" else MONSTERS,
-            "creature": [] if name in ("terra_sea", "terra_desert", "terra_red_desert") else CREATURES,
+            # Terra spawns no vanilla mob on its own (ADR-0093).
+            "monster": [],
+            "creature": [],
             "ambient": [],
             "axolotls": [],
             "underground_water_creature": [],

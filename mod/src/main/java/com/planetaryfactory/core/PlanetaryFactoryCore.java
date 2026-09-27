@@ -26,6 +26,7 @@ import com.planetaryfactory.core.ore.OreMining;
 import com.planetaryfactory.core.start.StartingKitGrant;
 import com.planetaryfactory.core.worldgen.PFWorldgen;
 import com.planetaryfactory.core.worldgen.TerraStartingArea;
+import com.planetaryfactory.core.worldgen.VanillaSpawning;
 import com.planetaryfactory.core.radar.ChartDeliveries;
 import com.planetaryfactory.core.reach.Reach;
 import io.github._5thlayer.groundworks.Placements;
@@ -96,6 +97,7 @@ public final class PlanetaryFactoryCore {
         // start rather than defaulted once, because a player's own /gamerule toggle would otherwise
         // survive a reload.
         NeoForge.EVENT_BUS.addListener(WaterConservation::onServerStarting);
+        NeoForge.EVENT_BUS.addListener(VanillaSpawning::onCreateSpawnPosition);
         // The area is once per world; the kit that the spec's Opening opens on is once per player
         // (#203). Both are grants, and neither is once per join.
         NeoForge.EVENT_BUS.addListener(StartingKitGrant::onLogin);
