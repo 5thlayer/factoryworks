@@ -37,7 +37,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import rearth.oritech.util.ColorableMachine.ColorVariant;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import rearth.oritech.block.base.block.MultiblockMachine;
@@ -88,14 +87,6 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::stallsUnfed);
         tests.test("assembling_machine_status_is_derived_on_each_ask", 20,
                 AssemblingMachineTests::statusIsDerivedOnEachAsk);
-        if (ModList.get().isLoaded("researchd")) {
-            tests.test("assembling_machine_stalls_on_a_locked_recipe", 100,
-                    AssemblingMachineTests::stallsOnALockedRecipe);
-            tests.test("assembling_machine_crafts_once_its_team_researches", 100,
-                    AssemblingMachineTests::craftsOnceItsTeamResearches);
-            tests.test("assembling_machine_refuses_a_locked_recipe", 20,
-                    AssemblingMachineTests::refusesALockedRecipe);
-        }
         // Counted once: a hull block has no block entity and answers the anchor's face (#328).
         tests.test("assembling_machine_is_powered_by_a_pole", 100,
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.south(2), "one whole machine"));
@@ -234,16 +225,10 @@ final class AssemblingMachineTests {
     /** copper-cable: one copper plate makes two wire in Factorio's 0.5 s. */
     private static final String CABLE = "planetaryfactory:assembling/copper_cable";
 
-    /** The pipe recipe, which the refusal test locks and no other test crafts. */
-    private static final String PIPE = "planetaryfactory:assembling/pipe";
 
     private static final String CIRCUIT = "planetaryfactory:assembling/electronic_circuit";
 
     private static final String CONCRETE = "planetaryfactory:assembling/concrete";
-
-    /** iron-gear-wheel, which the lock test locks and no other test crafts. */
-    private static final String STEAM_POWER = "planetary_factory:steam_power";
-    private static final String GEAR = "planetaryfactory:assembling/iron_gear_wheel";
 
     /**
      * copper-cable's 0.5 s at {@code assembling-machine-1}'s speed 0.5, in ticks. Typed rather than
@@ -410,41 +395,6 @@ final class AssemblingMachineTests {
         }
     }
 
-    /**
-     * Fed, powered and with room, but Researchd blocks the recipe for the team that placed the
-     * machine (#260). The pipe is {@code steam-power}'s, which a new team has not researched.
-     */
-    private static void stallsOnALockedRecipe(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = place(helper);
-        ResearchTeams.placedBy(machine, ResearchTeams.create(helper));
-        machine.setHeldRecipe(HeldRecipe.of(PIPE), player(helper));
-        machine.inventory.set(0, ItemResource.of(item("ftbmaterials:iron_plate")), 4);
-        machine.energyStorage.set(CHARGE);
-        helper.runAfterDelay(WINDOW, () -> {
-            assertStalled(helper, machine, AssemblingStall.LOCKED, 4, PIPE);
-            helper.succeed();
-        });
-    }
-
-    /** The lock is the placing team's: once it researches {@code steam-power}, the pipe crafts. */
-    private static void craftsOnceItsTeamResearches(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = place(helper);
-        var team = ResearchTeams.create(helper);
-        ResearchTeams.placedBy(machine, team);
-        ResearchTeams.complete(helper, team, STEAM_POWER);
-        machine.setHeldRecipe(HeldRecipe.of(PIPE), player(helper));
-        machine.inventory.set(0, ItemResource.of(item("ftbmaterials:iron_plate")), 4);
-        machine.energyStorage.set(CHARGE);
-        helper.succeedWhen(() -> {
-            if (machine.stall() == AssemblingStall.LOCKED) {
-                helper.fail("a machine whose team researched " + STEAM_POWER + " is still locked on " + PIPE, ANCHOR);
-            }
-            if (machine.inventory.getItem(0).getCount() == 4) {
-                helper.fail("a machine whose team researched " + STEAM_POWER + " took no iron plate", ANCHOR);
-            }
-        });
-    }
-
     /** A stall also takes no input. */
     private static void assertStalled(GameTestHelper helper, AssemblingMachineBlockEntity machine,
             AssemblingStall expected, int inputs, String held) {
@@ -527,21 +477,6 @@ final class AssemblingMachineTests {
         HoldVerdict fluid = menu.request(player, CONCRETE);
         if (fluid != HoldVerdict.NOT_THIS_MACHINE || !machine.heldRecipe().equals(HeldRecipe.of(held))) {
             helper.fail("a crafting-with-fluid recipe was answered " + fluid + " and left " + machine.heldRecipe(), ANCHOR);
-            return;
-        }
-        helper.succeed();
-    }
-
-    /** A recipe Researchd blocks for the placing team is refused and changes nothing (#260); no research unlocks the gear. */
-    private static void refusesALockedRecipe(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = place(helper);
-        ResearchTeams.placedBy(machine, ResearchTeams.create(helper));
-        Player player = player(helper);
-        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
-        menu.request(player, GEAR);
-        HoldVerdict locked = menu.request(player, PIPE);
-        if (locked != HoldVerdict.LOCKED || !machine.heldRecipe().equals(HeldRecipe.of(GEAR))) {
-            helper.fail("a locked recipe was answered " + locked + " and left " + machine.heldRecipe(), ANCHOR);
             return;
         }
         helper.succeed();

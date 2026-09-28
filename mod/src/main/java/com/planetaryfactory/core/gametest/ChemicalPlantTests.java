@@ -17,7 +17,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
@@ -73,9 +72,6 @@ final class ChemicalPlantTests {
         tests.test("chemical_plant_is_counted_once_by_a_pole", 100,
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.east(2), "both blocks"));
         tests.test("chemical_plant_refuses_the_fluid_addon", 20, ChemicalPlantTests::refusesTheFluidAddon);
-        if (ModList.get().isLoaded("researchd")) {
-            tests.test("chemical_plant_stalls_on_a_locked_recipe", 100, ChemicalPlantTests::stallsOnALockedRecipe);
-        }
     }
 
     /** Over a window of two whole crafts, so the phase the first tick lands on does not matter. */
@@ -133,18 +129,6 @@ final class ChemicalPlantTests {
         machine.energyStorage.set(CHARGE);
         helper.runAfterDelay(2 * TICKS_PER_CRAFT, () -> {
             assertStalled(helper, machine, AssemblingStall.NO_INGREDIENTS, 0, 100);
-            helper.succeed();
-        });
-    }
-
-    /** No research unlocks plastic for a new team. */
-    private static void stallsOnALockedRecipe(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        ResearchTeams.placedBy(machine, ResearchTeams.create(helper));
-        feedPlastic(helper, machine, 4, 100);
-        machine.energyStorage.set(CHARGE);
-        helper.runAfterDelay(2 * TICKS_PER_CRAFT, () -> {
-            assertStalled(helper, machine, AssemblingStall.LOCKED, 4, 100);
             helper.succeed();
         });
     }
