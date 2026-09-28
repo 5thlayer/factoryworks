@@ -85,18 +85,20 @@ public final class TreeShape {
     /**
      * Did anything here grow?
      *
-     * <p>Walks straight up the trunk from the base and asks whether any block touching it is a
+     * <p>Walks up the trunk from the base and asks whether any block touching it is a
      * naturally-grown leaf. A log cabin has none, a decorative pillar of logs and placed leaves has
      * none, and a tree of any species has several -- including the nether stems, which have no
-     * leaves at all and therefore fall out of the rule without being named by it.
+     * leaves at all and therefore fall out of the rule without being named by it. The walk takes a
+     * diagonal step up where the trunk has no log straight above, because an acacia's trunk bends
+     * before it reaches its canopy.
      *
-     * <p>Takes no bounds, and that is the point: the walk stops at the first block that is not a log,
-     * so it terminates on its own, and letting {@code maxHeight} truncate it would let a work cap
-     * answer a question about what kind of thing is standing here. A tall tree whose crown sits above
-     * the cap is still a tree; it just gets felled in two gestures.
+     * <p>Takes no bounds, and that is the point: every step rises one block, so the walk terminates
+     * on its own, and letting {@code maxHeight} truncate it would let a work cap answer a question
+     * about what kind of thing is standing here. A tall tree whose crown sits above the cap is still
+     * a tree; it just gets felled in two gestures.
      */
     private static boolean grew(TreeSurvey world, FellPos base) {
-        for (FellPos trunk = base; world.isLog(trunk); trunk = trunk.above()) {
+        for (FellPos trunk = base; trunk != null; trunk = nextUp(world, trunk)) {
             for (int[] step : AROUND) {
                 FellPos neighbour = trunk.offset(step[0], step[1], step[2]);
                 if (world.isLeaf(neighbour) && world.isNaturalLeaf(neighbour)) {
@@ -105,6 +107,23 @@ public final class TreeShape {
             }
         }
         return false;
+    }
+
+    /** The log above this one, straight up if there is one, else diagonally; null at the top. */
+    private static FellPos nextUp(TreeSurvey world, FellPos trunk) {
+        FellPos above = trunk.above();
+        if (world.isLog(above)) {
+            return above;
+        }
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                FellPos diagonal = above.offset(dx, 0, dz);
+                if (world.isLog(diagonal)) {
+                    return diagonal;
+                }
+            }
+        }
+        return null;
     }
 
     /** Every log connected to the base, upward and outward, within the bounds. */
