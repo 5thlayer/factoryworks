@@ -54,11 +54,11 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     /**
      * One recipe the machine may hold: the recipe, whether the team is locked out of it, what it
      * makes, what each input slot takes, in {@link AssemblingInputSlots}' order, and its fluid
-     * ingredients, whose first fluid is the one the tank holds and the status names, and the fluid its
-     * first output tank fills with.
+     * ingredients, the {@code n}th in input tank {@code n}, and the fluid each output tank fills with,
+     * in order (ADR-0096).
      */
     public record Entry(RecipeChoice choice, Component name, ItemStack icon, List<SizedIngredient> slotIngredients,
-                        List<SizedFluidIngredient> fluidIngredients, Optional<Fluid> outputFluid) {
+                        List<SizedFluidIngredient> fluidIngredients, List<Fluid> outputFluids) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, entry -> entry.choice().id(),
                 ByteBufCodecs.BOOL, entry -> entry.choice().locked(),
@@ -66,13 +66,23 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                 ItemStack.OPTIONAL_STREAM_CODEC, Entry::icon,
                 SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), Entry::slotIngredients,
                 SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), Entry::fluidIngredients,
-                ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)), Entry::outputFluid,
+                ByteBufCodecs.registry(Registries.FLUID).apply(ByteBufCodecs.list()), Entry::outputFluids,
                 (id, locked, name, icon, ingredients, fluids, output) ->
                         new Entry(new RecipeChoice(id, locked), name, icon, ingredients, fluids, output));
 
         /** The first fluid this recipe's tank takes, or empty for an item-only recipe. */
         public Optional<Fluid> fluid() {
             return AssemblingMachineRecipes.firstFluid(fluidIngredients);
+        }
+
+        public Optional<Fluid> inputFluid(int tank) {
+            return tank < fluidIngredients.size()
+                    ? AssemblingMachineRecipes.firstFluid(List.of(fluidIngredients.get(tank)))
+                    : Optional.empty();
+        }
+
+        public Optional<Fluid> outputFluid(int tank) {
+            return tank < outputFluids.size() ? Optional.of(outputFluids.get(tank)) : Optional.empty();
         }
 
         public static final StreamCodec<RegistryFriendlyByteBuf, List<Entry>> LIST_CODEC =
@@ -92,26 +102,29 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     private static final int DATA_STORED = 4;
     private static final int DATA_CAPACITY = 6;
     private static final int DATA_DRAW = 8;
-    private static final int DATA_TANK = 10;
-    private static final int DATA_TANK_CAPACITY = 11;
-    private static final int DATA_OUTPUT_TANK = 12;
-    private static final int DATA_OUTPUT_CAPACITY = 13;
-    private static final int DATA_COUNT = 14;
+    private static final int FLUID_INPUTS = MachineSpecs.get().maxFluidInputs();
+    private static final int FLUID_OUTPUTS = MachineSpecs.get().maxFluidOutputs();
+    // Only each tank's fill crosses: its size is the spec's, which the client reads off the block.
+    private static final int DATA_TANKS = 10;
+    private static final int DATA_COUNT = DATA_TANKS + FLUID_INPUTS + FLUID_OUTPUTS;
     private static final int OUTPUT = AssemblingMachineBlockEntity.OUTPUT;
     private static final int MACHINE_SLOTS = 5;
 
     public static final int INPUT_X = 8;
     public static final int INPUT_Y = 36;
     public static final int OUTPUT_X = 152;
-    public static final int ENERGY_Y = 58;
-    public static final int STATUS_Y = 74;
-    public static final int INVENTORY_Y = 98;
+    public static final int TANK_Y = 58;
+    private static final int TANK_ROW = 16;
+    private static final int ENERGY_Y = 58;
+    private static final int STATUS_Y = 74;
+    private static final int INVENTORY_Y = 98;
 
     private final List<Entry> entries;
     private final ContainerData data;
     private final AssemblingMachineBlockEntity machine;
     private final BlockPos pos;
     private final int inputs;
+    private final int rowShift;
 
     /** Client side: the slots stand over a stub the menu's own sync fills. */
     public AssemblingMachineMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
@@ -127,8 +140,9 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         this.pos = pos;
         this.entries = List.copyOf(entries);
         this.data = data;
-        this.inputs = playerInventory.player.level().getBlockState(pos).getBlock() instanceof ChassisMachineBlock block
-                ? block.spec().itemInputs() : AssemblingMachineBlockEntity.INPUTS;
+        MachineSpec spec = specAt(playerInventory.player, pos);
+        this.inputs = spec == null ? AssemblingMachineBlockEntity.INPUTS : spec.itemInputs();
+        this.rowShift = spec != null && spec.hasTanks() ? TANK_ROW : 0;
 
         for (int slot = 0; slot < AssemblingMachineBlockEntity.INPUTS; slot++) {
             addSlot(new InputSlot(slots, slots::set, slot, INPUT_X + slot * 18, INPUT_Y));
@@ -138,17 +152,39 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 9; column++) {
                 addSlot(new Slot(playerInventory, column + row * 9 + 9, 8 + column * 18,
-                        INVENTORY_Y + row * 18));
+                        inventoryY() + row * 18));
             }
         }
         for (int column = 0; column < 9; column++) {
-            addSlot(new Slot(playerInventory, column, 8 + column * 18, INVENTORY_Y + 58));
+            addSlot(new Slot(playerInventory, column, 8 + column * 18, inventoryY() + 58));
         }
         addDataSlots(data);
     }
 
     public BlockPos pos() {
         return pos;
+    }
+
+    private static MachineSpec specAt(Player player, BlockPos pos) {
+        return player.level().getBlockState(pos).getBlock() instanceof ChassisMachineBlock block ? block.spec() : null;
+    }
+
+    /** Asked of the block each time, since a Fast Replace changes it under an open menu (ADR-0082). */
+    public MachineSpec spec(Player player) {
+        MachineSpec spec = specAt(player, pos);
+        return spec == null ? AssemblingTier.ONE.spec() : spec;
+    }
+
+    public int energyY() {
+        return ENERGY_Y + rowShift;
+    }
+
+    public int statusY() {
+        return STATUS_Y + rowShift;
+    }
+
+    public int inventoryY() {
+        return INVENTORY_Y + rowShift;
     }
 
     /** Server side, over the machine's own inventory and the recipes the server has loaded. */
@@ -169,11 +205,8 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                     case DATA_CAPACITY + 1 -> DataSlotHalves.high(machine.energyStorage.getCapacityAsLong());
                     case DATA_DRAW -> DataSlotHalves.low(machine.drawTenths());
                     case DATA_DRAW + 1 -> DataSlotHalves.high(machine.drawTenths());
-                    case DATA_TANK -> (int) machine.tank().getAmountAsLong(0);
-                    case DATA_TANK_CAPACITY -> machine.spec().fluidInputVolume(0);
-                    case DATA_OUTPUT_TANK -> (int) machine.outputTankAmount(0);
-                    case DATA_OUTPUT_CAPACITY -> machine.spec().fluidOutputVolume(0);
-                    default -> 0;
+                    default -> index >= DATA_TANKS && index < DATA_COUNT
+                            ? (int) machine.tank().getAmountAsLong(index - DATA_TANKS) : 0;
                 };
             }
 
@@ -199,10 +232,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                                 holder.value().assemble(null),
                                 AssemblingMachineRecipes.slotIngredients(holder.value(), spec),
                                 holder.value().fluidIngredients(),
-                                holder.value().fluidResults().stream().findFirst()
-                                        .map(result -> FluidResource.of(result).getFluid())))
+                                holder.value().fluidResults().stream()
+                                        .map(result -> FluidResource.of(result).getFluid()).toList()))
                         .orElseGet(() -> new Entry(choice, Component.literal(choice.id()), ItemStack.EMPTY, List.of(),
-                                List.of(), Optional.empty())))
+                                List.of(), List.of())))
                 .toList();
     }
 
@@ -271,33 +304,15 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         return DataSlotHalves.join(data.get(DATA_CAPACITY), data.get(DATA_CAPACITY + 1));
     }
 
-    /** The first output tank's fill in mB. */
-    public int outputAmount() {
-        return data.get(DATA_OUTPUT_TANK);
+    public int inputAmount(int tank) {
+        return data.get(DATA_TANKS + tank);
     }
 
-    /** The first output tank's size in mB, or 0 on a machine with none. */
-    public int outputCapacity() {
-        return data.get(DATA_OUTPUT_CAPACITY);
+    public int outputAmount(int tank) {
+        return data.get(DATA_TANKS + FLUID_INPUTS + tank);
     }
 
-    /** The fluid the Held recipe fills its first output tank with, or empty. */
-    public Optional<Fluid> outputFluid() {
-        Entry entry = held();
-        return entry == null ? Optional.empty() : entry.outputFluid();
-    }
-
-    /** The tank's fill in mB; its fluid is the Held recipe's, since the face takes no other. */
-    public int tankAmount() {
-        return data.get(DATA_TANK);
-    }
-
-    /** The tank's size in mB, or 0 on a tier with no tank. */
-    public int tankCapacity() {
-        return data.get(DATA_TANK_CAPACITY);
-    }
-
-    /** The fluid the Held recipe takes, or empty. */
+    /** The fluid the status names, or empty. */
     public Optional<Fluid> heldFluid() {
         Entry held = held();
         return held == null ? Optional.empty() : held.fluid();
