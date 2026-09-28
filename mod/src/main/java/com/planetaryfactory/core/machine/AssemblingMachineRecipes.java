@@ -3,6 +3,7 @@ package com.planetaryfactory.core.machine;
 import java.util.List;
 import java.util.Optional;
 
+import com.planetaryfactory.core.PFServerConfig;
 import com.planetaryfactory.core.compat.researchd.ResearchdMachineLocks;
 import com.planetaryfactory.core.recipes.AssemblingRecipe;
 import com.planetaryfactory.core.recipes.PFRecipes;
@@ -25,7 +26,8 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
  *
  * <p>Every loaded {@code planetaryfactory:assembling} recipe, whatever its category. A
  * {@code crafting-with-fluid} one is listed and then refused by {@link HoldVerdict}, so Fill Recipe
- * on it says why rather than doing nothing (#331). What is Locked is Researchd's to say (#260).
+ * on it says why rather than doing nothing (#331). What is Locked is the server
+ * config's {@code lockSources} (#260).
  */
 public final class AssemblingMachineRecipes {
 
@@ -35,7 +37,8 @@ public final class AssemblingMachineRecipes {
     /** Whether {@code machine} may not make {@code id} yet: the screen marks it and the machine idles. */
     public static boolean isLocked(BlockEntity machine, String id) {
         Identifier recipe = Identifier.tryParse(id);
-        return recipe != null && ModList.get().isLoaded("researchd") && ResearchdMachineLocks.isLocked(machine, recipe);
+        return recipe != null && PFServerConfig.locksBy(PFServerConfig.LockSource.researchd)
+                && ModList.get().isLoaded("researchd") && ResearchdMachineLocks.isLocked(machine, recipe);
     }
 
     /** Every assembling recipe, as {@code machine}'s screen names them. */
