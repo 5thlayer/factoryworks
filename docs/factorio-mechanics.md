@@ -931,19 +931,20 @@ Sub-rules:
 ### Nuclear fission
 
 - **verdict**: `adapted`
-- **notice**: the reactor emits **superheated steam** directly and there is no heat layer, so
-  Factorio's reactor-to-exchanger ratio and heat-pipe layout puzzles do not exist here. The chapter
-  is fuel chemistry and a steam budget, not a thermal one.
+- **notice**: in the first cut the reactor emits **superheated steam** directly, so Factorio's
+  reactor-to-exchanger ratio and heat-pipe layout puzzles are not here yet. The heat layer is
+  deferred to #497, not absent (ADR-0098).
 - **where**: Terra
 - **via**: `pack`
-- **owner**: ADR-0033
-- **ticket**: #89 (closed)
+- **owner**: ADR-0033, ADR-0098
+- **ticket**: #135; #89 (closed)
 
 **Settled by ADR-0033: the chapter ships, pack-authored.** Factorio's own tech costs place it —
 `uranium-mining`, `uranium-processing` and `nuclear-power` are all chemical science, so rung 3;
 `nuclear-fuel-reprocessing` adds production, so rung 4; **Kovarex costs space science** and is
-post-launch, so Terra runs at raw 0.7% U-235 exactly as Nauvis does. Three pack machines on a GT
-chassis — Centrifuge, Nuclear Reactor, Steam Turbine.
+post-launch, so Terra runs at raw 0.7% U-235 exactly as Nauvis does. Three pack machines —
+Centrifuge, Nuclear Reactor, Steam Turbine — restated on Oritech's models by ADR-0098 after the GT
+chassis left with ADR-0060.
 
 **Mekanism was refused, and the earlier `via: mekanism` was a mistake of fact**: the Fission Reactor
 lives in **MekanismGenerators**, which this pack does not install. Adopting it would have brought six
@@ -959,15 +960,14 @@ Sub-rules:
 
 - **Kovarex enrichment** — `blocked`, and correctly so: it costs **space science** in Factorio, so it
   belongs to the post-launch map rather than to Terra. Terra's 0.7% yield is the fidelity, not a gap.
-- **Reactor neighbour bonus** — `excluded`. `by-consequence` of adopting a multiblock reactor: there
-  is nothing to place next to anything, so the layout puzzle has no board.
-- **Heat pipes and heat exchangers as a separate transport network** — `blocked`, **moved to Gelida**
-  by ADR-0033. Terra's reactor needs no heat layer, and Aquilo's mechanic is the one that actually
-  requires the real thing: buildings freeze by **adjacency** (one tile, orthogonal or diagonal, above
-  30 °C) rather than by plumbing, with per-entity draw and an immunity list, while heat pipes buffer
-  1 MJ/°C over 500–1000 °C and flow only down a differential. A fluid cannot express coverage.
-  Factorio's own two thresholds — **≥500 °C for a heat exchanger, ≥30 °C to keep a building warm** —
-  are the seam: the conduction layer is one build, the freezing layer another. Both are Gelida's.
+- **Reactor neighbour bonus** — `excluded` until #497. `by-consequence` of the first cut having no
+  heat layer: there is nothing to conduct between reactors, so the bonus has no board.
+- **Heat pipes and heat exchangers as a separate transport network** — `planned`, Terra, #497.
+  ADR-0098 brings the **conduction** layer back from Gelida: heat pipes buffer 1 MJ/°C over
+  500–1000 °C and flow only down a differential, and the Heat Exchanger then produces Superheated
+  Steam in the Reactor's place. Factorio's two thresholds — **≥500 °C for a heat exchanger, ≥30 °C
+  to keep a building warm** — are the seam: the **freezing** layer, where buildings freeze by
+  adjacency with per-entity draw and an immunity list, stays Gelida's.
 
 ### Pollution
 

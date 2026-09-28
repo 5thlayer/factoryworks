@@ -401,13 +401,13 @@
     },
     "heat-exchanger": {
       "status": "undecided",
-      "note": "`not_emitted` on its shelf; the nuclear chapter ships without a heat layer (ADR-0033).",
-      "ticket": 135
+      "note": "Terra's heat layer, after the nuclear chapter's first cut (ADR-0098).",
+      "ticket": 497
     },
     "heat-pipe": {
       "status": "undecided",
       "note": "As `heat-exchanger`.",
-      "ticket": 135
+      "ticket": 497
     },
     "heavy-armor": {
       "status": "undecided",
