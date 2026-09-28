@@ -31,8 +31,7 @@ the packwiz manifest (ADR-0024); ADR-0060 records which of them are pre-releases
 - **Railcraft Reborn** — trains (ADR-0060).
 - **Researchd**, forked by the pack — the research tree and the Research Lab that gates it
   (ADR-0022). The tree's shape is Factorio's, extracted rather than transcribed, and research is
-  server-global (ADR-0058). The fork's port to 26.1.2 is #251; until it lands, research gating is
-  inert. FTB Quests keeps the book and the reward surface, and gates nothing.
+  held per team; a machine locks by the team that placed it (ADR-0058's amendment). FTB Quests keeps the book and the reward surface, and gates nothing.
 - **`planetaryfactory_core`** — the pack's own mod, for mechanism no other mod supplies at
   Factorio's numbers (ADR-0014, ADR-0015). Among it: the pole network, the only power carrier
   (ADR-0062), the pack's recipe types (ADR-0063) and the machines built on Oritech's bodies.

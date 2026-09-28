@@ -19,9 +19,4 @@ public final class PlanetaryFactoryJeiPlugin implements IModPlugin {
     public Identifier getPluginUid() {
         return UID;
     }
-
-    // No registerAdvanced. What this plugin registered was the research-lock decorator against
-    // every recipe type JEI knows, and the decorator went with Researchd -- see
-    // docs/port/blocked-removals-26.1.2.md. The plugin itself stays registered so #75 has the seam
-    // back the moment #260 lands.
 }

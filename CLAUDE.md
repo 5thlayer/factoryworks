@@ -78,8 +78,8 @@ was red on the Electric Furnace's GTCEu textures until #324 gave it art of its o
 
 `planetaryfactory_core` itself compiles again as of #268, and what that cost is recorded in
 `docs/port/blocked-removals-26.1.2.md`: every class deleted because GregTech left or because the
-Researchd fork is still on 1.21.1, each with the ticket that owns restoring it (#260, then #262,
-then #251). Read it before concluding a mechanic was dropped — the Minecraft-free rules and their
+Researchd fork was still on 1.21.1, each with the ticket that owns restoring it (#262, then #251,
+#260 having decided its own stay removed). Read it before concluding a mechanic was dropped — the Minecraft-free rules and their
 unit tests survived; only the glue that reads a running game went.
 `data/pack/item-map.json` and `data/pack/subgroup-owner.json` still name Create, Power Grid and
 GregTech targets. They are the conversion's input and are rewritten with it.

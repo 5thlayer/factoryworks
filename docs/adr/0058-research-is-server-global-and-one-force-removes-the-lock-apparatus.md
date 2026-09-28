@@ -70,3 +70,21 @@ that team-scoped research is wrong — it argues that the pack does not model it
 pay for apparatus it is not using. **A defect is filed**, and its content is the finding above rather
 than the symptom: a later per-team fix must key `MachineRecipeType`'s cache by team, not add a filter
 at `getAllRecipesFor`. A filter alone is the leak.
+
+## Amendment (2026-09-28): research is per team again (#260)
+
+The rule above is withdrawn: **research is scoped to a Researchd team, and each machine locks by the
+team that placed it.** Its cost argument was about GregTech and Modern Industrialization, and
+neither is in the 26.1.2 pack (ADR-0060).
+
+Every machine now in the pack is one the pack owns or one Craftworks owns, so no foreign recipe
+cache has to be keyed by team. The lock is a question each owner asks of Researchd, by recipe id
+and team:
+
+- The Personal Assembler asks for the player's team, when `lockSources` in
+  `config/craftworks-server.toml` lists `researchd` (ADR-0089).
+- The Assembling Machine asks for the team whose Researchd placed-by attachment it carries, when
+  `lockSources` in `config/planetaryfactory_core-server.toml` lists `researchd`.
+
+A machine no team placed locks nothing, as #74 decided. The deletions above stand: the pack logs no
+bypass, keeps no retry list and never overrides Researchd's placement stamp.

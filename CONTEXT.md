@@ -407,7 +407,7 @@ The badge and tooltip a recipe viewer draws on a recipe under a **Research lock*
 _Avoid_: hidden recipe, greyed-out recipe, locked overlay
 
 **Unowned machine**:
-A machine carrying no Researchd placed-by attachment, so it belongs to no team and no **Research lock** applies to it — it runs every recipe. Ordinary placement always stamps an owner; this is what `/setblock`, `/clone` and worldgen leave behind. Failing open is deliberate, and the pack logs the first such bypass at each position rather than refusing it (issue #74).
+A machine carrying no Researchd placed-by attachment, so it belongs to no team and no **Research lock** applies to it — it runs every recipe. Ordinary placement always stamps an owner; this is what `/setblock`, `/clone` and worldgen leave behind. Failing open is deliberate (issue #74, ADR-0058's amendment).
 _Avoid_: ownerless machine, orphan machine, teamless machine
 
 **Fuel buffer**:
