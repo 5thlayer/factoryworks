@@ -60,7 +60,7 @@ ResearchdEvents.registerResearchPacks(event => {
 // the coupling that makes the divergence safe.
 fromFactorio('steel-axe', {
   icon: 'planetaryfactory:engineers_steel_pick',
-  has: ['gtceu:steel_plate', 50],
+  has: ['ftbmaterials:steel_plate', 50],
   unlocks: ['planetaryfactory:assembling/pack/engineers_steel_pick']
 });
 
@@ -98,15 +98,9 @@ fromFactorio('steel-axe', {
 // Factorio: craft 50 iron plate. Unlocks the steam chapter; here that is the pipe and the Offshore
 // Pump, the one block water enters the factory through (ADR-0050, #213). `boiler`, `steam-engine`
 // and `pipe-to-ground` have no pack recipe, so this node grants two of its five.
-//
-// The held item is Create's sheet, for the same reason as `electronics` below: AlmostUnified unifies
-// `c:plates/iron` and `create` outranks GregTech, so the furnace delivers `create:iron_sheet` however
-// `recipe/iron_plate.json` reads. Note that `StartingKit.java` grants `gtceu:iron_plate` x8 directly,
-// which no unification touches -- those eight do NOT count toward this fifty, and the same goes for
-// the kit's eight copper. #220.
 fromFactorio('steam-power', {
   icon: 'planetaryfactory:offshore_pump',
-  has: ['create:iron_sheet', 50],
+  has: ['ftbmaterials:iron_plate', 50],
   unlocks: [
     'planetaryfactory:assembling/pipe',
     'planetaryfactory:assembling/offshore_pump'
@@ -116,15 +110,6 @@ fromFactorio('steam-power', {
 // Factorio: craft 10 copper plate. The electronics chapter, and the node that grants the Lab --
 // without which `automation-science-pack` below can never fire.
 //
-// THE HELD ITEM IS CREATE'S SHEET, NOT THE PLATE THIS RECIPE'S JSON NAMES. `recipe/copper_plate.json`
-// results in `gtceu:copper_plate` on disk, but AlmostUnified unifies `c:plates/{material}` and its
-// `mod_priorities` put `create` above GregTech, so the furnace delivers `create:copper_sheet` -- 
-// confirmed in a running game, and it is what EMI shows for `planetaryfactory:copper_plate`.
-// `checkItemPresence` resolves a literal id through `BuiltInRegistries.ITEM` and holds it as a
-// one-item `Ingredient`, so it matches the sheet or the plate but never both; naming the plate here
-// is a gate the furnace cannot fill. The pack ought to carry ONE plate item per material rather than
-// two that only a unification config keeps apart -- that is #220, and this id follows it when it lands.
-//
 // CHANGING THIS ID NEEDS A RESTART, NOT `/reload`. Researchd's registry is a
 // `SimpleJsonResourceReloadListener` that re-fires the KubeJS event, and on a `/reload` it can read
 // the PREVIOUS script evaluation -- the old id, with no warning. The queued `ResearchProgress$Task`
@@ -132,7 +117,7 @@ fromFactorio('steam-power', {
 // id tested without both looks exactly like a wrong id: this one was reverted once on that evidence.
 fromFactorio('electronics', {
   icon: 'planetaryfactory:electronic_circuit',
-  has: ['create:copper_sheet', 10],
+  has: ['ftbmaterials:copper_plate', 10],
   unlocks: [
     'planetaryfactory:assembling/copper_cable',
     'planetaryfactory:assembling/electronic_circuit',
@@ -156,7 +141,7 @@ fromFactorio('automation-science-pack', {
 // count-bearing `planetaryfactory:smelting` type, whose ids are flat rather than under
 // `assembling/` -- GregTech does not re-register it, so it is not cloned (#87, FLAT_TYPES).
 fromFactorio('steel-processing', {
-  icon: 'gtceu:steel_plate',
+  icon: 'ftbmaterials:steel_plate',
   unlocks: [
     'planetaryfactory:steel_plate',
     'planetaryfactory:assembling/steel_chest'
@@ -165,7 +150,7 @@ fromFactorio('steel-processing', {
 
 // 10 automation packs. `long-handed-inserter` is `undecided`, so this grants the machine only.
 fromFactorio('automation', {
-  icon: 'gtceu:lv_assembling_machine',
+  icon: 'planetaryfactory:assembling_machine',
   unlocks: ['planetaryfactory:assembling/assembling_machine_1']
 });
 
@@ -184,7 +169,7 @@ fromFactorio('logistic-science-pack', {
 
 // 40 automation + logistic.
 fromFactorio('automation-2', {
-  icon: 'gtceu:mv_assembling_machine',
+  icon: 'planetaryfactory:assembling_machine_2',
   unlocks: ['planetaryfactory:assembling/assembling_machine_2']
 });
 
@@ -198,7 +183,7 @@ fromFactorio('engine', {
 // eighteen fill/empty rows are Create's Spout and Item Drain keying on `IFluidHandlerItem` and were
 // never recipes at all (`native_mechanic`, ADR-0034 exception class 1).
 fromFactorio('fluid-handling', {
-  icon: 'create:fluid_tank',
+  icon: 'oritech:portable_tank',
   unlocks: [
     'planetaryfactory:assembling/storage_tank',
     'planetaryfactory:assembling/pump',
@@ -228,7 +213,7 @@ fromFactorio('fluid-handling', {
 // reading honest. When the oil extractor lands, `oil-processing` becomes declarable on its own terms
 // and these four move back down; nothing here has to be redone to allow that.
 fromFactorio('oil-gathering', {
-  icon: 'kubejs:oil_refinery',
+  icon: 'planetaryfactory:oil_refinery',
   unlocks: [
     'planetaryfactory:assembling/oil_refinery',
     'planetaryfactory:assembling/chemical_plant',

@@ -242,11 +242,11 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "4296be531325be1f4d3f9811a36da15760e011d5a6caa5bc3e5f55982b858212"
+hash = "8ea33ac1aeb0a8944d8b3e24d3bd4e0ffacc7ce1c411d3267fec898290054703"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "8466a6f6822ca792ab7e6251b1179e12735dedbf432ffd2576cadc863d7aeaad"
+hash = "ed2cbcd385f1e0550ac6838c5155dc0dae87fde2e56fcbe485c82cd4dfed2643"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -2274,7 +2274,7 @@ hash = "0fcc30abcbe5893e03772a82637279d60c671b0524712396a5141fc73a8aa7f4"
 
 [[files]]
 file = "kubejs/server_scripts/researchd.js"
-hash = "af67e912c4adedbb9dcdfb885a2636d498ec6110aab598355033b0c25da4bb0e"
+hash = "1a4cdf5944dcb901a75969af7d0157b3b2a8f076660e82adced8a82a76194440"
 
 [[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
