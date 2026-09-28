@@ -7,6 +7,7 @@ import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingStall;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.HeldRecipe;
 import com.planetaryfactory.core.machine.HoldVerdict;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
@@ -22,7 +23,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
@@ -32,7 +35,18 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, Direction facing) {
 
     /** A pole rescans at most this many ticks after a machine appears (EnergyFaceTests' figure). */
-    private static final int RESCAN_INTERVAL = 40;
+    static final int RESCAN_INTERVAL = 40;
+
+    static ChassisFixture assembling(AssemblingTier tier, BlockPos anchor, Direction facing) {
+        return new ChassisFixture("Assembling Machine " + tier, PFBlocks.assemblingFootprint(tier), anchor, facing);
+    }
+
+    /** A footprint block other than the anchor, on the anchor's layer when there is one. */
+    BlockPos hullBlock() {
+        List<BlockPos> blocks = footprint.positions(anchor, facing);
+        return blocks.stream().filter(pos -> !pos.equals(anchor) && pos.getY() == anchor.getY()).findFirst()
+                .orElseGet(() -> blocks.stream().filter(pos -> !pos.equals(anchor)).findFirst().orElseThrow());
+    }
 
     <T extends AssemblingMachineBlockEntity> T placeWhole(GameTestHelper helper, Class<T> type) {
         footprint.placeAll(helper.getLevel(), helper.absolutePos(anchor), facing);
@@ -50,19 +64,23 @@ record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, 
         return helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, helper.absolutePos(at), null);
     }
 
-    interface Move {
-        int apply(ResourceHandler<FluidResource> face, Transaction tx);
+    ResourceHandler<ItemResource> itemFace(GameTestHelper helper, BlockPos at) {
+        return helper.getLevel().getCapability(Capabilities.Item.BLOCK, helper.absolutePos(at), null);
     }
 
-    static void expectMoved(GameTestHelper helper, BlockPos at, String what, int expected,
-            ResourceHandler<FluidResource> face, Move move) {
+    interface Move<R extends Resource> {
+        int apply(ResourceHandler<R> face, Transaction tx);
+    }
+
+    static <R extends Resource> void expectMoved(GameTestHelper helper, BlockPos at, String what, int expected,
+            ResourceHandler<R> face, Move<R> move) {
         int moved;
         try (Transaction tx = Transaction.openRoot()) {
             moved = move.apply(face, tx);
             tx.commit();
         }
         if (moved != expected) {
-            helper.fail(what + " moved " + moved + " mB, expected " + expected, at);
+            helper.fail(what + " moved " + moved + ", expected " + expected, at);
         }
     }
 
