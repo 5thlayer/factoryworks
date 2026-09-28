@@ -73,14 +73,9 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int SLOT_DARK = 0xFF373737;
     private static final int SLOT_LIGHT = 0xFFFFFFFF;
     private static final int BAR = 0xFF5DA05D;
-    // Oritech's energy bar, a 24x96 vertical strip: full at u=0, empty at u=24. Tiled 1:1 in
-    // 24-wide slices so the stripes keep their width on a horizontal bar.
-    private static final Identifier GUI_COMPONENTS =
-            Identifier.fromNamespaceAndPath("oritech", "textures/gui/modular/machine_gui_components.png");
-    private static final int ENERGY_STRIP = 24;
-    private static final int ENERGY_EMPTY_U = 24;
-    private static final int COMPONENTS_WIDTH = 98;
-    private static final int COMPONENTS_HEIGHT = 96;
+    // Jade's energy bar sprite, tiled 1:1 so its stripes keep their width on a 6px bar.
+    private static final Identifier ENERGY_SPRITE = Identifier.fromNamespaceAndPath("jade", "energy_progress");
+    private static final int ENERGY_EMPTY_TINT = 0xFF404040;
     // For a tank whose recipe no longer resolves, so its fluid is unknown.
     private static final int FLUID = 0xFF3B6FE0;
     private static final int SPRITE_SIZE = 16;
@@ -191,20 +186,18 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     }
 
     private static void drawEnergy(GuiGraphicsExtractor graphics, int x, int y, int width, int filled) {
-        energyStrip(graphics, x, y, width, ENERGY_EMPTY_U);
+        energyTiles(graphics, x, y, width, ENERGY_EMPTY_TINT);
         if (filled > 0) {
-            graphics.enableScissor(x, y, x + filled, y + ENERGY_HEIGHT);
-            energyStrip(graphics, x, y, width, 0);
-            graphics.disableScissor();
+            energyTiles(graphics, x, y, filled, 0xFFFFFFFF);
         }
     }
 
-    private static void energyStrip(GuiGraphicsExtractor graphics, int x, int y, int width, int u) {
-        for (int tileX = x; tileX < x + width; tileX += ENERGY_STRIP) {
-            int tile = Math.min(ENERGY_STRIP, x + width - tileX);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, tileX, y, u, 0, tile, ENERGY_HEIGHT,
-                    tile, ENERGY_HEIGHT, COMPONENTS_WIDTH, COMPONENTS_HEIGHT);
+    private static void energyTiles(GuiGraphicsExtractor graphics, int x, int y, int width, int tint) {
+        graphics.enableScissor(x, y, x + width, y + ENERGY_HEIGHT);
+        for (int tileX = x; tileX < x + width; tileX += SPRITE_SIZE) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_SPRITE, tileX, y, SPRITE_SIZE, SPRITE_SIZE, tint);
         }
+        graphics.disableScissor();
     }
 
     /** The fluid's own sprite and tint, as Oritech's tanks draw it, so the pack's retint shows (ADR-0067). */
