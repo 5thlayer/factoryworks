@@ -67,6 +67,8 @@ whatever pattern they establish rather than the other way round.
 
 ## The two machines
 
+> **Superseded by ADR-0096.** Both machines are pack blocks on Oritech's models; this section is kept for its reasoning.
+
 | Machine | Form | `setMaxIOSize` | Recipes |
 | --- | --- | --- | --- |
 | **Oil Refinery** | Multiblock, one tier | `(0, 0, 2, 3)` | basic oil processing, advanced oil processing |
@@ -146,6 +148,8 @@ author no recipes, and **hide them from EMI**. Visible-but-unreachable is the wo
 Factorio player who finds Naphtha with no recipe reads it as a pack bug.
 
 ## Ratios are Factorio's, ×10
+
+> **The ×10 is superseded by ADR-0096.** Amounts are the corpus's; the ratios below stand.
 
 One craft consumes a bucket of crude, so tanks and pipes are sized sanely, and the ratios — which
 are what a Factorio player actually feels, because refinery banks are built by ratio — survive
