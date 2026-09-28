@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import com.planetaryfactory.core.PFAttachments;
 import java.util.List;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -58,8 +57,8 @@ public final class StartingKitGrant {
         for (StartingKit.Entry entry : kit) {
             deliver(player, entry);
         }
-        for (String key : Welcome.LINES) {
-            player.sendSystemMessage(Component.translatable(key));
+        for (Welcome.Line line : Welcome.LINES) {
+            player.sendSystemMessage(line.component());
         }
         LOGGER.info("Granted the starting kit to {}: {} stacks", player.getGameProfile().name(),
                 kit.size());
