@@ -1,42 +1,48 @@
 # Terra: spawn to first launch
 
-The beat-by-beat arc for Terra, against ADR-0018's **20–25 hours** for a Factorio-literate,
-GregTech-naive player following the book. The spine is ADR-0018, the ownership table is ADR-0017,
-the recipes are ADR-0031's corpus. This document is the *route* through them.
+The beat-by-beat arc for Terra, against ADR-0018's **20–25 hours** for a Factorio-literate player
+following the book. The spine is ADR-0018, the ladder and its gates are ADR-0097, and the recipes
+are ADR-0031's corpus. This document is the *route* through them.
 
 **Beats name items and surfaces, never quantities.** Prices live in the corpus and in `#42`'s slot
 lists and move constantly; a beat sheet carrying numbers is stale by the next recipe edit.
 
-## Hour budget
+## The gates
 
-| Chapter | Budget |
-| --- | --- |
-| Opening | 1h |
-| Rung 0 — steam | 3–4h |
-| Rung 1 — `automation` | 4–5h |
-| Rung 2 — `logistic` | 5–6h |
-| Rung 3 — `chemical` | 4–5h |
-| Rung 4 — `production` | 3–4h |
-| **Total** | **20–25h** |
+Every chapter opens on a Factorio **gate**: a science rung, or a trigger technology researched by
+doing something rather than by packs (ADR-0097). The pack invents no boundary of its own. The
+ladder is three science rungs plus rung 0, and `production` comes after the launch.
 
-Front-loaded, which is Factorio's own shape: the first hours are slow because everything is
-hand-made, and the last rung is quick because by then the factory does the work. `logistic` is the
-fattest because ADR-0025 hung the opening of the oil chapter on it, and that is the chapter where a
-Factorio player stops recognising things.
+| Gate | Cost | Opens |
+| --- | --- | --- |
+| — | — | The opening: the wreck, the Personal Assembler, first plates |
+| `steam-power` | trigger: craft 50 iron plate | Steam: the Offshore Pump, the Boiler, the Steam Engine |
+| `electronics` | trigger: craft 10 copper plate | The first watt: green circuits, the small pole, the Lab |
+| `automation-science-pack` | trigger: craft a Lab | The Lab: rung 1 becomes purchasable |
+| `automation` | automation | Rung 1: Assembling Machine I |
+| `logistic-science-pack` | automation | Rung 2: movement at scale |
+| `oil-processing` | trigger: mine crude oil | The oil chapter: the Refinery and the Chemical Plant |
+| `chemical-science-pack` | automation + logistic | Rung 3: the same barrel, split finer |
+| `uranium-processing` | trigger: mine uranium ore | The reactor, a branch the launch does not need |
+| `rocket-silo` | automation + logistic + chemical | The launch |
+| `production-science-pack` | automation + logistic + chemical | After the launch: Assembling Machine III, express belts, reprocessing |
 
-A chapter that lands far outside its budget has the wrong number of beats, not the wrong prices.
+Each row is Factorio's, not chosen. `tests/factorio/test_tech_extract.py` reads this table and fails
+when a row stops matching `data/factorio/technology.json`. It also fails if the launch comes to need
+a production pack, or if the silo comes to require the reactor.
 
-**Rung 0's 3–4h is not slack, and the pace run should not read it as one.** A player fluent in
-Factorio reaches electricity there in an hour or two, and the gap is real. ADR-0018's budget is
-explicitly for a first-time player of *this pack*, learning blocks nobody has shown them — after
-ADR-0048, every block in rung 0 is pack-authored, so there is nothing in the chapter a Factorio
-player has muscle memory for. That learning is what the extra hours buy. `#170`'s one clean pace
-reading is what settles the number; until then it is not adjusted on this account.
+**There is no hour budget per chapter.** This page had one, priced against five chapters on four
+rungs, and none of those chapters survived ADR-0097. Its numbers were guesses from before any recipe
+was emitted, and guessing is how rung 3 came to hold a nuclear chapter its 4–5h could not
+(ADR-0033). The 20–25h total stands. How it splits across the gates is read off a pace run (`#170`),
+not written here first. One reading carries over: the chapters before rung 1 are slow for a player
+fluent in Factorio, because every block in them is the pack's own and nothing there is muscle
+memory.
 
 ## Who teaches what
 
 **The research graph shows cost. The book explains the verb.** Researchd's UI lists what a node
-unlocks and what the Lab will eat; the quest book never repeats a price. A chapter opens on a rung
+unlocks and what the Lab will eat; the quest book never repeats a price. A chapter opens on a gate
 and its quests are *here is what this block does and why you want it*.
 
 They are kept apart on purpose. Prices move every time a recipe is touched; verbs do not. Overlap
@@ -90,103 +96,123 @@ but the cost is that discovery is the opening's only job.
 
 ---
 
-## Rung 0 — steam
+## Steam — `steam-power`
 
-*No science pack. Burner and kinetic, and not one watt anywhere.*
+*Researched by crafting 50 iron plates, which the opening's furnace is already doing.*
 
-**Granted**: the **Burner Mining Drill** (ADR-0043 / `#105`), the pack's own **Stone Furnace**
-(`#155`), the pack's **Boiler** and the pack's **Steam Engine** as prime mover (ADR-0048 / `#189`),
-mechanical belts, and the **wooden chest and the barrel** (the core's, ADR-0060). Every block on
-this list is pack-authored. Barrelling is gated by nothing — it is `shipped` as a native mechanic
-(`#93`) — so the barrel is on this rung because it is available from the first minute, not because
-a research hands it over.
-
-*This list read "LP Solid Boiler, LP Steam Miner, the vanilla Furnace as Stone Furnace (`#91`)", and
-then "Create's Steam Engine as prime mover". ADR-0040 deleted the LP Steam Miner and ADR-0043 made
-both rungs of the drill ladder the pack's; ADR-0047 and `#155` made the furnace ladder the pack's
-rather than a re-skinned vanilla block; and ADR-0048 made Terra's steam two pack-owned fluids on a
-pack-authored chain, which took the boiler off GregTech and the engine off Create. **Create's Steam
-Engine could never have held that slot**: Create has no steam fluid, and its engine mounts on a
-water-filled Fluid Tank rather than consuming steam from a pipe. The rewrite lands with `#190`;
-`#193` is the ticket that made the first of these true in the game.*
-
-**What rung 1 needs it for**: `automation` packs are Personal-Assembler-only forever (`#42`), so
-rung 0's job is to make the plates that feed them faster than your hands can.
+**Granted**: pipes, the **Offshore Pump** (ADR-0050), the pack's **Boiler** (ADR-0048) and the
+pack's **Steam Engine** on Oritech's engine (ADR-0077). Every block on this list is the pack's.
+The rest of what the chapter runs on was there from the first minute: the Burner Mining Drill, the
+Stone Furnace, the belt, the wooden chest and the barrel. Barrelling is gated by nothing (`#93`).
 
 | Beat | Fed by |
 | --- | --- |
-| Place the Burner Mining Drill from your pocket over the starting iron, facing a furnace — the drill is your ore supply from here on, and it feeds what it points at. | hand |
+| The Burner Mining Drill over the starting iron, facing a furnace. It is your ore supply from here on, and it feeds what it points at. | hand |
 | Feed it coal, and belt what it does not hand straight over to the furnace bank. | machine |
-| Green circuits by hand. They are Assembling Machine I's own key, which is why they are not a rung (`#55`). | Personal Assembler |
-| Steam Engine: steam becomes rotation. It powers machines, not a grid. | machine |
-| Hand-feed the Lab its first `automation` packs. | hand |
+| An Offshore Pump on the hub pool, a Boiler, a Steam Engine. Water becomes steam, and steam becomes the engine's own charge. Nothing draws it yet. | machine |
 
-**The grid does not exist yet**, and this is the chapter that earns it. Everything here burns coal
-or spins. The player should finish rung 0 slightly sick of walking packs to the Lab — that is the
-argument for rung 1, made by the game rather than by the book.
+**What the next chapter needs it for**: the engine's charge is the first energy in the pack, and it
+has nowhere to go until a pole reaches it.
+
+---
+
+## The first watt — `electronics`
+
+*Researched by crafting 10 copper plates.*
+
+**Granted**: copper cable, green circuits, the inserter, the Lab and the small electric pole.
+
+| Beat | Fed by |
+| --- | --- |
+| Green circuits by hand. They are Assembling Machine I's own key (`#55`). | Personal Assembler |
+| A small pole beside the Steam Engine. The pole carries energy to what stands in its supply area, with no wire to the engine (ADR-0062). | machine |
+| Craft a Lab. | Personal Assembler |
+
+The inserter's place is the loader's (ADR-0076), so this is where the belt first meets a chest.
+
+---
+
+## The Lab — `automation-science-pack`
+
+*Researched by crafting a Lab.*
+
+**Granted**: the `automation` science pack.
+
+| Beat | Fed by |
+| --- | --- |
+| Place the Lab and hand-feed it its first `automation` packs. | hand |
+
+`automation` packs are Personal-Assembler-only forever (`#42`), so this chapter's job is to make the
+plates that feed them faster than your hands can. The player should leave it slightly sick of
+walking packs to the Lab. That is the argument for rung 1, made by the game rather than by the book.
 
 ---
 
 ## Rung 1 — `automation`
 
-**Granted**: Power Grid's **generator assembly** and the FE grid, Assembling Machine I, **steel** (ADR-0039), and — off `steel-processing`, at no pack cost — **`steel-axe` and the Engineer's Steel Pick**, which halves seconds-per-ore from 2.0 to 1.0 — and,
-off the same steel, the **iron and steel chests** (the core's, ADR-0060), which is where rung 0's
-single chest stops being enough.
-
-**Why the grid arrives here**: the generator assembly turns Create's rotation into watts (`#92`,
-superseded on mechanism by ADR-0048 — it is a built assembly of Stator, Armature, Commutator and
-Generator Clutch, not Electro's single-block Alternator), and
-Assembling Machine I is FE-native (`#37`) — the grid arrives with its first customer and not one
-rung earlier. This holds whatever `#69` decided about ore multiplication — and ADR-0032 cut it entirely.
+**Granted**: Assembling Machine I, **steel** and the steel chest, and — off `steel-processing`, at
+no pack cost — **`steel-axe` and the Engineer's Steel Pick**, which halves seconds-per-ore from 2.0
+to 1.0 (ADR-0039). Then the Electric Mining Drill, the Radar (ADR-0079), the splitter and the
+underground belt, and the loaders' second tier.
 
 **What rung 2 needs it for**: the belt build-out is an assembly problem — a belt costs one item per
 block (ADR-0060) — and everything past here is assembled.
 
 | Beat | Fed by |
 | --- | --- |
-| Build the generator assembly off the Steam Engine's rotation — Stator, Armature, Commutator, Clutch. Rotation becomes watts; the first cable run. | machine |
 | Assembling Machine I. The Personal Assembler stops being how you *produce* — it never stops being how you *craft*. | machine |
 | Feed the Assembler from the belt, not from your hands. | machine |
-| Pipe the Lab. `logistic` packs arrive without you. | machine |
-| Steel, and the Steel Pick it triggers. Mining doubles, in the chapter where hand-mining feels worst. | Personal Assembler |
+| Steel, and the Steel Pick it triggers. Mining doubles. | Personal Assembler |
+| The Electric Mining Drill, on the grid, and the outfield patches it makes worth reaching. The Radar charts them. | machine |
 
 **Assembling Machine I has no fluid tanks** (ADR-0018, amended by `#125`). It cannot run the
-corpus's `crafting-with-fluid` rows, and it is not meant to — oil arrives at rung 2 alongside the
-tier that can drink it. This is the machine's visible shape, not a hidden gate.
+corpus's `crafting-with-fluid` rows, and it is not meant to — the tier that can drink a fluid
+arrives on rung 2. This is the machine's visible shape, not a hidden gate.
 
 ---
 
 ## Rung 2 — `logistic`
 
-The long chapter. Two things happen at once: movement at scale, and oil.
+**Granted**: the fast belt and its splitter, rail and trains, the Steel Furnace (the
+core's furnace ladder, ADR-0060), Assembling Machine II, concrete, and the **Pumpjack**
+(`oil-gathering`), which is the means to reach oil but not yet anything to do with it.
 
-**Granted**: the fork's belt tiers and the splitter, rail and trains, the Oil Refinery,
-the Chemical Plant, solid fuel, sulfur, sulfuric acid, plastic, the red circuit (ADR-0025, `#125`),
-the Steel Furnace (`#91`, registered by the core's furnace ladder since ADR-0060).
+| Beat | Fed by |
+| --- | --- |
+| Pipe the Lab. `logistic` packs arrive without you. | machine |
+| The fast belt and its splitter. Throughput stops being one number and becomes a choice — `logistics-2` buys a known one (ADR-0060). The express belt costs production science and waits for the launch. | machine |
+| Rail and trains. Distance stops being a wall. | machine |
+| The Pumpjack stands on an oil well. Crude never runs out: a well's yield falls to a floor and stops there, and a far well starts above 100% (ADR-0081). | machine |
+| Oil in the barrel you have had since the opening. A fluid becomes an item, and the belt and the train can carry it. | machine |
+
+**Movement at scale is belts and rail, and that is the whole of it.** Factorio has no mass package
+logistics (ADR-0060). What is left is the pair Factorio itself runs on — a belt whose throughput is a
+number you choose, and a train for when distance beats the belt.
+
+**Pantographs are not in Terra's first iteration.** Rail is Factorio's `Railway`, which is red +
+green and lands exactly here; electrified rail is not a Factorio mechanic, so there is no citation
+to honour and no reason to spend a beat on it before Terra ships.
+
+---
+
+## The oil chapter — `oil-processing`
+
+*Researched by mining crude oil, which the Pumpjack does. What it opens costs logistic packs:
+the trigger opens a chapter inside rung 2, not a rung.*
+
+**Granted**: the **Oil Refinery**, the **Chemical Plant** (ADR-0096), basic oil processing and solid
+fuel, then, on `logistic` packs, sulfur, sulfuric acid, plastic and the red circuit (ADR-0025,
+`#125`).
 
 **What rung 3 needs it for**: sulfur buys the `chemical` pack. That is the spine rule, stated
 plainly.
 
 | Beat | Fed by |
 | --- | --- |
-| The belt's upper tiers and the splitter. Throughput stops being one number and becomes a choice — `logistics-2` and `logistics-3` each buy a known one (ADR-0060). | machine |
-| Rail and trains. Distance stops being a wall. | machine |
-| The Pumpjack stands on an oil well. Crude never runs out: a well's yield falls to a floor and stops there, and a far well starts above 100% (ADR-0081). | machine |
-| Oil in the barrel you have had since rung 0. A fluid becomes an item, and the belt and the train can carry it. | machine |
-| Oil Refinery and Chemical Plant. Two new machine idioms in one beat — and the first machines that hold a *player-set* recipe rather than matching on input (ADR-0060), which is the literacy this chapter actually spends. | machine |
+| Oil Refinery and Chemical Plant. Two new machine idioms in one beat, each holding a recipe the player sets, of its own kind (ADR-0096). | machine |
 | Solid fuel, and the Steel Furnace that burns it. Fuel throughput becomes a constraint you can feel. | machine |
 | Sulfur → sulfuric acid. | machine |
 | Plastic, and the red circuit it makes. | machine |
-
-**Movement at scale is belts and rail, and that is the whole of it.** ADR-0060 dropped Create 6's
-package logistics and replaces it with nothing: Factorio has no mass package logistics, and
-auto-requesting was never a beat the citation could carry. What is left is the pair Factorio itself
-runs on — a belt whose throughput is a number you choose, and a train for when distance beats the
-belt. The chapter is not thinner for it; it is oil plus rail plus the belt finally having tiers.
-
-**Pantographs are not in Terra's first iteration.** Rail is Factorio's `Railway`, which is red +
-green and lands exactly here; electrified rail is not a Factorio mechanic, so there is no citation
-to honour and no reason to spend a beat on it before Terra ships.
 
 **The chapter's thesis**: *oil exists, and it makes three things you already wanted.* Fuel, sulfur,
 plastic. A Factorio player recognises every one of them, which is what carries them through two
@@ -197,12 +223,11 @@ unfamiliar machines.
 ## Rung 3 — `chemical`
 
 **Granted**: advanced oil processing, heavy and light cracking, lubricant (ADR-0025), the blue
-circuit (`#55`), the Electric Furnace — `#91` had it as Mekanism's renamed Energized Smelter;
-ADR-0035 took the mod out and `#149` registers it on a GT chassis instead — uranium past
-its acid gate (`#58`, and whether the nuclear chapter ships at all is `#89`).
+circuit (`#55`), the Electric Furnace (the core's furnace ladder), rocket fuel and low density
+structures.
 
-**What rung 4 needs it for**: cracking is what produces launch-fuel feedstock in quantity, and blue
-circuits are 5 per silo cycle, 50 cycles per launch.
+**What the launch needs from it**: rocket fuel is light oil and solid fuel, and a rocket part is a
+blue circuit, a low density structure and rocket fuel.
 
 | Beat | Fed by |
 | --- | --- |
@@ -210,8 +235,8 @@ circuits are 5 per silo cycle, 50 cycles per launch.
 | Cracking. Heavy → light → gas, and suddenly the ratios are yours to choose. | machine |
 | Lubricant. | machine |
 | Blue circuits, on acid. | machine |
-| Uranium past the acid gate, then the Centrifuge, then a reactor. Superheated steam, and the Turbine that drinks it (ADR-0033). | machine |
-| Electric Furnace. Fuel stops being a constraint, one rung after it started being one. | machine |
+| Electric Furnace. Fuel stops being a constraint, one chapter after it started being one. | machine |
+| Rocket fuel and low density structures. | machine |
 
 **The chapter's thesis**: *the same barrel, split finer.* Cracking is the first beat in the pack
 that is about a ratio rather than an unlock — nothing new is revealed, you simply decide what your
@@ -220,41 +245,62 @@ building to, so it gets the chapter's weight even though it unlocks the least.
 
 ---
 
-## Rung 4 — `production`
+## The reactor — `uranium-processing`
 
-**Granted**: rocket fuel, rocket control units, rocket parts, the Rocket Silo.
+*Researched by mining uranium ore, once `uranium-mining` lets a drill mine with the sulfuric acid
+rung 2 made (`#58`). It costs chemical packs, and it comes after cracking: the launch needs the
+chapter before this one, not this one.*
 
-Short by design. By now the factory builds things while you watch, and the rung's difficulty is
+**Granted**: the Centrifuge, then, on `nuclear-power`, the reactor and the Steam Turbine. The
+reactor makes superheated steam, and only the Turbine accepts it (ADR-0033).
+
+| Beat | Fed by |
+| --- | --- |
+| Uranium past the acid gate, then the Centrifuge. | machine |
+| A reactor, and the Turbine that drinks its steam. | machine |
+
+**Nothing downstream needs it.** `uranium-processing` is not among the silo's prerequisites, and
+what the Centrifuge makes feeds only the fuel cell, which feeds only the reactor. It is Factorio's
+optional power upgrade, and it is here for the player whose steam grid is groaning, not because the
+launch asks for it (ADR-0018, amended by ADR-0097). Kovarex costs space science, so Terra's reactors
+run at raw 0.7% U-235.
+
+---
+
+## The launch — `rocket-silo`
+
+*The silo costs chemical packs and no production pack (ADR-0097).*
+
+**Granted**: the Rocket Silo and the rocket part (ADR-0080).
+
+Short by design. By now the factory builds things while you watch, and the chapter's difficulty is
 throughput rather than novelty.
 
 | Beat | Fed by |
 | --- | --- |
-| Rocket fuel, petroleum-derived, `gtceu:rocket_fuel` and nothing else (`#41`). | machine |
-| Build the Rocket Silo. The largest multiblock in the pack. | hand + machine |
-| Feed it 50 cycles: HDPE, blue circuits, rocket fuel (`#41`, `#53`). | machine |
-| Build the rocket by hand. Once. Ceremony. | hand |
+| Build the Rocket Silo. The largest machine in the pack. | hand + machine |
+| Feed it rocket parts: blue circuits, low density structures, rocket fuel. The count is `#53`'s. | machine |
 | Launch. | — |
 
-**The 50 cycles are the real final exam.** Nothing is unlocked by them and nothing is taught; the
-beat asks one question — *is your factory finished?* — and the answer is a number of hours, not a
-recipe. That is the whole reason the count is a persisted integer on the silo (`#53`) rather than a
-crafting cost: the player watches it climb.
+**The part count is the real final exam.** Nothing is unlocked by it and nothing is taught; the beat
+asks one question — *is your factory finished?* — and the answer is a number of hours, not a recipe.
+The player watches the count climb.
 
-**The hand-built rocket is deliberate friction at the end of an automated chapter** (`#41`, GDD §4).
-It happens once, for the first departure from Terra's orbit, and never again.
+What a launch *does* is not decided: there is no travel, no platform and no satellite yet, and
+`#378` owns it.
 
-**The Orbital Starter Kit is named here, not specified.** It is what the first launch delivers; its
-contents belong to the orbital platform, and this arc stops at the pad.
+---
+
+## After the launch — `production`
+
+Not part of this arc, and named so that its absence reads as a decision. `production` science
+carries Assembling Machine III, the express belts and nuclear fuel reprocessing, which is where
+Space Age puts them. Its own pack recipe takes a productivity module, which is `#120`'s.
 
 ## What this document does not decide
 
-- ~~**Ore processing at rung 0 and enrichment at rung 1**~~ — **settled by ADR-0032**: ore smelts
-  1:1, every multiplier is cut pack-wide, and the chain written above (Miner → Furnace → plate, one
-  hop) is now what the ADRs say too. ADR-0017's Ore processing row is deleted.
-- **Which fractions come out of Terra's bedrock** — `#86`.
-- ~~**Whether the nuclear chapter ships**~~ — **settled by ADR-0033**: it does, at rungs 3 and 4,
-  pack-authored. Kovarex is space science and stays post-launch, so Terra runs at 0.7% U-235.
-  **Rung 3's 4–5 hour budget does not survive this** and the chapter needs re-cutting.
+- **Every quantity on this page**, because there are none.
+- **The per-chapter hours**, which a pace run reads rather than this page guessing (`#170`).
+- **What a launch does** — `#378`.
 - **Emission's pre-launch readout** — it keys on a metric ADR-0018 leaves open, so placing a beat
   for it now would be placing a beat to delete later. Decided with the Emission work.
-- **Every quantity on this page**, because there are none.

@@ -8,8 +8,8 @@ output still says what the decisions say it says:
   - every recipe's primary category is routed by `data/pack/category-map.json`, because an
     unrouted category is a recipe the converter would silently have nowhere to put
   - every recipe names a technology that exists in `technology.json`, or none at all
-  - the corpus is still Nauvis pre-launch: no recipe arrives via a technology costing a
-    science pack outside ADR-0018's four rungs
+  - the corpus is still Nauvis: no recipe arrives via a technology costing a science pack
+    outside ADR-0097's three rungs and the `production` rung after the launch
   - every recipe carries one of Factorio's item groups, because the item map is argued per
     group rather than per recipe, and a null group is a recipe no group decision covers
   - no recipe is empty: `recipe-unknown` is core's hidden placeholder icon and reached the
