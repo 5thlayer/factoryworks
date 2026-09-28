@@ -72,13 +72,13 @@ RELOADED = "minecraft:textures/atlas/blocks.png-atlas"
 # the game named -- a model id, or a block state description for a variant.
 EXPECTED = {
     "planetaryfactory:item/scrap_pile":
-        "names `gcyr:block/mars_regolith`, whose mod left with ADR-0060. The palette is #258's",
+        "names `gcyr:block/mars_regolith`, whose mod left with ADR-0060. Electro's art is #13's",
     "planetaryfactory:block/scrap_pile":
-        "names `gcyr:block/mars_regolith` -- the same departed mod (#258)",
+        "names `gcyr:block/mars_regolith` -- the same departed mod (#13)",
     "planetaryfactory:item/fulgorite":
-        "names `gcyr:block/martian_rock` (#258)",
+        "names `gcyr:block/martian_rock` (#13)",
     "planetaryfactory:block/fulgorite":
-        "names `gcyr:block/martian_rock` (#258)",
+        "names `gcyr:block/martian_rock` (#13)",
 }
 
 # Each way the client says an asset did not resolve, and the group that holds the subject. They are

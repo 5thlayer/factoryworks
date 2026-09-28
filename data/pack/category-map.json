@@ -41,13 +41,13 @@
     },
     "chemical_plant": {
       "recipe_type": null,
-      "note": "ADR-0025's Chemical Plant. Its `gtceu:chemical_plant` type left with ADR-0060; #277 decided the block is a core subclass (`planetaryfactory:chemical_plant`, ADR-0060); #258 builds it, and with it the recipe type and its JSON shape.",
-      "blocked_by": 258
+      "note": "ADR-0025's Chemical Plant. Its `gtceu:chemical_plant` type left with ADR-0060; #277 decided the block is a core subclass (`planetaryfactory:chemical_plant`, ADR-0060); #486 builds it, and with it the recipe type and its JSON shape.",
+      "blocked_by": 486
     },
     "oil_refinery": {
       "recipe_type": null,
-      "note": "ADR-0025's Oil Refinery. Its `gtceu:oil_refinery` type left with ADR-0060; #277 decided the block is a core subclass of `oritech:refinery` (`planetaryfactory:oil_refinery`, ADR-0060); #258 builds it, and with it the recipe type and its JSON shape.",
-      "blocked_by": 258
+      "note": "ADR-0025's Oil Refinery. Its `gtceu:oil_refinery` type left with ADR-0060; #277 decided the block is a core subclass of `oritech:refinery` (`planetaryfactory:oil_refinery`, ADR-0060); #486 builds it, and with it the recipe type and its JSON shape.",
+      "blocked_by": 486
     },
     "smelting": {
       "recipe_type": "planetaryfactory:smelting",

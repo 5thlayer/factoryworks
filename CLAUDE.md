@@ -832,7 +832,7 @@ any log — the pack shipped the port with fifteen item models and zero definiti
 definition is an orphan, that every ingredient in every live recipe is a string rather than 1.21.1's
 object, and that no namespace holds a pre-1.21.2 plural directory (`loot_tables/`, `tags/items/`),
 which the game does not walk at all. `kubejs:oil_refinery` is a recorded deferral, not a silent skip:
-it is dead with ADR-0060 and re-derived against the chassis #258 names. A sized ingredient
+it is dead with ADR-0060 and re-derived against the chassis #486 builds. A sized ingredient
 (`{"ingredient": ..., "count": n}`) is read through to the string inside it.
 
 `scripts/build-item-definitions.py` is the definitions' single owner — one generator rather than a
@@ -873,7 +873,7 @@ stopped when the log goes quiet for fifteen seconds with `blocks.png-atlas` crea
 process group because `launch.py` is a Python parent holding a Java child. The allowlist rule is
 `check-datapack-load.py`'s: every complaint about this namespace is an `EXPECTED` entry with its
 ticket, an unlisted one fails, and a stale one fails too. The four today are models naming
-departed `gcyr:` textures (#258). Other mods' namespaces
+departed `gcyr:` textures (#13). Other mods' namespaces
 are not scanned; they are not ours to fix.
 
 One blind spot is **measured rather than assumed**: a missing item model definition — the
