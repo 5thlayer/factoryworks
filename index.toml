@@ -258,7 +258,7 @@ hash = "174eaef72e49dbe98fb4e825af42c212d8222cb1471032596a746d9cb5920641"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "4490cdde4e38486c47a27a8af544db1163c0dd880cf6370e48d6db78f968171a"
+hash = "e27c1556aa8e7b30b432b0b8300d0ef5f563adffeace8fc0ffe93db7f8e82600"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"

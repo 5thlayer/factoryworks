@@ -22,7 +22,8 @@
       "group": "com.github.Porting-Dead-Mods",
       "artifact": "Porting-Dead-Libs",
       "version": "1.1.15",
-      "pattern": "Porting-Dead-Libs-*.jar"
+      "pattern": "Porting-Dead-Libs-*.jar",
+      "sibling": false
     }
   ]
 }

@@ -1066,7 +1066,8 @@ nothing is pushed without the user's word.
 
 `-PsiblingBuilds` is for trying such a change in the Pack before a library is released (#466, #475).
 It includes, as a composite, the checkout of every row of `local-jars.json` and of each jar the row
-nests, or of only the rows named (`-PsiblingBuilds=craftworks`), each at `-P<name>Dir`, default
+nests, except a row marked `"sibling": false` (Porting Dead Libs, whose tested jitpack binary no
+checkout reproduces), or of only the rows named (`-PsiblingBuilds=craftworks`), each at `-P<name>Dir`, default
 `~/minecraft_mods/<name>`. The compile and every dev run, `runGameTestServer` included, use those
 checkouts and never their `mods/` jars. The build prints one `siblingBuilds:` line per checkout,
 naming its version and HEAD.
