@@ -96,6 +96,7 @@ final class AssemblingMachineTests {
             tests.test("assembling_machine_refuses_a_locked_recipe", 20,
                     AssemblingMachineTests::refusesALockedRecipe);
         }
+        // Counted once: a hull block has no block entity and answers the anchor's face (#328).
         tests.test("assembling_machine_is_powered_by_a_pole", 100,
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.south(2), "one whole machine"));
         tests.test("assembling_machine_is_found_through_a_hull_block", 100,
@@ -207,7 +208,9 @@ final class AssemblingMachineTests {
      */
     private static void poleReachingOnlyAHullBlockFindsIt(GameTestHelper helper) {
         placeWhole(helper);
-        BlockPos part = CHASSIS.hullBlock();
+        BlockPos part = PFBlocks.assemblingFootprint(AssemblingTier.ONE).positions(ANCHOR, FACING).stream()
+                .filter(pos -> pos.getY() == ANCHOR.getY() && !pos.equals(ANCHOR))
+                .findFirst().orElseThrow();
         BlockPos step = part.subtract(ANCHOR);
         // Two blocks past the hull block: inside a small pole's +-2, and the anchor at 3 is not.
         BlockPos pole = part.offset(step.multiply(2));
@@ -458,7 +461,6 @@ final class AssemblingMachineTests {
         return BuiltInRegistries.ITEM.getValue(Identifier.parse(id));
     }
 
-    /** Checked against its defect: dropping the {@code store} from {@code saveAdditional} turns it red. */
     private static void keepsItsRecipeOverAReload(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = place(helper);
         CHASSIS.keepsItsRecipeOverAReload(helper, machine, someRecipe(machine));

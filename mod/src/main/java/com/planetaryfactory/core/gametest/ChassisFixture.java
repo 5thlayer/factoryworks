@@ -34,18 +34,16 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
  */
 record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, Direction facing) {
 
-    /** A pole rescans at most this many ticks after a machine appears (EnergyFaceTests' figure). */
+    /** A pole rescans at most this many ticks after a machine appears (#271). */
     static final int RESCAN_INTERVAL = 40;
 
     static ChassisFixture assembling(AssemblingTier tier, BlockPos anchor, Direction facing) {
         return new ChassisFixture("Assembling Machine " + tier, PFBlocks.assemblingFootprint(tier), anchor, facing);
     }
 
-    /** A footprint block other than the anchor, on the anchor's layer when there is one. */
     BlockPos hullBlock() {
-        List<BlockPos> blocks = footprint.positions(anchor, facing);
-        return blocks.stream().filter(pos -> !pos.equals(anchor) && pos.getY() == anchor.getY()).findFirst()
-                .orElseGet(() -> blocks.stream().filter(pos -> !pos.equals(anchor)).findFirst().orElseThrow());
+        return footprint.positions(anchor, facing).stream().filter(pos -> !pos.equals(anchor)).findFirst()
+                .orElseThrow();
     }
 
     <T extends AssemblingMachineBlockEntity> T placeWhole(GameTestHelper helper, Class<T> type) {
