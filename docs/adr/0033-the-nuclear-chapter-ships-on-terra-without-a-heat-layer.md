@@ -92,6 +92,8 @@ in Factorio too.
 
 ## The real heat network is Gelida's
 
+*Superseded by ADR-0098: the conduction layer comes to Terra later (#497); Gelida keeps only the freezing layer.*
+
 Terra was the wrong place to build it. Gelida's puzzle **is** heat — GDD §2: *"Fluids freeze without
 active heating; every process needs a thermal budget"* — and Aquilo's mechanic is spatial in a way a
 fluid cannot express: buildings freeze by proximity, not by plumbing.

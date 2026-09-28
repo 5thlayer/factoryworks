@@ -280,7 +280,7 @@ The pack's own low-temperature fluid, made by the **Boiler** from water and soli
 _Avoid_: low-pressure steam, LP steam, GT steam
 
 **Superheated Steam**:
-The pack's own high-temperature fluid, emitted directly by the reactor with no heat layer (ADR-0033) and accepted only by the **Steam Turbine**. The **Steam Engine** will not take it.
+The pack's own high-temperature fluid, accepted only by the **Steam Turbine**; the **Steam Engine** will not take it. The **Nuclear Reactor** emits it directly until Terra's heat layer makes the Heat Exchanger its producer (ADR-0098).
 _Avoid_: high-pressure steam, hot steam, 500-degree steam
 
 **Boiler**:
@@ -290,6 +290,14 @@ _Avoid_: LP Solid Boiler, heater, steam generator
 **Steam Engine**:
 The pack's rung 0 generator: it burns **Steam** into its own charge, faster the fuller its steam tank, and stops when that charge is full; the steam is spent, not returned as water. Engines placed in a row chain behind one **Master Engine**. It has no wire; it joins an **Electric Network** by standing inside a **Supply Area Pole**'s area. A pack block on Oritech's engine, placed as a footprint from one item and broken as one (ADR-0077); not Oritech's own Steam Engine, which is recipe-removed; hiding it is #173's.
 _Avoid_: Create's Steam Engine, Oritech's steam engine, alternator, turbine
+
+**Steam Turbine**:
+The generator that burns **Superheated Steam** at Factorio's rate, and nothing else. A second pack block on the same Oritech engine as the **Steam Engine**, painted apart, chaining and joining an **Electric Network** as engines do; a Turbine and a Steam Engine never share a row (ADR-0098).
+_Avoid_: Oritech's steam engine, large turbine, generator
+
+**Nuclear Reactor**:
+The pack's first-party machine that burns **Uranium Fuel Cells** and turns water into **Superheated Steam**, handing back a **Depleted Uranium Fuel Cell** per cell. Placed and broken as one footprint, dressed in Oritech's reactor blocks; not Oritech's reactor, which makes power from heat and is not Obtainable (ADR-0098).
+_Avoid_: fission reactor, reactor controller, reactor multiblock
 
 
 **Master Engine**:
@@ -464,6 +472,28 @@ _Avoid_: heavy fuel, light fuel, fuel oil, kerosene
 **The oil chapter**:
 Everything from crude to plastic, lubricant and launch fuel. It opens on the `oil-processing` **Gate**, which mining crude researches, and spans rungs 2 and 3 rather than sitting in one, because sulfur is petroleum-derived and sulfur gates chemical science (ADR-0097).
 _Avoid_: the oil rung, rung 4, the petroleum tier
+
+### The nuclear chapter
+
+**Centrifuge**:
+The machine carrying Factorio's `centrifuging` recipes: uranium processing, and fuel reprocessing at rung 4. A pack block on the crafting chassis wearing Oritech's Foundry, on the Foundry's footprint, holding a **Held recipe** of its own type (ADR-0098). Not Oritech's Centrifuge, whose model the **Chemical Plant** wears.
+_Avoid_: isotopic centrifuge, enrichment plant, foundry
+
+**U-235**:
+The rare uranium isotope, made only by the **Centrifuge**, on about 0.7% of uranium processing's crafts. The brighter of the two.
+_Avoid_: enriched uranium, uranium ingot
+
+**U-238**:
+The common uranium isotope, the rest of uranium processing's output and fuel reprocessing's product. Never a plain uranium ingot from any other source (ADR-0098).
+_Avoid_: depleted uranium, uranium ingot
+
+**Uranium Fuel Cell**:
+What the **Nuclear Reactor** burns, and the only item of the `nuclear` **Fuel category**; every burner refuses it.
+_Avoid_: fuel rod, uranium pellet
+
+**Depleted Uranium Fuel Cell**:
+What a **Uranium Fuel Cell** becomes once burnt, handed back by the **Nuclear Reactor** and reprocessed into **U-238** by the **Centrifuge**.
+_Avoid_: spent fuel, nuclear waste
 
 ### Spoiling
 
