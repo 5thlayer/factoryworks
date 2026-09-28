@@ -243,4 +243,28 @@ class TreeShapeTest {
 
         assertEquals(12, felled.logs().size(), "each log once, and no more");
     }
+
+    @Test
+    void anAcaciaWhoseTrunkBendsBeforeItsCanopyFells() {
+        // Vanilla's forking trunk: four logs straight up, then a diagonal step each level, with the
+        // flat canopy only around the top. No leaf touches the straight column.
+        Grove acacia = new Grove();
+        for (int y = 0; y < 4; y++) {
+            acacia.log(0, y, 0);
+        }
+        acacia.log(1, 4, 0).log(2, 5, 0);
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                if (dx != 0 || dz != 0) {
+                    acacia.leaf(2 + dx, 5, dz, Math.max(Math.abs(dx), Math.abs(dz)));
+                }
+            }
+        }
+        acacia.leaf(2, 6, 0, 1);
+
+        FellTree felled = TreeShape.survey(acacia, new FellPos(0, 0, 0), ROOMY);
+
+        assertTrue(felled.fells(), "a grown acacia is a tree");
+        assertEquals(6, felled.logs().size(), "the straight trunk and both bent logs");
+    }
 }
