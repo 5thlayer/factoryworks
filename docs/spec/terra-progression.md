@@ -58,7 +58,7 @@ The wreck is `#100` and `#134`: indestructible, habitable, one cargo hold, and y
 | --- | --- | --- |
 | 1 | Wake up inside the wreck. The book is in your inventory; its tooltip points at the inventory. | — |
 | 2 | Open the inventory. The Personal Assembler is already there. Craft one thing, badly, slowly. | Personal Assembler |
-| 3 | Leave. Three ore fields are visible from the door. | — |
+| 3 | Leave. Four ore fields are visible from the door. | — |
 | 4 | Place the Stone Furnace and the Burner Mining Drill from your pocket, the drill facing the furnace. First plates. | hand |
 | 5 | Walk out past the starting fields. The outfield's patches are flush with the topsoil and visible on foot. | — |
 | 6 | Drill → belt → Furnace → chest. Something runs while you watch. | machine-fed |
