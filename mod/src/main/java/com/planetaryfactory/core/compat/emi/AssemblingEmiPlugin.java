@@ -2,6 +2,7 @@ package com.planetaryfactory.core.compat.emi;
 
 import com.planetaryfactory.core.PFItems;
 import com.planetaryfactory.core.machine.AssemblingTier;
+import com.planetaryfactory.core.machine.client.AssemblingMachineScreen;
 import com.planetaryfactory.core.PFMenus;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
 import com.planetaryfactory.core.recipes.AssemblingFamily;
@@ -12,6 +13,7 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.api.stack.EmiStackInteraction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 
@@ -55,6 +57,10 @@ public final class AssemblingEmiPlugin implements EmiPlugin {
             registry.addWorkstation(ASSEMBLING, EmiStack.of(PFItems.assemblingMachine(tier).get()));
         }
         registry.addWorkstation(CHEMISTRY, EmiStack.of(PFItems.CHEMICAL_PLANT.get()));
+        // Recipe and usage keys on a tank bar's fluid.
+        registry.addStackProvider(AssemblingMachineScreen.class, (screen, x, y) -> screen.fluidBarAt(x, y)
+                .map(bar -> new EmiStackInteraction(EmiStack.of(bar.fluid().orElseThrow())))
+                .orElse(EmiStackInteraction.EMPTY));
         registry.addRecipeHandler(PFMenus.ASSEMBLING_MACHINE.get(), new AssemblingMachineEmiHandler());
         addRecipes(registry, ASSEMBLING, AssemblingFamily.ASSEMBLING);
         addRecipes(registry, CHEMISTRY, AssemblingFamily.CHEMISTRY);
