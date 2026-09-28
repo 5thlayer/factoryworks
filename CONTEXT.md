@@ -346,6 +346,14 @@ _Avoid_: real water, unplaced water, virgin water, source water
 
 ### Making things
 
+**Rung**:
+A science pack's tier of Terra's research ladder: rung 0 has no pack, then `automation`, `logistic` and `chemical`. The launch is on rung 3; `production` is the first rung after it (ADR-0097). Each rung opens on a **Gate**, but most gates open a chapter inside a rung.
+_Avoid_: tier, age, era, stage
+
+**Gate**:
+A Factorio technology that opens a chapter of Terra's arc: a **Rung**'s science pack, or a trigger technology researched by doing something rather than by packs, such as crafting a Lab or mining crude. Every chapter boundary is one, read off the corpus; the pack invents none (ADR-0097). Unrelated to a **Gated recipe**, which is about where a recipe is crafted.
+_Avoid_: milestone, checkpoint, unlock
+
 **Plate**:
 The pack's one item per material — FTB Materials', for every metal. It is what a furnace yields, since ore smelts 1:1 to a plate with no ingot step, and it is the form every recipe consumes. There is exactly one per material and never a second: where another mod ships a rival form for the same material, the rival's recipes are removed and it becomes unobtainable. The metal-derived intermediates — gear, rod, wire — come from the same supplier. Ingots, nuggets, dusts and raw forms exist in the jars but the pack does not use them.
 _Avoid_: sheet, ingot, GT plate, unified plate
@@ -450,7 +458,7 @@ The two heavier fractions. `oritech:still_heavy_oil` and `oritech:still_naphtha`
 _Avoid_: heavy fuel, light fuel, fuel oil, kerosene
 
 **The oil chapter**:
-Everything from crude to plastic, lubricant and launch fuel. It spans rungs 2 to 4 rather than sitting in one, because sulfur is petroleum-derived and sulfur gates chemical science.
+Everything from crude to plastic, lubricant and launch fuel. It opens on the `oil-processing` **Gate**, which mining crude researches, and spans rungs 2 and 3 rather than sitting in one, because sulfur is petroleum-derived and sulfur gates chemical science (ADR-0097).
 _Avoid_: the oil rung, rung 4, the petroleum tier
 
 ### Spoiling

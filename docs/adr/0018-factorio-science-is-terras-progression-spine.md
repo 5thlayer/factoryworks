@@ -19,15 +19,18 @@ recipe; this one is read once.
 production physically requires.** One ladder, not two: the science tier is the gate, the capability
 is the reward, and the reward is what makes the next tier producible.
 
-Four packs plus an unscienced rung 0 (`#26`):
+Three packs plus an unscienced rung 0 (ADR-0097). *This read "Four packs" (`#26`), with a rung 4
+of `production` holding the launch; ADR-0097 found that the silo costs no production pack and moved
+the rung after the launch.* Inside a rung, chapters open on Factorio's trigger technologies, and the
+pack invents no boundary of its own (ADR-0097):
 
 | Rung | Pack | What the rung is about |
 | --- | --- | --- |
 | 0 | *(none)* | Steam and Create kinetics. **The pack-authored Burner Mining Drill** (ADR-0040), the Furnace, Create's belts and the Steam Engine. *This row read "LP Solid Boiler, LP Steam Miner, the Furnace, Create's belts and the Steam Engine"; ADR-0040 removed the LP Steam Miner and took the boiler's last justification with it.* **ADR-0032 removed Crushing Wheels from this row** — ore smelts 1:1, so the chain is Miner → Furnace → plate, one hop. |
 | 1 | `automation` | **Electricity, and the first assembler** — the Alternator, the FE grid and Assembling Machine I (`#34`), **plus steel** (ADR-0039). *This row read "First machines and Mekanism enrichment"; ADR-0032 cut enrichment, and `#34` had already hung the grid on the Assembler so the rung's reward did not depend on it.* |
-| 2 | `logistic` | Movement at scale — Create 6 package logistics — **plus the Oil Refinery, the Chemical Plant, basic oil processing, solid fuel, sulfur, sulfuric acid and plastic** (ADR-0025), **and the red circuit, which plastic makes** (`#125`). |
-| 3 | `chemical` | **Advanced oil processing, heavy and light cracking, lubricant** (ADR-0025), the blue circuit and the Electric Furnace (`#91`), and **the nuclear chapter** — `uranium-mining`, `uranium-processing` and `nuclear-power` are all chemical science in Factorio (ADR-0033). *The 5x dissolution tier is gone — ADR-0032.* |
-| 4 | `production` | **Rocket fuel, rocket control units, rocket parts and the silo**, plus `nuclear-fuel-reprocessing` (ADR-0033). Kovarex costs **space** science and is post-launch, so Terra's reactors run at raw 0.7% U-235 — Factorio's own inefficiency, not a pack nerf. |
+| 2 | `logistic` | Movement at scale — Create 6 package logistics — **plus the Oil Refinery, the Chemical Plant, basic oil processing, solid fuel, sulfur, sulfuric acid and plastic** (ADR-0025), **and the red circuit, which plastic makes** (`#125`). The oil half is a chapter of its own inside the rung, opened by the `oil-processing` trigger rather than by the rung (ADR-0097). |
+| 3 | `chemical` | **Advanced oil processing, heavy and light cracking, lubricant** (ADR-0025), the blue circuit and the Electric Furnace (`#91`), and **the nuclear chapter** — `uranium-mining`, `uranium-processing` and `nuclear-power` are all chemical science in Factorio (ADR-0033). *The 5x dissolution tier is gone — ADR-0032.* **Then rocket fuel, low density structures, rocket parts and the silo**, which all cost chemical science (ADR-0097). |
+| *after the launch* | `production` | **Assembling Machine III, the express belts and `nuclear-fuel-reprocessing`** (ADR-0097). Kovarex costs **space** science and is post-launch too, so Terra's reactors run at raw 0.7% U-235 — Factorio's own inefficiency, not a pack nerf. *This row was rung 4 and held the launch; ADR-0097 moved the launch to rung 3.* |
 
 **Steel is a rung 1 grant, amended in by ADR-0039.** This table named steel at no rung at all, and
 `docs/spec/terra-progression.md` placed only the Steel Furnace, at rung 2 — so the metal itself had
@@ -36,14 +39,19 @@ this rung. The Steel Furnace stays at rung 2, so the metal arrives a rung before
 it, and `steel-axe` — which doubles mining speed and hangs off `steel-processing` — lands at rung 1
 too. *That clause read "where the Steam Miner is carrying the player and hand-mining feels worst" — ADR-0040 deleted the Steam Miner, and #176 re-reads what `steel-axe` buys once an ore block carries an amount and the burner drill is in the opening pocket.*
 
-**Rungs 2–4 were re-cut by ADR-0025.** Rung 4 was "the oil chapter entire"; the chapter now starts
-at rung 2. The cause is sulfur: making it petroleum-derived, as Factorio does, puts it and sulfuric
+**Rungs 2–4 were re-cut by ADR-0025, and ADR-0097 then removed rung 4.** Rung 4 was "the oil
+chapter entire"; the chapter now starts inside rung 2. The cause is sulfur: making it petroleum-derived, as Factorio does, puts it and sulfuric
 acid behind oil — and sulfur gates chemical science, so oil must precede it. Factorio's own tech
 costs say the same thing, since `Oil processing`, `Sulfur processing` and `Plastics` are all
 red+green while `Advanced oil processing` costs blue.
 
-The spine rule survives the move intact: rung 2's sulfur buys rung 3's science pack, rung 3's
-advanced processing buys rung 4's launch fuel, and rung 4's fuel buys the silo.
+The spine rule survives, on three rungs (ADR-0097): rung 2's sulfur buys rung 3's science pack,
+and rung 3's advanced processing makes the launch fuel the silo takes. **One exception, a terminal
+branch nothing downstream requires: the reactor.** `uranium-processing` is not among the silo's
+prerequisites, and what the Centrifuge makes feeds only the fuel cell, which feeds only the reactor.
+It stays because it is Factorio's optional power upgrade, not because the next rung needs it. *This
+paragraph read "rung 3's advanced processing buys rung 4's launch fuel, and rung 4's fuel buys the
+silo".*
 
 **The red circuit moved with the oil chapter** (`#125`). `#55` granted it at rung 1, reasoning from
 Factorio's own tech tree, where red circuits come from plastics and plastics are affordable then.
@@ -51,15 +59,16 @@ ADR-0025 had already moved plastic to rung 2, so rung 1 would have granted a rec
 cannot build. Red is a rung 2 grant; blue stays at rung 3, where sulfuric acid gives it a rung of
 headroom, and `#42`'s red circuit in the `chemical` pack is bought a rung after red is standing.
 
-**Rung 4's gate is re-argued.** `#39` justified the rung on the polymer, since every GCyR fuel tank
-and rocket motor is an Assembler recipe taking `plate KaptonK ×6`. The polymer is now rung 2, so
-that argument is spent, and the replacement is Factorio's own: the **Rocket silo** is the technology
-that costs production science, and it requires rocket fuel, rocket control units and concrete.
+**Rung 4 is gone** (ADR-0097). `#39` justified it on the polymer, and when the polymer moved to
+rung 2 this ADR replaced that with "the Rocket silo is the technology that costs production science,
+and it requires rocket fuel, rocket control units and concrete". That is Factorio 1.1. In the Space
+Age tree the pack extracts, the silo costs automation, logistic and chemical packs, and rocket
+control units do not exist.
 
 Packs keep **Factorio's names, ingredient count and ingredient roles**; the items filling those
 slots come from the mod that owns the rung. Military is dropped — its ingredients feed nothing
-downstream. Utility and Space are reserved for after the first launch, which is why `production`
-takes the fourth slot, with its vanilla recipe discarded.
+downstream. `production`, Utility and Space are reserved for after the first launch (ADR-0097), and
+`production`'s vanilla recipe is discarded.
 
 **Terra's science packs are inert items.** Sapros's science pack decays; that is where the
 buffer-as-liability puzzle belongs, and it is specified with Sapros.
@@ -127,7 +136,8 @@ beat sheet that lands far outside it has the wrong number of beats, not the wron
   **The premise inverted in ADR-0025** — sulfur *is* a refinery by-product now, by choice, so
   `chemical` does imply oil. The rejection nonetheless stands, on a different fact: oil does not fill
   a rung by itself once it is split across two of them, and rung 4 is held by the silo rather than by
-  the chapter. Four rungs, re-cut, not three.
+  the chapter. Four rungs, re-cut, not three. **Overturned by ADR-0097**: the silo costs no
+  production pack, so nothing held rung 4, and both of this rejection's reasons are now false.
 
 ## Consequences
 
