@@ -213,9 +213,10 @@ moving it back to the block turns both part tests red.
 And that the machine crafts its Held recipe at Factorio's rate (20 ticks and exactly 750 FE for
 copper cable, typed rather than read off `AssemblingMachineSpec`) and that a full output, no
 ingredients and a locked recipe each draw nothing, take nothing and keep the recipe (#328); drawing
-the tick's energy before the stall is asked turns all three stalls red. Nothing is locked until #260,
-so the lock test uses `AssemblingMachineRecipes.lockForTest`, which locks one id and not a swapped
-predicate. The batch's tests run side by side, so each locks a recipe no other test uses. And that
+the tick's energy before the stall is asked turns all three stalls red. The lock is Researchd's for
+the team that placed the machine (#260): each lock test makes a fresh Researchd team and stamps the
+machine with it, a pipe is locked and refused until that team researches `steam-power`, and then it
+crafts. Registered only with Researchd loaded. And that
 the item face takes the Held recipe's ingredients each in its own slot and refuses everything else
 (#329, ADR-0074). That is asserted through the capability on the anchor and on a hull block, on both
 overloads. A machine with no recipe takes nothing, and Oritech's `FILL_EVENLY` input mode, which

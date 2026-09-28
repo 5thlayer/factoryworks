@@ -266,7 +266,7 @@ hash = "f22ad10828ccad9cd00f592ac9edcbac53dcb5f08737d52d09f17866fd3f51ac"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "488a82bd6fa1153e6dbeb1f432c4010f4b98ada63aa0ac62afff17f0ad3bfd61"
+hash = "3502ac5b997649c45815cda2712c546875504665aa6202ed53bcb8ed39ef056f"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -2781,8 +2781,8 @@ hash = "0972057bb910ad49222d9658f4b57458143ea1428e3235870959c73ee2fc0a98"
 metafile = true
 
 [[files]]
-file = "mods/researchd-1.3.2-26.1.jar"
-hash = "7083bfe72994c2b0c78c1752c6fab5c34175c548fbebc44bea9ff5a4a713c09b"
+file = "mods/researchd-1.3.3-26.1.jar"
+hash = "5fb2411cce5e42d9c0567df21eb5d28be8eaf983251b9eb260923fb8d7071d5d"
 
 [[files]]
 file = "mods/rhino.pw.toml"

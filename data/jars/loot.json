@@ -1,5 +1,5 @@
 {
-  "jars": ["26.1.2.jar", "beltworks-0.3.8.jar", "ftb-materials-26.1.2.5.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "railcraft-reborn-26.1.2-1.4.3.jar", "researchd-1.3.2-26.1.jar"],
+  "jars": ["26.1.2.jar", "beltworks-0.3.8.jar", "ftb-materials-26.1.2.5.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "railcraft-reborn-26.1.2-1.4.3.jar", "researchd-1.3.3-26.1.jar"],
   "tables": {
     "beltworks:blocks/belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "beltworks:blocks/express_belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:express_belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
