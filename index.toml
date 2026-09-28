@@ -254,11 +254,11 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "34a4e2664087cab05765cd814eb8c1a64742bb1731280ae9758eef4035a7b28b"
+hash = "2c4d4341dfebe64412db1ec19feeb28958bae12a8413b66c9c3e0d17b6d148e8"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "dc9cff03b62b916787f0ef8a6b9b5f4abcba109837f3f84f46b1b9418da2103a"
+hash = "17d982a056f8d6606ab1e3931f4324931b992df2af68152ac3d161f49f202b0d"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -270,7 +270,7 @@ hash = "24495fcd82942d34f1b0201131281cafe24fce33938517977f1ea7bb37880515"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "7946179ad63dc5da2d33d1b4ed89d8061892effa554a041fd6769c8955fb6b88"
+hash = "cff387bddeb929a8d11dcff5afc7bbaccf26fec294027481273d215ffc64f391"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -2681,8 +2681,8 @@ hash = "8cd3a3e3f55d69d8fbb6aab75a721aaf7a8c1ec9d1bc64065380dcc9fdc39530"
 metafile = true
 
 [[files]]
-file = "mods/craftworks-0.1.2.jar"
-hash = "d2ead62ed517e54b48060ab314e2b566dc4a927c0041ea23693ab7ea53e437a6"
+file = "mods/craftworks-0.1.3.jar"
+hash = "cb6c26f50bd37a0d467ee439323af9fa7235f8c637c82ebe1842de42735e5f00"
 
 [[files]]
 file = "mods/emi-unofficial-port-unstable.pw.toml"
