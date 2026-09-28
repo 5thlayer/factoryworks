@@ -206,12 +206,16 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
             return;
         }
         TextureAtlasSprite sprite = RenderHelpers.getFluidSprite(fluid);
-        int tint = ColorHelper.makeOpaque(ColorHelper.getFluidTint(new FluidStack(fluid, 1)));
+        int tint = fluidTint(fluid);
         graphics.enableScissor(x, y, x + width, y + height);
         for (int tileX = x; tileX < x + width; tileX += SPRITE_SIZE) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, tileX, y, SPRITE_SIZE, SPRITE_SIZE, tint);
         }
         graphics.disableScissor();
+    }
+
+    private static int fluidTint(Fluid fluid) {
+        return ColorHelper.makeOpaque(ColorHelper.getFluidTint(new FluidStack(fluid, 1)));
     }
 
     /** A tank's bar on the energy row, in screen coordinates, and the fluid the Held recipe puts in it. */
@@ -374,7 +378,12 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
                     TEXT, false);
             return;
         }
-        graphics.item(held.icon(), HELD_X, HELD_Y);
+        if (!held.icon().isEmpty()) {
+            graphics.item(held.icon(), HELD_X, HELD_Y);
+        } else {
+            held.outputFluid().ifPresent(fluid -> graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
+                    RenderHelpers.getFluidSprite(fluid), HELD_X, HELD_Y, SPRITE_SIZE, SPRITE_SIZE, fluidTint(fluid)));
+        }
         int nameRight = right;
         if (held.choice().locked()) {
             Component locked = Component.translatable("gui.planetaryfactory.assembling_machine.locked");
