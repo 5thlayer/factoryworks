@@ -17,7 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.network.chat.Component;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
@@ -79,6 +81,23 @@ public final class AssemblingMachineRecipes {
      */
     public static List<SizedIngredient> slotIngredients(AssemblingRecipe recipe, MachineSpec spec) {
         return fits(recipe, spec) ? recipe.ingredients() : List.of();
+    }
+
+    /** The recipe's name as Factorio gives it: its own, or else its main product's (#490). */
+    public static Component name(RecipeHolder<AssemblingRecipe> holder) {
+        Identifier id = holder.id().identifier();
+        return Component.translatable("recipe." + id.getNamespace() + "." + id.getPath().replace('/', '.'),
+                productName(holder.value(), id));
+    }
+
+    private static Component productName(AssemblingRecipe recipe, Identifier id) {
+        ItemStack product = recipe.assemble(null);
+        if (!product.isEmpty()) {
+            return product.getHoverName();
+        }
+        return recipe.fluidResults().stream().findFirst()
+                .map(result -> AssemblingStatusText.name(FluidResource.of(result).getFluid()))
+                .orElse(Component.literal(id.toString()));
     }
 
     /** The first fluid a recipe's fluid ingredients name, which is the one its tank holds. */

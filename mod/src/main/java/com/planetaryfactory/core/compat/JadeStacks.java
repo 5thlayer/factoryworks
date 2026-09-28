@@ -1,5 +1,9 @@
 package com.planetaryfactory.core.compat;
 
+import java.util.Optional;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -30,6 +34,17 @@ final class JadeStacks {
         ItemStack.CODEC.encodeStart(ops(accessor), stack)
                 .result()
                 .ifPresent(encoded -> tag.put(key, encoded));
+    }
+
+    static void putComponent(CompoundTag tag, String key, Component component, BlockAccessor accessor) {
+        ComponentSerialization.CODEC.encodeStart(ops(accessor), component)
+                .result()
+                .ifPresent(encoded -> tag.put(key, encoded));
+    }
+
+    static Optional<Component> readComponent(CompoundTag tag, String key, BlockAccessor accessor) {
+        Tag encoded = tag.get(key);
+        return encoded == null ? Optional.empty() : ComponentSerialization.CODEC.parse(ops(accessor), encoded).result();
     }
 
     static ItemStack read(CompoundTag tag, String key, BlockAccessor accessor) {
