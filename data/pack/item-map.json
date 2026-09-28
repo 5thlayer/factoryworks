@@ -28,7 +28,7 @@
     "",
     "A row may carry `blocked_by`, the ticket that makes its target LOADABLE: a first-party item",
     "`planetaryfactory_core` has not registered yet, or a borrowed one whose mod is not installed on",
-    "26.1.2 (#258's machines, #260's Researchd). The target is kept as the standing",
+    "26.1.2 (#486's machines). The target is kept as the standing",
     "proposal. The converter skips every recipe touching one, so nothing is emitted that the game",
     "rejects at load (#279).",
     "",
@@ -189,8 +189,8 @@
       "kind": "item",
       "target": "planetaryfactory:chemical_plant",
       "source": "authored",
-      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #258's, so the row is blocked on it. Not Oritech's Centrifuge: ADR-0060 recipe-removes it as ore-doubling.",
-      "blocked_by": 258
+      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #486's, so the row is blocked on it. Not Oritech's Centrifuge: ADR-0060 recipe-removes it as ore-doubling.",
+      "blocked_by": 486
     },
     "chemical-science-pack": {
       "kind": "item",
@@ -574,8 +574,8 @@
       "kind": "item",
       "target": "planetaryfactory:oil_refinery",
       "source": "authored",
-      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #258's, so the row is blocked on it. Its Oritech parent is the Refinery, whose three fractions are the oil fluid rows.",
-      "blocked_by": 258
+      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #486's, so the row is blocked on it. Its Oritech parent is the Refinery, whose three fractions are the oil fluid rows.",
+      "blocked_by": 486
     },
     "oxide-asteroid-chunk": {
       "status": "undecided",

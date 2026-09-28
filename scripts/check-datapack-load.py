@@ -45,10 +45,10 @@ GRADLE = ["./gradlew", ":planetaryfactory_core:runGameTestServer", "--rerun-task
 # A rejection the log is allowed to contain, with the ticket that owns it.
 EXPECTED = {
     "planetaryfactory:blocks/iron_stromatolite":
-        "drops `gcyr:mercury_rock`, whose mod left with ADR-0060 -- a real dangling drop. The "
-        "palette is #258's; what a stromatolite drops instead is Sapros content (#23)",
+        "drops `gcyr:mercury_rock`, whose mod left with ADR-0060 -- a real dangling drop. What a "
+        "stromatolite drops instead is Sapros content (#23)",
     "planetaryfactory:blocks/copper_stromatolite":
-        "drops `gcyr:mercury_rock` -- the same dangling drop (#258, #23)",
+        "drops `gcyr:mercury_rock` -- the same dangling drop (#23)",
 }
 
 # The line the game prints per rejected file, and the two ways a whole registry can fail to load

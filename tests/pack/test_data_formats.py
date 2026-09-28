@@ -63,7 +63,7 @@ DATA_ROOTS = (
 # Item models left behind by a registration ADR-0060 removed. Named rather than skipped by shape,
 # so the day the chassis lands the entry is deleted and the definition is asserted like any other.
 DEFERRED_ITEM_MODELS = {
-    "kubejs:oil_refinery": "the GregTech multiblock's registration left with ADR-0060 (#258)",
+    "kubejs:oil_refinery": "the GregTech multiblock's registration left with ADR-0060 (#486)",
 }
 
 # Items drawn by a GeckoLib renderer, whose definition is GeckoLib's special model over the item

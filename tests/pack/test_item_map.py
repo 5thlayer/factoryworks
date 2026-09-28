@@ -22,7 +22,7 @@ TWO ASSERTIONS, AND THE SECOND IS WHY THIS FILE EXISTS (#275, ADR-0061).
    EMI entries and a recipe that takes whichever it feels like. A tag with exactly one populating
    jar stays legal, which is what keeps `#c:raw_materials/iron` doing its job.
 
-WHAT A DEFERRAL IS. The rows #258, #293, #294, #295, #260 and #378 own cannot resolve until those tickets land, so they are
+WHAT A DEFERRAL IS. The rows #486, #293, #294, #295, #260 and #378 own cannot resolve until those tickets land, so they are
 listed in DEFERRED with the ticket that owns each, in `scripts/check-datapack-load.py`'s idiom: an
 unlisted failure fails, and a LISTED row that now resolves fails too. The guard re-arms one row at a
 time rather than the assertion being weakened, and each ticket deletes its entry as its block lands.
@@ -53,7 +53,7 @@ VANILLA = pathlib.Path(
         "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
 
 # The `kubejs/data` subtrees that ADR-0060 left dead. They name registries that went with GregTech
-# and GCyR and are re-derived against the chassis (#258) by the converter (#279); scanning them for
+# and GCyR and are re-derived against the chassis (#486) by the converter (#279); scanning them for
 # contested tags would be asserting against files nobody intends to load.
 DEAD_SUBTREES = ("gtceu", "gt_materials", "gcyr")
 
@@ -61,7 +61,7 @@ DEAD_SUBTREES = ("gtceu", "gt_materials", "gcyr")
 # that ticket's fix -- a stale one is a guard nobody re-armed.
 CHASSIS = (
     "names a `planetaryfactory_core` subclass of an Oritech machine (ADR-0060) that #277 decided and "
-    "the chassis has not built yet: #258 owns this row")
+    "the chassis has not built yet: #486 owns this row")
 PUMP = (
     "names the first-party in-line pump, since Oritech's Pump drains the world rather than a pipe: "
     "#293 owns this row")
