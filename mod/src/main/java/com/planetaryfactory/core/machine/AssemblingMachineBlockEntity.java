@@ -217,7 +217,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
             return AssemblingStall.NO_RECIPE;
         }
         AssemblingRecipe recipe = resolved.get().value();
-        boolean locked = AssemblingMachineRecipes.isLocked(held.id().orElseThrow());
+        boolean locked = AssemblingMachineRecipes.isLocked(this, held.id().orElseThrow());
         boolean fed;
         boolean fluidFed;
         boolean fits;
@@ -502,8 +502,8 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     }
 
     private boolean keepsHeldRecipe(AssemblingTier to) {
-        return !held.isSet() || !(level instanceof ServerLevel server)
-                || AssemblingMachineMenu.verdict(server, to, held.id().orElseThrow()).held();
+        return !held.isSet() || !(level instanceof ServerLevel)
+                || AssemblingMachineMenu.verdict(this, to, held.id().orElseThrow()).held();
     }
 
     /**

@@ -37,6 +37,7 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import rearth.oritech.util.ColorableMachine.ColorVariant;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -87,8 +88,14 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::stallsUnfed);
         tests.test("assembling_machine_status_is_derived_on_each_ask", 20,
                 AssemblingMachineTests::statusIsDerivedOnEachAsk);
-        tests.test("assembling_machine_stalls_on_a_locked_recipe", 100,
-                AssemblingMachineTests::stallsOnALockedRecipe);
+        if (ModList.get().isLoaded("researchd")) {
+            tests.test("assembling_machine_stalls_on_a_locked_recipe", 100,
+                    AssemblingMachineTests::stallsOnALockedRecipe);
+            tests.test("assembling_machine_crafts_once_its_team_researches", 100,
+                    AssemblingMachineTests::craftsOnceItsTeamResearches);
+            tests.test("assembling_machine_refuses_a_locked_recipe", 20,
+                    AssemblingMachineTests::refusesALockedRecipe);
+        }
         tests.test("assembling_machine_is_powered_by_a_pole", 100,
                 AssemblingMachineTests::isPoweredByAPole);
         tests.test("assembling_machine_is_found_through_a_hull_block", 100,
@@ -293,6 +300,7 @@ final class AssemblingMachineTests {
     private static final String CONCRETE = "planetaryfactory:assembling/concrete";
 
     /** iron-gear-wheel, which the lock test locks and no other test crafts. */
+    private static final String STEAM_POWER = "planetary_factory:steam_power";
     private static final String GEAR = "planetaryfactory:assembling/iron_gear_wheel";
 
     /**
@@ -461,26 +469,38 @@ final class AssemblingMachineTests {
     }
 
     /**
-     * Fed, powered and with room, but the recipe is locked. Nothing is locked until Researchd
-     * returns (#260), so the lock is the stand-in {@link AssemblingMachineRecipes#lockForTest}, on a
-     * recipe no other test crafts. It is lifted before the assertions run; a sequence that
-     * times out before then leaves it set, which only this test's recipe notices.
+     * Fed, powered and with room, but Researchd blocks the recipe for the team that placed the
+     * machine (#260). The pipe is {@code steam-power}'s, which a new team has not researched.
      */
     private static void stallsOnALockedRecipe(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = place(helper);
-        helper.startSequence()
-                .thenExecute(() -> {
-                    AssemblingMachineRecipes.lockForTest(GEAR);
-                    machine.setHeldRecipe(HeldRecipe.of(GEAR), player(helper));
-                    machine.inventory.set(0, ItemResource.of(item("ftbmaterials:iron_plate")), 4);
-                    machine.energyStorage.set(CHARGE);
-                })
-                .thenIdle(WINDOW)
-                .thenExecute(() -> {
-                    AssemblingMachineRecipes.unlockForTest(GEAR);
-                    assertStalled(helper, machine, AssemblingStall.LOCKED, 4, GEAR);
-                })
-                .thenSucceed();
+        ResearchTeams.placedBy(machine, ResearchTeams.create(helper));
+        machine.setHeldRecipe(HeldRecipe.of(PIPE), player(helper));
+        machine.inventory.set(0, ItemResource.of(item("ftbmaterials:iron_plate")), 4);
+        machine.energyStorage.set(CHARGE);
+        helper.runAfterDelay(WINDOW, () -> {
+            assertStalled(helper, machine, AssemblingStall.LOCKED, 4, PIPE);
+            helper.succeed();
+        });
+    }
+
+    /** The lock is the placing team's: once it researches {@code steam-power}, the pipe crafts. */
+    private static void craftsOnceItsTeamResearches(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = place(helper);
+        var team = ResearchTeams.create(helper);
+        ResearchTeams.placedBy(machine, team);
+        ResearchTeams.complete(helper, team, STEAM_POWER);
+        machine.setHeldRecipe(HeldRecipe.of(PIPE), player(helper));
+        machine.inventory.set(0, ItemResource.of(item("ftbmaterials:iron_plate")), 4);
+        machine.energyStorage.set(CHARGE);
+        helper.succeedWhen(() -> {
+            if (machine.stall() == AssemblingStall.LOCKED) {
+                helper.fail("a machine whose team researched " + STEAM_POWER + " is still locked on " + PIPE, ANCHOR);
+            }
+            if (machine.inventory.getItem(0).getCount() == 4) {
+                helper.fail("a machine whose team researched " + STEAM_POWER + " took no iron plate", ANCHOR);
+            }
+        });
     }
 
     /** A stall draws no FE, takes no input, makes no progress and keeps its recipe. */
@@ -517,7 +537,7 @@ final class AssemblingMachineTests {
      */
     private static void keepsItsRecipeOverAReload(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = place(helper);
-        String id = someRecipe(helper);
+        String id = someRecipe(machine);
         machine.setHeldRecipe(HeldRecipe.of(id), player(helper));
 
         CompoundTag saved = machine.saveWithFullMetadata(helper.getLevel().registryAccess());
@@ -567,9 +587,6 @@ final class AssemblingMachineTests {
         Player player = player(helper);
         AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
         for (String id : loaded) {
-            if (AssemblingMachineRecipes.isLockedForTest(id)) {
-                continue;
-            }
             HoldVerdict verdict = menu.request(player, id);
             if (!verdict.held() || !machine.heldRecipe().equals(HeldRecipe.of(id))) {
                 helper.fail("Fill Recipe on " + id + " was answered " + verdict + " and left the machine holding "
@@ -586,8 +603,8 @@ final class AssemblingMachineTests {
 
     /**
      * Fill Recipe on a recipe the machine may not hold is refused and changes nothing (#330): an id
-     * that is not an assembling recipe, a {@code crafting-with-fluid} one tier 1 has no fluid box for,
-     * and one research has not unlocked. Left to {@code setHeldRecipe}, each is held and then idles,
+     * that is not an assembling recipe and a {@code crafting-with-fluid} one tier 1 has no fluid box for.
+     * Left to {@code setHeldRecipe}, each is held and then idles,
      * and the press looked like it worked.
      */
     private static void refusesWhatItCannotHold(GameTestHelper helper) {
@@ -606,17 +623,20 @@ final class AssemblingMachineTests {
             helper.fail("a crafting-with-fluid recipe was answered " + fluid + " and left " + machine.heldRecipe(), ANCHOR);
             return;
         }
-        // No other test crafts or locks this one; the lock set is shared by the batch.
-        String other = PIPE;
-        AssemblingMachineRecipes.lockForTest(other);
-        try {
-            HoldVerdict locked = menu.request(player, other);
-            if (locked != HoldVerdict.LOCKED || !machine.heldRecipe().equals(HeldRecipe.of(held))) {
-                helper.fail("a locked recipe was answered " + locked + " and left " + machine.heldRecipe(), ANCHOR);
-                return;
-            }
-        } finally {
-            AssemblingMachineRecipes.unlockForTest(other);
+        helper.succeed();
+    }
+
+    /** A recipe Researchd blocks for the placing team is refused and changes nothing (#260); no research unlocks the gear. */
+    private static void refusesALockedRecipe(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = place(helper);
+        ResearchTeams.placedBy(machine, ResearchTeams.create(helper));
+        Player player = player(helper);
+        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
+        menu.request(player, GEAR);
+        HoldVerdict locked = menu.request(player, PIPE);
+        if (locked != HoldVerdict.LOCKED || !machine.heldRecipe().equals(HeldRecipe.of(GEAR))) {
+            helper.fail("a locked recipe was answered " + locked + " and left " + machine.heldRecipe(), ANCHOR);
+            return;
         }
         helper.succeed();
     }
@@ -625,7 +645,7 @@ final class AssemblingMachineTests {
     private static void handsBackIngredientsOnAChange(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = place(helper);
         Player player = player(helper);
-        List<RecipeChoice> choices = AssemblingMachineRecipes.choices(helper.getLevel());
+        List<RecipeChoice> choices = AssemblingMachineRecipes.choices(machine);
         if (choices.size() < 2) {
             helper.fail("fewer than two assembling recipes are loaded");
             return;
@@ -667,7 +687,7 @@ final class AssemblingMachineTests {
         return helper.makeMockPlayer(GameType.SURVIVAL);
     }
 
-    private static String someRecipe(GameTestHelper helper) {
-        return AssemblingMachineRecipes.choices(helper.getLevel()).getFirst().id();
+    private static String someRecipe(AssemblingMachineBlockEntity machine) {
+        return AssemblingMachineRecipes.choices(machine).getFirst().id();
     }
 }

@@ -142,7 +142,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     /** Server side, over the machine's own inventory and the recipes the server has loaded. */
     public static AssemblingMachineMenu open(int containerId, Inventory playerInventory,
             AssemblingMachineBlockEntity machine) {
-        List<Entry> entries = entries((ServerLevel) machine.getLevel(), machine.tier());
+        List<Entry> entries = entries(machine);
         ContainerData data = new ContainerData() {
             @Override
             public int get(int index) {
@@ -176,8 +176,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                 entries, machine.inventory, data);
     }
 
-    public static List<Entry> entries(ServerLevel level, AssemblingTier tier) {
-        return AssemblingMachineRecipes.choices(level).stream()
+    public static List<Entry> entries(AssemblingMachineBlockEntity machine) {
+        ServerLevel level = (ServerLevel) machine.getLevel();
+        AssemblingTier tier = machine.tier();
+        return AssemblingMachineRecipes.choices(machine).stream()
                 .map(choice -> AssemblingMachineRecipes.resolve(level, HeldRecipe.of(choice.id()))
                         .map(holder -> new Entry(choice, holder.value().assemble(null),
                                 AssemblingMachineRecipes.slotIngredients(holder.value(), tier),
@@ -189,7 +191,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     /** What the opening packet carries: the position, then the list {@link #open} built. */
     public static void writeOpening(RegistryFriendlyByteBuf buf, AssemblingMachineBlockEntity machine) {
         buf.writeBlockPos(machine.getBlockPos());
-        Entry.LIST_CODEC.encode(buf, entries((ServerLevel) machine.getLevel(), machine.tier()));
+        Entry.LIST_CODEC.encode(buf, entries(machine));
     }
 
     static int heldIndex(List<Entry> entries, HeldRecipe held) {
@@ -281,7 +283,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         if (machine == null) {
             return HoldVerdict.NOT_ASSEMBLING;
         }
-        HoldVerdict verdict = verdict((ServerLevel) machine.getLevel(), machine.tier(), id);
+        HoldVerdict verdict = verdict(machine, machine.tier(), id);
         if (verdict.held()) {
             machine.setHeldRecipe(HeldRecipe.of(id), player);
         } else if (player instanceof ServerPlayer server) {
@@ -299,12 +301,13 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                 .orElse(Component.literal(id));
     }
 
-    /** What {@link #request} would answer on {@code tier}, asked of the server's recipes and research. */
-    public static HoldVerdict verdict(ServerLevel level, AssemblingTier tier, String id) {
-        Optional<RecipeHolder<AssemblingRecipe>> recipe = AssemblingMachineRecipes.resolve(level, HeldRecipe.of(id));
+    /** What {@link #request} would answer for {@code machine} on {@code tier}, asked of the server's recipes and locks. */
+    public static HoldVerdict verdict(AssemblingMachineBlockEntity machine, AssemblingTier tier, String id) {
+        Optional<RecipeHolder<AssemblingRecipe>> recipe =
+                AssemblingMachineRecipes.resolve((ServerLevel) machine.getLevel(), HeldRecipe.of(id));
         return HoldVerdict.of(recipe.isPresent(),
                 recipe.map(holder -> tier.crafts(holder.value().category())).orElse(false),
-                AssemblingMachineRecipes.isLocked(id));
+                AssemblingMachineRecipes.isLocked(machine, id));
     }
 
     @Override

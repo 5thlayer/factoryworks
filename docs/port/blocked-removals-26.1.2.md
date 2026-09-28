@@ -50,9 +50,9 @@ is the testing policy working as intended: the part worth keeping was the part t
 
 ## What a player loses meanwhile
 
-- **No research annotations.** Researchd loads the tree and Craftworks' Personal Assembler asks it
-  what is Locked (ADR-0089), but no recipe is annotated in EMI or JEI and no machine says a research
-  is why it is idle.
+- **No research annotations.** Researchd loads the tree, and Craftworks' Personal Assembler
+  (ADR-0089) and the Assembling Machine ask it what is Locked for the placing team, but no recipe is
+  annotated in EMI or JEI and no machine names the research it waits on.
 - **No machine chassis**, so none of Terra's Assembling Machines or its Chemical Plant is registered.
 
 ## The order to put it back in
