@@ -159,6 +159,8 @@
   "block.planetaryfactory.pumpjack_part": "Pumpjack (part)",
   "item.planetaryfactory.pumpjack": "Pumpjack",
   "block.planetaryfactory.oil_well": "Oil Well",
+  "message.planetaryfactory.welcome.crafting": "There is no crafting table here: your inventory is the Personal Assembler. Open it to craft.",
+  "message.planetaryfactory.welcome.reach": "You place blocks and pick up buildings from 16 blocks away, but you dig terrain, ore and trees only up close.",
   "message.planetaryfactory.pumpjack.no_well": "A Pumpjack must stand on an oil well.",
   "message.planetaryfactory.replace.no_room": "No room in the inventory for what the replaced block hands back.",
   "message.planetaryfactory.replace.other_group": "A %s cannot replace a %s column.",
