@@ -216,6 +216,12 @@ makes the ladder work.
 | 3 | `chemical` | **Advanced oil processing, heavy and light cracking, lubricant** |
 | 4 | `production` | **Rocket fuel, rocket control units, rocket parts, the silo** |
 
+**ADR-0097 re-cut this table again.** There is no rung 4: the silo and its rocket fuel cost chemical
+science and belong to rung 3, and `production` comes after the launch. The oil chapter no longer
+opens on the `logistic` rung either. It opens on the `oil-processing` trigger, which is researched
+by mining crude, and the Pumpjack's `oil-gathering` stays on rung 2 as the means to reach it. The
+table above is kept as this ADR's decision, not as the ladder; read ADR-0018's.
+
 Rungs 0 and 1 are unchanged by this ADR. ADR-0018's spine rule — each rung grants what the next
 rung's production physically requires — holds end to end on the new table: rung 2's sulfur buys
 rung 3's blue science, rung 3's advanced processing buys rung 4's rocket fuel, and rung 4's fuel
@@ -225,7 +231,9 @@ buys the silo.
 on the polymer, because every GCyR fuel tank and rocket motor is an Assembler recipe taking
 `plate KaptonK ×6`. The polymer is now rung 2, so that argument is spent. The replacement is
 Factorio's own: **the Rocket silo is the technology that costs production science**, and it requires
-rocket fuel, rocket control units and concrete. That is rung 4.
+rocket fuel, rocket control units and concrete. That is rung 4. **False, found by ADR-0097**: that is
+Factorio 1.1. In the Space Age tree the pack extracts, the silo costs automation, logistic and
+chemical packs, and rocket control units do not exist.
 
 ## The polymer is Factorio's plastic, not Mekanism's HDPE
 

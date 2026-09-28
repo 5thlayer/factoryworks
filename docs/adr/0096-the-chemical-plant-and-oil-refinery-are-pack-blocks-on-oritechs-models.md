@@ -45,8 +45,8 @@ corpus.
 Both machines stand on their model's footprint rather than Factorio's 3x3 and 5x5, as the
 Assembling Machine does (ADR-0072), which asked the question per machine and left it to this one.
 
-**What ADR-0025 keeps.** Its ratios, its rule that sulfur is petroleum-derived, and its rung re-cut
-all stand. Its section *The two machines* and its *×10* rule are replaced by this record.
+**What ADR-0025 keeps.** Its ratios and its rule that sulfur is petroleum-derived stand. Its section
+*The two machines* and its *×10* rule are replaced by this record, and its rung re-cut by ADR-0097.
 
 **Considered: one recipe type, split by category.** `planetaryfactory:assembling` would carry the
 `chemistry` and `oil-processing` categories and each machine would filter by category. Rejected:
