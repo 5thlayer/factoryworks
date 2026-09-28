@@ -6,8 +6,9 @@ import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 /**
- * Tiers 2 and 3's fluid face, on every block of the footprint (ADR-0074, ADR-0075): it takes only a
- * fluid the Held recipe names, and gives nothing back.
+ * A crafting machine's fluid face, on every block of the footprint (ADR-0074, ADR-0075, ADR-0096):
+ * a fluid the Held recipe names goes to its own input tank, anything else is refused, and only the
+ * output tanks give anything back.
  */
 public class AssemblingMachineFluidHandler extends GuardedResourceHandler<FluidResource> {
 
@@ -20,12 +21,12 @@ public class AssemblingMachineFluidHandler extends GuardedResourceHandler<FluidR
 
     @Override
     public boolean isValid(int index, FluidResource resource) {
-        return machine.acceptsFluid(resource) && super.isValid(index, resource);
+        return machine.inputTankFor(resource) == index && super.isValid(index, resource);
     }
 
     @Override
     public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
-        if (!machine.acceptsFluid(resource)) {
+        if (machine.inputTankFor(resource) != index) {
             return 0;
         }
         return super.insert(index, resource, amount, transaction);
@@ -33,6 +34,9 @@ public class AssemblingMachineFluidHandler extends GuardedResourceHandler<FluidR
 
     @Override
     public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
-        return 0;
+        if (!machine.isOutputTank(index)) {
+            return 0;
+        }
+        return super.extract(index, resource, amount, transaction);
     }
 }

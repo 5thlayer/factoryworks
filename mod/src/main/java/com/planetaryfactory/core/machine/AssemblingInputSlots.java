@@ -12,8 +12,7 @@ import java.util.function.ToIntFunction;
  */
 public final class AssemblingInputSlots {
 
-    /** {@code test_recipe_convert.py} reads this and fails a recipe with more ingredients. */
-    public static final int INPUTS = 4;
+    public static final int INPUTS = AssemblingTier.ONE.spec().itemInputs();
 
     private AssemblingInputSlots() {
     }

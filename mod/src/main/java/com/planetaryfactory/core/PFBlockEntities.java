@@ -294,7 +294,7 @@ public final class PFBlockEntities {
             registerOnFootprint(event, Capabilities.Item.BLOCK, footprint,
                     (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
                             ? new AssemblingMachineItemHandler(machine) : null);
-            if (tier.hasFluidInput()) {
+            if (tier.spec().hasTanks()) {
                 registerOnFootprint(event, Capabilities.Fluid.BLOCK, footprint,
                         (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
                                 ? new AssemblingMachineFluidHandler(machine) : null);

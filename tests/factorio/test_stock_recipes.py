@@ -23,7 +23,6 @@ Usage: tests/factorio/test_stock_recipes.py
 """
 import json
 import os
-import re
 import subprocess
 import sys
 import zipfile
@@ -41,7 +40,7 @@ GENERATOR = ROOT / "scripts/stock-recipe-convert.py"
 MODS = ROOT / "mods"
 CLIENT_JAR = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
     "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
-INPUT_SLOTS = ROOT / "mod/src/main/java/com/planetaryfactory/core/machine/AssemblingInputSlots.java"
+MACHINE_SPECS = ROOT / "mod/src/main/resources/planetaryfactory_core/machine/specs.json"
 HAND = "crafting"
 
 failures = []
@@ -110,7 +109,7 @@ def check_stock(recipes, keep):
 
     made = {item for name, r in recipes.items() if name not in stock for item in outputs_of(r)}
     defined = defined_items()
-    slots = int(re.search(r"public static final int INPUTS = (\d+);", INPUT_SLOTS.read_text()).group(1))
+    slots = json.loads(MACHINE_SPECS.read_text())["assembling-machine-1"]["item_inputs"]
     for name, recipe in sorted(stock.items()):
         check(len(ingredients_of(recipe)) <= slots,
               "%s has %d item ingredients and the Assembling Machine has %d input slots (ADR-0074)"

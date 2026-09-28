@@ -7,7 +7,6 @@ import com.planetaryfactory.core.PFServerConfig;
 import com.planetaryfactory.core.compat.researchd.ResearchdMachineLocks;
 import com.planetaryfactory.core.recipes.AssemblingFamily;
 import com.planetaryfactory.core.recipes.AssemblingRecipe;
-import com.planetaryfactory.core.recipes.PFRecipes;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -23,12 +22,11 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 /**
- * What an Assembling Machine may hold, read off the server's recipe manager (#327).
+ * What a crafting machine may hold, read off the server's recipe manager (#327, #489).
  *
- * <p>Every loaded {@code planetaryfactory:assembling} recipe, whatever its category. A
- * {@code crafting-with-fluid} one is listed and then refused by {@link HoldVerdict}, so Fill Recipe
- * on it says why rather than doing nothing (#331). What is Locked is the server
- * config's {@code lockSources} (#260).
+ * <p>Every loaded recipe of the machine's type, whatever it needs. One needing a tank the machine
+ * lacks is listed and then refused by {@link HoldVerdict}, so Fill Recipe on it says why rather than
+ * doing nothing (#331). What is Locked is the server config's {@code lockSources} (#260).
  */
 public final class AssemblingMachineRecipes {
 
@@ -42,31 +40,45 @@ public final class AssemblingMachineRecipes {
                 && ModList.get().isLoaded("researchd") && ResearchdMachineLocks.isLocked(machine, recipe);
     }
 
-    /** Every assembling recipe, as {@code machine}'s screen names them. */
-    public static List<RecipeChoice> choices(BlockEntity machine) {
+    /** Every recipe of the machine's type, as its screen names them. */
+    public static List<RecipeChoice> choices(AssemblingMachineBlockEntity machine) {
         List<String> ids = ((ServerLevel) machine.getLevel()).getServer().getRecipeManager().recipeMap()
-                .byType(PFRecipes.ASSEMBLING_TYPE.get()).stream()
+                .byType(AssemblingFamily.of(machine.spec().recipeType()).type()).stream()
                 .map(holder -> holder.id().identifier().toString())
                 .toList();
         return RecipeChoice.of(ids, id -> isLocked(machine, id));
     }
 
-    /** The recipe {@code held} names, looked up now rather than when the machine loaded. */
-    public static Optional<RecipeHolder<AssemblingRecipe>> resolve(ServerLevel level, HeldRecipe held) {
+    /** The recipe {@code held} names if it is of {@code spec}'s type, looked up now rather than when the machine loaded. */
+    public static Optional<RecipeHolder<AssemblingRecipe>> resolve(ServerLevel level, HeldRecipe held, MachineSpec spec) {
+        return resolveAny(level, held).filter(holder -> ofType(holder.value(), spec));
+    }
+
+    /** The recipe {@code held} names, of any type the chassis runs. */
+    public static Optional<RecipeHolder<AssemblingRecipe>> resolveAny(ServerLevel level, HeldRecipe held) {
         return held.id().map(Identifier::tryParse)
                 .map(id -> level.getServer().getRecipeManager().recipeMap()
                         .byKey(ResourceKey.create(Registries.RECIPE, id)))
-                .filter(holder -> holder.value() instanceof AssemblingRecipe recipe
-                        && recipe.family() == AssemblingFamily.ASSEMBLING)
+                .filter(holder -> holder.value() instanceof AssemblingRecipe)
                 .map(AssemblingMachineRecipes::cast);
     }
 
+    public static boolean ofType(AssemblingRecipe recipe, MachineSpec spec) {
+        return recipe.family().id().equals(spec.recipeType());
+    }
+
+    /** Whether {@code spec}'s machine has a slot or tank for everything {@code recipe} takes and gives. */
+    public static boolean fits(AssemblingRecipe recipe, MachineSpec spec) {
+        return spec.fits(recipe.ingredients().size(), recipe.results().size(),
+                recipe.fluidIngredients().size(), recipe.fluidResults().size());
+    }
+
     /**
-     * What the input slots take, in {@link AssemblingInputSlots}' order: nothing for a fluid recipe
-     * on a tier with no tank to run it.
+     * What the input slots take, in {@link AssemblingInputSlots}' order: nothing for a recipe the
+     * machine has no tank to run.
      */
-    public static List<SizedIngredient> slotIngredients(AssemblingRecipe recipe, AssemblingTier tier) {
-        return recipe.fluidIngredients().isEmpty() || tier.hasFluidInput() ? recipe.ingredients() : List.of();
+    public static List<SizedIngredient> slotIngredients(AssemblingRecipe recipe, MachineSpec spec) {
+        return fits(recipe, spec) ? recipe.ingredients() : List.of();
     }
 
     /** The first fluid a recipe's fluid ingredients name, which is the one its tank holds. */

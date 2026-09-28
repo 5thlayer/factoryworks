@@ -206,11 +206,13 @@ def check_overrides(overrides, corpus, failures):
             failures.append(f"override {name} names no recipe in the corpus")
 
 
-def assembling_inputs():
-    """The Assembling Machine's input slot count, read from the rule rather than typed here."""
-    source = (ROOT / "mod/src/main/java/com/planetaryfactory/core/machine/AssemblingInputSlots.java"
-              ).read_text()
-    return int(re.search(r"public static final int INPUTS = (\d+);", source).group(1))
+def input_slots():
+    """The most input slots any machine of each recipe type has, read from the spec the mod reads (#489)."""
+    specs = json.loads((ROOT / "mod/src/main/resources/planetaryfactory_core/machine/specs.json").read_text())
+    slots = {}
+    for spec in specs.values():
+        slots[spec["recipe_type"]] = max(slots.get(spec["recipe_type"], 0), spec["item_inputs"])
+    return slots
 
 
 def check_emitted(items, recipe_types, failures):
@@ -263,10 +265,11 @@ def check_emitted(items, recipe_types, failures):
             failures.append(f"{path.name} has time {recipe.get('time')!r}")
         if not recipe.get("category"):
             failures.append(f"{path.name} carries no Factorio category, so no hand set can read it")
-        # One ingredient per input slot, so a fifth could never be inserted (ADR-0074).
-        if len(recipe.get("ingredients", [])) > assembling_inputs():
-            failures.append(f"{path.name} has {len(recipe['ingredients'])} item ingredients and the "
-                            f"Assembling Machine has {assembling_inputs()} input slots")
+        # One ingredient per input slot, so one past the last could never be inserted (ADR-0074).
+        slots = input_slots().get(recipe.get("type"), 0)
+        if len(recipe.get("ingredients", [])) > slots:
+            failures.append(f"{path.name} has {len(recipe['ingredients'])} item ingredients and no "
+                            f"{recipe.get('type')} machine has more than {slots} input slots")
         for field in ("ingredients", "fluid_ingredients"):
             for entry in recipe.get(field, []):
                 ingredient = entry["ingredient"]

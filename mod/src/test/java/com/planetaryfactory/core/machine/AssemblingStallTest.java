@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -56,5 +58,37 @@ class AssemblingStallTest {
     @Test
     void aShortTankOutranksAFullOutput() {
         assertEquals(AssemblingStall.NO_FLUID, AssemblingStall.of(true, false, true, false, false));
+    }
+
+    /** One full fraction of three stops a refinery: nothing may be voided (ADR-0096). */
+    @Test
+    void oneFullOutputTankOfSeveralStopsTheMachine() {
+        assertEquals(AssemblingStall.OUTPUT_FULL,
+                AssemblingStall.of(true, false, true, true, true, List.of(true, false, true)));
+        assertEquals(AssemblingStall.OUTPUT_FULL,
+                AssemblingStall.of(true, false, true, true, true, List.of(false, false, false)));
+    }
+
+    @Test
+    void everyOutputTankWithRoomRuns() {
+        assertEquals(AssemblingStall.NONE,
+                AssemblingStall.of(true, false, true, true, true, List.of(true, true, true)));
+    }
+
+    /** No item result and three tanks with room: a refinery has no output slot to be full. */
+    @Test
+    void fullItemsStopAMachineWhoseTanksHaveRoom() {
+        assertEquals(AssemblingStall.OUTPUT_FULL,
+                AssemblingStall.of(true, false, true, true, false, List.of(true)));
+    }
+
+    /** A full tank never outranks a reason the craft would not start. */
+    @Test
+    void aFullTankIsNamedAfterEveryOtherStall() {
+        List<Boolean> oneFull = List.of(true, false, true);
+        assertEquals(AssemblingStall.NO_RECIPE, AssemblingStall.of(false, false, true, true, true, oneFull));
+        assertEquals(AssemblingStall.LOCKED, AssemblingStall.of(true, true, true, true, true, oneFull));
+        assertEquals(AssemblingStall.NO_INGREDIENTS, AssemblingStall.of(true, false, false, true, true, oneFull));
+        assertEquals(AssemblingStall.NO_FLUID, AssemblingStall.of(true, false, true, false, true, oneFull));
     }
 }
