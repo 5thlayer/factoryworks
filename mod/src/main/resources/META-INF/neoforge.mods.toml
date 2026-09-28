@@ -61,11 +61,6 @@ side = "BOTH"
 [[mixins]]
 config = "planetaryfactory_core.mixins.json"
 
-# Separate, and not required, because it targets EMI -- an optional client-side dependency. A
-# missing target class in the main config would be fatal; here it is skipped.
-[[mixins]]
-config = "planetaryfactory_core.emi.mixins.json"
-
 # Not required for the same reason: it targets Oritech, an optional dependency. The Steam Engine's
 # calibration to Factorio (#282, ADR-0062).
 [[mixins]]

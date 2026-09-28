@@ -1,0 +1,26 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 15
+    },
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 15
+    },
+    {
+      "ingredient": "planetaryfactory:advanced_circuit",
+      "count": 1
+    },
+    {
+      "ingredient": "beltworks:express_loader",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "beltworks:turbo_loader",
+    "count": 1
+  },
+  "time": 10
+}

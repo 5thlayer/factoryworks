@@ -1,58 +1,56 @@
 package com.planetaryfactory.core.gametest;
 
-import com.planetaryfactory.core.assembler.HandRecipe;
-import com.planetaryfactory.core.assembler.RecipeGraph;
-import com.planetaryfactory.core.assembler.RuntimeHandRecipes;
+import io.github._5thlayer.craftworks.planner.AssemblingRecipe;
+import io.github._5thlayer.craftworks.planner.AssemblingRecipeSet;
+import io.github._5thlayer.craftworks.recipe.RuntimeAssemblingRecipes;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 /**
- * That the Personal Assembler's hand set is read off {@code planetaryfactory:assembling} (#279).
+ * That Craftworks plans the pack's hand copies (#291, ADR-0089).
  *
- * <p>The admission rule is {@code HandSetAdmissionTest}'s and the emitted JSON is
- * {@code check-datapack-load.py}'s. What neither reaches is the glue between them: that the server's
- * recipe manager holds the pack's recipes under the pack's type, that {@code RuntimeHandRecipes}
- * finds them there, and that a tag ingredient arrives as the items it names. A graph read off the
- * wrong type is empty with nothing logged, which is the state the port left the Assembler in.
- *
- * <p>The recipes asserted are the wooden chest, for its tag ingredient, and concrete, for its fluid.
+ * <p>The copies' JSON is {@code test_hand_recipes.py}'s. What no static check reaches is whether
+ * Craftworks reads them: a copy it refuses, such as one whose tag names no item, only prints a
+ * warning. The wooden chest is asserted for its tag ingredient, and concrete for being left out,
+ * since it needs a fluid.
  */
 final class HandSetTests {
 
-    private static final String WOODEN_CHEST = "planetaryfactory:assembling/wooden_chest";
-    private static final String CONCRETE = "planetaryfactory:assembling/concrete";
+    private static final String WOODEN_CHEST = "planetaryfactory:hand/wooden_chest";
+    private static final String CONCRETE = "planetaryfactory:hand/concrete";
 
     private HandSetTests() {
     }
 
     static void register(PFGameTests.Registrar tests) {
-        tests.test("hand_set_reads_the_assembling_type", 20, HandSetTests::handSetReadsTheAssemblingType);
+        tests.test("craftworks_plans_the_hand_copies", 20, HandSetTests::craftworksPlansTheHandCopies);
     }
 
-    private static void handSetReadsTheAssemblingType(GameTestHelper helper) {
-        RecipeGraph graph = RuntimeHandRecipes.graph(helper.getLevel());
-        HandRecipe chest = graph.byId(WOODEN_CHEST);
-        if (chest == null) {
-            helper.fail("the hand set holds " + graph.size() + " recipe(s) and not " + WOODEN_CHEST);
+    private static void craftworksPlansTheHandCopies(GameTestHelper helper) {
+        AssemblingRecipeSet recipes = RuntimeAssemblingRecipes.recipes(helper.getLevel());
+        long copies = helper.getLevel().getServer().getRecipeManager().recipeMap().values().stream()
+                .filter(holder -> holder.id().identifier().toString().startsWith("planetaryfactory:hand/"))
+                .count();
+        long planned = recipes.ids().stream().filter(id -> id.startsWith("planetaryfactory:hand/")).count();
+        if (copies == 0 || planned != copies) {
+            helper.fail("Craftworks plans " + planned + " of the " + copies + " hand copies the server loaded");
             return;
         }
-        if (!chest.inputs().getFirst().items().contains("minecraft:oak_log")) {
-            helper.fail(WOODEN_CHEST + " takes " + chest.inputs() + "; #minecraft:logs should"
+        AssemblingRecipe chest = recipes.byId(WOODEN_CHEST);
+        if (chest == null) {
+            helper.fail("Craftworks does not plan " + WOODEN_CHEST);
+            return;
+        }
+        if (!chest.ingredients().getFirst().items().contains("minecraft:oak_log")) {
+            helper.fail(WOODEN_CHEST + " takes " + chest.ingredients() + "; #minecraft:logs should"
                     + " arrive as the logs it names");
             return;
         }
-        if (graph.makerOf("minecraft:chest") != chest) {
-            helper.fail("the graph does not know " + WOODEN_CHEST + " makes a chest");
+        if (!recipes.routes("minecraft:chest").contains(chest)) {
+            helper.fail("Craftworks does not know " + WOODEN_CHEST + " makes a chest");
             return;
         }
-        // Loaded, but crafting-with-fluid: the machine's, never the hand's.
-        boolean loaded = helper.getLevel().getServer().getRecipeManager().recipeMap().values().stream()
-                .anyMatch(holder -> holder.id().identifier().toString().equals(CONCRETE));
-        if (!loaded) {
-            helper.fail(CONCRETE + " is not in the recipe manager, so its absence below proves nothing");
-            return;
-        }
-        if (graph.byId(CONCRETE) != null) {
-            helper.fail(CONCRETE + " is crafting-with-fluid and is in the hand set");
+        if (recipes.byId(CONCRETE) != null) {
+            helper.fail(CONCRETE + " needs a fluid and has a hand copy");
             return;
         }
         helper.succeed();

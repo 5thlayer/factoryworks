@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:cobblestone",
+      "count": 5
+    }
+  ],
+  "result": {
+    "id": "planetaryfactory:stone_furnace",
+    "count": 1
+  },
+  "time": 10
+}

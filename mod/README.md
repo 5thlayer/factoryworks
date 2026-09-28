@@ -27,28 +27,8 @@ API in this pack exposes:
   research (issue #79). The answer is derived from the machine's current contents at the moment of
   asking and never stored; ADR-0027 is why the refusal cannot speak for itself, and #76 is what the
   stored alternative costs.
-- **The Personal Assembler** — the inventory screen (ADR-0066): the queue drawn in the removed grid's
-  area with click-to-cancel, the server-opened Crafting Plan, the packets and the serial queue behind
-  them (ADR-0038, #160, #290), and a read-only GUI layer
-  repeats the queue beside the hotbar — the queue runs with every screen shut, so needing to stop
-  playing to see it was the opposite of what a background queue is for. It is here for the bluntest reason in
-  ADR-0015's table: KubeJS cannot register a `MenuType` or a `Screen` on 1.21.1 at all (#96). The
-  split inside the package is the one the testing policy asks for — `AssemblerQueue`, `CraftingPlan`
-  and everything they touch name items by string and hold no Minecraft type, so the reservation, the
-  refund and the pause are unit-tested, and so is the attachment's codec, which is DataFixerUpper's
-  rather than Minecraft's for exactly that reason; `InventoryPlayerItems` is the single class where an
-  item id becomes an `ItemStack`. `PlanResolver` fills a plan and is Minecraft-free by the same
-  rule, so chain-crafting — the one genuinely hard thing in the Assembler — is unit-tested; the
-  graph it plans over is read off the loaded `planetaryfactory:assembling` recipes by
-  `RuntimeHandRecipes`, keyed on the `category` the converter stamps (#279), because ADR-0038 gives the Assembler no recipe type of
-  its own (#161). A recipe's input is an `Ingredient` — a count of any one of several items — and
-  not a single id, because the pack emits tag ingredients and AlmostUnified rewrites plain item
-  ingredients into unified tags at load; a resolver reading only the first match refuses plans the
-  crafting grid accepts. EMI's fill button reaches the inventory screen from `compat/emi`, implementing `EmiRecipeHandler`
-  directly rather than `StandardRecipeHandler`, whose default `canCraft` would grey the button out
-  precisely when the plan has something to say. Which recipes get a button is the other question:
-  the hand set's ids are synced to the client on datapack sync, so a furnace recipe never offers a
-  button that could only open a dialog to refuse.
+- **Not the Personal Assembler.** It is Craftworks, a local jar (ADR-0089). The pack ships only
+  its recipes, the `hand/` copies `scripts/build-hand-recipes.py` writes, and `config/craftworks-server.toml`.
 
 - **The lock annotation** — a recipe the viewing team has not researched is marked in both recipe
   viewers, from `compat/emi` and `compat/jei` over the shared `research/client` note (issue #75).

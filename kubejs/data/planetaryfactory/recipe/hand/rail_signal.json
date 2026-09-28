@@ -1,0 +1,18 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 5
+    }
+  ],
+  "result": {
+    "id": "railcraft:block_signal",
+    "count": 1
+  },
+  "time": 10
+}

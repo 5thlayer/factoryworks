@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:glass",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "minecraft:glass_pane",
+    "count": 4
+  },
+  "time": 10
+}

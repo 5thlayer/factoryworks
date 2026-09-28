@@ -23,8 +23,7 @@
 //   - `native_mechanic` (#93): Create's Spout and Item Drain key on `IFluidHandlerItem`, so the
 //     eighteen barrel fill/empty rows were never recipes. Nothing to keep, nothing to remove,
 //     and authoring one would duplicate a free mechanic.
-//   - The 2x2 inventory grid: not recipe-removable, and #140's, not this sweep's. #140 shipped
-//     it in `planetaryfactory_core` -- the grid's slots are inactive and craft nothing, so the
+//   - The 2x2 inventory grid: not recipe-removable. Craftworks removes it (ADR-0089), so the
 //     stock shaped recipes this sweep leaves loaded are unreachable rather than craftable.
 //   - GCyR's twelve compiled Java recipes (ADR-0026): expressed in a form no removal call
 //     reaches. The pack's answer there is re-authoring, not removal.
@@ -34,7 +33,12 @@ var RECIPE_SURVIVORS = [
   {
     surface: 'assembling',
     type: 'planetaryfactory:assembling',
-    why: "ADR-0026's Assembling Machine 1/2/3 and ADR-0038's Personal Assembler, one recipe type across Factorio's three assembling categories. ADR-0031: the corpus authors every recipe it contains, and the converter emits them onto the pack's own type since GregTech's left with ADR-0060 (#279). The Chemical Plant and Oil Refinery have no survivor until #277 registers their types."
+    why: "ADR-0026's Assembling Machine 1/2/3, one recipe type across Factorio's three assembling categories. ADR-0031: the corpus authors every recipe it contains, and the converter emits them onto the pack's own type since GregTech's left with ADR-0060 (#279). The Chemical Plant and Oil Refinery have no survivor until #277 registers their types."
+  },
+  {
+    surface: 'personal_assembler',
+    type: 'craftworks:assembling',
+    why: "ADR-0089: Craftworks' Personal Assembler plans only with its own type, so each `crafting` recipe of the assembling surface has a copy here under `hand/`, written by scripts/build-hand-recipes.py."
   },
   {
     surface: 'smelting',

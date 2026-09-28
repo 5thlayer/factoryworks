@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "ftbmaterials:iron_gear",
+    "count": 1
+  },
+  "time": 10
+}

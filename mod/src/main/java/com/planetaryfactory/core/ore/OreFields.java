@@ -38,7 +38,7 @@ public final class OreFields extends SavedData {
      *
      * <p><b>No unit test, deliberately.</b> {@link Field} is built on {@link BlockPos} and
      * {@link BoundingBox}, so this codec cannot be reached from the Minecraft-free test source set
-     * that holds {@code AssemblerCodecsTest}. What it would assert -- that the derivation survives
+     * that holds {@code HeldRecipeTest}. What it would assert -- that the derivation survives
      * a save -- is instead covered by the arithmetic tests under {@code core/ore/}, which take the
      * field list directly.
      */

@@ -17,6 +17,10 @@ file = "config/configuration-options.json"
 hash = "0b68a3b324f4a172d577a10446593b8f64f38e37199c928b0fc5aee152baee00"
 
 [[files]]
+file = "config/craftworks-server.toml"
+hash = "8d134f0ed5cdea8ec6b1af71df02dee7ebbd7f2233b0b38b3e92a6068e30100a"
+
+[[files]]
 file = "config/ferritecore-mixin.toml"
 hash = "06b420c4429aa9e3fea7045b51f529bc4f4ed5ad510ec7045d192351605cfe71"
 
@@ -250,7 +254,7 @@ hash = "ed2cbcd385f1e0550ac6838c5155dc0dae87fde2e56fcbe485c82cd4dfed2643"
 
 [[files]]
 file = "data/pack/category-map.json"
-hash = "84e660b8948750340fdfc6108f41703cb0fcd61088dc7a4fbb65dd53ae594d17"
+hash = "9b33cd5989ffa3e84a88e0cc7bbfbbed558c78cef1b58eeb773ba84c91cb69a4"
 
 [[files]]
 file = "data/pack/item-map.json"
@@ -258,7 +262,7 @@ hash = "174eaef72e49dbe98fb4e825af42c212d8222cb1471032596a746d9cb5920641"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "e27c1556aa8e7b30b432b0b8300d0ef5f563adffeace8fc0ffe93db7f8e82600"
+hash = "488a82bd6fa1153e6dbeb1f432c4010f4b98ada63aa0ac62afff17f0ad3bfd61"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -1845,6 +1849,290 @@ file = "kubejs/data/planetaryfactory/recipe/copper_plate.json"
 hash = "7210318c84d4a175e293fb01b633f9b1b20b2ea176f6d6d2e3e74ac99535a594"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/accumulator.json"
+hash = "ba7e14ea7c48b2ae02b2de25d2d6e62cf9b1e0ad30f29788529f5184821be3fc"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/advanced_circuit.json"
+hash = "081c2e8b6639ce4fa7dde7b70f2d27584f9d5e405590d5e1e73a7100b8299aff"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/assembling_machine_1.json"
+hash = "33583c1810259374b0cd43ef0403b4d9e0503a3f1c8b1212d711c9b8135306f2"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/assembling_machine_2.json"
+hash = "2f26c61d94dd4ab4feb36d11ceda3991e408d0f85e322a37902a96769db7442f"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/barrel.json"
+hash = "3ba025e6382c1af234addcb72ff31644ae5e6bccbf0084d57eac440f895132bb"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/boiler.json"
+hash = "dce36fa09826473fbddeaa1ec135a7cdbcdac1e3500bebb99644b30eed26cef8"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/bulk_inserter.json"
+hash = "3645b03ee51d4066db997859c970650ab9f758ef579a0754876d025aa8ad26a2"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/burner_inserter.json"
+hash = "28fc2a0c4e9068ea4c15342aa0a8cdd214338fd924b946cbdb4bf0261d17abb8"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/burner_mining_drill.json"
+hash = "cf4026a58370a880ff2917c16c7c26fe2bd2721c8f986c25dea0ed1709e78974"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/cargo_wagon.json"
+hash = "2971354938c395d6b9b64ff1337246a46e897fd0c070c883bc5532c37558d457"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/copper_cable.json"
+hash = "ddc628accef8b1aefec07f294f24408a69813910a078148e13f3f51ed79cd466"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/electric_furnace.json"
+hash = "08821f6f8e186c93a77316e154b79755d704fa02fd41bf557f56067f7386d649"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/electric_mining_drill.json"
+hash = "625d6ede73b482555a0f254f0858265c095df9c7b342c473a9aeb9fd65882e8e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/electronic_circuit.json"
+hash = "ca9e531444077291f8b666f62b1ee5eda19938ed3207f482487174e44c2ee87a"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/fast_inserter.json"
+hash = "0c2ab48642f8cd3505c069b550a6bcc2fd1f95fa0f9658f615adab12c067d860"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/fast_splitter.json"
+hash = "15c2e2f35f3d4ead4b2bf764b483c3fb832ea5f32cf2e84f66656909388ec1b9"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/fast_transport_belt.json"
+hash = "5acdbff67004126551fe7cc0cea872fc53becfa7ce303defdde68210a402bc60"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/fluid_wagon.json"
+hash = "38e60586e4f01a14f36b49138af0ccae1282445441aecd3af68dd29c84e2ca65"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/inserter.json"
+hash = "656ea5d84605464dcc933214584c43f68444bc0cd9ec8b8773c9794679e77257"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/iron_chest.json"
+hash = "e274b090f32b307eb3af7b45ce7c7dc29e801f3960d1d00511364f1768b73bb4"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/iron_gear_wheel.json"
+hash = "86dcbe0a2dc7af7727da987cf4c4a755789b4b752e34698d12ec2a859202cb82"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/iron_stick.json"
+hash = "b63f46dfaf5e6394a77cc240e85a5716522fcdde8632937503a3702d25af156c"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/locomotive.json"
+hash = "f27849979d23d2404cd0e145d06a63a20c981f88f6dbdb179c864560350e7b2e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/low_density_structure.json"
+hash = "b3bcae83ac5fdc468b2cac690ae4218d375db9d3a990475cf3180aa776405c14"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/medium_electric_pole.json"
+hash = "5956e5a38e919c5d069363b49d4e33a3f458ef6eadb50c357aa20eb069bf3087"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/offshore_pump.json"
+hash = "f7891bc91233c421f8fe4ae435f807cd5fadaf53c23daaa27dc61684b8ae2225"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/pack/engineers_iron_pick.json"
+hash = "799af1de6d148db1c3110e3f5031f041fb0eb1891fc5046698389f66ead335ce"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/pack/engineers_steel_pick.json"
+hash = "a73efb09cbf5e3fed9ec0e0b09b36932d6fa1a7934345f073f02f198927cf888"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/pipe.json"
+hash = "6bd1e22f622ffec7715680f9cc756c6d40c161069e5ff4b7a0c8568063645061"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/pumpjack.json"
+hash = "24ceee7cebd517ff1202471bc2bc483398bd22d4698ae8635dd0f0ff130a4599"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/radar.json"
+hash = "0327fec6c034ffb3e4fa51a2aed55a93774eaee18b25f2cabc54cb3a5c8e22d9"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/rail.json"
+hash = "f82cad292bf49ab9c706f1a16a9aa0aef44d7754b6066d86f32d76464dc6342d"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/rail_chain_signal.json"
+hash = "99b16fdf3ad3944c68bae52f6a77152fcc6dbccb8e8a4e5ee908016d655f9c6b"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/rail_signal.json"
+hash = "cf9b06a1ed12df31f324e504e460b7f2a5b952b6e06e58f758ea0edfdb2cc83f"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/small_electric_pole.json"
+hash = "b48a39f96987b7e2750b8f82eb8747e5f277dd3049bda8705a62129ce38497f4"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/small_lamp.json"
+hash = "c858c280ea4bf417c4352a5207e570a8178e0e7f4f3a2547bf9463955bc01bf2"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/solar_panel.json"
+hash = "2f1960ce89cc69208040b87f5ce9bc2f09ab905007326c8ec51ae50085482dfc"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/splitter.json"
+hash = "b665502eca13875e4ada0be2902ec233027f98d3f527c3786bf83d4e06f22c43"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/steam_engine.json"
+hash = "fd61062e2af51615c46e627a30872325b72e825418c7387a2e2a944fcc178e87"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/steel_chest.json"
+hash = "ee9d876c2a6d2943b2f600ef751ae4532ea3922997da1c75d7ac1a985cc72418"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/steel_furnace.json"
+hash = "fa5e1a8872484045207f09cdc9901a2ddac40c9f034a4ef620470801539da788"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/acacia_stairs.json"
+hash = "a672f4fe37335c8751f4c38d4c7f6e4c85b56b1d747c24ff1d315246e1f40fe6"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/birch_stairs.json"
+hash = "e60e2580d8bbd9ff9a208c9f769910429af3e47bd42e423e3867485b4a9b5b8b"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/black_concrete.json"
+hash = "21ea96e34f3f0ed3e9f33b4e38cff96ce547070d95b619fdf0d2917ae7c4ec8c"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/blue_concrete.json"
+hash = "724281e5953394d281f0ee6249a52deb317f1670621a1513cb6f4c2aea29a859"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/brown_concrete.json"
+hash = "239a22003b40141d086ee54e8e9fba2a909b3f310826291b1341053bfb9ca87d"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/cobblestone_stairs.json"
+hash = "d253306f1d2a43670573a36719d504d901b457307c3bfeebcd9e36dfc30303a1"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/cyan_concrete.json"
+hash = "39645e9f613448b0a0d95c9e3f5d640dd0904b21f47107bee8190c6e2d054284"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/glass_pane.json"
+hash = "535fba3d1e07eec49ad8721edbdadce7c7d5f75e9049706b245c48afa5ac0678"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/green_concrete.json"
+hash = "5d896e25f1e3cc0f82a4b5268b6c24017e98c63c6b04fe3da4d4c2e072be1bd2"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/ladder.json"
+hash = "6d5c3095e805d2eb56881d62ce1a2143934bb7f1b68a70ea8ad2c4d0a6dd49f4"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/light_blue_concrete.json"
+hash = "50a0b21fa0846be299142bfd5e148a3e19c0fc0af5ba854b5d1dd8de2ba6bce6"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/lime_concrete.json"
+hash = "4281d804fcfcefc2c8b63db01a30ba6157fa189ace7ef8e4690af1db8dd5550d"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/magenta_concrete.json"
+hash = "9e5642b1b3a38e0db386cf5f6fde325c4c9d0e41620952e955a5cad201601def"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/oak_stairs.json"
+hash = "6e33c58c24d93412ccef84c022ce4733399150031c86f46f6074d1522ae5f4ca"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/orange_concrete.json"
+hash = "05ea37f229197e2ac8734de42d92727cda47bedb4ad3f93392a1ee4043baeb8e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/pink_concrete.json"
+hash = "6ff50a5df98949764452a26ee349d08b169290ff4bcafc543ce921ad0da2ee65"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/purple_concrete.json"
+hash = "44866dce08678e545c7eca125188235fca64581f354f09bbf35c261070ac79f1"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/red_concrete.json"
+hash = "7f1269b197333f23b42bc9a88b3f50034e2c4027ea6734528313ff86ac8f1709"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/sand.json"
+hash = "4b4230c466032ad6cfba6df9bf8707da90b9b07893115a8a996589d76d5d8435"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/smart_filter.json"
+hash = "c15570f9343f13092284c60d9fe6027886835b5b457da706df84e5d78788abe7"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/stone_brick_stairs.json"
+hash = "0dd35a325f6fd74918d39f7b9eaccd4dc2f613f11ba833ea891062a18214713e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/stone_stairs.json"
+hash = "5630f9c859b0c57f26700fe0bc637303ceedca88bb10e3b6df7053eeb76a4bab"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/white_concrete.json"
+hash = "c9b57d2fffc18de6e88ca7fa0e8e55f36686f86632d61947de3f5733376d4c80"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stock/yellow_concrete.json"
+hash = "1fd3515c97ab392892ec1324282ff5086fdfae1ab39eec1eef4377637c1ba3b0"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/stone_furnace.json"
+hash = "df04ace413bfa5db16d74e1d6445351a1f5d1ccd99dfac2475e30f9366f42c44"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/storage_tank.json"
+hash = "037f06a5b2e39573a3a710bc9d3f51ebc96e76ab0a3d6db5a47c48f762919fac"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/substation.json"
+hash = "41b811046a217a35e152ef59e10744aa9ac103a5d1e449d31aa89840462c62aa"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/train_stop.json"
+hash = "2831b6947de1ee737903c8d4c949756fd87fdf0bc204ada6020643a31edc8840"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/transport_belt.json"
+hash = "1c25d40d82111c30d0881494511ce31e5396e1c5db20b6f4b8dc98f7391ad9e4"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/wooden_chest.json"
+hash = "67aeac0dd377e0666f92b30400819e69448fce9c2659ab64845226a7d737fa8a"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/iron_plate.json"
 hash = "d497c5dc3f7a2104987ed5c72e7ccd6561d536131006ae0e57ec42fa8fce6ac2"
 
@@ -2254,7 +2542,11 @@ hash = "5f1cc1c57b22b2bf32857a0c27d2805937847fac025a5759ff8603ffb83d49ee"
 
 [[files]]
 file = "kubejs/server_scripts/factorio_tech_dsl.js"
-hash = "d22a4db088958aedb736c695dc7595dd590086125f14bc53e8587d7c7243cbcd"
+hash = "13619636c44af1a4385f23c1c84a0c814132963fbcf15ff82fd98ceae6a1affe"
+
+[[files]]
+file = "kubejs/server_scripts/hand_recipes.js"
+hash = "815d0091adeee64622e153f9319362afcc66f0de698a62b340606cbcc351bd56"
 
 [[files]]
 file = "kubejs/server_scripts/jsconfig.json"
@@ -2266,7 +2558,7 @@ hash = "dae099ae3be7f033c0c190ee8c3b023b42f6b235d9d0591be5926e8435dbd67f"
 
 [[files]]
 file = "kubejs/server_scripts/recipe_survivors.js"
-hash = "e00f1904b10d7f49a54633234206428e5a7aad806340bc98ba1d15fcd1c64fd0"
+hash = "fd6a3fe5d3781af1f78e9c6569904163132d8772b6872a0b6b9b641a47ad32fb"
 
 [[files]]
 file = "kubejs/server_scripts/recipes.js"
@@ -2343,6 +2635,10 @@ metafile = true
 file = "mods/controlling.pw.toml"
 hash = "8cd3a3e3f55d69d8fbb6aab75a721aaf7a8c1ec9d1bc64065380dcc9fdc39530"
 metafile = true
+
+[[files]]
+file = "mods/craftworks-0.1.1.jar"
+hash = "6e4a424dc89c356e84a3f07a63e578dcd8b3b05e6f3aa2d681e7bbd495b1d586"
 
 [[files]]
 file = "mods/emi-unofficial-port-unstable.pw.toml"

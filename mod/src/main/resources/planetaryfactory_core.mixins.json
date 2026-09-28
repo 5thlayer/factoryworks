@@ -3,8 +3,7 @@
   "package": "com.planetaryfactory.core.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "minecraft.GameTestServerMixin",
-    "minecraft.InventoryMenuMixin"
+    "minecraft.GameTestServerMixin"
   ],
   "client": [
     "minecraft.MinecraftMixin"

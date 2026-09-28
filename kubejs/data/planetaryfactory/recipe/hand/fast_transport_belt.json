@@ -1,0 +1,18 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 5
+    },
+    {
+      "ingredient": "beltworks:belt_tile",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "beltworks:improved_belt_tile",
+    "count": 1
+  },
+  "time": 10
+}

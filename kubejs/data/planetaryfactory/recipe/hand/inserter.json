@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "beltworks:improved_loader",
+    "count": 1
+  },
+  "time": 10
+}

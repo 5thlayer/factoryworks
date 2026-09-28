@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "#minecraft:birch_logs",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "minecraft:birch_stairs",
+    "count": 8
+  },
+  "time": 10
+}

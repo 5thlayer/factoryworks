@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:stone_bricks",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "minecraft:stone_brick_stairs",
+    "count": 8
+  },
+  "time": 10
+}

@@ -1,0 +1,18 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "#minecraft:logs",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "planetaryfactory:engineers_iron_pick",
+    "count": 1
+  },
+  "time": 10
+}

@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 3
+    },
+    {
+      "ingredient": "planetaryfactory:stone_furnace",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 3
+    }
+  ],
+  "result": {
+    "id": "planetaryfactory:burner_mining_drill",
+    "count": 1
+  },
+  "time": 40
+}

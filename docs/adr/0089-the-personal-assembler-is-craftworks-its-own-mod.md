@@ -18,19 +18,22 @@ and its spec, 5thlayer/craftworks#2, record its side. For the pack, it means the
 - **Recipes.** Craftworks plans only with its own recipe type, `craftworks:assembling`, and accepts
   no foreign types. A recipe carries `ingredients` (counted, tags allowed), `result`, `time` in whole
   ticks (default 10) and `priority` (default 0). It takes items only. Because a recipe id has one
-  type, every recipe in ADR-0063's hand set becomes two recipes with two ids: the converter emits a
-  `craftworks:assembling` copy beside `planetaryfactory:assembling/<name>`. This amends ADR-0063,
+  type, every recipe in ADR-0063's hand set becomes two recipes with two ids: `scripts/build-hand-recipes.py`
+  writes a `craftworks:assembling` copy, `planetaryfactory:hand/<name>`, beside
+  `planetaryfactory:assembling/<name>`. It reads every machine recipe, whichever script wrote it. This amends ADR-0063,
   under which the hand and the Assembling Machines shared one file. The machine's recipe and its id
   are unchanged, so research unlocks keep their keys.
-- **Locks.** Craftworks locks by `lockSource` (`none` or `recipeBook`) and by hooks registered through
-  its Java API or a KubeJS event. A recipe is Locked if any of them says so. The pack sets `none` and,
-  once Researchd returns (#260), registers a hook that maps a hand recipe's id to the machine id its
-  research unlocks key on (ADR-0063).
+- **Locks.** Craftworks locks by the sources its `lockSources` config lists, one of which is
+  `researchd`, and asks Researchd about the hand recipe's own id. The pack sets
+  `lockSources = ["researchd"]`, and `factorio_tech_dsl.js` adds each hand copy to the research that
+  unlocks its machine recipe, so a research names both ids. That replaces the hook this ADR first
+  planned, which would have mapped a hand id to its machine id in Java.
 - **Screen.** Craftworks always removes the 2x2 grid and draws the queue in its place, which is
   ADR-0066's behaviour. There is no access gate and no item: every player has the Assembler.
-- **Vanilla recipes.** Craftworks ships vanilla's crafting recipes, converted in place, as a built-in
-  datapack. The pack turns it off with Craftworks' server config flag, since ADR-0034's sweep admits
-  no stock recipe that has not been re-authored.
+- **Vanilla recipes.** Craftworks 0.1.1 ships no vanilla recipes, so there is nothing for the pack to
+  turn off. If a later release adds them, the pack turns them off, since ADR-0034's sweep admits no
+  stock recipe that has not been re-authored. The copies survive the sweep as the
+  `personal_assembler` surface.
 
 **Sequencing.** Craftworks is built to parity in its own repo first. Parity means its core, the recipe
 type, the queue held on the player (with the HUD and the refund on death), the inventory screen with
@@ -52,8 +55,9 @@ a player to empty the Assembler queue before updating, and the old queue attachm
 
 **Consequences.**
 
-- `test_hand_resolver.py` and `test_research_unlocks.py` read the `craftworks:assembling` copies, and
-  a check holds each copy to its machine recipe, so the two ids cannot drift apart.
+- `test_hand_recipes.py` holds each copy to its machine recipe, so the two ids cannot drift apart.
+  `test_hand_resolver.py` and `test_research_unlocks.py` keep reading the corpus and the machine ids,
+  which the copies follow.
 - The unit tests under `mod/src/test/java/com/planetaryfactory/core/assembler/` move to Craftworks'
   repo, along with the rules they hold.
 - `CLAUDE.md`'s "Assembler queue and resolver check" section is rewritten for what stays in the pack.

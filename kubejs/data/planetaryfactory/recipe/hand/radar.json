@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 5
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 5
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 10
+    }
+  ],
+  "result": {
+    "id": "planetaryfactory:radar",
+    "count": 1
+  },
+  "time": 10
+}

@@ -16,12 +16,10 @@ import net.minecraft.resources.Identifier;
  * Puts {@code planetaryfactory:assembling} in EMI (#279).
  *
  * <p>For the reason {@link SmeltingEmiPlugin} exists: EMI has never heard of the type, so without a
- * category its recipes are in no viewer at all -- and the Personal Assembler's Fill Recipe button is
- * drawn on a recipe EMI shows, so an unshown hand recipe is also an unplannable one.
+ * category its recipes are in no viewer at all.
  *
  * <p>The Assembling Machine is the category's workstation and icon, and its screen takes Fill Recipe
- * (#330, ADR-0073). The Personal Assembler is the inventory screen rather than a block, so it is no
- * workstation; its handler is {@link PersonalAssemblerEmiPlugin}'s, keyed to a different menu.
+ * (#330, ADR-0073).
  */
 @EmiEntrypoint
 public final class AssemblingEmiPlugin implements EmiPlugin {

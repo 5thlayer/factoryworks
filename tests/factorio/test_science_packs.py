@@ -3,7 +3,7 @@
 
 Researchd's science packs are all one item, `researchd:research_pack`, told apart by a data
 component. The Assembler names an item by a string, and before ADR-0052 that string was the bare
-registry id -- so `RuntimeHandRecipes` refused every component-bearing stack rather than fold the
+registry id -- so the Assembler refused every component-bearing stack rather than fold the
 four packs onto one another, and both emitted science pack recipes simply did not exist in the
 Assembler: no plan, no `Missing`, no locked entry, and nothing wrong with the recipes themselves.
 
@@ -21,9 +21,9 @@ A science pack the converter holds back until a ticket lands -- Researchd is not
 #260 owns its port -- is reported as deferred rather than failed, read from the converter's
 `--awaited`. The component-shape assertions then have nothing to read, and say so (#279).
 
-WHAT IT CANNOT PROVE is that the `RecipeGraph` admits them: that is a running server, and its
+WHAT IT CANNOT PROVE is that Craftworks admits them: that is a running server, and its
 absence of a refusal line is the human-on-delivery check. The identity itself is asserted in
-`mod/src/test/java/com/planetaryfactory/core/assembler/ItemKeyTest.java`.
+Craftworks' `ItemKeyTest` (ADR-0089).
 
 Usage: tests/factorio/test_science_packs.py
 """

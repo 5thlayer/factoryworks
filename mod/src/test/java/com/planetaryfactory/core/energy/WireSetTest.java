@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * The level's stored wires (ADR-0068). {@code JsonOps} stands in for NBT, as in
- * {@code AssemblerCodecsTest}: the set holds only ints and lists.
+ * The level's stored wires (ADR-0068). {@code JsonOps} stands in for NBT: the set holds only ints
+ * and lists.
  */
 class WireSetTest {
 
