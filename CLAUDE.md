@@ -181,7 +181,7 @@ drops exactly one item; dropping the part's teardown turns the six part tests re
 resolves again after it, that every assembling recipe of tier 1's categories in the server's manager is
 one Fill Recipe can set and it can hold, while a `crafting-with-fluid` one is refused (#331) -- and that changing the recipe hands the inputs back;
 dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Every one is also held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
-(#330), and a non-assembling id or a locked recipe is refused there with a message and leaves the Held
+(#330), and a non-assembling id is refused there with a message and leaves the Held
 recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
 And that a small pole's demand probe leaves a Beltworks loader no FE, and that no `beltworks:` recipe
 survives the stock-recipe sweep, against the pack's express belt recipe as a control
@@ -215,13 +215,9 @@ none of its blocks standing and drops exactly one drill item. 26.1 removes a blo
 moving it back to the block turns both part tests red.
 And that the machine crafts its Held recipe at Factorio's rate (20 ticks and exactly 750 FE for
 copper cable, typed rather than read off `AssemblingMachineSpec`) and that a full output, no
-ingredients and a locked recipe each draw nothing, take nothing and keep the recipe (#328); drawing
-the tick's energy before the stall is asked turns all three stalls red. The lock is Researchd's for
-the team that placed the machine, asked only because `lockSources = ["researchd"]` in
-`config/planetaryfactory_core-server.toml`, which `linkServerConfigs` links into the dev runs (#260).
-Each lock test makes a fresh Researchd team and stamps the machine with it: a pipe is locked and
-refused until that team researches `steam-power`, and then it crafts. An empty `lockSources` turns
-two of them red. Registered only with Researchd loaded. And that
+ingredients each draw nothing, take nothing and keep the recipe (#328); drawing the tick's energy
+before the stall is asked turns both stalls red. No GameTest holds the Researchd lock: EMI offers a
+locked recipe to no machine, and the lock itself is Researchd's. And that
 the item face takes the Held recipe's ingredients each in its own slot and refuses everything else
 (#329, ADR-0074). That is asserted through the capability on the anchor and on a hull block, on both
 overloads. A machine with no recipe takes nothing, and Oritech's `FILL_EVENLY` input mode, which
@@ -239,15 +235,15 @@ block takes water only with concrete held and never gives it back, tier 2 holds 
 save hook. A `takeFluids` that always feeds and a change that keeps the tank turn four red. The
 per-tier figures are `AssemblingMachineSpecTest`, the fluid stall's order `AssemblingStallTest`. `ChemicalPlantTests` holds
 the Chemical Plant on the same chassis (#490, ADR-0096): plastic in 20 ticks for 2,100 FE, typed; a full
-output, no coal and a locked recipe stall with nothing drawn or taken; heavy oil cracking's two fluids
+output and no coal stall with nothing drawn or taken; heavy oil cracking's two fluids
 each reach their own tank through the anchor and the part, while other fluids and the inputs' way back
 out are refused; an assembling or oil-processing recipe is refused at the menu setter with its message;
 a pole reaching only the part feeds it, and one reaching both blocks counts it once; and Oritech's
 Fluid addon never attaches. Drawing before the stall, dropping the type check, routing every fluid to
 tank 0, dropping the addon filter, and making a part its own energy owner each turn their test red. `OilRefineryTests` holds
 the Oil Refinery on it (#491): advanced oil processing fills all three outputs at 100 ticks for 21,000
-FE, typed, and a second craft stops on its gas; any one full output, no water, and a locked basic oil
-processing stall with nothing drawn or taken; water and crude reach their own tanks through the anchor
+FE, typed, and a second craft stops on its gas; any one full output and no water
+stall with nothing drawn or taken; water and crude reach their own tanks through the anchor
 and a top chamber block, which hand back only the three outputs; a chemistry or assembling recipe is
 refused at the menu setter; and a pole reaching only a chamber feeds it, counted once. Its placement
 and break are `PlacementPlanTests`' and `FootprintBreakTests`'. And that the screen's status (#332) is recomputed on

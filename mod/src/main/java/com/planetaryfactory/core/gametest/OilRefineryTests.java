@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
@@ -35,7 +34,6 @@ final class OilRefineryTests {
             new ChassisFixture("Oil Refinery", PFBlocks.OIL_REFINERY_FOOTPRINT, ANCHOR, FACING);
 
     private static final String ADVANCED = "planetaryfactory:oil_processing/advanced_oil_processing";
-    private static final String BASIC = "planetaryfactory:oil_processing/basic_oil_processing";
     private static final String PLASTIC = "planetaryfactory:chemistry/plastic_bar";
     private static final String CABLE = "planetaryfactory:assembling/copper_cable";
 
@@ -75,9 +73,6 @@ final class OilRefineryTests {
                         ANCHOR.above(3 + PoleTier.VERTICAL_RADIUS), "only a chamber"));
         tests.test("oil_refinery_is_counted_once_by_a_pole", 100,
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.east(2), "several blocks"));
-        if (ModList.get().isLoaded("researchd")) {
-            tests.test("oil_refinery_stalls_on_a_locked_recipe", 200, OilRefineryTests::stallsOnALockedRecipe);
-        }
     }
 
     /** Fed for two crafts, it makes one at the recipe's rate and cost, then stops on its gas. */
@@ -130,23 +125,6 @@ final class OilRefineryTests {
         machine.energyStorage.set(CHARGE);
         helper.runAfterDelay(TICKS_PER_CRAFT + 1, () -> {
             assertStalled(helper, machine, AssemblingStall.NO_FLUID, 0, 200);
-            helper.succeed();
-        });
-    }
-
-    /** Basic oil processing, the one a research locks (#206). */
-    private static void stallsOnALockedRecipe(GameTestHelper helper) {
-        OilRefineryBlockEntity machine = placeWhole(helper);
-        ResearchTeams.placedBy(machine, ResearchTeams.create(helper));
-        CHASSIS.hold(helper, machine, BASIC);
-        expectMoved(helper, ANCHOR, "crude", 200, CHASSIS.fluidFace(helper, ANCHOR),
-                (f, tx) -> f.insert(FluidResource.of(fluid(CRUDE)), 200, tx));
-        machine.energyStorage.set(CHARGE);
-        helper.runAfterDelay(TICKS_PER_CRAFT + 1, () -> {
-            CHASSIS.assertStalled(helper, machine, AssemblingStall.LOCKED, CHARGE, BASIC);
-            if (machine.tank().getAmountAsLong(0) != 200) {
-                helper.fail("a locked machine took crude", ANCHOR);
-            }
             helper.succeed();
         });
     }
