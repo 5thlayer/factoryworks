@@ -12,6 +12,8 @@ import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingStatus;
 import com.planetaryfactory.core.machine.AssemblingStatusText;
+import com.planetaryfactory.core.machine.MachineSpec;
+import com.planetaryfactory.core.machine.TankRow;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -54,8 +56,7 @@ import rearth.oritech.client.ui.render.LargeItemRenderState;
  * machine's icon and name, the header every Oritech machine screen has. Under the slots, a bar shows
  * the stored FE, with the stored and maximum FE and the Held recipe's draw in its tooltip, and one
  * line states the {@link AssemblingStatus}: what is wrong and what fixes it (ADR-0073). On a machine
- * with tanks the energy bar shares its row with the first input tank's and the first output tank's,
- * whose tooltips name the fluid (#295, #490).
+ * with tanks a row above the energy bar holds one bar per tank, whose tooltip names its fluid.
  *
  * <p>The Held recipe is also drawn in its slots (ADR-0073): each ingredient ghosted in the input slot
  * {@link com.planetaryfactory.core.machine.AssemblingInputSlots} gives it, with the count one craft
@@ -111,8 +112,8 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private final ItemStack icon;
 
     public AssemblingMachineScreen(AssemblingMachineMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, 176, AssemblingMachineMenu.INVENTORY_Y + 83);
-        inventoryLabelY = AssemblingMachineMenu.INVENTORY_Y - 11;
+        super(menu, playerInventory, title, 176, menu.inventoryY() + 83);
+        inventoryLabelY = menu.inventoryY() - 11;
         Block block = playerInventory.player.level().getBlockState(menu.pos()).getBlock();
         if (!(block instanceof ChassisMachineBlock)) {
             block = PFBlocks.assemblingMachine(AssemblingTier.ONE).get();
@@ -169,8 +170,8 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         graphics.fill(x, y, x + Math.round(BAR_WIDTH * menu.progress()), y + 16, BAR);
 
         int energyX = leftPos + ENERGY_X;
-        int energyY = topPos + AssemblingMachineMenu.ENERGY_Y;
-        int width = barWidth();
+        int energyY = topPos + menu.energyY();
+        int width = ENERGY_WIDTH;
         recess(graphics, energyX, energyY, width, ENERGY_HEIGHT);
         drawEnergy(graphics, energyX, energyY, width, Math.round(width * charge()));
         for (FluidBar bar : fluidBars()) {
@@ -225,16 +226,26 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         }
     }
 
+    /**
+     * The tank row: input tanks under the input slots, output tanks under the progress bar and the
+     * output, so each tank keeps a readable width however many the machine has (ADR-0096).
+     */
     private List<FluidBar> fluidBars() {
-        int y = topPos + AssemblingMachineMenu.ENERGY_Y;
-        List<FluidBar> bars = new ArrayList<>(2);
-        if (hasTank()) {
-            bars.add(new FluidBar(menu.heldFluid(), menu.tankAmount(), menu.tankCapacity(),
-                    leftPos + tankX(), y, barWidth(), ENERGY_HEIGHT));
+        MachineSpec spec = menu.spec(minecraft.player);
+        AssemblingMachineMenu.Entry held = menu.held();
+        int y = topPos + AssemblingMachineMenu.TANK_Y;
+        List<FluidBar> bars = new ArrayList<>();
+        List<TankRow.Bar> inputs = TankRow.split(ENERGY_X, BAR_X - BAR_GAP - ENERGY_X, spec.fluidInputs().size());
+        for (int tank = 0; tank < inputs.size(); tank++) {
+            TankRow.Bar bar = inputs.get(tank);
+            bars.add(new FluidBar(held == null ? Optional.empty() : held.inputFluid(tank), menu.inputAmount(tank),
+                    spec.fluidInputVolume(tank), leftPos + bar.x(), y, bar.width(), ENERGY_HEIGHT));
         }
-        if (hasOutputTank()) {
-            bars.add(new FluidBar(menu.outputFluid(), menu.outputAmount(), menu.outputCapacity(),
-                    leftPos + outputTankX(), y, barWidth(), ENERGY_HEIGHT));
+        List<TankRow.Bar> outputs = TankRow.split(BAR_X, ENERGY_X + ENERGY_WIDTH - BAR_X, spec.fluidOutputs().size());
+        for (int tank = 0; tank < outputs.size(); tank++) {
+            TankRow.Bar bar = outputs.get(tank);
+            bars.add(new FluidBar(held == null ? Optional.empty() : held.outputFluid(tank), menu.outputAmount(tank),
+                    spec.fluidOutputVolume(tank), leftPos + bar.x(), y, bar.width(), ENERGY_HEIGHT));
         }
         return bars;
     }
@@ -244,28 +255,6 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         return fluidBars().stream()
                 .filter(bar -> bar.fluid().isPresent() && bar.contains(mouseX, mouseY))
                 .findFirst();
-    }
-
-    private boolean hasTank() {
-        return menu.tankCapacity() > 0;
-    }
-
-    private boolean hasOutputTank() {
-        return menu.outputCapacity() > 0;
-    }
-
-    /** The energy row shares its width evenly among energy, the input tank and the output tank. */
-    private int barWidth() {
-        int bars = 1 + (hasTank() ? 1 : 0) + (hasOutputTank() ? 1 : 0);
-        return (ENERGY_WIDTH - BAR_GAP * (bars - 1)) / bars;
-    }
-
-    private int tankX() {
-        return ENERGY_X + barWidth() + BAR_GAP;
-    }
-
-    private int outputTankX() {
-        return hasTank() ? tankX() + barWidth() + BAR_GAP : tankX();
     }
 
     private float charge() {
@@ -306,7 +295,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
                 return;
             }
         }
-        if (over(mouseX, mouseY, ENERGY_X, AssemblingMachineMenu.ENERGY_Y, barWidth(), ENERGY_HEIGHT)) {
+        if (over(mouseX, mouseY, ENERGY_X, menu.energyY(), ENERGY_WIDTH, ENERGY_HEIGHT)) {
             graphics.setTooltipForNextFrame(font, List.of(
                     Component.translatable("gui.planetaryfactory.assembling_machine.energy",
                             String.format("%,d", menu.storedFe()), String.format("%,d", menu.capacityFe())),
@@ -316,7 +305,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
                     Optional.empty(), mouseX, mouseY);
             return;
         }
-        if (over(mouseX, mouseY, STATUS_X, AssemblingMachineMenu.STATUS_Y, STATUS_WIDTH, font.lineHeight)) {
+        if (over(mouseX, mouseY, STATUS_X, menu.statusY(), STATUS_WIDTH, font.lineHeight)) {
             graphics.setTooltipForNextFrame(font, AssemblingStatusText.of(menu.status(), menu.heldFluid()), mouseX, mouseY);
             return;
         }
@@ -366,7 +355,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
 
         AssemblingStatus status = menu.status();
         graphics.text(font, fitted(AssemblingStatusText.of(status, menu.heldFluid()), STATUS_WIDTH), STATUS_X,
-                AssemblingMachineMenu.STATUS_Y, status.problem() ? PROBLEM_TEXT : TEXT, false);
+                menu.statusY(), status.problem() ? PROBLEM_TEXT : TEXT, false);
 
         int right = imageWidth - 8;
         AssemblingMachineMenu.Entry held = menu.held();
@@ -381,7 +370,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         if (!held.icon().isEmpty()) {
             graphics.item(held.icon(), HELD_X, HELD_Y);
         } else {
-            held.outputFluid().ifPresent(fluid -> graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
+            held.outputFluid(0).ifPresent(fluid -> graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                     RenderHelpers.getFluidSprite(fluid), HELD_X, HELD_Y, SPRITE_SIZE, SPRITE_SIZE, fluidTint(fluid)));
         }
         int nameRight = right;
