@@ -6,9 +6,9 @@ import java.util.Locale;
  * The one state the Assembling Machine's screen shows (#332, ADR-0073), each worded as what is
  * wrong and what fixes it.
  *
- * <p>Derived, never stored: the screen asks each time, as {@code MachineLockStatus} is asked,
- * because a stored conclusion re-checked on the wrong trigger goes stale. Where several hold, the
- * first the craft cycle stops on wins, so fixing the named problem is what lets the machine run --
+ * <p>Derived, never stored: the screen asks each time, because a stored conclusion re-checked on
+ * the wrong trigger goes stale. Where several hold, the first the craft cycle stops on wins, so
+ * fixing the named problem is what lets the machine run --
  * which puts power last, since a stalled machine draws nothing (ADR-0041).
  *
  * <p>Pure: the block entity asks the world and hands the answers in.

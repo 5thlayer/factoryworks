@@ -42,10 +42,8 @@ viewers carry no lock annotation.
 | `core/compat/emi/LockedRecipeEmiNote.java` | EMI's half of that annotation. |
 | `core/compat/jei/LockedRecipeJeiDecorator.java` | JEI's half. |
 
-**The rules survived.** `RecipeLockLookup`, `MachineLockStatus`, `RecipeResearchIndex` and
-`LockBypassLog` import no Researchd type — they are the Minecraft-free logic with the unit tests
-that hold it, and they are untouched. What went is only the glue that reads the running game. That
-is the testing policy working as intended: the part worth keeping was the part that was checkable.
+The Minecraft-free rules these files used (`RecipeLockLookup`, `MachineLockStatus`,
+`RecipeResearchIndex`, `LockBypassLog`, `LockedRecipeRetry`) went too, as ADR-0058 had ruled.
 
 ## What a player loses meanwhile
 
