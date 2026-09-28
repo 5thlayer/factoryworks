@@ -1,7 +1,7 @@
 {
   "jars": [
     "26.1.2.jar",
-    "beltworks-0.3.9.jar",
+    "beltworks-0.3.10.jar",
     "ftb-filter-system-neoforge-26.1.2.2.jar",
     "ftb-library-neoforge-26.1.2.7.jar",
     "ftb-materials-26.1.2.5.jar",
@@ -13,14 +13,18 @@
   "items": [
     "beltworks:belt_tile",
     "beltworks:express_belt_tile",
+    "beltworks:express_feeder",
     "beltworks:express_loader",
     "beltworks:express_splitter",
+    "beltworks:feeder",
     "beltworks:improved_belt_tile",
+    "beltworks:improved_feeder",
     "beltworks:improved_loader",
     "beltworks:improved_splitter",
     "beltworks:loader",
     "beltworks:splitter",
     "beltworks:turbo_belt_tile",
+    "beltworks:turbo_feeder",
     "beltworks:turbo_loader",
     "beltworks:turbo_splitter",
     "ftbfiltersystem:smart_filter",
