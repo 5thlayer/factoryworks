@@ -235,6 +235,10 @@ _Avoid_: spawn platform, base, hub structure
 The body of water in the hub, one block deep and flush with the ground. Since water is never created (ADR-0050), it is what makes water somewhere rung 0 already stands rather than somewhere it has to go.
 _Avoid_: pond, lake, starting water, spawn pool
 
+**Quest Book**:
+The book in the player's pocket, which explains what a block does and why the player wants it. It never shows a cost: prices are the research graph's, and the two are kept apart because prices move and verbs do not. It gates nothing: a quest may tick when the game sees its step done, but no progression waits on one (ADR-0034).
+_Avoid_: guide, tutorial, questline, FTB book
+
 ### Terra's ore
 
 **Ore patch**:
