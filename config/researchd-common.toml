@@ -13,7 +13,7 @@ load_default_datapack = true
 	#Energy consumed per tick by a Research Lab while it is researching. Zero disables the feature.
 	# Default: 0
 	# Range: > 0
-	research_lab_energy_usage = 0
+	research_lab_energy_usage = 30
 	#Size of a Research Lab's energy buffer. Also its per-tick transfer limit.
 	# Default: 100000
 	# Range: > 1
