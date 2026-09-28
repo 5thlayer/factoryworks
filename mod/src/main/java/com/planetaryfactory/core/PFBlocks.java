@@ -4,6 +4,8 @@ import com.planetaryfactory.core.energy.PoleTier;
 import com.planetaryfactory.core.machine.AssemblingMachineBlock;
 import com.planetaryfactory.core.machine.AssemblingMachineFootprint;
 import com.planetaryfactory.core.machine.AssemblingTier;
+import com.planetaryfactory.core.machine.ChemicalPlantBlock;
+import com.planetaryfactory.core.machine.ChemicalPlantFootprint;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.machine.footprint.FootprintPartBlock;
 import com.planetaryfactory.core.mining.rig.RigBlock;
@@ -104,6 +106,18 @@ public final class PFBlocks {
                     anchor, part, () -> PFItems.assemblingMachine(tier).get()));
         }
     }
+
+    public static final DeferredHolder<Block, ChemicalPlantBlock> CHEMICAL_PLANT =
+            BLOCKS.registerBlock("chemical_plant", props -> new ChemicalPlantBlock(machineProperties(props)));
+
+    public static final DeferredHolder<Block, FootprintPartBlock> CHEMICAL_PLANT_PART =
+            BLOCKS.registerBlock("chemical_plant_part",
+                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
+                            () -> PFBlocks.CHEMICAL_PLANT_FOOTPRINT));
+
+    public static final FootprintMachine CHEMICAL_PLANT_FOOTPRINT = new FootprintMachine(
+            ChemicalPlantFootprint.FOOTPRINT, CHEMICAL_PLANT, CHEMICAL_PLANT_PART,
+            () -> PFItems.CHEMICAL_PLANT.get());
 
     /** Terra's Steam Engine (ADR-0077): Oritech's engine entity, on the Assembling Machine's footprint seam. */
     public static final DeferredHolder<Block, SteamEngineBlock> STEAM_ENGINE =

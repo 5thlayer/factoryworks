@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.PFItems;
 import com.planetaryfactory.core.machine.AssemblingTier;
+import com.planetaryfactory.core.machine.ChemicalPlantBlockEntity;
 import com.planetaryfactory.core.energy.LevelWires;
 import com.planetaryfactory.core.energy.PoleColumn;
 import com.planetaryfactory.core.energy.PoleLinks;
@@ -107,6 +108,10 @@ final class PlacementPlanTests {
                 helper -> assemblingMachineMatchesPlacement(helper, AssemblingTier.THREE));
         tests.test("plan_refuses_an_assembling_machine_whole", 20,
                 PlacementPlanTests::assemblingMachineRefusesWhole);
+        tests.test("plan_matches_placement_for_a_chemical_plant", 20,
+                PlacementPlanTests::chemicalPlantMatchesPlacement);
+        tests.test("plan_refuses_a_chemical_plant_whole", 20,
+                PlacementPlanTests::chemicalPlantRefusesWhole);
         tests.test("plan_matches_placement_for_a_steam_engine", 20,
                 PlacementPlanTests::steamEngineMatchesPlacement);
         tests.test("plan_refuses_a_steam_engine_whole", 20,
@@ -277,6 +282,32 @@ final class PlacementPlanTests {
         helper.setBlock(ABOVE_FLOOR.above(AssemblingMachineFootprint.TALL - 1), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.assemblingMachine(AssemblingTier.ONE).get()),
                 FLOOR, Direction.UP, true), PackRefusal.FOOTPRINT_BLOCKED, helper);
+        helper.succeed();
+    }
+
+    /** The Chemical Plant's 1x1x2 (ADR-0096), for the Assembling Machine's reasons. */
+    private static void chemicalPlantMatchesPlacement(GameTestHelper helper) {
+        PlacementPlan plan = check(helper, new ItemStack(PFItems.CHEMICAL_PLANT.get()), FLOOR, Direction.UP, false);
+        if (plan.blocks().size() != 2) {
+            helper.fail("a Chemical Plant's plan named " + plan.blocks().size() + " blocks, expected 2", FLOOR);
+        }
+        BlockPos anchor = plan.blocks().getFirst().pos();
+        if (!(helper.getLevel().getBlockEntity(anchor) instanceof ChemicalPlantBlockEntity)) {
+            helper.fail("the placed anchor holds no Chemical Plant", helper.relativePos(anchor));
+        }
+        helper.runAfterDelay(5, () -> {
+            if (!helper.getLevel().getBlockState(anchor).getValue(MultiblockMachine.ASSEMBLED)) {
+                helper.fail("the anchor lost ASSEMBLED after it was placed", helper.relativePos(anchor));
+            }
+            helper.succeed();
+        });
+    }
+
+    /** A stone where the upper block goes refuses the whole machine. */
+    private static void chemicalPlantRefusesWhole(GameTestHelper helper) {
+        helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
+        refusal(check(helper, new ItemStack(PFItems.CHEMICAL_PLANT.get()), FLOOR, Direction.UP, true),
+                PackRefusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }
 

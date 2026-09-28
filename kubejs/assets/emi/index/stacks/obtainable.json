@@ -223,6 +223,9 @@
       "stack": "item:planetaryfactory:burner_mining_drill"
     },
     {
+      "stack": "item:planetaryfactory:chemical_plant"
+    },
+    {
       "stack": "item:planetaryfactory:electric_engine_unit"
     },
     {

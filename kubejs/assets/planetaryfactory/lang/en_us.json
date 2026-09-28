@@ -16,6 +16,8 @@
   "block.planetaryfactory.assembling_machine_3": "Assembling Machine 3",
   "block.planetaryfactory.assembling_machine_3_part": "Assembling Machine 3 (part)",
   "block.planetaryfactory.boiler": "Boiler",
+  "block.planetaryfactory.chemical_plant": "Chemical Plant",
+  "block.planetaryfactory.chemical_plant_part": "Chemical Plant (part)",
   "block.planetaryfactory.burner_mining_drill": "Burner Mining Drill",
   "block.planetaryfactory.burner_mining_drill_part": "Burner Mining Drill (part)",
   "block.planetaryfactory.coal_ore": "Coal Patch",

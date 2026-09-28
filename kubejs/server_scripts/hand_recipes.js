@@ -12,6 +12,7 @@ var PF_HAND_RECIPES = [
   'burner_inserter',
   'burner_mining_drill',
   'cargo_wagon',
+  'chemical_plant',
   'chemical_science_pack',
   'copper_cable',
   'electric_furnace',

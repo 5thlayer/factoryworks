@@ -42,6 +42,7 @@ final class FootprintBreakTests {
                 "assembling_machine", PFBlocks.assemblingFootprint(AssemblingTier.ONE),
                 "assembling_machine_2", PFBlocks.assemblingFootprint(AssemblingTier.TWO),
                 "assembling_machine_3", PFBlocks.assemblingFootprint(AssemblingTier.THREE),
+                "chemical_plant", PFBlocks.CHEMICAL_PLANT_FOOTPRINT,
                 "steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 "accumulator", PFBlocks.ACCUMULATOR_FOOTPRINT,
                 "radar", PFBlocks.RADAR_FOOTPRINT,

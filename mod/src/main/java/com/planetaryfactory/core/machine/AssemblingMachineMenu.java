@@ -102,6 +102,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     private final ContainerData data;
     private final AssemblingMachineBlockEntity machine;
     private final BlockPos pos;
+    private final int inputs;
 
     /** Client side: the slots stand over a stub the menu's own sync fills. */
     public AssemblingMachineMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
@@ -117,6 +118,8 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         this.pos = pos;
         this.entries = List.copyOf(entries);
         this.data = data;
+        this.inputs = playerInventory.player.level().getBlockState(pos).getBlock() instanceof ChassisMachineBlock block
+                ? block.spec().itemInputs() : AssemblingMachineBlockEntity.INPUTS;
 
         for (int slot = 0; slot < AssemblingMachineBlockEntity.INPUTS; slot++) {
             addSlot(new InputSlot(slots, slots::set, slot, INPUT_X + slot * 18, INPUT_Y));
@@ -351,6 +354,12 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         InputSlot(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> modifier,
                 int index, int x, int y) {
             super(handler, modifier, index, x, y);
+        }
+
+        /** A slot past the machine's own inputs is laid out and never used. */
+        @Override
+        public boolean isActive() {
+            return getSlotIndex() < inputs;
         }
 
         @Override

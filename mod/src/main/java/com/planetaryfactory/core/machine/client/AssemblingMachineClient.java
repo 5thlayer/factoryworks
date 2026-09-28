@@ -9,8 +9,8 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import rearth.oritech.client.renderers.blocks.MachineRenderer;
 
 /**
- * The Assembling Machine's client half: Oritech's renderer, pointed at Oritech's assembler model
- * (#326), and the pack's own screen (#327).
+ * The chassis machines' client half: Oritech's renderer, pointed at Oritech's assembler model
+ * (#326) and centrifuge model (ADR-0096), and the pack's own screen (#327).
  *
  * <p>{@code "models/assembler"} and {@code false} are the arguments Oritech's {@code ModRenderers}
  * registers its assembler with, read off the 2.0.0-exp6 jar. The model and textures resolve into
@@ -33,5 +33,8 @@ public final class AssemblingMachineClient {
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(PFBlockEntities.ASSEMBLING_MACHINE.get(),
                 context -> new MachineRenderer<>(context, "models/assembler", false));
+        // Not Oritech's CentrifugeRenderer, which is typed to its own block entity's tanks.
+        event.registerBlockEntityRenderer(PFBlockEntities.CHEMICAL_PLANT.get(),
+                context -> new MachineRenderer<>(context, "models/centrifuge", false));
     }
 }

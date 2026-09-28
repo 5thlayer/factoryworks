@@ -1,7 +1,9 @@
 package com.planetaryfactory.core.machine;
 
+import java.util.List;
+
 import com.planetaryfactory.core.PFBlocks;
-import com.planetaryfactory.core.machine.footprint.FootprintAnchorBlock;
+import com.planetaryfactory.core.machine.footprint.Footprint.Local;
 import io.github._5thlayer.groundworks.PlacementPlan;
 import io.github._5thlayer.groundworks.Placements;
 
@@ -13,11 +15,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** An Assembling Machine tier's anchor block (#326, ADR-0071), holding {@link AssemblingMachineBlockEntity}. */
-public class AssemblingMachineBlock extends FootprintAnchorBlock {
+public class AssemblingMachineBlock extends ChassisMachineBlock {
 
     private final AssemblingTier tier;
 
@@ -30,10 +31,19 @@ public class AssemblingMachineBlock extends FootprintAnchorBlock {
         return tier;
     }
 
-    /** Oritech's {@code MachineBlock.newBlockEntity} constructs this class by reflection. */
     @Override
-    public Class<? extends BlockEntity> getBlockEntityType() {
-        return AssemblingMachineBlockEntity.class;
+    public MachineSpec spec() {
+        return tier.spec();
+    }
+
+    @Override
+    public String paint() {
+        return tier.paint();
+    }
+
+    @Override
+    public List<Local> addonSlots() {
+        return AssemblingMachineFootprint.addonSlots();
     }
 
     /** One block entity type serves every tier, so a Fast Replace keeps it (ADR-0082). */
@@ -53,25 +63,5 @@ public class AssemblingMachineBlock extends FootprintAnchorBlock {
             }
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hit);
-    }
-
-    /**
-     * Opens the pack's menu rather than Oritech's (#327): the opening packet carries the recipe
-     * widget's list, which Oritech's {@code openMenu(provider, pos)} has no room for. An anchor that
-     * somehow lost {@code ASSEMBLED} goes to Oritech's own path, which is what repairs it.
-     */
-    @Override
-    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
-                                            BlockHitResult hit) {
-        if (!state.getValue(ASSEMBLED)) {
-            return super.useWithoutItem(state, level, pos, player, hit);
-        }
-        if (level.isClientSide()) {
-            return InteractionResult.SUCCESS;
-        }
-        if (level.getBlockEntity(pos) instanceof AssemblingMachineBlockEntity machine) {
-            player.openMenu(machine, buf -> AssemblingMachineMenu.writeOpening(buf, machine));
-        }
-        return InteractionResult.CONSUME;
     }
 }
