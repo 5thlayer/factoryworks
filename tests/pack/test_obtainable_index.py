@@ -69,8 +69,10 @@ def mechanic_failures(rows, derived, known):
     failures = []
     for row in rows:
         stack = row.get("id", "")
-        if set(row) != {"id", "mechanic", "why", "ticket"} or not isinstance(row["ticket"], int):
-            failures.append("%s: a row is exactly {id, mechanic, why, ticket}, ticket a number" % stack)
+        if set(row) != {"id", "mechanic", "why", "owner"} or not re.fullmatch(r"ADR-\d{4}", str(row["owner"])):
+            failures.append("%s: a row is exactly {id, mechanic, why, owner}, owner an ADR-00NN" % stack)
+        elif not list((ROOT / "docs/adr").glob("%s-*.md" % row["owner"][4:])):
+            failures.append("%s: its owner %s names no ADR" % (stack, row["owner"]))
         if stack not in known:
             failures.append("%s names nothing a jar or the pack registers" % stack)
         if stack in derived:
@@ -79,7 +81,7 @@ def mechanic_failures(rows, derived, known):
 
 
 class MechanicFailures(unittest.TestCase):
-    ROW = {"id": "item:minecraft:raw_iron", "mechanic": "m", "why": "w", "ticket": 1}
+    ROW = {"id": "item:minecraft:raw_iron", "mechanic": "m", "why": "w", "owner": "ADR-0041"}
 
     def test_a_row_naming_nothing_registered_fails(self):
         self.assertTrue(mechanic_failures([self.ROW], set(), {"item:minecraft:stone"}))
@@ -87,6 +89,10 @@ class MechanicFailures(unittest.TestCase):
     def test_a_row_already_derived_fails(self):
         known = {self.ROW["id"]}
         self.assertTrue(mechanic_failures([self.ROW], known, known))
+
+    def test_a_row_naming_no_adr_fails(self):
+        row = dict(self.ROW, owner="ADR-9999")
+        self.assertTrue(mechanic_failures([row], set(), {row["id"]}))
 
     def test_a_live_row_passes(self):
         self.assertEqual([], mechanic_failures([self.ROW], set(), {self.ROW["id"]}))

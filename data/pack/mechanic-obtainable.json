@@ -4,37 +4,37 @@
       "id": "fluid:minecraft:water",
       "mechanic": "offshore-pump",
       "why": "The Offshore Pump draws water from a source block beside it (ADR-0050). No recipe makes water.",
-      "ticket": 173
+      "owner": "ADR-0050"
     },
     {
       "id": "fluid:oritech:still_oil",
       "mechanic": "pumpjack",
       "why": "A Pumpjack on an oil well yields crude each cycle (ADR-0081). The wells are placed by a Java piece, so no data file names the fluid.",
-      "ticket": 173
+      "owner": "ADR-0081"
     },
     {
       "id": "fluid:planetaryfactory:steam",
       "mechanic": "boiler",
       "why": "The Boiler turns water and fuel into steam (ADR-0048). No recipe makes steam.",
-      "ticket": 173
+      "owner": "ADR-0048"
     },
     {
       "id": "item:minecraft:raw_iron",
       "mechanic": "ore-mining",
       "why": "An iron ore block pays its drop from `OreResource`, and its loot table is empty, so no drop derivation reaches it (ADR-0041).",
-      "ticket": 173
+      "owner": "ADR-0041"
     },
     {
       "id": "item:minecraft:raw_copper",
       "mechanic": "ore-mining",
       "why": "A copper ore block pays its drop from `OreResource`, and its loot table is empty, so no drop derivation reaches it (ADR-0041).",
-      "ticket": 173
+      "owner": "ADR-0041"
     },
     {
       "id": "item:ftbmaterials:uranium_raw_ore",
       "mechanic": "ore-mining",
       "why": "A uranium ore block pays its drop from `OreResource`, and its loot table is empty, so no drop derivation reaches it (ADR-0041).",
-      "ticket": 173
+      "owner": "ADR-0041"
     }
   ]
 }

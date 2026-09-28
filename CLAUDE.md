@@ -537,9 +537,8 @@ pointed at a new open ticket -- never at the reopened old one. The same command 
 `docs/factorio-mechanics.md` (#379): a `planned` or `blocked` section must name at least one open
 issue in its `ticket` field, which is prose keeping closed refs as history; `owner` and the inline
 sub-rule verdicts are not read. A failing section is re-verdicted or pointed at a new open ticket
-the same way. It also checks every row of `data/pack/mechanic-obtainable.json` (#453), which must
-name an open `ticket`. It needs an authenticated `gh`, so run it after closing a ticket or editing
-any of the three files; it is in no batch.
+the same way. It needs an authenticated `gh`, so run it after closing a ticket or editing either
+file; it is in no batch.
 
 ### Obtainable index check
 
@@ -555,7 +554,8 @@ id, then `added` naming every emitted recipe's output, every starting-kit item, 
 the file only under the `emi` namespace, applies `filters` before `added`, and skips an `added`
 entry that is a bare string, so each is a `{"stack": ...}` object. A stack with components, such as
 a Researchd science pack, is listed by its `componentChanges`, since EMI hides a variant not listed. A mechanic row is
-`{id, mechanic, why, ticket}`, for what a mechanic produces with no recipe and no data source.
+`{id, mechanic, why, owner}`, for what a mechanic produces with no recipe and no data source, and
+its `owner` is the ADR that makes it permanent.
 
 The worldgen walk (#454) starts at each dimension under `kubejs/data/`, never `kubejs/parked/`: the
 noise settings' default block and fluid and its surface rule, each biome's features followed from
@@ -570,7 +570,7 @@ Each drop's block and loot table are written to
 `kubejs/assets/planetaryfactory/obtainable/sources.json` for EMI's Where it is found (ADR-0091).
 
 `tests/pack/test_obtainable_index.py` runs both `--check`s, holds every listed stack to an id the
-corpus or the pack registers, and fails a mechanic row naming nothing or one the derivation already
+corpus or the pack registers, and fails a mechanic row naming nothing, naming no ADR, or one the derivation already
 covers. It holds the drops to #454's named ids and to terrain and logs alone, so a plant new to the
 live worldgen fails until its loot table is replaced. It holds the loot rule to three cases, and
 asserts that no block only a parked body places is a source. No mob drop is derived, since no mob spawns (ADR-0093). Run it after a
