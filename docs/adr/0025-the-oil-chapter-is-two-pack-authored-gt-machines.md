@@ -225,7 +225,8 @@ table above is kept as this ADR's decision, not as the ladder; read ADR-0018's.
 Rungs 0 and 1 are unchanged by this ADR. ADR-0018's spine rule — each rung grants what the next
 rung's production physically requires — holds end to end on the new table: rung 2's sulfur buys
 rung 3's blue science, rung 3's advanced processing buys rung 4's rocket fuel, and rung 4's fuel
-buys the silo.
+buys the silo. *(Void with rung 4, per the note above: rung 3's advanced processing makes the
+rocket fuel, and the silo is on rung 3 too.)*
 
 **Rung 4's gate is re-argued, and `#39`'s ownership decisions all survive.** `#39` justified rung 4
 on the polymer, because every GCyR fuel tank and rocket motor is an Assembler recipe taking

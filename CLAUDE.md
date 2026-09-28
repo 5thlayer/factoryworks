@@ -1048,7 +1048,10 @@ The pack's research tree takes its shape from Factorio's, extracted rather than 
 each research with `fromFactorio(name, {icon, unlocks, ...})` and supplies only the
 Minecraft-specific parts. Regeneration and provenance are in `data/factorio/README.md`.
 `tests/factorio/test_tech_extract.py` asserts the pruned tree is still a valid tree and that every
-declared name exists — run it after re-extracting or after editing `researchd.js`.
+declared name exists — run it after re-extracting or after editing `researchd.js`. It also reads the
+gate table in `docs/spec/terra-progression.md` and holds each gate to its cost in the corpus, the
+launch to no production pack and the reactor to a branch the silo does not require (ADR-0097), so
+run it after editing that table too.
 
 ### Pack manifest
 

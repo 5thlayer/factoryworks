@@ -32,7 +32,8 @@ and they let an oversized rung split at Factorio's own seams instead of the pack
 | --- | --- | --- |
 | `steam-power` | trigger: craft 50 iron plate | Rung 0, steam |
 | `electronics` | trigger: craft 10 copper plate | Green circuits and inserters |
-| `automation-science-pack` | trigger: craft a Lab | The Lab, and rung 1 |
+| `automation-science-pack` | trigger: craft a Lab | The Lab |
+| `automation` | automation | Rung 1 |
 | `logistic-science-pack` | automation | Rung 2 |
 | `oil-processing` | trigger: mine crude oil | The oil chapter |
 | `chemical-science-pack` | automation + logistic | Rung 3 |
@@ -44,9 +45,10 @@ and they let an oversized rung split at Factorio's own seams instead of the pack
 `tests/factorio/test_tech_extract.py` reads that table and holds every row to the corpus.
 
 **The oil chapter opens on `oil-processing`, not on the `logistic` rung.** ADR-0025 hung the
-chapter on the rung, so rung 2 carried 69 of the corpus's 163 recipes. The trigger relieves that
-without an invented seam. `oil-gathering`, the Pumpjack, stays logistic-tier, so the rung still
-grants the means to reach oil and the trigger grants what to do with it.
+chapter on the rung. Factorio opens it on the player's own action, mining crude, and so does the
+pack. `oil-gathering`, the Pumpjack, costs logistic packs, so the rung still grants the means to
+reach oil and the trigger grants what to do with it. The split does not make rung 2 small: 69 of the
+corpus's 163 recipes cost logistic packs, and 21 of those are `fluid-handling`'s barrels.
 
 **The reactor is a terminal branch.** `uranium-processing` is not among `rocket-silo`'s ancestors,
 and the only consumer of what the Centrifuge makes is the fuel cell, whose only consumer is the
@@ -62,9 +64,10 @@ optional power upgrade. ADR-0018's spine rule is amended to admit it.
 - **Keep four rungs and have the silo cost production anyway.** Rejected: it is a pack-authored
   price on the one technology the pack most wants to read as Factorio's, and ADR-0031 makes the
   corpus the price authority.
-- **Three rungs with the chapters left as rungs.** Rejected: rung 2 would then hold the whole oil
-  chapter as well as the belt tiers and rail, which is 42% of the corpus in one chapter. The
-  triggers are what split it, and they are Factorio's.
+- **Three rungs with the chapters left as rungs.** Rejected: Factorio opens steam, electronics,
+  the Lab, oil and uranium on something the player does, not on a purchase. A chapter per rung
+  would open each of them on the Lab instead, and the book would lose the openings Factorio gives
+  it.
 
 ## Consequences
 
@@ -75,7 +78,8 @@ optional power upgrade. ADR-0018's spine rule is amended to admit it.
   new figures is how rung 3 came to hold a nuclear chapter its 4–5h could not. The 20–25h total
   stands as ADR-0018's figure. The per-chapter split is a human reading on delivery.
 - **The research tree must implement the triggers.** A trigger technology is packless research on
-  Researchd (`#42`, and ADR-0033 already does this for `uranium-processing`). Which of the five
-  `researchd.js` declares today is the research tree's business, not this ADR's.
+  Researchd (`#42`, and ADR-0033 decided it for `uranium-processing`). `researchd.js` declares the
+  first three as triggers, but skips `oil-processing` and hangs its recipes on `oil-gathering`, so
+  today the Pumpjack's research opens the oil chapter. That is the research tree's to fix.
 - **`production`'s own pack recipe needs a productivity module**, and modules are `#120`'s. With the
   rung post-launch, that stops blocking Terra's launch.

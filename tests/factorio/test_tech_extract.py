@@ -14,7 +14,8 @@ technology that does not exist is a research that never appears, with no error a
 
 What this deliberately does not check is the pack's content: whether an icon is the right
 item, whether an unlocked recipe id resolves, whether the costs are fun. That is authoring,
-and it is the launch test's job.
+and it is the launch test's job. The one content claim held here is the ladder's: each gate
+`docs/spec/terra-progression.md` names is in the tree at the cost it claims (ADR-0097).
 """
 
 import importlib.util
@@ -364,6 +365,85 @@ def check_declarations(techs):
     check(len(declared) == len(set(declared)), "researchd.js declares a technology twice")
 
 
+def ancestors(name, by_name):
+    seen, stack = set(), [name]
+    while stack:
+        for parent in by_name[stack.pop()]["prerequisites"]:
+            if parent not in seen:
+                seen.add(parent)
+                stack.append(parent)
+    return seen
+
+
+def pack_set(tech):
+    return {i[0] for i in (tech.get("unit") or {}).get("ingredients", [])}
+
+
+def check_ladder(techs):
+    """Every gate Terra's arc names is in the corpus at the cost the arc claims (ADR-0097).
+
+    The gate table is read out of the spec rather than restated, so a gate the spec adds is
+    held to the corpus with no edit here.
+    """
+    by_name = {t["name"]: t for t in techs}
+    spec = REPO / "docs" / "spec" / "terra-progression.md"
+    text = spec.read_text(encoding="utf-8")
+    match = re.search(r"^## The gates\n(.*?)(?=^## |^---)", text, re.S | re.M)
+    check(match, "terra-progression.md has no `## The gates` section")
+    if not match:
+        return
+
+    gates = {}
+    rows = [line for line in match.group(1).splitlines() if line.startswith("|")][2:]
+    for line in rows:
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if cells[0] == "—":
+            continue
+        gate = re.fullmatch(r"`([a-z0-9-]+)`", cells[0]) if len(cells) >= 3 else None
+        check(gate, f"a gate row names no technology: {line}")
+        if not gate:
+            continue
+        check(gate.group(1) not in gates, f"the gate table names `{gate.group(1)}` twice")
+        gates[gate.group(1)] = cells[1]
+    check(len(gates) >= 10, f"the gate table names {len(gates)} technologies, expected at least 10")
+
+    for name, cost in gates.items():
+        tech = by_name.get(name)
+        check(tech, f"the spec's gate `{name}` is not a technology in technology.json")
+        if not tech:
+            continue
+        if cost.startswith("trigger"):
+            check(
+                tech["cost_kind"] == "trigger",
+                f"`{name}` is a trigger gate in the spec but costs {sorted(pack_set(tech))}",
+            )
+            continue
+        claimed = {p.strip() + "-science-pack" for p in cost.split("+")}
+        check(
+            tech["cost_kind"] == "packs" and pack_set(tech) == claimed,
+            f"`{name}` costs {tech['cost_kind']} {sorted(pack_set(tech))} in the corpus, "
+            f"the spec claims {sorted(claimed)}",
+        )
+
+    for name in ("rocket-silo", "production-science-pack", "uranium-processing"):
+        check(name in gates, f"the spec's gate table does not name `{name}`")
+    if "rocket-silo" not in by_name:
+        return
+    silo_path = ancestors("rocket-silo", by_name) | {"rocket-silo"}
+    costs_production = sorted(
+        n for n in silo_path if "production-science-pack" in pack_set(by_name[n])
+    )
+    check(
+        not costs_production,
+        f"the launch needs a production pack via {costs_production} -- the ladder is four "
+        "rungs again",
+    )
+    check(
+        "uranium-processing" not in silo_path,
+        "the silo now requires uranium-processing -- the reactor is no longer a terminal branch",
+    )
+
+
 def main():
     tech_path = DATA / "technology.json"
     if not tech_path.is_file():
@@ -382,6 +462,7 @@ def main():
     check_builder_singletons(techs)
     check_load_order()
     check_declarations(techs)
+    check_ladder(techs)
 
     check(packs, "no science packs extracted -- the prototype key moved again")
     check(
