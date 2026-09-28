@@ -29,10 +29,10 @@ fails the *load*, not the build, which is the one failure mode a green compile w
 
 ## Removed because Researchd is not ported yet (#260)
 
-The pack's Researchd fork is still on 1.21.1 (`~/minecraft_mods/researchd-src`, class file version
-65). There is no 26.1.2 jar to compile against, so every file importing
-`com.portingdeadmods.researchd` had to go. **#260 is the only thing blocking these**, and none of
-them needs redesigning — they are ports, not rewrites.
+When these went, the pack's Researchd fork was still on 1.21.1, so every file importing
+`com.portingdeadmods.researchd` had to go. The fork is now on 26.1 (`~/minecraft_mods/researchd`)
+and pinned in `data/pack/local-jars.json`, so nothing blocks them any more; #260 owns restoring
+them, and none needs redesigning — they are ports, not rewrites.
 
 | removed | what it was |
 | --- | --- |
