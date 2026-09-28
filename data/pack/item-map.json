@@ -189,8 +189,7 @@
       "kind": "item",
       "target": "planetaryfactory:chemical_plant",
       "source": "authored",
-      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #486's, so the row is blocked on it. Not Oritech's Centrifuge: ADR-0060 recipe-removes it as ore-doubling.",
-      "blocked_by": 486
+      "note": "The pack's block on the Assembling Machine's chassis, wearing Oritech's Centrifuge model (ADR-0096, #490). Not Oritech's Centrifuge, which ADR-0060 recipe-removes as ore-doubling."
     },
     "chemical-science-pack": {
       "kind": "item",

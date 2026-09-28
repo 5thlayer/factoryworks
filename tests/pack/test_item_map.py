@@ -71,7 +71,6 @@ POWER_SWITCH = (
 SILO = (
     "names the first-party Rocket Silo and the part it makes, which #378 owns and has not built yet")
 DEFERRED = {
-    "chemical-plant": CHASSIS,
     "oil-refinery": CHASSIS,
     "pump": PUMP,
     "power-switch": POWER_SWITCH,

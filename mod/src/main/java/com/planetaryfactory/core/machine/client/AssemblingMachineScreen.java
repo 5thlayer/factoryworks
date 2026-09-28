@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.planetaryfactory.core.PFBlocks;
-import com.planetaryfactory.core.machine.AssemblingMachineBlock;
+import com.planetaryfactory.core.machine.ChassisMachineBlock;
 import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.compat.emi.HeldRecipeTooltip;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
@@ -103,7 +103,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         super(menu, playerInventory, title, 176, AssemblingMachineMenu.INVENTORY_Y + 83);
         inventoryLabelY = AssemblingMachineMenu.INVENTORY_Y - 11;
         Block block = playerInventory.player.level().getBlockState(menu.pos()).getBlock();
-        if (!(block instanceof AssemblingMachineBlock)) {
+        if (!(block instanceof ChassisMachineBlock)) {
             block = PFBlocks.assemblingMachine(AssemblingTier.ONE).get();
         }
         name = block.getName();
@@ -144,6 +144,9 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         OritechSurface.PANEL.render(graphics, leftPos, topPos, imageWidth, imageHeight);
         extractTab(graphics);
         for (Slot slot : menu.slots) {
+            if (!slot.isActive()) {
+                continue;
+            }
             recess(graphics, leftPos + slot.x, topPos + slot.y, 16, 16);
             if (isShort(slot)) {
                 graphics.fill(leftPos + slot.x, topPos + slot.y, leftPos + slot.x + 16, topPos + slot.y + 16, SHORT);

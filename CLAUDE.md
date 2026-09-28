@@ -158,7 +158,7 @@ classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there 
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `ElectricNetworkTests` (#280), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
-`BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
+`BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490)
 `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). What is here is only what a JVM test cannot reach: that Craftworks plans every hand copy the
@@ -237,7 +237,14 @@ and leaves 50, 50 mB stalls with nothing drawn or taken, the fluid face on the a
 block takes water only with concrete held and never gives it back, tier 2 holds concrete where tier
 1 refuses it, tier 1 has no fluid face, a changed recipe voids the tank and the tank survives the
 save hook. A `takeFluids` that always feeds and a change that keeps the tank turn four red. The
-per-tier figures are `AssemblingMachineSpecTest`, the fluid stall's order `AssemblingStallTest`. And that the screen's status (#332) is recomputed on
+per-tier figures are `AssemblingMachineSpecTest`, the fluid stall's order `AssemblingStallTest`. `ChemicalPlantTests` holds
+the Chemical Plant on the same chassis (#490, ADR-0096): plastic in 20 ticks for 2,100 FE, typed; a full
+output, no coal and a locked recipe stall with nothing drawn or taken; heavy oil cracking's two fluids
+each reach their own tank through the anchor and the part, while other fluids and the inputs' way back
+out are refused; an assembling or oil-processing recipe is refused at the menu setter with its message;
+a pole reaching only the part feeds it, and one reaching both blocks counts it once; and Oritech's
+Fluid addon never attaches. Drawing before the stall, dropping the type check, routing every fluid to
+tank 0, dropping the addon filter, and making a part its own energy owner each turn their test red. And that the screen's status (#332) is recomputed on
 each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
 cycle stops the machine; forcing the power probe true turns it red. The precedence is
 `AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. A pole beside a whole machine counts it

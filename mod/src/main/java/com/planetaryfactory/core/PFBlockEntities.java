@@ -11,6 +11,7 @@ import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineFluidHandler;
 import com.planetaryfactory.core.machine.AssemblingMachineItemHandler;
 import com.planetaryfactory.core.machine.AssemblingTier;
+import com.planetaryfactory.core.machine.ChemicalPlantBlockEntity;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.mining.rig.RigBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigItemHandler;
@@ -108,6 +109,12 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(AssemblingMachineBlockEntity::new,
                             PFBlocks.assemblingMachineBlocks()));
 
+    /** The Chemical Plant's anchor (ADR-0096): its own type so its renderer is the Centrifuge's model. */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChemicalPlantBlockEntity>>
+            CHEMICAL_PLANT = BLOCK_ENTITIES.register("chemical_plant",
+                    () -> new BlockEntityType<>(ChemicalPlantBlockEntity::new,
+                            java.util.Set.of(PFBlocks.CHEMICAL_PLANT.get())));
+
     /**
      * The Steam Engine's anchor (ADR-0077): Oritech's engine entity under the pack's own type, which
      * {@link SteamEngineBlockEntity#getType} answers in place of the one Oritech's constructor names.
@@ -151,6 +158,7 @@ public final class PFBlockEntities {
         registerPumpCapabilities(event);
         registerBoilerCapabilities(event);
         registerAssemblingMachineCapabilities(event);
+        registerChemicalPlantCapabilities(event);
         registerSteamEngineCapabilities(event);
         registerAccumulatorCapabilities(event);
         registerRadarCapabilities(event);
@@ -300,6 +308,19 @@ public final class PFBlockEntities {
                                 ? new AssemblingMachineFluidHandler(machine) : null);
             }
         }
+    }
+
+    private static void registerChemicalPlantCapabilities(RegisterCapabilitiesEvent event) {
+        FootprintMachine footprint = PFBlocks.CHEMICAL_PLANT_FOOTPRINT;
+        registerOnFootprint(event, Capabilities.Energy.BLOCK, footprint,
+                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                        ? machine.getEnergyLookup(side) : null);
+        registerOnFootprint(event, Capabilities.Item.BLOCK, footprint,
+                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                        ? new AssemblingMachineItemHandler(machine) : null);
+        registerOnFootprint(event, Capabilities.Fluid.BLOCK, footprint,
+                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                        ? new AssemblingMachineFluidHandler(machine) : null);
     }
 
     /**

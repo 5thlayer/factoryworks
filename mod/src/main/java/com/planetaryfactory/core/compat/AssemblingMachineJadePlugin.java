@@ -1,7 +1,7 @@
 package com.planetaryfactory.core.compat;
 
 import com.planetaryfactory.core.PlanetaryFactoryCore;
-import com.planetaryfactory.core.machine.AssemblingMachineBlock;
+import com.planetaryfactory.core.machine.ChassisMachineBlock;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
 import com.planetaryfactory.core.machine.AssemblingStatus;
@@ -132,6 +132,6 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
-        registration.registerBlockComponent(TOOLTIP, AssemblingMachineBlock.class);
+        registration.registerBlockComponent(TOOLTIP, ChassisMachineBlock.class);
     }
 }

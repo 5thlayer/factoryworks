@@ -71,6 +71,8 @@ FACES = {
     # Item (#329): inputs filtered to the Held recipe, on the guard.
     # Fluid (#295): tiers 2 and 3's input tank, taking only the Held recipe's fluid.
     "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item", "Fluid")),
+    # The Assembling Machine's three faces, on the chassis (ADR-0096).
+    "chemical_plant": ("registerChemicalPlantCapabilities", ("Energy", "Item", "Fluid")),
     "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
     # Energy (#283): a pole charges and draws it, on every block of the footprint.
     "accumulator": ("registerAccumulatorCapabilities", ("Energy",)),

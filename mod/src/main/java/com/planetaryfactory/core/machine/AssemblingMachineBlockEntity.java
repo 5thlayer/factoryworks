@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.ValueInput;
@@ -121,8 +122,11 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     };
 
     public AssemblingMachineBlockEntity(BlockPos pos, BlockState state) {
-        super(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state,
-                OritechConfig.processingMachines.assemblerData.energyPerTick.get());
+        this(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state);
+    }
+
+    protected AssemblingMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state, OritechConfig.processingMachines.assemblerData.energyPerTick.get());
     }
 
     /** The tier is the block's: one block entity type serves all three (ADR-0075). */
@@ -131,7 +135,11 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     }
 
     public MachineSpec spec() {
-        return tier().spec();
+        return chassis().map(ChassisMachineBlock::spec).orElseGet(AssemblingTier.ONE::spec);
+    }
+
+    private Optional<ChassisMachineBlock> chassis() {
+        return getBlockState().getBlock() instanceof ChassisMachineBlock block ? Optional.of(block) : Optional.empty();
     }
 
     private static int capacity(MachineSpec spec, int index) {
@@ -139,12 +147,12 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     }
 
     /**
-     * The tier's paint, whatever was saved or assigned: the paint is how a player tells the tiers
+     * The block's paint, whatever was saved or assigned: the paint is how a player tells the tiers
      * apart (ADR-0075). {@code PaintLock} stops a cartridge being spent on it.
      */
     @Override
     public ColorVariant getCurrentColor() {
-        return ColorVariant.valueOf(tier().paint());
+        return ColorVariant.valueOf(chassis().map(ChassisMachineBlock::paint).orElse(AssemblingTier.ONE.paint()));
     }
 
     /** Ignored: see {@link #getCurrentColor}. */
@@ -423,10 +431,13 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         return OritechConfig.processingMachines.assemblerData.maxEnergyInsertion.get();
     }
 
+    /**
+     * Laid out for the widest machine, as the tanks are: the menu and the item face address the
+     * output by {@link #OUTPUT}, and a spec with fewer inputs leaves its last slots taking nothing.
+     */
     @Override
     public ContainerSlotAssignment getSlotAssignments() {
-        MachineSpec spec = spec();
-        return new ContainerSlotAssignment(0, spec.itemInputs(), spec.itemInputs(), spec.itemOutputs());
+        return new ContainerSlotAssignment(0, INPUTS, OUTPUT, 1);
     }
 
     @Override
@@ -436,16 +447,13 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         for (int input = 0; input < spec.itemInputs(); input++) {
             slots.add(new ScreenProvider.GuiSlot(input, 38 + 18 * (input % 2), 26 + 18 * (input / 2)));
         }
-        for (int output = 0; output < spec.itemOutputs(); output++) {
-            slots.add(new ScreenProvider.GuiSlot(spec.itemInputs() + output, 117, 36 + 18 * output, true));
-        }
+        slots.add(new ScreenProvider.GuiSlot(OUTPUT, 117, 36, true));
         return slots;
     }
 
     @Override
     public int getInventorySize() {
-        MachineSpec spec = spec();
-        return spec.itemInputs() + spec.itemOutputs();
+        return INPUTS + 1;
     }
 
     /**
@@ -635,10 +643,9 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         tank.deserialize(input.childOrEmpty(TANK_KEY));
     }
 
-    /** {@link AssemblingMachineFootprint#addonSlots}: beside the row and behind the anchor. */
     @Override
     public List<Vec3i> getAddonSlots() {
-        return AssemblingMachineFootprint.addonSlots().stream()
+        return chassis().map(ChassisMachineBlock::addonSlots).orElseGet(AssemblingMachineFootprint::addonSlots).stream()
                 .map(slot -> new Vec3i(slot.x(), slot.y(), slot.z()))
                 .toList();
     }

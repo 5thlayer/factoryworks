@@ -402,9 +402,10 @@ Sub-rules:
 - **verdict**: `planned`
 - **where**: Terra, Ignus, Gelida
 - **via**: `pack`
-- **owner**: ADR-0060 (the Oil Refinery and Chemical Plant are core subclasses of Oritech machines,
-  built by #258) and ADR-0067 (the oil fluids are Oritech's, retinted to Factorio's colours)
-- **ticket**: #258
+- **owner**: ADR-0096 (the Chemical Plant and Oil Refinery are pack blocks on the Assembling
+  Machine's chassis, on Oritech's models) and ADR-0067 (the oil fluids are Oritech's, retinted to
+  Factorio's colours)
+- **ticket**: #486 (the Chemical Plant is #490's; the Oil Refinery #491's); #258 before it
 
 Sub-rules:
 

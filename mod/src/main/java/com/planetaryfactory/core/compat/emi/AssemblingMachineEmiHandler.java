@@ -16,14 +16,15 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 /**
- * EMI's {@code + Fill Recipe}, pointed at an open Assembling Machine (#330, ADR-0073): it sets the
- * machine's Held recipe and moves no items.
+ * EMI's {@code + Fill Recipe}, pointed at an open chassis machine (#330, ADR-0073, ADR-0096): it sets
+ * the machine's Held recipe and moves no items.
  *
  * <p>{@link EmiRecipeHandler} directly: a standard handler moves ingredients and greys the button
  * when they are missing, and holding a recipe needs none -- MI's locking branch, where
  * {@code canCraft} asks whether the recipe can be held, not whether the player has the items.
  *
- * <p>Every assembling recipe gets the button, locked ones included: whether the machine may hold it
+ * <p>Every recipe of the chassis's types gets the button, locked ones and another machine's type
+ * included: whether the machine may hold it
  * is server truth, and the server refuses with a message ({@code AssemblingMachineMenu.request})
  * rather than the button hiding the reason. {@code craft} returns true, so EMI hands the screen back
  * to the machine, where the Held recipe is shown.
@@ -39,7 +40,7 @@ public final class AssemblingMachineEmiHandler implements EmiRecipeHandler<Assem
 
     @Override
     public boolean supportsRecipe(EmiRecipe recipe) {
-        return recipe.getCategory() == AssemblingEmiPlugin.ASSEMBLING && recipe.getId() != null;
+        return AssemblingEmiPlugin.HELD_CATEGORIES.contains(recipe.getCategory()) && recipe.getId() != null;
     }
 
     /** Always: holding a recipe takes no items, so an empty inventory keeps the button lit. */
