@@ -29,7 +29,7 @@ import zipfile
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
 KIT = MOD / "start/StartingKit.java"
-WELCOME = MOD / "start/Welcome.java"
+GRANT = MOD / "start/StartingKitGrant.java"
 LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 SPEC = ROOT / "docs/spec/terra-progression.md"
@@ -173,20 +173,15 @@ class StartingKitIds(unittest.TestCase):
                              % item)
 
 
-class WelcomeKeys(unittest.TestCase):
-    """Every line of the first-join message has a lang key (#494); a missing one prints the raw key."""
+class WelcomeKey(unittest.TestCase):
+    """The first-join message has a lang key (#494); a missing one prints the raw key."""
 
-    def test_every_welcome_line_is_in_the_pack_lang(self):
-        source = WELCOME.read_text(encoding="utf-8")
-        body = re.search(r"public static final List<Line> LINES = List\.of\((.*?)\);", source,
-                         re.DOTALL)
-        self.assertIsNotNone(body, "Welcome.LINES has moved or changed shape")
-        keys = re.findall(r'new Line\("([^"]+)"', body.group(1))
-        self.assertTrue(keys, "Welcome.LINES names no key")
+    def test_the_welcome_key_is_in_the_pack_lang(self):
+        key = re.search(r'WELCOME_KEY = "([^"]+)"', GRANT.read_text(encoding="utf-8"))
+        self.assertIsNotNone(key, "StartingKitGrant.WELCOME_KEY has moved or changed shape")
         lang = json.loads(LANG.read_text(encoding="utf-8"))
-        for key in keys:
-            self.assertIn(key, lang, "the first-join message names %s, which the pack's lang lacks"
-                          % key)
+        self.assertIn(key.group(1), lang,
+                      "the first-join message names %s, which the pack's lang lacks" % key.group(1))
 
 
 class StartingKitAgainstTheSpec(unittest.TestCase):
