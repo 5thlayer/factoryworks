@@ -442,11 +442,11 @@ The unprocessed fluid a **Pumpjack** draws from an **oil well**, and the sole in
 _Avoid_: raw oil, oil, petroleum, oil spring
 
 **Petroleum Gas**:
-The lightest fraction, and the one that feeds sulfur and plastic. `gtceu:oil`, renamed in lang only.
+The lightest fraction, and the one that feeds sulfur and plastic. `oritech:still_diesel`, drawn in Factorio's colour (ADR-0067).
 _Avoid_: refinery gas, natural gas, naphtha
 
 **Heavy Oil** / **Light Oil**:
-The two heavier fractions. `gtceu:heavy_oil` and `gtceu:light_oil` — not `heavy_fuel` and `light_fuel`, which are different materials the pack hides. Heavy Oil is also what Electro's oceans are made of (ADR-0009).
+The two heavier fractions. `oritech:still_heavy_oil` and `oritech:still_naphtha`, which Oritech names Naphtha (ADR-0067). Heavy Oil is also what Electro's oceans are made of (ADR-0009).
 _Avoid_: heavy fuel, light fuel, fuel oil, kerosene
 
 **The oil chapter**:
