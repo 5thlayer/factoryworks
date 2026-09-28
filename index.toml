@@ -138,7 +138,7 @@ hash = "ff6d7ae15491acb223054ff3eb9d0ff2f0235923f98cb4686f7aab9e7a00eef7"
 
 [[files]]
 file = "config/researchd-common.toml"
-hash = "0a0be36efd20ef4cbb1c72ac09f8aff1a8ab859625a662540bb8a657200c00c5"
+hash = "328c7cc75bdc7c302ba2b21338cd6266288f810e51e7e0018446c555f206ab49"
 
 [[files]]
 file = "config/researchd-server.toml"
@@ -254,11 +254,11 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "f264b9cda5fb90f96274fbd1394d1d7ababd35c807187a44771df88c5d18e3f2"
+hash = "34a4e2664087cab05765cd814eb8c1a64742bb1731280ae9758eef4035a7b28b"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "e0972e93b11b83f416722b51e177718cf3dd8b1d4983236e095e44c96988c5e8"
+hash = "dc9cff03b62b916787f0ef8a6b9b5f4abcba109837f3f84f46b1b9418da2103a"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -270,11 +270,11 @@ hash = "f22ad10828ccad9cd00f592ac9edcbac53dcb5f08737d52d09f17866fd3f51ac"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "32bb2c7a33623e3bf9dcdacb8aab6fb8b28d9a6c1e55ea73df6e6056e42e4acc"
+hash = "35c7b02b3acde7ec9c386939cfd06d5b2b1339a821d70a33ed8f16d598207b5a"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
-hash = "a6a502106ba8fb42f60a0af96dcc78030f30bdd9630fb5d66e268b73fdddb09f"
+hash = "32a73bc461eb39bad3b9c1a979c67ee930874ac0d66064bc6202fbf881e2d935"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -306,7 +306,7 @@ hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "26fbd37e276067bbad2a5b6f53ca183acebf08a8cf6ef71d5b4434b5c096fcc6"
+hash = "89e82fb2ec3cd7a791cd1ce9faacbe66aa828bf9ba855c379248a0fbd7a7f1d7"
 
 [[files]]
 file = "kubejs/assets/kubejs/blockstates/oil_refinery.json"
@@ -2582,11 +2582,11 @@ hash = "16b1348014019a2ba7947710529a04e09a6188d299c6eb107fc130aaec6e3038"
 
 [[files]]
 file = "kubejs/server_scripts/factorio_tech_data.js"
-hash = "5f1cc1c57b22b2bf32857a0c27d2805937847fac025a5759ff8603ffb83d49ee"
+hash = "ccb6314aad8c2789e005c1b24880f810db67fbbb6b18db3c7ce56e7aee61e0be"
 
 [[files]]
 file = "kubejs/server_scripts/factorio_tech_dsl.js"
-hash = "13619636c44af1a4385f23c1c84a0c814132963fbcf15ff82fd98ceae6a1affe"
+hash = "feef79cf0419a4478985c6eabd4b620c731b3e1ff01ea3a86a0720ad3580d47b"
 
 [[files]]
 file = "kubejs/server_scripts/hand_recipes.js"
@@ -2681,8 +2681,8 @@ hash = "8cd3a3e3f55d69d8fbb6aab75a721aaf7a8c1ec9d1bc64065380dcc9fdc39530"
 metafile = true
 
 [[files]]
-file = "mods/craftworks-0.1.1.jar"
-hash = "6e4a424dc89c356e84a3f07a63e578dcd8b3b05e6f3aa2d681e7bbd495b1d586"
+file = "mods/craftworks-0.1.2.jar"
+hash = "d2ead62ed517e54b48060ab314e2b566dc4a927c0041ea23693ab7ea53e437a6"
 
 [[files]]
 file = "mods/emi-unofficial-port-unstable.pw.toml"
