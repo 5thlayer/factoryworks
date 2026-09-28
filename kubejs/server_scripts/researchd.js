@@ -176,6 +176,17 @@ fromFactorio('plastics', {
   unlocks: ['planetaryfactory:chemistry/plastic_bar']
 });
 
+fromFactorio('advanced-oil-processing', {
+  icon: 'planetaryfactory:oil_refinery',
+  unlocks: [
+    'planetaryfactory:oil_processing/advanced_oil_processing',
+    'planetaryfactory:chemistry/heavy_oil_cracking',
+    'planetaryfactory:chemistry/light_oil_cracking',
+    'planetaryfactory:chemistry/solid_fuel_from_heavy_oil',
+    'planetaryfactory:chemistry/solid_fuel_from_light_oil'
+  ]
+});
+
 // ---------------------------------------------------------------------------------------------
 // BELT TIERS (#345, #349). Each node grants its tier's belt and splitter; the underground belt has
 // no pack recipe.
