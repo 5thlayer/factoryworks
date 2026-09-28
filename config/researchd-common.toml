@@ -8,3 +8,13 @@ load_default_datapack = true
 [debug]
 	#Whether to enable console debug messages for Researchd
 	console_debug = false
+
+[energy]
+	#Energy consumed per tick by a Research Lab while it is researching. Zero disables the feature.
+	# Default: 0
+	# Range: > 0
+	research_lab_energy_usage = 0
+	#Size of a Research Lab's energy buffer. Also its per-tick transfer limit.
+	# Default: 100000
+	# Range: > 1
+	research_lab_energy_capacity = 100000

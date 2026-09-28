@@ -292,6 +292,12 @@
       "stack": "item:railcraft:tank_minecart"
     },
     {
+      "stack": "item:researchd:research_lab"
+    },
+    {
+      "stack": "item:researchd:research_pack"
+    },
+    {
       "stack": "fluid:minecraft:water"
     },
     {

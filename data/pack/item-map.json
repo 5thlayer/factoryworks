@@ -91,8 +91,7 @@
       "components": {
         "researchd:research_pack": "planetary_factory:automation_science_pack"
       },
-      "note": "ADR-0018's rung 1. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read.",
-      "blocked_by": 260
+      "note": "ADR-0018's rung 1. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
     },
     "barrel": {
       "kind": "item",
@@ -200,8 +199,7 @@
       "components": {
         "researchd:research_pack": "planetary_factory:chemical_science_pack"
       },
-      "note": "ADR-0018's rung 3. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read.",
-      "blocked_by": 260
+      "note": "ADR-0018's rung 3. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
     },
     "coal": {
       "kind": "item",
@@ -473,8 +471,7 @@
       "target": "researchd:research_lab",
       "source": "borrowed",
       "note": "Researchd's Lab, and #103 has it running running free without energy consumption. We will use this item but we need to either fork the mod to add energy capability or wait for an upstream update.",
-      "ticket": 103,
-      "blocked_by": 260
+      "ticket": 103
     },
     "landfill": {
       "status": "not_emitted",
@@ -513,8 +510,7 @@
       "components": {
         "researchd:research_pack": "planetary_factory:logistic_science_pack"
       },
-      "note": "ADR-0018's rung 2. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read.",
-      "blocked_by": 260
+      "note": "ADR-0018's rung 2. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
     },
     "long-handed-inserter": {
       "status": "not_emitted",
@@ -652,8 +648,7 @@
       "components": {
         "researchd:research_pack": "planetary_factory:production_science_pack"
       },
-      "note": "ADR-0018's rung 4. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read.",
-      "blocked_by": 260
+      "note": "ADR-0018's rung 4. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
     },
     "productivity-module": {
       "status": "undecided",

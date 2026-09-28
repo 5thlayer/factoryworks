@@ -64,10 +64,16 @@ def check(condition, message):
 
 
 def outputs_of(recipe):
-    """The item names a recipe produces. Fluids are out of scope -- nothing duplicates one."""
+    """The items a recipe produces, each its id plus its components (ADR-0052). Fluids are out of
+    scope -- nothing duplicates one."""
     if recipe.get("type") == PACK_SMELTING:
-        return [recipe["result"]["id"]]
-    return [entry["id"] for entry in recipe.get("results", [])]
+        return [item_key(recipe["result"])]
+    return [item_key(entry) for entry in recipe.get("results", [])]
+
+
+def item_key(entry):
+    components = entry.get("components")
+    return entry["id"] + (json.dumps(components, sort_keys=True) if components else "")
 
 
 def awaited_results():

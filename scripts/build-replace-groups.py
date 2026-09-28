@@ -42,6 +42,8 @@ def groups():
             skipped.append(f"{name}: blocked by #{mapped['blocked_by']}")
         elif "target" not in mapped:
             sys.exit(f"{name}'s row in {ITEM_MAP} has no target, status or blocked_by")
+        elif not mapped["target"].startswith("planetaryfactory:"):
+            skipped.append(f"{name}: {mapped['target']} is not the pack's block")
         else:
             out[mapped["target"]] = group
     return dict(sorted(out.items())), skipped

@@ -1,0 +1,25 @@
+{
+  "type": "planetaryfactory:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 10
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "beltworks:belt_tile",
+      "count": 4
+    }
+  ],
+  "results": [
+    {
+      "id": "researchd:research_lab",
+      "count": 1
+    }
+  ],
+  "time": 40
+}

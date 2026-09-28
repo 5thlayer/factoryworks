@@ -258,7 +258,7 @@ anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `co
 Which blocks may Fast Replace which is Factorio's `fast_replaceable_group` (ADR-0082), never typed.
 `scripts/factorio-machine-extract.py` writes it onto the machine and pole rows, and
 `scripts/build-replace-groups.py` joins it onto `data/pack/item-map.json` into the resource
-`ReplaceGroups` reads. A row that is `undecided`, `not_emitted` or `blocked_by` is a recorded skip.
+`ReplaceGroups` reads. A row that is `undecided`, `not_emitted` or `blocked_by`, or whose target is not the pack's block, is a recorded skip.
 `tests/factorio/test_machine_extract.py` holds the groups against the dump when it is on disk.
 `tests/pack/test_replace_groups.py` runs the generator's `--check` and holds the resource to its
 own join of the two inputs. `ReplaceGroupsTest` covers the parse and the same-group rule. Run them
