@@ -262,7 +262,7 @@ hash = "9b33cd5989ffa3e84a88e0cc7bbfbbed558c78cef1b58eeb773ba84c91cb69a4"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "174eaef72e49dbe98fb4e825af42c212d8222cb1471032596a746d9cb5920641"
+hash = "f22ad10828ccad9cd00f592ac9edcbac53dcb5f08737d52d09f17866fd3f51ac"
 
 [[files]]
 file = "data/pack/local-jars.json"
@@ -302,7 +302,7 @@ hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "860d816ff83bf25625d68acd4aefb788bd973001b4c2658e24c05829f2f6bb3f"
+hash = "26fbd37e276067bbad2a5b6f53ca183acebf08a8cf6ef71d5b4434b5c096fcc6"
 
 [[files]]
 file = "kubejs/assets/kubejs/blockstates/oil_refinery.json"
@@ -1561,6 +1561,10 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/assembling_machine_2.json
 hash = "03068ec032e89e5ae69b70bac8229b27546ac45e45c81154e801e3903318f3f2"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/automation_science_pack.json"
+hash = "bb55c965d2852c8daace2f6e5650939b6c48c680a92d7b874e4833ca0f8a45ee"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/barrel.json"
 hash = "b8428bfb061dd228770733664a699c84ffb9519e36cb02df40c2ba5e912e53f2"
 
@@ -1583,6 +1587,10 @@ hash = "b026ceec870e03e3a970a2d53634018dabafd4291e4737524cdb9571a610606f"
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/cargo_wagon.json"
 hash = "646d8c3a655bedf34a6765f73005468c8ea6283af726a80a8f03153dbf2edda3"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/chemical_science_pack.json"
+hash = "bab059f45d2e9d26276b2940f293224e8d63021cc4a5685e3f3166a610c487b4"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/concrete.json"
@@ -1653,8 +1661,16 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/iron_stick.json"
 hash = "1f63b63c33d2eb0f30f25b9530ecea99f0a0e74accf279e6feb1717833baf8ee"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/lab.json"
+hash = "5e077758f082ca724ab747cbcc04eacc46db8de311930b06de920ce85b0b1e34"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/locomotive.json"
 hash = "dedf9e3e5d0a95f3dfaa1ab2daaa46365442011b90cec8127f9c4cf7717b113b"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/logistic_science_pack.json"
+hash = "72190d2de1b0977ec0e78ad27d71f3c16609fddeff9447180e3285c468e24fd3"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/low_density_structure.json"
@@ -1873,6 +1889,10 @@ file = "kubejs/data/planetaryfactory/recipe/hand/assembling_machine_2.json"
 hash = "2f26c61d94dd4ab4feb36d11ceda3991e408d0f85e322a37902a96769db7442f"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/automation_science_pack.json"
+hash = "c955b13ff9faacfa1f0a685989be1ff26ecde46876dc4968b949f2ec0758fc31"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/barrel.json"
 hash = "3ba025e6382c1af234addcb72ff31644ae5e6bccbf0084d57eac440f895132bb"
 
@@ -1895,6 +1915,10 @@ hash = "cf4026a58370a880ff2917c16c7c26fe2bd2721c8f986c25dea0ed1709e78974"
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/cargo_wagon.json"
 hash = "2971354938c395d6b9b64ff1337246a46e897fd0c070c883bc5532c37558d457"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/chemical_science_pack.json"
+hash = "2dc765002d21110b42dce16b654e1007ab3d5a48b49b07110be3fff1c2a603d8"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/copper_cable.json"
@@ -1945,8 +1969,16 @@ file = "kubejs/data/planetaryfactory/recipe/hand/iron_stick.json"
 hash = "b63f46dfaf5e6394a77cc240e85a5716522fcdde8632937503a3702d25af156c"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/lab.json"
+hash = "bb3846682faa517f04380a9b1ab0c0f0093ee5909e549d361014ecf41285d37f"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/locomotive.json"
 hash = "f27849979d23d2404cd0e145d06a63a20c981f88f6dbdb179c864560350e7b2e"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/logistic_science_pack.json"
+hash = "a5c3fe516ea811b43354d737141eab8251528590bf610fcbd6b0deb31affcc2c"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/low_density_structure.json"
@@ -2554,7 +2586,7 @@ hash = "13619636c44af1a4385f23c1c84a0c814132963fbcf15ff82fd98ceae6a1affe"
 
 [[files]]
 file = "kubejs/server_scripts/hand_recipes.js"
-hash = "815d0091adeee64622e153f9319362afcc66f0de698a62b340606cbcc351bd56"
+hash = "44b5487db6399577d78516b9cf87cd6e9a57be1e9ee6326840936947e5f6a010"
 
 [[files]]
 file = "kubejs/server_scripts/jsconfig.json"

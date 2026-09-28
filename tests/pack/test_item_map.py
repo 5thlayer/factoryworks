@@ -68,9 +68,6 @@ PUMP = (
 POWER_SWITCH = (
     "names the first-party power switch, since Oritech ships none and its Flux Gate is an item: "
     "#294 owns this row")
-SCIENCE = (
-    "names the Researchd fork, which is still on 1.21.1 and therefore not in `mods/`. #260 owns "
-    "the port; the row itself is not in question")
 SILO = (
     "names the first-party Rocket Silo and the part it makes, which #378 owns and has not built yet")
 DEFERRED = {
@@ -78,11 +75,6 @@ DEFERRED = {
     "oil-refinery": CHASSIS,
     "pump": PUMP,
     "power-switch": POWER_SWITCH,
-    "automation-science-pack": SCIENCE,
-    "chemical-science-pack": SCIENCE,
-    "logistic-science-pack": SCIENCE,
-    "production-science-pack": SCIENCE,
-    "lab": SCIENCE,
     "rocket-silo": SILO,
     "rocket-part": SILO,
 }
@@ -156,8 +148,19 @@ def resolves(target):
     elif namespace == "minecraft":
         keys = vanilla_lang()
     else:
+        # An item a jar names by some other key, such as Researchd's Lab, is still in the registry.
+        if target in jar_registry():
+            return True
         keys = jar_lang().get(namespace, set())
     return any("%s.%s.%s" % (prefix, namespace, path) in keys for prefix in PREFIXES)
+
+
+@functools.lru_cache(maxsize=None)
+def jar_registry():
+    """Every item and fluid id `scripts/jar-registry-extract.py` read out of the installed jars."""
+    jars = ROOT / "data" / "jars"
+    return {entry for name in ("item.json", "fluid.json")
+            for entry in json.loads((jars / name).read_text(encoding="utf-8"))["items" if name == "item.json" else "fluids"]}
 
 
 @functools.lru_cache(maxsize=None)

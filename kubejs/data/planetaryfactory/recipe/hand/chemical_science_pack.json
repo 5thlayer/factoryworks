@@ -1,0 +1,25 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "planetaryfactory:engine_unit",
+      "count": 2
+    },
+    {
+      "ingredient": "planetaryfactory:advanced_circuit",
+      "count": 3
+    },
+    {
+      "ingredient": "ftbmaterials:sulfur_dust",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "researchd:research_pack",
+    "count": 2,
+    "components": {
+      "researchd:research_pack": "planetary_factory:chemical_science_pack"
+    }
+  },
+  "time": 480
+}
