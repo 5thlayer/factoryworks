@@ -42,6 +42,8 @@
   "block.planetaryfactory.uranium_ore": "Uranium Ore Patch",
   "block.planetaryfactory.yumako_sapling": "Yumako Sapling",
   "emi.category.planetaryfactory.assembling": "Assembling Machine",
+  "emi.category.planetaryfactory.chemistry": "Chemistry",
+  "emi.category.planetaryfactory.oil_processing": "Oil Processing",
   "emi.category.planetaryfactory.smelting": "Smelting",
   "emi.planetaryfactory.assembling.seconds": "%ss",
   "emi.planetaryfactory.smelting.seconds": "%ss",

@@ -32,9 +32,9 @@ Two shapes come out, both read off the codec in `planetaryfactory_core`:
   `results` (an item template, `{"id", "count"}`), `fluid_results` (`{"id", "amount"}`), and `time`
   in ticks.
 - **`planetaryfactory:smelting`** for the four smelts (#155).
-
-The Chemical Plant and Oil Refinery have `recipe_type: null`, `blocked_by: 277`: their type and
-shape are the block #277 chooses, and are read off that mod's codec when it does.
+- **`planetaryfactory:chemistry`** and **`planetaryfactory:oil_processing`** for the Chemical Plant
+  and the Oil Refinery (#488, ADR-0096): the assembling shape above under a type each, so each has
+  its own EMI tab. The type is the serializer's, not a field of the JSON.
 
 Factorio's source category rides on the emitted recipe as `category`, because
 `category-map.json` collapses three crafting categories into one machine and the Personal

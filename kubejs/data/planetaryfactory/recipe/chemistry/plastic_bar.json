@@ -1,0 +1,23 @@
+{
+  "type": "planetaryfactory:chemistry",
+  "category": "chemistry",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:coal",
+      "count": 1
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_diesel",
+      "amount": 20
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:plastic_bar",
+      "count": 2
+    }
+  ],
+  "time": 20
+}

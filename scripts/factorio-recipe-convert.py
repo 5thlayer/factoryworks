@@ -100,6 +100,10 @@ SOURCE_CATEGORY_KEY = "category"
 # recipe on it was a file nothing read. Its codec is `AssemblingRecipe` in `planetaryfactory_core`.
 PACK_ASSEMBLING = "planetaryfactory:assembling"
 
+# The types registered on `AssemblingRecipe`'s record and codec, so one emitter shapes all three
+# (ADR-0096).
+ASSEMBLING_SHAPED = (PACK_ASSEMBLING, "planetaryfactory:chemistry", "planetaryfactory:oil_processing")
+
 
 def load(path):
     return json.loads((ROOT / path).read_text())
@@ -165,16 +169,16 @@ def convert_smelting(recipe, items, override):
     }
 
 
-def convert(recipe, items, override):
-    """One `planetaryfactory:assembling` recipe (#279).
+def convert(recipe_type, recipe, items, override):
+    """One recipe on `AssemblingRecipe`'s shape (#279, ADR-0096).
 
-    The shape is `AssemblingRecipe.CODEC`'s, which composes NeoForge's own codecs rather than
+    The shape is `AssemblingRecipe`'s codec, which composes NeoForge's own codecs rather than
     inventing any: an item ingredient is `SizedIngredient.NESTED_CODEC` (`ingredient` + `count`), a
     fluid one `SizedFluidIngredient.CODEC` (`ingredient` + `amount`), an item result
     `ItemStackTemplate.CODEC` (`id` + `count`) and a fluid result `FluidStackTemplate.CODEC` (`id` +
     `amount`). Every list is optional, so a recipe with no fluid writes no fluid key.
     """
-    out = {"type": PACK_ASSEMBLING, SOURCE_CATEGORY_KEY: recipe["category"]}
+    out = {"type": recipe_type, SOURCE_CATEGORY_KEY: recipe["category"]}
     sides = {"ingredients": [], "fluid_ingredients": [], "results": [], "fluid_results": []}
     for entry in recipe["ingredients"]:
         row = items[entry["name"]]
@@ -247,8 +251,8 @@ def main():
     # resolve by a ticket landing; an `undecided` row or an override is a decision, not a wait.
     awaiting = {}
 
-    def await_(name, machine, tickets, recipe):
-        awaiting["planetaryfactory:%s/%s" % (machine, name.replace("-", "_"))] = {
+    def await_(name, path, tickets, recipe):
+        awaiting["planetaryfactory:%s/%s" % (path, name.replace("-", "_"))] = {
             "tickets": sorted(tickets),
             "results": sorted(items[e["name"]]["target"] for e in recipe["results"]
                               if "target" in items.get(e["name"], {})),
@@ -314,7 +318,7 @@ def main():
             skipped.append((name, "item not registered yet",
                             ", ".join(awaited) + " — "
                             + ", ".join(f"#{t}" for t in tickets)))
-            await_(name, machine, tickets, recipe)
+            await_(name, recipe_type.split(":", 1)[1], tickets, recipe)
             continue
         on_tag = [e["name"] for e in recipe["results"] if items[e["name"]]["kind"] == "tag"]
         if on_tag:
@@ -327,11 +331,11 @@ def main():
         if recipe_type == PACK_SMELTING:
             emitted[name.replace("-", "_")] = convert_smelting(recipe, items, override)
         else:
-            if recipe_type != PACK_ASSEMBLING:
+            if recipe_type not in ASSEMBLING_SHAPED:
                 failures.append(f"{name}: recipe type {recipe_type} has no emitter -- "
                                 "category-map.json names a type this converter cannot shape")
                 continue
-            emitted[emitted_path(recipe_type, name)] = convert(recipe, items, override)
+            emitted[emitted_path(recipe_type, name)] = convert(recipe_type, recipe, items, override)
 
     for name, row in sorted(items.items()):
         if "outside_corpus" in row:

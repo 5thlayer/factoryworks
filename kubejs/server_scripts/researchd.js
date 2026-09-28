@@ -217,8 +217,8 @@ fromFactorio('oil-gathering', {
   unlocks: [
     'planetaryfactory:assembling/oil_refinery',
     'planetaryfactory:assembling/chemical_plant',
-    'planetaryfactory:oil_refinery/basic_oil_processing',
-    'planetaryfactory:chemical_plant/solid_fuel_from_petroleum_gas'
+    'planetaryfactory:oil_processing/basic_oil_processing',
+    'planetaryfactory:chemistry/solid_fuel_from_petroleum_gas'
   ]
 });
 
@@ -231,7 +231,7 @@ fromFactorio('oil-processing', { skip: true });
 // twelve-node slice exists to reach.
 fromFactorio('plastics', {
   icon: 'planetaryfactory:plastic_bar',
-  unlocks: ['planetaryfactory:chemical_plant/plastic_bar']
+  unlocks: ['planetaryfactory:chemistry/plastic_bar']
 });
 
 // ---------------------------------------------------------------------------------------------

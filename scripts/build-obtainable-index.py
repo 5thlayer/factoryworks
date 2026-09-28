@@ -74,10 +74,12 @@ def recipe_outputs():
     outputs = set()
     for path in sorted(RECIPES.rglob("*.json")):
         recipe = json.loads(path.read_text(encoding="utf-8"))
-        results = recipe.get("results") or [recipe.get("result")]
+        fluids = recipe.get("fluid_results", [])
+        results = recipe.get("results") or ([] if fluids else [recipe.get("result")])
         if not all(results):
-            sys.exit(f"{path.relative_to(ROOT)} has no `results` or `result`")
+            sys.exit(f"{path.relative_to(ROOT)} has no `results`, `result` or `fluid_results`")
         outputs |= {stack_key(result) for result in results}
+        outputs |= {"fluid:" + fluid["id"] for fluid in fluids}
     return outputs
 
 

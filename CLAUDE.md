@@ -157,12 +157,15 @@ And KubeJS reads a Better Advanced Tooltips class on a server as well, so that j
 classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there because the pack's
 recipes name their items.
 
-What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `ElectricNetworkTests` (#280), `HandSetTests` (#279),
+What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `ElectricNetworkTests` (#280), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
 `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). What is here is only what a JVM test cannot reach: that Craftworks plans every hand copy the
-server loaded, resolves a tag ingredient to its items and has no copy of a fluid recipe; that a pole's
+server loaded, resolves a tag ingredient to its items and has no copy of a fluid recipe; that each of
+the three types on `AssemblingRecipe`'s shape (assembling, chemistry, oil processing, ADR-0096) loads
+its recipes under its own folder and survives `Recipe.CODEC`'s round trip, and that an Assembling
+Machine resolves no chemistry recipe -- a unit test cannot, since the codec is NeoForge's; that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
 transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
 starved one freezes where it stood; that an Electric Mining Drill reached only through its part
@@ -811,7 +814,7 @@ decided in the script — a decision is a diff to a design document. Generated o
 hand-edited; re-run the converter. A Factorio name with no item-map row is a hard failure, while an
 `undecided` row is a recorded skip. So is a row carrying `blocked_by`, the ticket that makes its
 target loadable — a machine #277 has not chosen, a Researchd item #251 has not ported — and a machine
-whose `recipe_type` is still null (the Chemical Plant and Oil Refinery, on #277). `--awaited` prints
+whose `recipe_type` is still null (the Centrifuge and the Rocket Silo). `--awaited` prints
 those deferred recipes by the id they will load under, which is how the research-unlock,
 science-pack and duplication checks tell a deferral from a typo.
 `tests/factorio/test_recipe_convert.py` is the static check and runs the converter's `--check`; the
@@ -939,8 +942,7 @@ Personal Assembler's resolver has no cost model to choose between them. It shipp
 Create's two gearbox conversions and the large cogwheel's second route were emitted alongside the
 direct recipes they duplicate and every subtree-local check passed. One item legitimately has a
 second route: solid fuel, which Factorio makes from each of its three oils, and that is a row
-with its reason — all three of whose routes the converter currently holds back on #277, which the
-check reads from the converter's `--awaited` rather than calling the row stale. The file-path
+with its reason, all three of whose routes are `planetaryfactory:chemistry` recipes (#488). The file-path
 invariant it used to hold existed because GregTech re-registered every GTRecipe under its type's
 path (#87); the pack's own types are re-registered by nothing, and the rule left with GregTech (#279).
 
