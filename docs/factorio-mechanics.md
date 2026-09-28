@@ -803,7 +803,7 @@ or nothing, and #484 decides which.
 Sub-rules:
 
 - **Lay and cut the wire** — `adapted`. The Pick lays and breaks dust, gated on `circuit-network`
-  once #260 ports Researchd (#483).
+  (#483).
 - **Read a machine's or container's contents as a signal** — `planned`, #484. A comparator is the
   obvious reader and is not Obtainable.
 - **Combinator logic — arithmetic, decider, constant, selector** — `planned`, #484. The four rows are
@@ -1152,8 +1152,7 @@ argument has not been had.
 - **where**: all bodies
 - **via**: `pack`, `kubejs`
 - **owner**: ADR-0018, ADR-0022
-- **ticket**: #260 (Researchd on 26.1.2), #217 (the Lab on the grid), #228 (Military science);
-  #66, #82, #103 closed
+- **ticket**: #217 (the Lab on the grid), #228 (Military science); #66, #82, #103, #260 closed
 
 Four packs plus an unscienced rung 0, gated by Researchd's Research Lab, fed by pipe and consumed
 unattended.

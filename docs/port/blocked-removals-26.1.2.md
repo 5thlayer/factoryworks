@@ -30,9 +30,9 @@ fails the *load*, not the build, which is the one failure mode a green compile w
 ## Removed because Researchd is not ported yet (#260)
 
 When these went, the pack's Researchd fork was still on 1.21.1, so every file importing
-`com.portingdeadmods.researchd` had to go. The fork is now on 26.1 (`~/minecraft_mods/researchd`)
-and pinned in `data/pack/local-jars.json`, so nothing blocks them any more; #260 owns restoring
-them, and none needs redesigning — they are ports, not rewrites.
+`com.portingdeadmods.researchd` had to go. The fork is now on 26.1, and #260 decided none of these
+comes back: the Assembling Machine asks Researchd directly (ADR-0058's amendment), and the recipe
+viewers carry no lock annotation.
 
 | removed | what it was |
 | --- | --- |
@@ -56,7 +56,5 @@ is the testing policy working as intended: the part worth keeping was the part t
 
 ## The order to put it back in
 
-1. **#260** — port the Researchd fork. It unblocks five files on its own, all of them
-   pure ports.
-2. **#262** — the Oritech chassis. `SimpleMachine` waits on what that decides.
-3. **#251** — the Jade provider, which is where the idle note's job now lives.
+1. **#262** — the Oritech chassis. `SimpleMachine` waits on what that decides.
+2. **#251** — the Jade provider, which is where the idle note's job now lives.
