@@ -6,6 +6,8 @@ import com.planetaryfactory.core.machine.AssemblingMachineFootprint;
 import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.ChemicalPlantBlock;
 import com.planetaryfactory.core.machine.ChemicalPlantFootprint;
+import com.planetaryfactory.core.machine.OilRefineryBlock;
+import com.planetaryfactory.core.machine.OilRefineryFootprint;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.machine.footprint.FootprintPartBlock;
 import com.planetaryfactory.core.mining.rig.RigBlock;
@@ -118,6 +120,18 @@ public final class PFBlocks {
     public static final FootprintMachine CHEMICAL_PLANT_FOOTPRINT = new FootprintMachine(
             ChemicalPlantFootprint.FOOTPRINT, CHEMICAL_PLANT, CHEMICAL_PLANT_PART,
             () -> PFItems.CHEMICAL_PLANT.get());
+
+    public static final DeferredHolder<Block, OilRefineryBlock> OIL_REFINERY =
+            BLOCKS.registerBlock("oil_refinery", props -> new OilRefineryBlock(machineProperties(props)));
+
+    public static final DeferredHolder<Block, FootprintPartBlock> OIL_REFINERY_PART =
+            BLOCKS.registerBlock("oil_refinery_part",
+                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
+                            () -> PFBlocks.OIL_REFINERY_FOOTPRINT));
+
+    public static final FootprintMachine OIL_REFINERY_FOOTPRINT = new FootprintMachine(
+            OilRefineryFootprint.FOOTPRINT, OIL_REFINERY, OIL_REFINERY_PART,
+            () -> PFItems.OIL_REFINERY.get());
 
     /** Terra's Steam Engine (ADR-0077): Oritech's engine entity, on the Assembling Machine's footprint seam. */
     public static final DeferredHolder<Block, SteamEngineBlock> STEAM_ENGINE =

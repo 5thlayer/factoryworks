@@ -97,8 +97,8 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
 
     private static final int HELD_X = 8;
     private static final int HELD_Y = 17;
-    private static final int BAR_X = 84;
-    private static final int BAR_WIDTH = 60;
+    private static final int BAR_X = AssemblingMachineMenu.INPUT_X + AssemblingMachineBlockEntity.INPUTS * 18 + 4;
+    private static final int BAR_WIDTH = AssemblingMachineMenu.OUTPUT_X - 6 - BAR_X;
     private static final int ENERGY_X = 8;
     private static final int ENERGY_WIDTH = 160;
     private static final int ENERGY_HEIGHT = 12;

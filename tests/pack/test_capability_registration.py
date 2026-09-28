@@ -73,6 +73,8 @@ FACES = {
     "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item", "Fluid")),
     # The Assembling Machine's three faces, on the chassis (ADR-0096).
     "chemical_plant": ("registerChemicalPlantCapabilities", ("Energy", "Item", "Fluid")),
+    # No item slot, so no item face (ADR-0096).
+    "oil_refinery": ("registerOilRefineryCapabilities", ("Energy", "Fluid")),
     "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
     # Energy (#283): a pole charges and draws it, on every block of the footprint.
     "accumulator": ("registerAccumulatorCapabilities", ("Energy",)),

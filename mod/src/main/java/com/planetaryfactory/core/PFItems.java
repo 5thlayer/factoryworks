@@ -83,6 +83,11 @@ public final class PFItems {
             "chemical_plant",
             props -> new FootprintItem(props, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, 0.7f, "centrifuge"));
 
+    /** The Oil Refinery's item (ADR-0096), on Oritech's own {@code refinery} model at its 0.7. */
+    public static final DeferredHolder<Item, FootprintItem> OIL_REFINERY = ITEMS.registerItem(
+            "oil_refinery",
+            props -> new FootprintItem(props, PFBlocks.OIL_REFINERY_FOOTPRINT, 0.7f, "refinery"));
+
     /** The Steam Engine's item (ADR-0077), on Oritech's own {@code steam_engine} model at its 0.7. */
     public static final DeferredHolder<Item, FootprintItem> STEAM_ENGINE = ITEMS.registerItem(
             "steam_engine",
@@ -152,6 +157,7 @@ public final class PFItems {
         FUNCTIONAL.add(BARREL);
         ASSEMBLING_MACHINES.values().forEach(FUNCTIONAL::add);
         FUNCTIONAL.add(CHEMICAL_PLANT);
+        FUNCTIONAL.add(OIL_REFINERY);
         FUNCTIONAL.add(STEAM_ENGINE);
         FUNCTIONAL.add(ACCUMULATOR);
         FUNCTIONAL.add(RADAR);

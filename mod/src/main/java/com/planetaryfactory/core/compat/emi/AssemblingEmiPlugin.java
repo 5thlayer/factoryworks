@@ -14,7 +14,6 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 
 /**
@@ -22,7 +21,7 @@ import net.minecraft.resources.Identifier;
  * category their recipes are in no viewer at all.
  *
  * <p>The Assembling Machine is its category's workstation and icon, and its screen takes Fill Recipe
- * (#330, ADR-0073), and the Chemical Plant is Chemistry's (ADR-0096).
+ * (#330, ADR-0073), the Chemical Plant is Chemistry's and the Oil Refinery Oil Processing's (ADR-0096).
  */
 @EmiEntrypoint
 public final class AssemblingEmiPlugin implements EmiPlugin {
@@ -33,19 +32,15 @@ public final class AssemblingEmiPlugin implements EmiPlugin {
     public static final EmiRecipeCategory CHEMISTRY = category(AssemblingFamily.CHEMISTRY,
             EmiStack.of(PFItems.CHEMICAL_PLANT.get()));
 
-    public static final EmiRecipeCategory OIL_PROCESSING =
-            category(AssemblingFamily.OIL_PROCESSING, oritechIcon("refinery"));
+    public static final EmiRecipeCategory OIL_PROCESSING = category(AssemblingFamily.OIL_PROCESSING,
+            EmiStack.of(PFItems.OIL_REFINERY.get()));
 
     /** Every tab whose recipes a chassis machine holds, so Fill Recipe answers on each. */
-    static final Set<EmiRecipeCategory> HELD_CATEGORIES = Set.of(ASSEMBLING, CHEMISTRY);
+    static final Set<EmiRecipeCategory> HELD_CATEGORIES = Set.of(ASSEMBLING, CHEMISTRY, OIL_PROCESSING);
 
     private static EmiRecipeCategory category(AssemblingFamily family, EmiStack icon) {
         return new EmiRecipeCategory(
                 Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, family.path()), icon);
-    }
-
-    private static EmiStack oritechIcon(String path) {
-        return EmiStack.of(BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("oritech", path)));
     }
 
     @Override
@@ -57,6 +52,7 @@ public final class AssemblingEmiPlugin implements EmiPlugin {
             registry.addWorkstation(ASSEMBLING, EmiStack.of(PFItems.assemblingMachine(tier).get()));
         }
         registry.addWorkstation(CHEMISTRY, EmiStack.of(PFItems.CHEMICAL_PLANT.get()));
+        registry.addWorkstation(OIL_PROCESSING, EmiStack.of(PFItems.OIL_REFINERY.get()));
         // Recipe and usage keys on a tank bar's fluid.
         registry.addStackProvider(AssemblingMachineScreen.class, (screen, x, y) -> screen.fluidBarAt(x, y)
                 .map(bar -> new EmiStackInteraction(EmiStack.of(bar.fluid().orElseThrow())))

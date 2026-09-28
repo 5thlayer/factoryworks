@@ -20,11 +20,6 @@ owner, and an item model landing from anywhere at all gets its definition by bei
 `<ns>:item/<id>`. An item wanting a definition of another shape -- a tint, a range dispatch, a
 condition -- is a decision, and it stops being this script's and becomes its subject generator's.
 
-The one exclusion is recorded in DEFERRED: `kubejs:oil_refinery` is the GregTech multiblock whose
-registration left with ADR-0060, so its leftover model names an item that no longer exists. It is
-re-derived with the machine chassis Oritech replaces it with (#486) and given a
-definition then, not now.
-
 Usage:
 
     scripts/build-item-definitions.py            # writes the definitions
@@ -46,7 +41,6 @@ ASSET_ROOTS = (
 # `<namespace>:<id>` pairs whose item model is a leftover rather than a live item. Listed rather
 # than skipped silently, so a stale model is a recorded deferral instead of an invisible one.
 DEFERRED = {
-    "kubejs:oil_refinery": "the GregTech multiblock's registration left with ADR-0060; Oritech is the chassis (#486)",
 }
 
 
@@ -59,6 +53,7 @@ GECKOLIB = {
     "planetaryfactory:assembling_machine_2": "an OritechGeoItem drawing Oritech's assembler model (#295)",
     "planetaryfactory:assembling_machine_3": "an OritechGeoItem drawing Oritech's assembler model (#295)",
     "planetaryfactory:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
+    "planetaryfactory:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
     "planetaryfactory:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",
     "planetaryfactory:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
 }

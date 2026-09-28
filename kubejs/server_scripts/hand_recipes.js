@@ -32,6 +32,7 @@ var PF_HAND_RECIPES = [
   'low_density_structure',
   'medium_electric_pole',
   'offshore_pump',
+  'oil_refinery',
   'pack/engineers_iron_pick',
   'pack/engineers_steel_pick',
   'pipe',
