@@ -46,6 +46,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 
+# Factorio states a research unit in seconds; Researchd times one in ticks.
+TICKS_PER_SECOND = 20
+
 DEFAULT_DUMP = (
     Path.home()
     / "Library/Application Support/factorio/script-output/data-raw-dump.json"
@@ -227,6 +230,14 @@ def cost(tech):
     )
 
 
+def with_ticks(tech):
+    """The tech as KubeJS reads it: a pack-costed unit carries its time in Researchd's ticks too."""
+    unit = tech.get("unit")
+    if not unit or unit.get("time") is None:
+        return tech
+    return {**tech, "unit": {**unit, "ticks": unit["time"] * TICKS_PER_SECOND}}
+
+
 def science_packs(dump):
     """The science packs, in Factorio's own order.
 
@@ -344,7 +355,7 @@ def main():
         "// The priority header is load order: KubeJS sorts scripts by it, descending, and does\n"
         "// NOT load them alphabetically. This has to load before factorio_tech_dsl.js reads it.\n"
         "var FACTORIO_TECHS = "
-        + json.dumps(techs, indent=2)
+        + json.dumps([with_ticks(t) for t in techs], indent=2)
         + ";\n",
         encoding="utf-8",
     )

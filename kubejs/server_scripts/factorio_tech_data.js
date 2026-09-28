@@ -48,7 +48,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -97,7 +98,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -135,7 +137,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -169,7 +172,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -207,7 +211,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -244,7 +249,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -399,7 +405,8 @@ var FACTORIO_TECHS = [
           "metallurgic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -452,7 +459,8 @@ var FACTORIO_TECHS = [
           "metallurgic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -511,7 +519,8 @@ var FACTORIO_TECHS = [
           "space-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 900
     },
     "research_trigger": null,
     "effects": [
@@ -544,7 +553,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -581,7 +591,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 200
     },
     "research_trigger": null,
     "effects": [
@@ -620,7 +631,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -663,7 +675,8 @@ var FACTORIO_TECHS = [
           "production-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -721,7 +734,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -781,7 +795,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -815,7 +830,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -858,7 +874,8 @@ var FACTORIO_TECHS = [
           "utility-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -908,7 +925,8 @@ var FACTORIO_TECHS = [
           "electromagnetic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -941,7 +959,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -1129,7 +1148,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -1190,7 +1210,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1298,7 +1319,8 @@ var FACTORIO_TECHS = [
           "cryogenic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -1349,7 +1371,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -1394,7 +1417,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -1428,7 +1452,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 200
     },
     "research_trigger": null,
     "effects": [
@@ -1461,7 +1486,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -1536,7 +1562,8 @@ var FACTORIO_TECHS = [
           "metallurgic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1585,7 +1612,8 @@ var FACTORIO_TECHS = [
           "metallurgic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1619,7 +1647,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1672,7 +1701,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1784,7 +1814,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1835,7 +1866,8 @@ var FACTORIO_TECHS = [
           "utility-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1879,7 +1911,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1922,7 +1955,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1964,7 +1998,8 @@ var FACTORIO_TECHS = [
           "production-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -1998,7 +2033,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2032,7 +2068,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2078,7 +2115,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 900
     },
     "research_trigger": null,
     "effects": [
@@ -2115,7 +2153,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2144,7 +2183,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 200
     },
     "research_trigger": null,
     "effects": [
@@ -2279,7 +2319,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -2335,7 +2376,8 @@ var FACTORIO_TECHS = [
           "electromagnetic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2369,7 +2411,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -2408,7 +2451,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2450,7 +2494,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2483,7 +2528,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -2512,7 +2558,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -2557,7 +2604,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -2609,7 +2657,8 @@ var FACTORIO_TECHS = [
           "utility-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2647,7 +2696,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2688,7 +2738,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [],
@@ -2717,7 +2768,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -2831,7 +2883,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -2896,7 +2949,8 @@ var FACTORIO_TECHS = [
           "cryogenic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -3041,7 +3095,8 @@ var FACTORIO_TECHS = [
           "cryogenic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -3115,7 +3170,8 @@ var FACTORIO_TECHS = [
           "cryogenic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -3149,7 +3205,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3178,7 +3235,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 200
     },
     "research_trigger": null,
     "effects": [
@@ -3245,7 +3303,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3343,7 +3402,8 @@ var FACTORIO_TECHS = [
           "space-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3376,7 +3436,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -3414,7 +3475,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3447,7 +3509,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3488,7 +3551,8 @@ var FACTORIO_TECHS = [
           "space-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -3530,7 +3594,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [],
@@ -3567,7 +3632,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3612,7 +3678,8 @@ var FACTORIO_TECHS = [
           "electromagnetic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -3679,7 +3746,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3733,7 +3801,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 100
     },
     "research_trigger": null,
     "effects": [
@@ -3774,7 +3843,8 @@ var FACTORIO_TECHS = [
           "space-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3815,7 +3885,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -3853,7 +3924,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -3903,7 +3975,8 @@ var FACTORIO_TECHS = [
           "production-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -3949,7 +4022,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 900
     },
     "research_trigger": null,
     "effects": [
@@ -3986,7 +4060,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4040,7 +4115,8 @@ var FACTORIO_TECHS = [
           "electromagnetic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -4092,7 +4168,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -4135,7 +4212,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -4181,7 +4259,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4236,7 +4315,8 @@ var FACTORIO_TECHS = [
           "utility-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 900
     },
     "research_trigger": null,
     "effects": [
@@ -4274,7 +4354,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -4308,7 +4389,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4341,7 +4423,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [],
@@ -4369,7 +4452,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -4411,7 +4495,8 @@ var FACTORIO_TECHS = [
           "production-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4448,7 +4533,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4497,7 +4583,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4589,7 +4676,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -4638,7 +4726,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4676,7 +4765,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4727,7 +4817,8 @@ var FACTORIO_TECHS = [
           "electromagnetic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -4792,7 +4883,8 @@ var FACTORIO_TECHS = [
           "electromagnetic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -4851,7 +4943,8 @@ var FACTORIO_TECHS = [
           "space-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -4902,7 +4995,8 @@ var FACTORIO_TECHS = [
           "space-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -4948,7 +5042,8 @@ var FACTORIO_TECHS = [
           "space-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -4986,7 +5081,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5025,7 +5121,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5072,7 +5169,8 @@ var FACTORIO_TECHS = [
           "utility-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5109,7 +5207,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5148,7 +5247,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5214,7 +5314,8 @@ var FACTORIO_TECHS = [
           "cryogenic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -5283,7 +5384,8 @@ var FACTORIO_TECHS = [
           "cryogenic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -5312,7 +5414,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 200
     },
     "research_trigger": null,
     "effects": [
@@ -5373,7 +5476,8 @@ var FACTORIO_TECHS = [
           "electromagnetic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5438,7 +5542,8 @@ var FACTORIO_TECHS = [
           "cryogenic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -5480,7 +5585,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5551,7 +5657,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 200
     },
     "research_trigger": null,
     "effects": [
@@ -5589,7 +5696,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5627,7 +5735,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 900
     },
     "research_trigger": null,
     "effects": [
@@ -5669,7 +5778,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -5742,7 +5852,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5781,7 +5892,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -5819,7 +5931,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -5853,7 +5966,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 300
     },
     "research_trigger": null,
     "effects": [
@@ -5936,7 +6050,8 @@ var FACTORIO_TECHS = [
           "space-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -6033,7 +6148,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -6089,7 +6205,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -6184,7 +6301,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 100
     },
     "research_trigger": null,
     "effects": [
@@ -6254,7 +6372,8 @@ var FACTORIO_TECHS = [
           "cryogenic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -6284,7 +6403,8 @@ var FACTORIO_TECHS = [
           "automation-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 200
     },
     "research_trigger": null,
     "effects": [
@@ -6317,7 +6437,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -6364,7 +6485,8 @@ var FACTORIO_TECHS = [
           "military-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -6426,7 +6548,8 @@ var FACTORIO_TECHS = [
           "electromagnetic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -6467,7 +6590,8 @@ var FACTORIO_TECHS = [
           "logistic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -6514,7 +6638,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -6559,7 +6684,8 @@ var FACTORIO_TECHS = [
           "agricultural-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -6667,7 +6793,8 @@ var FACTORIO_TECHS = [
           "metallurgic-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 1200
     },
     "research_trigger": null,
     "effects": [
@@ -6722,7 +6849,8 @@ var FACTORIO_TECHS = [
           "utility-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 900
     },
     "research_trigger": null,
     "effects": [
@@ -6768,7 +6896,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [
@@ -6836,7 +6965,8 @@ var FACTORIO_TECHS = [
           "chemical-science-pack",
           1
         ]
-      ]
+      ],
+      "ticks": 600
     },
     "research_trigger": null,
     "effects": [

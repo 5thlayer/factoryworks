@@ -175,10 +175,36 @@ def check_generated_js(techs):
         return
     text = path.read_text(encoding="utf-8")
     check("var FACTORIO_TECHS" in text, "generated js does not define FACTORIO_TECHS")
-    body = text[text.index("=") + 1 : text.rindex(";")]
+    generated = json.loads(text[text.index("=") + 1 : text.rindex(";")])
+    stripped = [
+        {**t, "unit": {k: v for k, v in t["unit"].items() if k != "ticks"}} if t.get("unit") else t
+        for t in generated
+    ]
     check(
-        json.loads(body) == techs,
+        stripped == techs,
         "factorio_tech_data.js is stale -- rerun scripts/factorio-tech-extract.py",
+    )
+    check_unit_ticks(generated)
+
+
+def check_unit_ticks(generated):
+    """Researchd times a research unit in ticks and Factorio in seconds (#103).
+
+    Passing the seconds through ran every research 20x fast with nothing failing, so each
+    pack-costed unit is held to 20 ticks a second, and automation's to a typed 200.
+    """
+    for tech in generated:
+        unit = tech.get("unit") or {}
+        if unit.get("time") is None:
+            continue
+        check(
+            unit.get("ticks") == unit["time"] * 20,
+            f"{tech['name']}: a {unit['time']} s unit is {unit.get('ticks')} ticks, not {unit['time'] * 20}",
+        )
+    automation = next((t for t in generated if t["name"] == "automation"), None)
+    check(
+        automation is not None and automation["unit"].get("ticks") == 200,
+        "automation's 10 s unit is not 200 ticks",
     )
 
 
@@ -218,6 +244,10 @@ def check_builder_singletons(techs):
         if not line.strip().startswith(("//", "*", "/*"))
     )
     check("consumePacks(" in body, "the DSL does not call consumePacks()")
+    check(
+        "tech.unit.ticks)" in body and "tech.unit.time)" not in body,
+        "the DSL does not pass consumePacks() the unit's ticks -- Researchd reads ticks, not seconds",
+    )
     check(
         "consumePack(" not in body,
         "the DSL calls consumePack() -- it overwrites, so multi-pack costs are lost",
