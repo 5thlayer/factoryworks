@@ -31,7 +31,9 @@ import io.github._5thlayer.groundworks.Rotate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -55,7 +57,8 @@ public final class PlanetaryFactoryCore {
     /** The shared registry namespace. Not the mod id. See ADR-0014. */
     public static final String NAMESPACE = "planetaryfactory";
 
-    public PlanetaryFactoryCore(IEventBus modBus) {
+    public PlanetaryFactoryCore(IEventBus modBus, ModContainer container) {
+        container.registerConfig(ModConfig.Type.SERVER, PFServerConfig.SPEC);
         PFBlocks.register(modBus);
         PFAttachments.register(modBus);
         PFMenus.register(modBus);

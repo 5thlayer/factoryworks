@@ -150,7 +150,7 @@ run (#338). KubeJS resolves `kubejs/` against the game directory with no setting
 `mod/run/` is untracked, so the link is built rather than committed. There is no second copy: the
 startup scripts register the pack's items, the server scripts run the recipe sweep, and every file
 under `kubejs/data/` loads. That is what lets a test assert against the recipe the pack ships rather
-than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml`, linked in by `linkBeltworksConfig`: loaders need power only because the pack's config says so, and Beltworks' default is off (#447). Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
+than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml` and `config/planetaryfactory_core-server.toml`, linked in by `linkServerConfigs`: loaders need power (#447) and machines lock by research (#260) only because the pack's configs say so, and both defaults are off. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
 vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
 five blocks above the floor; without it no test block places and the run hangs rather than fails.
 And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the
@@ -214,9 +214,11 @@ And that the machine crafts its Held recipe at Factorio's rate (20 ticks and exa
 copper cable, typed rather than read off `AssemblingMachineSpec`) and that a full output, no
 ingredients and a locked recipe each draw nothing, take nothing and keep the recipe (#328); drawing
 the tick's energy before the stall is asked turns all three stalls red. The lock is Researchd's for
-the team that placed the machine (#260): each lock test makes a fresh Researchd team and stamps the
-machine with it, a pipe is locked and refused until that team researches `steam-power`, and then it
-crafts. Registered only with Researchd loaded. And that
+the team that placed the machine, asked only because `lockSources = ["researchd"]` in
+`config/planetaryfactory_core-server.toml`, which `linkServerConfigs` links into the dev runs (#260).
+Each lock test makes a fresh Researchd team and stamps the machine with it: a pipe is locked and
+refused until that team researches `steam-power`, and then it crafts. An empty `lockSources` turns
+two of them red. Registered only with Researchd loaded. And that
 the item face takes the Held recipe's ingredients each in its own slot and refuses everything else
 (#329, ADR-0074). That is asserted through the capability on the anchor and on a hull block, on both
 overloads. A machine with no recipe takes nothing, and Oritech's `FILL_EVENLY` input mode, which
