@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.compat;
 
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import snownee.jade.api.fluid.JadeFluidObject;
 import com.planetaryfactory.core.PlanetaryFactoryCore;
 import com.planetaryfactory.core.machine.ChassisMachineBlock;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
@@ -40,6 +42,7 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
     private static final String STATUS = "AssemblingStatus";
     private static final String PRODUCT = "AssemblingProduct";
     private static final String NAME = "AssemblingName";
+    private static final String OUTPUT_FLUID = "AssemblingOutputFluid";
     private static final String UNKNOWN = "AssemblingUnknown";
     private static final String PROGRESS = "AssemblingProgress";
     private static final String DURATION = "AssemblingDuration";
@@ -71,6 +74,8 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
                     JadeStacks.put(tag, PRODUCT, product, accessor);
                 }
                 JadeStacks.putComponent(tag, NAME, AssemblingMachineRecipes.name(holder), accessor);
+                holder.value().fluidResults().stream().findFirst().ifPresent(result -> tag.putString(OUTPUT_FLUID,
+                        BuiltInRegistries.FLUID.getKey(FluidResource.of(result).getFluid()).toString()));
                 tag.putInt(PROGRESS, machine.craftProgress());
                 tag.putInt(DURATION, machine.craftDuration());
             }, () -> tag.putBoolean(UNKNOWN, true));
@@ -97,10 +102,14 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
                 if (name.isEmpty()) {
                     tooltip.add(progress(data));
                 } else {
-                    if (product.isEmpty()) {
-                        tooltip.add(name.get());
-                    } else {
+                    Optional<Fluid> outputFluid = data.getString(OUTPUT_FLUID).map(Identifier::tryParse)
+                            .flatMap(BuiltInRegistries.FLUID::getOptional);
+                    if (!product.isEmpty()) {
                         JadeLayout.line(tooltip, JadeUI.item(product), name.get());
+                    } else if (outputFluid.isPresent()) {
+                        JadeLayout.line(tooltip, JadeUI.fluid(JadeFluidObject.of(outputFluid.get())).size(16, 16), name.get());
+                    } else {
+                        tooltip.add(name.get());
                     }
                     JadeLayout.appendFigure(tooltip, progress(data));
                     // Padded to "100%", or the tooltip narrows every time the figure loses a digit.
