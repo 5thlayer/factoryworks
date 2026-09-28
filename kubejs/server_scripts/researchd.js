@@ -65,56 +65,34 @@ fromFactorio('steel-axe', {
 });
 
 // ---------------------------------------------------------------------------------------------
-// THE CRITICAL PATH TO PLASTIC (#206, under #170)
+// THE CRITICAL PATH TO PLASTIC (#206): the ancestor closure of Factorio's `plastics`, every node
+// `fromFactorio()`, since #170 times the pace and an invented cost would falsify it.
 //
-// Twelve nodes -- eleven declared and one (`oil-processing`) declared absent, for the reason given
-// at `oil-gathering` below. They are exactly the ancestor closure of Factorio's `plastics` in
-// `data/factorio/technology.json`, computed from the file rather than chosen. Nothing off that path is
-// declared here, and nothing on it is invented: every node below is `fromFactorio()`, so its cost,
-// its time and its place in the tree are Factorio's own. #170 times the pace, and a hand-cut node
-// with a made-up cost would make that reading a lie -- which is why the two places this file
-// cannot carry Factorio's shape are written down rather than quietly patched.
+// Unlocks name only recipes the pack emits: a lock on an id nothing emits unlocks nothing, silently,
+// so Factorio effects with no pack recipe are dropped (`test_research_unlocks.py`).
 //
-// UNLOCKS ARE ONLY THE RECIPES THE PACK EMITS. Factorio's effects name recipes this pack does not
-// have -- `boiler` and `steam-engine` (item-map `undecided`/`not_emitted`), `inserter` and
-// `long-handed-inserter` (`undecided`, which is also why `logistic-science-pack` has no recipe of
-// its own: its two ingredients are a belt and an inserter), `pipe-to-ground` (`not_emitted`),
-// `pumpjack` (`undecided`, #105) and the twenty barrel fill/empty rows (`native_mechanic`, Create's
-// Spout and Item Drain, never recipes). A lock on an id nothing emits unlocks nothing, silently, so
-// those effects are dropped here and `tests/factorio/test_research_unlocks.py` holds the rest.
-//
-// CRAFT-VS-HOLD, the gap #138 will generalise. Factorio's `craft-item` is an EVENT and Researchd's
-// `checkItemPresence` reads STATE, so the three craft triggers below fire on HOLDING what Factorio
-// fires on CRAFTING. Two properties make that safe rather than merely close: the check latches
-// monotonically -- progress does not regress once the items have been held together -- so spending
-// the plates afterwards does not re-lock the research; and it charges nothing, which is Factorio's
-// own behaviour for a trigger technology. What it does NOT catch is a player who reaches the count
-// by looting or trading rather than crafting, and on Terra there is no such route at rung 0.
-// `consumeItem` is not used: it is reserved for rung 0 (#42, ADR-0033) and it would destroy the
-// plates a trigger technology is not supposed to charge.
+// Factorio's `craft-item` triggers are events and Researchd's `checkItemPresence` reads state, so the
+// three craft triggers fire on holding the items. The check latches and charges nothing, as a
+// Factorio trigger technology does, so spending the plates afterwards re-locks nothing. `consumeItem`
+// is reserved for rung 0 (#42, ADR-0033). #138 generalises this.
 
-// --- Rung 0: the two triggers that open the factory -------------------------------------------
+// --- Rung 0 -------------------------------------------------------------------------------------
 
-// Factorio: craft 50 iron plate. Unlocks the steam chapter; here that is the pipe and the Offshore
-// Pump, the one block water enters the factory through (ADR-0050, #213). `boiler`, `steam-engine`
-// and `pipe-to-ground` have no pack recipe, so this node grants two of its five.
+// `pipe-to-ground` has no pack recipe: underground pipes are excluded.
 fromFactorio('steam-power', {
   icon: 'planetaryfactory:offshore_pump',
   has: ['ftbmaterials:iron_plate', 50],
   unlocks: [
     'planetaryfactory:assembling/pipe',
-    'planetaryfactory:assembling/offshore_pump'
+    'planetaryfactory:assembling/offshore_pump',
+    'planetaryfactory:assembling/boiler',
+    'planetaryfactory:assembling/steam_engine'
   ]
 });
 
-// Factorio: craft 10 copper plate. The electronics chapter, and the node that grants the Lab --
-// without which `automation-science-pack` below can never fire.
-//
-// CHANGING THIS ID NEEDS A RESTART, NOT `/reload`. Researchd's registry is a
-// `SimpleJsonResourceReloadListener` that re-fires the KubeJS event, and on a `/reload` it can read
-// the PREVIOUS script evaluation -- the old id, with no warning. The queued `ResearchProgress$Task`
-// then holds the ingredient captured when it was queued, so a dequeue/requeue is needed on top. An
-// id tested without both looks exactly like a wrong id: this one was reverted once on that evidence.
+// CHANGING THIS ID NEEDS A RESTART AND A DEQUEUE/REQUEUE, NOT `/reload`: the registry can re-read the
+// previous script evaluation, and a queued task keeps the ingredient it was queued with. An id tested
+// without both looks exactly like a wrong id.
 fromFactorio('electronics', {
   icon: 'planetaryfactory:electronic_circuit',
   has: ['ftbmaterials:copper_plate', 10],
@@ -127,19 +105,14 @@ fromFactorio('electronics', {
   ]
 });
 
-// --- Rung 1: science begins --------------------------------------------------------------------
+// --- Rung 1 -------------------------------------------------------------------------------------
 
-// Factorio: craft a Lab. Researchd's Lab is `researchd:research_lab` (item-map, borrowed), so the
-// hold is the Lab itself. This is the node that makes every pack-costed research below reachable.
 fromFactorio('automation-science-pack', {
   iconPack: 'planetary_factory:automation_science_pack',
   has: ['researchd:research_lab', 1],
   unlocks: ['planetaryfactory:assembling/automation_science_pack']
 });
 
-// 50 automation packs. Steel is Terra's only surviving alloy (#72) and its recipe rides the
-// count-bearing `planetaryfactory:smelting` type, whose ids are flat rather than under
-// `assembling/` -- GregTech does not re-register it, so it is not cloned (#87, FLAT_TYPES).
 fromFactorio('steel-processing', {
   icon: 'ftbmaterials:steel_plate',
   unlocks: [
@@ -148,40 +121,30 @@ fromFactorio('steel-processing', {
   ]
 });
 
-// 10 automation packs. `long-handed-inserter` is `undecided`, so this grants the machine only.
+// `long-handed-inserter` is excluded (ADR-0076).
 fromFactorio('automation', {
   icon: 'planetaryfactory:assembling_machine',
   unlocks: ['planetaryfactory:assembling/assembling_machine_1']
 });
 
-// 75 automation packs. THE ONE DECLARED NODE THAT UNLOCKS NOTHING, and deliberately: Factorio's
-// logistic science pack is a belt plus an inserter, `inserter` is an `undecided` item-map row, and
-// the converter therefore emits no recipe for the pack itself. The NODE still has to exist -- it is
-// a prerequisite of `automation-2` and a pack cost of everything from `engine` down, so dropping it
-// would take Factorio's rung-2 pacing out of the very run #170 is timing. Its recipe arrives with
-// the inserter row; the research does not have to wait for it.
 fromFactorio('logistic-science-pack', {
   iconPack: 'planetary_factory:logistic_science_pack',
-  unlocks: []
+  unlocks: ['planetaryfactory:assembling/logistic_science_pack']
 });
 
-// --- Rung 2: fluids, then oil -------------------------------------------------------------------
+// --- Rung 2 -------------------------------------------------------------------------------------
 
-// 40 automation + logistic.
 fromFactorio('automation-2', {
   icon: 'planetaryfactory:assembling_machine_2',
   unlocks: ['planetaryfactory:assembling/assembling_machine_2']
 });
 
-// 100 automation + logistic.
 fromFactorio('engine', {
   icon: 'planetaryfactory:engine_unit',
   unlocks: ['planetaryfactory:assembling/engine_unit']
 });
 
-// 50 automation + logistic. Three of the twenty-three effects: the barrel ITEM is emitted, while the
-// eighteen fill/empty rows are Create's Spout and Item Drain keying on `IFluidHandlerItem` and were
-// never recipes at all (`native_mechanic`, ADR-0034 exception class 1).
+// The barrel fill/empty rows are `native_mechanic`, never recipes.
 fromFactorio('fluid-handling', {
   icon: 'oritech:portable_tank',
   unlocks: [
@@ -191,30 +154,13 @@ fromFactorio('fluid-handling', {
   ]
 });
 
-// 100 automation + logistic, 30s -- Factorio's own gate on reaching crude oil, and here it carries
-// the whole oil chapter.
-//
-// DIVERGENCE, the second of this file's two, and the larger. Factorio splits the chapter across two
-// nodes: `oil-gathering` (100 packs) grants the pumpjack, and `oil-processing` -- a TRIGGER
-// technology firing on MINING crude oil, costing nothing -- grants the Oil Refinery, the Chemical
-// Plant, basic oil processing and solid fuel. Neither half survives translation intact:
-//
-//   - `pumpjack` is an `undecided` item-map row (#105). Terra's crude is a GregTech bedrock fluid
-//     deposit tapped by a Fluid Drilling Rig (ADR-0017, docs/factorio-mechanics.md), not a patch you
-//     sit a pumpjack on, so this node's own effect has no recipe to grant.
-//   - `oil-processing`'s trigger cannot be expressed AT ALL. Researchd's four methods all read
-//     items, and crude oil is a fluid with no item form here -- `crude-oil-barrel` is
-//     `native_mechanic`, a Spout fill rather than a craft. A node whose method no player can meet is
-//     a dead gate, and a dead gate on the Chemical Plant ends the run at rung 2.
-//
-// So `oil-processing` is declared `skip` below and its four unlocks are granted HERE, by its only
-// parent. The pack cost of reaching plastic is unchanged to the pack: `oil-processing` costs nothing
-// in Factorio either, so the sum across the pair is the same 100 -- which is what keeps #170's
-// reading honest. When the oil extractor lands, `oil-processing` becomes declarable on its own terms
-// and these four move back down; nothing here has to be redone to allow that.
+// Also grants `oil-processing`'s four unlocks. That node's trigger is mining crude oil, a fluid, and
+// no Researchd method reads a fluid, so declared on its own it would be a dead gate on the Chemical
+// Plant. It costs nothing in Factorio, so the pair's pack cost is unchanged (#206, #138).
 fromFactorio('oil-gathering', {
-  icon: 'planetaryfactory:oil_refinery',
+  icon: 'planetaryfactory:pumpjack',
   unlocks: [
+    'planetaryfactory:assembling/pumpjack',
     'planetaryfactory:assembling/oil_refinery',
     'planetaryfactory:assembling/chemical_plant',
     'planetaryfactory:oil_processing/basic_oil_processing',
@@ -222,13 +168,9 @@ fromFactorio('oil-gathering', {
   ]
 });
 
-// Declared absent, with its reason immediately above. `skip` is visible rather than silent: the DSL
-// resolves parents THROUGH a skipped node, so `plastics` below parents onto `oil-gathering` and the
-// tree stays connected.
+// The DSL resolves parents through a skipped node, so `plastics` parents onto `oil-gathering`.
 fromFactorio('oil-processing', { skip: true });
 
-// 200 automation + logistic, 30s. The end of the path: rung 2's gate (ADR-0025) and what this
-// twelve-node slice exists to reach.
 fromFactorio('plastics', {
   icon: 'planetaryfactory:plastic_bar',
   unlocks: ['planetaryfactory:chemistry/plastic_bar']
