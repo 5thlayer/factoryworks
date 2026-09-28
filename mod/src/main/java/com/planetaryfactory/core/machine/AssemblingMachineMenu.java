@@ -102,8 +102,8 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     public static final int INPUT_Y = 36;
     public static final int OUTPUT_X = 152;
     public static final int ENERGY_Y = 58;
-    public static final int STATUS_Y = 68;
-    public static final int INVENTORY_Y = 92;
+    public static final int STATUS_Y = 74;
+    public static final int INVENTORY_Y = 98;
 
     private final List<Entry> entries;
     private final ContainerData data;

@@ -73,7 +73,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int SLOT_DARK = 0xFF373737;
     private static final int SLOT_LIGHT = 0xFFFFFFFF;
     private static final int BAR = 0xFF5DA05D;
-    // Jade's energy bar sprite, tiled 1:1 so its stripes keep their width on a 6px bar.
+    // Jade's energy bar sprite, tiled 1:1 so its stripes keep their width.
     private static final Identifier ENERGY_SPRITE = Identifier.fromNamespaceAndPath("jade", "energy_progress");
     private static final int ENERGY_EMPTY_TINT = 0xFF404040;
     // For a tank whose recipe no longer resolves, so its fluid is unknown.
@@ -100,7 +100,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int BAR_WIDTH = 60;
     private static final int ENERGY_X = 8;
     private static final int ENERGY_WIDTH = 160;
-    private static final int ENERGY_HEIGHT = 6;
+    private static final int ENERGY_HEIGHT = 12;
     private static final int BAR_GAP = 8;
     private static final int STATUS_X = 8;
     private static final int STATUS_WIDTH = 160;
