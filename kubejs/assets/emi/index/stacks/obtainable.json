@@ -259,6 +259,9 @@
       "stack": "item:planetaryfactory:offshore_pump"
     },
     {
+      "stack": "item:planetaryfactory:oil_refinery"
+    },
+    {
       "stack": "item:planetaryfactory:plastic_bar"
     },
     {

@@ -573,8 +573,7 @@
       "kind": "item",
       "target": "planetaryfactory:oil_refinery",
       "source": "authored",
-      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060), decided by #277; the chassis is #486's, so the row is blocked on it. Its Oritech parent is the Refinery, whose three fractions are the oil fluid rows.",
-      "blocked_by": 486
+      "note": "The pack's block on the Assembling Machine's chassis, wearing Oritech's Refinery model with both chamber layers (ADR-0096, #491). Not Oritech's Refinery, whose module mechanic the pack does not use; its three fractions are the oil fluid rows."
     },
     "oxide-asteroid-chunk": {
       "status": "undecided",

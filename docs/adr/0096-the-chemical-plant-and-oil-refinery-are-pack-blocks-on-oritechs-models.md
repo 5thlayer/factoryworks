@@ -18,7 +18,9 @@ corpus.
   and renderer and stands on the Centrifuge's 1x1x2 footprint. It takes up to 2 items and 2 fluids
   in and gives 1 item and 1 fluid out.
 - **The Oil Refinery** is `planetaryfactory:oil_refinery`. It wears Oritech's Refinery base with
-  both chamber layers, placed and broken as one 3x2x4 footprint from one item (ADR-0077). It takes 2
+  both chamber layers, placed and broken as one footprint from one item (ADR-0077): 3x2x4 overall,
+  22 blocks, since the base's cores leave two blocks of one corner column open under the chambers,
+  as the base's model does. A block there would be one the player sees and cannot walk into. It takes 2
   fluids in and always gives 3 out. Oritech's module mechanic is not used: no chamber is an item, and
   none of Oritech's refinery tanks or output routing is read.
 - **Each runs a recipe type of its own**, `planetaryfactory:chemistry` and

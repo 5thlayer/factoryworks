@@ -59,9 +59,6 @@ DEAD_SUBTREES = ("gtceu", "gt_materials", "gcyr")
 
 # A row whose target cannot resolve yet, and the ticket that owns it. Deleting an entry is part of
 # that ticket's fix -- a stale one is a guard nobody re-armed.
-CHASSIS = (
-    "names a `planetaryfactory_core` subclass of an Oritech machine (ADR-0060) that #277 decided and "
-    "the chassis has not built yet: #486 owns this row")
 PUMP = (
     "names the first-party in-line pump, since Oritech's Pump drains the world rather than a pipe: "
     "#293 owns this row")
@@ -71,7 +68,6 @@ POWER_SWITCH = (
 SILO = (
     "names the first-party Rocket Silo and the part it makes, which #378 owns and has not built yet")
 DEFERRED = {
-    "oil-refinery": CHASSIS,
     "pump": PUMP,
     "power-switch": POWER_SWITCH,
     "rocket-silo": SILO,

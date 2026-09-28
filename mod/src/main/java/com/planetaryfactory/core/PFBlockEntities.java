@@ -12,6 +12,7 @@ import com.planetaryfactory.core.machine.AssemblingMachineFluidHandler;
 import com.planetaryfactory.core.machine.AssemblingMachineItemHandler;
 import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.ChemicalPlantBlockEntity;
+import com.planetaryfactory.core.machine.OilRefineryBlockEntity;
 import com.planetaryfactory.core.machine.footprint.FootprintMachine;
 import com.planetaryfactory.core.mining.rig.RigBlockEntity;
 import com.planetaryfactory.core.mining.rig.RigItemHandler;
@@ -115,6 +116,11 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(ChemicalPlantBlockEntity::new,
                             java.util.Set.of(PFBlocks.CHEMICAL_PLANT.get())));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OilRefineryBlockEntity>>
+            OIL_REFINERY = BLOCK_ENTITIES.register("oil_refinery",
+                    () -> new BlockEntityType<>(OilRefineryBlockEntity::new,
+                            java.util.Set.of(PFBlocks.OIL_REFINERY.get())));
+
     /**
      * The Steam Engine's anchor (ADR-0077): Oritech's engine entity under the pack's own type, which
      * {@link SteamEngineBlockEntity#getType} answers in place of the one Oritech's constructor names.
@@ -159,6 +165,7 @@ public final class PFBlockEntities {
         registerBoilerCapabilities(event);
         registerAssemblingMachineCapabilities(event);
         registerChemicalPlantCapabilities(event);
+        registerOilRefineryCapabilities(event);
         registerSteamEngineCapabilities(event);
         registerAccumulatorCapabilities(event);
         registerRadarCapabilities(event);
@@ -318,6 +325,17 @@ public final class PFBlockEntities {
         registerOnFootprint(event, Capabilities.Item.BLOCK, footprint,
                 (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
                         ? new AssemblingMachineItemHandler(machine) : null);
+        registerOnFootprint(event, Capabilities.Fluid.BLOCK, footprint,
+                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                        ? new AssemblingMachineFluidHandler(machine) : null);
+    }
+
+    /** Energy and fluid on every block; the Refinery has no item slot, so no item face (ADR-0096). */
+    private static void registerOilRefineryCapabilities(RegisterCapabilitiesEvent event) {
+        FootprintMachine footprint = PFBlocks.OIL_REFINERY_FOOTPRINT;
+        registerOnFootprint(event, Capabilities.Energy.BLOCK, footprint,
+                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
+                        ? machine.getEnergyLookup(side) : null);
         registerOnFootprint(event, Capabilities.Fluid.BLOCK, footprint,
                 (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
                         ? new AssemblingMachineFluidHandler(machine) : null);

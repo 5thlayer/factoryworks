@@ -405,7 +405,7 @@ Sub-rules:
 - **owner**: ADR-0096 (the Chemical Plant and Oil Refinery are pack blocks on the Assembling
   Machine's chassis, on Oritech's models) and ADR-0067 (the oil fluids are Oritech's, retinted to
   Factorio's colours)
-- **ticket**: #486 (the Chemical Plant is #490's; the Oil Refinery #491's); #258 before it
+- **ticket**: #486 (the Chemical Plant shipped with #490 and the Oil Refinery with #491); #258 before it
 
 Sub-rules:
 

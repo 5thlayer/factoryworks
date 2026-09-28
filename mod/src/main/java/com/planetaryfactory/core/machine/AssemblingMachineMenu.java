@@ -35,7 +35,7 @@ import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import net.neoforged.neoforge.transfer.IndexModifier;
 
 /**
- * The Assembling Machine's menu (#327): four inputs, one output, and the Held recipe.
+ * The Assembling Machine's menu (#327): the inputs the widest recipe needs, one output, and the Held recipe.
  *
  * <p>The pack's own rather than Oritech's, because Oritech's screen has no hook for an extra
  * widget. A recipe is picked in the recipe viewer, never here (ADR-0073, #336): EMI's Fill Recipe
@@ -108,7 +108,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     private static final int DATA_TANKS = 10;
     private static final int DATA_COUNT = DATA_TANKS + FLUID_INPUTS + FLUID_OUTPUTS;
     private static final int OUTPUT = AssemblingMachineBlockEntity.OUTPUT;
-    private static final int MACHINE_SLOTS = 5;
+    private static final int MACHINE_SLOTS = AssemblingMachineBlockEntity.INPUTS + 1;
 
     public static final int INPUT_X = 8;
     public static final int INPUT_Y = 36;

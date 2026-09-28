@@ -9,7 +9,7 @@
     "energy_usage": 75000.0,
     "drain": 2500.0,
     "fast_replaceable_group": "assembling-machine",
-    "item_inputs": 4,
+    "item_inputs": 5,
     "item_outputs": 1,
     "fluid_inputs": [],
     "fluid_outputs": []
@@ -25,7 +25,7 @@
     "energy_usage": 150000.0,
     "drain": 5000.0,
     "fast_replaceable_group": "assembling-machine",
-    "item_inputs": 4,
+    "item_inputs": 5,
     "item_outputs": 1,
     "fluid_inputs": [
       1000
@@ -43,7 +43,7 @@
     "energy_usage": 375000.0,
     "drain": 12500.0,
     "fast_replaceable_group": "assembling-machine",
-    "item_inputs": 4,
+    "item_inputs": 5,
     "item_outputs": 1,
     "fluid_inputs": [
       1000

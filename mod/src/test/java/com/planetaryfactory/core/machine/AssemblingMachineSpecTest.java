@@ -150,11 +150,11 @@ class AssemblingMachineSpecTest {
         }
     }
 
-    /** ADR-0071's four input slots and one output, on every tier. */
+    /** The Oil Refinery's own recipe's five ingredients, on every tier (ADR-0096). */
     @Test
-    void everyTierHasFourInputsAndOneOutput() {
+    void everyTierHasFiveInputsAndOneOutput() {
         for (MachineSpec tier : List.of(ONE, TWO, THREE)) {
-            assertEquals(4, tier.itemInputs(), tier.name());
+            assertEquals(5, tier.itemInputs(), tier.name());
             assertEquals(1, tier.itemOutputs(), tier.name());
         }
     }
@@ -237,10 +237,10 @@ class AssemblingMachineSpecTest {
     /** A recipe fits when the machine has a slot or tank for every input and output. */
     @Test
     void aRecipeFitsOnlyWhereEveryInputAndOutputHasASlotOrTank() {
-        assertTrue(ONE.fits(4, 1, 0, 0));
+        assertTrue(ONE.fits(5, 1, 0, 0));
         assertFalse(ONE.fits(1, 1, 1, 0), "concrete's water on tier 1");
         assertTrue(TWO.fits(1, 1, 1, 0));
-        assertFalse(TWO.fits(5, 1, 0, 0));
+        assertFalse(TWO.fits(6, 1, 0, 0));
         assertFalse(TWO.fits(1, 0, 0, 1), "a fluid result on an assembler");
         MachineSpec refinery = MachineSpecs.get().spec("oil-refinery");
         assertTrue(refinery.fits(0, 0, 2, 3));
