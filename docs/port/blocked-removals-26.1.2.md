@@ -41,7 +41,6 @@ them, and none needs redesigning — they are ports, not rewrites.
 | `core/research/client/LockedRecipeNote.java` | The recipe-viewer annotation itself (#75). |
 | `core/compat/emi/LockedRecipeEmiNote.java` | EMI's half of that annotation. |
 | `core/compat/jei/LockedRecipeJeiDecorator.java` | JEI's half. |
-| `core/mixin/researchd/ResearchdBEPlacementHandlerMixin.java` | A Researchd-internal fix the fork carries. |
 
 **The rules survived.** `RecipeLockLookup`, `MachineLockStatus`, `RecipeResearchIndex` and
 `LockBypassLog` import no Researchd type — they are the Minecraft-free logic with the unit tests
@@ -57,7 +56,7 @@ is the testing policy working as intended: the part worth keeping was the part t
 
 ## The order to put it back in
 
-1. **#260** — port the Researchd fork. It unblocks six files on its own, and five of them are
+1. **#260** — port the Researchd fork. It unblocks five files on its own, all of them
    pure ports.
 2. **#262** — the Oritech chassis. `SimpleMachine` waits on what that decides.
 3. **#251** — the Jade provider, which is where the idle note's job now lives.
