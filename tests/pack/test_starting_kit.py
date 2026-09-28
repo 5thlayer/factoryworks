@@ -29,6 +29,8 @@ import zipfile
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
 KIT = MOD / "start/StartingKit.java"
+WELCOME = MOD / "start/Welcome.java"
+LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 SPEC = ROOT / "docs/spec/terra-progression.md"
 MODS = ROOT / "mods"
@@ -169,6 +171,22 @@ class StartingKitIds(unittest.TestCase):
         for item, count in self.pocket:
             self.assertEqual(1, count, "%s is a pocket tool, and the pocket holds one of each"
                              % item)
+
+
+class WelcomeKeys(unittest.TestCase):
+    """Every line of the first-join message has a lang key (#494); a missing one prints the raw key."""
+
+    def test_every_welcome_line_is_in_the_pack_lang(self):
+        source = WELCOME.read_text(encoding="utf-8")
+        body = re.search(r"public static final List<String> LINES = List\.of\((.*?)\);", source,
+                         re.DOTALL)
+        self.assertIsNotNone(body, "Welcome.LINES has moved or changed shape")
+        keys = re.findall(r'"([^"]+)"', body.group(1))
+        self.assertTrue(keys, "Welcome.LINES names no key")
+        lang = json.loads(LANG.read_text(encoding="utf-8"))
+        for key in keys:
+            self.assertIn(key, lang, "the first-join message names %s, which the pack's lang lacks"
+                          % key)
 
 
 class StartingKitAgainstTheSpec(unittest.TestCase):
