@@ -228,6 +228,12 @@ effect recording the rule that produced them.
   The denominator lives in `machine.json`, not here: ADR-0047 spends a fuel item's joules at
   the machine's own `energy_usage`, scaled by its burner `effectivity`.
 
+- **`recipe_name.json`** — Factorio's English `[recipe-name]` locale entries, read from the
+  install's `base` and `space-age` locale files rather than the dump, for the recipes in
+  `recipe.json`; barrel recipes, whose names take a parameter, are left out. A recipe with no entry
+  is named after its main product, which is the game's to say. `scripts/build-recipe-names.py`
+  turns it into the pack's lang keys (#490).
+
 - **`fluid.json`** — the two thermal constants ADR-0050/#210's pump:boiler ratio needs, and
   nothing else. One `fluids` array. **Scope is deliberately narrow**: only the fluids
   `machine.json`'s boiler already declares in its own fluid boxes (`water` in, `steam`

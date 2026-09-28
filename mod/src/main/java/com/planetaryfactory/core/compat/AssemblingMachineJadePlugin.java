@@ -39,6 +39,7 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
 
     private static final String STATUS = "AssemblingStatus";
     private static final String PRODUCT = "AssemblingProduct";
+    private static final String NAME = "AssemblingName";
     private static final String UNKNOWN = "AssemblingUnknown";
     private static final String PROGRESS = "AssemblingProgress";
     private static final String DURATION = "AssemblingDuration";
@@ -69,6 +70,7 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
                 if (!product.isEmpty()) {
                     JadeStacks.put(tag, PRODUCT, product, accessor);
                 }
+                JadeStacks.putComponent(tag, NAME, AssemblingMachineRecipes.name(holder), accessor);
                 tag.putInt(PROGRESS, machine.craftProgress());
                 tag.putInt(DURATION, machine.craftDuration());
             }, () -> tag.putBoolean(UNKNOWN, true));
@@ -91,10 +93,15 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
                 tooltip.add(Component.translatable("gui.planetaryfactory.assembling_machine.unknown_recipe"));
             } else if (data.contains(DURATION)) {
                 ItemStack product = JadeStacks.read(data, PRODUCT, accessor);
-                if (product.isEmpty()) {
+                Optional<Component> name = JadeStacks.readComponent(data, NAME, accessor);
+                if (name.isEmpty()) {
                     tooltip.add(progress(data));
                 } else {
-                    JadeLayout.line(tooltip, JadeUI.item(product), product.getHoverName());
+                    if (product.isEmpty()) {
+                        tooltip.add(name.get());
+                    } else {
+                        JadeLayout.line(tooltip, JadeUI.item(product), name.get());
+                    }
                     JadeLayout.appendFigure(tooltip, progress(data));
                     // Padded to "100%", or the tooltip narrows every time the figure loses a digit.
                     var font = Minecraft.getInstance().font;

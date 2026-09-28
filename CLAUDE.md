@@ -266,6 +266,16 @@ boots a server, so it is run against a change that touched mechanism. Run it aft
 anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`,
 `core/reach/`, `core/dismantle/`, `core/stretch/`, `core/worldgen/` or `core/gametest/`.
 
+### Recipe name check
+
+A chassis recipe is named as Factorio names it (#490): its own `recipe-name` locale entry, or else
+its main product. `scripts/factorio-recipe-name-extract.py` copies the entries into
+`data/factorio/recipe_name.json`, and `scripts/build-recipe-names.py` writes a
+`recipe.planetaryfactory.<type>.<name>` key for every emitted assembling, chemistry and oil
+processing recipe, with the entry or `%s`, which `AssemblingMachineRecipes.name` fills with the
+product. `tests/pack/test_recipe_names.py` runs both `--check`s and holds the keys to the emitted
+recipes both ways. Run it after any converter run.
+
 ### Machine spec check
 
 The crafting chassis reads every figure from a per-machine spec (#489, ADR-0096), never typed.

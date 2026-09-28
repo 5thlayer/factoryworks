@@ -12,6 +12,7 @@ import com.planetaryfactory.core.recipes.AssemblingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
@@ -56,17 +57,18 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
      * ingredients, whose first fluid is the one the tank holds and the status names, and the fluid its
      * first output tank fills with.
      */
-    public record Entry(RecipeChoice choice, ItemStack icon, List<SizedIngredient> slotIngredients,
+    public record Entry(RecipeChoice choice, Component name, ItemStack icon, List<SizedIngredient> slotIngredients,
                         List<SizedFluidIngredient> fluidIngredients, Optional<Fluid> outputFluid) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, entry -> entry.choice().id(),
                 ByteBufCodecs.BOOL, entry -> entry.choice().locked(),
+                ComponentSerialization.STREAM_CODEC, Entry::name,
                 ItemStack.OPTIONAL_STREAM_CODEC, Entry::icon,
                 SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), Entry::slotIngredients,
                 SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), Entry::fluidIngredients,
                 ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.FLUID)), Entry::outputFluid,
-                (id, locked, icon, ingredients, fluids, output) ->
-                        new Entry(new RecipeChoice(id, locked), icon, ingredients, fluids, output));
+                (id, locked, name, icon, ingredients, fluids, output) ->
+                        new Entry(new RecipeChoice(id, locked), name, icon, ingredients, fluids, output));
 
         /** The first fluid this recipe's tank takes, or empty for an item-only recipe. */
         public Optional<Fluid> fluid() {
@@ -193,12 +195,14 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         MachineSpec spec = machine.spec();
         return AssemblingMachineRecipes.choices(machine).stream()
                 .map(choice -> AssemblingMachineRecipes.resolve(level, HeldRecipe.of(choice.id()), spec)
-                        .map(holder -> new Entry(choice, holder.value().assemble(null),
+                        .map(holder -> new Entry(choice, AssemblingMachineRecipes.name(holder),
+                                holder.value().assemble(null),
                                 AssemblingMachineRecipes.slotIngredients(holder.value(), spec),
                                 holder.value().fluidIngredients(),
                                 holder.value().fluidResults().stream().findFirst()
                                         .map(result -> FluidResource.of(result).getFluid())))
-                        .orElseGet(() -> new Entry(choice, ItemStack.EMPTY, List.of(), List.of(), Optional.empty())))
+                        .orElseGet(() -> new Entry(choice, Component.literal(choice.id()), ItemStack.EMPTY, List.of(),
+                                List.of(), Optional.empty())))
                 .toList();
     }
 
@@ -322,12 +326,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         return verdict;
     }
 
-    /** The product's name when {@code id} resolves; an id that names no recipe has only itself. */
+    /** An id that names no recipe has only itself. */
     private static Component recipeName(ServerLevel level, String id) {
         return AssemblingMachineRecipes.resolveAny(level, HeldRecipe.of(id))
-                .map(holder -> holder.value().assemble(null))
-                .filter(stack -> !stack.isEmpty())
-                .map(ItemStack::getHoverName)
+                .map(AssemblingMachineRecipes::name)
                 .orElse(Component.literal(id));
     }
 

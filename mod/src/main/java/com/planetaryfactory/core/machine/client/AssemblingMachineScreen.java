@@ -381,7 +381,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
             nameRight -= font.width(locked) + 4;
             graphics.text(font, locked, right - font.width(locked), HELD_Y + 4, PROBLEM_TEXT, false);
         }
-        graphics.text(font, fitted(held.icon().getHoverName(), nameRight - HELD_X - 20), HELD_X + 20, HELD_Y + 4,
+        graphics.text(font, fitted(held.name(), nameRight - HELD_X - 20), HELD_X + 20, HELD_Y + 4,
                 TEXT, false);
     }
 
