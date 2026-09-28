@@ -259,6 +259,18 @@ boots a server, so it is run against a change that touched mechanism. Run it aft
 anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`,
 `core/reach/`, `core/dismantle/`, `core/stretch/`, `core/worldgen/` or `core/gametest/`.
 
+### Machine spec check
+
+The crafting chassis reads every figure from a per-machine spec (#489, ADR-0096), never typed.
+`scripts/build-machine-specs.py` writes one row per machine whose recipes share `AssemblingRecipe`'s
+shape -- the three Assembling Machines, the Chemical Plant and the Oil Refinery -- copying speed,
+energy use, drain, categories, Fast Replace group and tank volumes from `data/factorio/machine.json`,
+and taking the recipe type from `category-map.json`. Slot and tank counts follow the recipes: each
+is the most any emitted recipe of the machine's type and categories needs. `MachineSpecs` reads it.
+`tests/pack/test_machine_specs.py` runs the `--check`, holds each row to its corpus row and every
+emitted chassis recipe to some machine with room for it; `AssemblingMachineSpecTest` holds the
+parse with typed figures. Run them after a converter run or re-extracting the corpus.
+
 ### Replace group check
 
 Which blocks may Fast Replace which is Factorio's `fast_replaceable_group` (ADR-0082), never typed.

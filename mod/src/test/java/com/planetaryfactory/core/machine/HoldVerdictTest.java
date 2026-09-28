@@ -14,36 +14,36 @@ class HoldVerdictTest {
 
     @Test
     void anUnlockedAssemblingRecipeIsHeld() {
-        assertEquals(HoldVerdict.HELD, HoldVerdict.of(true, true, false));
+        assertEquals(HoldVerdict.HELD, HoldVerdict.of(true, true, true, false));
         assertTrue(HoldVerdict.HELD.held());
     }
 
     @Test
     void anIdTheMachineCannotResolveIsRefused() {
-        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, true, false));
+        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, true, true, false));
         assertFalse(HoldVerdict.NOT_ASSEMBLING.held());
     }
 
     @Test
     void aLockedRecipeIsRefused() {
-        assertEquals(HoldVerdict.LOCKED, HoldVerdict.of(true, true, true));
+        assertEquals(HoldVerdict.LOCKED, HoldVerdict.of(true, true, true, true));
     }
 
     @Test
     void anUnknownIdIsNotReportedAsLocked() {
-        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, true, true));
+        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, true, true, true));
     }
 
     @Test
-    void aRecipeOfACategoryTheMachineDoesNotCraftIsRefused() {
-        assertEquals(HoldVerdict.NOT_THIS_MACHINE, HoldVerdict.of(true, false, false));
+    void aRecipeNeedingATankTheMachineLacksIsRefused() {
+        assertEquals(HoldVerdict.NOT_THIS_MACHINE, HoldVerdict.of(true, true, false, false));
         assertFalse(HoldVerdict.NOT_THIS_MACHINE.held());
     }
 
     /** Factorio lists no such recipe in tier 1 at all, so researching it changes nothing here. */
     @Test
     void aLockedRecipeOfTheWrongCategoryIsNotReportedAsLocked() {
-        assertEquals(HoldVerdict.NOT_THIS_MACHINE, HoldVerdict.of(true, false, true));
+        assertEquals(HoldVerdict.NOT_THIS_MACHINE, HoldVerdict.of(true, true, false, true));
     }
 
     @Test
@@ -51,5 +51,23 @@ class HoldVerdictTest {
         for (HoldVerdict verdict : HoldVerdict.values()) {
             assertEquals(!verdict.held(), verdict.messageKey() != null, verdict.name());
         }
+    }
+
+    /** A chemistry recipe on an Assembling Machine: Fill Recipe from another machine's tab (ADR-0096). */
+    @Test
+    void aRecipeOfAnotherMachinesTypeIsRefused() {
+        assertEquals(HoldVerdict.NOT_THIS_TYPE, HoldVerdict.of(true, false, true, false));
+        assertFalse(HoldVerdict.NOT_THIS_TYPE.held());
+    }
+
+    /** Another type is named before its fit or its lock: no research makes it this machine's. */
+    @Test
+    void anotherTypeOutranksFitAndLock() {
+        assertEquals(HoldVerdict.NOT_THIS_TYPE, HoldVerdict.of(true, false, false, true));
+    }
+
+    @Test
+    void anUnknownIdIsNotReportedAsAnotherType() {
+        assertEquals(HoldVerdict.NOT_ASSEMBLING, HoldVerdict.of(false, false, false, false));
     }
 }

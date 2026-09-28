@@ -3,7 +3,7 @@ package com.planetaryfactory.core.machine;
 import com.planetaryfactory.core.energy.ForgeEnergy;
 
 /**
- * The Assembling Machine's rate per {@link AssemblingTier} (#328, #295, ADR-0029): the tier's
+ * A crafting machine's rate from its {@link MachineSpec} (#328, #295, #489, ADR-0029): its
  * {@code crafting_speed} and {@code energy_usage}, on ADR-0060's 1 FE = 100 J.
  *
  * <p>The recipe carries {@code energy_required * 20} and nothing else; the machine divides by its
@@ -27,11 +27,11 @@ public final class AssemblingMachineSpec {
     }
 
     /**
-     * The recipe's ticks as {@code tier} observes them, under Oritech's speed multiplier. Never
+     * The recipe's ticks as {@code spec}'s machine observes them, under Oritech's speed multiplier. Never
      * zero: a craft the divisor would round away still costs the tick it takes to run.
      */
-    public static int durationTicks(AssemblingTier tier, int recipeTicks, float speedMultiplier) {
-        return Math.max(1, (int) Math.ceil(recipeTicks / tier.craftingSpeed() * speedMultiplier - 1e-6));
+    public static int durationTicks(MachineSpec spec, int recipeTicks, float speedMultiplier) {
+        return Math.max(1, (int) Math.ceil(recipeTicks / spec.craftingSpeed() * speedMultiplier - 1e-6));
     }
 
     /**
@@ -39,8 +39,8 @@ public final class AssemblingMachineSpec {
      * Oritech's efficiency multiplier. The speed multiplier is deliberately absent -- it moves the
      * rate, not the amount.
      */
-    public static long fePerCraft(AssemblingTier tier, int recipeTicks, float efficiencyMultiplier) {
-        double joules = tier.watts() / (double) TICKS_PER_SECOND * (recipeTicks / tier.craftingSpeed());
+    public static long fePerCraft(MachineSpec spec, int recipeTicks, float efficiencyMultiplier) {
+        double joules = spec.watts() / (double) TICKS_PER_SECOND * (recipeTicks / spec.craftingSpeed());
         return Math.round(joules / ForgeEnergy.JOULES_PER_FE * efficiencyMultiplier);
     }
     /**

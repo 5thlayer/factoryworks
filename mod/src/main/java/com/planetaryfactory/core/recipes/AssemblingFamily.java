@@ -2,6 +2,8 @@ package com.planetaryfactory.core.recipes;
 
 import java.util.function.Supplier;
 
+import com.planetaryfactory.core.PlanetaryFactoryCore;
+
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -31,6 +33,20 @@ public enum AssemblingFamily {
     /** The type's id path, which is also the folder its recipes load from. */
     public String path() {
         return path;
+    }
+
+    /** The type's id, as a {@code MachineSpec} names it. */
+    public String id() {
+        return PlanetaryFactoryCore.NAMESPACE + ":" + path;
+    }
+
+    public static AssemblingFamily of(String id) {
+        for (AssemblingFamily family : values()) {
+            if (family.id().equals(id)) {
+                return family;
+            }
+        }
+        throw new IllegalArgumentException("no chassis recipe type " + id);
     }
 
     public RecipeType<AssemblingRecipe> type() {

@@ -4,9 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static com.planetaryfactory.core.machine.AssemblingTier.ONE;
-import static com.planetaryfactory.core.machine.AssemblingTier.THREE;
-import static com.planetaryfactory.core.machine.AssemblingTier.TWO;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +18,10 @@ import org.junit.jupiter.api.Test;
  * test cannot agree with the implementation by construction.
  */
 class AssemblingMachineSpecTest {
+
+    private static final MachineSpec ONE = AssemblingTier.ONE.spec();
+    private static final MachineSpec TWO = AssemblingTier.TWO.spec();
+    private static final MachineSpec THREE = AssemblingTier.THREE.spec();
 
     /** copper-cable: 0.5 s in the corpus, emitted as 10 ticks, observed at 1 s on tier 1. */
     @Test
@@ -120,15 +123,15 @@ class AssemblingMachineSpecTest {
     /** Tier 1's {@code crafting_categories}: no fluid box, so no {@code crafting-with-fluid}. */
     @Test
     void tierOneCraftsNoFluidRecipe() {
-        assertTrue(ONE.crafts("crafting"));
-        assertTrue(ONE.crafts("advanced-crafting"));
-        assertFalse(ONE.crafts("crafting-with-fluid"));
+        assertTrue(AssemblingTier.ONE.crafts("crafting"));
+        assertTrue(AssemblingTier.ONE.crafts("advanced-crafting"));
+        assertFalse(AssemblingTier.ONE.crafts("crafting-with-fluid"));
     }
 
     /** Tiers 2 and 3 add {@code crafting-with-fluid}, and neither takes a chemical plant's category. */
     @Test
     void tiersTwoAndThreeCraftWithAFluid() {
-        for (AssemblingTier tier : new AssemblingTier[] {TWO, THREE}) {
+        for (AssemblingTier tier : new AssemblingTier[] {AssemblingTier.TWO, AssemblingTier.THREE}) {
             assertTrue(tier.crafts("crafting"), tier + " crafting");
             assertTrue(tier.crafts("advanced-crafting"), tier + " advanced-crafting");
             assertTrue(tier.crafts("crafting-with-fluid"), tier + " crafting-with-fluid");
@@ -136,23 +139,120 @@ class AssemblingMachineSpecTest {
         }
     }
 
-    /** Only the fluid tiers have a tank, of 1,000 mB. */
+    /** Only the fluid tiers have a tank, of 1,000 mB, and no tier has an output tank. */
     @Test
     void onlyTiersTwoAndThreeHaveATank() {
-        assertFalse(ONE.hasFluidInput());
-        assertTrue(TWO.hasFluidInput());
-        assertTrue(THREE.hasFluidInput());
-        assertEquals(0, ONE.fluidCapacity());
-        assertEquals(1000, TWO.fluidCapacity());
-        assertEquals(1000, THREE.fluidCapacity());
+        assertEquals(List.of(), ONE.fluidInputs());
+        assertEquals(List.of(1000), TWO.fluidInputs());
+        assertEquals(List.of(1000), THREE.fluidInputs());
+        for (MachineSpec tier : List.of(ONE, TWO, THREE)) {
+            assertEquals(List.of(), tier.fluidOutputs(), tier.name());
+        }
+    }
+
+    /** ADR-0071's four input slots and one output, on every tier. */
+    @Test
+    void everyTierHasFourInputsAndOneOutput() {
+        for (MachineSpec tier : List.of(ONE, TWO, THREE)) {
+            assertEquals(4, tier.itemInputs(), tier.name());
+            assertEquals(1, tier.itemOutputs(), tier.name());
+        }
+    }
+
+    /** Each tier's {@code crafting_speed}, {@code energy_usage} and {@code drain}, in watts. */
+    @Test
+    void eachTierReadsItsSpeedAndPowerFromTheCorpus() {
+        assertEquals(0.5, ONE.craftingSpeed());
+        assertEquals(0.75, TWO.craftingSpeed());
+        assertEquals(1.25, THREE.craftingSpeed());
+        assertEquals(75_000L, ONE.watts());
+        assertEquals(150_000L, TWO.watts());
+        assertEquals(375_000L, THREE.watts());
+        assertEquals(2_500L, ONE.drainWatts());
+        assertEquals(5_000L, TWO.drainWatts());
+        assertEquals(12_500L, THREE.drainWatts());
+    }
+
+    @Test
+    void theThreeTiersHoldAssemblingRecipesAndReplaceEachOther() {
+        for (MachineSpec tier : List.of(ONE, TWO, THREE)) {
+            assertEquals("planetaryfactory:assembling", tier.recipeType(), tier.name());
+            assertEquals("assembling-machine", tier.replaceGroup(), tier.name());
+        }
+    }
+
+    /** 2 items and 2 fluids in, 1 of each out: the entity's second output box is one no recipe fills (ADR-0096). */
+    @Test
+    void theChemicalPlantsTanksFollowItsRecipes() {
+        MachineSpec plant = MachineSpecs.get().spec("chemical-plant");
+        assertEquals("planetaryfactory:chemistry", plant.recipeType());
+        assertEquals(Set.of("chemistry"), plant.categories());
+        assertEquals(2, plant.itemInputs());
+        assertEquals(1, plant.itemOutputs());
+        assertEquals(List.of(1000, 1000), plant.fluidInputs());
+        assertEquals(List.of(100), plant.fluidOutputs());
+        assertEquals(1.0, plant.craftingSpeed());
+        assertEquals(210_000L, plant.watts());
+        assertEquals(7_000L, plant.drainWatts());
+        assertEquals("chemical-plant", plant.replaceGroup());
+    }
+
+    /** 2 fluids in and always 3 out, with no item slots at all (ADR-0096). */
+    @Test
+    void theOilRefineryHasThreeOutputTanksAndNoSlots() {
+        MachineSpec refinery = MachineSpecs.get().spec("oil-refinery");
+        assertEquals("planetaryfactory:oil_processing", refinery.recipeType());
+        assertEquals(0, refinery.itemInputs());
+        assertEquals(0, refinery.itemOutputs());
+        assertEquals(List.of(1000, 1000), refinery.fluidInputs());
+        assertEquals(List.of(100, 100, 100), refinery.fluidOutputs());
+        assertEquals(420_000L, refinery.watts());
+        assertEquals(14_000L, refinery.drainWatts());
+        assertEquals("oil-refinery", refinery.replaceGroup());
+    }
+
+    /** 420 kW for basic oil processing's 5 s is 2.1 MJ, 21,000 FE. */
+    @Test
+    void aRefineryCraftCostsFourHundredTwentyKilowattsOverItsDuration() {
+        MachineSpec refinery = MachineSpecs.get().spec("oil-refinery");
+        assertEquals(100, AssemblingMachineSpec.durationTicks(refinery, 100, 1.0f));
+        assertEquals(21_000, AssemblingMachineSpec.fePerCraft(refinery, 100, 1.0f));
+    }
+
+    /** Tanks are laid out for the widest machine: two in, three out. */
+    @Test
+    void theTankLayoutIsTheWidestMachines() {
+        assertEquals(2, MachineSpecs.get().maxFluidInputs());
+        assertEquals(3, MachineSpecs.get().maxFluidOutputs());
+    }
+
+    @Test
+    void aTankPastTheMachinesLastHasNoRoom() {
+        assertEquals(0, TWO.fluidInputVolume(1));
+        assertEquals(0, ONE.fluidInputVolume(0));
+        assertEquals(100, MachineSpecs.get().spec("oil-refinery").fluidOutputVolume(2));
+        assertEquals(0, MachineSpecs.get().spec("chemical-plant").fluidOutputVolume(1));
+    }
+
+    /** A recipe fits when the machine has a slot or tank for every input and output. */
+    @Test
+    void aRecipeFitsOnlyWhereEveryInputAndOutputHasASlotOrTank() {
+        assertTrue(ONE.fits(4, 1, 0, 0));
+        assertFalse(ONE.fits(1, 1, 1, 0), "concrete's water on tier 1");
+        assertTrue(TWO.fits(1, 1, 1, 0));
+        assertFalse(TWO.fits(5, 1, 0, 0));
+        assertFalse(TWO.fits(1, 0, 0, 1), "a fluid result on an assembler");
+        MachineSpec refinery = MachineSpecs.get().spec("oil-refinery");
+        assertTrue(refinery.fits(0, 0, 2, 3));
+        assertFalse(refinery.fits(1, 0, 2, 3));
     }
 
     /** The ids the item map names, derived from the tier. */
     @Test
     void eachTierIsItsOwnBlock() {
-        assertEquals("assembling_machine", ONE.blockName());
-        assertEquals("assembling_machine_2", TWO.blockName());
-        assertEquals("assembling_machine_3", THREE.blockName());
-        assertEquals("assembling_machine_2_part", TWO.partBlockName());
+        assertEquals("assembling_machine", AssemblingTier.ONE.blockName());
+        assertEquals("assembling_machine_2", AssemblingTier.TWO.blockName());
+        assertEquals("assembling_machine_3", AssemblingTier.THREE.blockName());
+        assertEquals("assembling_machine_2_part", AssemblingTier.TWO.partBlockName());
     }
 }

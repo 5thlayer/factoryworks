@@ -56,15 +56,15 @@ public class AssemblingMachineJadePlugin implements IWailaPlugin {
                 return;
             }
             tag.putInt(STATUS, machine.status().ordinal());
-            if (machine.tier().hasFluidInput()) {
+            if (!machine.spec().fluidInputs().isEmpty()) {
                 tag.putLong(TANK, machine.tank().getAmountAsLong(0));
-                tag.putInt(TANK_CAPACITY, machine.tier().fluidCapacity());
+                tag.putInt(TANK_CAPACITY, machine.spec().fluidInputVolume(0));
             }
             machine.heldFluid().ifPresent(fluid -> tag.putString(FLUID, BuiltInRegistries.FLUID.getKey(fluid).toString()));
             if (machine.heldRecipe().id().isEmpty()) {
                 return;
             }
-            AssemblingMachineRecipes.resolve(server, machine.heldRecipe()).ifPresentOrElse(holder -> {
+            AssemblingMachineRecipes.resolve(server, machine.heldRecipe(), machine.spec()).ifPresentOrElse(holder -> {
                 ItemStack product = holder.value().assemble(null);
                 if (!product.isEmpty()) {
                     JadeStacks.put(tag, PRODUCT, product, accessor);

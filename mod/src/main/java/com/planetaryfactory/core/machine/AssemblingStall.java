@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.machine;
 
+import java.util.List;
+
 /**
  * Why an Assembling Machine makes no progress this tick (#328), or {@link #NONE}.
  *
@@ -20,7 +22,7 @@ public enum AssemblingStall {
     NO_INGREDIENTS,
     /** The tank does not hold one craft's fluid. */
     NO_FLUID,
-    /** The output slot cannot take a craft's whole result. */
+    /** The output slots or any output tank the Held recipe fills cannot take a craft's whole result. */
     OUTPUT_FULL,
     /**
      * Runnable, but the buffer cannot pay this tick's share. Found by the draw itself, inside a
@@ -30,6 +32,13 @@ public enum AssemblingStall {
 
     public static AssemblingStall of(boolean resolves, boolean locked, boolean fed, boolean fluidFed,
                                      boolean outputFits) {
+        return of(resolves, locked, fed, fluidFed, outputFits, List.of());
+    }
+
+    /** {@code tanksFit} holds, per output tank the Held recipe fills, whether it takes a craft's share. */
+    public static AssemblingStall of(boolean resolves, boolean locked, boolean fed, boolean fluidFed,
+                                     boolean itemsFit, List<Boolean> tanksFit) {
+        boolean outputFits = itemsFit && !tanksFit.contains(false);
         if (!resolves) {
             return NO_RECIPE;
         }

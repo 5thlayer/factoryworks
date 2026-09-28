@@ -158,7 +158,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                     case DATA_DRAW -> DataSlotHalves.low(machine.drawTenths());
                     case DATA_DRAW + 1 -> DataSlotHalves.high(machine.drawTenths());
                     case DATA_TANK -> (int) machine.tank().getAmountAsLong(0);
-                    case DATA_TANK_CAPACITY -> machine.tier().fluidCapacity();
+                    case DATA_TANK_CAPACITY -> machine.spec().fluidInputVolume(0);
                     default -> 0;
                 };
             }
@@ -178,11 +178,11 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     public static List<Entry> entries(AssemblingMachineBlockEntity machine) {
         ServerLevel level = (ServerLevel) machine.getLevel();
-        AssemblingTier tier = machine.tier();
+        MachineSpec spec = machine.spec();
         return AssemblingMachineRecipes.choices(machine).stream()
-                .map(choice -> AssemblingMachineRecipes.resolve(level, HeldRecipe.of(choice.id()))
+                .map(choice -> AssemblingMachineRecipes.resolve(level, HeldRecipe.of(choice.id()), spec)
                         .map(holder -> new Entry(choice, holder.value().assemble(null),
-                                AssemblingMachineRecipes.slotIngredients(holder.value(), tier),
+                                AssemblingMachineRecipes.slotIngredients(holder.value(), spec),
                                 holder.value().fluidIngredients()))
                         .orElseGet(() -> new Entry(choice, ItemStack.EMPTY, List.of(), List.of())))
                 .toList();
@@ -283,7 +283,7 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         if (machine == null) {
             return HoldVerdict.NOT_ASSEMBLING;
         }
-        HoldVerdict verdict = verdict(machine, machine.tier(), id);
+        HoldVerdict verdict = verdict(machine, machine.spec(), id);
         if (verdict.held()) {
             machine.setHeldRecipe(HeldRecipe.of(id), player);
         } else if (player instanceof ServerPlayer server) {
@@ -294,19 +294,20 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     /** The product's name when {@code id} resolves; an id that names no recipe has only itself. */
     private static Component recipeName(ServerLevel level, String id) {
-        return AssemblingMachineRecipes.resolve(level, HeldRecipe.of(id))
+        return AssemblingMachineRecipes.resolveAny(level, HeldRecipe.of(id))
                 .map(holder -> holder.value().assemble(null))
                 .filter(stack -> !stack.isEmpty())
                 .map(ItemStack::getHoverName)
                 .orElse(Component.literal(id));
     }
 
-    /** What {@link #request} would answer for {@code machine} on {@code tier}, asked of the server's recipes and locks. */
-    public static HoldVerdict verdict(AssemblingMachineBlockEntity machine, AssemblingTier tier, String id) {
+    /** What {@link #request} would answer for {@code machine} running {@code spec}, asked of the server's recipes and locks. */
+    public static HoldVerdict verdict(AssemblingMachineBlockEntity machine, MachineSpec spec, String id) {
         Optional<RecipeHolder<AssemblingRecipe>> recipe =
-                AssemblingMachineRecipes.resolve((ServerLevel) machine.getLevel(), HeldRecipe.of(id));
+                AssemblingMachineRecipes.resolveAny((ServerLevel) machine.getLevel(), HeldRecipe.of(id));
         return HoldVerdict.of(recipe.isPresent(),
-                recipe.map(holder -> tier.crafts(holder.value().category())).orElse(false),
+                recipe.map(holder -> AssemblingMachineRecipes.ofType(holder.value(), spec)).orElse(false),
+                recipe.map(holder -> AssemblingMachineRecipes.fits(holder.value(), spec)).orElse(false),
                 AssemblingMachineRecipes.isLocked(machine, id));
     }
 

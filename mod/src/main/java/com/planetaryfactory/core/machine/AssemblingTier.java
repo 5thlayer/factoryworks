@@ -1,37 +1,25 @@
 package com.planetaryfactory.core.machine;
 
-import java.util.Set;
-
 /**
- * Factorio's three Assembling Machines, each a block of its own (ADR-0075): {@code crafting_speed},
- * {@code energy_usage} and {@code crafting_categories} from {@code machine.json}, and the Oritech
- * paint that tells them apart.
+ * Factorio's three Assembling Machines, each a block of its own (ADR-0075), with the Oritech paint
+ * that tells them apart. Every figure is the tier's {@link MachineSpec} (#489).
  *
  * <p>Pure: the paint is Oritech's {@code ColorVariant} by name, so the test source set can hold the
- * figures without Oritech on its classpath.
+ * tiers without Oritech on its classpath.
  */
 public enum AssemblingTier {
-    ONE("assembling_machine", 0.5, 75_000L, "ORANGE", "crafting", "advanced-crafting"),
-    TWO("assembling_machine_2", 0.75, 150_000L, "DIAMOND", "crafting", "advanced-crafting", "crafting-with-fluid"),
-    THREE("assembling_machine_3", 1.25, 375_000L, "INDUSTRIAL", "crafting", "advanced-crafting", "crafting-with-fluid");
-
-    private static final String FLUID_CATEGORY = "crafting-with-fluid";
-
-    /** The fluid box's {@code volume} Factorio gives tiers 2 and 3, in mB (ADR-0075). */
-    private static final int FLUID_INPUT_MB = 1_000;
+    ONE("assembling_machine", "assembling-machine-1", "ORANGE"),
+    TWO("assembling_machine_2", "assembling-machine-2", "DIAMOND"),
+    THREE("assembling_machine_3", "assembling-machine-3", "INDUSTRIAL");
 
     private final String blockName;
-    private final double craftingSpeed;
-    private final long watts;
+    private final String factorioName;
     private final String paint;
-    private final Set<String> categories;
 
-    AssemblingTier(String blockName, double craftingSpeed, long watts, String paint, String... categories) {
+    AssemblingTier(String blockName, String factorioName, String paint) {
         this.blockName = blockName;
-        this.craftingSpeed = craftingSpeed;
-        this.watts = watts;
+        this.factorioName = factorioName;
         this.paint = paint;
-        this.categories = Set.of(categories);
     }
 
     public String blockName() {
@@ -42,12 +30,8 @@ public enum AssemblingTier {
         return blockName + "_part";
     }
 
-    public double craftingSpeed() {
-        return craftingSpeed;
-    }
-
-    public long watts() {
-        return watts;
+    public MachineSpec spec() {
+        return MachineSpecs.get().spec(factorioName);
     }
 
     /** Oritech's {@code ColorVariant} name, fixed per tier: a repainted tier would claim another's rate. */
@@ -57,16 +41,6 @@ public enum AssemblingTier {
 
     /** Whether this tier crafts a recipe of Factorio {@code category}. */
     public boolean crafts(String category) {
-        return categories.contains(category);
-    }
-
-    /** Whether this tier has a fluid input, which is the same as crafting with a fluid. */
-    public boolean hasFluidInput() {
-        return crafts(FLUID_CATEGORY);
-    }
-
-    /** The input tank's size in mB, or 0 on a tier with none. */
-    public int fluidCapacity() {
-        return hasFluidInput() ? FLUID_INPUT_MB : 0;
+        return spec().crafts(category);
     }
 }

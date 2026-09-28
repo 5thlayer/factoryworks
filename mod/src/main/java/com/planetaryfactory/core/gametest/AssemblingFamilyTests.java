@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.planetaryfactory.core.machine.AssemblingMachineRecipes;
+import com.planetaryfactory.core.machine.AssemblingTier;
 import com.planetaryfactory.core.machine.HeldRecipe;
 import com.planetaryfactory.core.recipes.AssemblingFamily;
 import com.planetaryfactory.core.recipes.AssemblingRecipe;
@@ -61,7 +62,7 @@ final class AssemblingFamilyTests {
 
     private static void noChemistryHeld(GameTestHelper helper) {
         String plastic = "planetaryfactory:chemistry/plastic_bar";
-        if (AssemblingMachineRecipes.resolve(helper.getLevel(), HeldRecipe.of(plastic)).isPresent()) {
+        if (AssemblingMachineRecipes.resolve(helper.getLevel(), HeldRecipe.of(plastic), AssemblingTier.ONE.spec()).isPresent()) {
             helper.fail("an Assembling Machine resolves " + plastic);
             return;
         }
