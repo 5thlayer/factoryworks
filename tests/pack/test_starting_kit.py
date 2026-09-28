@@ -178,10 +178,10 @@ class WelcomeKeys(unittest.TestCase):
 
     def test_every_welcome_line_is_in_the_pack_lang(self):
         source = WELCOME.read_text(encoding="utf-8")
-        body = re.search(r"public static final List<String> LINES = List\.of\((.*?)\);", source,
+        body = re.search(r"public static final List<Line> LINES = List\.of\((.*?)\);", source,
                          re.DOTALL)
         self.assertIsNotNone(body, "Welcome.LINES has moved or changed shape")
-        keys = re.findall(r'"([^"]+)"', body.group(1))
+        keys = re.findall(r'new Line\("([^"]+)"', body.group(1))
         self.assertTrue(keys, "Welcome.LINES names no key")
         lang = json.loads(LANG.read_text(encoding="utf-8"))
         for key in keys:
