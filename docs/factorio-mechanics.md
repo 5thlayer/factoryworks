@@ -872,11 +872,11 @@ Sub-rules:
 - **verdict**: `adapted`
 - **notice**: the Steam Engine is Oritech's engine under a pack block, calibrated by mixin to
   Factorio's 30 mB/s and 450 FE/t, and the solar panel is Oritech's Big Solar Panel at Oritech's own
-  output.
+  output until #508 makes it a pack block at Factorio's.
 - **where**: all bodies
 - **via**: `pack`, `oritech`
 - **owner**: ADR-0048, ADR-0060, ADR-0062, ADR-0077
-- **ticket**: #135 (the Steam Turbine), #7 (solar); #104, #189, #224, #283 closed
+- **ticket**: #135 (the Steam Turbine), #508 (the Solar Panel), #7 (per-body solar); #104, #189, #224, #283 closed
 
 Sub-rules:
 
@@ -908,7 +908,10 @@ Sub-rules:
 - **Accumulators** — `shipped`, #283. `accumulator` is Oritech's Large Energy Storage, mixed in to
   Factorio's 5 MJ and 300 kW.
 - **Solar panels** — `adapted`. `solar-panel` is Oritech's Big Solar Panel (ADR-0062, ADR-0067),
-  crafted from Factorio's recipe and producing at Oritech's own rate; per-body output is #7. *Before ADR-0060 both were Power Grid's
+  crafted from Factorio's recipe and producing at Oritech's own rate, and it never runs: Oritech
+  assembles it from machine cores the pack does not give. #508 makes it `planetaryfactory:solar_panel`,
+  placed as one footprint, at Factorio's 60 kW on Factorio's day curve with a one-tick buffer and no
+  weather; per-body output is #7. *Before ADR-0060 both were Power Grid's
   (#148).* It is also
   the *planet* Electro's identity — see [Day and night cycle](#day-and-night-cycle).
 - **Steam as a stored, pipeable intermediate** — `shipped` for low-temperature steam, which the
@@ -1374,15 +1377,20 @@ network's player-facing half, and they go with it.
 
 ### Day and night cycle
 
-- **verdict**: `shipped`
+- **verdict**: `planned`
+- **notice**: Terra still runs vanilla's 20-minute day; ADR-0099 gives it Nauvis's 7 minutes, and
+  the row becomes `adapted` when #509 lands.
 - **where**: Terra, Sapros
-- **via**: `native_mechanic`
-- **owner**: `unargued`
+- **via**: `native_mechanic`, `pack`
+- **owner**: ADR-0099
+- **ticket**: #509 (Terra), #8 (the other bodies)
 
 Sub-rules:
 
-- **Solar output follows the cycle, and accumulators bridge the night** — `planned`, and it is
-  Electro's identity. Electro's own cycle is `unargued`.
+- **Solar output follows the cycle, and accumulators bridge the night** — `planned`. On Terra, #508:
+  the panel follows Factorio's day curve and banks no night, so the Accumulator carries it, at
+  Factorio's 0.84 per panel once #509 lands. On Electro it is the planet's identity, and #7's; Electro's
+  own cycle is #8's.
 
 ### Controls
 
