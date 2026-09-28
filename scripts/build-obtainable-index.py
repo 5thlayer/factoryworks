@@ -77,8 +77,24 @@ def recipe_outputs():
         results = recipe.get("results") or [recipe.get("result")]
         if not all(results):
             sys.exit(f"{path.relative_to(ROOT)} has no `results` or `result`")
-        outputs |= {"item:" + result["id"] for result in results}
+        outputs |= {stack_key(result) for result in results}
     return outputs
+
+
+def stack_key(result):
+    """A result's stack as a string, its components appended as JSON when it carries any: a Researchd
+    science pack is one item told apart by a component (ADR-0052), and EMI hides the ones not listed."""
+    components = result.get("components")
+    suffix = json.dumps(components, sort_keys=True, separators=(",", ":")) if components else ""
+    return "item:" + result["id"] + suffix
+
+
+def emi_stack(key):
+    """The stack as EMI's index reads it: a string, or an object with `componentChanges`."""
+    if "{" not in key:
+        return key
+    item, brace, components = key.partition("{")
+    return {"type": "item", "id": item.removeprefix("item:"), "componentChanges": json.loads(brace + components)}
 
 
 def kit_items():
@@ -308,7 +324,7 @@ def derived():
 def index(drops):
     stacks = recipe_outputs() | kit_items() | set(drops) | {row["id"] for row in mechanic_rows()}
     ordered = sorted(stacks, key=lambda stack: (not stack.startswith("item:"), stack))
-    return {"filters": ["/.*/"], "added": [{"stack": stack} for stack in ordered]}
+    return {"filters": ["/.*/"], "added": [{"stack": emi_stack(stack)} for stack in ordered]}
 
 
 def main():

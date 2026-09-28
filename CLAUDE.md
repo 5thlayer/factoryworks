@@ -553,7 +553,8 @@ files and writes `kubejs/assets/emi/index/stacks/obtainable.json`: a `filters` e
 id, then `added` naming every emitted recipe's output, every starting-kit item, every row of
 `data/pack/mechanic-obtainable.json` and every drop of a block the live worldgen places. EMI reads
 the file only under the `emi` namespace, applies `filters` before `added`, and skips an `added`
-entry that is a bare string, so each is a `{"stack": ...}` object. A mechanic row is
+entry that is a bare string, so each is a `{"stack": ...}` object. A stack with components, such as
+a Researchd science pack, is listed by its `componentChanges`, since EMI hides a variant not listed. A mechanic row is
 `{id, mechanic, why, ticket}`, for what a mechanic produces with no recipe and no data source.
 
 The worldgen walk (#454) starts at each dimension under `kubejs/data/`, never `kubejs/parked/`: the

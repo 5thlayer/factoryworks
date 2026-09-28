@@ -295,7 +295,31 @@
       "stack": "item:researchd:research_lab"
     },
     {
-      "stack": "item:researchd:research_pack"
+      "stack": {
+        "type": "item",
+        "id": "researchd:research_pack",
+        "componentChanges": {
+          "researchd:research_pack": "planetary_factory:automation_science_pack"
+        }
+      }
+    },
+    {
+      "stack": {
+        "type": "item",
+        "id": "researchd:research_pack",
+        "componentChanges": {
+          "researchd:research_pack": "planetary_factory:chemical_science_pack"
+        }
+      }
+    },
+    {
+      "stack": {
+        "type": "item",
+        "id": "researchd:research_pack",
+        "componentChanges": {
+          "researchd:research_pack": "planetary_factory:logistic_science_pack"
+        }
+      }
     },
     {
       "stack": "fluid:minecraft:water"

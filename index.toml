@@ -121,6 +121,10 @@ file = "config/placebo.cfg"
 hash = "6bbc71c6dc18b1ba4952e1bc54ed2b98c3a90f04cec4257ec3f7566cdf0c0e2a"
 
 [[files]]
+file = "config/planetaryfactory_core-server.toml"
+hash = "840c5e4f8a3a794ca070b7133abd4bb11bb52e203bb4f8bddbd8901277f744f8"
+
+[[files]]
 file = "config/railcraft-common.toml"
 hash = "f85218927864b8b73154009d80eefda39aae5a0dbe0d301dd185ca4004cce5ee"
 
@@ -250,11 +254,11 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "8ea33ac1aeb0a8944d8b3e24d3bd4e0ffacc7ce1c411d3267fec898290054703"
+hash = "f264b9cda5fb90f96274fbd1394d1d7ababd35c807187a44771df88c5d18e3f2"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "ed2cbcd385f1e0550ac6838c5155dc0dae87fde2e56fcbe485c82cd4dfed2643"
+hash = "e0972e93b11b83f416722b51e177718cf3dd8b1d4983236e095e44c96988c5e8"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -266,7 +270,7 @@ hash = "f22ad10828ccad9cd00f592ac9edcbac53dcb5f08737d52d09f17866fd3f51ac"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "3502ac5b997649c45815cda2712c546875504665aa6202ed53bcb8ed39ef056f"
+hash = "32bb2c7a33623e3bf9dcdacb8aab6fb8b28d9a6c1e55ea73df6e6056e42e4acc"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -2781,8 +2785,8 @@ hash = "0972057bb910ad49222d9658f4b57458143ea1428e3235870959c73ee2fc0a98"
 metafile = true
 
 [[files]]
-file = "mods/researchd-1.3.3-26.1.jar"
-hash = "5fb2411cce5e42d9c0567df21eb5d28be8eaf983251b9eb260923fb8d7071d5d"
+file = "mods/researchd-1.3.4-26.1.jar"
+hash = "fd62f78adb9311f2312880ac4bf78b817123fcc0a288f291d63d93bcea180e8b"
 
 [[files]]
 file = "mods/rhino.pw.toml"
