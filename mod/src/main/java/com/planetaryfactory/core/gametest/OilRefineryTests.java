@@ -1,34 +1,24 @@
 package com.planetaryfactory.core.gametest;
 
+import static com.planetaryfactory.core.gametest.ChassisFixture.expectMoved;
+import static com.planetaryfactory.core.gametest.ChassisFixture.fluid;
+
 import java.util.List;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.energy.PoleTier;
-import com.planetaryfactory.core.energy.SupplyAreaPoleBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
-import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingStall;
-import com.planetaryfactory.core.machine.HeldRecipe;
-import com.planetaryfactory.core.machine.HoldVerdict;
 import com.planetaryfactory.core.machine.OilRefineryBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
  * The Oil Refinery (#491, ADR-0096): the chassis on Oritech's Refinery and its two chamber layers.
@@ -41,6 +31,8 @@ final class OilRefineryTests {
 
     private static final BlockPos ANCHOR = new BlockPos(3, 1, 3);
     private static final Direction FACING = Direction.NORTH;
+    private static final ChassisFixture CHASSIS =
+            new ChassisFixture("Oil Refinery", PFBlocks.OIL_REFINERY_FOOTPRINT, ANCHOR, FACING);
 
     private static final String ADVANCED = "planetaryfactory:oil_processing/advanced_oil_processing";
     private static final String BASIC = "planetaryfactory:oil_processing/basic_oil_processing";
@@ -60,9 +52,6 @@ final class OilRefineryTests {
     private static final int OUTPUT_TANK_SIZE = 100;
     private static final long CHARGE = 50_000L;
 
-    /** A pole rescans at most this many ticks after a machine appears. */
-    private static final int RESCAN_INTERVAL = 40;
-
     private OilRefineryTests() {
     }
 
@@ -78,12 +67,14 @@ final class OilRefineryTests {
         tests.test("oil_refinery_fluid_face_routes_by_the_held_recipe", 20,
                 OilRefineryTests::fluidFaceRoutesByTheHeldRecipe);
         tests.test("oil_refinery_refuses_another_machines_recipe", 20,
-                OilRefineryTests::refusesAnotherMachinesRecipe);
-        tests.test("oil_refinery_keeps_its_recipe_over_a_reload", 20, OilRefineryTests::keepsItsRecipeOverAReload);
+                helper -> CHASSIS.refusesOtherRecipes(helper, placeWhole(helper), ADVANCED, List.of(PLASTIC, CABLE)));
+        tests.test("oil_refinery_keeps_its_recipe_over_a_reload", 20,
+                helper -> CHASSIS.keepsItsRecipeOverAReload(helper, placeWhole(helper), ADVANCED));
         tests.test("oil_refinery_is_fed_through_a_chamber", 100,
-                helper -> isFedByAPole(helper, ANCHOR.above(3 + PoleTier.VERTICAL_RADIUS), "only a chamber"));
+                helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper),
+                        ANCHOR.above(3 + PoleTier.VERTICAL_RADIUS), "only a chamber"));
         tests.test("oil_refinery_is_counted_once_by_a_pole", 100,
-                helper -> isFedByAPole(helper, ANCHOR.east(2), "several blocks"));
+                helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.east(2), "several blocks"));
         if (ModList.get().isLoaded("researchd")) {
             tests.test("oil_refinery_stalls_on_a_locked_recipe", 200, OilRefineryTests::stallsOnALockedRecipe);
         }
@@ -125,7 +116,7 @@ final class OilRefineryTests {
         feed(helper, machine, 100, 200);
         FluidResource fluid = FluidResource.of(fluid(List.of(HEAVY_OIL, LIGHT_OIL, PETROLEUM_GAS).get(output)));
         int filled = OUTPUT_TANK_SIZE - MADE_PER_CRAFT.get(output) + 1;
-        ((FluidStacksResourceHandler) machine.tank()).set(outputTank(machine, output), fluid, filled);
+        ((FluidStacksResourceHandler) machine.tank()).set(CHASSIS.outputTank(machine, output), fluid, filled);
         machine.energyStorage.set(CHARGE);
         helper.runAfterDelay(TICKS_PER_CRAFT + 1, () -> {
             assertStalled(helper, machine, AssemblingStall.OUTPUT_FULL, 100, 200);
@@ -147,17 +138,14 @@ final class OilRefineryTests {
     private static void stallsOnALockedRecipe(GameTestHelper helper) {
         OilRefineryBlockEntity machine = placeWhole(helper);
         ResearchTeams.placedBy(machine, ResearchTeams.create(helper));
-        hold(helper, machine, BASIC);
-        expectMoved(helper, ANCHOR, "crude", 200, fluidFace(helper, ANCHOR),
+        CHASSIS.hold(helper, machine, BASIC);
+        expectMoved(helper, ANCHOR, "crude", 200, CHASSIS.fluidFace(helper, ANCHOR),
                 (f, tx) -> f.insert(FluidResource.of(fluid(CRUDE)), 200, tx));
         machine.energyStorage.set(CHARGE);
         helper.runAfterDelay(TICKS_PER_CRAFT + 1, () -> {
-            if (machine.stall() != AssemblingStall.LOCKED) {
-                helper.fail("the machine reports " + machine.stall() + ", expected LOCKED", ANCHOR);
-            }
-            if (CHARGE - machine.energyStorage.getAmountAsLong() != 0 || machine.progress.get() != 0
-                    || machine.tank().getAmountAsLong(0) != 200 || !machine.heldRecipe().equals(HeldRecipe.of(BASIC))) {
-                helper.fail("a locked machine drew, progressed, took crude or let go of its recipe", ANCHOR);
+            CHASSIS.assertStalled(helper, machine, AssemblingStall.LOCKED, CHARGE, BASIC);
+            if (machine.tank().getAmountAsLong(0) != 200) {
+                helper.fail("a locked machine took crude", ANCHOR);
             }
             helper.succeed();
         });
@@ -170,18 +158,18 @@ final class OilRefineryTests {
      */
     private static void fluidFaceRoutesByTheHeldRecipe(GameTestHelper helper) {
         OilRefineryBlockEntity machine = placeWhole(helper);
-        hold(helper, machine, ADVANCED);
+        CHASSIS.hold(helper, machine, ADVANCED);
         FluidResource water = FluidResource.of(Fluids.WATER);
         FluidResource crude = FluidResource.of(fluid(CRUDE));
         FluidResource lava = FluidResource.of(Fluids.LAVA);
         List<FluidResource> outputs = List.of(FluidResource.of(fluid(HEAVY_OIL)), FluidResource.of(fluid(LIGHT_OIL)),
                 FluidResource.of(fluid(PETROLEUM_GAS)));
         for (int output = 0; output < outputs.size(); output++) {
-            ((FluidStacksResourceHandler) machine.tank()).set(outputTank(machine, output), outputs.get(output), 90);
+            ((FluidStacksResourceHandler) machine.tank()).set(CHASSIS.outputTank(machine, output), outputs.get(output), 90);
         }
         int step = 0;
         for (BlockPos at : List.of(ANCHOR, ANCHOR.above(3))) {
-            ResourceHandler<FluidResource> face = fluidFace(helper, at);
+            ResourceHandler<FluidResource> face = CHASSIS.fluidFace(helper, at);
             if (face == null) {
                 helper.fail("no fluid face at " + at, at);
                 return;
@@ -207,95 +195,20 @@ final class OilRefineryTests {
         helper.succeed();
     }
 
-    /** Fill Recipe's setter refuses a chemistry or assembling recipe, with a message, and keeps its own. */
-    private static void refusesAnotherMachinesRecipe(GameTestHelper helper) {
-        OilRefineryBlockEntity machine = placeWhole(helper);
-        ListeningPlayer player = new ListeningPlayer(helper);
-        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
-        HoldVerdict advanced = menu.request(player, ADVANCED);
-        if (advanced != HoldVerdict.HELD) {
-            helper.fail("advanced oil processing was answered " + advanced, ANCHOR);
-            return;
-        }
-        for (String other : List.of(PLASTIC, CABLE)) {
-            player.heard.clear();
-            HoldVerdict verdict = menu.request(player, other);
-            if (verdict != HoldVerdict.NOT_THIS_TYPE || !machine.heldRecipe().equals(HeldRecipe.of(ADVANCED))
-                    || !player.heard.equals(List.of(HoldVerdict.NOT_THIS_TYPE.messageKey()))) {
-                helper.fail(other + " was answered " + verdict + " with " + player.heard + " and left "
-                        + machine.heldRecipe(), ANCHOR);
-                return;
-            }
-        }
-        helper.succeed();
-    }
-
-    private static void keepsItsRecipeOverAReload(GameTestHelper helper) {
-        OilRefineryBlockEntity machine = placeWhole(helper);
-        hold(helper, machine, ADVANCED);
-        CompoundTag saved = machine.saveWithFullMetadata(helper.getLevel().registryAccess());
-        BlockEntity loaded = BlockEntity.loadStatic(machine.getBlockPos(), machine.getBlockState(), saved,
-                helper.getLevel().registryAccess());
-        if (!(loaded instanceof OilRefineryBlockEntity reloaded)
-                || !reloaded.heldRecipe().equals(HeldRecipe.of(ADVANCED))) {
-            helper.fail("the refinery held advanced oil processing and reloaded as " + loaded, ANCHOR);
-            return;
-        }
-        reloaded.setLevel(helper.getLevel());
-        if (!reloaded.heldRecipeResolves()) {
-            helper.fail("the reloaded recipe does not resolve against the recipe manager", ANCHOR);
-            return;
-        }
-        helper.succeed();
-    }
-
-    /** A pole reaching {@code reach} counts one machine and fills it. */
-    private static void isFedByAPole(GameTestHelper helper, BlockPos pole, String reach) {
-        OilRefineryBlockEntity machine = placeWhole(helper);
-        helper.startSequence()
-                .thenExecute(() -> {
-                    machine.energyStorage.set(0L);
-                    helper.setBlock(pole, PFBlocks.CREATIVE_POLE.get());
-                })
-                .thenIdle(RESCAN_INTERVAL + 5)
-                .thenExecute(() -> {
-                    int found = helper.getBlockEntity(pole, SupplyAreaPoleBlockEntity.class).machineCount();
-                    if (found != 1) {
-                        helper.fail("a pole reaching " + reach + " counts " + found + " machines", pole);
-                    }
-                    if (machine.energyStorage.getAmountAsLong() <= 0L) {
-                        helper.fail("a pole reaching " + reach + " left the machine unpowered", ANCHOR);
-                    }
-                })
-                .thenSucceed();
-    }
-
-    /** A stall draws no FE, takes no fluid, makes no progress and keeps its recipe. */
+    /** A stall also takes no water or crude. */
     private static void assertStalled(GameTestHelper helper, AssemblingMachineBlockEntity machine,
             AssemblingStall expected, int water, int crude) {
-        if (machine.stall() != expected) {
-            helper.fail("the machine reports " + machine.stall() + ", expected " + expected, ANCHOR);
-        }
-        long spent = CHARGE - machine.energyStorage.getAmountAsLong();
-        if (spent != 0) {
-            helper.fail("a machine stalled on " + expected + " drew " + spent + " FE", ANCHOR);
-        }
-        if (machine.progress.get() != 0) {
-            helper.fail("a machine stalled on " + expected + " made progress " + machine.progress.get(), ANCHOR);
-        }
+        CHASSIS.assertStalled(helper, machine, expected, CHARGE, ADVANCED);
         if (machine.tank().getAmountAsLong(0) != water || machine.tank().getAmountAsLong(1) != crude) {
             helper.fail("a machine stalled on " + expected + " took input: " + machine.tank().getAmountAsLong(0)
                     + " mB of water, " + machine.tank().getAmountAsLong(1) + " of crude", ANCHOR);
-        }
-        if (!machine.heldRecipe().equals(HeldRecipe.of(ADVANCED))) {
-            helper.fail("a machine stalled on " + expected + " let go of its recipe", ANCHOR);
         }
     }
 
     /** Both fluids through the face, so a face refusing either fails here. */
     private static void feed(GameTestHelper helper, AssemblingMachineBlockEntity machine, int water, int crude) {
-        hold(helper, machine, ADVANCED);
-        ResourceHandler<FluidResource> face = fluidFace(helper, ANCHOR);
+        CHASSIS.hold(helper, machine, ADVANCED);
+        ResourceHandler<FluidResource> face = CHASSIS.fluidFace(helper, ANCHOR);
         if (water > 0) {
             expectMoved(helper, ANCHOR, "water", water, face,
                     (f, tx) -> f.insert(FluidResource.of(Fluids.WATER), water, tx));
@@ -303,53 +216,7 @@ final class OilRefineryTests {
         expectMoved(helper, ANCHOR, "crude", crude, face, (f, tx) -> f.insert(FluidResource.of(fluid(CRUDE)), crude, tx));
     }
 
-    private static int outputTank(AssemblingMachineBlockEntity machine, int output) {
-        int seen = 0;
-        for (int index = 0; index < machine.tank().size(); index++) {
-            if (machine.isOutputTank(index) && seen++ == output) {
-                return index;
-            }
-        }
-        throw new IllegalStateException("the Oil Refinery has no output tank " + output);
-    }
-
-    private static void hold(GameTestHelper helper, AssemblingMachineBlockEntity machine, String id) {
-        machine.setHeldRecipe(HeldRecipe.of(id), player(helper));
-        if (!machine.heldRecipeResolves()) {
-            helper.fail(id + " does not resolve on the Oil Refinery, so this proves nothing", ANCHOR);
-        }
-    }
-
-    private interface Move {
-        int apply(ResourceHandler<FluidResource> face, Transaction tx);
-    }
-
-    private static void expectMoved(GameTestHelper helper, BlockPos at, String what, int expected,
-            ResourceHandler<FluidResource> face, Move move) {
-        int moved;
-        try (Transaction tx = Transaction.openRoot()) {
-            moved = move.apply(face, tx);
-            tx.commit();
-        }
-        if (moved != expected) {
-            helper.fail(what + " moved " + moved + " mB, expected " + expected, at);
-        }
-    }
-
-    private static ResourceHandler<FluidResource> fluidFace(GameTestHelper helper, BlockPos at) {
-        return helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, helper.absolutePos(at), null);
-    }
-
     private static OilRefineryBlockEntity placeWhole(GameTestHelper helper) {
-        PFBlocks.OIL_REFINERY_FOOTPRINT.placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), FACING);
-        return (OilRefineryBlockEntity) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));
-    }
-
-    private static Player player(GameTestHelper helper) {
-        return helper.makeMockPlayer(GameType.SURVIVAL);
-    }
-
-    private static Fluid fluid(String id) {
-        return BuiltInRegistries.FLUID.getValue(Identifier.parse(id));
+        return CHASSIS.placeWhole(helper, OilRefineryBlockEntity.class);
     }
 }
