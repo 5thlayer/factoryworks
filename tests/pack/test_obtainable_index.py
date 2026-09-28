@@ -123,12 +123,19 @@ class LootRule(unittest.TestCase):
         self.assertEqual({"item:minecraft:stick"}, self.drops(entry))
 
 
+def key(stack):
+    """An index entry back as the generator's string key."""
+    if isinstance(stack, str):
+        return stack
+    return "item:" + stack["id"] + json.dumps(stack["componentChanges"], sort_keys=True, separators=(",", ":"))
+
+
 class ObtainableIndex(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.generator = load_generator()
         cls.index = json.loads(cls.generator.INDEX.read_text(encoding="utf-8"))
-        cls.added = [entry["stack"] for entry in cls.index["added"]]
+        cls.added = [key(entry["stack"]) for entry in cls.index["added"]]
 
     def run_check(self, script):
         result = subprocess.run([sys.executable, str(script), "--check"],
@@ -160,14 +167,14 @@ class ObtainableIndex(unittest.TestCase):
         for path in (KUBEJS / "data" / PACK / "recipe").rglob("*.json"):
             recipe = json.loads(path.read_text(encoding="utf-8"))
             results = recipe.get("results") or [recipe["result"]]
-            outputs |= {"item:" + result["id"] for result in results}
+            outputs |= {self.generator.stack_key(result) for result in results}
         kit = {"item:" + item for item in re.findall(
             r'new Entry\("([^"]+)"', KIT.read_text(encoding="utf-8"))}
         self.assertTrue(outputs and kit)
         self.assertEqual(set(), (outputs | kit) - set(self.added))
 
     def test_every_listed_stack_is_registered(self):
-        self.assertEqual([], sorted(set(self.added) - registered()))
+        self.assertEqual([], sorted({stack.partition("{")[0] for stack in self.added} - registered()))
 
     def test_the_live_worldgen_drops_what_454_names(self):
         for stack in ("oak_stairs", "birch_stairs", "acacia_stairs", "dirt", "oak_log"):
