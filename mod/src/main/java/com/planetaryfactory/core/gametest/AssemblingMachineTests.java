@@ -1,5 +1,7 @@
 package com.planetaryfactory.core.gametest;
 
+import static com.planetaryfactory.core.gametest.ChassisFixture.expectMoved;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,7 +25,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,13 +36,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import rearth.oritech.util.ColorableMachine.ColorVariant;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 import rearth.oritech.block.base.block.MultiblockMachine;
 
 /**
@@ -62,6 +60,8 @@ import rearth.oritech.block.base.block.MultiblockMachine;
 final class AssemblingMachineTests {
 
     private static final BlockPos ANCHOR = new BlockPos(3, 1, 3);
+    private static final Direction FACING = Direction.NORTH;
+    private static final ChassisFixture CHASSIS = ChassisFixture.assembling(AssemblingTier.ONE, ANCHOR, FACING);
 
     private AssemblingMachineTests() {
     }
@@ -97,7 +97,7 @@ final class AssemblingMachineTests {
                     AssemblingMachineTests::refusesALockedRecipe);
         }
         tests.test("assembling_machine_is_powered_by_a_pole", 100,
-                AssemblingMachineTests::isPoweredByAPole);
+                helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.south(2), "one whole machine"));
         tests.test("assembling_machine_is_found_through_a_hull_block", 100,
                 AssemblingMachineTests::poleReachingOnlyAHullBlockFindsIt);
         tests.test("assembling_machine_filters_inputs_to_its_recipe", 20,
@@ -119,13 +119,12 @@ final class AssemblingMachineTests {
             helper.fail(BOILER + " is not loaded, so the filter has no recipe to filter to", ANCHOR);
             return;
         }
-        BlockPos part = PFBlocks.assemblingFootprint(AssemblingTier.ONE).positions(ANCHOR, FACING).stream()
-                .filter(pos -> !pos.equals(ANCHOR)).findFirst().orElseThrow();
+        BlockPos part = CHASSIS.hullBlock();
         ItemResource furnace = ItemResource.of(item("planetaryfactory:stone_furnace"));
         ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
         ItemResource stone = ItemResource.of(Items.STONE);
         for (BlockPos at : List.of(ANCHOR, part)) {
-            ResourceHandler<ItemResource> face = itemFace(helper, at);
+            ResourceHandler<ItemResource> face = CHASSIS.itemFace(helper, at);
             if (face == null) {
                 helper.fail("no item face at " + at, at);
                 return;
@@ -159,7 +158,7 @@ final class AssemblingMachineTests {
     /** No Held recipe: no slot takes anything, on either overload. */
     private static void withNoRecipeTakesNothing(GameTestHelper helper) {
         place(helper);
-        ResourceHandler<ItemResource> face = itemFace(helper, ANCHOR);
+        ResourceHandler<ItemResource> face = CHASSIS.itemFace(helper, ANCHOR);
         ItemResource plate = ItemResource.of(item("ftbmaterials:iron_plate"));
         expectMoved(helper, ANCHOR, "plate, slot-less, with no recipe", 0, face, (f, tx) -> f.insert(plate, 8, tx));
         for (int slot = 0; slot < AssemblingMachineBlockEntity.INPUTS; slot++) {
@@ -175,7 +174,7 @@ final class AssemblingMachineTests {
         AssemblingMachineBlockEntity machine = place(helper);
         machine.setHeldRecipe(HeldRecipe.of(BOILER), player(helper));
         machine.cycleInputMode();
-        ResourceHandler<ItemResource> face = itemFace(helper, ANCHOR);
+        ResourceHandler<ItemResource> face = CHASSIS.itemFace(helper, ANCHOR);
         ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
         expectMoved(helper, ANCHOR, "fluid pipes into slot 1 after a mode cycle", 8, face,
                 (f, tx) -> f.insert(1, fluidPipe, 8, tx));
@@ -185,28 +184,6 @@ final class AssemblingMachineTests {
             return;
         }
         helper.succeed();
-    }
-
-    /** One transfer through a face, inside the transaction {@link #expectMoved} opens. */
-    private interface Move {
-        int apply(ResourceHandler<ItemResource> face, Transaction tx);
-    }
-
-    /** Runs {@code move} in a committed transaction and fails unless it moved {@code expected}. */
-    private static void expectMoved(GameTestHelper helper, BlockPos at, String what, int expected,
-            ResourceHandler<ItemResource> face, Move move) {
-        int moved;
-        try (Transaction tx = Transaction.openRoot()) {
-            moved = move.apply(face, tx);
-            tx.commit();
-        }
-        if (moved != expected) {
-            helper.fail(what + " moved " + moved + ", expected " + expected, at);
-        }
-    }
-
-    private static ResourceHandler<ItemResource> itemFace(GameTestHelper helper, BlockPos at) {
-        return helper.getLevel().getCapability(Capabilities.Item.BLOCK, helper.absolutePos(at), null);
     }
 
     private static void clearInputs(AssemblingMachineBlockEntity machine) {
@@ -224,50 +201,19 @@ final class AssemblingMachineTests {
     }
 
     /**
-     * A creative pole beside a whole machine -- anchor and three hull blocks, as the item places it
-     * -- counts it once and fills it. Once, not four times: a hull block has no block entity and
-     * answers the anchor's face, and a scan that did not resolve it to the anchor would offer and
-     * draw one machine per block (#328 in-world: first "Machines in area: 0", with no face at all).
-     */
-    private static void isPoweredByAPole(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        BlockPos pole = ANCHOR.south(2);
-        helper.startSequence()
-                .thenExecute(() -> {
-                    machine.energyStorage.set(0L);
-                    helper.setBlock(pole, PFBlocks.CREATIVE_POLE.get());
-                })
-                .thenIdle(RESCAN_INTERVAL + 5)
-                .thenExecute(() -> {
-                    int found = helper.getBlockEntity(pole, SupplyAreaPoleBlockEntity.class).machineCount();
-                    if (found != 1) {
-                        helper.fail("a pole reaching one whole Assembling Machine counts " + found
-                                + " machines", ANCHOR);
-                    }
-                    if (machine.energyStorage.getAmountAsLong() <= 0L) {
-                        helper.fail("a creative pole beside the machine left it unpowered", ANCHOR);
-                    }
-                })
-                .thenSucceed();
-    }
-
-    /**
      * A small pole whose 5x5 reaches a hull block and not the anchor still finds the machine.
      * Which block is the anchor is not visible to a player, so a pole placed against the far side
      * must not miss it.
      */
     private static void poleReachingOnlyAHullBlockFindsIt(GameTestHelper helper) {
         placeWhole(helper);
-        List<BlockPos> blocks = PFBlocks.assemblingFootprint(AssemblingTier.ONE).positions(ANCHOR, FACING);
-        BlockPos part = blocks.stream()
-                .filter(pos -> pos.getY() == ANCHOR.getY() && !pos.equals(ANCHOR))
-                .findFirst().orElseThrow();
+        BlockPos part = CHASSIS.hullBlock();
         BlockPos step = part.subtract(ANCHOR);
         // Two blocks past the hull block: inside a small pole's +-2, and the anchor at 3 is not.
         BlockPos pole = part.offset(step.multiply(2));
         helper.startSequence()
                 .thenExecute(() -> helper.setBlock(pole, PFBlocks.pole(PoleTier.SMALL).get()))
-                .thenIdle(RESCAN_INTERVAL + 5)
+                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5)
                 .thenExecute(() -> {
                     int found = helper.getBlockEntity(pole, SupplyAreaPoleBlockEntity.class).machineCount();
                     if (found != 1) {
@@ -278,15 +224,8 @@ final class AssemblingMachineTests {
                 .thenSucceed();
     }
 
-    /** A pole rescans at most this many ticks after a machine appears (EnergyFaceTests' figure). */
-    private static final int RESCAN_INTERVAL = 40;
-
-    private static final Direction FACING = Direction.NORTH;
-
-    /** The anchor and its three hull blocks, in the states the item places them in. */
     private static AssemblingMachineBlockEntity placeWhole(GameTestHelper helper) {
-        PFBlocks.assemblingFootprint(AssemblingTier.ONE).placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), FACING);
-        return (AssemblingMachineBlockEntity) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));
+        return CHASSIS.placeWhole(helper, AssemblingMachineBlockEntity.class);
     }
 
     /** copper-cable: one copper plate makes two wire in Factorio's 0.5 s. */
@@ -503,25 +442,13 @@ final class AssemblingMachineTests {
         });
     }
 
-    /** A stall draws no FE, takes no input, makes no progress and keeps its recipe. */
+    /** A stall also takes no input. */
     private static void assertStalled(GameTestHelper helper, AssemblingMachineBlockEntity machine,
             AssemblingStall expected, int inputs, String held) {
-        if (machine.stall() != expected) {
-            helper.fail("the machine reports " + machine.stall() + ", expected " + expected, ANCHOR);
-        }
-        long spent = CHARGE - machine.energyStorage.getAmountAsLong();
-        if (spent != 0) {
-            helper.fail("a machine stalled on " + expected + " drew " + spent + " FE", ANCHOR);
-        }
-        if (machine.progress.get() != 0) {
-            helper.fail("a machine stalled on " + expected + " made progress " + machine.progress.get(), ANCHOR);
-        }
+        CHASSIS.assertStalled(helper, machine, expected, CHARGE, held);
         if (machine.inventory.getItem(0).getCount() != inputs) {
             helper.fail("a machine stalled on " + expected + " took input: " + machine.inventory.getItem(0),
                     ANCHOR);
-        }
-        if (!machine.heldRecipe().equals(HeldRecipe.of(held))) {
-            helper.fail("a machine stalled on " + expected + " let go of its recipe", ANCHOR);
         }
     }
 
@@ -531,33 +458,10 @@ final class AssemblingMachineTests {
         return BuiltInRegistries.ITEM.getValue(Identifier.parse(id));
     }
 
-    /**
-     * Saved and loaded through the same tag a chunk save writes. Checked against its defect:
-     * dropping the {@code store} from {@code saveAdditional} turns it red.
-     */
+    /** Checked against its defect: dropping the {@code store} from {@code saveAdditional} turns it red. */
     private static void keepsItsRecipeOverAReload(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = place(helper);
-        String id = someRecipe(machine);
-        machine.setHeldRecipe(HeldRecipe.of(id), player(helper));
-
-        CompoundTag saved = machine.saveWithFullMetadata(helper.getLevel().registryAccess());
-        BlockEntity loaded = BlockEntity.loadStatic(machine.getBlockPos(), machine.getBlockState(), saved,
-                helper.getLevel().registryAccess());
-        if (!(loaded instanceof AssemblingMachineBlockEntity reloaded)) {
-            helper.fail("the saved machine reloaded as " + loaded, ANCHOR);
-            return;
-        }
-        if (!reloaded.heldRecipe().equals(HeldRecipe.of(id))) {
-            helper.fail("the machine held " + id + " and reloaded holding " + reloaded.heldRecipe(), ANCHOR);
-            return;
-        }
-        reloaded.setLevel(helper.getLevel());
-        if (!reloaded.heldRecipeResolves()) {
-            helper.fail("the reloaded machine's " + id + " does not resolve against the recipe manager",
-                    ANCHOR);
-            return;
-        }
-        helper.succeed();
+        CHASSIS.keepsItsRecipeOverAReload(helper, machine, someRecipe(machine));
     }
 
     /**

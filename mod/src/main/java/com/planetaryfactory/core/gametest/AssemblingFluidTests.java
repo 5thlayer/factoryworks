@@ -1,8 +1,9 @@
 package com.planetaryfactory.core.gametest;
 
+import static com.planetaryfactory.core.gametest.ChassisFixture.expectMoved;
+
 import java.util.List;
 
-import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.machine.AssemblingMachineBlockEntity;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.machine.AssemblingStall;
@@ -21,11 +22,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
  * Tiers 2 and 3's input tank (#295, ADR-0075): a fluid recipe crafts from it and stalls without
@@ -40,6 +39,7 @@ final class AssemblingFluidTests {
 
     private static final BlockPos ANCHOR = new BlockPos(3, 1, 3);
     private static final Direction FACING = Direction.NORTH;
+    private static final ChassisFixture TIER_TWO = ChassisFixture.assembling(AssemblingTier.TWO, ANCHOR, FACING);
 
     private static final String CONCRETE = "planetaryfactory:assembling/concrete";
     private static final String CABLE = "planetaryfactory:assembling/copper_cable";
@@ -72,7 +72,7 @@ final class AssemblingFluidTests {
         AssemblingMachineBlockEntity machine = placeWhole(helper, AssemblingTier.TWO);
         helper.startSequence()
                 .thenExecute(() -> {
-                    hold(helper, machine, CONCRETE);
+                    TIER_TWO.hold(helper, machine, CONCRETE);
                     feedConcrete(machine);
                     fill(helper, machine, 150);
                     machine.energyStorage.set(CHARGE);
@@ -101,32 +101,20 @@ final class AssemblingFluidTests {
         AssemblingMachineBlockEntity machine = placeWhole(helper, AssemblingTier.TWO);
         helper.startSequence()
                 .thenExecute(() -> {
-                    hold(helper, machine, CONCRETE);
+                    TIER_TWO.hold(helper, machine, CONCRETE);
                     feedConcrete(machine);
                     fill(helper, machine, 50);
                     machine.energyStorage.set(CHARGE);
                 })
                 .thenIdle(60)
                 .thenExecute(() -> {
-                    if (machine.stall() != AssemblingStall.NO_FLUID) {
-                        helper.fail("a machine short of water reports " + machine.stall(), ANCHOR);
-                    }
-                    long spent = CHARGE - machine.energyStorage.getAmountAsLong();
-                    if (spent != 0) {
-                        helper.fail("a machine short of water drew " + spent + " FE", ANCHOR);
-                    }
-                    if (machine.progress.get() != 0) {
-                        helper.fail("a machine short of water made progress " + machine.progress.get(), ANCHOR);
-                    }
+                    TIER_TWO.assertStalled(helper, machine, AssemblingStall.NO_FLUID, CHARGE, CONCRETE);
                     if (machine.inventory.getItem(0).getCount() != 5 || machine.inventory.getItem(1).getCount() != 1) {
                         helper.fail("a machine short of water took input", ANCHOR);
                     }
                     if (machine.tank().getAmountAsLong(0) != 50) {
                         helper.fail("a machine short of water took water: " + machine.tank().getAmountAsLong(0),
                                 ANCHOR);
-                    }
-                    if (!machine.heldRecipe().equals(HeldRecipe.of(CONCRETE))) {
-                        helper.fail("a machine short of water let go of its recipe", ANCHOR);
                     }
                 })
                 .thenSucceed();
@@ -141,15 +129,15 @@ final class AssemblingFluidTests {
         AssemblingMachineBlockEntity machine = placeWhole(helper, AssemblingTier.TWO);
         FluidResource water = FluidResource.of(Fluids.WATER);
         FluidResource lava = FluidResource.of(Fluids.LAVA);
-        for (BlockPos at : List.of(ANCHOR, hullBlock())) {
-            ResourceHandler<FluidResource> face = fluidFace(helper, at);
+        for (BlockPos at : List.of(ANCHOR, TIER_TWO.hullBlock())) {
+            ResourceHandler<FluidResource> face = TIER_TWO.fluidFace(helper, at);
             if (face == null) {
                 helper.fail("tier 2 has no fluid face at " + at, at);
                 return;
             }
             machine.setHeldRecipe(HeldRecipe.NONE, player(helper));
             expectMoved(helper, at, "water with no recipe held", 0, face, (f, tx) -> f.insert(water, 100, tx));
-            hold(helper, machine, CONCRETE);
+            TIER_TWO.hold(helper, machine, CONCRETE);
             expectMoved(helper, at, "lava with concrete held", 0, face, (f, tx) -> f.insert(lava, 100, tx));
             expectMoved(helper, at, "water with concrete held", 100, face, (f, tx) -> f.insert(water, 100, tx));
             expectMoved(helper, at, "water back out", 0, face, (f, tx) -> f.extract(water, 100, tx));
@@ -165,8 +153,8 @@ final class AssemblingFluidTests {
     /** Tier 1 has no tank, so no pipe finds one, on the anchor or a hull block. */
     private static void tierOneHasNoFluidFace(GameTestHelper helper) {
         placeWhole(helper, AssemblingTier.ONE);
-        for (BlockPos at : List.of(ANCHOR, hullBlock())) {
-            if (fluidFace(helper, at) != null) {
+        for (BlockPos at : List.of(ANCHOR, TIER_TWO.hullBlock())) {
+            if (TIER_TWO.fluidFace(helper, at) != null) {
                 helper.fail("tier 1 answers a fluid face at " + at, at);
                 return;
             }
@@ -188,14 +176,14 @@ final class AssemblingFluidTests {
 
     private static void voidsItsTankOnAChange(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = placeWhole(helper, AssemblingTier.TWO);
-        hold(helper, machine, CONCRETE);
+        TIER_TWO.hold(helper, machine, CONCRETE);
         fill(helper, machine, 300);
-        hold(helper, machine, CONCRETE);
+        TIER_TWO.hold(helper, machine, CONCRETE);
         if (machine.tank().getAmountAsLong(0) != 300) {
             helper.fail("re-picking the recipe already held emptied the tank", ANCHOR);
             return;
         }
-        hold(helper, machine, CABLE);
+        TIER_TWO.hold(helper, machine, CABLE);
         if (machine.tank().getAmountAsLong(0) != 0 || !machine.tank().getResource(0).isEmpty()) {
             helper.fail("a changed recipe left " + machine.tank().getAmountAsLong(0) + " mB in the tank", ANCHOR);
             return;
@@ -206,7 +194,7 @@ final class AssemblingFluidTests {
     /** Saved and loaded through the tag a chunk save writes. */
     private static void keepsItsTankOverAReload(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = placeWhole(helper, AssemblingTier.TWO);
-        hold(helper, machine, CONCRETE);
+        TIER_TWO.hold(helper, machine, CONCRETE);
         fill(helper, machine, 420);
         CompoundTag saved = machine.saveWithFullMetadata(helper.getLevel().registryAccess());
         BlockEntity loaded = BlockEntity.loadStatic(machine.getBlockPos(), machine.getBlockState(), saved,
@@ -228,48 +216,15 @@ final class AssemblingFluidTests {
         machine.inventory.set(1, ItemResource.of(item("minecraft:raw_iron")), 1);
     }
 
-    private static void hold(GameTestHelper helper, AssemblingMachineBlockEntity machine, String id) {
-        machine.setHeldRecipe(HeldRecipe.of(id), player(helper));
-        if (!machine.heldRecipeResolves()) {
-            helper.fail(id + " is not loaded, so this proves nothing", ANCHOR);
-        }
-    }
-
     /** Through the machine's own face, so a fill the face refuses fails here rather than later. */
     private static void fill(GameTestHelper helper, AssemblingMachineBlockEntity machine, int millibuckets) {
-        ResourceHandler<FluidResource> face = fluidFace(helper, ANCHOR);
+        ResourceHandler<FluidResource> face = TIER_TWO.fluidFace(helper, ANCHOR);
         expectMoved(helper, ANCHOR, "filling the tank", millibuckets, face,
                 (f, tx) -> f.insert(FluidResource.of(Fluids.WATER), millibuckets, tx));
     }
 
-    private interface Move {
-        int apply(ResourceHandler<FluidResource> face, Transaction tx);
-    }
-
-    private static void expectMoved(GameTestHelper helper, BlockPos at, String what, int expected,
-            ResourceHandler<FluidResource> face, Move move) {
-        int moved;
-        try (Transaction tx = Transaction.openRoot()) {
-            moved = move.apply(face, tx);
-            tx.commit();
-        }
-        if (moved != expected) {
-            helper.fail(what + " moved " + moved + " mB, expected " + expected, at);
-        }
-    }
-
-    private static ResourceHandler<FluidResource> fluidFace(GameTestHelper helper, BlockPos at) {
-        return helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, helper.absolutePos(at), null);
-    }
-
-    private static BlockPos hullBlock() {
-        return PFBlocks.assemblingFootprint(AssemblingTier.TWO).positions(ANCHOR, FACING).stream()
-                .filter(pos -> !pos.equals(ANCHOR)).findFirst().orElseThrow();
-    }
-
     private static AssemblingMachineBlockEntity placeWhole(GameTestHelper helper, AssemblingTier tier) {
-        PFBlocks.assemblingFootprint(tier).placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), FACING);
-        return (AssemblingMachineBlockEntity) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));
+        return ChassisFixture.assembling(tier, ANCHOR, FACING).placeWhole(helper, AssemblingMachineBlockEntity.class);
     }
 
     private static Player player(GameTestHelper helper) {
