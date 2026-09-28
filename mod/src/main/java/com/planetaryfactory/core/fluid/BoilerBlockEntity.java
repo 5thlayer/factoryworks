@@ -20,6 +20,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -174,6 +175,7 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
                 JOULES_PER_TICK,
                 fuel,
                 this::light);
+        setLit(converted > 0);
         if (converted <= 0) {
             return;
         }
@@ -184,6 +186,13 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
             tx.commit();
         }
         setChanged();
+    }
+
+    private void setLit(boolean lit) {
+        if (getBlockState().getValue(BoilerBlock.LIT) == lit) {
+            return;
+        }
+        level.setBlock(getBlockPos(), getBlockState().setValue(BoilerBlock.LIT, lit), Block.UPDATE_ALL);
     }
 
     /**

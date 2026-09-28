@@ -140,11 +140,13 @@ def write(path, data):
         handle.write("\n")
 
 
-def blockstate(model_name):
+def blockstate(model_name, lit=False):
+    lits = (",lit=false", ",lit=true") if lit else ("",)
     return {
         "variants": {
-            f"facing={facing}": ({"model": model_name} if y == 0 else {"model": model_name, "y": y})
+            f"facing={facing}{suffix}": ({"model": model_name} if y == 0 else {"model": model_name, "y": y})
             for facing, y in FACINGS.items()
+            for suffix in lits
         }
     }
 
@@ -177,7 +179,7 @@ def self_drop_loot_table(block_id):
 def planned_files(rows):
     files = {STEAM_CHAIN_RESOURCE: rows}
     model_name = f"{NAMESPACE}:block/{BOILER_BLOCK}"
-    files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}.json")] = blockstate(model_name)
+    files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}.json")] = blockstate(model_name, lit=True)
     files[os.path.join(ASSETS, "models", "block", f"{BOILER_BLOCK}.json")] = oriented_model()
     files[os.path.join(ASSETS, "models", "item", f"{BOILER_BLOCK}.json")] = {"parent": model_name}
     files[os.path.join(DATA, "loot_table", "blocks", f"{BOILER_BLOCK}.json")] = self_drop_loot_table(

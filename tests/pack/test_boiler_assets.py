@@ -58,9 +58,10 @@ MINECRAFT_TICKS_PER_SECOND = 20
 def check_assets(failures):
     variants = json.loads((ASSETS / f"blockstates/{BLOCK}.json").read_text()).get("variants", {})
     for facing in FACINGS:
-        if f"facing={facing}" not in variants:
-            failures.append(f"the blockstate has no facing={facing} variant -- that facing renders "
-                            "as nothing")
+        for lit in ("false", "true"):
+            if f"facing={facing},lit={lit}" not in variants:
+                failures.append(f"the blockstate has no facing={facing},lit={lit} variant -- that "
+                                "state renders as nothing")
 
     lang = json.loads((ASSETS / "lang/en_us.json").read_text())
     for key in LANG_KEYS:

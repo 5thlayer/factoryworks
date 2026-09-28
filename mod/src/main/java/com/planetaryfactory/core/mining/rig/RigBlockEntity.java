@@ -34,6 +34,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -211,6 +212,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
             // NOTHING BURNS DOWN HERE, which is ADR-0043's rule verbatim: "a rig that is stalled,
             // unpowered or standing on nothing consumes nothing". The push still runs, because a
             // stall clears the moment the faced tile takes what is banked.
+            setLit(false);
             if (cycle.idle(hasOre)) {
                 setChanged();
             }
@@ -228,6 +230,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
 
         duration = RigRate.operationTicks(row.miningSpeed(), target.miningTime());
         boolean powered = pay();
+        setLit(powered && row.burnsFuel());
         if (cycle.tick(powered, duration)) {
             complete(server, target);
         }
@@ -274,6 +277,13 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
             return true;
         }
         return light() && fuel.drawTick(perTick);
+    }
+
+    private void setLit(boolean lit) {
+        if (getBlockState().getValue(RigBlock.LIT) == lit) {
+            return;
+        }
+        level.setBlock(getBlockPos(), getBlockState().setValue(RigBlock.LIT, lit), Block.UPDATE_ALL);
     }
 
     /** Consume one fuel item whole and bank its joules. */

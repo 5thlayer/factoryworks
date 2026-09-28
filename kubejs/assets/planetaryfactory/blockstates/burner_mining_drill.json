@@ -1,17 +1,32 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,lit=false": {
       "model": "planetaryfactory:block/burner_mining_drill"
     },
-    "facing=east": {
+    "facing=north,lit=true": {
+      "model": "planetaryfactory:block/burner_mining_drill"
+    },
+    "facing=east,lit=false": {
       "model": "planetaryfactory:block/burner_mining_drill",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,lit=true": {
+      "model": "planetaryfactory:block/burner_mining_drill",
+      "y": 90
+    },
+    "facing=south,lit=false": {
       "model": "planetaryfactory:block/burner_mining_drill",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,lit=true": {
+      "model": "planetaryfactory:block/burner_mining_drill",
+      "y": 180
+    },
+    "facing=west,lit=false": {
+      "model": "planetaryfactory:block/burner_mining_drill",
+      "y": 270
+    },
+    "facing=west,lit=true": {
       "model": "planetaryfactory:block/burner_mining_drill",
       "y": 270
     }

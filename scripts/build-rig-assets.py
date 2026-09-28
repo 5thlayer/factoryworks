@@ -118,11 +118,13 @@ def drills_from_corpus():
     return rows
 
 
-def blockstate(model_name):
+def blockstate(model_name, lit=False):
+    lits = (",lit=false", ",lit=true") if lit else ("",)
     return {
         "variants": {
-            f"facing={facing}": ({"model": model_name} if y == 0 else {"model": model_name, "y": y})
+            f"facing={facing}{suffix}": ({"model": model_name} if y == 0 else {"model": model_name, "y": y})
             for facing, y in FACINGS.items()
+            for suffix in lits
         }
     }
 
@@ -189,7 +191,7 @@ def planned_files(drills):
     lang = dict(SCREEN_LANG)
     for block_name, rig in RIGS.items():
         model_name = f"{NAMESPACE}:block/{block_name}"
-        files[os.path.join(ASSETS, "blockstates", f"{block_name}.json")] = blockstate(model_name)
+        files[os.path.join(ASSETS, "blockstates", f"{block_name}.json")] = blockstate(model_name, lit=True)
         files[os.path.join(ASSETS, "models", "block", f"{block_name}.json")] = oriented_model(rig)
         files[os.path.join(ASSETS, "models", "item", f"{block_name}.json")] = item_model(model_name)
         files[os.path.join(DATA, "loot_table", "blocks", f"{block_name}.json")] = self_drop_loot_table(
