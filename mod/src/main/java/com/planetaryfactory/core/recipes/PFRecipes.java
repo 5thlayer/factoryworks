@@ -11,8 +11,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * The pack's own recipe types: {@code planetaryfactory:smelting} (#155) and
- * {@code planetaryfactory:assembling} (#279, see {@link AssemblingRecipe}).
+ * The pack's own recipe types: {@code planetaryfactory:smelting} (#155), and the three on
+ * {@link AssemblingRecipe}'s shape, one per {@link AssemblingFamily}.
  *
  * <p>Smelting is the only type the three furnace tiers read. Vanilla's {@code minecraft:smelting} is not
  * read alongside it: ADR-0034's sweep removes every vanilla smelting recipe, so a dual read would
@@ -40,13 +40,33 @@ public final class PFRecipes {
     public static final String ASSEMBLING = "assembling";
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> ASSEMBLING_TYPE =
-            TYPES.register(ASSEMBLING, () -> RecipeType.simple(
-                    Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, ASSEMBLING)));
+            assemblingType(ASSEMBLING);
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AssemblingRecipe>> ASSEMBLING_SERIALIZER =
-            SERIALIZERS.register(ASSEMBLING, AssemblingRecipe::serializer);
+            SERIALIZERS.register(ASSEMBLING, () -> AssemblingRecipe.serializer(AssemblingFamily.ASSEMBLING));
+
+    public static final String CHEMISTRY = "chemistry";
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> CHEMISTRY_TYPE =
+            assemblingType(CHEMISTRY);
+
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AssemblingRecipe>> CHEMISTRY_SERIALIZER =
+            SERIALIZERS.register(CHEMISTRY, () -> AssemblingRecipe.serializer(AssemblingFamily.CHEMISTRY));
+
+    public static final String OIL_PROCESSING = "oil_processing";
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> OIL_PROCESSING_TYPE =
+            assemblingType(OIL_PROCESSING);
+
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AssemblingRecipe>> OIL_PROCESSING_SERIALIZER =
+            SERIALIZERS.register(OIL_PROCESSING, () -> AssemblingRecipe.serializer(AssemblingFamily.OIL_PROCESSING));
 
     private PFRecipes() {
+    }
+
+    private static DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> assemblingType(String path) {
+        return TYPES.register(path, () -> RecipeType.simple(
+                Identifier.fromNamespaceAndPath(PlanetaryFactoryCore.NAMESPACE, path)));
     }
 
     public static void register(IEventBus modBus) {

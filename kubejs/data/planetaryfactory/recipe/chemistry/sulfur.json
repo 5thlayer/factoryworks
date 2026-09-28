@@ -1,0 +1,21 @@
+{
+  "type": "planetaryfactory:chemistry",
+  "category": "chemistry",
+  "fluid_ingredients": [
+    {
+      "ingredient": "minecraft:water",
+      "amount": 30
+    },
+    {
+      "ingredient": "oritech:still_diesel",
+      "amount": 30
+    }
+  ],
+  "results": [
+    {
+      "id": "ftbmaterials:sulfur_dust",
+      "count": 2
+    }
+  ],
+  "time": 20
+}

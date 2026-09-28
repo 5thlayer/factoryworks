@@ -55,6 +55,9 @@
       "stack": "item:ftbmaterials:steel_plate"
     },
     {
+      "stack": "item:ftbmaterials:sulfur_dust"
+    },
+    {
       "stack": "item:ftbmaterials:uranium_raw_ore"
     },
     {
@@ -211,6 +214,9 @@
       "stack": "item:planetaryfactory:barrel"
     },
     {
+      "stack": "item:planetaryfactory:battery"
+    },
+    {
       "stack": "item:planetaryfactory:boiler"
     },
     {
@@ -250,13 +256,25 @@
       "stack": "item:planetaryfactory:offshore_pump"
     },
     {
+      "stack": "item:planetaryfactory:plastic_bar"
+    },
+    {
+      "stack": "item:planetaryfactory:processing_unit"
+    },
+    {
       "stack": "item:planetaryfactory:pumpjack"
     },
     {
       "stack": "item:planetaryfactory:radar"
     },
     {
+      "stack": "item:planetaryfactory:rocket_fuel"
+    },
+    {
       "stack": "item:planetaryfactory:small_electric_pole"
+    },
+    {
+      "stack": "item:planetaryfactory:solid_fuel"
     },
     {
       "stack": "item:planetaryfactory:steam_engine"
@@ -325,7 +343,22 @@
       "stack": "fluid:minecraft:water"
     },
     {
+      "stack": "fluid:oritech:still_biofuel"
+    },
+    {
+      "stack": "fluid:oritech:still_diesel"
+    },
+    {
+      "stack": "fluid:oritech:still_heavy_oil"
+    },
+    {
+      "stack": "fluid:oritech:still_naphtha"
+    },
+    {
       "stack": "fluid:oritech:still_oil"
+    },
+    {
+      "stack": "fluid:oritech:still_sulfuric_acid"
     },
     {
       "stack": "fluid:planetaryfactory:steam"

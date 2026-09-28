@@ -1,0 +1,17 @@
+{
+  "type": "planetaryfactory:chemistry",
+  "category": "chemistry",
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_heavy_oil",
+      "amount": 20
+    }
+  ],
+  "results": [
+    {
+      "id": "planetaryfactory:solid_fuel",
+      "count": 1
+    }
+  ],
+  "time": 20
+}

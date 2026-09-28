@@ -24,13 +24,11 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 /**
  * One Factorio assembling recipe: {@code crafting}, {@code advanced-crafting} or
- * {@code crafting-with-fluid} (#279).
+ * {@code crafting-with-fluid} (#279), or a {@code chemistry} or {@code oil-processing} one on the
+ * same shape under its own type ({@link AssemblingFamily}, ADR-0096).
  *
- * <p>GregTech's {@code gtceu:assembling} left with ADR-0060, and every recipe the converter emitted
- * onto it became a file nothing read. This is the pack's own replacement, and the one type both the
- * Personal Assembler's hand set and the Assembling Machine #277 decides are to read. The Factorio
- * category rides on the recipe, so ADR-0038's hand set stays a predicate over this type rather than
- * a type of its own.
+ * <p>The Factorio category rides on the recipe, so ADR-0038's hand set stays a predicate over the
+ * assembling type rather than a type of its own.
  *
  * <p>Every field is a NeoForge or vanilla codec rather than one of the pack's: a sized item
  * ingredient, a sized fluid ingredient, and item and fluid <em>templates</em> for the results. A
@@ -45,6 +43,7 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
  * the Assembling Machine runs the one recipe it holds by id (#328, ADR-0071).
  */
 public record AssemblingRecipe(
+        AssemblingFamily family,
         String category,
         List<SizedIngredient> ingredients,
         List<SizedFluidIngredient> fluidIngredients,
@@ -86,39 +85,46 @@ public record AssemblingRecipe(
 
     @Override
     public RecipeSerializer<AssemblingRecipe> getSerializer() {
-        return PFRecipes.ASSEMBLING_SERIALIZER.get();
+        return family.serializer();
     }
 
     @Override
     public RecipeType<AssemblingRecipe> getType() {
-        return PFRecipes.ASSEMBLING_TYPE.get();
+        return family.type();
     }
 
-    public static RecipeSerializer<AssemblingRecipe> serializer() {
-        return new RecipeSerializer<>(CODEC, STREAM_CODEC);
+    /** The family is the serializer's, never the JSON's, so all three types read one shape (ADR-0096). */
+    public static RecipeSerializer<AssemblingRecipe> serializer(AssemblingFamily family) {
+        return new RecipeSerializer<>(codec(family), streamCodec(family));
     }
 
-    private static final MapCodec<AssemblingRecipe> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance.group(
-                    Codec.STRING.fieldOf("category").forGetter(AssemblingRecipe::category),
-                    SizedIngredient.NESTED_CODEC.listOf().optionalFieldOf("ingredients", List.of())
-                            .forGetter(AssemblingRecipe::ingredients),
-                    SizedFluidIngredient.CODEC.listOf().optionalFieldOf("fluid_ingredients", List.of())
-                            .forGetter(AssemblingRecipe::fluidIngredients),
-                    ItemStackTemplate.CODEC.listOf().optionalFieldOf("results", List.of())
-                            .forGetter(AssemblingRecipe::results),
-                    FluidStackTemplate.CODEC.listOf().optionalFieldOf("fluid_results", List.of())
-                            .forGetter(AssemblingRecipe::fluidResults),
-                    Codec.INT.fieldOf("time").forGetter(AssemblingRecipe::time))
-                    .apply(instance, AssemblingRecipe::new));
+    private static MapCodec<AssemblingRecipe> codec(AssemblingFamily family) {
+        return RecordCodecBuilder.mapCodec(instance -> instance.group(
+                        Codec.STRING.fieldOf("category").forGetter(AssemblingRecipe::category),
+                        SizedIngredient.NESTED_CODEC.listOf().optionalFieldOf("ingredients", List.of())
+                                .forGetter(AssemblingRecipe::ingredients),
+                        SizedFluidIngredient.CODEC.listOf().optionalFieldOf("fluid_ingredients", List.of())
+                                .forGetter(AssemblingRecipe::fluidIngredients),
+                        ItemStackTemplate.CODEC.listOf().optionalFieldOf("results", List.of())
+                                .forGetter(AssemblingRecipe::results),
+                        FluidStackTemplate.CODEC.listOf().optionalFieldOf("fluid_results", List.of())
+                                .forGetter(AssemblingRecipe::fluidResults),
+                        Codec.INT.fieldOf("time").forGetter(AssemblingRecipe::time))
+                .apply(instance, (category, ingredients, fluidIngredients, results, fluidResults, time) ->
+                        new AssemblingRecipe(family, category, ingredients, fluidIngredients, results,
+                                fluidResults, time)));
+    }
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, AssemblingRecipe> STREAM_CODEC =
-            StreamCodec.composite(
-                    ByteBufCodecs.STRING_UTF8, AssemblingRecipe::category,
-                    SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AssemblingRecipe::ingredients,
-                    SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AssemblingRecipe::fluidIngredients,
-                    ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()), AssemblingRecipe::results,
-                    FluidStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()), AssemblingRecipe::fluidResults,
-                    ByteBufCodecs.VAR_INT, AssemblingRecipe::time,
-                    AssemblingRecipe::new);
+    private static StreamCodec<RegistryFriendlyByteBuf, AssemblingRecipe> streamCodec(AssemblingFamily family) {
+        return StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8, AssemblingRecipe::category,
+                SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AssemblingRecipe::ingredients,
+                SizedFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AssemblingRecipe::fluidIngredients,
+                ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()), AssemblingRecipe::results,
+                FluidStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()), AssemblingRecipe::fluidResults,
+                ByteBufCodecs.VAR_INT, AssemblingRecipe::time,
+                (category, ingredients, fluidIngredients, results, fluidResults, time) ->
+                        new AssemblingRecipe(family, category, ingredients, fluidIngredients, results,
+                                fluidResults, time));
+    }
 }

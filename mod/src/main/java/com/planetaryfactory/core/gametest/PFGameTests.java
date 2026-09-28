@@ -77,6 +77,7 @@ public final class PFGameTests {
         ElectricNetworkTests.register(registrar);
         PoleWireTests.register(registrar);
         HandSetTests.register(registrar);
+        AssemblingFamilyTests.register(registrar);
         PlacementPlanTests.register(registrar);
         PoleColumnCostTests.register(registrar);
         BoilerTests.register(registrar);

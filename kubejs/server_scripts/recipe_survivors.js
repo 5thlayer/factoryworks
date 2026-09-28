@@ -33,7 +33,17 @@ var RECIPE_SURVIVORS = [
   {
     surface: 'assembling',
     type: 'planetaryfactory:assembling',
-    why: "ADR-0026's Assembling Machine 1/2/3, one recipe type across Factorio's three assembling categories. ADR-0031: the corpus authors every recipe it contains, and the converter emits them onto the pack's own type since GregTech's left with ADR-0060 (#279). The Chemical Plant and Oil Refinery have no survivor until #277 registers their types."
+    why: "ADR-0026's Assembling Machine 1/2/3, one recipe type across Factorio's three assembling categories. ADR-0031: the corpus authors every recipe it contains, and the converter emits them onto the pack's own type since GregTech's left with ADR-0060 (#279)."
+  },
+  {
+    surface: 'chemical_plant',
+    type: 'planetaryfactory:chemistry',
+    why: "ADR-0096's Chemical Plant, on a type of its own sharing the assembling shape so it has its own EMI tab. ADR-0031: the corpus authors every recipe on it (#488)."
+  },
+  {
+    surface: 'oil_refinery',
+    type: 'planetaryfactory:oil_processing',
+    why: "ADR-0096's Oil Refinery, on a type of its own sharing the assembling shape so it has its own EMI tab. ADR-0031: the corpus authors every recipe on it (#488)."
   },
   {
     surface: 'personal_assembler',

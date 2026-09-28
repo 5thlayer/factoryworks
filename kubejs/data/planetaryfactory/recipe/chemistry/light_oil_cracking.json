@@ -1,0 +1,21 @@
+{
+  "type": "planetaryfactory:chemistry",
+  "category": "chemistry",
+  "fluid_ingredients": [
+    {
+      "ingredient": "minecraft:water",
+      "amount": 30
+    },
+    {
+      "ingredient": "oritech:still_naphtha",
+      "amount": 30
+    }
+  ],
+  "fluid_results": [
+    {
+      "id": "oritech:still_diesel",
+      "amount": 20
+    }
+  ],
+  "time": 40
+}

@@ -40,14 +40,12 @@
       "note": "Craftworks' Personal Assembler (ADR-0089), which plans only with its own type. No category routes here: `scripts/build-hand-recipes.py` copies every `crafting` recipe of `assembling` onto this type, under `recipe/hand/`."
     },
     "chemical_plant": {
-      "recipe_type": null,
-      "note": "ADR-0025's Chemical Plant. Its `gtceu:chemical_plant` type left with ADR-0060; #277 decided the block is a core subclass (`planetaryfactory:chemical_plant`, ADR-0060); #486 builds it, and with it the recipe type and its JSON shape.",
-      "blocked_by": 486
+      "recipe_type": "planetaryfactory:chemistry",
+      "note": "ADR-0096's Chemical Plant, on `planetaryfactory:chemistry`: the Assembling Machine's recipe record and codec under a type of its own, named after Factorio's category (#488). Its `gtceu:chemical_plant` type left with ADR-0060."
     },
     "oil_refinery": {
-      "recipe_type": null,
-      "note": "ADR-0025's Oil Refinery. Its `gtceu:oil_refinery` type left with ADR-0060; #277 decided the block is a core subclass of `oritech:refinery` (`planetaryfactory:oil_refinery`, ADR-0060); #486 builds it, and with it the recipe type and its JSON shape.",
-      "blocked_by": 486
+      "recipe_type": "planetaryfactory:oil_processing",
+      "note": "ADR-0096's Oil Refinery, on `planetaryfactory:oil_processing`: the Assembling Machine's recipe record and codec under a type of its own, named after Factorio's category (#488). Its `gtceu:oil_refinery` type left with ADR-0060."
     },
     "smelting": {
       "recipe_type": "planetaryfactory:smelting",

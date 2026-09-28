@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.planetaryfactory.core.PFServerConfig;
 import com.planetaryfactory.core.compat.researchd.ResearchdMachineLocks;
+import com.planetaryfactory.core.recipes.AssemblingFamily;
 import com.planetaryfactory.core.recipes.AssemblingRecipe;
 import com.planetaryfactory.core.recipes.PFRecipes;
 
@@ -55,7 +56,8 @@ public final class AssemblingMachineRecipes {
         return held.id().map(Identifier::tryParse)
                 .map(id -> level.getServer().getRecipeManager().recipeMap()
                         .byKey(ResourceKey.create(Registries.RECIPE, id)))
-                .filter(holder -> holder.value() instanceof AssemblingRecipe)
+                .filter(holder -> holder.value() instanceof AssemblingRecipe recipe
+                        && recipe.family() == AssemblingFamily.ASSEMBLING)
                 .map(AssemblingMachineRecipes::cast);
     }
 

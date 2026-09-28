@@ -172,8 +172,10 @@ class ObtainableIndex(unittest.TestCase):
         outputs = set()
         for path in (KUBEJS / "data" / PACK / "recipe").rglob("*.json"):
             recipe = json.loads(path.read_text(encoding="utf-8"))
-            results = recipe.get("results") or [recipe["result"]]
+            fluids = recipe.get("fluid_results", [])
+            results = recipe.get("results") or ([] if fluids else [recipe["result"]])
             outputs |= {self.generator.stack_key(result) for result in results}
+            outputs |= {"fluid:" + fluid["id"] for fluid in fluids}
         kit = {"item:" + item for item in re.findall(
             r'new Entry\("([^"]+)"', KIT.read_text(encoding="utf-8"))}
         self.assertTrue(outputs and kit)
