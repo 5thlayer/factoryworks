@@ -422,12 +422,12 @@ _Avoid_: fuel type, burnable, fuel class
 ### The oil chapter
 
 **Oil Refinery**:
-The pack-registered GregTech multiblock that splits crude. It runs basic and advanced oil processing on Terra, and it is the only machine in the pack that emits three fluids at once (ADR-0025). Coal liquefaction is Space Age in Factorio 2.x and is out of the extracted corpus, so it arrives with Ignus or not at all (#12). Registered as `kubejs:oil_refinery` — the KubeJS multiblock builder keeps its own namespace, unlike every other pack-registered machine — against the recipe type `gtceu:oil_refinery`.
-_Avoid_: distillation tower, refinery multiblock, cracker
+The machine that splits crude: basic and advanced oil processing, two fluids in and three out, the only machine in the pack that emits three fluids at once (ADR-0025). A pack block wearing Oritech's Refinery with both of its chamber layers, placed and broken as one footprint from one item, always with three outputs. It holds a **Held recipe** of its own recipe type, not the **Assembling Machine**'s. Not Oritech's own Refinery, whose chambers add outputs one at a time and which is recipe-removed and hidden. Coal liquefaction is Space Age and arrives with Ignus or not at all (#12).
+_Avoid_: distillation tower, refinery multiblock, cracker, refinery chamber
 
 **Chemical Plant**:
-The pack-registered GregTech single block carrying Factorio's whole chemical-plant recipe list — both crackings, lubricant, plastic, sulfur, solid fuel, sulfuric acid, battery and explosives (ADR-0025). One tier: `gtceu:lv_chemical_plant`, against the recipe type `gtceu:chemical_plant`.
-_Avoid_: chemical reactor, chem plant, reaction chamber
+The machine carrying Factorio's chemical-plant recipe list: both crackings, lubricant, plastic, sulfur, solid fuel, sulfuric acid and battery (ADR-0025). Up to two items and two fluids in, one item and one fluid out. A pack block wearing Oritech's Centrifuge, on the Centrifuge's footprint; it holds a **Held recipe** of its own recipe type, not the **Assembling Machine**'s. Not Oritech's own Centrifuge, which is recipe-removed and hidden.
+_Avoid_: chemical reactor, chem plant, reaction chamber, centrifuge
 
 **Oil well**:
 One block, flush with the terrain, that holds an amount of **Crude Oil** and never runs dry: each draw lowers its amount toward a floor — a fifth of what it started with, or 20% yield, whichever is higher — and its yield, the fraction of full output a Pumpjack gets from it, falls with it. A far well can start well above 100%. A crude-oil field is a scattering of wells, not a filled patch. It is the only crude source anywhere in the pack (#377).
