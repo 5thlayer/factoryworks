@@ -597,6 +597,11 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
                 .orElse(-1);
     }
 
+    /** Output tank {@code result}'s fill in mB. */
+    public long outputTankAmount(int result) {
+        return tank.getAmountAsLong(FLUID_INPUTS + result);
+    }
+
     public boolean isOutputTank(int index) {
         return index >= FLUID_INPUTS && index - FLUID_INPUTS < spec().fluidOutputs().size();
     }
