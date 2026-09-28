@@ -133,7 +133,8 @@ ResearchdEvents.registerResearches((event) => {
       var scale = over.costScale || 1;
       var packs = (tech.unit.ingredients || []).map((pair) => pfId(pair[0]));
       if (packs.length) {
-        research.consumePacks(packs, Math.ceil(tech.unit.count * scale), tech.unit.time);
+        // Factorio's unit time is seconds; Researchd's duration is ticks per unit.
+        research.consumePacks(packs, Math.ceil(tech.unit.count * scale), tech.unit.time * 20);
       }
     }
 
