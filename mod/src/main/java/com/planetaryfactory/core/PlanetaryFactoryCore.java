@@ -135,6 +135,7 @@ public final class PlanetaryFactoryCore {
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,
             // so vanilla's intuitions about what burns are wrong in both directions.
             FuelTooltip.register();
+            com.planetaryfactory.core.start.client.QuestBookTooltip.register();
             com.planetaryfactory.core.radar.client.RadarMapClient.register();
         }
     }
