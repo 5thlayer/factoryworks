@@ -30,6 +30,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
 KIT = MOD / "start/StartingKit.java"
 GRANT = MOD / "start/StartingKitGrant.java"
+BOOK_TOOLTIP = MOD / "start/client/QuestBookTooltip.java"
 LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 SPEC = ROOT / "docs/spec/terra-progression.md"
@@ -173,15 +174,30 @@ class StartingKitIds(unittest.TestCase):
                              % item)
 
 
-class WelcomeKey(unittest.TestCase):
-    """The first-join message has a lang key (#494); a missing one prints the raw key."""
+class WelcomeKeys(unittest.TestCase):
+    """The first join and the book's tooltip name lang keys (#494, #496); a missing one prints the
+    raw key."""
+
+    def setUp(self):
+        self.lang = json.loads(LANG.read_text(encoding="utf-8"))
 
     def test_the_welcome_key_is_in_the_pack_lang(self):
         key = re.search(r'WELCOME_KEY = "([^"]+)"', GRANT.read_text(encoding="utf-8"))
         self.assertIsNotNone(key, "StartingKitGrant.WELCOME_KEY has moved or changed shape")
-        lang = json.loads(LANG.read_text(encoding="utf-8"))
-        self.assertIn(key.group(1), lang,
+        self.assertIn(key.group(1), self.lang,
                       "the first-join message names %s, which the pack's lang lacks" % key.group(1))
+
+    def test_the_book_tooltip_key_is_in_the_pack_lang(self):
+        key = re.search(r'KEY = "([^"]+)"', BOOK_TOOLTIP.read_text(encoding="utf-8"))
+        self.assertIsNotNone(key, "QuestBookTooltip.KEY has moved or changed shape")
+        self.assertIn(key.group(1), self.lang,
+                      "the book's tooltip names %s, which the pack's lang lacks" % key.group(1))
+
+    def test_the_tooltip_is_on_the_book_the_pocket_grants(self):
+        book = re.search(r'BOOK = "([^"]+)"', BOOK_TOOLTIP.read_text(encoding="utf-8"))
+        self.assertIsNotNone(book, "QuestBookTooltip.BOOK has moved or changed shape")
+        self.assertIn(book.group(1), [item for item, _ in entries("POCKET")],
+                      "the tooltip is on %s, which is not the book the pocket grants" % book.group(1))
 
 
 class StartingKitAgainstTheSpec(unittest.TestCase):
