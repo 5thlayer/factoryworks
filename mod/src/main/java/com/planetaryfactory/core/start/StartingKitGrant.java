@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.planetaryfactory.core.PFAttachments;
 import java.util.List;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -36,6 +37,8 @@ import org.slf4j.Logger;
  */
 public final class StartingKitGrant {
     private static final Logger LOGGER = LogUtils.getLogger();
+    /** Wording, lines and colours are all the lang value's, so editing it needs no jar (#494). */
+    static final String WELCOME_KEY = "message.planetaryfactory.welcome";
 
     private StartingKitGrant() {
     }
@@ -57,9 +60,7 @@ public final class StartingKitGrant {
         for (StartingKit.Entry entry : kit) {
             deliver(player, entry);
         }
-        for (Welcome.Line line : Welcome.LINES) {
-            player.sendSystemMessage(line.component());
-        }
+        player.sendSystemMessage(Component.translatable(WELCOME_KEY));
         LOGGER.info("Granted the starting kit to {}: {} stacks", player.getGameProfile().name(),
                 kit.size());
     }
