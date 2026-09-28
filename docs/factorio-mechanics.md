@@ -399,18 +399,18 @@ Sub-rules:
 
 ### Oil processing
 
-- **verdict**: `planned`
+- **verdict**: `shipped`
 - **where**: Terra, Ignus, Gelida
 - **via**: `pack`
 - **owner**: ADR-0096 (the Chemical Plant and Oil Refinery are pack blocks on the Assembling
   Machine's chassis, on Oritech's models) and ADR-0067 (the oil fluids are Oritech's, retinted to
   Factorio's colours)
-- **ticket**: #486 (the Chemical Plant shipped with #490 and the Oil Refinery with #491); #258 before it
+- **ticket**: #486, closed (the Chemical Plant shipped with #490 and the Oil Refinery with #491); #258 before it
 
 Sub-rules:
 
-- **Basic then advanced oil processing** — `planned`.
-- **Cracking to resolve the three-output imbalance** — `planned`. The chapter's whole puzzle.
+- **Basic then advanced oil processing** — `shipped`. Advanced is not gated by research yet (#493).
+- **Cracking to resolve the three-output imbalance** — `shipped`. The chapter's whole puzzle.
 - **Coal liquefaction** — `planned`, on Ignus (`docs/planets.md`).
 
 ### Smelting
