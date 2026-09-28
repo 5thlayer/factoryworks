@@ -22,23 +22,16 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public final class PFNetwork {
 
     /** Bumped when a payload's shape changes; clients on the old shape are refused, not confused. */
-    private static final String VERSION = "9";
+    private static final String VERSION = "10";
 
     private PFNetwork() {
     }
 
     public static void register(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(VERSION);
-        registrar.playToServer(FillRecipePacket.TYPE, FillRecipePacket.STREAM_CODEC, FillRecipePacket::handle);
         registrar.playToServer(HoldRecipePacket.TYPE, HoldRecipePacket.STREAM_CODEC, HoldRecipePacket::handle);
-        registrar.playToServer(PlanCraftPacket.TYPE, PlanCraftPacket.STREAM_CODEC, PlanCraftPacket::handle);
-        registrar.playToServer(PlanCancelPacket.TYPE, PlanCancelPacket.STREAM_CODEC, PlanCancelPacket::handle);
-        registrar.playToClient(PlanUpdatePacket.TYPE, PlanUpdatePacket.STREAM_CODEC, PlanUpdatePacket::handle);
-        registrar.playToClient(QueueSyncPacket.TYPE, QueueSyncPacket.STREAM_CODEC, QueueSyncPacket::handle);
-        registrar.playToClient(HandRecipeSetPacket.TYPE, HandRecipeSetPacket.STREAM_CODEC, HandRecipeSetPacket::handle);
-        // Not the Assembler's: a data pack is server truth, and the fuel table has to reach a
-        // client for an item to say what it is worth (ADR-0047).
-        // Not the Assembler's either: the wires a client draws (ADR-0068).
+        // A data pack is server truth, and the fuel table has to reach a client for an item to say
+        // what it is worth (ADR-0047).
         registrar.playToClient(PoleWiresPacket.TYPE, PoleWiresPacket.STREAM_CODEC, PoleWiresPacket::handle);
         registrar.playToClient(FuelTablePacket.TYPE, FuelTablePacket.STREAM_CODEC, FuelTablePacket::handle);
         registrar.playToClient(RadarChunkPacket.TYPE, RadarChunkPacket.STREAM_CODEC, RadarChunkPacket::handle);

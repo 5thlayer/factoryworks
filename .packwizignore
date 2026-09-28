@@ -50,6 +50,7 @@ mods/*.jar
 # index. Their hash in index.toml is the record of which build is installed, held
 # to data/pack/local-jars.json by scripts/sync-local-jars.py --check.
 !mods/beltworks-*.jar
+!mods/craftworks-*.jar
 !mods/researchd-*.jar
 !mods/Porting-Dead-Libs-*.jar
 

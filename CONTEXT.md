@@ -367,15 +367,15 @@ One unit of mining work against an ore block: it consumes one unit of the block'
 _Avoid_: mining tick, drill cycle, swing
 
 **Personal Assembler**:
-The player's inventory screen, as the player's only hand-crafting surface. It is a surface, not a machine, and has no recipe type of its own: it runs the **Assembling Machine**'s recipes that Factorio marks hand-craftable — first category `crafting`, minus the eleven Factorio withholds (`#88`) — at speed 1, serially (ADR-0029). It **replaces** the crafting grid, which the pack removes (`#90`), and crafts nothing by hand directly: every craft is a **Crafting Plan** (ADR-0038). It is always present: it is taught by the opening, never granted by it (`#100`).
+The player's inventory screen, as the player's only hand-crafting surface. It is Craftworks' mechanic, and Craftworks' glossary defines it (ADR-0089). The pack gives it a copy of each **Assembling Machine** recipe that Factorio marks hand-craftable — first category `crafting`, minus the eleven Factorio withholds (`#88`) — crafted at speed 1, serially (ADR-0029). It **replaces** the crafting grid, and crafts nothing by hand directly: every craft is a **Crafting Plan**. It is always present: it is taught by the opening, never granted by it (`#100`).
 _Avoid_: hand crafter, personal crafter, portable crafter
 
 **Crafting Plan**:
-The resolved, flattened tree of crafts the Personal Assembler produces when an amount is chosen, and the unit in which the player commits and is refunded. It names every intermediate it will make, every ingredient the player lacks and every recipe the team has not researched; it is paid for in full when it starts and is never re-resolved (ADR-0038).
+The resolved, flattened tree of crafts the Personal Assembler produces when an amount is chosen, and the unit in which the player commits and is refunded. It names every intermediate it will make, every ingredient the player lacks and every recipe the team has not researched; it is paid for in full when it starts and is never re-resolved. Craftworks' term (ADR-0089).
 _Avoid_: crafting job, batch, order
 
 **Assembler queue**:
-The serial list of Crafting Plans awaiting execution. One plan runs at a time, and a plan whose finished craft cannot fit in the player's inventory pauses and stops the whole queue rather than dropping anything.
+The serial list of Crafting Plans awaiting execution. One plan runs at a time, and a plan whose finished craft cannot fit in the player's inventory pauses and stops the whole queue rather than dropping anything. Craftworks' term (ADR-0089).
 _Avoid_: crafting queue, backlog
 
 **Missing ingredient**:
@@ -383,7 +383,7 @@ A leaf of a Crafting Plan the player does not have and the Assembler cannot make
 _Avoid_: shortfall, unavailable
 
 **Locked**:
-A recipe inside a Crafting Plan that the team has not researched. The resolver plans only through unlocked recipes, so a locked intermediate stops a plan exactly as a missing ingredient does, for a reason the player fixes with research rather than with mining.
+A recipe inside a Crafting Plan that the team has not researched: Craftworks asks Researchd about the hand copy, which unlocks with its machine recipe (ADR-0089). The resolver plans only through unlocked recipes, so a locked intermediate stops a plan exactly as a missing ingredient does, for a reason the player fixes with research rather than with mining.
 _Avoid_: unavailable recipe, gated
 
 **Assembling Machine**:

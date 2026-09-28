@@ -539,16 +539,14 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: all bodies
-- **via**: `planetaryfactory_core`
-- **owner**: ADR-0038, `docs/gdd.md` §5
-- **ticket**: #99 (upgrade modules), #260 (a Locked recipe needs Researchd; the Assembler plans with
-  nothing Locked until then); #160, #161, #100, #140 closed
+- **via**: `craftworks`
+- **owner**: ADR-0089 and Craftworks' own ADRs, `docs/gdd.md` §5
+- **ticket**: #99 (upgrade modules); #160, #161, #100, #140, #291 closed
 
 The crafting grid is removed (#90) and the Personal Assembler replaces it permanently (#95) — it is
 the player's only hand-crafting surface, not a bootstrap crutch, and every fluid-free `crafting`
-recipe reaches it (#88). The 2x2 inventory grid is removed in fact as of #140, in
-`planetaryfactory_core` rather than by recipe removal, because it is a vanilla menu and no recipe
-removal reaches it (ADR-0034).
+recipe reaches it (#88). Craftworks removes the 2x2 inventory grid, rather than
+a recipe removal, because it is a vanilla menu and no recipe removal reaches it (ADR-0034).
 
 **Chain-crafting is the mechanic, not the timer.** Factorio's wiki names it as what separates the
 hand from an assembling machine: request a recipe whose ingredients you lack and the sub-crafts are

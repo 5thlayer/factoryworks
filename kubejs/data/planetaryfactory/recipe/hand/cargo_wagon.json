@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 20
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 20
+    }
+  ],
+  "result": {
+    "id": "railcraft:cargo_minecart",
+    "count": 1
+  },
+  "time": 20
+}

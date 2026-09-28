@@ -1,0 +1,6 @@
+#What locks a recipe for a player, on top of any hook a mod registers. A recipe is
+#Locked if any listed source says so. Empty (the default) locks nothing.
+#  recipeBook: Locked until the recipe is in the player's recipe book.
+#  researchd:  Locked while Researchd blocks the recipe for the player's team.
+#For example ["researchd"].
+lockSources = ["researchd"]

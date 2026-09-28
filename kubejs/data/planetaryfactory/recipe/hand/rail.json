@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:cobblestone",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_rod",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "minecraft:rail",
+    "count": 2
+  },
+  "time": 10
+}

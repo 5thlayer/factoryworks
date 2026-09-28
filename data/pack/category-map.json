@@ -33,7 +33,11 @@
   "machines": {
     "assembling": {
       "recipe_type": "planetaryfactory:assembling",
-      "note": "ADR-0026's Assembling Machine 1/2/3 and the Personal Assembler's hand set, on the pack's own `planetaryfactory:assembling` (#279). One type across the three Factorio categories, each recipe carrying its `category`, so ADR-0038's hand set stays a predicate over this type rather than a type of its own. Its GregTech type left with ADR-0060; the pack's type is what `RuntimeHandRecipes` reads today, and the Assembling Machine block #258 builds is to read the same type rather than bring its own."
+      "note": "ADR-0026's Assembling Machine 1/2/3 and the Personal Assembler's hand set, on the pack's own `planetaryfactory:assembling` (#279). One type across the three Factorio categories, each recipe carrying its `category`, so the hand set stays a predicate over this type: `scripts/build-hand-recipes.py` copies its `crafting` recipes onto `personal_assembler`'s type (ADR-0089). Its GregTech type left with ADR-0060, and the Assembling Machine block #258 builds is to read the same type rather than bring its own."
+    },
+    "personal_assembler": {
+      "recipe_type": "craftworks:assembling",
+      "note": "Craftworks' Personal Assembler (ADR-0089), which plans only with its own type. No category routes here: `scripts/build-hand-recipes.py` copies every `crafting` recipe of `assembling` onto this type, under `recipe/hand/`."
     },
     "chemical_plant": {
       "recipe_type": null,

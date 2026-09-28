@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 2
+    },
+    {
+      "ingredient": "ftbmaterials:copper_plate",
+      "count": 20
+    },
+    {
+      "ingredient": "planetaryfactory:plastic_bar",
+      "count": 5
+    }
+  ],
+  "result": {
+    "id": "planetaryfactory:low_density_structure",
+    "count": 1
+  },
+  "time": 300
+}

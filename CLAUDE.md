@@ -161,9 +161,8 @@ What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `Electri
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295)
 `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
-(#438). What is here is only what a JVM test cannot reach: that `RuntimeHandRecipes` finds the pack's assembling recipes in
-the server's recipe manager, resolves a tag ingredient to its items and leaves a fluid recipe out
-(forcing the graph empty turns it red); that a pole's
+(#438). What is here is only what a JVM test cannot reach: that Craftworks plans every hand copy the
+server loaded, resolves a tag ingredient to its items and has no copy of a fluid recipe; that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
 transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
 starved one freezes where it stood; that an Electric Mining Drill reached only through its part
@@ -406,50 +405,26 @@ default-deny rule are `FuelBufferTest` and `FuelTableTest` under
 item map or touching `core/smelting/`. Whether a furnace burns a log in a running game is a world
 load. See `docs/testing/fuel-table-check.md`.
 
-### Assembler queue and resolver check
+### Hand recipe check
 
-`mod/src/test/java/com/planetaryfactory/core/assembler/` asserts the Personal Assembler's queue:
-Start takes the whole raw cost at once, a chain runs its steps in order and delivers only what no
-remaining step needs, cancelling refunds the unspent reservation plus the intermediates already made,
-a craft that will not fit pauses the head instead of dropping, and a paused head stops the plans
-behind it. `AssemblerCodecsTest` is the data attachment's round trip, which ADR-0038 asks for by
-name — a codec that drops a field does not crash, it returns a queue that silently emptied over a
-logout. `PlanResolverTest` is the other half: chain-crafting, an intermediate already held being used
-rather than remade, `Missing` against `Locked`, and `all` as the largest count the inventory covers.
-`ItemKeyTest` is the identity itself (ADR-0052): an item is its registry id plus its data component
-patch, encoded as one string, so an empty patch encodes to the bare id and every existing key is
-unchanged, two differently-ordered patches encode identically, and matching is exact string equality
-— a deliberate divergence from `neoforge:components`' subset match, without which the resolver would
-have to compare `ItemStack`s and stop being a unit test. It is what lets Researchd's four science
-packs, which are one item told apart by a component, be four items to the queue.
-`PlanToQueueTest` is the seam between them, and the one neither side can assert alone — a plan the
-resolver calls complete must be one the queue can run to the end, because a step the buffer cannot
-feed throws *after* the reservation was taken. All five are
-`./gradlew :planetaryfactory_core:test` with no game launch: the queue and the resolver name items by
-string and the codec is DataFixerUpper's rather than Minecraft's, which is what keeps them checkable.
+The Personal Assembler is Craftworks, a local jar (ADR-0089), and its rules are tested in its repo.
+It plans only with `craftworks:assembling`, so `scripts/build-hand-recipes.py` writes a copy of every
+`crafting` recipe under `recipe/assembling/` into `recipe/hand/`, whichever script wrote the machine
+recipe, and lists them in `kubejs/server_scripts/hand_recipes.js`. Craftworks locks by
+`lockSources = ["researchd"]` in `config/craftworks-server.toml` and asks Researchd about the copy's
+own id, so `factorio_tech_dsl.js` adds each copy to the research that unlocks its machine recipe.
+`tests/factorio/test_hand_recipes.py` runs the generator's `--check`, holds each copy to its machine
+recipe field by field and asserts the DSL adds the copies. `gametest/HandSetTests` holds that
+Craftworks plans every copy the server loaded. Re-run the generator after any converter run or an
+edit under `recipe/assembling/`.
 
-`tests/factorio/test_science_packs.py` is the emitted half of #222 — that both science pack recipes
-are in the hand set and that every component-bearing output there is one the key format can name.
-Whether the `RecipeGraph` admits them is a running server, and the absence of a refusal line naming
-them is the signal.
-
-`tests/factorio/test_hand_resolver.py` is the corpus half — that the *design* terminates. All 113
-category-`crafting` recipes resolve to plans bottoming out in the 21 known leaves, no item has two
-hand recipes (the resolver picks a route with no cost model), and there are no cycles. It reads
-`data/factorio/recipe.json` and fails the day a regeneration adds a recipe nothing hand-makes.
-
-`CraftButtonsTest` is the Crafting Plan's one rule (#287, ADR-0064): a press queues at once, so a lit
-`+1`, `+5` or `all` is a promise the inventory covers it, and the ceiling is the resolver's
-`largestAffordable` rather than anything the screen counts. `FillRequestTest` is EMI's Fill Recipe on
-the Assembler's screen (#288, ADR-0065): left queues 1, right 5, Shift all, middle opens the plan, and
-a request the ceiling does not cover queues nothing -- five never becomes three -- so the server opens
-the plan instead. `CancelClickTest` is a click on a queue icon on the inventory screen
-(#290, ADR-0066): left cancels 1, right 5, Shift all; a partial cancel re-resolves the rest of the row,
-which `AssemblerQueueTest` asserts keeps its id, place and the craft under way's progress.
-
-Run them after editing anything under `core/assembler/` or after re-extracting the corpus. Whether
-each mouse button reaches the handler on the Assembler's screen, Fill Recipe is unchanged on every
-other screen, and a plan delivers is a world load, not a static check.
+`tests/factorio/test_hand_resolver.py` is the corpus half: all 113 category-`crafting` recipes
+resolve to plans bottoming out in the 21 known leaves, no item has two hand recipes (the resolver
+picks a route with no cost model), and there are no cycles. It reads `data/factorio/recipe.json` and
+fails the day a regeneration adds a recipe nothing hand-makes. `tests/factorio/test_science_packs.py`
+holds that both science pack recipes are in the hand set and that every component-bearing output
+there is one an item key can name. Whether a locked recipe shows Locked on Fill Recipe is a human
+check on delivery.
 
 ### Terra water fixture
 

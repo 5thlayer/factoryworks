@@ -1,6 +1,5 @@
 package com.planetaryfactory.core;
 
-import com.planetaryfactory.core.assembler.CraftingPlanMenu;
 import com.planetaryfactory.core.fluid.BoilerMenu;
 import com.planetaryfactory.core.machine.AssemblingMachineMenu;
 import com.planetaryfactory.core.mining.rig.RigMenu;
@@ -12,23 +11,10 @@ import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
-/**
- * The menus (ADR-0038, ADR-0064, ADR-0065).
- *
- * <p>The Assembler has one of its own. EMI's Fill Recipe keys on the inventory screen (ADR-0066); the Crafting Plan is a
- * dialog the <em>server</em> opens, because a plan is server truth -- it reads the inventory and the
- * team's research, and each press takes the reservation off the back of it.
- *
- * <p>All Java, and this is ADR-0015's split at its sharpest: KubeJS cannot register a {@code
- * MenuType} or a {@code Screen} on 1.21.1 at all (#96).
- */
 public final class PFMenus {
 
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, PlanetaryFactoryCore.NAMESPACE);
-
-    public static final Supplier<MenuType<CraftingPlanMenu>> CRAFTING_PLAN =
-            MENUS.register("assembler_crafting_plan", () -> IMenuTypeExtension.create(CraftingPlanMenu::new));
 
     /**
      * One menu for all three furnace tiers (#155), not one per tier: they differ in whether there

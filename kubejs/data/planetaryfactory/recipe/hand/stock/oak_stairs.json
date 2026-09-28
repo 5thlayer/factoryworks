@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "#minecraft:oak_logs",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "minecraft:oak_stairs",
+    "count": 8
+  },
+  "time": 10
+}

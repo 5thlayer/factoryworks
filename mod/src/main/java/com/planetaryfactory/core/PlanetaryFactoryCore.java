@@ -1,11 +1,8 @@
 package com.planetaryfactory.core;
 
-import com.planetaryfactory.core.assembler.AssemblerTicker;
 import com.planetaryfactory.core.machine.PaintLock;
 import com.planetaryfactory.core.dismantle.PipeFamily;
 import com.planetaryfactory.core.stretch.OritechPipeLegs;
-import com.planetaryfactory.core.assembler.client.AssemblerClient;
-import com.planetaryfactory.core.crafting.client.InventoryGridBlank;
 import com.planetaryfactory.core.felling.TreeFelling;
 import com.planetaryfactory.core.gametest.PFGameTests;
 import com.planetaryfactory.core.fluid.PFFluidTypes;
@@ -105,7 +102,6 @@ public final class PlanetaryFactoryCore {
         // it reloads with the rest rather than being a table compiled into this jar.
         NeoForge.EVENT_BUS.addListener(PFFuel::register);
         NeoForge.EVENT_BUS.addListener(PFFuel::onDatapackSync);
-        // The Personal Assembler's queue runs whether or not its panel is open (ADR-0038).
         // One break gesture draws one unit, and the block stands until it is spent (ADR-0041).
         NeoForge.EVENT_BUS.addListener(OreMining::onBreak);
         // A tree is one entity, so mining its base fells it, and the gesture costs the whole tree's
@@ -113,9 +109,6 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(TreeFelling::onBreakSpeed);
         NeoForge.EVENT_BUS.addListener(TreeFelling::onBreak);
         NeoForge.EVENT_BUS.addListener(TreeFelling::onLogout);
-        NeoForge.EVENT_BUS.addListener(AssemblerTicker::onPlayerTick);
-        NeoForge.EVENT_BUS.addListener(AssemblerTicker::onLogin);
-        NeoForge.EVENT_BUS.addListener(AssemblerTicker::onDatapackSync);
         NeoForge.EVENT_BUS.addListener(PaintLock::onRightClickBlock);
         PipeFamily.register();
         if (ModList.get().isLoaded("oritech")) {
@@ -126,7 +119,6 @@ public final class PlanetaryFactoryCore {
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onChunkSent);
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
-            AssemblerClient.register(modBus);
             FurnaceClient.register(modBus);
             RigClient.register(modBus);
             com.planetaryfactory.core.machine.client.AssemblingMachineClient.register(modBus);
@@ -140,8 +132,6 @@ public final class PlanetaryFactoryCore {
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,
             // so vanilla's intuitions about what burns are wrong in both directions.
             FuelTooltip.register();
-            // The 2x2 grid is gone (#140); what is left of it on the inventory texture goes too.
-            InventoryGridBlank.register();
             com.planetaryfactory.core.radar.client.RadarMapClient.register();
         }
     }

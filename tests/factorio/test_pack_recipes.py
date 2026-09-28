@@ -18,7 +18,7 @@ What fails quietly without it:
   - a recipe landing on a surface `recipe_survivors.js` does not name, so ADR-0034's sweep removes
     it on load with no error.
   - dropping `category: crafting`, which is the entire definition of the Personal
-    Assembler's hand set (`RuntimeHandRecipes`). The recipe survives, is craftable in a machine the
+    Assembler's hand set (`scripts/build-hand-recipes.py`). The recipe survives, is craftable in a machine the
     player cannot build yet, and rung 0 is a dead end.
   - a file under `kubejs/` whose name carries an uppercase letter. KubeJS validates every name it
     scans and rejects one outright -- `Invalid file name: Uppercase 'R' in

@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:copper_plate",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "ftbmaterials:copper_wire",
+    "count": 2
+  },
+  "time": 10
+}

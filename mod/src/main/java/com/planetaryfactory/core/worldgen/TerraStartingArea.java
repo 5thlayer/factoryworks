@@ -313,7 +313,7 @@ public final class TerraStartingArea {
          * {@code save}/{@code load} pair, so the two directions can no longer disagree.
          *
          * <p><b>No unit test, deliberately.</b> `docs/testing/what-to-check.md` wants a codec
-         * round-tripped, and `AssemblerCodecsTest` is the precedent -- but that codec is reachable
+         * round-tripped, and `HeldRecipeTest` is the precedent -- but that codec is reachable
          * on the Minecraft-free test classpath and this one is not: it is nested in a class that
          * loads the structure registry. A single {@code Codec.BOOL} field is also the one shape
          * with nothing to drop. If this ever grows a second field, it moves out to its own

@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_rod",
+      "count": 4
+    },
+    {
+      "ingredient": "ftbmaterials:copper_wire",
+      "count": 4
+    },
+    {
+      "ingredient": "planetaryfactory:electronic_circuit",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "ftbfiltersystem:smart_filter",
+    "count": 1
+  },
+  "time": 10
+}

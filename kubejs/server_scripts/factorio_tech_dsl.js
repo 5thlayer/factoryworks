@@ -18,6 +18,7 @@
 // alphabetically does nothing:
 //   factorio_tech_data.js  priority 20  (generated, defines FACTORIO_TECHS)
 //   factorio_tech_dsl.js   priority 10  (this file, defines fromFactorio)
+//   hand_recipes.js        priority 10  (generated, defines PF_HAND_RECIPES)
 //   researchd.js           priority 0   (the hand-authored declarations)
 // The flush below runs inside registerResearches, which fires long after all three load.
 //
@@ -141,7 +142,7 @@ ResearchdEvents.registerResearches((event) => {
     // into one unlockDimensions(), and the two are joined with and().
     var effects = [];
     if ((over.unlocks || []).length) {
-      effects.push(ResearchEffectHelper.unlockRecipes(over.unlocks));
+      effects.push(ResearchEffectHelper.unlockRecipes(withHandCopies(over.unlocks)));
     }
     if ((over.unlocksDimensions || []).length) {
       // Our planet gating is not Factorio's (ADR-0022), so this is always hand-authored --
@@ -168,3 +169,15 @@ ResearchdEvents.registerResearches((event) => {
     console.warn('  ' + missing.join(', '));
   }
 });
+
+// Craftworks asks Researchd about the hand copy's own id, so a research that unlocks a machine
+// recipe unlocks its copy too (ADR-0089).
+function withHandCopies(unlocks) {
+  var machine = 'planetaryfactory:assembling/';
+  var out = unlocks.slice();
+  unlocks.forEach((id) => {
+    var path = id.indexOf(machine) === 0 ? id.substring(machine.length) : null;
+    if (path !== null && PF_HAND_RECIPES.indexOf(path) >= 0) out.push('planetaryfactory:hand/' + path);
+  });
+  return out;
+}

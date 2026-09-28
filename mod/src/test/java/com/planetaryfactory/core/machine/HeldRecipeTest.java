@@ -12,7 +12,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
- * The Held recipe's round trip (#327), in {@code AssemblerCodecsTest}'s shape.
+ * The Held recipe's round trip (#327).
  *
  * <p>A codec that drops the field does not crash: it decodes to "holds nothing", and every machine
  * in a world silently forgets its recipe over a reload. So the round trip is asserted on the value,

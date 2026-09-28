@@ -19,11 +19,9 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
  * EMI's {@code + Fill Recipe}, pointed at an open Assembling Machine (#330, ADR-0073): it sets the
  * machine's Held recipe and moves no items.
  *
- * <p>{@link EmiRecipeHandler} directly, for {@link PersonalAssemblerEmiHandler}'s reason: a standard
- * handler moves ingredients and greys the button when they are missing, and holding a recipe needs
- * none -- MI's locking branch, where {@code canCraft} asks whether the recipe can be held, not
- * whether the player has the items. Unlike the Assembler's, a press carries no quantity, so
- * {@link FillClick} is not read.
+ * <p>{@link EmiRecipeHandler} directly: a standard handler moves ingredients and greys the button
+ * when they are missing, and holding a recipe needs none -- MI's locking branch, where
+ * {@code canCraft} asks whether the recipe can be held, not whether the player has the items.
  *
  * <p>Every assembling recipe gets the button, locked ones included: whether the machine may hold it
  * is server truth, and the server refuses with a message ({@code AssemblingMachineMenu.request})

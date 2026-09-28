@@ -16,9 +16,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 /**
  * The fuel table, server to client, so an item can say what it is worth as fuel (ADR-0047).
  *
- * <p>Sent on datapack sync -- login and {@code /reload} both -- which is the same moment and the
- * same reason as {@link HandRecipeSetPacket}: the table is derived from the loaded data pack and
- * from nothing else, and a data pack does not reach a client on its own.
+ * <p>Sent on datapack sync -- login and {@code /reload} both: the table is derived from the loaded
+ * data pack and from nothing else, and a data pack does not reach a client on its own.
  *
  * <p>Whole rows rather than a rendered line of text. What a client draws is a client's business,
  * and a category the client cannot see would make {@code FuelTable}'s default-deny rule mean two

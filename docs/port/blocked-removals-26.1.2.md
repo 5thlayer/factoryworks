@@ -41,7 +41,6 @@ them, and none needs redesigning — they are ports, not rewrites.
 | `core/research/client/LockedRecipeNote.java` | The recipe-viewer annotation itself (#75). |
 | `core/compat/emi/LockedRecipeEmiNote.java` | EMI's half of that annotation. |
 | `core/compat/jei/LockedRecipeJeiDecorator.java` | JEI's half. |
-| `core/assembler/RuntimePlanSource.java` | **Restored by #279 without its research half.** It plans over `RuntimeHandRecipes`' graph again; its predicate asking Researchd whether a recipe is blocked is `recipeId -> false` until this ticket puts it back. |
 | `core/mixin/researchd/ResearchdBEPlacementHandlerMixin.java` | A Researchd-internal fix the fork carries. |
 
 **The rules survived.** `RecipeLockLookup`, `MachineLockStatus`, `RecipeResearchIndex` and
@@ -51,17 +50,14 @@ is the testing policy working as intended: the part worth keeping was the part t
 
 ## What a player loses meanwhile
 
-- **No research locks anywhere.** Recipes are not refused, not annotated in EMI or JEI, and no
-  machine says a research is why it is idle. `researchd.js` still declares the tree; nothing reads it.
-- **The Personal Assembler plans with nothing Locked.** #279 gave the hand set the pack's own
-  `planetaryfactory:assembling` type to read and restored `RuntimeHandRecipes` and
-  `RuntimePlanSource`, so plans resolve again; the Locked column stays empty until #260.
+- **No research annotations.** Researchd loads the tree and Craftworks' Personal Assembler asks it
+  what is Locked (ADR-0089), but no recipe is annotated in EMI or JEI and no machine says a research
+  is why it is idle.
 - **No machine chassis**, so none of Terra's Assembling Machines or its Chemical Plant is registered.
 
 ## The order to put it back in
 
-1. **#260** — port the Researchd fork. It unblocks seven files on its own, and six of them are
+1. **#260** — port the Researchd fork. It unblocks six files on its own, and five of them are
    pure ports.
-2. **#262** — the Oritech chassis. `SimpleMachine` waits on what that decides. (`RuntimeHandRecipes`
-   no longer does: #279 restored it on `planetaryfactory:assembling`.)
+2. **#262** — the Oritech chassis. `SimpleMachine` waits on what that decides.
 3. **#251** — the Jade provider, which is where the idle note's job now lives.
