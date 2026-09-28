@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.machine.client;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +20,19 @@ import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPosition
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.neoforged.neoforge.fluids.FluidStack;
+import rearth.oritech.client.renderers.util.RenderHelpers;
+import rearth.oritech.util.ColorHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
@@ -65,9 +73,17 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
     private static final int SLOT_DARK = 0xFF373737;
     private static final int SLOT_LIGHT = 0xFFFFFFFF;
     private static final int BAR = 0xFF5DA05D;
-    private static final int ENERGY = 0xFFD0A030;
-    // One colour for every fluid, the Boiler screen's water: the tooltip names the fluid.
+    // Oritech's energy bar, a 24x96 vertical strip: full at u=0, empty at u=24. Tiled 1:1 in
+    // 24-wide slices so the stripes keep their width on a horizontal bar.
+    private static final Identifier GUI_COMPONENTS =
+            Identifier.fromNamespaceAndPath("oritech", "textures/gui/modular/machine_gui_components.png");
+    private static final int ENERGY_STRIP = 24;
+    private static final int ENERGY_EMPTY_U = 24;
+    private static final int COMPONENTS_WIDTH = 98;
+    private static final int COMPONENTS_HEIGHT = 96;
+    // For a tank whose recipe no longer resolves, so its fluid is unknown.
     private static final int FLUID = 0xFF3B6FE0;
+    private static final int SPRITE_SIZE = 16;
     private static final int TEXT = 0xFF404040;
     private static final int BAR_TEXT = 0xFFFFFFFF;
     private static final int PROBLEM_TEXT = 0xFFA02020;
@@ -161,19 +177,76 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         int energyY = topPos + AssemblingMachineMenu.ENERGY_Y;
         int width = barWidth();
         recess(graphics, energyX, energyY, width, ENERGY_HEIGHT);
-        graphics.fill(energyX, energyY, energyX + Math.round(width * charge()), energyY + ENERGY_HEIGHT, ENERGY);
-        if (hasTank()) {
-            fluidBar(graphics, leftPos + tankX(), energyY, width, menu.tankAmount(), menu.tankCapacity());
-        }
-        if (hasOutputTank()) {
-            fluidBar(graphics, leftPos + outputTankX(), energyY, width, menu.outputAmount(), menu.outputCapacity());
+        drawEnergy(graphics, energyX, energyY, width, Math.round(width * charge()));
+        for (FluidBar bar : fluidBars()) {
+            recess(graphics, bar.x(), bar.y(), bar.width(), bar.height());
+            float fill = bar.capacity() <= 0 ? 0f : Math.min(1f, (float) bar.amount() / bar.capacity());
+            int filled = Math.round(bar.width() * fill);
+            if (bar.fluid().isPresent()) {
+                drawFluid(graphics, bar.fluid().get(), bar.x(), bar.y(), filled, bar.height());
+            } else {
+                graphics.fill(bar.x(), bar.y(), bar.x() + filled, bar.y() + bar.height(), FLUID);
+            }
         }
     }
 
-    private static void fluidBar(GuiGraphicsExtractor graphics, int x, int y, int width, int amount, int capacity) {
-        recess(graphics, x, y, width, ENERGY_HEIGHT);
-        float fill = capacity <= 0 ? 0f : Math.min(1f, (float) amount / capacity);
-        graphics.fill(x, y, x + Math.round(width * fill), y + ENERGY_HEIGHT, FLUID);
+    private static void drawEnergy(GuiGraphicsExtractor graphics, int x, int y, int width, int filled) {
+        energyStrip(graphics, x, y, width, ENERGY_EMPTY_U);
+        if (filled > 0) {
+            graphics.enableScissor(x, y, x + filled, y + ENERGY_HEIGHT);
+            energyStrip(graphics, x, y, width, 0);
+            graphics.disableScissor();
+        }
+    }
+
+    private static void energyStrip(GuiGraphicsExtractor graphics, int x, int y, int width, int u) {
+        for (int tileX = x; tileX < x + width; tileX += ENERGY_STRIP) {
+            int tile = Math.min(ENERGY_STRIP, x + width - tileX);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, GUI_COMPONENTS, tileX, y, u, 0, tile, ENERGY_HEIGHT,
+                    tile, ENERGY_HEIGHT, COMPONENTS_WIDTH, COMPONENTS_HEIGHT);
+        }
+    }
+
+    /** The fluid's own sprite and tint, as Oritech's tanks draw it, so the pack's retint shows (ADR-0067). */
+    private static void drawFluid(GuiGraphicsExtractor graphics, Fluid fluid, int x, int y, int width, int height) {
+        if (width <= 0) {
+            return;
+        }
+        TextureAtlasSprite sprite = RenderHelpers.getFluidSprite(fluid);
+        int tint = ColorHelper.makeOpaque(ColorHelper.getFluidTint(new FluidStack(fluid, 1)));
+        graphics.enableScissor(x, y, x + width, y + height);
+        for (int tileX = x; tileX < x + width; tileX += SPRITE_SIZE) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, tileX, y, SPRITE_SIZE, SPRITE_SIZE, tint);
+        }
+        graphics.disableScissor();
+    }
+
+    /** A tank's bar on the energy row, in screen coordinates, and the fluid the Held recipe puts in it. */
+    public record FluidBar(Optional<Fluid> fluid, int amount, int capacity, int x, int y, int width, int height) {
+        boolean contains(double mouseX, double mouseY) {
+            return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
+        }
+    }
+
+    private List<FluidBar> fluidBars() {
+        int y = topPos + AssemblingMachineMenu.ENERGY_Y;
+        List<FluidBar> bars = new ArrayList<>(2);
+        if (hasTank()) {
+            bars.add(new FluidBar(menu.heldFluid(), menu.tankAmount(), menu.tankCapacity(),
+                    leftPos + tankX(), y, barWidth(), ENERGY_HEIGHT));
+        }
+        if (hasOutputTank()) {
+            bars.add(new FluidBar(menu.outputFluid(), menu.outputAmount(), menu.outputCapacity(),
+                    leftPos + outputTankX(), y, barWidth(), ENERGY_HEIGHT));
+        }
+        return bars;
+    }
+
+    /** The fluid of the bar under the mouse, for EMI's and JEI's recipe and usage keys. */
+    public Optional<FluidBar> fluidBarAt(double mouseX, double mouseY) {
+        return fluidBars().stream()
+                .filter(bar -> bar.fluid().isPresent() && bar.contains(mouseX, mouseY))
+                .findFirst();
     }
 
     private boolean hasTank() {
@@ -229,17 +302,12 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
 
     @Override
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        if (hasTank() && over(mouseX, mouseY, tankX(), AssemblingMachineMenu.ENERGY_Y, barWidth(), ENERGY_HEIGHT)) {
-            graphics.setTooltipForNextFrame(font,
-                    AssemblingStatusText.tank(menu.heldFluid(), menu.tankAmount(), menu.tankCapacity()), mouseX, mouseY);
-            return;
-        }
-        if (hasOutputTank()
-                && over(mouseX, mouseY, outputTankX(), AssemblingMachineMenu.ENERGY_Y, barWidth(), ENERGY_HEIGHT)) {
-            graphics.setTooltipForNextFrame(font,
-                    AssemblingStatusText.tank(menu.outputFluid(), menu.outputAmount(), menu.outputCapacity()),
-                    mouseX, mouseY);
-            return;
+        for (FluidBar bar : fluidBars()) {
+            if (bar.contains(mouseX, mouseY)) {
+                graphics.setTooltipForNextFrame(font,
+                        AssemblingStatusText.tank(bar.fluid(), bar.amount(), bar.capacity()), mouseX, mouseY);
+                return;
+            }
         }
         if (over(mouseX, mouseY, ENERGY_X, AssemblingMachineMenu.ENERGY_Y, barWidth(), ENERGY_HEIGHT)) {
             graphics.setTooltipForNextFrame(font, List.of(
