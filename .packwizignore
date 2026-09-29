@@ -16,6 +16,7 @@ scripts/
 skills-lock.json
 .github/
 .vscode/
+/publish/
 *.md
 .gitignore
 .gitattributes
