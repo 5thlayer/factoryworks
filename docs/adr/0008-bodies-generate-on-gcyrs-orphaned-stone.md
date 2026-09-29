@@ -26,7 +26,7 @@ references to GCyR's, so the shape of the world is ours to tune per body. The de
 noise the copied noise settings reference are still GCyR's, as are the blocks.
 
 Ignus's worldgen layer is a new one, `ignus_rock`, registered from KubeJS startup and scoped to
-`planetaryfactory:vulcanus`. GCyR's own `venus` layer still exists and is scoped to `gcyr:venus`;
+`factoryworks:vulcanus`. GCyR's own `venus` layer still exists and is scoped to `gcyr:venus`;
 reusing it would tie four bodies to a dimension key this pack does not offer as a planet.
 
 ## Considered Options

@@ -9,11 +9,11 @@
 // point is to SEE a 64-stack split across rungs, and identical icons would hide exactly that.
 StartupEvents.registry('item', (event) => {
   const stage = (id, name, texture) =>
-    event.create(`planetaryfactory:${id}`).displayName(name).texture(texture);
+    event.create(`factoryworks:${id}`).displayName(name).texture(texture);
 
-  stage('decaytest_fresh', 'Decay Test (Fresh)', 'planetaryfactory:item/yumako');
-  stage('decaytest_ripe', 'Decay Test (Ripe)', 'planetaryfactory:item/jellynut');
-  stage('decaytest_stale', 'Decay Test (Stale)', 'planetaryfactory:item/iron_bacteria');
-  stage('decaytest_spoiling', 'Decay Test (Spoiling)', 'planetaryfactory:item/copper_bacteria');
+  stage('decaytest_fresh', 'Decay Test (Fresh)', 'factoryworks:item/yumako');
+  stage('decaytest_ripe', 'Decay Test (Ripe)', 'factoryworks:item/jellynut');
+  stage('decaytest_stale', 'Decay Test (Stale)', 'factoryworks:item/iron_bacteria');
+  stage('decaytest_spoiling', 'Decay Test (Spoiling)', 'factoryworks:item/copper_bacteria');
   stage('decaytest_spoilage', 'Decay Test Spoilage', 'minecraft:item/rotten_flesh');
 });

@@ -3,7 +3,7 @@
 
 Joins `data/factorio/machine.json`'s machine and pole rows onto `data/pack/item-map.json` and
 writes `{pack block id: group}` to
-`mod/src/main/resources/planetaryfactory_core/placement/replace_groups.json`. A row whose item-map
+`mod/src/main/resources/factoryworks_core/placement/replace_groups.json`. A row whose item-map
 entry is `undecided`, `not_emitted` or `blocked_by` a ticket is a recorded skip, printed with its
 reason, as the recipe converter does.
 
@@ -20,7 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MACHINE_CORPUS = ROOT / "data" / "factorio" / "machine.json"
 ITEM_MAP = ROOT / "data" / "pack" / "item-map.json"
-RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/placement/replace_groups.json"
+RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/placement/replace_groups.json"
 
 
 def groups():
@@ -42,7 +42,7 @@ def groups():
             skipped.append(f"{name}: blocked by #{mapped['blocked_by']}")
         elif "target" not in mapped:
             sys.exit(f"{name}'s row in {ITEM_MAP} has no target, status or blocked_by")
-        elif not mapped["target"].startswith("planetaryfactory:"):
+        elif not mapped["target"].startswith("factoryworks:"):
             skipped.append(f"{name}: {mapped['target']} is not the pack's block")
         else:
             out[mapped["target"]] = group

@@ -23,7 +23,7 @@ This ADR adopts both hypotheses and the version change they make possible.
 | machines, the energy layer, fluid logistics | **Oritech**, the one third-party tech mod |
 | trains | **Railcraft Reborn** |
 | belts, loaders and the splitter | **SimpleBelts, forked by the pack**, which makes it the pack's fourth fork |
-| everything no mod carries at Factorio's numbers | `planetaryfactory_core` |
+| everything no mod carries at Factorio's numbers | `factoryworks_core` |
 
 **Leaving:** Create, Create: Power Grid, Modern Industrialization and GCyR. GregTech was already
 leaving under ADR-0056.
@@ -55,7 +55,7 @@ Architectury plugin, a Configured config provider, EMI's Oritech recipe defaults
   Upstream Researchd is still on 1.21.1, and the pack's fork was never submitted upstream, so the
   pack does the port.
 - **Respoiled** upstream has a `multi/26.1` branch, which is a reference for porting the Decay fork.
-- **`planetaryfactory_core`** requires `gtceu` and `researchd`. The first leaves under ADR-0056.
+- **`factoryworks_core`** requires `gtceu` and `researchd`. The first leaves under ADR-0056.
 
 ## Why Oritech, and not Modern Industrialization
 
@@ -218,7 +218,7 @@ are re-derived, not carried over.
   **Energy storage is the core's accumulator**, at Factorio's 5 MJ and 300 kW, which is 50,000 FE
   at 150 FE/t. Oritech's smallest store is twenty times that and would retire the puzzle.
 - **Machines are core subclasses of Oritech's.** An Oritech machine with a Factorio counterpart
-  becomes a `planetaryfactory_core` subclass that reuses Oritech's model. Assemblers, chemical
+  becomes a `factoryworks_core` subclass that reuses Oritech's model. Assemblers, chemical
   plants and refineries hold a **player-set recipe**: set once, inputs filtered to it, no lookup.
   Furnaces keep Oritech's first match, which is Factorio's own split. Oritech recipes that conflict
   with the corpus are reauthored. Every Oritech machine with no Factorio row is recipe-removed —

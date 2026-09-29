@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Write the lang key of every emitted chassis recipe, as Factorio names it (#490).
 
-A recipe's key is `recipe.planetaryfactory.<type>.<name>`, for its id
-`planetaryfactory:<type>/<name>`. Its value is `data/factorio/recipe_name.json`'s entry for the
+A recipe's key is `recipe.factoryworks.<type>.<name>`, for its id
+`factoryworks:<type>/<name>`. Its value is `data/factorio/recipe_name.json`'s entry for the
 Factorio recipe the file was converted from, or `%s` where there is none: the game fills that with
 the main product's name, as Factorio does. Every recipe has a key so a server can send the name
 without knowing which recipes have one.
 
-The keys live in `kubejs/assets/planetaryfactory/lang/en_us.json` beside hand-written ones, so the
-script owns only the `recipe.planetaryfactory.` prefix: it drops every key under it and appends the
+The keys live in `kubejs/assets/factoryworks/lang/en_us.json` beside hand-written ones, so the
+script owns only the `recipe.factoryworks.` prefix: it drops every key under it and appends the
 current set, leaving the rest of the file as it was.
 
 Usage:
@@ -24,10 +24,10 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 NAMES = REPO / "data/factorio/recipe_name.json"
-RECIPES = REPO / "kubejs/data/planetaryfactory/recipe"
-LANG = REPO / "kubejs/assets/planetaryfactory/lang/en_us.json"
+RECIPES = REPO / "kubejs/data/factoryworks/recipe"
+LANG = REPO / "kubejs/assets/factoryworks/lang/en_us.json"
 TYPES = ("assembling", "chemistry", "oil_processing")
-PREFIX = "recipe.planetaryfactory."
+PREFIX = "recipe.factoryworks."
 
 
 def keys():

@@ -99,7 +99,7 @@ randomized layout and patch sizes. Two things are settled here.
 
 ~~**The materials: iron, copper, zinc, tin and coal.**~~ The set is chosen to bootstrap the three things
 the opening needs — brass for Create, bronze for steam, and an LV miner — and it maps onto veins
-Terra already registers: `gtceu:iron`, `gtceu:copper`, `planetaryfactory:sphalerite`,
+Terra already registers: `gtceu:iron`, `gtceu:copper`, `factoryworks:sphalerite`,
 `gtceu:cassiterite`, `gtceu:coal`. Nothing new is registered for it.
 
 This membership is a **starting configuration, not an invariant** — it needs playtest. What ADR-0019
@@ -109,7 +109,7 @@ are currently outside it, which makes everything past bronze gated on prospectin
 that gate lands wrong, the set moves.
 
 > **Amended by #176 — this paragraph is false, and was never marked superseded.** The shipped
-> `kubejs/data/planetaryfactory/structure/terra_start_{iron,copper,coal}_*.nbt` templates carry literal
+> `kubejs/data/factoryworks/structure/terra_start_{iron,copper,coal}_*.nbt` templates carry literal
 > `gtceu:iron_ore`, `gtceu:copper_ore` and `gtceu:coal_ore` blocks. `scripts/build-terra-start.py` gives the
 > reason: a vein cannot be spawn-anchored. The consequence this paragraph predicted is real and accepted — the
 > starting fields have no map readout and are read with Jade instead.
@@ -145,7 +145,7 @@ debug command; what players get is a manual "Mark as Depleted" button on the map
 
 > **Unbuilt as of #176.** `grep -rn 'GeneratedVein\|depleted' mod/src/main/java` returns nothing.
 
-So `planetaryfactory_core` **flips the flag automatically when a GregTech Miner exhausts its working
+So `factoryworks_core` **flips the flag automatically when a GregTech Miner exhausts its working
 area**. The miner that drained the vein is the machine that knows, it has the information for free,
 and it is already the outfield verb ADR-0019 chose. The flag is set by an *actual failure to find
 ore* — never by a parallel counter — which is the same honesty the whole design rests on: the map
@@ -216,7 +216,7 @@ safe. Raise it and it stops being a consolation and starts being a reason to sta
 
 ## Consequences
 
-- **`planetaryfactory_core` gains a miner-side depletion hook** — the automatic `depleted` flip. Per
+- **`factoryworks_core` gains a miner-side depletion hook** — the automatic `depleted` flip. Per
   ADR-0015 this is mechanism and belongs in the mod, not in KubeJS.
 - **The starting patches need spawn-pinned vein placement**, which is a structure that anchors vein
   generation rather than one that places ore. This is new mechanism and it is the build's problem,

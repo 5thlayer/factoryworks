@@ -6,14 +6,14 @@ item, a `#`-prefixed one for a tag -- where 1.21.1 took an object, `{"item": "..
 `{"tag": "..."}`. The converter kept writing the old shape through the port, and the result is not
 a crash:
 
-    [Worker-Main-3/ERROR]: Couldn't parse data file 'planetaryfactory:stone_brick':
+    [Worker-Main-3/ERROR]: Couldn't parse data file 'factoryworks:stone_brick':
       No key type in MapLike[{"item":"minecraft:cobblestone"}]
 
 One ERROR line during datapack load, at the point nobody is watching, and the recipe is then simply
 absent from the manager. In front of a player that is a furnace that takes the item, has power, and
 never smelts -- the reading that cost #266's in-world check an evening.
 
-WHAT IT CHECKS. Every emitted `planetaryfactory:smelting` file: the ingredient is a string, a tag
+WHAT IT CHECKS. Every emitted `factoryworks:smelting` file: the ingredient is a string, a tag
 is `#`-prefixed, the result is still an object with an id, and `count` survives -- the count is the
 whole reason the pack registers a recipe type of its own (#155, ADR-0046), and a shape change is
 exactly where it would be dropped without anything failing.
@@ -33,8 +33,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
-PACK_SMELTING = "planetaryfactory:smelting"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
+PACK_SMELTING = "factoryworks:smelting"
 
 failures = []
 
@@ -45,7 +45,7 @@ def check(condition, message):
 
 
 def main():
-    check(EMITTED.is_dir(), "kubejs/data/planetaryfactory/recipe/ does not exist")
+    check(EMITTED.is_dir(), "kubejs/data/factoryworks/recipe/ does not exist")
     if not EMITTED.is_dir():
         return report(0)
 

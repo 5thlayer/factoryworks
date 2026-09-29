@@ -1,6 +1,6 @@
 # Manufactio: a Factorio-inspired 1.12.2 pack, compared
 
-Researched 2026-09-27 for a comparison with PlanetaryFactory. Where a claim comes from inside the
+Researched 2026-09-27 for a comparison with FactoryWorks. Where a claim comes from inside the
 modpack zip, the citation is a path inside `Manufactio-1.35.zip` (CurseForge file 3582169, downloaded
 from `https://mediafilez.forgecdn.net/files/3582/169/Manufactio-1.35.zip`). The pack's overrides sit
 under `overrides/`, so `overrides/scripts/research.zs` is the [CraftTweaker](https://www.curseforge.com/minecraft/mc-mods/crafttweaker) script of that name. Our

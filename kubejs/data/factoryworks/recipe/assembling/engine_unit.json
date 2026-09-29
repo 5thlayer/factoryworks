@@ -1,0 +1,25 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "advanced-crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 1
+    },
+    {
+      "ingredient": "oritech:fluid_pipe",
+      "count": 2
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:engine_unit",
+      "count": 1
+    }
+  ],
+  "time": 200
+}

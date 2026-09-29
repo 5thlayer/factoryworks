@@ -1,0 +1,17 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:cobblestone",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:stone_stairs",
+      "count": 8
+    }
+  ],
+  "time": 10
+}

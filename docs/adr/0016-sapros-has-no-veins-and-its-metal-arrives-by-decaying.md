@@ -36,7 +36,7 @@ correctly. What consumes them is #17's.
 
 ## Sapros still has a worldgen layer
 
-`sapros_rock` matches `gcyr:mercury_rock` and is scoped to `planetaryfactory:gleba`, and it
+`sapros_rock` matches `gcyr:mercury_rock` and is scoped to `factoryworks:gleba`, and it
 places nothing, because nothing references it. Same reasoning as Electro's `electro_rock`: the
 layer is what gives the body a tab in GregTech's prospecting tooling, and a player who prospects
 Sapros and is told there are no veins has learned the design, where a player told nothing at all
@@ -68,7 +68,7 @@ simply never spends it.
 ## Consequences
 
 Between this ticket and #17, Sapros is a body a player can farm on and cannot smelt on. Anyone
-reading `kubejs/data/planetaryfactory/gtceu/` and finding no Sapros files should find this ADR
+reading `kubejs/data/factoryworks/gtceu/` and finding no Sapros files should find this ADR
 before they conclude something was forgotten. The fixture's three empty objects — `ore_veins`,
 `bedrock_ores`, `bedrock_fluids` — are the executable half of that claim: each makes the check
-walk the entire loaded registry and fail if anything at all reaches `planetaryfactory:gleba`.
+walk the entire loaded registry and fail if anything at all reaches `factoryworks:gleba`.

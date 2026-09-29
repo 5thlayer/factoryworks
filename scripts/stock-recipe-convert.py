@@ -3,7 +3,7 @@
 
 Reads each recipe `data/pack/stock-admissions.json` admits out of the installed jar that ships it
 (a mod jar, or the client jar for vanilla) and writes it under
-`kubejs/data/planetaryfactory/recipe/assembling/stock/`. Nothing is decided here: which recipes are
+`kubejs/data/factoryworks/recipe/assembling/stock/`. Nothing is decided here: which recipes are
 kept is the admissions file, and what each ingredient becomes is `data/pack/stock-substitutions.json`.
 An admission with a `rewrite` takes its ingredients and yield from that row instead of the jar's
 (#444); only its output is read from the jar, and each ingredient must be a `keep` row. An
@@ -27,8 +27,8 @@ CLIENT_JAR = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
 ADMISSIONS = ROOT / "data/pack/stock-admissions.json"
 SUBSTITUTIONS = ROOT / "data/pack/stock-substitutions.json"
 # `factorio-recipe-convert.py` lists this subtree in FOREIGN_SUBTREES and leaves it alone.
-OUT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe/assembling/stock"
-SMELT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe/smelting/stock"
+OUT_DIR = ROOT / "kubejs/data/factoryworks/recipe/assembling/stock"
+SMELT_DIR = ROOT / "kubejs/data/factoryworks/recipe/smelting/stock"
 
 CATEGORY_OF_SOURCE = {
     "minecraft:crafting_shaped": "crafting",
@@ -109,7 +109,7 @@ def convert(recipes, admit, subs, problems):
         if stem in emitted:
             problems.append("two admitted recipes are both named %s" % stem)
         emitted[stem] = {
-            "type": "planetaryfactory:assembling",
+            "type": "factoryworks:assembling",
             "category": category,
             "ingredients": [{"ingredient": item, "count": count} for item, count in merged.items()],
             "results": [{"id": recipe["result"]["id"], "count": yields}],
@@ -137,7 +137,7 @@ def author(rows, keep, problems):
         stem = output.split(":", 1)[1]
         if row.get("on") == "assembling" and row.get("category"):
             emitted[(OUT_DIR, stem)] = {
-                "type": "planetaryfactory:assembling",
+                "type": "factoryworks:assembling",
                 "category": row["category"],
                 "ingredients": [{"ingredient": item, "count": n} for item, n in ingredients.items()],
                 "results": [{"id": output, "count": row["count"]}],
@@ -146,7 +146,7 @@ def author(rows, keep, problems):
         elif row.get("on") == "smelting" and len(ingredients) == 1:
             (item, n), = ingredients.items()
             emitted[(SMELT_DIR, stem)] = {
-                "type": "planetaryfactory:smelting",
+                "type": "factoryworks:smelting",
                 "ingredient": item,
                 "count": n,
                 "result": {"id": output, "count": row["count"]},

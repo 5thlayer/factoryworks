@@ -62,9 +62,9 @@ Two jars are built rather than downloaded, and neither exists on a public index.
 | Jar | How it is tracked |
 | --- | --- |
 | `beltworks` local jar (`5thlayer/beltworks`) | pinned in `data/pack/local-jars.json`, installed from `~/.m2`; unmanaged entry in `index.toml` — path plus sha256, no metafile |
-| `planetaryfactory_core` | **not indexed at all** |
+| `factoryworks_core` | **not indexed at all** |
 
-`planetaryfactory_core` is excluded in `.packwizignore`. It is rebuilt into `mods/` by
+`factoryworks_core` is excluded in `.packwizignore`. It is rebuilt into `mods/` by
 `installToPack` on every `./gradlew build`, Gradle jars are not byte-reproducible, and its source is
 fully tracked in `mod/` — so indexing it would dirty the manifest on every build while recording
 nothing git does not already have.

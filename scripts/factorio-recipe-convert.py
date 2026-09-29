@@ -45,7 +45,7 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT_DIR = ROOT / "kubejs/data/planetaryfactory/recipe"
+OUT_DIR = ROOT / "kubejs/data/factoryworks/recipe"
 
 # The subtrees of OUT_DIR this converter does NOT own. This converter wipes what it owns before
 # writing, so without this exclusion a run would delete them, and `--check` would report them as
@@ -72,8 +72,8 @@ def is_ours(path):
 # recipe type itself, and the ticket that registers one that does not exist yet, are read from the
 # map rather than kept in a table of this script's own.
 #
-# `pack:smelting` is the pack's three furnace tiers (#155) -- `planetaryfactory_core` blocks
-# reading `planetaryfactory:smelting`, the mod's own type, and reading nothing else. The type
+# `pack:smelting` is the pack's three furnace tiers (#155) -- `factoryworks_core` blocks
+# reading `factoryworks:smelting`, the mod's own type, and reading nothing else. The type
 # carries a count on the ingredient, which is what lets the m:n smelts be expressed at all; every
 # category-`smelting` recipe in the corpus emits onto it.
 MACHINE_OF_PROCESS = {"pack:smelting": "smelting"}
@@ -86,7 +86,7 @@ MACHINE_OF_PROCESS = {"pack:smelting": "smelting"}
 # The vanilla type is not read alongside it. ADR-0034's sweep removes every vanilla smelting
 # recipe, so a dual read would have no live consumer -- and a recipe on it would carry vanilla's
 # cook time and get no tier scaling.
-PACK_SMELTING = "planetaryfactory:smelting"
+PACK_SMELTING = "factoryworks:smelting"
 
 # Factorio's `crafting` / `advanced-crafting` / `crafting-with-fluid` all collapse to one
 # machine, and the Personal Assembler needs the distinction back: it is a filtered view of the
@@ -97,12 +97,12 @@ PACK_SMELTING = "planetaryfactory:smelting"
 SOURCE_CATEGORY_KEY = "category"
 
 # The pack's assembling type (#279). GregTech's `gtceu:assembling` left with ADR-0060, and every
-# recipe on it was a file nothing read. Its codec is `AssemblingRecipe` in `planetaryfactory_core`.
-PACK_ASSEMBLING = "planetaryfactory:assembling"
+# recipe on it was a file nothing read. Its codec is `AssemblingRecipe` in `factoryworks_core`.
+PACK_ASSEMBLING = "factoryworks:assembling"
 
 # The types registered on `AssemblingRecipe`'s record and codec, so one emitter shapes all three
 # (ADR-0096).
-ASSEMBLING_SHAPED = (PACK_ASSEMBLING, "planetaryfactory:chemistry", "planetaryfactory:oil_processing")
+ASSEMBLING_SHAPED = (PACK_ASSEMBLING, "factoryworks:chemistry", "factoryworks:oil_processing")
 
 
 def load(path):
@@ -210,7 +210,7 @@ def emitted_path(recipe_type, name):
     #87 made this a rule rather than a habit: GregTech re-registered every GTRecipe under its type's
     path, so a file anywhere else loaded twice. The pack's own type is not re-registered by
     anything, so the directory is no longer load-bearing for duplication -- it is kept because
-    `researchd.js` unlocks `planetaryfactory:assembling/<name>` and the foreign subtrees sit inside
+    `researchd.js` unlocks `factoryworks:assembling/<name>` and the foreign subtrees sit inside
     it.
     """
     return "%s/%s" % (recipe_type.split(":", 1)[1], name.replace("-", "_"))
@@ -252,7 +252,7 @@ def main():
     awaiting = {}
 
     def await_(name, path, tickets, recipe):
-        awaiting["planetaryfactory:%s/%s" % (path, name.replace("-", "_"))] = {
+        awaiting["factoryworks:%s/%s" % (path, name.replace("-", "_"))] = {
             "tickets": sorted(tickets),
             "results": sorted(items[e["name"]]["target"] for e in recipe["results"]
                               if "target" in items.get(e["name"], {})),
@@ -305,7 +305,7 @@ def main():
         if blocked:
             continue
         # A `blocked_by` row has a target the game cannot load yet: a first-party item that
-        # arrives with a `planetaryfactory_core` ticket, or a borrowed one whose mod is not on
+        # arrives with a `factoryworks_core` ticket, or a borrowed one whose mod is not on
         # 26.1.2 (#277, #260). Emitting a
         # recipe against it produces JSON that names an item nothing registers, and KubeJS fails
         # to read the recipe at WORLD LOAD rather than at conversion time: an error in a log,

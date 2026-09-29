@@ -1,6 +1,6 @@
 # Manufactio - Casual Mode: the original without pollution or siege, compared
 
-Researched 2026-09-27 for a comparison with PlanetaryFactory, as a companion to
+Researched 2026-09-27 for a comparison with FactoryWorks, as a companion to
 `docs/research/manufactio.md` (the original pack), which this file leans on for every mechanic
 Casual Mode did not change. Where a claim comes from inside the modpack zip, the citation is a path
 inside `Manufactio - CM-1.31.zip` (CurseForge file 4744184, downloaded from

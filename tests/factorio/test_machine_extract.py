@@ -102,7 +102,7 @@ ACCUMULATOR_SOURCE = {
     "input_flow_limit": "300kW",
     "output_flow_limit": "300kW",
 }
-ACCUMULATOR_SPEC = ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/AccumulatorSpec.java"
+ACCUMULATOR_SPEC = ROOT / "mod/src/main/java/com/factoryworks/core/energy/AccumulatorSpec.java"
 ACCUMULATOR_CONSTANTS = {
     "buffer_capacity": "BUFFER_JOULES",
     "input_flow_limit": "INPUT_FLOW_WATTS",

@@ -37,14 +37,14 @@ that has to put a player's splash screen back.
 **Does the asset manager log anything?** For most failures, loudly:
 
 ```
-[Worker-Main-2/WARN]: Missing textures in model planetaryfactory:block/scrap_pile:
+[Worker-Main-2/WARN]: Missing textures in model factoryworks:block/scrap_pile:
     gcyr:block/mars_regolith
-[Worker-Main-2/WARN]: Missing model for variant: 'Block{planetaryfactory:steam}[level=0]'
-[Worker-Main-2/WARN]: Missing FluidModel for fluid 'planetaryfactory:steam'
+[Worker-Main-2/WARN]: Missing model for variant: 'Block{factoryworks:steam}[level=0]'
+[Worker-Main-2/WARN]: Missing FluidModel for fluid 'factoryworks:steam'
 ```
 
 **But not for the failure the ticket was filed over.** A missing item model definition is logged
-nowhere. Deleting `assets/planetaryfactory/items/boiler.json` and running this check produced a log
+nowhere. Deleting `assets/factoryworks/items/boiler.json` and running this check produced a log
 containing the string `boiler` zero times, while the item renders as the checkerboard in the
 inventory, in the hand and in EMI. That is the measured shape of #273's fifteen, and it is why the
 definition half of the claim stays with `test_data_formats.py`, which walks definition → model in

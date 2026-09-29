@@ -1,0 +1,27 @@
+{
+  "type": "factoryworks:chemistry",
+  "category": "chemistry",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:copper_plate",
+      "count": 1
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_sulfuric_acid",
+      "amount": 20
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:battery",
+      "count": 1
+    }
+  ],
+  "time": 80
+}

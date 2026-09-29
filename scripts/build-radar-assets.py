@@ -2,7 +2,7 @@
 """Emit the Radar's corpus row and pack-side assets (#368, ADR-0079).
 
 `data/factorio/machine.json`'s `radars` row is copied field by field to
-`mod/src/main/resources/planetaryfactory_core/radar/radars.json`, which `RadarCorpus` reads at
+`mod/src/main/resources/factoryworks_core/radar/radars.json`, which `RadarCorpus` reads at
 class-init. Turning watts and joules into FE is `RadarSpec`'s, where a unit test holds it.
 
 The model is a placeholder until #367: every block of the 3x3x3 footprint draws the same cube,
@@ -21,11 +21,11 @@ import sys
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MACHINE_CORPUS = os.path.join(ROOT, "data", "factorio", "machine.json")
 RADAR_RESOURCE = os.path.join(
-    ROOT, "mod", "src", "main", "resources", "planetaryfactory_core", "radar", "radars.json"
+    ROOT, "mod", "src", "main", "resources", "factoryworks_core", "radar", "radars.json"
 )
-ASSETS = os.path.join(ROOT, "kubejs", "assets", "planetaryfactory")
-DATA = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
-NAMESPACE = "planetaryfactory"
+ASSETS = os.path.join(ROOT, "kubejs", "assets", "factoryworks")
+DATA = os.path.join(ROOT, "kubejs", "data", "factoryworks")
+NAMESPACE = "factoryworks"
 
 BLOCK_NAME = "radar"
 PART_NAME = "radar_part"

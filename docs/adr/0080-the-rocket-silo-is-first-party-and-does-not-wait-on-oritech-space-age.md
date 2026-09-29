@@ -10,11 +10,11 @@ held the launch in the same wait. The idea was that the addon's Rocket Assembler
 become the pack's launch. #41's answer was a GTCEu multiblock silo launching a GCyR rocket after 50
 Rocket Part cycles, and it lost its whole substrate with ADR-0060.
 
-**Decision (#278, #378).** The Rocket Silo is a `planetaryfactory_core` footprint machine on the
+**Decision (#278, #378).** The Rocket Silo is a `factoryworks_core` footprint machine on the
 pack's own seam, as the Assembling Machine, the Steam Engine and the Radar are (ADR-0072, ADR-0077,
 ADR-0079). It makes Rocket Parts and launches. Neither waits on an Oritech release. The `rocket-silo`
-and `rocket-part` item-map rows name `planetaryfactory:rocket_silo` and
-`planetaryfactory:rocket_part`, `blocked_by` #378.
+and `rocket-part` item-map rows name `factoryworks:rocket_silo` and
+`factoryworks:rocket_part`, `blocked_by` #378.
 
 #340 keeps travel, platforms and cargo. The launch is Terra's goal (#25). Holding it on an upstream
 jar with no release date would leave Terra's progression without an end. The silo is a single

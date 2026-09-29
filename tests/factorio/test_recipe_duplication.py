@@ -41,15 +41,15 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 # The pack's furnace type (#155): a count-bearing smelt, whose output is shaped differently.
-PACK_SMELTING = "planetaryfactory:smelting"
+PACK_SMELTING = "factoryworks:smelting"
 
 # Items an emitted recipe is allowed to make twice, and why. A row here is a DECISION: it says the
 # second route earns its EMI entry. The default is one route per item, because under ADR-0034's
 # default-deny sweep every recipe in the game is one the pack chose to author.
 MULTI_ROUTE = {
-    "planetaryfactory:solid_fuel": (
+    "factoryworks:solid_fuel": (
         "Factorio's own three routes -- heavy oil, light oil and petroleum gas each make solid "
         "fuel, and which one is worth running is the whole point of the oil line. ADR-0031 says "
         "the corpus authors what it contains, and it contains all three."),
@@ -87,7 +87,7 @@ def awaited_results():
 
 
 def main():
-    check(EMITTED.is_dir(), "kubejs/data/planetaryfactory/recipe/ does not exist")
+    check(EMITTED.is_dir(), "kubejs/data/factoryworks/recipe/ does not exist")
     if not EMITTED.is_dir():
         return report()
 

@@ -1,7 +1,7 @@
 # What the 26.1.2 port took out, and who owns putting it back
 
 ADR-0060 moved the pack to Minecraft 26.1.2 and took GregTech out. #268 is the ticket that made
-`planetaryfactory_core` compile again, and it carries an explicit escape hatch: a call site whose
+`factoryworks_core` compile again, and it carries an explicit escape hatch: a call site whose
 dependency is gone is either ported to the replacement, or **removed behind a note naming the ticket
 that owns it**. This file is that note, written once here rather than as a TODO comment in a file
 that no longer exists.
@@ -24,7 +24,7 @@ the replacement chassis, and its API is a different shape — `rearth.oritech`, 
 | `core/mixin/gtceu/RecipeLogicStatusMixin.java` | The idle note's three-times-a-frame hook into the machine screen. | #251 |
 
 Both mixins named GregTech classes by target string, so their entries left
-`planetaryfactory_core.mixins.json` with them: a mixin naming a class that is not on the classpath
+`factoryworks_core.mixins.json` with them: a mixin naming a class that is not on the classpath
 fails the *load*, not the build, which is the one failure mode a green compile would have hidden.
 
 ## Removed because Researchd is not ported yet (#260)

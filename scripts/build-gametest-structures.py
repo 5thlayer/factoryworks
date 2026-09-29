@@ -19,7 +19,7 @@ import nbt
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 STRUCTURES = os.path.join(
-    ROOT, "mod", "src", "main", "resources", "data", "planetaryfactory", "structure", "gametest")
+    ROOT, "mod", "src", "main", "resources", "data", "factoryworks", "structure", "gametest")
 
 DATA_VERSION = 4790  # 26.1.2, world_version in the client jar's version.json.
 

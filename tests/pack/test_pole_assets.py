@@ -18,15 +18,15 @@ import sys
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-POLE_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/PoleTier.java"
-CREATIVE_POLE = ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/CreativeSupplyAreaPoleBlock.java"
+POLE_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/energy/PoleTier.java"
+CREATIVE_POLE = ROOT / "mod/src/main/java/com/factoryworks/core/energy/CreativeSupplyAreaPoleBlock.java"
 TEXTURE_SCRIPT = ROOT / "scripts/build-creative-pole-texture.py"
 TRANSLATING_SOURCES = (
-    ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/SupplyAreaPoleItem.java",
-    ROOT / "mod/src/main/java/com/planetaryfactory/core/compat/PoleJadePlugin.java",
+    ROOT / "mod/src/main/java/com/factoryworks/core/energy/SupplyAreaPoleItem.java",
+    ROOT / "mod/src/main/java/com/factoryworks/core/compat/PoleJadePlugin.java",
 )
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
-DATA = ROOT / "kubejs/data/planetaryfactory"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
+DATA = ROOT / "kubejs/data/factoryworks"
 
 # `SMALL(5),` -- the enum constant and its Factorio supply size.
 TIER_RE = re.compile(r"^\s{4}([A-Z][A-Z_]*)\((\d+)(?:, [\d.]+)?\)[,;]", re.MULTILINE)
@@ -115,7 +115,7 @@ class PoleAssets(unittest.TestCase):
         self.assertEqual([], stale, "the big pole is dropped, so nothing may still name it")
 
         lang = json.loads((ASSETS / "lang" / "en_us.json").read_text(encoding="utf-8"))
-        self.assertNotIn("block.planetaryfactory.big_electric_pole", lang)
+        self.assertNotIn("block.factoryworks.big_electric_pole", lang)
 
     def test_every_translation_key_the_pole_uses_exists(self):
         # The pole is the only block in the pack that explains itself -- no cable to trace, no GUI,
@@ -124,7 +124,7 @@ class PoleAssets(unittest.TestCase):
         lang = json.loads((ASSETS / "lang" / "en_us.json").read_text(encoding="utf-8"))
         for source in TRANSLATING_SOURCES:
             for key, _ in translatable_calls(source.read_text(encoding="utf-8")):
-                if not key.startswith("tooltip.planetaryfactory."):
+                if not key.startswith("tooltip.factoryworks."):
                     continue
                 with self.subTest(source=source.name, key=key):
                     self.assertIn(key, lang, f"{source.name} translates {key}, which has no entry")

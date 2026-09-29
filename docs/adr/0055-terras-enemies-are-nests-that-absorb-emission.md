@@ -88,7 +88,7 @@ affects only how much warning a player gets, which is a UX question and not this
 - **Expansion runs on its own timer**, not on the cloud, capped by the same distance-density rule
   that placed the original nests — an uncapped registry grows forever.
 - **Waves travel as data and instantiate near their target.**
-- **Enemies damage only blocks tagged `planetaryfactory:destructible`.** Factorio's biters eat
+- **Enemies damage only blocks tagged `factoryworks:destructible`.** Factorio's biters eat
   walls and turrets; Minecraft mobs grief nothing. Unrestricted destruction is not fidelity here,
   it is an unbounded loss with no repair mechanic underneath it, so the blast radius is a tag.
 - **Every number above is extracted, not chosen.** Absorption rates, the evolution coefficients,

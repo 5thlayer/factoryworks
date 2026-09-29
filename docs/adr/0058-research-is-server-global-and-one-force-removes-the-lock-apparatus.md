@@ -84,7 +84,7 @@ and team:
 - The Personal Assembler asks for the player's team, when `lockSources` in
   `config/craftworks-server.toml` lists `researchd` (ADR-0089).
 - The Assembling Machine asks for the team whose Researchd placed-by attachment it carries, when
-  `lockSources` in `config/planetaryfactory_core-server.toml` lists `researchd`.
+  `lockSources` in `config/factoryworks_core-server.toml` lists `researchd`.
 
 A machine no team placed locks nothing, as #74 decided. The deletions above stand: the pack logs no
 bypass, keeps no retry list and never overrides Researchd's placement stamp.

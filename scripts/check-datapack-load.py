@@ -9,7 +9,7 @@ player as a furnace that holds the item, holds power and never smelts (#266) -- 
 in-world debugging for a line that was printed the first time the world loaded.
 
     [Worker-Main-7/ERROR] [minecraft/SimpleJsonResourceReloadListener]:
-      Couldn't parse data file 'planetaryfactory:iron_plate': ... Unknown registry key ...
+      Couldn't parse data file 'factoryworks:iron_plate': ... Unknown registry key ...
 
 It is also the only check here that can see the OTHER half of a data file: not the shape, which a
 static check can read, but whether the ids inside it name anything. `gcyr:mercury_rock` below is
@@ -40,14 +40,14 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GRADLE = ["./gradlew", ":planetaryfactory_core:runGameTestServer", "--rerun-tasks"]
+GRADLE = ["./gradlew", ":factoryworks_core:runGameTestServer", "--rerun-tasks"]
 
 # A rejection the log is allowed to contain, with the ticket that owns it.
 EXPECTED = {
-    "planetaryfactory:blocks/iron_stromatolite":
+    "factoryworks:blocks/iron_stromatolite":
         "drops `gcyr:mercury_rock`, whose mod left with ADR-0060 -- a real dangling drop. What a "
         "stromatolite drops instead is Sapros content (#23)",
-    "planetaryfactory:blocks/copper_stromatolite":
+    "factoryworks:blocks/copper_stromatolite":
         "drops `gcyr:mercury_rock` -- the same dangling drop (#23)",
 }
 

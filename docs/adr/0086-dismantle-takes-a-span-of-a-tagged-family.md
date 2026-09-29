@@ -12,7 +12,7 @@ block kind, so the gesture is made generic instead.
 **Decision.** A Dismantle takes up a span of one **Dismantle Family** in two sneak-clicks of the
 Engineer's Pick.
 
-- **A family is a block tag,** `planetaryfactory:dismantle/<family>`, plus an optional join rule
+- **A family is a block tag,** `factoryworks:dismantle/<family>`, plus an optional join rule
   registered in code. With no rule, two members are joined when they touch face to face. A family
   is chosen over one shared tag because a shared tag joins a pipe to the wall it touches, and over
   "same block as the start" because a pipe run is three Oritech blocks: the plain pipe, the
@@ -24,10 +24,10 @@ Engineer's Pick.
   takes.
 - **The first family is `dismantle/pipes`,** joined only where Oritech's connection between two
   pipes is open, which is what Oritech's own network follows.
-- **The gesture belongs to `planetaryfactory:dismantles`,** holding both Picks. On a pipe it takes
+- **The gesture belongs to `factoryworks:dismantles`,** holding both Picks. On a pipe it takes
   over Oritech's sneak-wrench pickup, which breaks one pipe; one pipe is now two sneak-clicks on it,
   or plain mining. The plain click still toggles a connection.
-- **The rule lives in `planetaryfactory_core`,** its span Minecraft-free.
+- **The rule lives in `factoryworks_core`,** its span Minecraft-free.
 
 **Belts join later.** Belts are to become a family too, their line-following a join rule, rather
 than stay a separate gesture. That waits for the belt fork to settle, so for now two

@@ -32,16 +32,16 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-PUMPS = ROOT / "mod/src/main/resources/planetaryfactory_core/fluid/pumps.json"
+PUMPS = ROOT / "mod/src/main/resources/factoryworks_core/fluid/pumps.json"
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 GENERATOR = ROOT / "scripts/build-pump-assets.py"
-PUMP_ITEM = ROOT / "mod/src/main/java/com/planetaryfactory/core/fluid/OffshorePumpItem.java"
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+PUMP_ITEM = ROOT / "mod/src/main/java/com/factoryworks/core/fluid/OffshorePumpItem.java"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
 
 FACTORIO_NAME = "offshore-pump"
 BLOCK_NAME = "offshore_pump"
-BLOCK_ID = f"planetaryfactory:{BLOCK_NAME}"
+BLOCK_ID = f"factoryworks:{BLOCK_NAME}"
 
 # Every field the generator copies. Kept here as well as in the generator so that dropping one
 # there fails rather than quietly narrowing what the mod reads.

@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_rod",
+      "count": 4
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 2
+    },
+    {
+      "ingredient": "ftbmaterials:copper_wire",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "factoryworks:medium_electric_pole",
+    "count": 1
+  },
+  "time": 10
+}

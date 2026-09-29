@@ -1,0 +1,25 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 10
+    },
+    {
+      "ingredient": "factoryworks:advanced_circuit",
+      "count": 5
+    },
+    {
+      "ingredient": "minecraft:stone_bricks",
+      "count": 10
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:electric_furnace",
+      "count": 1
+    }
+  ],
+  "time": 100
+}

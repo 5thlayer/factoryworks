@@ -1,0 +1,23 @@
+{
+  "type": "factoryworks:chemistry",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "factoryworks:solid_fuel",
+      "count": 10
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_naphtha",
+      "amount": 10
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:rocket_fuel",
+      "count": 1
+    }
+  ],
+  "time": 300
+}

@@ -36,7 +36,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 SCRIPTS = ROOT / "kubejs/server_scripts"
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 CATEGORY_MAP = ROOT / "data/pack/category-map.json"
 
 # The two vanilla types #90 and #34 left with no block in the pack to execute them. A survivor on
@@ -110,8 +110,8 @@ def main():
     # nowhere. That is the failure ADR-0034 exists to name, and it is a one-word edit away, so it
     # is asserted rather than trusted. The pack's namespace is applied ONCE, in recipes.js, to
     # every entry; a row carrying its own `mod` would escape that.
-    check(re.search(r"mod:\s*'planetaryfactory'", sweep),
-          "recipes.js does not apply `mod: 'planetaryfactory'` to the survivors. Every survivor "
+    check(re.search(r"mod:\s*'factoryworks'", sweep),
+          "recipes.js does not apply `mod: 'factoryworks'` to the survivors. Every survivor "
           "is by definition a recipe the pack authored (ADR-0034 as amended by #172) -- dropping "
           "the namespace admits every other mod's recipes on the same surface")
     check("RECIPE_SURVIVORS.map" in sweep,

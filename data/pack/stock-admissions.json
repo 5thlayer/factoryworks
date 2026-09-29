@@ -1,7 +1,7 @@
 {
   "_comment": [
     "The stock recipes the pack keeps, each re-authored by `scripts/stock-recipe-convert.py` as a",
-    "`planetaryfactory:assembling` recipe (ADR-0034, 'The tail, decided'). Every other stock recipe",
+    "`factoryworks:assembling` recipe (ADR-0034, 'The tail, decided'). Every other stock recipe",
     "is swept. A new admission is a row here, and its ingredients a row each in",
     "`stock-substitutions.json`.",
     "",

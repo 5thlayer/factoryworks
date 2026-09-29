@@ -1,0 +1,17 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:glass",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:glass_pane",
+      "count": 4
+    }
+  ],
+  "time": 10
+}

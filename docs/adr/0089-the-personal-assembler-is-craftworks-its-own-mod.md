@@ -19,8 +19,8 @@ and its spec, 5thlayer/craftworks#2, record its side. For the pack, it means the
   no foreign types. A recipe carries `ingredients` (counted, tags allowed), `result`, `time` in whole
   ticks (default 10) and `priority` (default 0). It takes items only. Because a recipe id has one
   type, every recipe in ADR-0063's hand set becomes two recipes with two ids: `scripts/build-hand-recipes.py`
-  writes a `craftworks:assembling` copy, `planetaryfactory:hand/<name>`, beside
-  `planetaryfactory:assembling/<name>`. It reads every machine recipe, whichever script wrote it. This amends ADR-0063,
+  writes a `craftworks:assembling` copy, `factoryworks:hand/<name>`, beside
+  `factoryworks:assembling/<name>`. It reads every machine recipe, whichever script wrote it. This amends ADR-0063,
   under which the hand and the Assembling Machines shared one file. The machine's recipe and its id
   are unchanged, so research unlocks keep their keys.
 - **Locks.** Craftworks locks by the sources its `lockSources` config lists, one of which is
@@ -48,7 +48,7 @@ a player to empty the Assembler queue before updating, and the old queue attachm
 - *A subproject in this repo.* Rejected: a public mod needs its own issues, releases and CI, and this
   repo's checks and ADRs are about the Factorio pack.
 - *The pack keeps its own copy.* Rejected: two copies of ADR-0038's pause and refund rules would drift.
-- *Craftworks admits `planetaryfactory:assembling` by a config predicate*, as #291's first draft had
+- *Craftworks admits `factoryworks:assembling` by a config predicate*, as #291's first draft had
   it, so the hand and the machine keep one file. Rejected in Craftworks' ADRs: a planner that reads
   foreign types has to guess each type's shape, and only its own type guarantees items-only recipes
   with counts.
@@ -58,6 +58,6 @@ a player to empty the Assembler queue before updating, and the old queue attachm
 - `test_hand_recipes.py` holds each copy to its machine recipe, so the two ids cannot drift apart.
   `test_hand_resolver.py` and `test_research_unlocks.py` keep reading the corpus and the machine ids,
   which the copies follow.
-- The unit tests under `mod/src/test/java/com/planetaryfactory/core/assembler/` move to Craftworks'
+- The unit tests under `mod/src/test/java/com/factoryworks/core/assembler/` move to Craftworks'
   repo, along with the rules they hold.
 - `CLAUDE.md`'s "Assembler queue and resolver check" section is rewritten for what stays in the pack.

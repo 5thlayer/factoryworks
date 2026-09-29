@@ -37,7 +37,7 @@ Cables, and the Energy Cube with the Induction Matrix.
 
 ## The Energized Smelter becomes the Electric Furnace, a fourth pack-registered machine
 
-`#91` mapped Factorio's three furnace tiers onto the vanilla Furnace, a `planetaryfactory_core`
+`#91` mapped Factorio's three furnace tiers onto the vanilla Furnace, a `factoryworks_core`
 block, and Mekanism's Energized Smelter renamed. The middle tier is unaffected. **The top tier
 becomes a pack-registered machine on a GT chassis** — the ADR-0025 / ADR-0026 idiom that `#107` and
 `#135` already execute three times between them.

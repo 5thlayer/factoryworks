@@ -23,8 +23,8 @@ import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-FURNACE_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/smelting/FurnaceTier.java"
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+FURNACE_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/smelting/FurnaceTier.java"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
 NOTICE = ROOT / "NOTICE"
 
 # `STONE(1.0f, true),` -- the enum constant, whatever its arguments are.
@@ -77,7 +77,7 @@ class FurnaceAssets(unittest.TestCase):
         for texture in sorted(textures):
             with self.subTest(texture=texture):
                 namespace, path = texture.split(":", 1)
-                self.assertEqual("planetaryfactory", namespace,
+                self.assertEqual("factoryworks", namespace,
                                  "the Electric tier's art is copied into the pack's namespace")
                 file = (ASSETS / "textures" / f"{path}.png").relative_to(ROOT).as_posix()
                 self.assertIn(file, notice, f"{file} is borrowed art with no credit in NOTICE")

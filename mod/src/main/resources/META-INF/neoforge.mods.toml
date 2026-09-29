@@ -7,7 +7,7 @@ modId = "${mod_id}"
 version = "${mod_version}"
 displayName = "${mod_name}"
 description = '''
-The Planetary Factory modpack's first-party mod. It owns the mechanisms no scripting
+The FactoryWorks modpack's first-party mod. It owns the mechanisms no scripting
 API in the pack exposes -- currently the saplings of Sapros's two trees and their
 TreeGrower -- and no tunable content whatsoever. See ADR-0014 and ADR-0015.
 '''
@@ -59,12 +59,12 @@ ordering = "NONE"
 side = "BOTH"
 
 [[mixins]]
-config = "planetaryfactory_core.mixins.json"
+config = "factoryworks_core.mixins.json"
 
 # Not required for the same reason: it targets Oritech, an optional dependency. The Steam Engine's
 # calibration to Factorio (#282, ADR-0062).
 [[mixins]]
-config = "planetaryfactory_core.oritech.mixins.json"
+config = "factoryworks_core.oritech.mixins.json"
 
 # Both recipe viewers ship with the pack and both were listing a research-locked recipe exactly
 # like an unlocked one (issue #75). Neither is required for the mod to load. JEI is driven by a

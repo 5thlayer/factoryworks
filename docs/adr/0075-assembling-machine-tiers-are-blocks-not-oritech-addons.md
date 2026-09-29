@@ -11,7 +11,7 @@ cuts the duration to 0.5 at 1.2 times the energy, its efficiency addon cuts the 
 `machine_core_N` blocks raise how many addons fit. #277 left the choice between the two to #295, and
 ADR-0071 expected Oritech's ladder to win, because tier 1 already takes addons.
 
-**Decision.** Tiers 2 and 3 are further `planetaryfactory_core` blocks of the same Assembling
+**Decision.** Tiers 2 and 3 are further `factoryworks_core` blocks of the same Assembling
 Machine subclass, one per tier, each with its own Factorio speed, draw and categories, and each
 crafted from Factorio's own recipe. Oritech's addons stay live on all three, with Oritech's
 meaning, and are not part of the ladder. What an addon is in Factorio's terms is #120's question.

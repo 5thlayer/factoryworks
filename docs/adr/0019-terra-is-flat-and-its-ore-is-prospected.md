@@ -134,7 +134,7 @@ datapacks/<pack>/data/minecraft/worldgen/biome/<each of the palette>.json
 `multi_noise_biome_source_parameter_list/overworld.json` is **not** in that list and cannot be: it
 is a 37-byte `{"preset": "minecraft:overworld"}` stub whose codec accepts only hardcoded preset
 names. The palette lives in an explicit `biomes` list in the dimension file — the same shape
-`planetaryfactory:gleba` already uses.
+`factoryworks:gleba` already uses.
 
 Flatness is expressed in three density functions: `offset` as a shallow spline carrying both the
 relief and the rare cliff segment, `factor` as a large constant, `jaggedness` as `0.0`. The mapping
@@ -151,7 +151,7 @@ rather than a discrete choice.
 - **Flatten and leave veins where they are.** Rejected, and it is the trap this ADR started as:
   flattening *removes* the caves and cliff faces that currently expose ore, so flatness without a
   band change makes ore strictly harder to find than vanilla.
-- **Replace Terra with a `planetaryfactory:terra` dimension.** Rejected: a rename that invalidates
+- **Replace Terra with a `factoryworks:terra` dimension.** Rejected: a rename that invalidates
   the GCyR planet entry, every vein's `dimension_filter` and the three `terra_*` bedrock deposits,
   for no mechanical gain.
 - **Vanilla `−64..384` column.** Rejected in favour of `0..192`: with no caves and a shallow band,
@@ -211,7 +211,7 @@ Two further corrections found while building:
   jaggedness}`.** Sapros, Ignus and Electro all point their noise router's `depth` at
   `minecraft:overworld/depth`, which is built from `overworld/offset` — overriding it would flatten
   three other bodies along with Terra, which is exactly the "flat as a pack-wide principle" option
-  this ADR rejected. They live under `planetaryfactory:terra/` instead, and Terra's `final_density`
+  this ADR rejected. They live under `factoryworks:terra/` instead, and Terra's `final_density`
   inlines them.
 - **Vanilla ore needs no suppression clause in the noise settings.** Terra's palette is seven
   pack-namespace biomes authored from scratch, so vanilla ore is absent by omission — the
@@ -247,7 +247,7 @@ no depleted flag on a vein to set — and a GregTech Miner scans for ore blocks 
 consulting the vein registry. Against that, a vein cannot be spawn-anchored at all: GregTech
 places veins on its own grid, and nothing in that placement can be told "one, here".
 
-**Anchoring is not worldgen at all: `planetaryfactory_core` stamps the pool onto world
+**Anchoring is not worldgen at all: `factoryworks_core` stamps the pool onto world
 spawn.** This corrects a first attempt at `minecraft:concentric_rings` with `distance: 0`,
 `count: 1`, which anchors to the world *origin* and not to spawn — a difference that only looks
 cosmetic. That placement pins the ring to chunk (0,0) and then searches a hardcoded 112 blocks
@@ -290,8 +290,8 @@ check's fixture row for it therefore asserts what the stamp depends on — that 
 loaded, that its biomes are ones Terra emits, that its ore ids are real blocks — rather than a
 placement that no longer exists.
 
-The land-only biome tag survives the change and still matters. `#planetaryfactory:terra_land` is
-not the vein tag `#planetaryfactory:terra`, which holds the sea and the shore; the structure's
+The land-only biome tag survives the change and still matters. `#factoryworks:terra_land` is
+not the vein tag `#factoryworks:terra`, which holds the sea and the shore; the structure's
 own biome list is what keeps a field off the seabed.
 
 **Randomization is jigsaw, and the fixed set is one pool per resource.** A single shared pool
@@ -314,7 +314,7 @@ half-dug patch legible. That is *not* `terrain_matching`: vanilla's projection a
 defined as "the highest block that is not air". A tree is not air, so a field crossing a wood
 landed on the canopy, ore in place of leaves twenty blocks up, split between treetop and ground
 wherever the wood ended. No vanilla heightmap avoids it; `OCEAN_FLOOR` and `MOTION_BLOCKING` stop
-at leaves and logs too. So `planetaryfactory_core` registers `planetaryfactory:ground`, a structure
+at leaves and logs too. So `factoryworks_core` registers `factoryworks:ground`, a structure
 processor that walks the column down past whatever grew there and lands on the first real terrain
 block, and the elements are `rigid` — the projection is what would add the gravity processor back,
 and it runs last. Under a wood the field therefore lies *beneath* the trees, which go on standing

@@ -32,17 +32,17 @@
 var RECIPE_SURVIVORS = [
   {
     surface: 'assembling',
-    type: 'planetaryfactory:assembling',
+    type: 'factoryworks:assembling',
     why: "ADR-0026's Assembling Machine 1/2/3, one recipe type across Factorio's three assembling categories. ADR-0031: the corpus authors every recipe it contains, and the converter emits them onto the pack's own type since GregTech's left with ADR-0060 (#279)."
   },
   {
     surface: 'chemical_plant',
-    type: 'planetaryfactory:chemistry',
+    type: 'factoryworks:chemistry',
     why: "ADR-0096's Chemical Plant, on a type of its own sharing the assembling shape so it has its own EMI tab. ADR-0031: the corpus authors every recipe on it (#488)."
   },
   {
     surface: 'oil_refinery',
-    type: 'planetaryfactory:oil_processing',
+    type: 'factoryworks:oil_processing',
     why: "ADR-0096's Oil Refinery, on a type of its own sharing the assembling shape so it has its own EMI tab. ADR-0031: the corpus authors every recipe on it (#488)."
   },
   {
@@ -52,7 +52,7 @@ var RECIPE_SURVIVORS = [
   },
   {
     surface: 'smelting',
-    type: 'planetaryfactory:smelting',
-    why: "#155 puts the smelting categories on the pack's own `planetaryfactory:smelting`, whose ingredient carries a count -- vanilla's holds none, so the 5:1 steel smelt and the 2:1 stone brick (ADR-0046) cannot be expressed on it at all. Vanilla `minecraft:smelting` is NOT admitted alongside it: under default-deny every recipe on it was already going, so nothing is read from the vanilla type and the vanilla Furnace, Smoker and Blast Furnace are inert rather than merely uncraftable. That takes Minecraft's food cooking with it, which the hunger ticket owns."
+    type: 'factoryworks:smelting',
+    why: "#155 puts the smelting categories on the pack's own `factoryworks:smelting`, whose ingredient carries a count -- vanilla's holds none, so the 5:1 steel smelt and the 2:1 stone brick (ADR-0046) cannot be expressed on it at all. Vanilla `minecraft:smelting` is NOT admitted alongside it: under default-deny every recipe on it was already going, so nothing is read from the vanilla type and the vanilla Furnace, Smoker and Blast Furnace are inert rather than merely uncraftable. That takes Minecraft's food cooking with it, which the hunger ticket owns."
   }
 ]

@@ -1,0 +1,17 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "#minecraft:logs",
+      "count": 2
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:chest",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

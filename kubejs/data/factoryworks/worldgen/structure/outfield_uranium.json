@@ -1,0 +1,8 @@
+{
+  "type": "factoryworks:outfield_disc",
+  "resource": "uranium",
+  "biomes": "#factoryworks:terra_land",
+  "step": "top_layer_modification",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none"
+}

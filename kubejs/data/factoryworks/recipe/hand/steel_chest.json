@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 8
+    }
+  ],
+  "result": {
+    "id": "factoryworks:steel_chest",
+    "count": 1
+  },
+  "time": 10
+}

@@ -1,0 +1,207 @@
+package com.factoryworks.core.compat;
+
+import com.factoryworks.core.FactoryWorksCore;
+import com.factoryworks.core.mining.rig.RigBlock;
+import com.factoryworks.core.mining.rig.RigBlockEntity;
+import com.factoryworks.core.mining.rig.RigPartBlock;
+import com.factoryworks.core.mining.rig.RigPartBlockEntity;
+import com.factoryworks.core.mining.rig.RigSlots;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.IServerDataProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaCommonRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.Element;
+import snownee.jade.api.ui.JadeUI;
+
+/**
+ * What a mining rig is doing right now, on the HUD (#199).
+ *
+ * <p>The rig is the pack's hardest machine to diagnose from outside: it is a 2x2 or 3x3 whose work
+ * happens <em>under</em> itself and whose output leaves sideways, so every failure looks the same
+ * from every angle -- a still block. The tooltip separates the three stills that matter:
+ * <strong>backed up</strong> (a banked stack the faced tile will not take), <strong>out of
+ * fuel</strong> (the burner's buffer at zero) and <strong>nothing left to mine</strong>, which is
+ * the one a furnace has no analogue for and the one a player is most likely to read as a bug.
+ *
+ * <p>Progress is a percentage rather than a tick count because the duration is per-target here --
+ * uranium costs twice what iron does -- so the raw numbers name nothing the player knows.
+ *
+ * <p>The fuel line is shown on the burner tier only, the same rule {@link FurnaceJadePlugin} uses
+ * for its electric buffer: it is stated where "not running" has an invisible cause, and would read
+ * as a fault on the tier that never has one.
+ *
+ * <p>Both blocks carry the component. Three quarters of a 2x2 is a part rather than the anchor, so
+ * a crosshair lands on one three times out of four; the menu already forwards to the anchor and a
+ * tooltip that did not would be empty from three sides of the same machine.
+ *
+ * <p>Like the other plugins in this package, found by Jade's annotation scan and referenced from
+ * nowhere else in the mod, so the jar stays a compile-time dependency.
+ */
+@WailaPlugin
+public class RigJadePlugin implements IWailaPlugin {
+
+    private static final Identifier UID =
+            Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, "rig");
+
+    private static final String PRESENT = "RigPresent";
+    private static final String BUFFER_ITEM = "RigBufferItem";
+    private static final String BUFFER_COUNT = "RigBufferCount";
+    private static final String PROGRESS = "RigProgress";
+    private static final String DURATION = "RigDuration";
+    private static final String FUEL = "RigFuel";
+    private static final String FUEL_CAPACITY = "RigFuelCapacity";
+    private static final String HAS_ORE = "RigHasOre";
+    private static final String FUEL_ITEM = "RigFuelItem";
+
+    /**
+     * The rig behind whatever the crosshair is on: itself if it is the anchor, and otherwise the
+     * anchor the part remembers. A part whose anchor has gone answers nothing rather than throwing
+     * -- a half-torn rig is a state a break can be observed in.
+     */
+    private static RigBlockEntity rigBehind(BlockEntity hit) {
+        if (hit instanceof RigBlockEntity rig) {
+            return rig;
+        }
+        if (hit instanceof RigPartBlockEntity part && part.getLevel() != null) {
+            BlockPos anchor = part.anchorPos();
+            if (anchor != null && part.getLevel().getBlockEntity(anchor) instanceof RigBlockEntity rig) {
+                return rig;
+            }
+        }
+        return null;
+    }
+
+    private static final IServerDataProvider<BlockAccessor> DATA = new IServerDataProvider<>() {
+        @Override
+        public void appendServerData(CompoundTag tag, BlockAccessor accessor) {
+            RigBlockEntity rig = rigBehind(accessor.getBlockEntity());
+            if (rig == null) {
+                return;
+            }
+            tag.putBoolean(PRESENT, true);
+            String itemId = rig.bufferedItemId();
+            if (itemId != null && rig.bufferedCount() > 0) {
+                tag.putString(BUFFER_ITEM, itemId);
+                tag.putInt(BUFFER_COUNT, rig.bufferedCount());
+            }
+            tag.putInt(PROGRESS, rig.data().get(RigBlockEntity.DATA_PROGRESS));
+            tag.putInt(DURATION, rig.data().get(RigBlockEntity.DATA_DURATION));
+            tag.putBoolean(HAS_ORE, rig.hasOre());
+            if (rig.burnsFuel()) {
+                tag.putInt(FUEL, rig.data().get(RigBlockEntity.DATA_FUEL));
+                tag.putInt(FUEL_CAPACITY, rig.data().get(RigBlockEntity.DATA_FUEL_CAPACITY));
+                // What is left in the slot, not just what is already burning. A buffer with joules
+                // in it and an empty slot is a rig that is about to stop, and the joules alone do
+                // not say so; the slot is also the one the hopper feeding it fills.
+                ItemStack held = rig.getItem(RigSlots.FUEL);
+                if (!held.isEmpty()) {
+                    JadeStacks.put(tag, FUEL_ITEM, held, accessor);
+                }
+            }
+        }
+
+        @Override
+        public Identifier getUid() {
+            return UID;
+        }
+    };
+
+    private static final IBlockComponentProvider TOOLTIP = new IBlockComponentProvider() {
+        @Override
+        public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+            CompoundTag data = accessor.getServerData();
+            if (!data.getBooleanOr(PRESENT, false)) {
+                return;
+            }
+            
+            // The banked stack and how far along the rig is, read left to right the way the ore
+            // moves: out of the ground, into the buffer. A full buffer against frozen progress is
+            // push-or-stall's only visible symptom, and nothing outside the block shows it today.
+            JadeLayout.line(tooltip, banked(data), progress(data));
+
+            if (!data.getBooleanOr(HAS_ORE, false)) {
+                // The line the rig needs most. An exhausted footprint is not a fault, and without
+                // this it reads as one: same still block, same full buffer, same fuel.
+                tooltip.add(Component.translatable("tooltip.factoryworks.rig.jade.no_ore"));
+            }
+            if (data.contains(FUEL_CAPACITY)) {
+                // The stack first, then the buffer: what will burn next, then how much is left of
+                // what is burning now. An empty slot is the dash rather than a gap, for the same
+                // reason the banked line uses one.
+                JadeLayout.line(tooltip, fuel(accessor, data),
+                        Component.translatable("tooltip.factoryworks.rig.jade.fuel",
+                                data.getIntOr(FUEL, 0), data.getIntOr(FUEL_CAPACITY, 0)));
+            }
+        }
+
+        @Override
+        public Identifier getUid() {
+            return UID;
+        }
+    };
+
+    /**
+     * What the rig is holding. An empty buffer is a dash rather than a blank, for the same reason
+     * the furnace's ends are: "nothing banked" is half the diagnosis, and a gap does not say it.
+     */
+    private static Element banked(CompoundTag data) {
+        if (!data.contains(BUFFER_ITEM)) {
+            return JadeUI.text(Component.translatable("tooltip.factoryworks.rig.jade.empty"));
+        }
+        // The buffer names its item by string, so the id has to be resolved here rather than read
+        // off a saved stack. An id this client cannot resolve is air, and `JadeUI.item` on an
+        // empty stack draws a blank -- which is the one thing this method promises not to do.
+        Item item = BuiltInRegistries.ITEM.get(Identifier.parse(data.getStringOr(BUFFER_ITEM, "")))
+                .map(holder -> holder.value()).orElse(null);
+        ItemStack banked = item == null
+                ? ItemStack.EMPTY
+                : new ItemStack(item, data.getIntOr(BUFFER_COUNT, 0));
+        return banked.isEmpty()
+                ? JadeUI.text(Component.translatable("tooltip.factoryworks.rig.jade.empty"))
+                : JadeUI.item(banked);
+    }
+
+    /** What is in the fuel slot, drawn as its icon and count -- the dash when the slot is empty. */
+    private static Element fuel(
+            BlockAccessor accessor, CompoundTag data) {
+        ItemStack held = JadeStacks.read(data, FUEL_ITEM, accessor);
+        return held.isEmpty()
+                ? JadeUI.text(Component.translatable("tooltip.factoryworks.rig.jade.empty"))
+                : JadeUI.item(held);
+    }
+
+    private static Component progress(CompoundTag data) {
+        int duration = data.getIntOr(DURATION, 0);
+        int progress = data.getIntOr(PROGRESS, 0);
+        if (duration <= 0) {
+            return Component.translatable("tooltip.factoryworks.rig.jade.idle");
+        }
+        return Component.translatable("tooltip.factoryworks.rig.jade.progress",
+                Math.round(progress * 100F / duration));
+    }
+
+    @Override
+    public void register(IWailaCommonRegistration registration) {
+        registration.registerBlockDataProvider(DATA, RigBlockEntity.class);
+        registration.registerBlockDataProvider(DATA, RigPartBlockEntity.class);
+    }
+
+    @Override
+    public void registerClient(IWailaClientRegistration registration) {
+        registration.registerBlockComponent(TOOLTIP, RigBlock.class);
+        registration.registerBlockComponent(TOOLTIP, RigPartBlock.class);
+    }
+}

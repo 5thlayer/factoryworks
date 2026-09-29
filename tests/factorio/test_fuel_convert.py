@@ -2,7 +2,7 @@
 """Assert the generated fuel table is the join it claims to be, and that the mod reads it.
 
 `scripts/factorio-fuel-convert.py` joins `data/factorio/fuel.json` onto `data/pack/item-map.json`
-and writes `kubejs/data/planetaryfactory/fuel/*.json`, which is what a burner furnace burns
+and writes `kubejs/data/factoryworks/fuel/*.json`, which is what a burner furnace burns
 (ADR-0047, #187). What is checkable without launching the game:
 
   - **the emitted table is not stale.** The converter's own `--check`, the rule that generated
@@ -34,9 +34,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-OUT_DIR = ROOT / "kubejs/data/planetaryfactory/fuel"
+OUT_DIR = ROOT / "kubejs/data/factoryworks/fuel"
 CONVERTER = ROOT / "scripts/factorio-fuel-convert.py"
-SMELTING = ROOT / "mod/src/main/java/com/planetaryfactory/core/smelting"
+SMELTING = ROOT / "mod/src/main/java/com/factoryworks/core/smelting"
 
 TICKS_PER_SECOND = 20
 
@@ -204,15 +204,15 @@ def main():
                 "does not survive a reload, and nothing reports it"
             )
 
-    lang = json.loads((ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json")
+    lang = json.loads((ROOT / "kubejs/assets/factoryworks/lang/en_us.json")
                       .read_text(encoding="utf-8"))
-    for key in ("tooltip.planetaryfactory.furnace.fuel",
-                "tooltip.planetaryfactory.furnace.fuel.seconds",
-                "tooltip.planetaryfactory.furnace.fuel.out",
+    for key in ("tooltip.factoryworks.furnace.fuel",
+                "tooltip.factoryworks.furnace.fuel.seconds",
+                "tooltip.factoryworks.furnace.fuel.out",
                 # The item tooltip is where a default-deny table stops being invisible: vanilla's
                 # intuitions about what burns are wrong in both directions here.
-                "tooltip.planetaryfactory.fuel.joules",
-                "tooltip.planetaryfactory.fuel.burn"):
+                "tooltip.factoryworks.fuel.joules",
+                "tooltip.factoryworks.fuel.burn"):
         if key not in lang:
             failures.append(f"{key} is not in the lang file, so the burner's hover reads as its key")
 

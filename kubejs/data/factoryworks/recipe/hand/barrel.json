@@ -1,0 +1,14 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "factoryworks:barrel",
+    "count": 1
+  },
+  "time": 20
+}

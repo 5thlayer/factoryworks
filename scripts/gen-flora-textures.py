@@ -3,7 +3,7 @@
 # every vanilla tree; they are meant to be replaced by real art.
 import zlib, struct, random, os
 
-BASE = "kubejs/assets/planetaryfactory/textures"
+BASE = "kubejs/assets/factoryworks/textures"
 
 def png(path, pixels):
     raw = b"".join(b"\x00" + b"".join(bytes(p) for p in row) for row in pixels)

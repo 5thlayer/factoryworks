@@ -8,7 +8,7 @@ Three decisions this script encodes, each argued in `docs/adr/0019-*.md` and in 
 
 **The patches are pack-authored ore blocks, not GregTech's and not a GregTech vein.** ADR-0041
 makes an ore block carry an amount, and GregTech models its material ore blocks at runtime --
-so the blocks here are `planetaryfactory:<resource>_ore`, which carry the amount and the eight
+so the blocks here are `factoryworks:<resource>_ore`, which carry the amount and the eight
 sprite stages. What a block pays out is `OreResource`'s, and it is vanilla's raw ore for iron and
 copper -- GregTech registered none for a material vanilla already covers, so `gtceu:raw_iron` was
 never an item and naming it cost every draw its payout in silence. The blocks still carry `c:ores`.
@@ -23,7 +23,7 @@ on the reasoning that it is the only vanilla placement type putting a bounded nu
 near the world origin -- but the origin is not spawn, and on a seed whose origin is open ocean the
 ring's biome search fails and the player gets no opening at all, silently. No `StructurePlacement`
 can see world spawn: it is handed a `ChunkGeneratorStructureState` and nothing else, deliberately.
-So `planetaryfactory_core` stamps the start pool onto spawn itself on `ServerStartedEvent`, and this
+So `factoryworks_core` stamps the start pool onto spawn itself on `ServerStartedEvent`, and this
 script writes no structure and no structure set -- see `TerraStartingArea` and ADR-0019's amendment.
 
 **Randomization is jigsaw, not noise.** The hub carries one connector per resource, each
@@ -38,7 +38,7 @@ couple of seconds a block is about that. Stone is the fourth field and sits outs
 is ADR-0041's late addition, it is not on the hand-mining path the hour measures, and its own
 mid-size patch adds ~260 on top. It is a tuning number, not a discrete choice.
 
-Run from anywhere; writes into `kubejs/data/planetaryfactory/`.
+Run from anywhere; writes into `kubejs/data/factoryworks/`.
 """
 
 import importlib
@@ -53,7 +53,7 @@ import nbt  # noqa: E402
 TERRA_PALETTE = importlib.import_module("build-terra-worldgen").PALETTE  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-PF = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
+PF = os.path.join(ROOT, "kubejs", "data", "factoryworks")
 STRUCTURES = os.path.join(PF, "structure")
 WORLDGEN = os.path.join(PF, "worldgen")
 
@@ -68,17 +68,17 @@ SEED = 20260829
 # tutorial, and it has to answer "what is this a patch of" with one word.
 PATCHES = {
     "iron": {
-        "block": "planetaryfactory:iron_ore",
+        "block": "factoryworks:iron_ore",
         "radii": [10, 12, 14],
         "facing": "east",
     },
     "copper": {
-        "block": "planetaryfactory:copper_ore",
+        "block": "factoryworks:copper_ore",
         "radii": [9, 10, 12],
         "facing": "north",
     },
     "coal": {
-        "block": "planetaryfactory:coal_ore",
+        "block": "factoryworks:coal_ore",
         "radii": [9, 11, 13],
         "facing": "west",
     },
@@ -88,7 +88,7 @@ PATCHES = {
     # unbuildable here. The smallest field of the four, which is Factorio's own ordering --
     # stone's starting patch is 160,000 against iron's 400,000.
     "stone": {
-        "block": "planetaryfactory:stone_ore",
+        "block": "factoryworks:stone_ore",
         "radii": [8, 9, 11],
         "facing": "south",
     },
@@ -102,7 +102,7 @@ SIZES = ["small", "medium", "large"]
 DISTANCES = [34, 48, 62]
 
 # Terra's land: every palette biome but the sea (#356).
-LAND_BIOMES = sorted("planetaryfactory:" + entry[0] for entry in TERRA_PALETTE if entry[0] != "terra_sea")
+LAND_BIOMES = sorted("factoryworks:" + entry[0] for entry in TERRA_PALETTE if entry[0] != "terra_sea")
 
 # Jigsaw orientations are `<front>_<top>`; every connector here is horizontal, so the top is up.
 OPPOSITE = {"east": "west", "west": "east", "north": "south", "south": "north"}
@@ -166,7 +166,7 @@ def write_template(path, size, palette, blocks):
 def build_patch(rng, resource, size_name, radius, distance):
     """One patch template: a connector at the west edge, the ore field `distance` blocks east.
 
-    The template is one block tall, and `planetaryfactory:ground` drops each of its columns onto
+    The template is one block tall, and `factoryworks:ground` drops each of its columns onto
     the terrain, so y=0 is the topsoil block itself: the ore replaces it and the field lies flush
     with the surface. That is the Factorio reading ADR-0019 asks for -- a patch you see the outline
     of and plan a miner over -- and it is also what makes the field legible after half of it has
@@ -199,8 +199,8 @@ def build_patch(rng, resource, size_name, radius, distance):
     # world space and the wrong one in template space, which rotates the field off its axis --
     # copper's would land on top of iron's.
     connector, connector_nbt = jigsaw_block(
-        "planetaryfactory:terra_start_patch",
-        "planetaryfactory:terra_start_hub",
+        "factoryworks:terra_start_patch",
+        "factoryworks:terra_start_hub",
         "minecraft:empty",
         "west",
     )
@@ -309,9 +309,9 @@ def build_hub(rng, index, offsets):
     for resource, (dx, dz) in offsets.items():
         facing = PATCHES[resource]["facing"]
         block, block_nbt = jigsaw_block(
-            "planetaryfactory:terra_start_hub",
-            "planetaryfactory:terra_start_patch",
-            "planetaryfactory:terra_start_" + resource,
+            "factoryworks:terra_start_hub",
+            "factoryworks:terra_start_patch",
+            "factoryworks:terra_start_" + resource,
             facing,
         )
         # Clamped by this resource's own span, which is what makes the guarantee hold rather
@@ -381,12 +381,12 @@ def build_datapack(hub_count):
                 "weight": 1,
                 "element": {
                     "element_type": "minecraft:single_pool_element",
-                    "location": "planetaryfactory:terra_start_hub_%d" % index,
+                    "location": "factoryworks:terra_start_hub_%d" % index,
                     # Same pair as a patch, and for the same reason: the pool has to sit in the
                     # ground rather than at the hub's own y, and `rigid` is what keeps vanilla's
                     # gravity processor -- which reads a heightmap that stops at leaves -- off it.
                     "projection": "rigid",
-                    "processors": "planetaryfactory:terra_start_ground",
+                    "processors": "factoryworks:terra_start_ground",
                 },
             }
             for index in range(hub_count)
@@ -394,15 +394,15 @@ def build_datapack(hub_count):
     })
 
     write_json(os.path.join(WORLDGEN, "processor_list", "terra_start_ground.json"), {
-        "_comment": "Generated by scripts/build-terra-start.py. `planetaryfactory:ground` is "
-                    "registered by planetaryfactory_core. It drops each column of a patch onto the "
+        "_comment": "Generated by scripts/build-terra-start.py. `factoryworks:ground` is "
+                    "registered by factoryworks_core. It drops each column of a patch onto the "
                     "terrain, walking down through whatever grew there. Vanilla's "
                     "`minecraft:gravity` -- the one the `terrain_matching` projection applies -- "
                     "reads WORLD_SURFACE instead, which is 'the highest block that is not air', so "
                     "a field crossing a wood landed on the canopy as ore in place of leaves. No "
                     "vanilla heightmap avoids that; OCEAN_FLOOR and MOTION_BLOCKING stop at leaves "
                     "and logs too.",
-        "processors": [{"processor_type": "planetaryfactory:ground"}],
+        "processors": [{"processor_type": "factoryworks:ground"}],
     })
 
     for resource in PATCHES:
@@ -417,13 +417,13 @@ def build_datapack(hub_count):
                     "weight": 1,
                     "element": {
                         "element_type": "minecraft:single_pool_element",
-                        "location": "planetaryfactory:terra_start_%s_%s" % (resource, size),
+                        "location": "factoryworks:terra_start_%s_%s" % (resource, size),
                         # `rigid`, not `terrain_matching`, and the field still follows the ground:
                         # the processor below is what drops each column, and the projection is what
                         # would otherwise add vanilla's own gravity processor on top of it. See the
                         # processor list's comment for why vanilla's will not do.
                         "projection": "rigid",
-                        "processors": "planetaryfactory:terra_start_ground",
+                        "processors": "factoryworks:terra_start_ground",
                     },
                 }
                 for size in SIZES

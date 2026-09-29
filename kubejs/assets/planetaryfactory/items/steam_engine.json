@@ -1,9 +1,0 @@
-{
-  "model": {
-    "type": "minecraft:special",
-    "base": "planetaryfactory:item/steam_engine",
-    "model": {
-      "type": "geckolib:geckolib"
-    }
-  }
-}

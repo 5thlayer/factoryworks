@@ -1,0 +1,17 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:gray_concrete",
+      "count": 10
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:red_concrete",
+      "count": 10
+    }
+  ],
+  "time": 10
+}

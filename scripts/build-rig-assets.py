@@ -4,13 +4,13 @@
 ADR-0043's ladder is two rigs, and #192 is the shared idiom both stand on: an anchor block plus
 parts that forward to it, placed as one square that extends away from the player. This script
 supplies the one thing that idiom needs and this ticket must not type by hand -- the footprint
-size -- plus the ordinary blockstate/model/lang/loot-table plumbing every `planetaryfactory:`
+size -- plus the ordinary blockstate/model/lang/loot-table plumbing every `factoryworks:`
 block needs under ADR-0015's split (mechanism in the mod, assets in the pack).
 
 **Every number is read, not chosen.** `data/factorio/machine.json`'s `drills` rows carry the
 whole prototype (#188, widened by #193); this script keeps only the two solid-ore drills
 (`resource_categories` containing `basic-solid`) and copies the fields the mod reads to
-`mod/src/main/resources/planetaryfactory_core/mining/drills.json`, which the mod reads at
+`mod/src/main/resources/factoryworks_core/mining/drills.json`, which the mod reads at
 class-init the same way `OreCorpus` reads `ore/amounts.json`. The pumpjack is a fluid drill
 (`basic-fluid`) and neither ticket's scope.
 
@@ -33,12 +33,12 @@ import sys
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MACHINE_CORPUS = os.path.join(ROOT, "data", "factorio", "machine.json")
 DRILL_RESOURCE = os.path.join(
-    ROOT, "mod", "src", "main", "resources", "planetaryfactory_core", "mining", "drills.json"
+    ROOT, "mod", "src", "main", "resources", "factoryworks_core", "mining", "drills.json"
 )
-ASSETS = os.path.join(ROOT, "kubejs", "assets", "planetaryfactory")
-DATA = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
+ASSETS = os.path.join(ROOT, "kubejs", "assets", "factoryworks")
+DATA = os.path.join(ROOT, "kubejs", "data", "factoryworks")
 
-NAMESPACE = "planetaryfactory"
+NAMESPACE = "factoryworks"
 
 # The two rigs. `factorio_name` is the corpus key the row is read from; everything else here is
 # display/texture choices, not numbers ADR-0022 governs.
@@ -67,9 +67,9 @@ FACINGS = {"north": 0, "east": 90, "south": 180, "west": 270}
 # being derived from RIGS -- the same three the furnace screen carries, because the gauge answers
 # the same question: what is banked, and what a tick of work costs.
 SCREEN_LANG = {
-    "tooltip.planetaryfactory.rig.fuel": "%s / %s J",
-    "tooltip.planetaryfactory.rig.fuel.seconds": "%ss of mining at %s J/t",
-    "tooltip.planetaryfactory.rig.fuel.out": "No fuel burning",
+    "tooltip.factoryworks.rig.fuel": "%s / %s J",
+    "tooltip.factoryworks.rig.fuel.seconds": "%ss of mining at %s J/t",
+    "tooltip.factoryworks.rig.fuel.out": "No fuel burning",
 }
 
 # Every field the mod reads off a row. A corpus regeneration that drops one is a hard failure

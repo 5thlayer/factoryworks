@@ -1,0 +1,17 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 8
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:steel_chest",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

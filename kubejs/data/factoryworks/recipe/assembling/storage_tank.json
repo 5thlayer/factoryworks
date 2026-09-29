@@ -1,0 +1,21 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 20
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 5
+    }
+  ],
+  "results": [
+    {
+      "id": "oritech:portable_tank",
+      "count": 1
+    }
+  ],
+  "time": 60
+}

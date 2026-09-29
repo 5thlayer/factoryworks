@@ -20,7 +20,7 @@ from launch import INSTALL  # noqa: E402 -- the one place the install's location
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MC = os.path.join(ROOT, "kubejs", "data", "minecraft")
-PF = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
+PF = os.path.join(ROOT, "kubejs", "data", "factoryworks")
 
 # Terra's noise settings and dimension type start from vanilla's own, read out of the game jar
 # the instance launches. Minecraft rewrites both formats between versions -- 26.1 moved every
@@ -294,7 +294,7 @@ def surface_rule():
     stone all the way down, and there is nothing else to express.
     """
     def biome_is(names):
-        return {"type": "minecraft:biome", "biome_is": ["planetaryfactory:" + n for n in names]}
+        return {"type": "minecraft:biome", "biome_is": ["factoryworks:" + n for n in names]}
 
     floor = {
         "type": "minecraft:stone_depth",
@@ -380,7 +380,7 @@ SURFACE_RULE = surface_rule()
 
 def build_dimension():
     return {
-        "_comment": "Terra. The palette is an explicit biomes list because multi_noise_biome_source_parameter_list is a preset-only stub whose codec accepts hardcoded names -- the same shape planetaryfactory:gleba already uses.",
+        "_comment": "Terra. The palette is an explicit biomes list because multi_noise_biome_source_parameter_list is a preset-only stub whose codec accepts hardcoded names -- the same shape factoryworks:gleba already uses.",
         "type": "minecraft:overworld",
         "generator": {
             "type": "minecraft:noise",
@@ -389,7 +389,7 @@ def build_dimension():
                 "type": "minecraft:multi_noise",
                 "biomes": [
                     {
-                        "biome": "planetaryfactory:" + name,
+                        "biome": "factoryworks:" + name,
                         "parameters": {
                             "temperature": temp,
                             "humidity": hum,

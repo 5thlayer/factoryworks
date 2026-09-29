@@ -2,7 +2,7 @@
 """Assert the hand-written recipe subtree, and the Engineer's Pick's pack-side files.
 
 `docs/testing/what-to-check.md`'s "cross-file references resolve" claim, for the one subtree of
-`kubejs/data/planetaryfactory/recipe/` that no converter generates.
+`kubejs/data/factoryworks/recipe/` that no converter generates.
 
 `recipe/assembling/pack/` is ADR-0031's single stated exception: the corpus authors every recipe it contains,
 and Factorio has no mining-tool prototype, so the Engineer's Pick's two recipes cannot come from
@@ -22,7 +22,7 @@ What fails quietly without it:
     player cannot build yet, and rung 0 is a dead end.
   - a file under `kubejs/` whose name carries an uppercase letter. KubeJS validates every name it
     scans and rejects one outright -- `Invalid file name: Uppercase 'R' in
-    kubejs/data/planetaryfactory/recipe/assembling/pack/README.md` -- and that ERROR stops a world from
+    kubejs/data/factoryworks/recipe/assembling/pack/README.md` -- and that ERROR stops a world from
     loading. It is asserted here because this subtree is the one place a human writes files under
     `kubejs/` by hand rather than generating them, and a README next to the recipes is the obvious
     thing to reach for.
@@ -32,7 +32,7 @@ What fails quietly without it:
     other file would notice.
 
 `terra_species()` is here too, the tree species Terra's biomes place, read out of
-`kubejs/data/planetaryfactory/worldgen/biome/terra_*.json` rather than typed; the stock wooden
+`kubejs/data/factoryworks/worldgen/biome/terra_*.json` rather than typed; the stock wooden
 stairs are asserted against it.
 
 The `fellable` block tag is here because it fails as quietly: the mod names it with a `TagKey`,
@@ -51,12 +51,12 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 SUBTREE = "assembling/pack"
 PACK = EMITTED / SUBTREE
-BIOMES = ROOT / "kubejs/data/planetaryfactory/worldgen/biome"
-FELLABLE_TAG = ROOT / "kubejs/data/planetaryfactory/tags/block/fellable.json"
-FELLING = ROOT / "mod/src/main/java/com/planetaryfactory/core/felling/TreeFelling.java"
+BIOMES = ROOT / "kubejs/data/factoryworks/worldgen/biome"
+FELLABLE_TAG = ROOT / "kubejs/data/factoryworks/tags/block/fellable.json"
+FELLING = ROOT / "mod/src/main/java/com/factoryworks/core/felling/TreeFelling.java"
 # Which vanilla tree placement carries which species. Terra's biomes name the placed feature.
 PLACEMENT_SPECIES = {
     "trees_plains": ("oak",),
@@ -67,9 +67,9 @@ PLACEMENT_SPECIES = {
     "trees_sparse_jungle": ("jungle",),
     "trees_taiga": ("spruce",),
 }
-PICK_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/mining/PickTier.java"
-PICK_ITEM = ROOT / "mod/src/main/java/com/planetaryfactory/core/mining/EngineersPick.java"
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+PICK_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/PickTier.java"
+PICK_ITEM = ROOT / "mod/src/main/java/com/factoryworks/core/mining/EngineersPick.java"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
 DATA = ROOT / "kubejs/data"
 SURVIVORS = ROOT / "kubejs/server_scripts/recipe_survivors.js"
 # The two trees KubeJS scans and name-validates. `kubejs/README.txt` sits above both, which is why
@@ -77,7 +77,7 @@ SURVIVORS = ROOT / "kubejs/server_scripts/recipe_survivors.js"
 SCANNED = (ROOT / "kubejs/data", ROOT / "kubejs/assets")
 CONVERTER = ROOT / "scripts/factorio-recipe-convert.py"
 MODS = ROOT / "mods"
-NAMESPACE = "planetaryfactory"
+NAMESPACE = "factoryworks"
 
 # The category the Personal Assembler's predicate keeps, and nothing else is hand-craftable.
 HAND_CATEGORY = "crafting"
@@ -124,7 +124,7 @@ def survivor_types():
 
 
 def items_of(recipe, side):
-    """`(item or #tag, count)` pairs off a `planetaryfactory:assembling` recipe (#279)."""
+    """`(item or #tag, count)` pairs off a `factoryworks:assembling` recipe (#279)."""
     if side == "inputs":
         return [(entry["ingredient"], entry.get("count", 1))
                 for entry in recipe.get("ingredients", [])]

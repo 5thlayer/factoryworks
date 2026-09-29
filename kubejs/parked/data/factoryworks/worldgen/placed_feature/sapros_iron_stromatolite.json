@@ -1,0 +1,24 @@
+{
+  "_comment": "In abundance, per the wiki, and the only source of metal on the body -- one that pays out through Decay rather than through a furnace.",
+  "feature": "factoryworks:sapros_iron_stromatolite",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 2,
+        "max_inclusive": 5
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

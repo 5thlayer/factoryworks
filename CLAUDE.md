@@ -76,7 +76,7 @@ ruled the prospector was never canon and ADR-0045 put every ore patch on the sur
 drops it and the charting gesture stays open on #116. A third, `tests/pack/test_furnace_assets.py`,
 was red on the Electric Furnace's GTCEu textures until #324 gave it art of its own.
 
-`planetaryfactory_core` itself compiles again as of #268, and what that cost is recorded in
+`factoryworks_core` itself compiles again as of #268, and what that cost is recorded in
 `docs/port/blocked-removals-26.1.2.md`: every class deleted because GregTech left or because the
 Researchd fork was still on 1.21.1, each with the ticket that owns restoring it (#262, then #251,
 #260 having decided its own stay removed). Read it before concluding a mechanic was dropped — the Minecraft-free rules and their
@@ -117,7 +117,7 @@ turning `5 iron_plate -> 1 steel_plate` into a 1:1 with no error and no log line
 survives both codecs, and that nothing in the mod reads recipes off vanilla's smelting type. It is
 a source-text check because the assertion needs to name a Minecraft class the unit-test classpath
 deliberately does not have. The arithmetic and the rules are
-Minecraft-free unit tests under `mod/src/test/java/com/planetaryfactory/core/smelting/`: the
+Minecraft-free unit tests under `mod/src/test/java/com/factoryworks/core/smelting/`: the
 per-tier duration, the 90 FE/t draw and its buffer, the unsided routing by item, and the stall —
 a blocked output starts no smelt, burns no fuel and voids nothing (ADR-0041). Whether the three
 blocks smelt in a running game is `gametest/EnergyFaceTests` for the Electric tier (#271) and
@@ -132,14 +132,14 @@ cap in `FurnaceItemHandler` turns all three tiers red.
 
 ### GameTest harness
 
-`./gradlew :planetaryfactory_core:runGameTestServer` from the repo root is the pack's only check
+`./gradlew :factoryworks_core:runGameTestServer` from the repo root is the pack's only check
 that loads a world. It is headless, needs no display and no human, and fails the command when a
-test fails. The tests are in `mod/src/main/java/com/planetaryfactory/core/gametest/`, in the
+test fails. The tests are in `mod/src/main/java/com/factoryworks/core/gametest/`, in the
 **main** source set — a GameTest is code the game loads, so it cannot live in the Minecraft-free
 test source set. 26.1 has no `@GameTestHolder` and no `neoforge.enabledGameTestNamespaces`: a test
 is an entry in the `test_instance` datapack registry, registered through NeoForge's
 `RegisterGameTestsEvent`. Groundworks and Beltworks register tests too, some of them for cases the
-Pack's settings rule out on purpose, so the run selects `--tests planetaryfactory:*` and each repo's
+Pack's settings rule out on purpose, so the run selects `--tests factoryworks:*` and each repo's
 own run holds its tests (#448). The selector takes one wildcard pattern, not a list.
 `PFGameTestInstance` is the shape that event has no answer for — vanilla's `function` instance
 resolves a `Consumer` out of the `test_function` registry, which is populated during `Bootstrap`,
@@ -154,7 +154,7 @@ run (#338). KubeJS resolves `kubejs/` against the game directory with no setting
 `mod/run/` is untracked, so the link is built rather than committed. There is no second copy: the
 startup scripts register the pack's items, the server scripts run the recipe sweep, and every file
 under `kubejs/data/` loads. That is what lets a test assert against the recipe the pack ships rather
-than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml` and `config/planetaryfactory_core-server.toml`, linked in by `linkServerConfigs`: loaders need power (#447) and machines lock by research (#260) only because the pack's configs say so, and both defaults are off. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
+than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml` and `config/factoryworks_core-server.toml`, linked in by `linkServerConfigs`: loaders need power (#447) and machines lock by research (#260) only because the pack's configs say so, and both defaults are off. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
 vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
 five blocks above the floor; without it no test block places and the run hangs rather than fails.
 And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the
@@ -283,7 +283,7 @@ anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `co
 A chassis recipe is named as Factorio names it (#490): its own `recipe-name` locale entry, or else
 its main product. `scripts/factorio-recipe-name-extract.py` copies the entries into
 `data/factorio/recipe_name.json`, and `scripts/build-recipe-names.py` writes a
-`recipe.planetaryfactory.<type>.<name>` key for every emitted assembling, chemistry and oil
+`recipe.factoryworks.<type>.<name>` key for every emitted assembling, chemistry and oil
 processing recipe, with the entry or `%s`, which `AssemblingMachineRecipes.name` fills with the
 product. `tests/pack/test_recipe_names.py` runs both `--check`s and holds the keys to the emitted
 recipes both ways. Run it after any converter run.
@@ -314,7 +314,7 @@ after re-extracting the corpus or editing the item map.
 ### Building tag check
 
 What the player breaks at full Reach (16) rather than vanilla's 4.5 is the
-`planetaryfactory:buildings` block tag (#413), never typed. `scripts/factorio-building-extract.py`
+`factoryworks:buildings` block tag (#413), never typed. `scripts/factorio-building-extract.py`
 writes `data/factorio/building.json`, every Factorio item that places an entity, and
 `scripts/build-building-tag.py` joins its Buildings onto `data/pack/item-map.json` by the block of
 the target's own id. A missing, `undecided`, `not_emitted`, `native_mechanic` or `blocked_by` row,
@@ -341,9 +341,9 @@ draws a plan and the click executes one, so the two cannot drift -- a preview th
 than none, because a player builds against it. The plan, its drawing and the vanilla plan
 (deferring to `BlockPlaceContext` for facing, replaceable blocks and state survival) are the
 Groundworks library's, which Beltworks bundles and the pack compiles against as it is nested in the
-installed Beltworks jar (#446, #465). `Placements.planFor` is the one entry point, and every `planetaryfactory:` block, and every
+installed Beltworks jar (#446, #465). `Placements.planFor` is the one entry point, and every `factoryworks:` block, and every
 other block with a facing, an axis or a rotation (`Oriented`, #450), is opted into the vanilla plan in
-`PlanetaryFactoryCore`; a door or bed draws one half, an accepted quirk. Only an item whose placement is *not* vanilla's implements
+`FactoryWorksCore`; a door or bed draws one half, an accepted quirk. Only an item whose placement is *not* vanilla's implements
 `PlansPlacement` -- the pole's column, the rig's footprint, the pump's dry site -- and its refusals are
 `PackRefusal`. What the pack draws beside a plan is `placement/client/`, on the library's
 `PlacementPreviewEvent`: the supply area, mining area and wires as an `Overlay`, a family dismantle
@@ -404,7 +404,7 @@ collector pipeline is reached through the former.
 ### Felling check
 
 A tree is one entity holding an amount, and one gesture takes it whole (ADR-0051). Three checks,
-none of which launches the game. `mod/src/test/java/com/planetaryfactory/core/felling/` is the rule:
+none of which launches the game. `mod/src/test/java/com/factoryworks/core/felling/` is the rule:
 `TreeShapeTest` is the fill over a block-position graph — it terminates on a ring of logs, respects
 each of its three bounds, refuses a mid-trunk block, refuses a log cabin (no naturally-grown leaf),
 never descends below the base, and does not cross into a touching canopy, which is vanilla's leaf
@@ -432,7 +432,7 @@ three items: an id that names nothing is a silent empty slot, and the moment the
 circuit rung 0 has stopped being taught. The foreign loop filters by namespace rather than by id, so
 it is the assertion that a borrowed id resolves at all and the next borrowed pocket entry has to
 pass it too — which is what `gtceu:prospector.lv` stopped doing when GregTech left.
-`mod/src/test/java/com/planetaryfactory/core/start/` is the once-per-player rule and the flag's
+`mod/src/test/java/com/factoryworks/core/start/` is the once-per-player rule and the flag's
 codec round trip, which are Minecraft-free because the kit names items by string. Run both after
 editing `core/start/` or the spec's Opening. Whether the kit is in the inventory at spawn is a
 world load.
@@ -441,14 +441,14 @@ world load.
 
 What a burner furnace burns is generated datapack JSON, not Forge's burn table (ADR-0047).
 `scripts/factorio-fuel-convert.py` joins `data/factorio/fuel.json` onto `data/pack/item-map.json`
-into `kubejs/data/planetaryfactory/fuel/`, and nothing is decided in the script: a fuel with no
+into `kubejs/data/factoryworks/fuel/`, and nothing is decided in the script: a fuel with no
 item-map row, an `undecided` one or a fluid is a *recorded skip*, printed with its reason.
 `tests/factorio/test_fuel_convert.py` asserts every decided fuel has a row and nothing else does,
 that `uranium-fuel-cell` fails on category as well as on its row, that coal's row still buys 888
 whole ticks at the Stone Furnace's own 4,500 J/t, that `wood` arrives as the tag `minecraft:logs`,
 and that the mod's listener reads the folder the converter writes. The arithmetic and the
 default-deny rule are `FuelBufferTest` and `FuelTableTest` under
-`./gradlew :planetaryfactory_core:test`. Run all three after re-extracting the corpus, editing the
+`./gradlew :factoryworks_core:test`. Run all three after re-extracting the corpus, editing the
 item map or touching `core/smelting/`. Whether a furnace burns a log in a running game is a world
 load. See `docs/testing/fuel-table-check.md`.
 
@@ -521,7 +521,7 @@ symptom is a new world.
 An ore block carries an amount and a break draws one unit (ADR-0041). That is five checks, none of
 which launches the game: `tests/factorio/test_resource_extract.py` re-derives every starting total
 from Factorio's own committed formula rather than trusting the number;
-`mod/src/test/java/com/planetaryfactory/core/ore/` asserts a block pays out exactly what it holds
+`mod/src/test/java/com/factoryworks/core/ore/` asserts a block pays out exactly what it holds
 and that an exhausted position retires its delta, since a delta left behind is inherited by the next
 block placed there; `tests/pack/test_ore_assets.py` asserts a blockstate variant per stage,
 that every ore block is in `c:ores`, and resolves every drop against the installed jars, since an
@@ -534,7 +534,7 @@ them after editing anything under `core/ore/`, the two ore generators or the ext
 ### Outfield disc check
 
 Every patch beyond the starting area is a surface disc placed by worldgen (#320, ADR-0045): one
-`planetaryfactory:outfield_disc` structure and one `random_spread` structure set per resource,
+`factoryworks:outfield_disc` structure and one `random_spread` structure set per resource,
 uranium included (#321). `scripts/build-outfield-worldgen.py` writes them from
 `data/factorio/resource.json`, and `tests/worldgen/test_outfield_worldgen.py` runs its `--check`
 and re-derives the spacing from each resource's `mean_spacing` and the separation from
@@ -611,7 +611,7 @@ satisfies it, and any other tool predicate, silk touch included, is satisfied by
 block drops dirt and not itself. A loot table under `kubejs/data/` replaces the jar's: every plant
 the live worldgen places, leaves included, has an empty one, and gravel drops no flint (ADR-0092).
 Each drop's block and loot table are written to
-`kubejs/assets/planetaryfactory/obtainable/sources.json` for EMI's Where it is found (ADR-0091).
+`kubejs/assets/factoryworks/obtainable/sources.json` for EMI's Where it is found (ADR-0091).
 
 `tests/pack/test_obtainable_index.py` runs both `--check`s, holds every listed stack to an id the
 corpus or the pack registers, and fails a mechanic row naming nothing, naming no ADR, or one the derivation already
@@ -644,7 +644,7 @@ asserts the face exists at all. A machine whose registration is missing is not b
 thrown and nothing logged. Two seams make that reachable: a block entity type is declared in
 `BLOCK_ENTITIES.register` and its faces in `registerCapabilities`, with no compiler relationship
 between them, and both event handlers are reached only by an `addListener` line in
-`PlanetaryFactoryCore` — dropping that one line makes every machine in the mod inert at once.
+`FactoryWorksCore` — dropping that one line makes every machine in the mod inert at once.
 `FACES` and `ITEM_FACES` are the recorded tables of which type gets which faces, listed rather
 than discovered so that a new machine fails here instead of being answered "none"; a type that
 genuinely wants no face records an empty tuple, which is then a decision somebody wrote down.
@@ -696,7 +696,7 @@ the item-map row names the block now that it exists; and that the **refusal mess
 read out of `OffshorePumpItem` rather than typed, because a missing one renders the raw key on the
 very gesture the message exists to explain.
 
-The rule itself is Minecraft-free and lives under `mod/src/test/java/com/planetaryfactory/core/fluid/`:
+The rule itself is Minecraft-free and lives under `mod/src/test/java/com/factoryworks/core/fluid/`:
 `OffshorePumpSitingTest` is the predicate — one adjacent source, flowing refused, no minimum size —
 and `OffshorePumpSpecTest` the two tick rates, which are the easiest thing here to get wrong, since
 `pumping_speed` is stated per *Factorio* tick and its value happens to be Minecraft's tick rate.
@@ -707,7 +707,7 @@ the hub pool actually feeds a pipe is a world load.
 
 Terra's Boiler is the burner model's third customer (#224, ADR-0048): fuel and water in,
 low-temperature steam out. Two checks, neither of which launches the game.
-`mod/src/test/java/com/planetaryfactory/core/fluid/` holds the arithmetic and the stall —
+`mod/src/test/java/com/factoryworks/core/fluid/` holds the arithmetic and the stall —
 `BoilerSpecTest` is the rate, and every figure in it is reachable by a wrong route that looks
 right: the rise is paid for at **steam's** 0.2 kJ and water's is ten times larger (6 mB/s instead
 of 60), and `energy_consumption` is per *second* against a buffer drained per tick. `BoilerCycleTest`
@@ -736,7 +736,7 @@ and making the cycle convert nothing each turn exactly one of the three red.
 The oil fluids are Oritech's, drawn in Factorio's colours (#277, ADR-0067). A fluid's colour is its
 sprite times a tint, and Oritech's tint is a constructor argument that NeoForge refuses to register
 twice, so `core/mixin/oritech/FluidModelContentMixin` swaps it for the one `FluidTintCorpus` reads
-out of `planetaryfactory_core/fluid/tints.json`. `scripts/build-fluid-tints.py` writes that file from
+out of `factoryworks_core/fluid/tints.json`. `scripts/build-fluid-tints.py` writes that file from
 Factorio's `base_color` (in `data/factorio/fluid.json`) and each sprite's average, read from the
 Oritech jar. It retints only where Oritech's colour misses by more than 0.15. The sprite and tint
 per Oritech fluid were read off the jar with `javap` and are the one typed table.
@@ -749,10 +749,10 @@ is a human check on delivery.
 ### Steam Engine check
 
 Oritech's Steam Engine entity is the pack's engine (#282, ADR-0062), under the pack's own block,
-`planetaryfactory:steam_engine`, placed and broken as one footprint (#352, ADR-0077), and a mixin
+`factoryworks:steam_engine`, placed and broken as one footprint (#352, ADR-0077), and a mixin
 (`core/mixin/oritech/SteamEngineEntityMixin`) replaces its `tickMaster` and `setupMaster` whole,
 reaching the pack's subclass through inheritance. The HUD's status precedence is `SteamEngineStatusTest`.
-`SteamEngineSpecTest` under `./gradlew :planetaryfactory_core:test` is the arithmetic, read from
+`SteamEngineSpecTest` under `./gradlew :factoryworks_core:test` is the arithmetic, read from
 `SteamChainCorpus`: one engine at speed 7 burns 30 mB/s and makes 450 FE/t **over whole ticks** --
 Oritech's `(long)` cast floors 1.5 mB/t to 1, so the spec carries the fraction -- rows are linear, no
 water returns, and the tank and FE buffer are 200 mB and 450 FE per engine in the row. The mixin
@@ -771,7 +771,7 @@ The Radar (#368, ADR-0079) is a 3x3x3 on the footprint seam that charts one 32-b
 row against the dump when it is on disk and re-derives 33.3 s per sector;
 `tests/pack/test_radar_assets.py` runs `scripts/build-radar-assets.py --check` and holds the mod's
 resource against the corpus and each ore's patch-marker lang key (#370). The rules are Minecraft-free under
-`mod/src/test/java/com/planetaryfactory/core/radar/`: the draw, the 10 MJ sector and the 250 kJ
+`mod/src/test/java/com/factoryworks/core/radar/`: the draw, the 10 MJ sector and the 250 kJ
 nearby pulse counted from the same draw (`RadarSpecTest`, `RadarEnergyTest`), the 9x9 nearby area
 and the long range's clockwise rings, unexplored first (`RadarSweepTest`), the 3x3x3
 (`RadarFootprintTest`) and the chart's round trip (`RadarChartsTest`). `gametest/RadarTests` is
@@ -803,7 +803,7 @@ Crude is infinite (#377, ADR-0081): an **oil well** holds an amount, a Pumpjack 
 well's start. `scripts/factorio-resource-extract.py` slices crude's figures into `amounts.json`
 beside the ores, and `tests/factorio/test_resource_extract.py` asserts them and re-derives each
 field's wells and centre amount per distance. The derivations are Minecraft-free under
-`mod/src/test/java/com/planetaryfactory/core/oil/`: `WellYieldTest` (yield, the 1,000 cap, the floor,
+`mod/src/test/java/com/factoryworks/core/oil/`: `WellYieldTest` (yield, the 1,000 cap, the floor,
 the carried fraction), `OilFieldTest` (1/96 of the mask, 3 apart, ore columns turned away, the
 amount), and `PumpjackEnergyTest` and `PumpjackSpecTest` (45 FE/t, a 1.5 FE/t drain paid idle, a
 cycle per 900 FE). `scripts/build-pumpjack-assets.py` copies the `pumpjack` drill row and the item
@@ -848,8 +848,8 @@ is never evidence for `excluded` here — and it places nothing on a progression
 
 ### Recipe conversion
 
-`scripts/factorio-recipe-convert.py` turns the extracted corpus into `planetaryfactory:assembling`
-and `planetaryfactory:smelting` recipe JSON under `kubejs/data/planetaryfactory/recipe/` (#279), reading five committed data files: the corpus, the category
+`scripts/factorio-recipe-convert.py` turns the extracted corpus into `factoryworks:assembling`
+and `factoryworks:smelting` recipe JSON under `kubejs/data/factoryworks/recipe/` (#279), reading five committed data files: the corpus, the category
 map, the subgroup owners, `data/pack/item-map.json` and `data/pack/recipe-overrides.json`. Nothing is
 decided in the script — a decision is a diff to a design document. Generated output is never
 hand-edited; re-run the converter. A Factorio name with no item-map row is a hard failure, while an
@@ -922,7 +922,7 @@ are not scanned; they are not ours to fix.
 
 One blind spot is **measured rather than assumed**: a missing item model definition — the
 fifteen-item failure the ticket was filed over — is logged nowhere at all. Deleting
-`assets/planetaryfactory/items/boiler.json` produced a log with zero occurrences of `boiler` while
+`assets/factoryworks/items/boiler.json` produced a log with zero occurrences of `boiler` while
 the item rendered as the checkerboard. That half stays with `test_data_formats.py`, and the two are
 complementary by measurement. Whether the Boiler's texture is the *right* texture is not claimed
 here. It is in no batch; run it after editing any model, blockstate, texture or definition. See
@@ -949,7 +949,7 @@ that decodes an item.
 
 ### Emitted smelt shape check
 
-`tests/factorio/test_smelting_shape.py` asserts the four emitted `planetaryfactory:smelting`
+`tests/factorio/test_smelting_shape.py` asserts the four emitted `factoryworks:smelting`
 recipes are shaped the way **26.1** parses an ingredient: a string, `#`-prefixed for a tag, where
 1.21.1 took `{"item": ...}`. The old shape does not crash — it is one `Couldn't parse data file`
 line at datapack load and the recipe is then absent from the manager, which reaches a player as a
@@ -983,7 +983,7 @@ Personal Assembler's resolver has no cost model to choose between them. It shipp
 Create's two gearbox conversions and the large cogwheel's second route were emitted alongside the
 direct recipes they duplicate and every subtree-local check passed. One item legitimately has a
 second route: solid fuel, which Factorio makes from each of its three oils, and that is a row
-with its reason, all three of whose routes are `planetaryfactory:chemistry` recipes (#488). The file-path
+with its reason, all three of whose routes are `factoryworks:chemistry` recipes (#488). The file-path
 invariant it used to hold existed because GregTech re-registered every GTRecipe under its type's
 path (#87); the pack's own types are re-registered by nothing, and the rule left with GregTech (#279).
 
@@ -992,7 +992,7 @@ decision.
 
 ### Hand-written recipe check
 
-`kubejs/data/planetaryfactory/recipe/assembling/pack/` is the one subtree no converter generates: ADR-0039's
+`kubejs/data/factoryworks/recipe/assembling/pack/` is the one subtree no converter generates: ADR-0039's
 two Engineer's Pick recipes, which the corpus can never author because Factorio has no mining-tool
 prototype. `tests/factorio/test_pack_recipes.py` is what holds them, since every other recipe here
 is checked against the corpus and these are checked against nothing otherwise — that the
@@ -1008,7 +1008,7 @@ that only become a material under a colour handler our item never reaches; GregT
 ADR-0060 and took the source with it, so `scripts/build-pick-textures.py` and its `--check` are
 gone rather than restated. The tier list is read out of `PickTier.java`. The pick's arithmetic —
 that Factorio's seconds survive Minecraft's break-time formula — is `MiningSpeedTest` under
-`./gradlew :planetaryfactory_core:test`. Whether the Pick mines every block class is a world load. See
+`./gradlew :factoryworks_core:test`. Whether the Pick mines every block class is a world load. See
 `docs/testing/hand-written-recipe-check.md`.
 
 ### Stock recipe re-authoring check
@@ -1017,7 +1017,7 @@ A stock recipe the pack keeps is re-authored, never admitted as shipped (ADR-003
 `scripts/stock-recipe-convert.py` reads each recipe `data/pack/stock-admissions.json` admits out of
 the installed jar, flattens a shaped pattern with every count kept, swaps each ingredient through
 `data/pack/stock-substitutions.json` and writes a hand recipe under
-`kubejs/data/planetaryfactory/recipe/assembling/stock/`. An ingredient in neither table, a table row
+`kubejs/data/factoryworks/recipe/assembling/stock/`. An ingredient in neither table, a table row
 nothing reads, and a recipe no jar or two jars ship each fail the line (#442). An admission can
 carry a `rewrite` instead of being flattened: its ingredients, all `keep` rows, and its yield,
 chosen and recorded with a reason, and only the output is read from the jar (#444).
@@ -1070,7 +1070,7 @@ run it after editing that table too.
 The jar set is a packwiz manifest tracked in git (ADR-0024) — `pack.toml`, `index.toml` and one
 `mods/*.pw.toml` per externally-sourced mod. `mods/*` is gitignored with `!mods/*.pw.toml` re-included;
 never rewrite that as a bare `mods`, or the manifest silently stops being tracked. The local
-Beltworks jar is an unmanaged hashed entry and `planetaryfactory_core` is not indexed at all.
+Beltworks jar is an unmanaged hashed entry and `factoryworks_core` is not indexed at all.
 `scripts/pack-check.sh` asserts the installed jars still match. See `docs/pack/packwiz-workflow.md`.
 
 ### Local jar check
@@ -1104,8 +1104,8 @@ checkout too.
 
 ### First-party mod
 
-`planetaryfactory_core` is a Gradle subproject in `mod/`, built from the repo root with
-`./gradlew :planetaryfactory_core:installToPack` — required after a fresh clone, since the jar
+`factoryworks_core` is a Gradle subproject in `mod/`, built from the repo root with
+`./gradlew :factoryworks_core:installToPack` — required after a fresh clone, since the jar
 lands in the gitignored `mods/`. It owns mechanism only; ADR-0015 has the ownership table for
 what goes in the mod, in KubeJS and in datapack JSON. See `mod/README.md`.
 

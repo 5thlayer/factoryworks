@@ -1,6 +1,6 @@
 # Manufactio 2 - Nuclear Edition: the sequel, compared
 
-Researched 2026-09-27 for a comparison with PlanetaryFactory, as a companion to
+Researched 2026-09-27 for a comparison with FactoryWorks, as a companion to
 `docs/research/manufactio.md` (the original pack). Where a claim comes from inside the modpack zip,
 the citation is a path inside `Manufactio NE-1.01.zip` (CurseForge file 4405041, downloaded from
 `https://mediafilez.forgecdn.net/files/4405/41/Manufactio%20NE-1.01.zip`). The pack's overrides sit

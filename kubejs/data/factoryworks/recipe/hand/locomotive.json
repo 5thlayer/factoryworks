@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "factoryworks:engine_unit",
+      "count": 20
+    },
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 10
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 30
+    }
+  ],
+  "result": {
+    "id": "railcraft:steam_locomotive",
+    "count": 1
+  },
+  "time": 80
+}

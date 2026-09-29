@@ -1,0 +1,27 @@
+{
+  "type": "factoryworks:chemistry",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 20
+    },
+    {
+      "ingredient": "factoryworks:advanced_circuit",
+      "count": 2
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_sulfuric_acid",
+      "amount": 5
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:processing_unit",
+      "count": 1
+    }
+  ],
+  "time": 200
+}

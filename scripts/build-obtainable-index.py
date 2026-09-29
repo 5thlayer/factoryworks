@@ -43,11 +43,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import nbt  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-RECIPES = ROOT / "kubejs/data/planetaryfactory/recipe"
-KIT = ROOT / "mod/src/main/java/com/planetaryfactory/core/start/StartingKit.java"
+RECIPES = ROOT / "kubejs/data/factoryworks/recipe"
+KIT = ROOT / "mod/src/main/java/com/factoryworks/core/start/StartingKit.java"
 MECHANICS = ROOT / "data/pack/mechanic-obtainable.json"
 INDEX = ROOT / "kubejs/assets/emi/index/stacks/obtainable.json"
-SOURCES = ROOT / "kubejs/assets/planetaryfactory/obtainable/sources.json"
+SOURCES = ROOT / "kubejs/assets/factoryworks/obtainable/sources.json"
 LIVE = ROOT / "kubejs/data"
 JARS = ROOT / "data/jars"
 

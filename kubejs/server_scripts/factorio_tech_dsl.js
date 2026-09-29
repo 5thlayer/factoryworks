@@ -57,7 +57,7 @@ function fromFactorio(name, over) {
 }
 
 function pfId(name) {
-  return 'planetary_factory:' + name.replace(/-/g, '_');
+  return 'factory_works:' + name.replace(/-/g, '_');
 }
 
 ResearchdEvents.registerResearches((event) => {
@@ -160,7 +160,7 @@ ResearchdEvents.registerResearches((event) => {
   // the script already knows the answer.
   if (missing.length) {
     console.warn(
-      '[planetary_factory] ' +
+      '[factory_works] ' +
         missing.length +
         ' of ' +
         techs.length +
@@ -173,11 +173,11 @@ ResearchdEvents.registerResearches((event) => {
 // Craftworks asks Researchd about the hand copy's own id, so a research that unlocks a machine
 // recipe unlocks its copy too (ADR-0089).
 function withHandCopies(unlocks) {
-  var machine = 'planetaryfactory:assembling/';
+  var machine = 'factoryworks:assembling/';
   var out = unlocks.slice();
   unlocks.forEach((id) => {
     var path = id.indexOf(machine) === 0 ? id.substring(machine.length) : null;
-    if (path !== null && PF_HAND_RECIPES.indexOf(path) >= 0) out.push('planetaryfactory:hand/' + path);
+    if (path !== null && PF_HAND_RECIPES.indexOf(path) >= 0) out.push('factoryworks:hand/' + path);
   });
   return out;
 }

@@ -1,7 +1,7 @@
 {
   "replace": true,
   "values": [
-    "planetaryfactory:engineers_iron_pick",
-    "planetaryfactory:engineers_steel_pick"
+    "factoryworks:engineers_iron_pick",
+    "factoryworks:engineers_steel_pick"
   ]
 }

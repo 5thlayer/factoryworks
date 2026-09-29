@@ -256,7 +256,7 @@ demoted to a later-planet tier. Hydrogen is cut as a launch fuel by raising its 
 tier. All three were already decided in `#39`; none needs a fork source edit.
 
 **Solid fuel is a KubeJS item with a burn time.** It has no mechanism, so ADR-0015 keeps it out of
-`planetaryfactory_core`; it has no ore, dust or plate form, so registering it as a GT material would
+`factoryworks_core`; it has no ore, dust or plate form, so registering it as a GT material would
 buy nothing and add twenty unwanted derived items.
 
 ## Lubricant is made on both bodies, and must never touch the grid

@@ -2,7 +2,7 @@
 """Assert the re-authored stock recipes resolve and keep the hand graph a plan (#442, ADR-0034).
 
 `scripts/stock-recipe-convert.py` re-authors each stock recipe `data/pack/stock-admissions.json`
-admits as a `planetaryfactory:assembling` recipe, swapping its ingredients through
+admits as a `factoryworks:assembling` recipe, swapping its ingredients through
 `data/pack/stock-substitutions.json`. What it asserts:
 
   - the generator's `--check` passes: the emitted files are what the line writes today
@@ -32,7 +32,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import test_pack_recipes  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 STOCK = EMITTED / "assembling/stock"
 ADMISSIONS = ROOT / "data/pack/stock-admissions.json"
 SUBSTITUTIONS = ROOT / "data/pack/stock-substitutions.json"
@@ -40,7 +40,7 @@ GENERATOR = ROOT / "scripts/stock-recipe-convert.py"
 MODS = ROOT / "mods"
 CLIENT_JAR = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
     "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
-MACHINE_SPECS = ROOT / "mod/src/main/resources/planetaryfactory_core/machine/specs.json"
+MACHINE_SPECS = ROOT / "mod/src/main/resources/factoryworks_core/machine/specs.json"
 HAND = "crafting"
 
 failures = []
@@ -104,7 +104,7 @@ def check_stock(recipes, keep):
     for output, row in sorted(authored.items()):
         name = "%s/stock/%s" % (row["on"], output.split(":", 1)[1])
         check(name in stock and outputs_of(stock[name]) == [output]
-              and stock[name]["type"] == "planetaryfactory:" + row["on"],
+              and stock[name]["type"] == "factoryworks:" + row["on"],
               "`author` row %s is not emitted as %s" % (output, name))
 
     made = {item for name, r in recipes.items() if name not in stock for item in outputs_of(r)}
@@ -190,7 +190,7 @@ def main():
     check_generator()
     recipes = emitted()
     keep = json.loads(SUBSTITUTIONS.read_text())["keep"]
-    if check(STOCK.is_dir(), "kubejs/data/planetaryfactory/recipe/assembling/stock/ does not exist"):
+    if check(STOCK.is_dir(), "kubejs/data/factoryworks/recipe/assembling/stock/ does not exist"):
         check_stock(recipes, keep)
         check_wooden_stairs(recipes)
         check_no_walls(recipes)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assert every block `planetaryfactory_core` registers has the pack-side files it needs (#254).
+"""Assert every block `factoryworks_core` registers has the pack-side files it needs (#254).
 
 For each block the mod registers through a `DeferredRegister.createBlocks`: a blockstate whose
 every variant names a model, every model's parent chain and textures resolving, a lang key, an item
@@ -30,9 +30,9 @@ import test_item_map  # noqa: E402
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 JAVA = ROOT / "mod/src/main/java"
 KUBEJS = ROOT / "kubejs"
-ASSETS = KUBEJS / "assets/planetaryfactory"
-LOOT = KUBEJS / "data/planetaryfactory/loot_table/blocks"
-NAMESPACE = "planetaryfactory"
+ASSETS = KUBEJS / "assets/factoryworks"
+LOOT = KUBEJS / "data/factoryworks/loot_table/blocks"
+NAMESPACE = "factoryworks"
 
 # Blocks with no item of their own, by the rule that places them. Each pattern must match a
 # registered block and none it matches may have an item definition, so an entry cannot go stale.

@@ -1,0 +1,27 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "factoryworks:engine_unit",
+      "count": 1
+    },
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 2
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_biofuel",
+      "amount": 15
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:electric_engine_unit",
+      "count": 1
+    }
+  ],
+  "time": 200
+}

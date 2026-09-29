@@ -1,0 +1,1 @@
+{ "parent": "minecraft:block/cross", "textures": { "cross": "factoryworks:block/yumako_sapling" } }

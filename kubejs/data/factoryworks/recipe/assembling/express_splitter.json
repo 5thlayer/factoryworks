@@ -1,0 +1,31 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "beltworks:improved_splitter",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "factoryworks:advanced_circuit",
+      "count": 10
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_biofuel",
+      "amount": 80
+    }
+  ],
+  "results": [
+    {
+      "id": "beltworks:express_splitter",
+      "count": 1
+    }
+  ],
+  "time": 40
+}

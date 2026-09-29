@@ -1,0 +1,18 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "factoryworks:engineers_iron_pick",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "factoryworks:engineers_steel_pick",
+    "count": 1
+  },
+  "time": 10
+}

@@ -1,0 +1,18 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 6
+    },
+    {
+      "ingredient": "minecraft:stone_bricks",
+      "count": 10
+    }
+  ],
+  "result": {
+    "id": "factoryworks:steel_furnace",
+    "count": 1
+  },
+  "time": 60
+}

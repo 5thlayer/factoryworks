@@ -1,4 +1,4 @@
-# `planetaryfactory:assembling_machine`: what Oritech's assembler actually offers a subclass
+# `factoryworks:assembling_machine`: what Oritech's assembler actually offers a subclass
 
 Read against the **installed jar**, `mods/oritech-2.0.0-exp6.jar`, extracted and disassembled with
 `javap -p -c`. Every class claim below is from that jar unless it says otherwise. The source clone at
@@ -6,7 +6,7 @@ Read against the **installed jar**, `mods/oritech-2.0.0-exp6.jar`, extracted and
 where it is the only source for an intent; each such citation says so.
 
 ADR-0060 asserts in one sentence that assemblers, chemical plants and refineries "hold a **player-set
-recipe**: set once, inputs filtered to it, no lookup", as `planetaryfactory_core` subclasses reusing
+recipe**: set once, inputs filtered to it, no lookup", as `factoryworks_core` subclasses reusing
 Oritech's model. This file supplies the facts that sentence has never been spent into. It proposes
 nothing and decides nothing.
 
@@ -28,7 +28,7 @@ ticket is `modern-industrialization-slot-locking.md` and the two Oritech facts i
    `findActiveRecipe`, `checkCraftingFinished`, `canOutputRecipe`, `getCraftingResults` and
    `getRecipeDuration` all name it. `OritechRecipe.itemInputs` is `List<Ingredient>` — **one entry per
    input slot, one unit each** — so on the Assembler's four slots the schema tops out at four
-   ingredients of one item. `planetaryfactory:assembling` carries `List<SizedIngredient>` with
+   ingredients of one item. `factoryworks:assembling` carries `List<SizedIngredient>` with
    Factorio's counts (10 plates, 5 circuits). **The pack's recipe type cannot be cast, adapted or
    widened into the base class's.** §1.5, §2.2.
 2. **There is no lookup to remove — but removing it is not the work.** The lookup is one protected
@@ -194,12 +194,12 @@ change matters to this pack specifically: it is the same `ItemStack.CODEC` bindi
 `tests/pack/test_load_codecs.py` exists for, and Oritech has already taken the template route, so the
 pack's `AssemblingRecipe` and Oritech's are aligned on that point.
 
-The pack's type, `com.planetaryfactory.core.recipes.AssemblingRecipe`
-(`mod/src/main/java/com/planetaryfactory/core/recipes/AssemblingRecipe.java`), is
+The pack's type, `com.factoryworks.core.recipes.AssemblingRecipe`
+(`mod/src/main/java/com/factoryworks/core/recipes/AssemblingRecipe.java`), is
 `record(String category, List<SizedIngredient> ingredients, List<SizedFluidIngredient>
 fluidIngredients, List<ItemStackTemplate> results, List<FluidStackTemplate> fluidResults, int time)`
 and its `matches` **returns `false`** with the comment "No block matches it yet". It is registered as
-`planetaryfactory:assembling` in `PFRecipes` and read today only by the Personal Assembler's hand set
+`factoryworks:assembling` in `PFRecipes` and read today only by the Personal Assembler's hand set
 and the EMI plugin.
 
 Where the two types collide:
@@ -285,7 +285,7 @@ ADR-0060 chose Oritech for.
 
 | thing | inherited? |
 | --- | --- |
-| **block** | no — a new `planetaryfactory:assembling_machine` block, which may extend `MultiblockMachine` (or not, if the multiblock is dropped) |
+| **block** | no — a new `factoryworks:assembling_machine` block, which may extend `MultiblockMachine` (or not, if the multiblock is dropped) |
 | **item** | no — `PFItems` |
 | **block entity type** | **no** — this is the whole reason for extending the abstract base; a new `PFBlockEntities` entry |
 | **menu type** | **optional.** `OritechScreenHandler`'s network constructor is `(id, Inventory, FriendlyByteBuf)` → `buf.readBlockPos()` → `level.getBlockEntity(pos)`, and it stores the BE as a `ScreenProvider`. It is **not typed to Oritech's block entities**, so `ModScreens.ASSEMBLER_SCREEN` can be returned from a pack subclass's `getScreenHandlerType()` and will resolve. A pack-owned menu type is needed only if the screen grows a recipe-selection widget. |
@@ -331,7 +331,7 @@ pack wants the tiers told apart visually. Whether any of this reads correctly is
 - `oritech.mixins.json` declares `"required": true`, an empty server `mixins` list and three client
   mixins. Oritech does not mix into anything the pack owns.
 - The pack's own convention is `"required": false` on its Oritech mixin config
-  (`planetaryfactory_core.oritech.mixins.json`, which today lists `FluidStacksCapacityAccessor`,
+  (`factoryworks_core.oritech.mixins.json`, which today lists `FluidStacksCapacityAccessor`,
   `MachineCoreEntityMixin`, `SteamEngineEntityMixin` and the client-side `FluidModelContentMixin`),
   because Oritech is an optional dependency — a renamed target is a log warning, not a crash. A
   *subclass* has no such escape hatch: it is a compile-time and load-time hard dependency on
@@ -351,7 +351,7 @@ Two options, both with precedent in this repo:
 | a data attachment | the pack's `PFAttachments` and `AssemblerCodecs` (ADR-0038's queue, whose codec round trip is asserted by `AssemblerCodecsTest`) | attachments on block entities are a different surface from the player attachment the queue uses; not verified here |
 
 Either way the stored thing should be a `ResourceKey`/`Identifier`, not a recipe object —
-ADR-0063's ids are stable (`planetaryfactory:assembling/<name>`) and are already what Researchd's
+ADR-0063's ids are stable (`factoryworks:assembling/<name>`) and are already what Researchd's
 unlocks key on (`tests/factorio/test_research_unlocks.py`).
 
 ### 3.2 How the player would set it
@@ -372,7 +372,7 @@ Three gestures, with what each costs:
    decodes left/right/middle/Shift into `ONE`/`FIVE`/`ALL`/`PLAN`. That enum's semantics are
    *quantities*, which a machine does not want — the reusable parts are the handler registration, the
    button-mixin and the screen-on-top race the handler documents, not `FillRequest` itself.
-   `AssemblingEmiPlugin` already registers `planetaryfactory:assembling` as an EMI category and
+   `AssemblingEmiPlugin` already registers `factoryworks:assembling` as an EMI category and
    explicitly says "No workstation. The Assembling Machine is #277's" — adding the block as EMI's
    workstation for that category is the one-line prerequisite.
 3. **An item interaction** (a configuration card). Prior art is Extended Industrialization's Machine
@@ -471,7 +471,7 @@ Two facts that size the remainder:
   severe on the refinery than on a two-tank subclass; **undetermined** — what those three are used for
   was not read.
 - ADR-0060 names the refinery specifically as "a core subclass of `oritech:refinery`" and the chemical
-  plant as `planetaryfactory:chemical_plant`; `category-map.json`'s notes repeat both. #277 chose the
+  plant as `factoryworks:chemical_plant`; `category-map.json`'s notes repeat both. #277 chose the
   blocks; #258 builds them and "with it the recipe type and its JSON shape". So the chemical plant and
   refinery do not yet have a recipe type at all — the assembler is the only one of the three whose
   type exists today.
@@ -504,7 +504,7 @@ route and an EMI category that do not exist yet.
 1. **Does the machine keep Oritech's craft cycle or replace it?** §2.2's Options A/B/C. This is the
    single decision everything else follows from, and it cannot be deferred: it fixes whether the pack
    owns `workTick`'s transaction discipline.
-2. **Does `planetaryfactory:assembling` stay the recipe type, given it cannot be expressed as an
+2. **Does `factoryworks:assembling` stay the recipe type, given it cannot be expressed as an
    `OritechRecipe`?** ADR-0063 says yes and gives three reasons. Nothing found here contradicts it,
    but nothing found here makes it cheap either.
 3. **Four input slots, or more?** Factorio recipes exceed four ingredient units routinely, and

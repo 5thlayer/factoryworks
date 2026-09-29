@@ -94,7 +94,7 @@ and item map today.
 
 ## Consequences
 
-- Felling is mechanism and lives in `planetaryfactory_core`, per ADR-0015. A felling mod was
+- Felling is mechanism and lives in `factoryworks_core`, per ADR-0015. A felling mod was
   considered and declined: every one on 1.21.1 keys off axe tiers and an axe-shaped tool, which this
   pack deliberately does not have, and a new mod arrives with recipes ADR-0034's sweep must handle
   and a survivor decision to argue.

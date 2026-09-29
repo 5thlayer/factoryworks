@@ -2,7 +2,7 @@
   "_comment": "The create-world screen builds the overworld from the preset, not from dimension/overworld.json, so Terra's palette has to be named here too.",
   "dimensions": {
     "minecraft:overworld": {
-      "_comment": "Terra. The palette is an explicit biomes list because multi_noise_biome_source_parameter_list is a preset-only stub whose codec accepts hardcoded names -- the same shape planetaryfactory:gleba already uses.",
+      "_comment": "Terra. The palette is an explicit biomes list because multi_noise_biome_source_parameter_list is a preset-only stub whose codec accepts hardcoded names -- the same shape factoryworks:gleba already uses.",
       "type": "minecraft:overworld",
       "generator": {
         "type": "minecraft:noise",
@@ -11,7 +11,7 @@
           "type": "minecraft:multi_noise",
           "biomes": [
             {
-              "biome": "planetaryfactory:terra_woodland",
+              "biome": "factoryworks:terra_woodland",
               "parameters": {
                 "temperature": 0.0,
                 "humidity": 0.0,
@@ -29,7 +29,7 @@
               }
             },
             {
-              "biome": "planetaryfactory:terra_grassland",
+              "biome": "factoryworks:terra_grassland",
               "parameters": {
                 "temperature": 0.0,
                 "humidity": 0.0,
@@ -47,7 +47,7 @@
               }
             },
             {
-              "biome": "planetaryfactory:terra_dry_steppe",
+              "biome": "factoryworks:terra_dry_steppe",
               "parameters": {
                 "temperature": 0.0,
                 "humidity": 0.0,
@@ -65,7 +65,7 @@
               }
             },
             {
-              "biome": "planetaryfactory:terra_desert",
+              "biome": "factoryworks:terra_desert",
               "parameters": {
                 "temperature": 0.0,
                 "humidity": 0.0,
@@ -83,7 +83,7 @@
               }
             },
             {
-              "biome": "planetaryfactory:terra_red_desert",
+              "biome": "factoryworks:terra_red_desert",
               "parameters": {
                 "temperature": 0.0,
                 "humidity": 0.0,
@@ -95,7 +95,7 @@
               }
             },
             {
-              "biome": "planetaryfactory:terra_shore",
+              "biome": "factoryworks:terra_shore",
               "parameters": {
                 "temperature": 0.0,
                 "humidity": 0.0,
@@ -113,7 +113,7 @@
               }
             },
             {
-              "biome": "planetaryfactory:terra_sea",
+              "biome": "factoryworks:terra_sea",
               "parameters": {
                 "temperature": 0.0,
                 "humidity": 0.0,

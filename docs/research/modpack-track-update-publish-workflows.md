@@ -45,7 +45,7 @@ not evidence of an adopted workflow. Nothing in this pack is tracked by Cat-Down
 Downloader is still evaluated below on its merits, but it should not be treated as an incumbent.
 
 For reference, the state being described **[repo]**: `mods/` holds **124 jars**, `mods` is ignored
-wholesale, and the three special ones are `planetaryfactory_core-0.1.0.jar` (8.6K),
+wholesale, and the three special ones are `factoryworks_core-0.1.0.jar` (8.6K),
 `gcyr-1.21.1-0.2.4+gt7.0.2-src.jar` (1.5M) and `Respoiled-neoforge-1.21.1-6.2.3-pf1.jar` (120K) —
 note that two of the three already carry a **fork marker in the filename** (`-src`, `-pf1`), which is
 the manual convention a manifest would formalise.
@@ -133,13 +133,13 @@ already exclude `.git/**`, `.DS_Store`, `/*.zip`, `*.mrpack` and the packwiz bin
 non-ignored file calls `updateFile`, which sha256-hashes it and sets `markAsMetaFile` **only** if
 the basename ends in `.pw.toml`. Everything else lands in `index.toml` as a plain hashed entry.
 
-So: **drop `planetaryfactory_core-0.1.0.jar` into `mods/`, run `packwiz refresh`, and it is a
+So: **drop `factoryworks_core-0.1.0.jar` into `mods/`, run `packwiz refresh`, and it is a
 tracked, hashed, first-class index entry.** No metafile, no URL, no exception list. It is exactly as
 "in the pack" as `config/` or `kubejs/` are. `installToPack` writing a new jar plus a `packwiz
 refresh` is a complete update cycle for it, and the diff is one hash line in `index.toml`.
 
 The cost is that the jar itself must then live **in the git repo**, which for this pack means
-reversing the `**/*.jar` ignore for those three paths. `planetaryfactory_core` at 8.6K is nothing;
+reversing the `**/*.jar` ignore for those three paths. `factoryworks_core` at 8.6K is nothing;
 Respoiled at 120K is fine; the GCyR fork at **1.5M per version** is the one to think about, since
 git stores every historical copy.
 
@@ -290,7 +290,7 @@ bundled file, not as a manifest reference.** It works. But the exporter prints, 
 > Note that mods bundled within a CurseForge pack must be in the Approved Non-CurseForge Mods list
 
 That is the real constraint on publishing to CurseForge, and it is a **policy** problem, not a tool
-problem: `planetaryfactory_core` is yours, but a **fork of GCyR and a fork of Respoiled bundled into
+problem: `factoryworks_core` is yours, but a **fork of GCyR and a fork of Respoiled bundled into
 a CurseForge pack** need to satisfy both those mods' licences and CurseForge's approved-non-CF list.
 Flagged as an open question in §7 — it is not a decision to make from source code.
 
@@ -519,7 +519,7 @@ The concrete shape, in the order it would be done:
 1. `packwiz init` at the repo root, then **`packwiz cf detect`** to fingerprint the 124 jars into
    metafiles in one shot, then `packwiz refresh`. Expect ~121 hits and a handful of partial matches
    to fix by hand.
-2. **`planetaryfactory_core` → Route A** (unmanaged index file). 8.6K, built in-repo, changes with
+2. **`factoryworks_core` → Route A** (unmanaged index file). 8.6K, built in-repo, changes with
    the repo; committing the jar is honest and cheap, and `installToPack` + `packwiz refresh` is the
    whole update cycle.
 3. **The GCyR fork and the Respoiled fork → Route B** (`[update.github]` against a release of your

@@ -9,7 +9,7 @@ emitted at all. `SmeltingRecipe` decoded its result with `ItemStack.CODEC`, whic
 `Item.CODEC_WITH_BOUND_COMPONENTS`, and an item's data components are bound during the SAME
 datapack load that reads the recipes:
 
-    Couldn't parse data file 'planetaryfactory:stone_brick':
+    Couldn't parse data file 'factoryworks:stone_brick':
       Item minecraft:stone_bricks does not have components yet
 
 One ERROR line at load and the recipe is then absent from the manager: the furnace holds the item,
@@ -44,7 +44,7 @@ import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
+MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 
 # The spellings that resolve to `Item.CODEC_WITH_BOUND_COMPONENTS` and so refuse an item whose
 # components are not bound yet. `ItemStackTemplate` is deliberately not among them.

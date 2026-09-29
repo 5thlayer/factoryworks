@@ -34,7 +34,7 @@ Two rules come with it, both #124's:
   dimensions. ADR-0017's "every new recipe is checked against this table" is the precedent for a rule
   that binds at the recipe.
 
-The Nether's sky is a separate thing. The parked `kubejs/parked/data/planetaryfactory/dimension_type/ignus.json`
+The Nether's sky is a separate thing. The parked `kubejs/parked/data/factoryworks/dimension_type/ignus.json`
 borrows it with `"effects": "minecraft:the_nether"`, a 1.21.1 field that 26.1's `dimension_type` no
 longer has: a dimension's sky and fog are its `minecraft:visual/*` attributes. When #12 brings Ignus
 back, its sky is restated in that form.

@@ -1,0 +1,29 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 16
+    },
+    {
+      "ingredient": "oritech:fluid_pipe",
+      "count": 8
+    },
+    {
+      "ingredient": "oritech:portable_tank",
+      "count": 1
+    }
+  ],
+  "results": [
+    {
+      "id": "railcraft:tank_minecart",
+      "count": 1
+    }
+  ],
+  "time": 30
+}

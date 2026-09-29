@@ -22,7 +22,7 @@ Run after re-extracting the corpus, in case Factorio changed its stage counts:
     scripts/build-ore-textures.py
     scripts/build-ore-textures.py --check    # what tests/ runs: regenerate and diff
 
-Writes `kubejs/assets/planetaryfactory/textures/block/ore/<resource>_stage<N>.png`.
+Writes `kubejs/assets/factoryworks/textures/block/ore/<resource>_stage<N>.png`.
 """
 import argparse
 import colorsys
@@ -35,7 +35,7 @@ import zlib
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 CORPUS = os.path.join(ROOT, "data", "factorio", "resource.json")
-OUT = os.path.join(ROOT, "kubejs", "assets", "planetaryfactory", "textures", "block", "ore")
+OUT = os.path.join(ROOT, "kubejs", "assets", "factoryworks", "textures", "block", "ore")
 
 # Terra's alphabet, and the Factorio resource each block's amounts are read from. The block ids
 # are the pack's; the keys are Factorio's, because that is what the corpus is keyed by (ADR-0028).

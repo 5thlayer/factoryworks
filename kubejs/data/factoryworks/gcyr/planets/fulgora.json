@@ -1,0 +1,15 @@
+{
+  "translation": "level.factoryworks.fulgora",
+  "galaxy": "factoryworks:milky_way",
+  "solar_system": "factoryworks:solar_system",
+  "world": "factoryworks:fulgora",
+  "orbit_world": "factoryworks:fulgora_orbit",
+  "rocket_tier": 2,
+  "gravity": 7.8,
+  "has_atmosphere": true,
+  "days_in_year": 500,
+  "temperature": 340,
+  "solar_power": 3,
+  "has_oxygen": false,
+  "button_color": 10233268
+}

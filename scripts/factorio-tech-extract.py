@@ -117,7 +117,7 @@ def locale_names(data_dir):
 
 
 def pf_id(name):
-    return "planetary_factory:" + name.replace("-", "_")
+    return "factory_works:" + name.replace("-", "_")
 
 
 def is_pruned(tech):

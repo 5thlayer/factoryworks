@@ -1,0 +1,27 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "beltworks:improved_belt_tile",
+      "count": 1
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_biofuel",
+      "amount": 20
+    }
+  ],
+  "results": [
+    {
+      "id": "beltworks:express_belt_tile",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

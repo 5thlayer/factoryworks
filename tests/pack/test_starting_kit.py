@@ -27,24 +27,24 @@ import unittest
 import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
+MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 KIT = MOD / "start/StartingKit.java"
 GRANT = MOD / "start/StartingKitGrant.java"
 BOOK_TOOLTIP = MOD / "start/client/QuestBookTooltip.java"
-LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
+LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 SPEC = ROOT / "docs/spec/terra-progression.md"
 MODS = ROOT / "mods"
 
-NAMESPACE = "planetaryfactory"
+NAMESPACE = "factoryworks"
 
 
 # What each pocket entry has to be recognisable as in the spec's "What you start with" bullet. The
 # book is beat 1's own sentence rather than the bullet's, so it is matched against the beat table.
 POCKET_IN_SPEC = {
-    "planetaryfactory:stone_furnace": "Stone Furnace",
-    "planetaryfactory:burner_mining_drill": "Burner Mining Drill",
-    "planetaryfactory:engineers_iron_pick": "Engineer's Iron Pick",
+    "factoryworks:stone_furnace": "Stone Furnace",
+    "factoryworks:burner_mining_drill": "Burner Mining Drill",
+    "factoryworks:engineers_iron_pick": "Engineer's Iron Pick",
     "ftbquests:book": None,
 }
 

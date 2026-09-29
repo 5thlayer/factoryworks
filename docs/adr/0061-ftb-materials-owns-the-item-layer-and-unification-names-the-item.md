@@ -69,7 +69,7 @@ Four things are deliberately **not** done:
 
 ## Where the pack's own items sit
 
-`planetaryfactory_core`'s items and the SimpleBelts fork's belts **stay out of the `c:` material
+`factoryworks_core`'s items and the SimpleBelts fork's belts **stay out of the `c:` material
 tags**. Neither is a material form: the mod's items are mechanisms (furnaces, rigs, the Boiler, the
 picks, the circuits ADR-0031 authors because they carry progression), and a belt is logistics. A
 mechanism joining a material tag is how a machine becomes an ingredient by accident, which is the

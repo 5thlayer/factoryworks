@@ -167,8 +167,8 @@ def main():
     for row in table["jars"]:
         install(row)
     run("the manifest refresh", ["scripts/pack-check.sh", "--fix"])
-    run("the core mod's build", ["./gradlew", ":planetaryfactory_core:installToPack"])
-    print("\ncompiled and installed planetaryfactory_core against the pinned jars")
+    run("the core mod's build", ["./gradlew", ":factoryworks_core:installToPack"])
+    print("\ncompiled and installed factoryworks_core against the pinned jars")
 
 
 if __name__ == "__main__":

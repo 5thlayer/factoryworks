@@ -18,7 +18,7 @@ This ADR records what replaces it. The jar set becomes a **packwiz** manifest, t
 
 The evaluation is in [the research note](../research/modpack-track-update-publish-workflows.md).
 The pack has a hard requirement that decided it: three jars are built locally and exist on no public
-index — `planetaryfactory_core` (built from `mod/`, ADR-0014), a `gcyr` fork, and a `Respoiled`
+index — `factoryworks_core` (built from `mod/`, ADR-0014), a `gcyr` fork, and a `Respoiled`
 fork. Any tool that handles those as a hand-maintained exception list reproduces the current
 problem in a new file.
 
@@ -45,13 +45,13 @@ updater would make the forks ordinary updatable mods, and it is the right answer
 because `github.com` is on Modrinth's allowlist and such an entry exports as a real hashed `files[]`
 row rather than a bundled binary. Publishing is out of scope (below), so that benefit is currently
 worth nothing, while the cost — cutting a GitHub release for every rebuild of every fork — is
-recurring and immediate. For `planetaryfactory_core` it would also contradict ADR-0014 directly:
+recurring and immediate. For `factoryworks_core` it would also contradict ADR-0014 directly:
 `installToPack` exists so that `./gradlew build` is the whole install step, and routing the jar
 through a release breaks that. Route A costs nothing and records the exact hash.
 
 Revisit per jar when publish lands. `gcyr` will be the cheap one — it already has `auto_publish.yml`.
 
-**`planetaryfactory_core` is excluded from the index entirely.** Its provenance is `mod/`, which is
+**`factoryworks_core` is excluded from the index entirely.** Its provenance is `mod/`, which is
 fully tracked; hashing the build output records nothing git does not already have. Gradle jars are
 not byte-reproducible by default, so indexing it would dirty `index.toml` on every `./gradlew build`
 and train everyone to ignore the drift check. This slightly weakens the "the manifest reconstructs

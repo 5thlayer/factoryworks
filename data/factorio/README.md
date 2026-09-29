@@ -354,6 +354,6 @@ effect recording the rule that produced them.
   `place_result`, and a rail planner's `rails`, with the entity type each places. An item laid with
   `place_as_tile` is carried as not a Building, and so are a seed's plant, a vehicle and a robot,
   each with its reason. `scripts/build-building-tag.py` joins the Buildings onto
-  `data/pack/item-map.json` into the `planetaryfactory:buildings` block tag, which decides what the
+  `data/pack/item-map.json` into the `factoryworks:buildings` block tag, which decides what the
   player breaks at full Reach rather than vanilla's 4.5; `tests/pack/test_building_tag.py` runs its
   `--check` and re-extracts this file when the dump is on disk.

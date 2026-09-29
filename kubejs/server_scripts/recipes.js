@@ -13,11 +13,11 @@ ServerEvents.recipes(event => {
   // A survivor names a surface; the namespace is applied here because every survivor is by
   // definition a recipe the pack authored. KubeJS ANDs the keys of one filter map and ORs the
   // list under `or`, so this reads: remove everything that is not one of ours on a named surface.
-  var survivors = RECIPE_SURVIVORS.map(entry => ({ mod: 'planetaryfactory', type: entry.type }))
+  var survivors = RECIPE_SURVIVORS.map(entry => ({ mod: 'factoryworks', type: entry.type }))
 
   event.remove({ not: { or: survivors } })
 
-  console.info('[planetaryfactory] stock-recipe sweep: kept ' + survivors.length +
+  console.info('[factoryworks] stock-recipe sweep: kept ' + survivors.length +
     ' surface(s) -- ' + RECIPE_SURVIVORS.map(entry => entry.surface).join(', ') +
     '; everything else removed (ADR-0034)')
 })

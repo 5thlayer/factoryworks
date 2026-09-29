@@ -167,7 +167,7 @@ The generalisation of Beltworks' belt Dismantle to any **Dismantle Family**: tak
 _Avoid_: deconstruct, mass mine, unstretch
 
 **Dismantle Family**:
-The blocks one **Dismantle** takes up together as a single span, and the rule for the span between two of them. Fluid pipes are the Pack's family: the block tag `planetaryfactory:dismantle/pipes`, whose span is the shortest path, joined only where Oritech's connection is open (#431, #448). Belts are Beltworks' family.
+The blocks one **Dismantle** takes up together as a single span, and the rule for the span between two of them. Fluid pipes are the Pack's family: the block tag `factoryworks:dismantle/pipes`, whose span is the shortest path, joined only where Oritech's connection is open (#431, #448). Belts are Beltworks' family.
 _Avoid_: dismantle group, dismantle kind, replace group (a different grouping)
 
 **Launch Terminal**:
@@ -283,7 +283,7 @@ _Avoid_: explored area, revealed map, fog
 ### Powering things
 
 **Steam**:
-The pack's own low-temperature fluid, made by the **Boiler** from water and solid fuel and consumed by the **Steam Engine**. Real, pipeable and buffered, as in Factorio, and `planetaryfactory:` rather than any mod's (ADR-0048).
+The pack's own low-temperature fluid, made by the **Boiler** from water and solid fuel and consumed by the **Steam Engine**. Real, pipeable and buffered, as in Factorio, and `factoryworks:` rather than any mod's (ADR-0048).
 _Avoid_: low-pressure steam, LP steam, GT steam
 
 **Superheated Steam**:
@@ -418,11 +418,11 @@ A recipe inside a Crafting Plan that the team has not researched: Craftworks ask
 _Avoid_: unavailable recipe, gated
 
 **Assembling Machine**:
-The machine that runs Factorio's crafting recipes, on Oritech's chassis: a `planetaryfactory_core` subclass reusing Oritech's model, energy storage, inventory and addons, and replacing its craft cycle whole (ADR-0071). It runs `planetaryfactory:assembling` (ADR-0063), holds a **Held recipe** rather than matching on input, and is placed as a footprint from one item like every other pack block (ADR-0069). It comes in three tiers, one block each, at Factorio's speeds and in Factorio's colours; tiers 2 and 3 also craft with a fluid (`#295`). Oritech's addons are not the tier ladder -- what they are is #120's. Not Oritech's own Assembler, which is a rival for the same row and is recipe-removed and hidden.
+The machine that runs Factorio's crafting recipes, on Oritech's chassis: a `factoryworks_core` subclass reusing Oritech's model, energy storage, inventory and addons, and replacing its craft cycle whole (ADR-0071). It runs `factoryworks:assembling` (ADR-0063), holds a **Held recipe** rather than matching on input, and is placed as a footprint from one item like every other pack block (ADR-0069). It comes in three tiers, one block each, at Factorio's speeds and in Factorio's colours; tiers 2 and 3 also craft with a fluid (`#295`). Oritech's addons are not the tier ladder -- what they are is #120's. Not Oritech's own Assembler, which is a rival for the same row and is recipe-removed and hidden.
 _Avoid_: assembler, Oritech assembler, GT assembler, crafter, fabricator
 
 **Held recipe**:
-The single `planetaryfactory:assembling` recipe a player sets on an **Assembling Machine**, which the machine then runs and nothing else. It is Factorio's own gesture: the machine is told its recipe rather than deducing one from what it is fed, so there is no lookup, no first match and no ambiguity between two recipes sharing an ingredient set. The machine's inputs are filtered to it, and it is held whether or not the machine can currently run it — an unfed, unresearched or output-blocked machine displays its Held recipe and idles, and never clears it silently. Stored as the recipe id, which is stable and is what research unlocks already key on.
+The single `factoryworks:assembling` recipe a player sets on an **Assembling Machine**, which the machine then runs and nothing else. It is Factorio's own gesture: the machine is told its recipe rather than deducing one from what it is fed, so there is no lookup, no first match and no ambiguity between two recipes sharing an ingredient set. The machine's inputs are filtered to it, and it is held whether or not the machine can currently run it — an unfed, unresearched or output-blocked machine displays its Held recipe and idles, and never clears it silently. Stored as the recipe id, which is stable and is what research unlocks already key on.
 _Avoid_: locked recipe, recipe lock, selected recipe, machine lock
 
 **Gated recipe**:

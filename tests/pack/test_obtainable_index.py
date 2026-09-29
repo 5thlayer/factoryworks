@@ -23,9 +23,9 @@ ROOT = Path(__file__).resolve().parents[2]
 EXTRACTOR = ROOT / "scripts/jar-registry-extract.py"
 GENERATOR = ROOT / "scripts/build-obtainable-index.py"
 KUBEJS = ROOT / "kubejs"
-KIT = ROOT / "mod/src/main/java/com/planetaryfactory/core/start/StartingKit.java"
+KIT = ROOT / "mod/src/main/java/com/factoryworks/core/start/StartingKit.java"
 PARKED = KUBEJS / "parked/data"
-PACK = "planetaryfactory"
+PACK = "factoryworks"
 TERRAIN_AND_LOGS = {"item:minecraft:" + name for name in (
     "dirt", "sand", "red_sand", "gravel", "sandstone", "red_sandstone", "cobblestone",
     "oak_log", "birch_log", "acacia_log")}
@@ -203,7 +203,7 @@ class ObtainableIndex(unittest.TestCase):
     def test_no_block_only_a_parked_body_places_is_a_source(self):
         live = self.generator.Worldgen([self.generator.LIVE]).walk().blocks
         parked = self.generator.Worldgen([PARKED, self.generator.LIVE]).walk().blocks - live
-        self.assertIn("planetaryfactory:yumako_log", parked)
+        self.assertIn("factoryworks:yumako_log", parked)
         sources = json.loads(self.generator.SOURCES.read_text(encoding="utf-8"))["stacks"]
         broken = {source["broken"] for found in sources.values() for source in found}
         self.assertEqual(set(), broken & parked)

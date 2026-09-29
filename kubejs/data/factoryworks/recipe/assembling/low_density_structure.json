@@ -1,0 +1,25 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 2
+    },
+    {
+      "ingredient": "ftbmaterials:copper_plate",
+      "count": 20
+    },
+    {
+      "ingredient": "factoryworks:plastic_bar",
+      "count": 5
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:low_density_structure",
+      "count": 1
+    }
+  ],
+  "time": 300
+}

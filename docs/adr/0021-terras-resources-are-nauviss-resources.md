@@ -85,7 +85,7 @@ So the cut is applied to all four:
   #86: the coal and uranium bedrock deposits are not built.** Factorio's depleting-but-never-exhausted
   resource is oil, and only oil; an ore patch runs dry. A bedrock coal or uranium deposit would be an
   infinite ore patch, which is the shape this ADR exists to refuse. The bedrock set is therefore one
-  authored crude deposit — `planetaryfactory:terra_crude_oil_deposit`, on `gtceu:raw_oil` — and
+  authored crude deposit — `factoryworks:terra_crude_oil_deposit`, on `gtceu:raw_oil` — and
   nothing else. `terra_ferrous_deposit` and `terra_cupriferous_deposit` are deleted too: the same
   argument reaches them, and ADR-0020's tail section is amended to say so. Terra's bedrock carries
   oil and no ore. GregTech's own six overworld fluid deposits are narrowed to nowhere:

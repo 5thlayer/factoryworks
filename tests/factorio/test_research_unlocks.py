@@ -17,7 +17,7 @@ counted in the output. It will load under exactly that id when the ticket lands,
 the converter's `--awaited`, so a typo is still a failure (#279).
 
   - every `unlocks` entry in `researchd.js` resolves to a recipe under
-    `kubejs/data/planetaryfactory/recipe/`
+    `kubejs/data/factoryworks/recipe/`
   - a declaration this parser cannot read is a failure, not a skip. A silently unparsed `unlocks`
     is exactly the unchecked coupling the check exists to catch
 
@@ -43,8 +43,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 SCRIPTS = ROOT / "kubejs/server_scripts"
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
-EMITTED_NAMESPACE = "planetaryfactory"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
+EMITTED_NAMESPACE = "factoryworks"
 
 failures = []
 

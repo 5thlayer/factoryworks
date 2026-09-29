@@ -15,8 +15,8 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-CORE = ROOT / "mod/src/main/java/com/planetaryfactory/core"
-LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
+CORE = ROOT / "mod/src/main/java/com/factoryworks/core"
+LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
 
 # Each plugin with the helpers that spell its text, and the enum its status line is read from.
 MACHINES = {
@@ -31,7 +31,7 @@ MACHINES = {
 
 # Any key-shaped literal, not only a `translatable(` argument: a helper that takes the key as a
 # parameter would otherwise hide it.
-KEY_RE = re.compile(r'"((?:gui|tooltip)\.planetaryfactory\.[a-z_.]+)"')
+KEY_RE = re.compile(r'"((?:gui|tooltip)\.factoryworks\.[a-z_.]+)"')
 
 
 def status_keys(path, enum):

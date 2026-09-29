@@ -11,8 +11,8 @@ machines. This spends that rule, row by row.
 **Decision.**
 
 - **Machines are core blocks.** `assembling-machine-1`, `chemical-plant` and `oil-refinery` name
-  `planetaryfactory:` subclasses of Oritech machines, as ADR-0060 says, blocked on #258's chassis.
-  Not Oritech's assembler, which reads its own recipe type rather than `planetaryfactory:assembling`
+  `factoryworks:` subclasses of Oritech machines, as ADR-0060 says, blocked on #258's chassis.
+  Not Oritech's assembler, which reads its own recipe type rather than `factoryworks:assembling`
   (ADR-0063), and not Oritech's Centrifuge, which ADR-0060 recipe-removes. Tiers 2 and 3 are #295's.
 - **Placed blocks are borrowed.** Oritech's Fluid Pipe, Portable Tank, Big Solar Panel and Industrial
   Light; vanilla rail, Railcraft Reborn's Block Signal and Iron Buffer Stop Track; SimpleBelts' two

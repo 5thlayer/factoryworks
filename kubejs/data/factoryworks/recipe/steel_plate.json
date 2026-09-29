@@ -1,0 +1,10 @@
+{
+  "type": "factoryworks:smelting",
+  "ingredient": "ftbmaterials:iron_plate",
+  "count": 5,
+  "result": {
+    "id": "ftbmaterials:steel_plate",
+    "count": 1
+  },
+  "cookingtime": 320
+}

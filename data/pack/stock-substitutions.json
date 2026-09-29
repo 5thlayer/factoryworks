@@ -34,7 +34,7 @@
       "reason": "Nothing on Terra drops string: its spiders and cobwebs are not part of ADR-0021's surface. The filter strings it across its frame, and copper cable is the pack's only thread."
     },
     "minecraft:paper": {
-      "to": "planetaryfactory:electronic_circuit",
+      "to": "factoryworks:electronic_circuit",
       "reason": "Paper is a swept grid recipe from sugar cane. It carries the filter's rule, and Factorio's filter inserter paid for its filter in electronic circuits."
     }
   }

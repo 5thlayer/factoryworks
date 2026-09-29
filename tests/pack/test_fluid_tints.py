@@ -37,8 +37,8 @@ import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts/build-fluid-tints.py"
-RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/fluid/tints.json"
-MIXINS = ROOT / "mod/src/main/resources/planetaryfactory_core.oritech.mixins.json"
+RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/fluid/tints.json"
+MIXINS = ROOT / "mod/src/main/resources/factoryworks_core.oritech.mixins.json"
 LANG = ROOT / "kubejs/assets/oritech/lang/en_us.json"
 MIXIN = "FluidModelContentMixin"
 MIXIN_TARGET = "rearth/oritech/client/init/FluidModelContent.class"

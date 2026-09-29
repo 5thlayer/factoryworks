@@ -27,7 +27,7 @@
     "and reports the row, so the blocked set is a list rather than a silence.",
     "",
     "A row may carry `blocked_by`, the ticket that makes its target LOADABLE: a first-party item",
-    "`planetaryfactory_core` has not registered yet, or a borrowed one whose mod is not installed on",
+    "`factoryworks_core` has not registered yet, or a borrowed one whose mod is not installed on",
     "26.1.2 (#486's machines). The target is kept as the standing",
     "proposal. The converter skips every recipe touching one, so nothing is emitted that the game",
     "rejects at load (#279).",
@@ -46,13 +46,13 @@
   "items": {
     "accumulator": {
       "kind": "item",
-      "target": "planetaryfactory:accumulator",
+      "target": "factoryworks:accumulator",
       "source": "borrowed",
       "note": "The pack's block on Oritech's Large Energy Storage entity, placed whole on the footprint seam (ADR-0077) and mixed in to Factorio's 5 MJ and 300 kW (#283, ADR-0062)."
     },
     "advanced-circuit": {
       "kind": "item",
-      "target": "planetaryfactory:advanced_circuit",
+      "target": "factoryworks:advanced_circuit",
       "source": "authored",
       "note": "As `electronic-circuit`. ADR-0031's three tiers, one item each."
     },
@@ -63,21 +63,21 @@
     },
     "assembling-machine-1": {
       "kind": "item",
-      "target": "planetaryfactory:assembling_machine",
+      "target": "factoryworks:assembling_machine",
       "source": "authored",
-      "note": "A `planetaryfactory_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060, ADR-0071), decided by #277. The block is registered by #326, which unblocks the row; it reads `planetaryfactory:assembling` rather than Oritech's assembler type (ADR-0063)."
+      "note": "A `factoryworks_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060, ADR-0071), decided by #277. The block is registered by #326, which unblocks the row; it reads `factoryworks:assembling` rather than Oritech's assembler type (ADR-0063)."
     },
     "assembling-machine-2": {
       "kind": "item",
-      "target": "planetaryfactory:assembling_machine_2",
+      "target": "factoryworks:assembling_machine_2",
       "source": "authored",
-      "note": "Tier 2 of the `planetaryfactory_core` Assembling Machine: a block of its own at Factorio's speed and draw, with a fluid input (ADR-0075, #295)."
+      "note": "Tier 2 of the `factoryworks_core` Assembling Machine: a block of its own at Factorio's speed and draw, with a fluid input (ADR-0075, #295)."
     },
     "assembling-machine-3": {
       "kind": "item",
-      "target": "planetaryfactory:assembling_machine_3",
+      "target": "factoryworks:assembling_machine_3",
       "source": "authored",
-      "note": "Tier 3 of the `planetaryfactory_core` Assembling Machine (ADR-0075, #295). Registered; its recipe takes `speed-module`, undecided on #120, so the converter records it as a skip."
+      "note": "Tier 3 of the `factoryworks_core` Assembling Machine (ADR-0075, #295). Registered; its recipe takes `speed-module`, undecided on #120, so the converter records it as a skip."
     },
     "asteroid-collector": {
       "status": "undecided",
@@ -89,19 +89,19 @@
       "target": "researchd:research_pack",
       "source": "borrowed",
       "components": {
-        "researchd:research_pack": "planetary_factory:automation_science_pack"
+        "researchd:research_pack": "factory_works:automation_science_pack"
       },
-      "note": "ADR-0018's rung 1. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
+      "note": "ADR-0018's rung 1. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `factory_works:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
     },
     "barrel": {
       "kind": "item",
-      "target": "planetaryfactory:barrel",
+      "target": "factoryworks:barrel",
       "source": "authored",
-      "note": "ADR-0037. Registered in `planetaryfactory_core` as an `IFluidHandlerItem`: 50 mB -- Factorio's 50 units under the converter's 1:1 fluid rule -- stacking to 10, accepting any fluid. GregTech's cells were the only installed candidates and are a six-material ladder with a temperature band, for a concept that has one tier. Filled and emptied by Create's Spout and Item Drain with no recipes at all (#93), so this row is the only place the container is named."
+      "note": "ADR-0037. Registered in `factoryworks_core` as an `IFluidHandlerItem`: 50 mB -- Factorio's 50 units under the converter's 1:1 fluid rule -- stacking to 10, accepting any fluid. GregTech's cells were the only installed candidates and are a six-material ladder with a temperature band, for a concept that has one tier. Filled and emptied by Create's Spout and Item Drain with no recipes at all (#93), so this row is the only place the container is named."
     },
     "battery": {
       "kind": "item",
-      "target": "planetaryfactory:battery",
+      "target": "factoryworks:battery",
       "source": "authored",
       "note": "Factorio's battery is a crafting intermediate, not a placed power store: GregTech's batteries are tiered chargeable hulls and Electro's capacitor is a different thing, so borrowing either would put an EU container inside a recipe that wants lead and acid. Texture borrows `gtceu:max_battery`. No tier suffix -- there is one battery."
     },
@@ -126,7 +126,7 @@
     },
     "boiler": {
       "kind": "item",
-      "target": "planetaryfactory:boiler",
+      "target": "factoryworks:boiler",
       "source": "authored",
       "note": "Terra's Boiler: fuel and water in, low-temperature steam out (#224, ADR-0048). It REPLACES the LP Solid Boiler this row used to point at -- ADR-0048 makes the steam chain pack-authored on two pack-owned fluids, and a GT boiler emitting `gtceu:steam` would re-open the power layer #37 removed. Third customer of the burner model the Furnace and the Burner Mining Drill share (ADR-0047): `fuel_value * effectivity` into a buffer, drained at the prototype's own draw. One tier -- ADR-0033's reactor emits superheated steam directly, so `heat-exchanger` stays on #135. Flipped from `undecided` when the block landed, not before: an item-map target for a block that does not exist emits a recipe naming nothing.",
       "ticket": 224
@@ -145,9 +145,9 @@
     },
     "burner-mining-drill": {
       "kind": "item",
-      "target": "planetaryfactory:burner_mining_drill",
+      "target": "factoryworks:burner_mining_drill",
       "source": "authored",
-      "note": "Rung 0's rig, and `planetaryfactory_core`'s (ADR-0043, #193). GregTech owns no solid extraction on Terra: `gtceu:lv_miner` deletes an ore block whole whatever amount it held and takes its drops from the loot table, which Terra's ore blocks do not have, so it would destroy a field and pay out nothing. The rig draws one unit per operation through `OreMining` instead (ADR-0041). 2x2 over the 2x2 beneath it, burning solid fuel at 150 kW under ADR-0047, and every one of those numbers is a `data/factorio/machine.json` row. Its own recipe is Factorio's, category `crafting`, so the Personal Assembler plans it at rung 0."
+      "note": "Rung 0's rig, and `factoryworks_core`'s (ADR-0043, #193). GregTech owns no solid extraction on Terra: `gtceu:lv_miner` deletes an ore block whole whatever amount it held and takes its drops from the loot table, which Terra's ore blocks do not have, so it would destroy a field and pay out nothing. The rig draws one unit per operation through `OreMining` instead (ADR-0041). 2x2 over the 2x2 beneath it, burning solid fuel at 150 kW under ADR-0047, and every one of those numbers is a `data/factorio/machine.json` row. Its own recipe is Factorio's, category `crafting`, so the Personal Assembler plans it at rung 0."
     },
     "car": {
       "status": "undecided",
@@ -187,7 +187,7 @@
     },
     "chemical-plant": {
       "kind": "item",
-      "target": "planetaryfactory:chemical_plant",
+      "target": "factoryworks:chemical_plant",
       "source": "authored",
       "note": "The pack's block on the Assembling Machine's chassis, wearing Oritech's Centrifuge model (ADR-0096, #490). Not Oritech's Centrifuge, which ADR-0060 recipe-removes as ore-doubling."
     },
@@ -196,9 +196,9 @@
       "target": "researchd:research_pack",
       "source": "borrowed",
       "components": {
-        "researchd:research_pack": "planetary_factory:chemical_science_pack"
+        "researchd:research_pack": "factory_works:chemical_science_pack"
       },
-      "note": "ADR-0018's rung 3. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
+      "note": "ADR-0018's rung 3. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `factory_works:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
     },
     "coal": {
       "kind": "item",
@@ -248,7 +248,7 @@
     },
     "crude-oil-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "crusher": {
       "status": "undecided",
@@ -272,31 +272,31 @@
     },
     "electric-engine-unit": {
       "kind": "item",
-      "target": "planetaryfactory:electric_engine_unit",
+      "target": "factoryworks:electric_engine_unit",
       "source": "authored",
       "note": "As `engine-unit`."
     },
     "electric-furnace": {
       "kind": "item",
-      "target": "planetaryfactory:electric_furnace",
+      "target": "factoryworks:electric_furnace",
       "source": "authored",
-      "note": "The ladder's top rung (#155): `crafting_speed` 2, no fuel slot, 13 EU/t through GTCEu's `IEnergyContainer`, fed by ADR-0036's supply-area pole and by nothing else -- `acceptEnergyFromNetwork` returns 0, so a GT cable run cannot reach it. #149 specified it on a GT chassis and is closed as superseded: a GT machine reads `SmeltingRecipe` through `GTRecipeType.proxyRecipes` and would be blind to the count-bearing `planetaryfactory:smelting` type. Idle draw is not modelled (ADR-0029 excludes it)."
+      "note": "The ladder's top rung (#155): `crafting_speed` 2, no fuel slot, 13 EU/t through GTCEu's `IEnergyContainer`, fed by ADR-0036's supply-area pole and by nothing else -- `acceptEnergyFromNetwork` returns 0, so a GT cable run cannot reach it. #149 specified it on a GT chassis and is closed as superseded: a GT machine reads `SmeltingRecipe` through `GTRecipeType.proxyRecipes` and would be blind to the count-bearing `factoryworks:smelting` type. Idle draw is not modelled (ADR-0029 excludes it)."
     },
     "electric-mining-drill": {
       "kind": "item",
-      "target": "planetaryfactory:electric_mining_drill",
+      "target": "factoryworks:electric_mining_drill",
       "source": "authored",
-      "note": "Rung 1's rig, and `planetaryfactory_core`'s (ADR-0043, #194). The burner rig's mechanism unchanged -- one unit per operation through `OreMining` (ADR-0041), the same eject -- on a 3x3 mining the 5x5 beneath it at 0.5 mining speed, and powered by standing in a supply-area pole's area (ADR-0036) at 90 kW, 45 FE/t under ADR-0060. Every one of those numbers is a `data/factorio/machine.json` row. Its own recipe is Factorio's, category `crafting`, so the Personal Assembler plans it."
+      "note": "Rung 1's rig, and `factoryworks_core`'s (ADR-0043, #194). The burner rig's mechanism unchanged -- one unit per operation through `OreMining` (ADR-0041), the same eject -- on a 3x3 mining the 5x5 beneath it at 0.5 mining speed, and powered by standing in a supply-area pole's area (ADR-0036) at 90 kW, 45 FE/t under ADR-0060. Every one of those numbers is a `data/factorio/machine.json` row. Its own recipe is Factorio's, category `crafting`, so the Personal Assembler plans it."
     },
     "electronic-circuit": {
       "kind": "item",
-      "target": "planetaryfactory:electronic_circuit",
+      "target": "factoryworks:electronic_circuit",
       "source": "authored",
       "note": "Registered in `kubejs/startup_scripts/items.js`. #62 removed GregTech's and Mekanism's competing lines; the tier carries progression, so it authors rather than borrows."
     },
     "engine-unit": {
       "kind": "item",
-      "target": "planetaryfactory:engine_unit",
+      "target": "factoryworks:engine_unit",
       "source": "authored",
       "note": "Factorio's engine is an intermediate no installed mod ships as one item, and it feeds recipes the pack wants. ADR-0031's author case: no borrow candidate exists."
     },
@@ -377,7 +377,7 @@
     },
     "fluoroketone-cold-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "fluoroketone-hot": {
       "status": "not_emitted",
@@ -385,7 +385,7 @@
     },
     "fluoroketone-hot-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "flying-robot-frame": {
       "status": "undecided",
@@ -434,7 +434,7 @@
     },
     "heavy-oil-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "ice": {
       "status": "undecided",
@@ -449,7 +449,7 @@
     },
     "iron-chest": {
       "kind": "item",
-      "target": "planetaryfactory:iron_chest",
+      "target": "factoryworks:iron_chest",
       "source": "authored",
       "note": "Authored in `kubejs/startup_scripts/blocks.js`, the shape #133 proved: `InventoryAttachment` plus `CustomChestMenu`, width 9 or the screen lays out wrong, six rows the ceiling, every face `[]` and never `null`. Vanilla ships one chest and no mod here ships a ladder, so Factorio's capacity progression is authored or absent. 9x4 = 36 slots."
     },
@@ -501,7 +501,7 @@
     },
     "light-oil-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "loader": {
       "kind": "item",
@@ -525,9 +525,9 @@
       "target": "researchd:research_pack",
       "source": "borrowed",
       "components": {
-        "researchd:research_pack": "planetary_factory:logistic_science_pack"
+        "researchd:research_pack": "factory_works:logistic_science_pack"
       },
-      "note": "ADR-0018's rung 2. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
+      "note": "ADR-0018's rung 2. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `factory_works:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
     },
     "long-handed-inserter": {
       "status": "not_emitted",
@@ -535,7 +535,7 @@
     },
     "low-density-structure": {
       "kind": "item",
-      "target": "planetaryfactory:low_density_structure",
+      "target": "factoryworks:low_density_structure",
       "source": "authored",
       "note": "Factorio fidelity: the Rocket Silo's cycle consumes Factorio's own rocket intermediates. This REVISES #41, which had the cycle take HDPE sheets directly (and whose HDPE was itself superseded by ADR-0035 -- plastic is `gtceu:polyethylene`)."
     },
@@ -547,13 +547,13 @@
     },
     "lubricant-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "medium-electric-pole": {
       "kind": "item",
-      "target": "planetaryfactory:medium_electric_pole",
+      "target": "factoryworks:medium_electric_pole",
       "source": "authored",
-      "note": "ADR-0036's supply-area pole, registered in `planetaryfactory_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
+      "note": "ADR-0036's supply-area pole, registered in `factoryworks_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
     },
     "metallic-asteroid-chunk": {
       "status": "undecided",
@@ -582,14 +582,14 @@
     },
     "offshore-pump": {
       "kind": "item",
-      "target": "planetaryfactory:offshore_pump",
+      "target": "factoryworks:offshore_pump",
       "source": "authored",
       "note": "Where water enters the factory, and the only place it can (ADR-0050). Flipped from `undecided` when the block landed, not before: an item-map target for a block that does not exist emits a recipe naming nothing.",
       "ticket": 213
     },
     "oil-refinery": {
       "kind": "item",
-      "target": "planetaryfactory:oil_refinery",
+      "target": "factoryworks:oil_refinery",
       "source": "authored",
       "note": "The pack's block on the Assembling Machine's chassis, wearing Oritech's Refinery model with both chamber layers (ADR-0096, #491). Not Oritech's Refinery, whose module mechanic the pack does not use; its three fractions are the oil fluid rows."
     },
@@ -616,7 +616,7 @@
     },
     "petroleum-gas-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "piercing-rounds-magazine": {
       "status": "undecided",
@@ -635,7 +635,7 @@
     },
     "plastic-bar": {
       "kind": "item",
-      "target": "planetaryfactory:plastic_bar",
+      "target": "factoryworks:plastic_bar",
       "source": "authored",
       "note": "Plastic gates rung 2 (ADR-0025) and a rung-boundary row authors rather than borrows (ADR-0031). Its recipe is `pack:chemical_plant` and waits on #107; the ITEM exists now, so the recipes that consume it are not blocked on a machine they do not use."
     },
@@ -646,14 +646,14 @@
     },
     "power-switch": {
       "kind": "item",
-      "target": "planetaryfactory:power_switch",
+      "target": "factoryworks:power_switch",
       "source": "authored",
       "note": "Joins or cuts two pole networks. #277 proposed `oritech:flux_gate`, which is a crafting item rather than a block, and Oritech ships no switch; a first-party block on the core's poles (ADR-0062), #294's.",
       "blocked_by": 294
     },
     "processing-unit": {
       "kind": "item",
-      "target": "planetaryfactory:processing_unit",
+      "target": "factoryworks:processing_unit",
       "source": "authored",
       "note": "As `electronic-circuit`."
     },
@@ -662,9 +662,9 @@
       "target": "researchd:research_pack",
       "source": "borrowed",
       "components": {
-        "researchd:research_pack": "planetary_factory:production_science_pack"
+        "researchd:research_pack": "factory_works:production_science_pack"
       },
-      "note": "ADR-0018's rung 4. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `planetary_factory:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
+      "note": "ADR-0018's rung 4. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `factory_works:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
     },
     "productivity-module": {
       "status": "undecided",
@@ -678,22 +678,22 @@
     },
     "pump": {
       "kind": "item",
-      "target": "planetaryfactory:pump",
+      "target": "factoryworks:pump",
       "source": "authored",
       "note": "Factorio's in-line pump. Not `oritech:pump`, which drains fluid from the world rather than moving it along a pipe (#277). A first-party block, #293's; `offshore-pump` is already first-party (ADR-0050).",
       "blocked_by": 293
     },
     "pumpjack": {
       "kind": "item",
-      "target": "planetaryfactory:pumpjack",
+      "target": "factoryworks:pumpjack",
       "source": "authored",
-      "note": "Factorio's Pumpjack (#377, ADR-0081): a 3x3x3 footprint machine standing on an oil well, drawing 45 FE/t and a 1.5 FE/t drain, and pumping 10 mB/s of crude at 100% yield out of any face. Mechanism, so `planetaryfactory_core`'s (ADR-0015). Drawn by Oritech's Pump model, scaled."
+      "note": "Factorio's Pumpjack (#377, ADR-0081): a 3x3x3 footprint machine standing on an oil well, drawing 45 FE/t and a 1.5 FE/t drain, and pumping 10 mB/s of crude at 100% yield out of any face. Mechanism, so `factoryworks_core`'s (ADR-0015). Drawn by Oritech's Pump model, scaled."
     },
     "radar": {
       "kind": "item",
-      "target": "planetaryfactory:radar",
+      "target": "factoryworks:radar",
       "source": "authored",
-      "note": "Factorio's Radar (#368, ADR-0079): a 3x3x3 footprint machine drawing 150 FE/t that charts one 32-block sector of its reach per 10 MJ into its owner's team's chart. Mechanism, so `planetaryfactory_core`'s (ADR-0015). It detects nothing hidden: ore lies on the surface (ADR-0045)."
+      "note": "Factorio's Radar (#368, ADR-0079): a 3x3x3 footprint machine drawing 150 FE/t that charts one 32-block sector of its reach per 10 MJ into its owner's team's chart. Mechanism, so `factoryworks_core`'s (ADR-0015). It detects nothing hidden: ore lies on the surface (ADR-0045)."
     },
     "rail": {
       "kind": "item",
@@ -734,20 +734,20 @@
     },
     "rocket-fuel": {
       "kind": "item",
-      "target": "planetaryfactory:rocket_fuel",
+      "target": "factoryworks:rocket_fuel",
       "source": "authored",
       "note": "As `low-density-structure`: a solid item, Factorio's own, made from `solid-fuel` and light oil. Distinct from `gtceu:rocket_fuel`, the FLUID the GCyR rocket entity burns (#41)."
     },
     "rocket-part": {
       "kind": "item",
-      "target": "planetaryfactory:rocket_part",
+      "target": "factoryworks:rocket_part",
       "source": "authored",
       "note": "Made in the Rocket Silo, which #378 authors; whether the part cycle survives is #378's question too.",
       "blocked_by": 378
     },
     "rocket-silo": {
       "kind": "item",
-      "target": "planetaryfactory:rocket_silo",
+      "target": "factoryworks:rocket_silo",
       "source": "authored",
       "note": "A first-party footprint machine, not waiting on Oritech: Space Age (#378). #41's GTCEu multiblock and GCyR rocket left with ADR-0060.",
       "blocked_by": 378
@@ -769,9 +769,9 @@
     },
     "small-electric-pole": {
       "kind": "item",
-      "target": "planetaryfactory:small_electric_pole",
+      "target": "factoryworks:small_electric_pole",
       "source": "authored",
-      "note": "ADR-0036's supply-area pole, registered in `planetaryfactory_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
+      "note": "ADR-0036's supply-area pole, registered in `factoryworks_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
     },
     "small-lamp": {
       "kind": "item",
@@ -792,7 +792,7 @@
     },
     "solid-fuel": {
       "kind": "item",
-      "target": "planetaryfactory:solid_fuel",
+      "target": "factoryworks:solid_fuel",
       "source": "authored",
       "note": "GregTech ships no solid fuel item and borrowing `minecraft:coal` would have the oil chapter print an ore the pack mines, which ADR-0032's 1:1 stance forbids. Burnable, made from the oil fractions in the Chemical Plant. Feeds `rocket-fuel`."
     },
@@ -824,9 +824,9 @@
     },
     "steam-engine": {
       "kind": "item",
-      "target": "planetaryfactory:steam_engine",
+      "target": "factoryworks:steam_engine",
       "source": "authored",
-      "note": "A `planetaryfactory_core` block on Oritech's Steam Engine entity, placed from one item as its whole footprint and broken as one (ADR-0077, #352). Oritech's chaining, fill-driven speed and efficiency curve are kept, with a mixin putting Factorio's rate in place of Oritech's arithmetic -- 30 mB/s and 450 FE/t at the curve's peak, no water returned (ADR-0062). The recipe is Factorio's, emitted by the converter; Oritech's own engine and its crafting recipe are swept (ADR-0034).",
+      "note": "A `factoryworks_core` block on Oritech's Steam Engine entity, placed from one item as its whole footprint and broken as one (ADR-0077, #352). Oritech's chaining, fill-driven speed and efficiency curve are kept, with a mixin putting Factorio's rate in place of Oritech's arithmetic -- 30 mB/s and 450 FE/t at the curve's peak, no water returned (ADR-0062). The recipe is Factorio's, emitted by the converter; Oritech's own engine and its crafting recipe are swept (ADR-0034).",
       "ticket": 352
     },
     "steam-turbine": {
@@ -836,21 +836,21 @@
     },
     "steel-chest": {
       "kind": "item",
-      "target": "planetaryfactory:steel_chest",
+      "target": "factoryworks:steel_chest",
       "source": "authored",
       "note": "Authored in `kubejs/startup_scripts/blocks.js`, the shape #133 proved: `InventoryAttachment` plus `CustomChestMenu`, width 9 or the screen lays out wrong, six rows the ceiling, every face `[]` and never `null`. Vanilla ships one chest and no mod here ships a ladder, so Factorio's capacity progression is authored or absent. 9x6 = 54 slots, the ceiling."
     },
     "steel-furnace": {
       "kind": "item",
-      "target": "planetaryfactory:steel_furnace",
+      "target": "factoryworks:steel_furnace",
       "source": "authored",
-      "note": "The furnace ladder is `planetaryfactory_core`'s: three blocks reading the pack's own count-bearing `planetaryfactory:smelting` and nothing else (#155). Vanilla's furnace consumes exactly one item and Factorio's steel is 5 plates, so the count is the reason the type exists; the vanilla type is not read alongside it, because ADR-0034's sweep leaves it with no live recipe. Speed and fuel only, gating nothing (#91). Fuel-burning, `crafting_speed` 2. Blast furnace texture."
+      "note": "The furnace ladder is `factoryworks_core`'s: three blocks reading the pack's own count-bearing `factoryworks:smelting` and nothing else (#155). Vanilla's furnace consumes exactly one item and Factorio's steel is 5 plates, so the count is the reason the type exists; the vanilla type is not read alongside it, because ADR-0034's sweep leaves it with no live recipe. Speed and fuel only, gating nothing (#91). Fuel-burning, `crafting_speed` 2. Blast furnace texture."
     },
     "steel-plate": {
       "kind": "item",
       "target": "ftbmaterials:steel_plate",
       "source": "borrowed",
-      "note": "The only surviving alloy on Terra -- iron plus coal, #72. FTB Materials' plate form (ADR-0061); note that FTB Materials also ships a `steel_ingot`, and this row is deliberately the PLATE, because ADR-0032 removed the ingot step from Terra's chain entirely. Its `smelting` recipe is 5 plates to 1, which no vanilla shape can express; it rides the count-bearing `planetaryfactory:smelting` type, which #155 landed."
+      "note": "The only surviving alloy on Terra -- iron plus coal, #72. FTB Materials' plate form (ADR-0061); note that FTB Materials also ships a `steel_ingot`, and this row is deliberately the PLATE, because ADR-0032 removed the ingot step from Terra's chain entirely. Its `smelting` recipe is 5 plates to 1, which no vanilla shape can express; it rides the count-bearing `factoryworks:smelting` type, which #155 landed."
     },
     "stone": {
       "kind": "item",
@@ -862,13 +862,13 @@
       "kind": "item",
       "target": "minecraft:stone_bricks",
       "source": "borrowed",
-      "note": "Factorio's stone brick is a building material -- walls, floors, the furnaces themselves -- and Minecraft's building block of that name is `minecraft:stone_bricks`. The recipe is the corpus verbatim: 2 stone to 1, category `smelting`, which no vanilla furnace shape can express, so it rides the count-bearing `planetaryfactory:smelting` type with `steel-plate`, which #155 landed. ADR-0046 reversed the earlier reading (`minecraft:stone` on a 1:1 vanilla shape), which only ever worked by putting the item on the smelted block."
+      "note": "Factorio's stone brick is a building material -- walls, floors, the furnaces themselves -- and Minecraft's building block of that name is `minecraft:stone_bricks`. The recipe is the corpus verbatim: 2 stone to 1, category `smelting`, which no vanilla furnace shape can express, so it rides the count-bearing `factoryworks:smelting` type with `steel-plate`, which #155 landed. ADR-0046 reversed the earlier reading (`minecraft:stone` on a 1:1 vanilla shape), which only ever worked by putting the item on the smelted block."
     },
     "stone-furnace": {
       "kind": "item",
-      "target": "planetaryfactory:stone_furnace",
+      "target": "factoryworks:stone_furnace",
       "source": "authored",
-      "note": "The furnace ladder is `planetaryfactory_core`'s: three blocks reading the pack's own count-bearing `planetaryfactory:smelting` and nothing else (#155). Vanilla's furnace consumes exactly one item and Factorio's steel is 5 plates, so the count is the reason the type exists; the vanilla type is not read alongside it, because ADR-0034's sweep leaves it with no live recipe. Speed and fuel only, gating nothing (#91). Rung 0, fuel-burning, `crafting_speed` 1. Vanilla's furnace recipe goes with the stock sweep."
+      "note": "The furnace ladder is `factoryworks_core`'s: three blocks reading the pack's own count-bearing `factoryworks:smelting` and nothing else (#155). Vanilla's furnace consumes exactly one item and Factorio's steel is 5 plates, so the count is the reason the type exists; the vanilla type is not read alongside it, because ADR-0034's sweep leaves it with no live recipe. Speed and fuel only, gating nothing (#91). Rung 0, fuel-burning, `crafting_speed` 1. Vanilla's furnace recipe goes with the stock sweep."
     },
     "stone-wall": {
       "status": "undecided",
@@ -893,9 +893,9 @@
     },
     "substation": {
       "kind": "item",
-      "target": "planetaryfactory:substation_electric_pole",
+      "target": "factoryworks:substation_electric_pole",
       "source": "authored",
-      "note": "ADR-0036's supply-area pole, registered in `planetaryfactory_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
+      "note": "ADR-0036's supply-area pole, registered in `factoryworks_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
     },
     "sulfur": {
       "kind": "item",
@@ -911,7 +911,7 @@
     },
     "sulfuric-acid-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "train-stop": {
       "kind": "item",
@@ -984,7 +984,7 @@
     },
     "water-barrel": {
       "status": "native_mechanic",
-      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
+      "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "wood": {
       "kind": "tag",

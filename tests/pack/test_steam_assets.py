@@ -9,10 +9,10 @@ Three things are asserted, and each fails in a different way:
     run the Boiler at a rate somebody chose with nothing else failing, since neither #224 nor #225
     exists yet to notice. So the resource is asserted against the corpus field by field, never
     against a literal, the `test_pump_assets.py` pattern.
-  - **The fluids' lang keys.** These are `planetaryfactory:` fluids, so nothing else in the pack
+  - **The fluids' lang keys.** These are `factoryworks:` fluids, so nothing else in the pack
     names them, and a missing `fluid_type` key renders the raw key in a tank tooltip.
   - **That neither fluid has a bucket.** ADR-0037 answered portable fluid for this pack --
-    `planetaryfactory:barrel`, any fluid at Factorio's own 50 mB -- and states that capacity as a
+    `factoryworks:barrel`, any fluid at Factorio's own 50 mB -- and states that capacity as a
     rule a later container "does not get to be re-argued from Minecraft's bucket" against. A
     1 000 mB bucket of steam is the twentyfold dose that ADR rejects, and it hands the player a
     hand-carry route around the Boiler-pipe-Engine chain rung 0 exists to teach. Asserted as an
@@ -35,13 +35,13 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-STEAM_CHAIN = ROOT / "mod/src/main/resources/planetaryfactory_core/fluid/steam_chain.json"
+STEAM_CHAIN = ROOT / "mod/src/main/resources/factoryworks_core/fluid/steam_chain.json"
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 FLUID_CORPUS = ROOT / "data/factorio/fluid.json"
 GENERATOR = ROOT / "scripts/build-steam-assets.py"
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
 
-FLUID_JAVA_DIR = ROOT / "mod/src/main/java/com/planetaryfactory/core/fluid"
+FLUID_JAVA_DIR = ROOT / "mod/src/main/java/com/factoryworks/core/fluid"
 PF_FLUID_TYPES = FLUID_JAVA_DIR / "PFFluidTypes.java"
 PF_FLUIDS = FLUID_JAVA_DIR / "PFFluids.java"
 
@@ -125,7 +125,7 @@ def check_corpus(failures):
 
 def check_assets(lang, failures):
     for fluid_name in FLUIDS:
-        fluid_type_key = f"fluid_type.planetaryfactory.{fluid_name}"
+        fluid_type_key = f"fluid_type.factoryworks.{fluid_name}"
         if not lang.get(fluid_type_key):
             failures.append(f"{fluid_name} has no {fluid_type_key} lang entry -- it would show its "
                             "raw key in a tank tooltip")
@@ -142,13 +142,13 @@ def check_no_bucket(lang, failures):
     code = re.sub(r"//.*", "", code)
     if "BucketItem" in code:
         failures.append(
-            "PFFluids registers a BucketItem -- ADR-0037 makes planetaryfactory:barrel this pack's "
+            "PFFluids registers a BucketItem -- ADR-0037 makes factoryworks:barrel this pack's "
             "portable fluid container at Factorio's 50 mB, and says a later container does not get "
             "to be re-argued from Minecraft's bucket"
         )
 
     for fluid_name in FLUIDS:
-        bucket_key = f"item.planetaryfactory.{fluid_name}_bucket"
+        bucket_key = f"item.factoryworks.{fluid_name}_bucket"
         if lang.get(bucket_key):
             failures.append(f"{bucket_key} is a lang entry, but {fluid_name} has no bucket")
 
@@ -174,7 +174,7 @@ def check_not_gtceu_steam(failures):
         if "gtceu" in code.lower():
             failures.append(
                 f"{path.relative_to(ROOT)} mentions gtceu outside a comment -- ADR-0048 is "
-                "explicit that these are planetaryfactory: fluids, never GregTech's own steam"
+                "explicit that these are factoryworks: fluids, never GregTech's own steam"
             )
 
 

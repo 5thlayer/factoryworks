@@ -21,9 +21,9 @@ client, waits for the resource reload to finish, kills it and reads the log.
 
 The client is verbose where the server is silent. It prints, per broken asset:
 
-    [Worker-Main-2/WARN]: Missing textures in model planetaryfactory:block/scrap_pile:
+    [Worker-Main-2/WARN]: Missing textures in model factoryworks:block/scrap_pile:
         gcyr:block/mars_regolith
-    [Worker-Main-2/WARN]: Missing model for variant: 'Block{planetaryfactory:steam}[level=0]'
+    [Worker-Main-2/WARN]: Missing model for variant: 'Block{factoryworks:steam}[level=0]'
 
 WHAT IS EXPECTED. Same rule as `check-datapack-load.py`: every complaint the log may contain about
 this pack is listed in EXPECTED with the ticket that owns it, an unlisted one fails, and a LISTED
@@ -32,7 +32,7 @@ re-armed.
 
 WHAT THIS CANNOT SEE, measured rather than assumed. A missing item model definition -- the
 fifteen-item failure #276 was filed over -- is logged NOWHERE. Deleting
-`assets/planetaryfactory/items/boiler.json` and running this produced a log with zero occurrences
+`assets/factoryworks/items/boiler.json` and running this produced a log with zero occurrences
 of the string `boiler` in it, and the item still renders as the checkerboard. The client is verbose
 about a model whose textures do not resolve and silent about an item that reaches no model at all,
 so that half of the claim stays with `tests/pack/test_data_formats.py`, which walks definition ->
@@ -57,7 +57,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LOG = ROOT / "logs/latest.log"
-NS = "planetaryfactory"
+NS = "factoryworks"
 
 # How long the client may take to reach the end of its resource reload, and how long the log must
 # stay quiet before the reload is taken to be over. The client never exits on its own -- it sits at
@@ -71,13 +71,13 @@ RELOADED = "minecraft:textures/atlas/blocks.png-atlas"
 # A complaint the log is allowed to contain, and the ticket that owns it. The key is the subject
 # the game named -- a model id, or a block state description for a variant.
 EXPECTED = {
-    "planetaryfactory:item/scrap_pile":
+    "factoryworks:item/scrap_pile":
         "names `gcyr:block/mars_regolith`, whose mod left with ADR-0060. Electro's art is #13's",
-    "planetaryfactory:block/scrap_pile":
+    "factoryworks:block/scrap_pile":
         "names `gcyr:block/mars_regolith` -- the same departed mod (#13)",
-    "planetaryfactory:item/fulgorite":
+    "factoryworks:item/fulgorite":
         "names `gcyr:block/martian_rock` (#13)",
-    "planetaryfactory:block/fulgorite":
+    "factoryworks:block/fulgorite":
         "names `gcyr:block/martian_rock` (#13)",
 }
 

@@ -183,7 +183,7 @@ concept in this space we would definitely be reinventing if we wrote our own.
 ```
 
 `.addCondition` being public means a first-party condition registered from
-`planetaryfactory_core` would slot into the same pipeline.
+`factoryworks_core` would slot into the same pipeline.
 
 ### Scope limit — read this twice
 
@@ -489,7 +489,7 @@ inventory. Item locking is not.
 7. If a **crafting-grid** lock is genuinely required, the realistic options are: adopt **AStages**
    (17k downloads, actively pushed, real station mixins, JEI + EMI + REI plugins, FTB Quests bridge —
    but vanilla stations only, closed licence, and its EMI listing does not update live), or implement
-   it in `planetaryfactory_core` against the FTB Library `StageProvider` SPI plus a `CraftingMenu` /
+   it in `factoryworks_core` against the FTB Library `StageProvider` SPI plus a `CraftingMenu` /
    result-slot hook and **both** a JEI and an EMI plugin. ADR-0015's ownership table says mechanism
    belongs in the mod, so option two is the one that fits the pack's own rules.
 8. **One signal can drive both halves.** The stage store, the stage-change client packets, and the
@@ -500,7 +500,7 @@ inventory. Item locking is not.
 ## Open questions this document does not answer
 
 - Whether `/reload` breaks in-flight GregTech machine recipes. **[unverified]** — needs a bench test.
-- Whether a custom `RecipeCondition` registered from `planetaryfactory_core` survives GregTech's recipe
+- Whether a custom `RecipeCondition` registered from `factoryworks_core` survives GregTech's recipe
   serialization round-trip across a dedicated-server boundary (it has `toNetwork`/`fromNetwork`, so
   it should, but this was not tested).
 - Whether EMI can be driven to hide recipes per-player **live** on 1.21.1. Verified: its public API

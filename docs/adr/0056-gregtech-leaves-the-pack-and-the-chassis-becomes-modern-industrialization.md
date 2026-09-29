@@ -81,7 +81,7 @@ on. The pack is on NeoForge `21.1.248`.
 
 ## What this costs, stated honestly
 
-**Eight Java files in `planetaryfactory_core` import `com.gregtechceu.*`.** Two `RecipeLogic` mixins
+**Eight Java files in `factoryworks_core` import `com.gregtechceu.*`.** Two `RecipeLogic` mixins
 retarget to `CrafterComponent`; `RuntimeHandRecipes` and `IdleMachineLockNote` retype from `GTRecipe`
 to MI's `MachineRecipe`; three energy touchpoints move from `GTCapability.CAPABILITY_ENERGY_CONTAINER`
 to `MIEnergyStorage`. `mixins.json` declares `"required": true`, so a stale entry is a crash and not

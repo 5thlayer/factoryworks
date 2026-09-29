@@ -10,7 +10,7 @@ furnace cannot express: `steel-plate` is 5 iron plates to 1, `stone-brick` is 2 
 `SmeltingRecipe` holds a bare `Ingredient` with no count. It resolved the two **as a pair, and
 differently** — recorded in `data/pack/recipe-overrides.json` and in `docs/factorio-mechanics.md`:
 
-- `steel-plate` earns a count-bearing `planetaryfactory:smelting` recipe type on the three furnace
+- `steel-plate` earns a count-bearing `factoryworks:smelting` recipe type on the three furnace
   tiers, built by `#155`, read alongside vanilla smelting.
 - `stone-brick` takes the vanilla 1:1 shape instead — `stone` is `minecraft:cobblestone`,
   `stone-brick` is `minecraft:stone`, and smelting one to the other is the same move at a
@@ -38,7 +38,7 @@ bought a working recipe by putting the item on the wrong block.
 ## The decision
 
 **`stone-brick` is the corpus recipe verbatim: 2 `stone` to 1 `stone-brick`, category
-`smelting`, on the count-bearing `planetaryfactory:smelting` type (`#155`), read on all three
+`smelting`, on the count-bearing `factoryworks:smelting` type (`#155`), read on all three
 furnace tiers.** It is `steel-plate`'s twin, not its counterexample.
 
 **`stone-brick` maps to `minecraft:stone_bricks`.** With the real ratio restored there is no

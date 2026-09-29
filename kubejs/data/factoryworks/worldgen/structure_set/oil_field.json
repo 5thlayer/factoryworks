@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "factoryworks:oil_field",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 47,
+    "separation": 3,
+    "salt": 1792687403
+  }
+}

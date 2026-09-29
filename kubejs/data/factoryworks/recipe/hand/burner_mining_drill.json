@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 3
+    },
+    {
+      "ingredient": "factoryworks:stone_furnace",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 3
+    }
+  ],
+  "result": {
+    "id": "factoryworks:burner_mining_drill",
+    "count": 1
+  },
+  "time": 40
+}

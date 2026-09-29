@@ -17,7 +17,7 @@ Library for Factorio's rules, with the tests asserting that configuration. Both 
 **Decision.**
 
 - **The gate.** A mechanic is extracted only if all five hold, otherwise it stays in
-  `planetaryfactory_core`:
+  `factoryworks_core`:
   1. it makes sense without Factorio's rules;
   2. few Pack classes depend on it;
   3. its tests move without the Pack's corpus;
@@ -29,7 +29,7 @@ Library for Factorio's rules, with the tests asserting that configuration. Both 
   consumed the same way without being a Library.
 - **Tests.** A Library's tests move with its code. The commit that switches the Pack to the Library
   deletes the Pack's copies of both.
-- **Bindings stay.** A Binding and its GameTests stay in the Pack, under the `planetaryfactory:*`
+- **Bindings stay.** A Binding and its GameTests stay in the Pack, under the `factoryworks:*`
   selector (#448), because they assert the Pack's settings, which a Library's own run rules out.
 
 **Not decided here.** Naming is not a rule: the skill fixes a name before the first commit because

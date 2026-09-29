@@ -144,7 +144,7 @@ index = open("index.toml").read() if os.path.exists("index.toml") else ""
 stray = [os.path.basename(j) for j in sorted(glob.glob("mods/*.jar"))
          if os.path.basename(j) not in named
          and os.path.basename(j) not in index
-         and not os.path.basename(j).startswith("planetaryfactory_core-")]
+         and not os.path.basename(j).startswith("factoryworks_core-")]
 
 for m in missing:
     print("MISSING\t" + m)

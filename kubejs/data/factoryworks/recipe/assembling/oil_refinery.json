@@ -1,0 +1,33 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 15
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "minecraft:stone_bricks",
+      "count": 10
+    },
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 10
+    },
+    {
+      "ingredient": "oritech:fluid_pipe",
+      "count": 10
+    }
+  ],
+  "results": [
+    {
+      "id": "factoryworks:oil_refinery",
+      "count": 1
+    }
+  ],
+  "time": 160
+}

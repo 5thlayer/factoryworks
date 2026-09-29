@@ -12,7 +12,7 @@ oil springs retargeted at Terra, drained by Oritech's Pump. No ADR adopted it.
 **Decision (#377).** Crude is Factorio's infinite resource.
 
 - An **oil well** is one block that holds an amount and cannot be broken.
-- A **Pumpjack** is a `planetaryfactory_core` 3x3 footprint machine on the pack's own seam
+- A **Pumpjack** is a `factoryworks_core` 3x3 footprint machine on the pack's own seam
   (ADR-0059). It is placed only on a well and draws 90 kW plus a 3 kW drain from a pole.
 - Each cycle yields `10 × amount / normal` crude, capped at 1,000, and takes
   `infinite_depletion_amount` off the well. `normal` is 300,000.
@@ -66,4 +66,4 @@ would give.
   #377, not `excluded`.
 - `docs/spec/terra-progression.md`'s Fluid Drilling Rig beat and the coverage doc's pumpjack row no
   longer describe crude.
-- The `pumpjack` item-map row names `planetaryfactory:pumpjack`.
+- The `pumpjack` item-map row names `factoryworks:pumpjack`.

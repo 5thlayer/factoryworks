@@ -12,7 +12,7 @@ So **Electro registers no GregTech ore veins at all** — not a reduced set, not
 Prospecting it returns nothing.
 
 The problem with an absence is that it is indistinguishable from an omission. A reader three
-tickets from now, looking at `kubejs/data/planetaryfactory/gtceu/ore_vein/` and finding no Electro
+tickets from now, looking at `kubejs/data/factoryworks/gtceu/ore_vein/` and finding no Electro
 files, cannot tell whether the body was designed barren or whether someone forgot. Three things
 say it deliberately:
 
@@ -28,7 +28,7 @@ codec makes `dimension_filter` a required field, so a vein reaches a body only b
 walk is exhaustive rather than a heuristic.
 
 **Electro still has a worldgen layer.** `electro_rock` matches `gcyr:martian_rock` and is scoped to
-`planetaryfactory:fulgora`, and it places nothing, because nothing references it. It exists so the
+`factoryworks:fulgora`, and it places nothing, because nothing references it. It exists so the
 body has a tab in GregTech's prospecting tooling: a player who prospects Electro and is told there
 are no veins has learned the design, where a player told nothing at all has found what looks like a
 bug.

@@ -16,8 +16,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 GENERATOR = ROOT / "scripts" / "build-replace-groups.py"
-RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/placement/replace_groups.json"
-BLOCKSTATES = ROOT / "kubejs/assets/planetaryfactory/blockstates"
+RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/placement/replace_groups.json"
+BLOCKSTATES = ROOT / "kubejs/assets/factoryworks/blockstates"
 
 FAMILIES = (
     "stone-furnace", "steel-furnace", "electric-furnace",
@@ -34,7 +34,7 @@ def entry_failures(actual):
     failures = []
     for block, group in sorted(actual.items()):
         namespace, _, path = block.partition(":")
-        if namespace != "planetaryfactory" or not (BLOCKSTATES / f"{path}.json").is_file():
+        if namespace != "factoryworks" or not (BLOCKSTATES / f"{path}.json").is_file():
             failures.append(f"{block} is not a block the pack registers a blockstate for")
         sources = [name for name, target in target_of.items() if target == block]
         if not sources:

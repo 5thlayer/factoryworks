@@ -33,7 +33,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 
 HAND_CATEGORY = "crafting"
 
@@ -64,7 +64,7 @@ def hand_recipes():
 
 
 def outputs(recipe):
-    """A `planetaryfactory:assembling` recipe's item results: `{id, count, components?}`."""
+    """A `factoryworks:assembling` recipe's item results: `{id, count, components?}`."""
     yield from recipe.get("results") or []
 
 
@@ -82,7 +82,7 @@ def main():
 
     awaited = awaited_ids()
     deferred = [name for name in REQUIRED if name not in recipes
-                and "planetaryfactory:assembling/%s" % name in awaited]
+                and "factoryworks:assembling/%s" % name in awaited]
     for name in REQUIRED:
         if name in deferred:
             continue

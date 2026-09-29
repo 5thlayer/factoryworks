@@ -1,0 +1,25 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 5
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 5
+    },
+    {
+      "ingredient": "beltworks:belt_tile",
+      "count": 4
+    }
+  ],
+  "results": [
+    {
+      "id": "beltworks:splitter",
+      "count": 1
+    }
+  ],
+  "time": 20
+}

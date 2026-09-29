@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "factoryworks:item/chemical_plant",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}
