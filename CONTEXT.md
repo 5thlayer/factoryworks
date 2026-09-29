@@ -1,7 +1,8 @@
-# PlanetaryFactory
+# FactoryWorks
 
-A Minecraft 26.1.2 / NeoForge modpack that reproduces the progression, production-chain routing and
-interplanetary scope of Factorio's Space Age expansion.
+A Minecraft 26.1.2 / NeoForge overhaul modpack that reproduces the progression, production-chain
+routing and interplanetary scope of Factorio's Space Age expansion. Its tagline is "the factory just
+works", and its first-party mod is **FactoryWorks Core** (ADR-0101).
 
 **Factorio is the subject; the mods are the implementation.** What the pack reproduces, adapts or
 drops is the ledger in `docs/factorio-mechanics.md`, written in Factorio's terms and privileging no
@@ -15,6 +16,8 @@ is what is actually meant is the drift this file exists to prevent (`#94`).
 
 How the pack is built out of our own mods -- a **Library** and the **Binding** that configures it for
 Factorio's rules -- is 5thlayer/skillworks' vocabulary, defined in its `CONTEXT.md` (ADR-0090).
+FactoryWorks Core is the pack's Binding. The capital W marks the pack; a Library is spelled with a
+lowercase w (Beltworks).
 
 ## Language
 
