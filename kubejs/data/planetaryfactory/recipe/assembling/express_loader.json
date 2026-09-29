@@ -3,19 +3,19 @@
   "category": "crafting",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:iron_plate",
-      "count": 1
+      "ingredient": "beltworks:express_belt_tile",
+      "count": 5
     },
     {
-      "ingredient": "ftbmaterials:iron_gear",
+      "ingredient": "beltworks:improved_loader",
       "count": 1
     }
   ],
   "results": [
     {
-      "id": "beltworks:feeder",
+      "id": "beltworks:express_loader",
       "count": 1
     }
   ],
-  "time": 10
+  "time": 200
 }

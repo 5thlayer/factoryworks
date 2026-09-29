@@ -30,6 +30,8 @@ MUST_HOLD = {
                             "planetaryfactory:assembling_machine_3"),
     "loaders": ("beltworks:loader", "beltworks:improved_loader", "beltworks:express_loader",
                 "beltworks:turbo_loader"),
+    "feeders": ("beltworks:feeder", "beltworks:improved_feeder", "beltworks:express_feeder",
+                "beltworks:turbo_feeder"),
     "belts": ("beltworks:belt_tile", "beltworks:improved_belt_tile", "beltworks:express_belt_tile",
               "beltworks:turbo_belt_tile"),
     "splitters": ("beltworks:splitter", "beltworks:improved_splitter", "beltworks:express_splitter",

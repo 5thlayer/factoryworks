@@ -652,31 +652,37 @@ splitter, and the last two their belt tier (#345, #349). Their underground belts
 ### Inserters
 
 - **verdict**: `adapted`
-- **notice**: the inserter is the **loader**, a block that loads an inventory onto a belt or unloads a
-  belt into one. There is no swing arm, so nothing moves between two inventories directly and there
-  is no reach across a belt.
+- **notice**: the inserter is the **feeder**, a block that moves one item at a time between ends up
+  to 3 blocks apart, each a chest, a machine or a belt tile, and picks up loose items. The **loader**
+  loads an inventory onto a belt or unloads a belt into one, and is belt equipment.
 - **where**: all bodies
 - **via**: `beltworks` (Beltworks, 5thlayer/beltworks, ADR-0060)
-- **owner**: ADR-0076, ADR-0060, #341
+- **owner**: ADR-0100, ADR-0076, ADR-0060, #341
 
 Sub-rules:
 
-- **The inserter chain** — `adapted` as the loader. The fork's four loaders, `loader`,
-  `improved_loader`, `express_loader` and `turbo_loader`, read as Loader, Fast loader, Express loader and
-  Turbo loader, and are crafted from the `burner-inserter`, `inserter`, `fast-inserter` and
-  `bulk-inserter` recipes on the Assembling surface, each unlocked by its inserter's technology
-  (#347, ADR-0076). A loader moves its tier's 15, 30, 45 or 60 items/s whatever belt it is on.
-- **Inserter energy** — `adapted` as the loader's. Tier 1 runs unpowered, as the burner inserter
-  burns fuel the loader has no slot for. Tiers 2 to 4 hold an FE buffer a pole feeds, pay one swing
-  of their inserter per item (66.5, 81.2 and 116 FE) and its drain every tick (4, 5 and 10 FE/s), and
-  move nothing when short of an item's charge. The loading and the unloading loader each pay, as
-  Factorio's two inserters would, so a tier-2 line costs 133 FE an item (#348, ADR-0076).
-- **Inserter filter** — `adapted`. A loader takes FTB Filter System's smart filter as its filter
+- **The inserter chain** — `adapted` as the feeder. The fork's four feeders, `feeder`,
+  `improved_feeder`, `express_feeder` and `turbo_feeder`, are crafted from the `burner-inserter`,
+  `inserter`, `fast-inserter` and `bulk-inserter` recipes on the Assembling surface, each unlocked by
+  its inserter's technology (#514, ADR-0100). A feeder moves a tenth of its tier's loader rate.
+- **Loaders** — `adapted` from Factorio's hidden loaders. `loader`, `improved_loader` and
+  `express_loader` are crafted from the `loader`, `fast-loader` and `express-loader` recipes, unlocked
+  by `logistics`, `logistics-2` and `logistics-3` (#514, ADR-0100). The tier-1 loader takes 5 inserters,
+  which are tier-2 feeders here, so it cannot be crafted before `electronics`. `turbo_loader` has no
+  recipe, since its recipe takes the turbo belt, which has none. A loader moves its tier's 15, 30, 45
+  or 60 items/s whatever belt it is on.
+- **Inserter energy** — `adapted` as the feeder's. Each feeder pays one swing of its inserter per
+  item, since it carries one item a swing: 669, 66.5, 81.2 and 232 FE, the burner inserter's included, set in
+  `config/beltworks-server.toml` (#514). Loaders keep the figures ADR-0076 gave them: tier 1
+  unpowered, tiers 2 to 4 66.5, 81.2 and 116 FE an item and 4, 5 and 10 FE/s of drain, until
+  5thlayer/beltworks#84 makes them configurable (#348, ADR-0076).
+- **Inserter filter** — `adapted`. A loader or a feeder takes FTB Filter System's smart filter as its filter
   (ADR-0084). The filter is hand-made from 4 iron sticks, 4 copper cable and 1 electronic circuit,
   its stock recipe re-authored under ADR-0034's tail (#442).
-- **Long-handed inserter** — `excluded`. A loader has no arm to lengthen, so a long-handed tier would
-  be a loader with nothing to tell it apart; `long-handed-inserter` is `not_emitted` (#347, ADR-0076).
-- **Stack-size bonus research** — `planned`. A loader moves one item per belt entry until #25 picks
+- **Long-handed inserter** — `adapted` as the feeder's reach. A feeder's head and tail each reach 1 to
+  3 blocks, set by key, so there is no long-handed tier; `long-handed-inserter` is `not_emitted`
+  (#514, ADR-0100).
+- **Stack-size bonus research** — `planned`. A loader moves one item per belt entry, and a feeder one item a swing, until #25 picks
   the technologies (#341).
 
 ### Logistic robots

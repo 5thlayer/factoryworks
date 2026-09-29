@@ -15,12 +15,17 @@ because until then the loader was the only block that could take them.
 - The four feeder tiers take the corpus's inserter chain: `burner-inserter`, `inserter`,
   `fast-inserter` and `bulk-inserter` map to `feeder`, `improved_feeder`, `express_feeder` and
   `turbo_feeder`. Each is unlocked by that inserter's technology.
-- Each feeder pays its inserter's swing energy per item, and tier 1 pays the burner inserter's.
-  These are set in `config/beltworks-server.toml` under `feederJoulesPerItem`.
-- The loaders are hand-written in `recipe/assembling/pack/`, in the shape of Factorio 1.1's hidden
-  loaders: 5 feeders, 5 electronic circuits, 5 iron gear wheels, 5 iron plates and 5 belts, all of
-  the loader's tier. Tier 1 has no Factorio counterpart and takes no circuit.
-- Loader tier *n* unlocks with belt tier *n*, and tier 1 at the start.
+- Each feeder pays one whole swing of its inserter per item, tier 1 the burner inserter's, since a
+  feeder carries one item a swing: the turbo feeder pays the bulk inserter's full 23,200 J, not the
+  11,600 its two-item hand averages. The burner inserter's swing takes 5 spike ticks, like the
+  inserter whose extension speed it shares; Beltworks states no rule for them. The figures are set
+  in `config/beltworks-server.toml` under `feederJoulesPerItem`.
+- The loaders take Factorio's own loader recipes, which the game ships hidden. The extractor keeps
+  `loader`, `fast-loader` and `express-loader`, and the converter emits them like any other recipe.
+  The tier-1 loader takes 5 `inserter`, which is a tier-2 feeder here, so it cannot be crafted
+  before `electronics`. `turbo-loader` takes the turbo belt, which has no recipe, so the turbo
+  loader has none either.
+- Loader tier *n* unlocks with belt tier *n*: `logistics`, `logistics-2` and `logistics-3`.
 - `long-handed-inserter` becomes `adapted`: the feeder's reach does its job. It has no recipe,
   because reach is set by key, not by tier.
 
@@ -30,8 +35,9 @@ actually behaves like the inserter would be the one without its name.
 
 **Consequences.**
 
-- The loader chain is authored by the Pack, which ADR-0076 had avoided. Its figures come from
-  Factorio 1.1's data, not from a choice.
+- ADR-0076's premise that Factorio has no loader recipe was wrong: the recipes are hidden, not
+  absent. Nothing in the loader chain is authored by the Pack.
+- The logistic science pack takes an `inserter`, so it now takes a tier-2 feeder.
 - Loaders keep their current per-item energy, since Beltworks makes it configurable for no loader
   tier. That is a carry-over, not a decision, until 5thlayer/beltworks makes loader energy
   configurable per tier.

@@ -134,6 +134,11 @@ def scoped_technologies(techs):
     return keep, by_name
 
 
+# Factorio hides its loaders' recipes and no technology unlocks them, but they are the loader chain
+# the Pack crafts (ADR-0100). The turbo loader's needs a turbo belt, which has no recipe here.
+HIDDEN_KEPT = ("loader", "fast-loader", "express-loader")
+
+
 def scoped_recipes(recipes, techs, keep, by_name):
     """Recipe name -> the technology that unlocks it, or None for enabled-from-the-start.
 
@@ -148,7 +153,7 @@ def scoped_recipes(recipes, techs, keep, by_name):
                 unlocked.setdefault(effect["recipe"], name)
     for name, recipe in recipes.items():
         # `enabled` defaults to true, and an enabled recipe needs no technology.
-        if recipe.get("enabled", True):
+        if recipe.get("enabled", True) or name in HIDDEN_KEPT:
             unlocked.setdefault(name, None)
     return unlocked
 
@@ -194,7 +199,7 @@ def extract(dump, techs):
             continue
         # `recipe-unknown` is core's placeholder icon: hidden, no ingredients, no results.
         # It is enabled from the start, which is the only reason it reaches the corpus.
-        if recipe.get("hidden"):
+        if recipe.get("hidden") and name not in HIDDEN_KEPT:
             skipped["hidden"] += 1
             continue
         results = contents(recipe.get("results"))

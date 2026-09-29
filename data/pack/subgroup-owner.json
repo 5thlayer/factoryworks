@@ -53,7 +53,7 @@
     "and it is deliberately permissive -- locking intermediates to one machine each restricts the player",
     "far more than Factorio does, and buys nothing ADR-0017 asked for.",
     "",
-    "It is ENFORCED as `first category is `crafting``, which is the same 113 recipes -- the test proves the",
+    "It is ENFORCED as `first category is `crafting``, which is the same 116 recipes -- the test proves the",
     "two formulations pick out the identical set, so the exception list is derived rather than maintained.",
     "Factorio's `category` field IS 'needs a real machine', already curated upstream: the 11 fluid-free",
     "recipes it withholds from the hand are 4 `smelting`, 2 `centrifuging`, 3 `crushing`, `rocket-part` and",
@@ -64,7 +64,7 @@
     "no fluid' alone would have swallowed it silently.",
     "",
     "NO ROW HERE NAMES THE PERSONAL ASSEMBLER, because the predicate cuts across shelves rather than along",
-    "them. 113 of the corpus's 163 recipes qualify, spread over 29 of the 34 shelves -- 24 wholly, and 5",
+    "them. 116 of the corpus's 166 recipes qualify, spread over 29 of the 34 shelves -- 24 wholly, and 5",
     "(`intermediate-product`, `belt`, `terrain`, `uranium-processing`, `space-interactors`) split down the",
     "middle. A shelf is the wrong granularity for it, which is why it is not stored at all.",
     "",
@@ -83,7 +83,7 @@
       "process": "pack:assembling",
       "adr_row": "Item logistics -- Create (belts, chutes, trains)",
       "cross_owner": "Create's belts, built in the pack's Assembling Machine. Create ships no machine that assembles a multi-part device; `mechanical_crafting` is a grid, not a machine, and Factorio builds belts in an assembler.",
-      "count": 9
+      "count": 12
     },
     "logistics/inserter": {
       "owner": "create",
@@ -537,11 +537,11 @@
       "owner": "not_emitted",
       "reason": "#26 dropped Military science -- its ingredients feed nothing downstream. THAT PREMISE IS FALSE since #118 (ADR-0055): the combat line has customers and Military science returns. The shelf stays out of the corpus's emit scope only until `item-map.json` carries its rows; the ledger verdict is `planned` and this field is the other axis.",
       "note": "Contains `radar`, which is emitted on its own row: #368 builds it as `planetaryfactory:radar` (ADR-0079), crafted in the pack's Assembling Machine from Factorio's recipe. The rest of the shelf stays cut.",
-    "per_recipe": {
-      "radar": "pack:assembling",
-      "stone-wall": "not_emitted",
-      "gate": "not_emitted"
-    },
+      "per_recipe": {
+        "radar": "pack:assembling",
+        "stone-wall": "not_emitted",
+        "gate": "not_emitted"
+      },
       "count": 3
     },
     "space/space-crushing": {

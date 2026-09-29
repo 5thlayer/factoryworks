@@ -10,13 +10,22 @@
       "stack": "item:beltworks:express_belt_tile"
     },
     {
+      "stack": "item:beltworks:express_feeder"
+    },
+    {
       "stack": "item:beltworks:express_loader"
     },
     {
       "stack": "item:beltworks:express_splitter"
     },
     {
+      "stack": "item:beltworks:feeder"
+    },
+    {
       "stack": "item:beltworks:improved_belt_tile"
+    },
+    {
+      "stack": "item:beltworks:improved_feeder"
     },
     {
       "stack": "item:beltworks:improved_loader"
@@ -31,7 +40,7 @@
       "stack": "item:beltworks:splitter"
     },
     {
-      "stack": "item:beltworks:turbo_loader"
+      "stack": "item:beltworks:turbo_feeder"
     },
     {
       "stack": "item:ftbfiltersystem:smart_filter"

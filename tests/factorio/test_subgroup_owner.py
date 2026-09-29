@@ -96,7 +96,7 @@ WITHHELD = {
 # The five split shelves are the point: the rule is a predicate over categories, so it crosses
 # shelves instead of following them, and a shelf could not store it even if a row wanted to.
 EXPECTED_SPREAD = (
-    113,
+    116,
     29,
     24,
     ["belt", "intermediate-product", "space-interactors", "terrain", "uranium-processing"],
