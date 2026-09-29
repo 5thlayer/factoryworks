@@ -283,6 +283,24 @@ public class FurnaceBlockEntity extends BlockEntity implements Container, MenuPr
     }
 
     /**
+     * How many more of {@code stack} automated insertion may put in the input slot: the Overload
+     * Limit of the smelt taking it, less what the slot holds (#518). The menu's slots do not ask.
+     */
+    public int overloadRoom(ItemStack stack) {
+        if (level == null || level.getServer() == null || stack.isEmpty()) {
+            return 0;
+        }
+        int held = items.get(FurnaceSlots.INPUT).getCount();
+        return level.getServer().getRecipeManager().recipeMap()
+                .byType(PFRecipes.SMELTING_TYPE.get()).stream()
+                .map(RecipeHolder::value)
+                .filter(smelt -> smelt.isIngredient(stack))
+                .findFirst()
+                .map(smelt -> tier.overloadRoom(smelt.count(), smelt.cookingTime(), held))
+                .orElse(0);
+    }
+
+    /**
      * Whether the generated fuel table names this stack (ADR-0047). Default-deny: an item with no
      * row is not fuel, and {@link FurnaceSlots#insertionSlot} therefore will not route it to the
      * fuel slot at all.

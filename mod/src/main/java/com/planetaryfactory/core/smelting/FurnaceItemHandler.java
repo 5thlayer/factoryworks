@@ -31,6 +31,17 @@ public class FurnaceItemHandler extends GuardedResourceHandler<ItemResource> {
     }
 
     @Override
+    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+        if (convertIndex(index) == FurnaceSlots.INPUT) {
+            amount = Math.min(amount, blockEntity.overloadRoom(resource.toStack(1)));
+            if (amount == 0) {
+                return 0;
+            }
+        }
+        return super.insert(index, resource, amount, transaction);
+    }
+
+    @Override
     public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
         if (!FurnaceSlots.canExtract(convertIndex(index))) {
             return 0;

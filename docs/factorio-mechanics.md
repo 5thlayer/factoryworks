@@ -682,9 +682,9 @@ Sub-rules:
 - **Long-handed inserter** — `adapted` as the feeder's reach. A feeder's head and tail each reach 1 to
   3 blocks, set by key, so there is no long-handed tier; `long-handed-inserter` is `not_emitted`
   (#514, ADR-0100).
-- **Overload limit** — `shipped` on the crafting chassis (#517); furnaces #518, fluids #519.
+- **Overload limit** — `shipped` on the crafting chassis (#517) and the furnaces (#518); fluids #519.
   Automated insertion stops at a recipe's Overload Limit, the crafts one inserter swing (1.166 s)
-  completes plus one, between 2 and 100, measured in `data/factorio/overload.json`. The hand is
+  completes plus one, between 2 and 100, measured in `data/factorio/overload.json`. Quick transfer (#208, unbuilt) will be held to it through the item handler; the hand in a screen is
   not held to it. A product stops the craft at a full stack, as Factorio's does. The bonus `allow_inserter_overload` gives of 4× the stack
   inserter's stack size is not reproduced, since no feeder or loader carries a stack.
 - **Stack-size bonus research** — `planned`. A loader moves one item per belt entry, and a feeder one item a swing, until #25 picks
