@@ -245,7 +245,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         for (int tank = 0; tank < outputs.size(); tank++) {
             TankRow.Bar bar = outputs.get(tank);
             bars.add(new FluidBar(held == null ? Optional.empty() : held.outputFluid(tank), menu.outputAmount(tank),
-                    spec.fluidOutputVolume(tank), leftPos + bar.x(), y, bar.width(), ENERGY_HEIGHT));
+                    menu.outputVolume(tank), leftPos + bar.x(), y, bar.width(), ENERGY_HEIGHT));
         }
         return bars;
     }

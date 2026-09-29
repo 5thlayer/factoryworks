@@ -68,6 +68,21 @@ def volumes(row, production_type, count):
     return boxes[:count]
 
 
+def pinned():
+    """Emitted chassis recipes whose Factorio recipe pins a fluid product to a box (#520)."""
+    recipes = json.loads((ROOT / "data" / "factorio" / "recipe.json").read_text(encoding="utf-8"))
+    out = []
+    for recipe in recipes:
+        if not any("fluidbox_index" in r for r in recipe.get("results", [])):
+            continue
+        stem = recipe["name"].replace("-", "_")
+        found = [t for t in CHASSIS_TYPES if (EMITTED / t.split(":")[1] / f"{stem}.json").is_file()]
+        if len(found) != 1:
+            sys.exit(f"{recipe['name']} pins a fluid product and is emitted under {found}")
+        out.append(f"{found[0]}/{stem}")
+    return sorted(out)
+
+
 def specs():
     machine = json.loads(MACHINE_CORPUS.read_text(encoding="utf-8"))
     category_map = json.loads(CATEGORY_MAP.read_text(encoding="utf-8"))
@@ -91,6 +106,7 @@ def specs():
             "item_outputs": most["results"],
             "fluid_inputs": volumes(row, "input", most["fluid_ingredients"]),
             "fluid_outputs": volumes(row, "output", most["fluid_results"]),
+            "fluid_output_boxes": [box["volume"] for box in row["fluid_boxes"] if box["production_type"] == "output"],
         }
     return out
 
@@ -101,7 +117,10 @@ def main():
     args = parser.parse_args()
 
     corpus = json.loads(OVERLOAD_CORPUS.read_text(encoding="utf-8"))
-    overload = {**corpus["constants"], "fluid_input_multiplier": corpus["measured"]["fluid_input"]["multiplier"]}
+    overload = {**corpus["constants"],
+                "fluid_input_multiplier": corpus["measured"]["fluid_input"]["multiplier"],
+                "fluid_output_multiplier": corpus["measured"]["fluid_output_volume"]["multiplier"],
+                "pinned_fluid_outputs": pinned()}
     outputs = {RESOURCE: specs(), OVERLOAD: overload}
     for path, data in outputs.items():
         text = json.dumps(data, indent=2) + "\n"

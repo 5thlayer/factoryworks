@@ -63,6 +63,24 @@ def main():
         if any(case["held"][n] > case["volume"][n] for n in case["held"]):
             failures.append(f"{case['recipe']}: an output holds more than its volume")
 
+    volume = corpus["measured"]["fluid_output_volume"]
+    for case in volume["cases"]:
+        boxes = [b["volume"] for b in machines[case["machine"]]["fluid_boxes"] if b["production_type"] == "output"]
+        amounts = case["amounts"]
+        if case["recipe"] in recipes:
+            listed = [r["amount"] for r in recipes[case["recipe"]]["results"] if r.get("type") == "fluid"]
+            if listed != amounts:
+                failures.append(f"{case['recipe']}: the corpus makes {listed}, the case says {amounts}")
+            pins = any("fluidbox_index" in r for r in recipes[case["recipe"]]["results"])
+            if pins != case.get("pinned", False):
+                failures.append(f"{case['recipe']}: pinned is {pins} in the corpus")
+        want = []
+        for i, amount in enumerate(amounts):
+            box = boxes[i] + (sum(boxes[len(amounts):]) if i == 0 and not case.get("pinned") else 0)
+            want.append(max(box, amount * volume["multiplier"]))
+        if want != case["volume"]:
+            failures.append(f"{case['machine']} {case['recipe']}: volume rule gives {want}, probe read {case['volume']}")
+
     dump = json.loads(DUMP.read_text(encoding="utf-8")) if DUMP.is_file() else None
     for case in corpus["measured"]["output"]["cases"]:
         if case["held"] != case["stack_size"]:

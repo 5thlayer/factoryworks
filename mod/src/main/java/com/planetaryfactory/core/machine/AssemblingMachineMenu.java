@@ -106,7 +106,9 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
     private static final int FLUID_OUTPUTS = MachineSpecs.get().maxFluidOutputs();
     // Only each tank's fill crosses: its size is the spec's, which the client reads off the block.
     private static final int DATA_TANKS = 10;
-    private static final int DATA_COUNT = DATA_TANKS + FLUID_INPUTS + FLUID_OUTPUTS;
+    /** The Held recipe resizes the output tanks (#520), so the client cannot read them off the spec. */
+    private static final int DATA_OUTPUT_VOLUMES = DATA_TANKS + FLUID_INPUTS + FLUID_OUTPUTS;
+    private static final int DATA_COUNT = DATA_OUTPUT_VOLUMES + FLUID_OUTPUTS;
     private static final int OUTPUT = AssemblingMachineBlockEntity.OUTPUT;
     private static final int MACHINE_SLOTS = AssemblingMachineBlockEntity.INPUTS + 1;
 
@@ -205,7 +207,9 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
                     case DATA_CAPACITY + 1 -> DataSlotHalves.high(machine.energyStorage.getCapacityAsLong());
                     case DATA_DRAW -> DataSlotHalves.low(machine.drawTenths());
                     case DATA_DRAW + 1 -> DataSlotHalves.high(machine.drawTenths());
-                    default -> index >= DATA_TANKS && index < DATA_COUNT
+                    default -> index >= DATA_OUTPUT_VOLUMES && index < DATA_COUNT
+                            ? machine.outputTankVolume(index - DATA_OUTPUT_VOLUMES)
+                            : index >= DATA_TANKS && index < DATA_OUTPUT_VOLUMES
                             ? (int) machine.tank().getAmountAsLong(index - DATA_TANKS) : 0;
                 };
             }
@@ -306,6 +310,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
 
     public int inputAmount(int tank) {
         return data.get(DATA_TANKS + tank);
+    }
+
+    public int outputVolume(int tank) {
+        return data.get(DATA_OUTPUT_VOLUMES + tank);
     }
 
     public int outputAmount(int tank) {

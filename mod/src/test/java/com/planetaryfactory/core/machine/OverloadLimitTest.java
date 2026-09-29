@@ -2,6 +2,7 @@ package com.planetaryfactory.core.machine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,7 +15,8 @@ class OverloadLimitTest {
 
     @Test
     void readsFactoriosConstants() {
-        assertEquals(new OverloadLimit(1.166, 2, 100, 4), LIMIT);
+        assertEquals(new OverloadLimit(1.166, 2, 100, 4, 3,
+                Set.of("planetaryfactory:oil_processing/basic_oil_processing")), LIMIT);
     }
 
     @Test
@@ -34,12 +36,12 @@ class OverloadLimitTest {
 
     @Test
     void neverAboveTheMaximum() {
-        assertEquals(100, new OverloadLimit(10.0, 2, 100, 4).crafts(1.25, 1));
+        assertEquals(100, new OverloadLimit(10.0, 2, 100, 4, 3, Set.of()).crafts(1.25, 1));
     }
 
     @Test
     void anExactQuotientIsNotRoundedUpPastItself() {
-        assertEquals(3, new OverloadLimit(1.0, 2, 100, 4).crafts(1.0, 10));
+        assertEquals(3, new OverloadLimit(1.0, 2, 100, 4, 3, Set.of()).crafts(1.0, 10));
     }
 
     @Test

@@ -76,7 +76,8 @@ public final class MachineSpecs {
                         row.get("item_inputs").getAsInt(),
                         row.get("item_outputs").getAsInt(),
                         ints(row.getAsJsonArray("fluid_inputs")),
-                        ints(row.getAsJsonArray("fluid_outputs"))));
+                        ints(row.getAsJsonArray("fluid_outputs")),
+                        ints(row.getAsJsonArray("fluid_output_boxes"))));
             }
             return new MachineSpecs(Map.copyOf(specs));
         } catch (IOException e) {

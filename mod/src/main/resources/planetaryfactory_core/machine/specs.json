@@ -12,7 +12,8 @@
     "item_inputs": 5,
     "item_outputs": 1,
     "fluid_inputs": [],
-    "fluid_outputs": []
+    "fluid_outputs": [],
+    "fluid_output_boxes": []
   },
   "assembling-machine-2": {
     "recipe_type": "planetaryfactory:assembling",
@@ -30,7 +31,10 @@
     "fluid_inputs": [
       1000
     ],
-    "fluid_outputs": []
+    "fluid_outputs": [],
+    "fluid_output_boxes": [
+      1000
+    ]
   },
   "assembling-machine-3": {
     "recipe_type": "planetaryfactory:assembling",
@@ -48,7 +52,10 @@
     "fluid_inputs": [
       1000
     ],
-    "fluid_outputs": []
+    "fluid_outputs": [],
+    "fluid_output_boxes": [
+      1000
+    ]
   },
   "chemical-plant": {
     "recipe_type": "planetaryfactory:chemistry",
@@ -66,6 +73,10 @@
       1000
     ],
     "fluid_outputs": [
+      100
+    ],
+    "fluid_output_boxes": [
+      100,
       100
     ]
   },
@@ -85,6 +96,11 @@
       1000
     ],
     "fluid_outputs": [
+      100,
+      100,
+      100
+    ],
+    "fluid_output_boxes": [
       100,
       100,
       100

@@ -17,6 +17,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 
 /**
@@ -34,6 +35,7 @@ final class OilRefineryTests {
             new ChassisFixture("Oil Refinery", PFBlocks.OIL_REFINERY_FOOTPRINT, ANCHOR, FACING);
 
     private static final String ADVANCED = "planetaryfactory:oil_processing/advanced_oil_processing";
+    private static final String BASIC = "planetaryfactory:oil_processing/basic_oil_processing";
     private static final String PLASTIC = "planetaryfactory:chemistry/plastic_bar";
     private static final String CABLE = "planetaryfactory:assembling/copper_cable";
 
@@ -47,7 +49,8 @@ final class OilRefineryTests {
     private static final int WATER_PER_CRAFT = 50;
     private static final int CRUDE_PER_CRAFT = 100;
     private static final List<Integer> MADE_PER_CRAFT = List.of(25, 45, 55);
-    private static final int OUTPUT_TANK_SIZE = 100;
+    /** Advanced oil processing's output boxes in Factorio 2.1.20 (#520), typed from the probe. */
+    private static final List<Integer> OUTPUT_TANK_SIZES = List.of(100, 135, 165);
     private static final long CHARGE = 50_000L;
 
     private OilRefineryTests() {
@@ -61,6 +64,8 @@ final class OilRefineryTests {
             tests.test("oil_refinery_stalls_on_full_output_" + output, 200,
                     helper -> stallsOnAFullOutput(helper, full));
         }
+        tests.test("oil_refinery_output_tanks_are_sized_by_the_recipe", 20,
+                OilRefineryTests::outputTanksAreSizedByTheRecipe);
         tests.test("oil_refinery_stalls_without_water", 200, OilRefineryTests::stallsWithoutWater);
         tests.test("oil_refinery_fluid_face_routes_by_the_held_recipe", 20,
                 OilRefineryTests::fluidFaceRoutesByTheHeldRecipe);
@@ -75,10 +80,10 @@ final class OilRefineryTests {
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.east(2), "several blocks"));
     }
 
-    /** Fed for two crafts, it makes one at the recipe's rate and cost, then stops on its gas. */
+    /** Fed for one craft and a half, it makes one at the recipe's rate and cost, then stops on its water. */
     private static void runsAdvancedOilProcessing(GameTestHelper helper) {
         OilRefineryBlockEntity machine = placeWhole(helper);
-        feed(helper, machine, 2 * WATER_PER_CRAFT, 2 * CRUDE_PER_CRAFT);
+        feed(helper, machine, WATER_PER_CRAFT + WATER_PER_CRAFT / 2, 2 * CRUDE_PER_CRAFT);
         machine.energyStorage.set(CHARGE);
         helper.runAfterDelay(TICKS_PER_CRAFT + 1, () -> {
             for (int output = 0; output < MADE_PER_CRAFT.size(); output++) {
@@ -88,7 +93,7 @@ final class OilRefineryTests {
                             + MADE_PER_CRAFT.get(output), ANCHOR);
                 }
             }
-            if (machine.tank().getAmountAsLong(0) != WATER_PER_CRAFT
+            if (machine.tank().getAmountAsLong(0) != WATER_PER_CRAFT / 2
                     || machine.tank().getAmountAsLong(1) != CRUDE_PER_CRAFT) {
                 helper.fail("one craft left " + machine.tank().getAmountAsLong(0) + " mB of water and "
                         + machine.tank().getAmountAsLong(1) + " of crude", ANCHOR);
@@ -97,8 +102,8 @@ final class OilRefineryTests {
             if (spent != FE_PER_CRAFT) {
                 helper.fail("one craft drew " + spent + " FE, expected " + FE_PER_CRAFT, ANCHOR);
             }
-            if (machine.stall() != AssemblingStall.OUTPUT_FULL) {
-                helper.fail("after one craft the gas tank has no room for 55 mB, yet the machine reports "
+            if (machine.stall() != AssemblingStall.NO_FLUID) {
+                helper.fail("after one craft 25 mB of water is short of a craft, yet the machine reports "
                         + machine.stall(), ANCHOR);
             }
             helper.succeed();
@@ -110,13 +115,39 @@ final class OilRefineryTests {
         OilRefineryBlockEntity machine = placeWhole(helper);
         feed(helper, machine, 100, 200);
         FluidResource fluid = FluidResource.of(fluid(List.of(HEAVY_OIL, LIGHT_OIL, PETROLEUM_GAS).get(output)));
-        int filled = OUTPUT_TANK_SIZE - MADE_PER_CRAFT.get(output) + 1;
+        int filled = OUTPUT_TANK_SIZES.get(output) - MADE_PER_CRAFT.get(output) + 1;
         ((FluidStacksResourceHandler) machine.tank()).set(CHASSIS.outputTank(machine, output), fluid, filled);
         machine.energyStorage.set(CHARGE);
         helper.runAfterDelay(TICKS_PER_CRAFT + 1, () -> {
             assertStalled(helper, machine, AssemblingStall.OUTPUT_FULL, 100, 200);
             helper.succeed();
         });
+    }
+
+    /** What each output tank takes, through the tank itself, with advanced and the pinned basic held. */
+    private static void outputTanksAreSizedByTheRecipe(GameTestHelper helper) {
+        OilRefineryBlockEntity machine = placeWhole(helper);
+        CHASSIS.hold(helper, machine, ADVANCED);
+        List<String> fluids = List.of(HEAVY_OIL, LIGHT_OIL, PETROLEUM_GAS);
+        for (int output = 0; output < fluids.size(); output++) {
+            expectOutputTank(helper, machine, output, fluids.get(output), OUTPUT_TANK_SIZES.get(output));
+        }
+        CHASSIS.hold(helper, machine, BASIC);
+        expectOutputTank(helper, machine, 0, PETROLEUM_GAS, 135);
+        helper.succeed();
+    }
+
+    private static void expectOutputTank(GameTestHelper helper, OilRefineryBlockEntity machine, int output,
+            String fluid, int size) {
+        int tank = CHASSIS.outputTank(machine, output);
+        ((FluidStacksResourceHandler) machine.tank()).set(tank, FluidResource.EMPTY, 0);
+        int took;
+        try (Transaction tx = Transaction.openRoot()) {
+            took = machine.tank().insert(tank, FluidResource.of(fluid(fluid)), 1000, tx);
+        }
+        if (took != size) {
+            helper.fail("output tank " + output + " took " + took + " mB of " + fluid + ", expected " + size, ANCHOR);
+        }
     }
 
     private static void stallsWithoutWater(GameTestHelper helper) {

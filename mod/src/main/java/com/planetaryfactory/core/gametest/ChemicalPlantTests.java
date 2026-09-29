@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import rearth.oritech.block.blocks.addons.MachineAddonBlock;
@@ -64,6 +65,8 @@ final class ChemicalPlantTests {
                 ChemicalPlantTests::fluidFaceRoutesByTheHeldRecipe);
         tests.test("chemical_plant_fluid_face_stops_each_tank_at_the_overload_limit", 20,
                 ChemicalPlantTests::fluidFaceStopsEachTankAtTheOverloadLimit);
+        tests.test("chemical_plant_lone_output_takes_the_unused_box", 20,
+                ChemicalPlantTests::loneOutputTakesTheUnusedBox);
         tests.test("chemical_plant_refuses_another_machines_recipe", 20,
                 helper -> CHASSIS.refusesOtherRecipes(helper, placeWhole(helper), PLASTIC, List.of(CABLE, BASIC_OIL)));
         tests.test("chemical_plant_keeps_its_recipe_over_a_reload", 20,
@@ -222,6 +225,21 @@ final class ChemicalPlantTests {
         expectMoved(helper, ANCHOR, "water", 120, face, (f, tx) -> f.insert(water, 1000, tx));
         expectMoved(helper, ANCHOR, "heavy oil", 160, face, (f, tx) -> f.insert(heavy, 1000, tx));
         expectMoved(helper, ANCHOR, "water past the limit", 0, face, (f, tx) -> f.insert(water, 10, tx));
+        helper.succeed();
+    }
+
+    /** Cracking's one product fills both of Factorio's 100 mB output boxes, typed from the probe (#520). */
+    private static void loneOutputTakesTheUnusedBox(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = placeWhole(helper);
+        CHASSIS.hold(helper, machine, CRACKING);
+        int took;
+        try (Transaction tx = Transaction.openRoot()) {
+            took = machine.tank().insert(CHASSIS.outputTank(machine, 0), FluidResource.of(fluid(LIGHT_OIL)), 1000, tx);
+        }
+        if (took != 200) {
+            helper.fail("the light oil tank took " + took + " mB, expected 200", ANCHOR);
+            return;
+        }
         helper.succeed();
     }
 
