@@ -1065,6 +1065,17 @@ gate table in `docs/spec/terra-progression.md` and holds each gate to its cost i
 launch to no production pack and the reactor to a branch the silo does not require (ADR-0097), so
 run it after editing that table too.
 
+### Licence check
+
+Which licence covers which file is `REUSE.toml`'s, with the texts in `LICENSES/` (#302,
+ADR-0102): code LGPL-3.0-only, the Pack's content CC BY 4.0, Wube's corpus under neither, and
+third-party files under their own. No file carries an SPDX header. `tests/pack/test_licensing.py`
+implements `reuse lint`'s rule, since that tool needs libmagic and CI runs it, and holds the
+boundaries a glob edit can silently move: the corpus never under the Pack's licences, each art
+credit in `NOTICE` resolving to the licence `NOTICE` names, and the mod declaring what the map
+gives it. Run it after adding a file of a new kind, any third-party art, or an edit to
+`REUSE.toml`.
+
 ### Pack manifest
 
 The jar set is a packwiz manifest tracked in git (ADR-0024) — `pack.toml`, `index.toml` and one

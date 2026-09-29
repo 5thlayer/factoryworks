@@ -18,6 +18,9 @@ skills-lock.json
 .vscode/
 /publish/
 *.md
+/LICENSE
+/LICENSES/
+/REUSE.toml
 .gitignore
 .gitattributes
 # Editor scratch, alive only while a file is open -- and gone by the time a

@@ -5,6 +5,9 @@ Each entry names the files, their author, where they came from and the licence t
 file listed here is NOT covered by any licence this repository states for its own work; its own
 licence governs it.
 
+Which licence covers which file is REUSE.toml's to say (ADR-0102). This list is the credits for what
+was copied in.
+
 Electric Furnace textures (#324)
 --------------------------------
 
