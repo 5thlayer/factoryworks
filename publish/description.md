@@ -1,6 +1,6 @@
 FactoryWorks is an overhaul modpack that plays like Factorio. You start with a furnace, a burner drill and a pick beside four ore fields, and build a factory from there: every recipe, rate and research is carried over from Factorio's own data, and the crafting grid, stock recipes, mobs, the Nether and the End are gone.
 
-**NeoForge, Minecraft 26.1.2 only.** FactoryWorks is early work: Terra, the starting planet, is the only one so far. Please report any issues you find on [GitHub](https://github.com/adamico/factoryworks/issues).
+**NeoForge, Minecraft 26.1.2 only.** FactoryWorks is early work: Terra, the starting planet, is the only one so far.
 
 ## Features
 
@@ -25,3 +25,5 @@ FactoryWorks is a fan project and is not affiliated with or endorsed by Wube Sof
 
 - Electric Furnace textures by Futureazoo ([TextureRepository](https://github.com/Futureazoo/TextureRepository)), under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 - Ore textures from **unused-textures** by malcolmriley ([GitHub](https://github.com/malcolmriley/unused-textures)), under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+Factorio's numbers, recipes and tech tree are used; its text, art and sounds are not. FactoryWorks' code is [LGPL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html) and its own assets are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The data derived from Factorio is Wube's and is covered by neither, and the third-party art above keeps its own licence.
