@@ -1,5 +1,6 @@
 package com.planetaryfactory.core.machine;
 
+import com.planetaryfactory.core.machine.footprint.MachineTooltip;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -27,6 +28,11 @@ public abstract class ChassisMachineBlock extends FootprintAnchorBlock {
     }
 
     public abstract MachineSpec spec();
+
+    @Override
+    protected List<MachineTooltip.Line> tooltipLines() {
+        return MachineTooltip.crafting(spec().craftingSpeed(), spec().watts());
+    }
 
     /** Oritech's {@code ColorVariant} name. */
     public abstract String paint();
