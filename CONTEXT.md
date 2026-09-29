@@ -221,6 +221,10 @@ _Avoid_: fast entity transfer, ctrl-click, quick insert, fast transfer
 Quick transfer at half the magnitude — half the held stack in, or half of what the block will give up out.
 _Avoid_: fast entity split, ctrl-right-click, half stack transfer
 
+**Overload Limit**:
+The most of one ingredient, or of one product, that automated transfer leaves in a machine: a number of crafts' worth set by the recipe and the machine's crafting speed, as Factorio computes it. A belt, loader, feeder or pipe stops at it, and a machine whose product has reached it stops crafting. The player's own hand is not held to it (#516).
+_Avoid_: insertion limit, cap, 2× rule
+
 ### Terra's opening
 
 **Starting area**:
