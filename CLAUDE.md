@@ -125,6 +125,10 @@ blocks smelt in a running game is `gametest/EnergyFaceTests` for the Electric ti
 tier's rate for 4,500 J a working tick, keeps the steel smelt's 5:1, and with a full output lights
 no coal, spends no banked joule and starts no smelt. Dropping the output check, shrinking the input
 by one, or a 4,000 J tick each turns both tiers' tests red.
+`gametest/FurnaceOverloadTests` holds the input to the Overload Limit of the smelt taking it on all
+three tiers (#518): 2 raw iron, 10 iron plates for the 5:1 steel smelt, fuel uncapped, and a
+shift-click in the screen still placing 64; `FurnaceOverloadTest` holds the figures. Dropping the
+cap in `FurnaceItemHandler` turns all three tiers red.
 
 ### GameTest harness
 
@@ -157,7 +161,7 @@ And KubeJS reads a Better Advanced Tooltips class on a server as well, so that j
 classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there because the pack's
 recipes name their items.
 
-What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `ElectricNetworkTests` (#280), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
+What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `ElectricNetworkTests` (#280), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
 `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo

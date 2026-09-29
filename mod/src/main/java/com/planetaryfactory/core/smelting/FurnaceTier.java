@@ -1,6 +1,7 @@
 package com.planetaryfactory.core.smelting;
 
 import com.planetaryfactory.core.energy.ForgeEnergy;
+import com.planetaryfactory.core.machine.OverloadLimit;
 
 import java.util.Locale;
 
@@ -79,6 +80,10 @@ public enum FurnaceTier {
      */
     public int durationTicks(int recipeTicks) {
         return Math.max(1, (int) Math.ceil(recipeTicks / craftingSpeed));
+    }
+
+    public int overloadRoom(int perSmelt, int recipeTicks, int held) {
+        return OverloadLimit.room(perSmelt, OverloadLimit.get().crafts(craftingSpeed, recipeTicks), held);
     }
 
     /**

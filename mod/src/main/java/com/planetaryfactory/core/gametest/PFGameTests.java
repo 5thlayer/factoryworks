@@ -74,6 +74,7 @@ public final class PFGameTests {
         Registrar registrar = new Registrar(event, environment);
         EnergyFaceTests.register(registrar);
         BurnerFurnaceTests.register(registrar);
+        FurnaceOverloadTests.register(registrar);
         ElectricNetworkTests.register(registrar);
         PoleWireTests.register(registrar);
         HandSetTests.register(registrar);
