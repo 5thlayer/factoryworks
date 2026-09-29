@@ -9,8 +9,12 @@ file = "config/MouseTweaks.cfg"
 hash = "4069ce1a439d8c37453c1b1e9f2037e0942674c7e48723a39b37eab245792ad4"
 
 [[files]]
+file = "config/beltworks-server-1.toml.bak"
+hash = "de50c0c8f2cfba73c07002aa615e807ee4e2ffcfde218e84f1541508e020f1f9"
+
+[[files]]
 file = "config/beltworks-server.toml"
-hash = "3e852d93dff2f2e578df7047c4dfb1d1f988f1e6db97557aa7b371e8341f90c6"
+hash = "f1ea5ac9db509263e2ef0e4802ccdc0339b93a138159ca4f1ba8dc195c074ca2"
 
 [[files]]
 file = "config/configuration-options.json"
@@ -225,8 +229,12 @@ file = "data/factorio/machine.json"
 hash = "ecac56427c1157dc22c919bee3d1acbd979984e612e9f514a858ed53197ca43e"
 
 [[files]]
+file = "data/factorio/overload.json"
+hash = "616bef04b24431a2114747fff7b772e1c4e8b7552bd041879a9a3bcc0d4688ad"
+
+[[files]]
 file = "data/factorio/recipe.json"
-hash = "9f63c4c3063e5be44ef179df0356903afcfbb6ecd669afd270540c9ed559ddee"
+hash = "7ecfe6c7b5a71265d7a3661dd26bf8fd78073c6705d2615018b52a733e469a66"
 
 [[files]]
 file = "data/factorio/recipe_name.json"
@@ -258,11 +266,11 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "2c4d4341dfebe64412db1ec19feeb28958bae12a8413b66c9c3e0d17b6d148e8"
+hash = "c79b61662b2ada117b3c602656ea400d3f54110d5762daadb12b1520befd9c82"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "17d982a056f8d6606ab1e3931f4324931b992df2af68152ac3d161f49f202b0d"
+hash = "80ab32922d8fffa214593d0754cd6326aee0ff7feb712632762e48fe0f7acb4b"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -270,11 +278,11 @@ hash = "36e3fca2475b9aee0bc0b460b482670a7991920d284fe8f61d6015b60104833d"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "ba5afecad62aeec41d7e95c2a499ae80daf6066ef3530f204fe6332f4f40314a"
+hash = "4de078d4cb4d2670530f0e4f9556fb772ec1e7820ec9a844ecc4b72fd5b32a73"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "742131ebdee2e16d21effd215cf6b4bdae7445d8fccd9072deceeba0cf55e153"
+hash = "73d73b0907c9133f9511695d896fec317a4aa3b78ff4d276e9f228b024a9b10d"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -294,7 +302,7 @@ hash = "2d51be022590c8e9a060aca9354ebffc66fa31f49c4a3f3317061e329bca33a3"
 
 [[files]]
 file = "data/pack/subgroup-owner.json"
-hash = "3dae4cca3b3cb56af153c745696a2bbd6242f7983ff37f6ba66dee02369cc93e"
+hash = "84a1fb7eecd5ac6b6f00600d3ffe11ad76c1577e3c46ed22b7289c3d66cb6ef8"
 
 [[files]]
 file = "defaultconfigs/ftbessentials-server.snbt"
@@ -310,7 +318,7 @@ hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "8bef4ed3c30a1bd32d509b2c6f67a9614d58a9aac52f96ba7aebcfcf5556aeba"
+hash = "216c02c651da1721ad1be209c7788f0f1e01e268a2f39afafb6f0609f4b061ce"
 
 [[files]]
 file = "kubejs/assets/kubejs/lang/en_us.json"
@@ -590,7 +598,7 @@ hash = "05bb9997ff87c49c5abcfdfb6473458863c4ca61a7f77918c9341c330819807c"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/lang/en_us.json"
-hash = "969a1f4f50dc1dc6fab7f3becf9fcd885a52f63564b44c889e6d18f4bc338241"
+hash = "4607532335beb4bdfa96c0804ae885d1091654e24687e8e9d4f1ffce3f45a4e7"
 
 [[files]]
 file = "kubejs/assets/planetaryfactory/models/block/accumulator_part.json"
@@ -1618,11 +1626,11 @@ hash = "9ad3efebc7fa977f6f4ed8920933d8e89fa96293af64afd9a091d83cc293fe69"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/bulk_inserter.json"
-hash = "d4dcee212f2e3770a9552dacede4b1a6bbc19b361f50bad9a236082cecb5880d"
+hash = "d87451b184e56f80d9695a1ee4eafd4989863fa2b010b1cdf382dde9505689fb"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/burner_inserter.json"
-hash = "24a41d8cadfc556fe01bc2a4a266841e48845bd4f85970b45cbbeb86ed815634"
+hash = "a142c88de5ce7f4c1a1b0d4ec482bcd3b968044b747fcf660fe4d60e59ac0c1c"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/burner_mining_drill.json"
@@ -1669,6 +1677,10 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/engine_unit.json"
 hash = "967914dcda911f7982b780a92024792d59ea3a33605f8bd72ac1c64302c6e458"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/express_loader.json"
+hash = "254b2ea6356f63c37f9f8d67275d9598f322a229c50fdc9eed97a0a203775437"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/express_splitter.json"
 hash = "5725594198eaf5f45db9e699c8df86e9e42f6247b46c9b67e3ecc04eadbf69b4"
 
@@ -1678,7 +1690,11 @@ hash = "827d1b8806817e3dc976a337f0b4aff4a0457b4029fb192e2163e3141afccbd2"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/fast_inserter.json"
-hash = "2fb148edc540c889e1ba25d26aea1c05591ab654e0873aae91da1f36fa66cc6d"
+hash = "f3297ff9b97953dd2b9399310297cf342bd785cb90ded01430373fee1ab14671"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/fast_loader.json"
+hash = "9591122c9793b250ba715c1c683f1a720c57b4a8825881400df421cd3ccae09b"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/fast_splitter.json"
@@ -1694,7 +1710,7 @@ hash = "9dff0b2a633d8aec2a598301d625d4577b57ec977db109c4906c2bb148ca9914"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/inserter.json"
-hash = "58128fff63d4c20ce13bda95893714e0f1d47a2740102270a563ea80a6b6d6fe"
+hash = "155a26fe7a69edbe5b8926de9661e1ddc69cdd9b2fbe19afcd64a5af8d6fb216"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/iron_chest.json"
@@ -1713,12 +1729,16 @@ file = "kubejs/data/planetaryfactory/recipe/assembling/lab.json"
 hash = "5e077758f082ca724ab747cbcc04eacc46db8de311930b06de920ce85b0b1e34"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/assembling/loader.json"
+hash = "690e8d916c0030632f7d1761f8596efff0ac93f8b802e24a57ba937a2029d804"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/locomotive.json"
 hash = "dedf9e3e5d0a95f3dfaa1ab2daaa46365442011b90cec8127f9c4cf7717b113b"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/logistic_science_pack.json"
-hash = "72190d2de1b0977ec0e78ad27d71f3c16609fddeff9447180e3285c468e24fd3"
+hash = "33e90f76d7ad1a1d2c84d7268c5bb2fd69e600a0de881b031b77e60450c85ee1"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/assembling/low_density_structure.json"
@@ -2002,11 +2022,11 @@ hash = "dce36fa09826473fbddeaa1ec135a7cdbcdac1e3500bebb99644b30eed26cef8"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/bulk_inserter.json"
-hash = "3645b03ee51d4066db997859c970650ab9f758ef579a0754876d025aa8ad26a2"
+hash = "3d5195ca9043f4d7bca5cb25dfeb97678b532da16c85b803250002aca2a509bd"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/burner_inserter.json"
-hash = "28fc2a0c4e9068ea4c15342aa0a8cdd214338fd924b946cbdb4bf0261d17abb8"
+hash = "74044619e5ad3011cafbf0b906167146a73acf0e63d178c9da1aeb8514a8dfb6"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/burner_mining_drill.json"
@@ -2041,8 +2061,16 @@ file = "kubejs/data/planetaryfactory/recipe/hand/electronic_circuit.json"
 hash = "ca9e531444077291f8b666f62b1ee5eda19938ed3207f482487174e44c2ee87a"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/express_loader.json"
+hash = "4482e2f788c0c4fa02b65eaf4923f5fc2b93c1847c562403da7c5f7f302df1ae"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/fast_inserter.json"
-hash = "0c2ab48642f8cd3505c069b550a6bcc2fd1f95fa0f9658f615adab12c067d860"
+hash = "c1819e94b38d6d949adef44f8af6048d09b5a8bd4e63999fd33b2328c0855149"
+
+[[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/fast_loader.json"
+hash = "274033081ce457aba653868bdf45ba7429ebd04ef853ee47ffd9c14da0992228"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/fast_splitter.json"
@@ -2058,7 +2086,7 @@ hash = "38e60586e4f01a14f36b49138af0ccae1282445441aecd3af68dd29c84e2ca65"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/inserter.json"
-hash = "656ea5d84605464dcc933214584c43f68444bc0cd9ec8b8773c9794679e77257"
+hash = "71add9f16bdcba476c3a959f294a6f21c7deb528c6291a0785fc32264f65b628"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/iron_chest.json"
@@ -2077,12 +2105,16 @@ file = "kubejs/data/planetaryfactory/recipe/hand/lab.json"
 hash = "bb3846682faa517f04380a9b1ab0c0f0093ee5909e549d361014ecf41285d37f"
 
 [[files]]
+file = "kubejs/data/planetaryfactory/recipe/hand/loader.json"
+hash = "8f79ea4fa2047749acb72f71e8278004b027f8e28c920286b3546499c7ce07dd"
+
+[[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/locomotive.json"
 hash = "f27849979d23d2404cd0e145d06a63a20c981f88f6dbdb179c864560350e7b2e"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/logistic_science_pack.json"
-hash = "a5c3fe516ea811b43354d737141eab8251528590bf610fcbd6b0deb31affcc2c"
+hash = "d407125d145ff429017a785534a08f75bfd11cae076bcab10d077edb7a0524c5"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/recipe/hand/low_density_structure.json"
@@ -2378,7 +2410,7 @@ hash = "b833ac8f6766e64867b542cd6eb2547d59fe4ad66c8f7974fe6fc41b5749c37b"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/tags/block/buildings.json"
-hash = "6213e391ad035b9e833fa3c8f59c638c41f75273145d8ab2d549a3e97727a971"
+hash = "6f8292683293ca2840108947fad367b0158498c9b6c3e66341b1686e77c4ae3a"
 
 [[files]]
 file = "kubejs/data/planetaryfactory/tags/block/dismantle/pipes.json"
@@ -2702,7 +2734,7 @@ hash = "feef79cf0419a4478985c6eabd4b620c731b3e1ff01ea3a86a0720ad3580d47b"
 
 [[files]]
 file = "kubejs/server_scripts/hand_recipes.js"
-hash = "792e8431652e182e110a8543d0059d46848fe9925324a84a8811cb480f8c871b"
+hash = "a0f60f8f455c48f8fc29e441ea02a0769c6b6da430bff3d0e82d6eb8c1ca7753"
 
 [[files]]
 file = "kubejs/server_scripts/jsconfig.json"
@@ -2722,7 +2754,7 @@ hash = "0fcc30abcbe5893e03772a82637279d60c671b0524712396a5141fc73a8aa7f4"
 
 [[files]]
 file = "kubejs/server_scripts/researchd.js"
-hash = "cd5bad75871d378806add8c4ea8fef42fabe7686389b364c9609450b83fcaced"
+hash = "a6a52e6d0d91ac8dba1f8f040fd99d41884fb160b2213aa38458f29dad7ea101"
 
 [[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
@@ -2759,8 +2791,8 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
-file = "mods/beltworks-0.3.10.jar"
-hash = "bdad56b629c971d63bdf5b593c9c199e754bbbe8cc63e019a0ee0ec9e77b920e"
+file = "mods/beltworks-0.3.11.jar"
+hash = "0192dfbcc7dace2eb9e8ec9cb21e47e8b81ede52207f89b7145322e89c0b1bec"
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
