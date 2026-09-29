@@ -67,6 +67,16 @@ public final class SteamEngineSpec {
     public record Tick(int steam, long energy, Carry carry) {
     }
 
+    /** One engine's steam at peak speed, in mB a second. */
+    public double steamPerSecondAtPeak() {
+        return steamPerTickAtPeak * MINECRAFT_TICKS_PER_SECOND;
+    }
+
+    /** One engine's output at peak speed, in FE a tick. */
+    public double energyPerTickAtPeak() {
+        return energyPerTickAtPeak;
+    }
+
     /** A row's master steam tank: Factorio's steam box per engine, not Oritech's 8,000 mB. */
     public int tankCapacity(int rowLength) {
         return fluidBoxVolume * rowLength;

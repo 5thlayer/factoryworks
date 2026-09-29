@@ -2,6 +2,9 @@ package com.planetaryfactory.core.fluid;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.machine.footprint.FootprintAnchorBlock;
+import com.planetaryfactory.core.machine.footprint.MachineTooltip;
+
+import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -13,6 +16,14 @@ import net.minecraft.world.phys.BlockHitResult;
 
 /** The Steam Engine's anchor block (ADR-0077), holding {@link SteamEngineBlockEntity}. */
 public class SteamEngineBlock extends FootprintAnchorBlock {
+
+    /** The peak figures do not read the efficiency curve, so a flat one serves the tooltip. */
+    private static final SteamEngineSpec SPEC = SteamEngineSpec.fromCorpus(SteamChainCorpus.get(), speed -> 1.0);
+
+    @Override
+    protected List<MachineTooltip.Line> tooltipLines() {
+        return MachineTooltip.steamEngine(SPEC.steamPerSecondAtPeak(), SPEC.energyPerTickAtPeak());
+    }
 
     public SteamEngineBlock(Properties properties) {
         super(properties, () -> PFBlocks.STEAM_ENGINE_FOOTPRINT);

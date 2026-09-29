@@ -1,9 +1,16 @@
 package com.planetaryfactory.core.machine.footprint;
 
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
 import rearth.oritech.block.base.block.MultiblockMachine;
 
@@ -26,6 +33,17 @@ public abstract class FootprintAnchorBlock extends MultiblockMachine implements 
     public FootprintMachine machine() {
         return machine.get();
     }
+
+    /** Replaces Oritech's machine tooltip, which describes Oritech's machine rather than this one (#515). */
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltip, TooltipFlag flag,
+                             DataComponentGetter components) {
+        for (MachineTooltip.Line line : tooltipLines()) {
+            tooltip.accept(Component.translatable(line.key(), line.args().toArray()).withStyle(ChatFormatting.GRAY));
+        }
+    }
+
+    protected abstract List<MachineTooltip.Line> tooltipLines();
 
     /**
      * The anchor going takes its parts with it. Its own item comes from its loot table, and its

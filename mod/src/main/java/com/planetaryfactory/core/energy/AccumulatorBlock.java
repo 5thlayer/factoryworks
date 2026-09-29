@@ -2,6 +2,9 @@ package com.planetaryfactory.core.energy;
 
 import com.planetaryfactory.core.PFBlocks;
 import com.planetaryfactory.core.machine.footprint.FootprintAnchorBlock;
+import com.planetaryfactory.core.machine.footprint.MachineTooltip;
+
+import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -14,6 +17,11 @@ import net.minecraft.world.phys.BlockHitResult;
 
 /** The accumulator's anchor block (#283), holding {@link AccumulatorBlockEntity}. */
 public class AccumulatorBlock extends FootprintAnchorBlock {
+
+    @Override
+    protected List<MachineTooltip.Line> tooltipLines() {
+        return MachineTooltip.accumulator(AccumulatorSpec.capacityFe(), AccumulatorSpec.outputFePerTick());
+    }
 
     public AccumulatorBlock(Properties properties) {
         super(properties, () -> PFBlocks.ACCUMULATOR_FOOTPRINT);
