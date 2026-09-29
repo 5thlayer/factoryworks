@@ -4,6 +4,19 @@ Reference input, not a build artifact. The pack's research tree takes its *shape
 (ADR-0022); these files are that shape, extracted from the game's own prototypes so it is never
 retyped.
 
+## Licence
+
+The files in this folder are Wube Software's, extracted from Factorio's own prototypes. They are
+under neither of the Pack's licences, the LGPL-3.0-only that covers its code nor the CC BY 4.0 that
+covers its own content, and `REUSE.toml` records them as `LicenseRef-Wube-Factorio-Data`
+(`LICENSES/LicenseRef-Wube-Factorio-Data.txt`). This repository grants no right to them and they
+are not offered for reuse (ADR-0102).
+
+That is every `*.json` here and `kubejs/server_scripts/factorio_tech_data.js`, which the tech
+extractor rewrites from them. This README, the extractors and everything the Pack generates from
+these figures are the Pack's own work and are licensed by what kind of file they are: the
+extractors and generators are code, the emitted recipes, tables and resources are content.
+
 ## Provenance
 
 | | |

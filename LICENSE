@@ -1,0 +1,12 @@
+FactoryWorks is licensed per file (ADR-0102):
+
+- Code is LGPL-3.0-only (LICENSES/LGPL-3.0-only.txt): FactoryWorks Core, the build, the scripts and
+  checks, and the KubeJS scripts.
+- The Pack's own content is CC BY 4.0 (LICENSES/CC-BY-4.0.txt): docs, data, assets and the store
+  pages.
+- Wube's Factorio data, in data/factorio/, is under neither. It is Wube Software's, not licensed
+  here, and not offered for reuse (LICENSES/LicenseRef-Wube-Factorio-Data.txt).
+- Whatever else is not the Pack's own keeps the licence it came with: third-party art, the vendored
+  agent skills and the Gradle wrapper. NOTICE names each.
+
+REUSE.toml says which licence covers which file.

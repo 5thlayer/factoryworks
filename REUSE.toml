@@ -1,0 +1,110 @@
+version = 1
+
+# Code is LGPL-3.0-only, the Pack's own content is CC BY 4.0, and whatever is not the Pack's own
+# keeps the licence it came with (ADR-0102). Nothing carries an SPDX header: this file is the
+# whole map. The last annotation matching a file wins, so the general rules come first and the
+# exceptions after them. `tests/pack/test_licensing.py` holds it, and `reuse lint` in CI.
+
+# Code, and the files a program reads as instructions: the mod, its build, the scripts and checks,
+# KubeJS scripts, manifests and configs.
+[[annotations]]
+path = [
+    "mod/**",
+    "scripts/**",
+    "tests/**",
+    "*.gradle",
+    "gradle.properties",
+    ".gitignore",
+    ".packwizignore",
+    ".github/**",
+    "kubejs/**/*.js",
+    "kubejs/**/jsconfig.json",
+    "kubejs/config/**",
+    "config/**",
+    "defaultconfigs/**",
+    "pack.toml",
+    "index.toml",
+    "mods/*.pw.toml",
+    "publish/make-cover.py",
+]
+SPDX-FileCopyrightText = "2026 5thlayer"
+SPDX-License-Identifier = "LGPL-3.0-only"
+
+# The Pack's own content: docs, data, assets, quests, structures and the store pages.
+[[annotations]]
+path = [
+    "**/*.md",
+    "NOTICE",
+    "kubejs/README.txt",
+    "kubejs/assets/**",
+    "kubejs/data/**",
+    "kubejs/parked/**",
+    "config/ftbquests/**",
+    "data/pack/**",
+    "data/jars/**",
+    "mod/src/main/resources/assets/**",
+    "mod/src/main/resources/data/**",
+    "mod/src/main/resources/factoryworks_core/**",
+    "publish/**/*.txt",
+]
+SPDX-FileCopyrightText = "2026 5thlayer"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+# Art from malcolmriley's unused-textures: the ore sprites and the unmodified copies they are
+# derived from (NOTICE).
+[[annotations]]
+path = [
+    "kubejs/assets/factoryworks/textures/block/ore/*.png",
+    "data/art/*.png",
+]
+SPDX-FileCopyrightText = ["Malcolm Riley", "2026 5thlayer"]
+SPDX-License-Identifier = "CC-BY-4.0"
+
+# The store art's backdrop is Beltworks' belt art, which is Rearth's and malcolmriley's, and
+# Minecraft's own textures, which stay Mojang's (LICENSES/LicenseRef-Mojang.txt).
+[[annotations]]
+path = ["publish/**/*.png"]
+SPDX-FileCopyrightText = ["Rearth", "Malcolm Riley", "Mojang AB", "2026 5thlayer"]
+SPDX-License-Identifier = "CC-BY-4.0 AND LicenseRef-Mojang"
+
+# The Electric Furnace's art, copied unmodified from Futureazoo's TextureRepository (NOTICE). It is
+# not the Pack's to relicense, and NonCommercial is a restriction the Pack's own licences lack.
+[[annotations]]
+path = ["kubejs/assets/factoryworks/textures/block/electric_furnace/*.png"]
+SPDX-FileCopyrightText = "Futureazoo"
+SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
+
+# Konkrete's own translations, shipped as its config.
+[[annotations]]
+path = ["config/konkrete/**"]
+SPDX-FileCopyrightText = "Keksuccino"
+SPDX-License-Identifier = "Apache-2.0"
+
+# The vendored agent skills, from mattpocock/skills.
+[[annotations]]
+path = [".agents/**", "skills-lock.json"]
+SPDX-FileCopyrightText = "Matt Pocock"
+SPDX-License-Identifier = "MIT"
+
+# Wube's Factorio data: the corpus, and the script the tech extractor rewrites from it. Under
+# neither of the Pack's licences (data/factorio/README.md).
+[[annotations]]
+path = [
+    "data/factorio/*.json",
+    "kubejs/server_scripts/factorio_tech_data.js",
+]
+SPDX-FileCopyrightText = "Wube Software Ltd."
+SPDX-License-Identifier = "LicenseRef-Wube-Factorio-Data"
+
+# The README beside the corpus is the Pack's own.
+[[annotations]]
+path = ["data/factorio/README.md"]
+SPDX-FileCopyrightText = "2026 5thlayer"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+# The Gradle wrapper is Gradle's.
+[[annotations]]
+path = ["gradlew", "gradlew.bat", "gradle/wrapper/**"]
+precedence = "override"
+SPDX-FileCopyrightText = "Gradle"
+SPDX-License-Identifier = "Apache-2.0"

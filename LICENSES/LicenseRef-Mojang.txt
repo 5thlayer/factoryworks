@@ -1,0 +1,4 @@
+The Minecraft item textures in these files are the property of Mojang AB and are
+not licensed under this repository's licences. They are used as permitted by
+the Minecraft Usage Guidelines: https://www.minecraft.net/en-us/usage-guidelines
+Their use here grants no rights to the textures themselves.
