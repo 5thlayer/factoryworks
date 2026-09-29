@@ -34,6 +34,21 @@ first two are published. #301 already bars "Factorio" and its coined names from 
   rename is a substitution and not a redesign. The live docs follow, ADRs included, since they are
   state. Closed tickets and commits keep the old ids as history. It lands before the first upload
   (#70) and before the repository goes public (#306), as a pull request with nothing else open.
+- **Two spellings outside that list are kept, by decision (#522).**
+  - **Researchd's ids are `factory_works:`**, not `factoryworks:`. This covers the science packs and
+    the research ids that `pf_id` writes into `data/factorio/technology.json`. Before the rename they
+    were `planetary_factory:`, a spelling chosen in the first research script with no reason
+    recorded, and the rename carried it across. Nothing requires the two to differ. Researchd's ids
+    are its own registries and cannot collide with a block or an item. Folding them together would
+    be a free change before the first release. After it, every team would lose its research
+    progress.
+  - **The `PF` prefix stays.** It covers the registry classes (`PFItems`, `PFBlocks`,
+    `PFWorldgen` and fourteen more), the KubeJS tables (`PF_BLOCKS`, `PF_HAND_RECIPES`,
+    `PF_TECH_OVERRIDES`), `pf_id`, and the environment variables `PF_CLIENT_JAR`,
+    `PF_PLAYER_NAME` and `PF_PLAYER_UUID`. It reads as "the Pack's". No player or pack author sees
+    it. The two player variables are also read by skillworks' `quicklaunch` and set in every
+    maintainer's untracked `player.env`, so renaming them would break a launch in a repo this
+    change does not touch.
 
 **Considered: keep PlanetaryFactory.** Rejected. It names a destination the first release does not
 reach, and milestones reach Minecraft channels before the pack is complete (#301).
