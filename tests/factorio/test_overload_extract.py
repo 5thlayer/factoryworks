@@ -44,6 +44,25 @@ def main():
     if not order_told:
         failures.append("no input case tells +1-then-clamp from clamp-then-+1")
 
+    fluid = corpus["measured"]["fluid_input"]
+    speeds = {}
+    for case in fluid["cases"]:
+        recipe = recipes[case["recipe"]]
+        want = {i["name"]: i["amount"] * fluid["multiplier"] for i in recipe["ingredients"] if i.get("type") == "fluid"}
+        if want != case["held"]:
+            failures.append(f"{case['machine']} {case['recipe']}: fluid rule gives {want}, probe held {case['held']}")
+        speeds.setdefault(case["recipe"], set()).add(case["speed"])
+    if not any(len(v) > 1 for v in speeds.values()):
+        failures.append("no fluid input case shows the limit ignores crafting speed")
+
+    for case in corpus["measured"]["fluid_output"]["cases"]:
+        products = {r["name"]: r["amount"] for r in recipes[case["recipe"]]["results"] if r.get("type") == "fluid"}
+        full = [n for n, held in case["held"].items() if held + products[n] > case["volume"][n]]
+        if not full:
+            failures.append(f"{case['recipe']}: stalled with room for every product")
+        if any(case["held"][n] > case["volume"][n] for n in case["held"]):
+            failures.append(f"{case['recipe']}: an output holds more than its volume")
+
     dump = json.loads(DUMP.read_text(encoding="utf-8")) if DUMP.is_file() else None
     for case in corpus["measured"]["output"]["cases"]:
         if case["held"] != case["stack_size"]:
@@ -63,7 +82,9 @@ def main():
     if failures:
         sys.exit(1)
     print(f"OK -- {len(corpus['measured']['input']['cases'])} input and "
-          f"{len(corpus['measured']['output']['cases'])} output cases re-derived")
+          f"{len(corpus['measured']['output']['cases'])} output cases re-derived, "
+          f"{len(corpus['measured']['fluid_input']['cases'])} fluid input and "
+          f"{len(corpus['measured']['fluid_output']['cases'])} fluid output cases")
 
 
 if __name__ == "__main__":
