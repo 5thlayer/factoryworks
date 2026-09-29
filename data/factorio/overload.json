@@ -1,0 +1,86 @@
+{
+  "constants": {
+    "dynamic_recipe_overload_factor": 1.166,
+    "minimum_recipe_overload_multiplier": 2,
+    "maximum_recipe_overload_multiplier": 100
+  },
+  "measured": {
+    "game": "Factorio 2.1.20, base only",
+    "probe": "scripts/factorio-overload-probe/",
+    "input": {
+      "rule": "an inserter drops while an ingredient holds fewer than amount * clamp(ceil(factor * crafting_speed / energy_required) + 1, minimum, maximum); the +1 is added before the clamp",
+      "cases": [
+        {
+          "machine": "assembling-machine-1",
+          "recipe": "iron-gear-wheel",
+          "held": {
+            "iron-plate": 6
+          }
+        },
+        {
+          "machine": "assembling-machine-2",
+          "recipe": "engine-unit",
+          "held": {
+            "steel-plate": 2,
+            "iron-gear-wheel": 2,
+            "pipe": 4
+          }
+        },
+        {
+          "machine": "assembling-machine-3",
+          "recipe": "copper-cable",
+          "held": {
+            "copper-plate": 4
+          }
+        },
+        {
+          "machine": "assembling-machine-2",
+          "recipe": "electronic-circuit",
+          "held": {
+            "iron-plate": 3,
+            "copper-cable": 9
+          }
+        },
+        {
+          "machine": "assembling-machine-3",
+          "recipe": "iron-gear-wheel",
+          "held": {
+            "iron-plate": 8
+          }
+        }
+      ]
+    },
+    "output": {
+      "rule": "a machine stops crafting when its product's slot holds a full stack; no recipe multiple applies",
+      "cases": [
+        {
+          "machine": "assembling-machine-2",
+          "recipe": "iron-gear-wheel",
+          "held": 100,
+          "stack_size": 100
+        },
+        {
+          "machine": "assembling-machine-2",
+          "recipe": "copper-cable",
+          "held": 200,
+          "stack_size": 200
+        },
+        {
+          "machine": "assembling-machine-3",
+          "recipe": "copper-cable",
+          "held": 200,
+          "stack_size": 200
+        },
+        {
+          "machine": "assembling-machine-1",
+          "recipe": "pipe",
+          "held": 100,
+          "stack_size": 100
+        }
+      ]
+    },
+    "not_measured": {
+      "hand": "a benchmark run has no player, so the hand and Quick transfer are not read here"
+    }
+  }
+}

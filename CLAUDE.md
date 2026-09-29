@@ -249,7 +249,10 @@ refused at the menu setter; and a pole reaching only a chamber feeds it, counted
 and break are `PlacementPlanTests`' and `FootprintBreakTests`'. And that the screen's status (#332) is recomputed on
 each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
 cycle stops the machine; forcing the power probe true turns it red. The precedence is
-`AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. A pole beside a whole machine counts it
+`AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. The item face holds each input to the recipe's Overload Limit (#517): copper cable takes 3 plates
+on tier 1 and 4 on tier 3, typed from the Factorio probe, while a shift-click still places 64;
+`OverloadLimitTest` holds the rule. A product stops the craft at a full stack, as Factorio's does,
+which the full-output stall test above already holds. A pole beside a whole machine counts it
 once and fills it, and a small pole reaching only a hull block still finds it: the hull blocks have
 no block entity, so they resolve to the anchor through `EnergyOwnerBlock` in `SupplyAreaScan`, and
 without it one machine counts as four. Each was checked against the defect it exists for: dropping

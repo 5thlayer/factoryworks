@@ -1,0 +1,5 @@
+{
+  "dynamic_recipe_overload_factor": 1.166,
+  "minimum_recipe_overload_multiplier": 2,
+  "maximum_recipe_overload_multiplier": 100
+}

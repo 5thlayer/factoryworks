@@ -575,6 +575,24 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     }
 
     /**
+     * How many more of its ingredient automated insertion may put in {@code slot}: the Overload
+     * Limit less what the slot holds (#517). The menu's slots do not ask, so the hand is not held to it.
+     */
+    public int overloadRoom(int slot) {
+        if (!(level instanceof ServerLevel server)) {
+            return 0;
+        }
+        return AssemblingMachineRecipes.resolve(server, held, spec())
+                .flatMap(holder -> AssemblingInputSlots.ingredientFor(slot,
+                                AssemblingMachineRecipes.slotIngredients(holder.value(), spec()))
+                        .map(ingredient -> OverloadLimit.room(ingredient.count(),
+                                OverloadLimit.get().crafts(spec().craftingSpeed() / getSpeedMultiplier(),
+                                        holder.value().time()),
+                                inventory.getItem(slot).getCount())))
+                .orElse(0);
+    }
+
+    /**
      * The input tank {@code resource} goes to: the one holding the Held recipe's fluid ingredient it
      * matches, or -1 when the recipe names no such fluid or the machine cannot run it (ADR-0075,
      * ADR-0096). Server only.

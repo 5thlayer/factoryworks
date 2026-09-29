@@ -3,7 +3,9 @@
 
 Writes one row per Factorio machine whose recipes the pack emits on `AssemblingRecipe`'s shape --
 the three Assembling Machines, the Chemical Plant and the Oil Refinery -- to
-`mod/src/main/resources/planetaryfactory_core/machine/specs.json`, which `MachineSpecs` reads.
+`mod/src/main/resources/planetaryfactory_core/machine/specs.json`, which `MachineSpecs` reads, and
+the Overload Limit's constants from `data/factorio/overload.json` beside it, which `OverloadLimit`
+reads (#517).
 
 Speed, energy use, drain, the Fast Replace group, the categories and the tank volumes are copied
 from `data/factorio/machine.json`. The recipe type is the one `data/pack/category-map.json` routes
@@ -29,6 +31,8 @@ MACHINE_CORPUS = ROOT / "data" / "factorio" / "machine.json"
 CATEGORY_MAP = ROOT / "data" / "pack" / "category-map.json"
 EMITTED = ROOT / "kubejs" / "data" / "planetaryfactory" / "recipe"
 RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/machine/specs.json"
+OVERLOAD_CORPUS = ROOT / "data" / "factorio" / "overload.json"
+OVERLOAD = RESOURCE.parent / "overload.json"
 
 # The types that share AssemblingRecipe's record, and so the chassis (ADR-0096).
 CHASSIS_TYPES = ("planetaryfactory:assembling", "planetaryfactory:chemistry", "planetaryfactory:oil_processing")
@@ -96,15 +100,18 @@ def main():
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
 
-    text = json.dumps(specs(), indent=2) + "\n"
-    if args.check:
-        if not RESOURCE.is_file() or RESOURCE.read_text(encoding="utf-8") != text:
-            sys.exit(f"stale: {RESOURCE} -- run scripts/build-machine-specs.py")
-        print(f"OK -- {RESOURCE.relative_to(ROOT)}")
-        return
-    RESOURCE.parent.mkdir(parents=True, exist_ok=True)
-    RESOURCE.write_text(text, encoding="utf-8")
-    print(f"wrote {RESOURCE.relative_to(ROOT)}")
+    overload = json.loads(OVERLOAD_CORPUS.read_text(encoding="utf-8"))["constants"]
+    outputs = {RESOURCE: specs(), OVERLOAD: overload}
+    for path, data in outputs.items():
+        text = json.dumps(data, indent=2) + "\n"
+        if args.check:
+            if not path.is_file() or path.read_text(encoding="utf-8") != text:
+                sys.exit(f"stale: {path} -- run scripts/build-machine-specs.py")
+            print(f"OK -- {path.relative_to(ROOT)}")
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+        print(f"wrote {path.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

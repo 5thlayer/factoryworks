@@ -42,6 +42,7 @@ scripts/factorio-tree-extract.py
 scripts/factorio-enemy-extract.py
 scripts/factorio-logistics-extract.py
 scripts/factorio-building-extract.py
+scripts/factorio-overload-extract.py
 python3 tests/factorio/test_tech_extract.py
 python3 tests/factorio/test_recipe_extract.py
 python3 tests/factorio/test_machine_extract.py
@@ -50,6 +51,7 @@ python3 tests/factorio/test_fuel_extract.py
 python3 tests/factorio/test_tree_extract.py
 python3 tests/factorio/test_enemy_extract.py
 python3 tests/factorio/test_logistics_extract.py
+python3 tests/factorio/test_overload_extract.py
 
 scripts/factorio-fuel-convert.py
 python3 tests/factorio/test_fuel_convert.py
