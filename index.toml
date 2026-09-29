@@ -2971,33 +2971,5 @@ file = "player.env"
 hash = "64c47ffaaa82c5864238d886c4f579e7650823bea0f1870ab8d8b8411256d768"
 
 [[files]]
-file = "publish/core/factoryworks-core-cover.png"
-hash = "8db369c79ea026a44b6623fb157fd73af0e6ed20b92e90830990cb6b6aec672b"
-
-[[files]]
-file = "publish/core/factoryworks-core-icon.png"
-hash = "209194bffe6d1cf6b5d34b69a8ebd0bc5c695a4773fdd8619abe87022710e3cd"
-
-[[files]]
-file = "publish/core/summary.txt"
-hash = "121d355c414f4565134ed2bed9331ad89ffd76fa40ba4a5cf631c68818c88657"
-
-[[files]]
-file = "publish/factoryworks-cover.png"
-hash = "8d023fbf67498ce9299bc5c2342d5f7f9eac877614626d32f668d80866b6d213"
-
-[[files]]
-file = "publish/factoryworks-icon.png"
-hash = "9bc45dac68999fdcf5834a8704edb220ff262f0eceaa96ef82dbb6b7acad247f"
-
-[[files]]
-file = "publish/make-cover.py"
-hash = "3edce47a1217e67a5f10cc76107318f2f2bcb25cfc0ff76bd4f3917b3cf4b998"
-
-[[files]]
-file = "publish/summary.txt"
-hash = "968d300f8d86614e4fa7c32185fe3cddfeed40eb0115ae7e68c5383853a827cf"
-
-[[files]]
 file = "realms_persistence.json"
 hash = "6fcaca997cf2f0b0a907e3fab539a9b13e3e002dd1c6215a0093a820b79513df"
