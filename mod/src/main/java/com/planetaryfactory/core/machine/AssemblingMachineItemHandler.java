@@ -7,7 +7,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 /**
  * The Assembling Machine's item face, on every side. Inputs are filtered by
- * {@link AssemblingInputSlots}; only the output can be extracted.
+ * {@link AssemblingInputSlots} and held to the Overload Limit; only the output can be extracted.
  *
  * <p>Only sound while the machine pins Oritech's input mode: {@code FILL_EVENLY} spreads a per-slot
  * insert past this filter (ADR-0074).
@@ -31,7 +31,7 @@ public class AssemblingMachineItemHandler extends GuardedResourceHandler<ItemRes
         if (!machine.acceptsInput(index, resource)) {
             return 0;
         }
-        return super.insert(index, resource, amount, transaction);
+        return super.insert(index, resource, Math.min(amount, machine.overloadRoom(index)), transaction);
     }
 
     @Override

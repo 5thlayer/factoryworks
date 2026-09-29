@@ -98,6 +98,12 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::withNoRecipeTakesNothing);
         tests.test("assembling_machine_input_mode_stays_pinned", 20,
                 AssemblingMachineTests::inputModeStaysPinned);
+        tests.test("assembling_machine_holds_automated_input_to_the_overload_limit", 20,
+                helper -> holdsInputToTheOverloadLimit(helper, AssemblingTier.ONE, 3));
+        tests.test("assembling_machine_3_holds_automated_input_to_the_overload_limit", 20,
+                helper -> holdsInputToTheOverloadLimit(helper, AssemblingTier.THREE, 4));
+        tests.test("assembling_machine_screen_places_a_full_stack", 20,
+                AssemblingMachineTests::screenPlacesAFullStack);
     }
 
     /** Two ingredients, so slots 2 and 3 are unused. */
@@ -129,7 +135,8 @@ final class AssemblingMachineTests {
             expectMoved(helper, at, "furnace into unused slot 3", 0, face, (f, tx) -> f.insert(3, furnace, 8, tx));
             expectMoved(helper, at, "furnace into the output", 0, face,
                     (f, tx) -> f.insert(AssemblingMachineBlockEntity.OUTPUT, furnace, 8, tx));
-            expectMoved(helper, at, "furnace, slot-less", 8, face, (f, tx) -> f.insert(furnace, 8, tx));
+            // Tier 1's Overload Limit for the boiler is 3 crafts (#517).
+            expectMoved(helper, at, "furnace, slot-less", 3, face, (f, tx) -> f.insert(furnace, 8, tx));
             expectMoved(helper, at, "fluid pipe, slot-less", 8, face, (f, tx) -> f.insert(fluidPipe, 8, tx));
             if (!machine.inventory.getResource(0).equals(furnace) || !machine.inventory.getResource(1).equals(fluidPipe)
                     || !machine.inventory.getResource(2).isEmpty() || !machine.inventory.getResource(3).isEmpty()) {
@@ -173,6 +180,37 @@ final class AssemblingMachineTests {
         if (machine.inventory.getAmountAsInt(1) != 8) {
             helper.fail("after Oritech's mode button the inputs hold " + inputs(machine)
                     + ", expected all 8 fluid pipes in slot 1", ANCHOR);
+            return;
+        }
+        helper.succeed();
+    }
+
+    /** Copper cable's Overload Limit, typed from the Factorio probe: 3 plates on tier 1, 4 on tier 3 (#517). */
+    private static void holdsInputToTheOverloadLimit(GameTestHelper helper, AssemblingTier tier, int limit) {
+        AssemblingMachineBlockEntity machine = place(helper, tier);
+        machine.setHeldRecipe(HeldRecipe.of(CABLE), player(helper));
+        ResourceHandler<ItemResource> face = CHASSIS.itemFace(helper, ANCHOR);
+        ItemResource plate = ItemResource.of(item("ftbmaterials:copper_plate"));
+        expectMoved(helper, ANCHOR, "plates, slot-less, into an empty machine", limit, face,
+                (f, tx) -> f.insert(plate, 8, tx));
+        expectMoved(helper, ANCHOR, "plates into slot 0 at the limit", 0, face, (f, tx) -> f.insert(0, plate, 8, tx));
+        machine.inventory.set(0, plate, limit - 1);
+        expectMoved(helper, ANCHOR, "plates into slot 0 one short of the limit", 1, face,
+                (f, tx) -> f.insert(0, plate, 8, tx));
+        helper.succeed();
+    }
+
+    /** The hand is not held to the Overload Limit: a shift-click moves the whole stack (#517). */
+    private static void screenPlacesAFullStack(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = place(helper);
+        Player player = player(helper);
+        machine.setHeldRecipe(HeldRecipe.of(CABLE), player);
+        player.getInventory().setItem(0, new ItemStack(item("ftbmaterials:copper_plate"), 64));
+        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
+        int hotbarFirst = AssemblingMachineBlockEntity.INPUTS + 1 + 27;
+        menu.quickMoveStack(player, hotbarFirst);
+        if (machine.inventory.getAmountAsInt(0) != 64) {
+            helper.fail("a shift-click placed " + machine.inventory.getItem(0) + ", expected 64 copper plates", ANCHOR);
             return;
         }
         helper.succeed();
