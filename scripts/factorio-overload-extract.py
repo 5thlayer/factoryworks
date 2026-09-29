@@ -63,6 +63,9 @@ FLUID_INPUT_CASES = [
     {"machine": "chemical-plant", "recipe": "heavy-oil-cracking", "speed": 4.6738,
      "held": {"water": 120, "heavy-oil": 160}},
     {"machine": "oil-refinery", "recipe": "basic-oil-processing", "speed": 1, "held": {"crude-oil": 400}},
+    {"machine": "oil-refinery", "recipe": "basic-oil-processing", "speed": 4.6738, "held": {"crude-oil": 400}},
+    {"machine": "chemical-plant", "recipe": "light-oil-cracking", "speed": 1, "held": {"water": 120, "light-oil": 120}},
+    {"machine": "chemical-plant", "recipe": "solid-fuel-from-light-oil", "speed": 1, "held": {"light-oil": 40}},
     {"machine": "oil-refinery", "recipe": "advanced-oil-processing", "speed": 1,
      "held": {"water": 200, "crude-oil": 400}},
 ]
@@ -80,6 +83,26 @@ FLUID_OUTPUT_CASES = [
     {"machine": "oil-refinery", "recipe": "advanced-oil-processing",
      "held": {"heavy-oil": 75, "light-oil": 135, "petroleum-gas": 165},
      "volume": {"heavy-oil": 100, "light-oil": 135, "petroleum-gas": 165}},
+]
+
+# Unpowered, the recipe set; `volume` is each output box the engine reported, `boxes` the machine's
+# output boxes. The probe's own recipes (`probe-*`, in its data.lua) have amounts base lacks.
+# basic-oil-processing pins its product to a box with `fluidbox_index`.
+FLUID_OUTPUT_VOLUME_CASES = [
+    {"machine": "chemical-plant", "recipe": "lubricant", "amounts": [10], "volume": [200]},
+    {"machine": "chemical-plant", "recipe": "sulfuric-acid", "amounts": [50], "volume": [200]},
+    {"machine": "chemical-plant", "recipe": "heavy-oil-cracking", "amounts": [30], "volume": [200]},
+    {"machine": "chemical-plant", "recipe": "light-oil-cracking", "amounts": [20], "volume": [200]},
+    {"machine": "chemical-plant", "recipe": "probe-chem-60", "amounts": [60], "volume": [200]},
+    {"machine": "chemical-plant", "recipe": "probe-chem-100", "amounts": [100], "volume": [300]},
+    {"machine": "chemical-plant", "recipe": "probe-chem-two", "amounts": [10, 10], "volume": [100, 100]},
+    {"machine": "oil-refinery", "recipe": "basic-oil-processing", "pinned": True, "amounts": [45], "volume": [135]},
+    {"machine": "oil-refinery", "recipe": "advanced-oil-processing", "amounts": [25, 45, 55],
+     "volume": [100, 135, 165]},
+    {"machine": "oil-refinery", "recipe": "coal-liquefaction", "amounts": [90, 20, 10], "volume": [270, 100, 100]},
+    {"machine": "oil-refinery", "recipe": "probe-refinery-20", "amounts": [20], "volume": [300]},
+    {"machine": "oil-refinery", "recipe": "probe-refinery-two", "amounts": [20, 20], "volume": [200, 100]},
+    {"machine": "assembling-machine-2", "recipe": "empty-water-barrel", "amounts": [50], "volume": [1000]},
 ]
 
 MEASURED = {
@@ -102,6 +125,13 @@ MEASURED = {
     "fluid_output": {
         "rule": "a craft starts only while each fluid product's amount fits in the room left in its box",
         "cases": FLUID_OUTPUT_CASES,
+    },
+    "fluid_output_volume": {
+        "rule": "each fluid product's box is the larger of amount * multiplier and its own volume; the first "
+                "product also takes the volume of every output box the recipe leaves unused, unless the recipe "
+                "pins its products to boxes; crafting speed does not enter",
+        "multiplier": 3,
+        "cases": FLUID_OUTPUT_VOLUME_CASES,
     },
     "not_measured": {
         "hand": "a benchmark run has no player, so the hand and Quick transfer are not read here",

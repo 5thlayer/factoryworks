@@ -142,8 +142,25 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         return getBlockState().getBlock() instanceof ChassisMachineBlock block ? Optional.of(block) : Optional.empty();
     }
 
-    private static int capacity(MachineSpec spec, int index) {
-        return index < FLUID_INPUTS ? spec.fluidInputVolume(index) : spec.fluidOutputVolume(index - FLUID_INPUTS);
+    private int capacity(MachineSpec spec, int index) {
+        if (index < FLUID_INPUTS) {
+            return spec.fluidInputVolume(index);
+        }
+        int result = index - FLUID_INPUTS;
+        if (result >= spec.fluidOutputs().size() || !(level instanceof ServerLevel server)) {
+            return spec.fluidOutputVolume(result);
+        }
+        return AssemblingMachineRecipes.resolve(server, held, spec)
+                .filter(holder -> result < holder.value().fluidResults().size())
+                .map(holder -> {
+                    OverloadLimit limit = OverloadLimit.get();
+                    List<Integer> amounts = holder.value().fluidResults().stream()
+                            .map(fluid -> fluid.amount()).toList();
+                    return OutputTankVolume.of(spec.fluidOutputBoxes(), amounts,
+                            limit.pinnedFluidOutputs().contains(holder.id().identifier().toString()),
+                            limit.fluidOutputCrafts()).get(result);
+                })
+                .orElse(spec.fluidOutputVolume(result));
     }
 
     /**
@@ -626,6 +643,11 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
                 .map(ingredients -> OverloadLimit.get().fluidRoom(ingredients.get(index).amount(),
                         tank.getAmountAsInt(index)))
                 .orElse(0);
+    }
+
+    /** Output tank {@code result}'s volume in mB as the Held recipe sizes it (#520). */
+    public int outputTankVolume(int result) {
+        return capacity(spec(), FLUID_INPUTS + result);
     }
 
     /** Output tank {@code result}'s fill in mB. */

@@ -20,12 +20,14 @@ public record MachineSpec(
         int itemInputs,
         int itemOutputs,
         List<Integer> fluidInputs,
-        List<Integer> fluidOutputs) {
+        List<Integer> fluidOutputs,
+        List<Integer> fluidOutputBoxes) {
 
     public MachineSpec {
         categories = Set.copyOf(categories);
         fluidInputs = List.copyOf(fluidInputs);
         fluidOutputs = List.copyOf(fluidOutputs);
+        fluidOutputBoxes = List.copyOf(fluidOutputBoxes);
     }
 
     public boolean crafts(String category) {
@@ -50,7 +52,10 @@ public record MachineSpec(
         return index < fluidInputs.size() ? fluidInputs.get(index) : 0;
     }
 
-    /** Output tank {@code index}'s volume in mB, or 0 past the machine's last. */
+    /**
+     * Output tank {@code index}'s volume in mB, or 0 past the machine's last. A Held recipe resizes
+     * it; see {@link OutputTankVolume}.
+     */
     public int fluidOutputVolume(int index) {
         return index < fluidOutputs.size() ? fluidOutputs.get(index) : 0;
     }

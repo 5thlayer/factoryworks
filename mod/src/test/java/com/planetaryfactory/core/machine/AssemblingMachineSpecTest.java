@@ -191,6 +191,7 @@ class AssemblingMachineSpecTest {
         assertEquals(1, plant.itemOutputs());
         assertEquals(List.of(1000, 1000), plant.fluidInputs());
         assertEquals(List.of(100), plant.fluidOutputs());
+        assertEquals(List.of(100, 100), plant.fluidOutputBoxes());
         assertEquals(1.0, plant.craftingSpeed());
         assertEquals(210_000L, plant.watts());
         assertEquals(7_000L, plant.drainWatts());
@@ -206,6 +207,7 @@ class AssemblingMachineSpecTest {
         assertEquals(0, refinery.itemOutputs());
         assertEquals(List.of(1000, 1000), refinery.fluidInputs());
         assertEquals(List.of(100, 100, 100), refinery.fluidOutputs());
+        assertEquals(List.of(100, 100, 100), refinery.fluidOutputBoxes());
         assertEquals(420_000L, refinery.watts());
         assertEquals(14_000L, refinery.drainWatts());
         assertEquals("oil-refinery", refinery.replaceGroup());

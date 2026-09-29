@@ -6,17 +6,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * The Overload Limit: how many crafts' worth of an ingredient automated insertion leaves in a
  * machine, Factorio's {@code clamp(ceil(factor * speed / energy_required) + 1, minimum, maximum)}.
- * A fluid input holds {@code fluidCrafts} crafts' worth whatever the speed (#519).
+ * A fluid input holds {@code fluidCrafts} crafts' worth whatever the speed (#519); the output tank
+ * sizes are {@link OutputTankVolume}'s, with {@code fluidOutputCrafts} and the recipes that pin their
+ * products (#520).
  * The constants are read from {@code planetaryfactory_core/machine/overload.json}, which
  * {@code scripts/build-machine-specs.py} copies out of the corpus (#517).
  *
  * <p>Pure: no Minecraft types.
  */
-public record OverloadLimit(double factor, int minimum, int maximum, int fluidCrafts) {
+public record OverloadLimit(double factor, int minimum, int maximum, int fluidCrafts, int fluidOutputCrafts,
+        Set<String> pinnedFluidOutputs) {
+
+    public OverloadLimit {
+        pinnedFluidOutputs = Set.copyOf(pinnedFluidOutputs);
+    }
 
     private static final String PATH = "/planetaryfactory_core/machine/overload.json";
     private static final double TICKS_PER_SECOND = 20.0;
@@ -55,7 +64,10 @@ public record OverloadLimit(double factor, int minimum, int maximum, int fluidCr
                     root.get("dynamic_recipe_overload_factor").getAsDouble(),
                     root.get("minimum_recipe_overload_multiplier").getAsInt(),
                     root.get("maximum_recipe_overload_multiplier").getAsInt(),
-                    root.get("fluid_input_multiplier").getAsInt());
+                    root.get("fluid_input_multiplier").getAsInt(),
+                    root.get("fluid_output_multiplier").getAsInt(),
+                    root.getAsJsonArray("pinned_fluid_outputs").asList().stream()
+                            .map(element -> element.getAsString()).collect(Collectors.toSet()));
         } catch (IOException e) {
             throw new IllegalStateException("could not read " + PATH, e);
         }

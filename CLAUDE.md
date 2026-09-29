@@ -247,7 +247,9 @@ a pole reaching only the part feeds it, and one reaching both blocks counts it o
 Fluid addon never attaches. Drawing before the stall, dropping the type check, routing every fluid to
 tank 0, dropping the addon filter, and making a part its own energy owner each turn their test red. `OilRefineryTests` holds
 the Oil Refinery on it (#491): advanced oil processing fills all three outputs at 100 ticks for 21,000
-FE, typed, and a second craft stops on its gas; any one full output and no water
+FE, typed; each output tank takes what Factorio sizes it for the Held recipe -- 100, 135 and 165 for
+advanced, 135 for the pinned basic, and the Chemical Plant's lone cracking product both boxes' 200 (#520,
+`OutputTankVolumeTest`); any one full output and no water
 stall with nothing drawn or taken; water and crude reach their own tanks through the anchor
 and a top chamber block, which hand back only the three outputs; a chemistry or assembling recipe is
 refused at the menu setter; and a pole reaching only a chamber feeds it, counted once. Its placement

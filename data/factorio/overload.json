@@ -167,6 +167,31 @@
         },
         {
           "machine": "oil-refinery",
+          "recipe": "basic-oil-processing",
+          "speed": 4.6738,
+          "held": {
+            "crude-oil": 400
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "light-oil-cracking",
+          "speed": 1,
+          "held": {
+            "water": 120,
+            "light-oil": 120
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "solid-fuel-from-light-oil",
+          "speed": 1,
+          "held": {
+            "light-oil": 40
+          }
+        },
+        {
+          "machine": "oil-refinery",
           "recipe": "advanced-oil-processing",
           "speed": 1,
           "held": {
@@ -232,6 +257,155 @@
             "light-oil": 135,
             "petroleum-gas": 165
           }
+        }
+      ]
+    },
+    "fluid_output_volume": {
+      "rule": "each fluid product's box is the larger of amount * multiplier and its own volume; the first product also takes the volume of every output box the recipe leaves unused, unless the recipe pins its products to boxes; crafting speed does not enter",
+      "multiplier": 3,
+      "cases": [
+        {
+          "machine": "chemical-plant",
+          "recipe": "lubricant",
+          "amounts": [
+            10
+          ],
+          "volume": [
+            200
+          ]
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "sulfuric-acid",
+          "amounts": [
+            50
+          ],
+          "volume": [
+            200
+          ]
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "heavy-oil-cracking",
+          "amounts": [
+            30
+          ],
+          "volume": [
+            200
+          ]
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "light-oil-cracking",
+          "amounts": [
+            20
+          ],
+          "volume": [
+            200
+          ]
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "probe-chem-60",
+          "amounts": [
+            60
+          ],
+          "volume": [
+            200
+          ]
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "probe-chem-100",
+          "amounts": [
+            100
+          ],
+          "volume": [
+            300
+          ]
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "probe-chem-two",
+          "amounts": [
+            10,
+            10
+          ],
+          "volume": [
+            100,
+            100
+          ]
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "basic-oil-processing",
+          "pinned": true,
+          "amounts": [
+            45
+          ],
+          "volume": [
+            135
+          ]
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "advanced-oil-processing",
+          "amounts": [
+            25,
+            45,
+            55
+          ],
+          "volume": [
+            100,
+            135,
+            165
+          ]
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "coal-liquefaction",
+          "amounts": [
+            90,
+            20,
+            10
+          ],
+          "volume": [
+            270,
+            100,
+            100
+          ]
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "probe-refinery-20",
+          "amounts": [
+            20
+          ],
+          "volume": [
+            300
+          ]
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "probe-refinery-two",
+          "amounts": [
+            20,
+            20
+          ],
+          "volume": [
+            200,
+            100
+          ]
+        },
+        {
+          "machine": "assembling-machine-2",
+          "recipe": "empty-water-barrel",
+          "amounts": [
+            50
+          ],
+          "volume": [
+            1000
+          ]
         }
       ]
     },
