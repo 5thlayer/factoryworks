@@ -79,6 +79,162 @@
         }
       ]
     },
+    "fluid_input": {
+      "rule": "an input fluid box holds at most amount * multiplier, whatever the crafting speed",
+      "multiplier": 4,
+      "cases": [
+        {
+          "machine": "assembling-machine-2",
+          "recipe": "concrete",
+          "speed": 0.75,
+          "held": {
+            "water": 400
+          }
+        },
+        {
+          "machine": "assembling-machine-3",
+          "recipe": "concrete",
+          "speed": 1.25,
+          "held": {
+            "water": 400
+          }
+        },
+        {
+          "machine": "assembling-machine-3",
+          "recipe": "concrete",
+          "speed": 5.84225,
+          "held": {
+            "water": 400
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "plastic-bar",
+          "speed": 1,
+          "held": {
+            "petroleum-gas": 80
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "lubricant",
+          "speed": 1,
+          "held": {
+            "heavy-oil": 40
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "lubricant",
+          "speed": 4.6738,
+          "held": {
+            "heavy-oil": 40
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "sulfuric-acid",
+          "speed": 1,
+          "held": {
+            "water": 400
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "heavy-oil-cracking",
+          "speed": 1,
+          "held": {
+            "water": 120,
+            "heavy-oil": 160
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "heavy-oil-cracking",
+          "speed": 4.6738,
+          "held": {
+            "water": 120,
+            "heavy-oil": 160
+          }
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "basic-oil-processing",
+          "speed": 1,
+          "held": {
+            "crude-oil": 400
+          }
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "advanced-oil-processing",
+          "speed": 1,
+          "held": {
+            "water": 200,
+            "crude-oil": 400
+          }
+        }
+      ]
+    },
+    "fluid_output": {
+      "rule": "a craft starts only while each fluid product's amount fits in the room left in its box",
+      "cases": [
+        {
+          "machine": "chemical-plant",
+          "recipe": "lubricant",
+          "held": {
+            "lubricant": 200
+          },
+          "volume": {
+            "lubricant": 200
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "sulfuric-acid",
+          "held": {
+            "sulfuric-acid": 200
+          },
+          "volume": {
+            "sulfuric-acid": 200
+          }
+        },
+        {
+          "machine": "chemical-plant",
+          "recipe": "heavy-oil-cracking",
+          "held": {
+            "light-oil": 180
+          },
+          "volume": {
+            "light-oil": 200
+          }
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "basic-oil-processing",
+          "held": {
+            "petroleum-gas": 135
+          },
+          "volume": {
+            "petroleum-gas": 135
+          }
+        },
+        {
+          "machine": "oil-refinery",
+          "recipe": "advanced-oil-processing",
+          "held": {
+            "heavy-oil": 75,
+            "light-oil": 135,
+            "petroleum-gas": 165
+          },
+          "volume": {
+            "heavy-oil": 100,
+            "light-oil": 135,
+            "petroleum-gas": 165
+          }
+        }
+      ]
+    },
     "not_measured": {
       "hand": "a benchmark run has no player, so the hand and Quick transfer are not read here"
     }

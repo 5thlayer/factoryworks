@@ -7,7 +7,8 @@ the output threshold are engine behaviour, so they are written under `measured` 
 re-derives every measured input case from the constants and the recipe and machine corpora.
 
 To re-measure, load the probe as a mod beside `base` only, `--create` a map and `--benchmark` it
-for 3,700 ticks; it appends to `script-output/overload_probe.txt`.
+for 3,700 ticks; it appends to `script-output/overload_probe.txt`. The fluid cases are
+`scripts/factorio-overload-fluid-probe/`, run the same way into `overload_fluid_probe.txt` (#519).
 
 Usage:
 
@@ -48,6 +49,39 @@ OUTPUT_CASES = [
     {"machine": "assembling-machine-1", "recipe": "pipe", "held": 100, "stack_size": 100},
 ]
 
+# Unpowered, fed by infinity pipes; `held` is where each input box stopped, `speed` the machine's
+# crafting speed with any beacons, so a high-speed case shows the fluid rule ignores speed.
+FLUID_INPUT_CASES = [
+    {"machine": "assembling-machine-2", "recipe": "concrete", "speed": 0.75, "held": {"water": 400}},
+    {"machine": "assembling-machine-3", "recipe": "concrete", "speed": 1.25, "held": {"water": 400}},
+    {"machine": "assembling-machine-3", "recipe": "concrete", "speed": 5.84225, "held": {"water": 400}},
+    {"machine": "chemical-plant", "recipe": "plastic-bar", "speed": 1, "held": {"petroleum-gas": 80}},
+    {"machine": "chemical-plant", "recipe": "lubricant", "speed": 1, "held": {"heavy-oil": 40}},
+    {"machine": "chemical-plant", "recipe": "lubricant", "speed": 4.6738, "held": {"heavy-oil": 40}},
+    {"machine": "chemical-plant", "recipe": "sulfuric-acid", "speed": 1, "held": {"water": 400}},
+    {"machine": "chemical-plant", "recipe": "heavy-oil-cracking", "speed": 1, "held": {"water": 120, "heavy-oil": 160}},
+    {"machine": "chemical-plant", "recipe": "heavy-oil-cracking", "speed": 4.6738,
+     "held": {"water": 120, "heavy-oil": 160}},
+    {"machine": "oil-refinery", "recipe": "basic-oil-processing", "speed": 1, "held": {"crude-oil": 400}},
+    {"machine": "oil-refinery", "recipe": "advanced-oil-processing", "speed": 1,
+     "held": {"water": 200, "crude-oil": 400}},
+]
+
+# Powered and kept fed; `held` is each output box when the machine reported full_output, and
+# `volume` the box's volume the engine reported with the recipe set.
+FLUID_OUTPUT_CASES = [
+    {"machine": "chemical-plant", "recipe": "lubricant", "held": {"lubricant": 200}, "volume": {"lubricant": 200}},
+    {"machine": "chemical-plant", "recipe": "sulfuric-acid", "held": {"sulfuric-acid": 200},
+     "volume": {"sulfuric-acid": 200}},
+    {"machine": "chemical-plant", "recipe": "heavy-oil-cracking", "held": {"light-oil": 180},
+     "volume": {"light-oil": 200}},
+    {"machine": "oil-refinery", "recipe": "basic-oil-processing", "held": {"petroleum-gas": 135},
+     "volume": {"petroleum-gas": 135}},
+    {"machine": "oil-refinery", "recipe": "advanced-oil-processing",
+     "held": {"heavy-oil": 75, "light-oil": 135, "petroleum-gas": 165},
+     "volume": {"heavy-oil": 100, "light-oil": 135, "petroleum-gas": 165}},
+]
+
 MEASURED = {
     "game": "Factorio 2.1.20, base only",
     "probe": "scripts/factorio-overload-probe/",
@@ -59,6 +93,15 @@ MEASURED = {
     "output": {
         "rule": "a machine stops crafting when its product's slot holds a full stack; no recipe multiple applies",
         "cases": OUTPUT_CASES,
+    },
+    "fluid_input": {
+        "rule": "an input fluid box holds at most amount * multiplier, whatever the crafting speed",
+        "multiplier": 4,
+        "cases": FLUID_INPUT_CASES,
+    },
+    "fluid_output": {
+        "rule": "a craft starts only while each fluid product's amount fits in the room left in its box",
+        "cases": FLUID_OUTPUT_CASES,
     },
     "not_measured": {
         "hand": "a benchmark run has no player, so the hand and Quick transfer are not read here",
