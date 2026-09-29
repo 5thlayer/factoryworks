@@ -14,12 +14,12 @@
       "count": 1
     },
     {
-      "ingredient": "beltworks:express_loader",
+      "ingredient": "beltworks:express_feeder",
       "count": 1
     }
   ],
   "result": {
-    "id": "beltworks:turbo_loader",
+    "id": "beltworks:turbo_feeder",
     "count": 1
   },
   "time": 10

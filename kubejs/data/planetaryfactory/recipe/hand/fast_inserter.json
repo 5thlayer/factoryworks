@@ -10,12 +10,12 @@
       "count": 2
     },
     {
-      "ingredient": "beltworks:improved_loader",
+      "ingredient": "beltworks:improved_feeder",
       "count": 1
     }
   ],
   "result": {
-    "id": "beltworks:express_loader",
+    "id": "beltworks:express_feeder",
     "count": 1
   },
   "time": 10

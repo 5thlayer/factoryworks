@@ -1,0 +1,18 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "beltworks:improved_belt_tile",
+      "count": 5
+    },
+    {
+      "ingredient": "beltworks:loader",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "beltworks:improved_loader",
+    "count": 1
+  },
+  "time": 60
+}

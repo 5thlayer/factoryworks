@@ -133,15 +133,15 @@
     },
     "bulk-inserter": {
       "kind": "item",
-      "target": "beltworks:turbo_loader",
+      "target": "beltworks:turbo_feeder",
       "source": "borrowed",
-      "note": "Beltworks' tier-4 loader, crafted from the bulk inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
+      "note": "Beltworks' tier-4 feeder, crafted from the bulk inserter's recipe (#514, ADR-0100). A feeder moves one item at a time between ends up to 3 blocks apart, the job Factorio's inserter does."
     },
     "burner-inserter": {
       "kind": "item",
-      "target": "beltworks:loader",
+      "target": "beltworks:feeder",
       "source": "borrowed",
-      "note": "Beltworks' tier-1 loader, crafted from the burner inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
+      "note": "Beltworks' tier-1 feeder, crafted from the burner inserter's recipe (#514, ADR-0100). A feeder moves one item at a time between ends up to 3 blocks apart, the job Factorio's inserter does."
     },
     "burner-mining-drill": {
       "kind": "item",
@@ -310,6 +310,12 @@
       "note": "Every consumer is military -- grenades, mines, artillery -- so whether this row exists at all is the combat line's question, not the oil chapter's. Its only in-scope consumer is the grenade, which #230 owns.",
       "ticket": 230
     },
+    "express-loader": {
+      "kind": "item",
+      "target": "beltworks:express_loader",
+      "source": "borrowed",
+      "note": "Beltworks' tier-3 loader, crafted from Factorio's hidden express-loader recipe (#514, ADR-0100)."
+    },
     "express-splitter": {
       "kind": "item",
       "target": "beltworks:express_splitter",
@@ -328,9 +334,15 @@
     },
     "fast-inserter": {
       "kind": "item",
-      "target": "beltworks:express_loader",
+      "target": "beltworks:express_feeder",
       "source": "borrowed",
-      "note": "Beltworks' tier-3 loader, crafted from the fast inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
+      "note": "Beltworks' tier-3 feeder, crafted from the fast inserter's recipe (#514, ADR-0100). A feeder moves one item at a time between ends up to 3 blocks apart, the job Factorio's inserter does."
+    },
+    "fast-loader": {
+      "kind": "item",
+      "target": "beltworks:improved_loader",
+      "source": "borrowed",
+      "note": "Beltworks' tier-2 loader, crafted from Factorio's hidden fast-loader recipe (#514, ADR-0100)."
     },
     "fast-splitter": {
       "kind": "item",
@@ -431,9 +443,9 @@
     },
     "inserter": {
       "kind": "item",
-      "target": "beltworks:improved_loader",
+      "target": "beltworks:improved_feeder",
       "source": "borrowed",
-      "note": "Beltworks' tier-2 loader, crafted from the inserter's recipe and moving its tier's items a second whatever belt it is on (#347, ADR-0076). A loader is the pack's inserter: ADR-0060 replaces the swing arm with a block that loads and unloads a belt."
+      "note": "Beltworks' tier-2 feeder, crafted from the inserter's recipe (#514, ADR-0100). A feeder moves one item at a time between ends up to 3 blocks apart, the job Factorio's inserter does."
     },
     "iron-chest": {
       "kind": "item",
@@ -491,6 +503,12 @@
       "status": "native_mechanic",
       "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `planetaryfactory:barrel` (ADR-0037)."
     },
+    "loader": {
+      "kind": "item",
+      "target": "beltworks:loader",
+      "source": "borrowed",
+      "note": "Beltworks' tier-1 loader, crafted from Factorio's hidden loader recipe (#514, ADR-0100)."
+    },
     "locomotive": {
       "kind": "item",
       "target": "railcraft:steam_locomotive",
@@ -513,7 +531,7 @@
     },
     "long-handed-inserter": {
       "status": "not_emitted",
-      "note": "Excluded by ADR-0076 (#347): the pack's inserter is a loader, which has no swing arm to lengthen, so a long-handed tier would be a loader with nothing to distinguish it. docs/factorio-mechanics.md records the row as `excluded`."
+      "note": "The feeder's reach of 1-3 blocks, set by key, does the long-handed inserter's job, so it has no recipe of its own (#514, ADR-0100). docs/factorio-mechanics.md records the row as `adapted`."
     },
     "low-density-structure": {
       "kind": "item",
@@ -906,6 +924,13 @@
       "target": "beltworks:belt_tile",
       "source": "borrowed",
       "note": "Beltworks' tier-1 belt tile, one block of belt at Factorio's 15 items/s, merged with its neighbours into one transport line (#345, ADR-0084). ADR-0060 gives item logistics to the fork, which carries the tier table."
+    },
+    "turbo-loader": {
+      "kind": "item",
+      "target": "beltworks:turbo_loader",
+      "source": "borrowed",
+      "note": "Beltworks' tier-4 loader (#514, ADR-0100).",
+      "outside_corpus": "Factorio's hidden turbo-loader recipe takes the turbo belt, which has no recipe here, so the loader ships with none."
     },
     "turbo-splitter": {
       "kind": "item",

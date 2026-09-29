@@ -3,23 +3,31 @@
   "category": "crafting",
   "ingredients": [
     {
+      "ingredient": "beltworks:improved_feeder",
+      "count": 5
+    },
+    {
       "ingredient": "planetaryfactory:electronic_circuit",
-      "count": 1
+      "count": 5
     },
     {
       "ingredient": "ftbmaterials:iron_gear",
-      "count": 1
+      "count": 5
     },
     {
       "ingredient": "ftbmaterials:iron_plate",
-      "count": 1
+      "count": 5
+    },
+    {
+      "ingredient": "beltworks:belt_tile",
+      "count": 5
     }
   ],
   "results": [
     {
-      "id": "beltworks:improved_feeder",
+      "id": "beltworks:loader",
       "count": 1
     }
   ],
-  "time": 10
+  "time": 20
 }

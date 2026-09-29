@@ -3,7 +3,7 @@
   "category": "crafting",
   "ingredients": [
     {
-      "ingredient": "beltworks:improved_loader",
+      "ingredient": "beltworks:improved_feeder",
       "count": 1
     },
     {

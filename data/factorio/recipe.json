@@ -1841,6 +1841,38 @@
     "order": null
   },
   {
+    "name": "express-loader",
+    "category": "crafting",
+    "categories": [
+      "crafting"
+    ],
+    "unlocked_by": null,
+    "energy_required": 10,
+    "ingredients": [
+      {
+        "type": "item",
+        "name": "express-transport-belt",
+        "amount": 5
+      },
+      {
+        "type": "item",
+        "name": "fast-loader",
+        "amount": 1
+      }
+    ],
+    "results": [
+      {
+        "type": "item",
+        "name": "express-loader",
+        "amount": 1
+      }
+    ],
+    "allow_productivity": false,
+    "group": "logistics",
+    "subgroup": "belt",
+    "order": null
+  },
+  {
     "name": "express-splitter",
     "category": "crafting-with-fluid",
     "categories": [
@@ -1994,6 +2026,38 @@
     "allow_productivity": false,
     "group": "logistics",
     "subgroup": "inserter",
+    "order": null
+  },
+  {
+    "name": "fast-loader",
+    "category": "crafting",
+    "categories": [
+      "crafting"
+    ],
+    "unlocked_by": null,
+    "energy_required": 3,
+    "ingredients": [
+      {
+        "type": "item",
+        "name": "fast-transport-belt",
+        "amount": 5
+      },
+      {
+        "type": "item",
+        "name": "loader",
+        "amount": 1
+      }
+    ],
+    "results": [
+      {
+        "type": "item",
+        "name": "fast-loader",
+        "amount": 1
+      }
+    ],
+    "allow_productivity": false,
+    "group": "logistics",
+    "subgroup": "belt",
     "order": null
   },
   {
@@ -2874,6 +2938,53 @@
     "group": "intermediate-products",
     "subgroup": "fluid-recipes",
     "order": "b[fluid-chemistry]-b[light-oil-cracking]"
+  },
+  {
+    "name": "loader",
+    "category": "crafting",
+    "categories": [
+      "crafting"
+    ],
+    "unlocked_by": null,
+    "energy_required": 1,
+    "ingredients": [
+      {
+        "type": "item",
+        "name": "inserter",
+        "amount": 5
+      },
+      {
+        "type": "item",
+        "name": "electronic-circuit",
+        "amount": 5
+      },
+      {
+        "type": "item",
+        "name": "iron-gear-wheel",
+        "amount": 5
+      },
+      {
+        "type": "item",
+        "name": "iron-plate",
+        "amount": 5
+      },
+      {
+        "type": "item",
+        "name": "transport-belt",
+        "amount": 5
+      }
+    ],
+    "results": [
+      {
+        "type": "item",
+        "name": "loader",
+        "amount": 1
+      }
+    ],
+    "allow_productivity": false,
+    "group": "logistics",
+    "subgroup": "belt",
+    "order": null
   },
   {
     "name": "locomotive",

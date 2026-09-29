@@ -10,15 +10,15 @@ looked at.
 
 What is asserted:
 
-  - the hand set is Assembling Machine 1's, derived: first category `crafting`, which is 113
+  - the hand set is Assembling Machine 1's, derived: first category `crafting`, which is 116
     recipes and which already excludes Factorio's eleven fluid-free withholds (#88). The count is
     pinned because the predicate is prose everywhere else, and a regeneration that moves a recipe
     into or out of `crafting` silently changes what the Assembler can make
   - no item has two hand recipes, so the resolver never chooses between routes. ADR-0038 relies on
     this: a resolver that had to choose would need a cost model, and there is none
-  - every one of the 113 resolves -- the walk terminates, with no cycle and no intermediate that is
+  - every one of the 116 resolves -- the walk terminates, with no cycle and no intermediate that is
     neither hand-craftable nor a known leaf
-  - the leaves are exactly the 21 named below
+  - the leaves are exactly the 22 named below
 
 WHAT IT CANNOT PROVE is that the *runtime* graph agrees with the corpus. The mod resolves against
 the recipes actually loaded, which the converter emits, and the converter skips a Factorio name
@@ -43,7 +43,7 @@ HAND_CATEGORY = "crafting"
 # Pinned because the predicate is otherwise only prose. `tests/factorio/test_subgroup_owner.py`
 # derives the same number from the other direction -- the shelves the set spreads across -- so a
 # regeneration that changes it fails in two places with two different explanations.
-EXPECTED_HAND_RECIPES = 113
+EXPECTED_HAND_RECIPES = 116
 
 # Where every plan bottoms out: ingredients of a hand recipe that no hand recipe makes. Each is
 # mined, smelted, or made by a machine, and each is therefore `Missing` rather than `To Craft` when
@@ -53,7 +53,7 @@ EXPECTED_HAND_RECIPES = 113
 # documentation and cannot quietly become the source of truth.
 EXPECTED_LEAVES = {
     "battery", "carbon", "coal", "concrete", "copper-plate", "electric-engine-unit",
-    "engine-unit", "ice", "iron-plate", "plastic-bar", "processing-unit",
+    "engine-unit", "express-transport-belt", "ice", "iron-plate", "plastic-bar", "processing-unit",
     "productivity-module", "refined-concrete", "speed-module", "steel-plate", "stone",
     "stone-brick", "sulfur", "uranium-235", "uranium-238", "wood",
 }

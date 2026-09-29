@@ -121,7 +121,7 @@ fromFactorio('steel-processing', {
   ]
 });
 
-// `long-handed-inserter` is excluded (ADR-0076).
+// `long-handed-inserter` has no recipe: the feeder's reach does its job (ADR-0100).
 fromFactorio('automation', {
   icon: 'planetaryfactory:assembling_machine',
   unlocks: ['planetaryfactory:assembling/assembling_machine_1']
@@ -188,19 +188,23 @@ fromFactorio('advanced-oil-processing', {
 });
 
 // ---------------------------------------------------------------------------------------------
-// BELT TIERS (#345, #349). Each node grants its tier's belt and splitter; the underground belt has
-// no pack recipe.
+// BELT TIERS (#345, #349). Each node grants its tier's belt, splitter and loader (ADR-0100); the
+// underground belt has no pack recipe.
 
 fromFactorio('logistics', {
   icon: 'beltworks:splitter',
-  unlocks: ['planetaryfactory:assembling/splitter']
+  unlocks: [
+    'planetaryfactory:assembling/splitter',
+    'planetaryfactory:assembling/loader'
+  ]
 });
 
 fromFactorio('logistics-2', {
   icon: 'beltworks:improved_belt_tile',
   unlocks: [
     'planetaryfactory:assembling/fast_transport_belt',
-    'planetaryfactory:assembling/fast_splitter'
+    'planetaryfactory:assembling/fast_splitter',
+    'planetaryfactory:assembling/fast_loader'
   ]
 });
 
@@ -208,20 +212,21 @@ fromFactorio('logistics-3', {
   icon: 'beltworks:express_belt_tile',
   unlocks: [
     'planetaryfactory:assembling/express_transport_belt',
-    'planetaryfactory:assembling/express_splitter'
+    'planetaryfactory:assembling/express_splitter',
+    'planetaryfactory:assembling/express_loader'
   ]
 });
 
 // ---------------------------------------------------------------------------------------------
-// LOADER TIERS (#347, ADR-0076). The burner inserter's recipe is unlocked from the start, as in
+// FEEDER TIERS (#514, ADR-0100). The burner inserter's recipe is unlocked from the start, as in
 // Factorio, and `electronics` grants the inserter's above.
 
 fromFactorio('fast-inserter', {
-  icon: 'beltworks:express_loader',
+  icon: 'beltworks:express_feeder',
   unlocks: ['planetaryfactory:assembling/fast_inserter']
 });
 
 fromFactorio('bulk-inserter', {
-  icon: 'beltworks:turbo_loader',
+  icon: 'beltworks:turbo_feeder',
   unlocks: ['planetaryfactory:assembling/bulk_inserter']
 });
