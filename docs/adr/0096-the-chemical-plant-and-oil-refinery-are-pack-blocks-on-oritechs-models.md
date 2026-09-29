@@ -6,7 +6,7 @@ status: accepted
 
 ADR-0025 put the oil chapter on two machines the pack registered on a GregTech chassis: a
 single-block Chemical Plant and a multiblock Oil Refinery, each sized by `setMaxIOSize`. GregTech
-left with ADR-0060, and #277 decided that both come back as `planetaryfactory_core` blocks. Neither
+left with ADR-0060, and #277 decided that both come back as `factoryworks_core` blocks. Neither
 exists, so the converter holds back every `chemistry` and `oil-processing` recipe and the oil
 chapter cannot be built (#486).
 
@@ -14,17 +14,17 @@ chapter cannot be built (#486).
 holds a **Held recipe** set by the player, filters its inputs to it, and reads its figures from the
 corpus.
 
-- **The Chemical Plant** is `planetaryfactory:chemical_plant`. It wears Oritech's Centrifuge model
+- **The Chemical Plant** is `factoryworks:chemical_plant`. It wears Oritech's Centrifuge model
   and renderer and stands on the Centrifuge's 1x1x2 footprint. It takes up to 2 items and 2 fluids
   in and gives 1 item and 1 fluid out.
-- **The Oil Refinery** is `planetaryfactory:oil_refinery`. It wears Oritech's Refinery base with
+- **The Oil Refinery** is `factoryworks:oil_refinery`. It wears Oritech's Refinery base with
   both chamber layers, placed and broken as one footprint from one item (ADR-0077): 3x2x4 overall,
   22 blocks, since the base's cores leave two blocks of one corner column open under the chambers,
   as the base's model does. A block there would be one the player sees and cannot walk into. It takes 2
   fluids in and always gives 3 out. Oritech's module mechanic is not used: no chamber is an item, and
   none of Oritech's refinery tanks or output routing is read.
-- **Each runs a recipe type of its own**, `planetaryfactory:chemistry` and
-  `planetaryfactory:oil_processing`, named after Factorio's categories as `smelting` is. Both share
+- **Each runs a recipe type of its own**, `factoryworks:chemistry` and
+  `factoryworks:oil_processing`, named after Factorio's categories as `smelting` is. Both share
   the Assembling Machine's recipe record and codec, so all three types have one JSON shape. The
   converter writes each type under a folder of its name, and each type has its own EMI tab and Fill
   Recipe. A machine holds only a recipe of its own type.
@@ -50,7 +50,7 @@ Assembling Machine does (ADR-0072), which asked the question per machine and lef
 **What ADR-0025 keeps.** Its ratios and its rule that sulfur is petroleum-derived stand. Its section
 *The two machines* and its *×10* rule are replaced by this record, and its rung re-cut by ADR-0097.
 
-**Considered: one recipe type, split by category.** `planetaryfactory:assembling` would carry the
+**Considered: one recipe type, split by category.** `factoryworks:assembling` would carry the
 `chemistry` and `oil-processing` categories and each machine would filter by category. Rejected:
 EMI shows a tab per recipe type, so both machines' recipes would sit in the Assembling tab, and
 Fill Recipe from there would have to refuse by category on every machine.
@@ -81,7 +81,7 @@ refinery bank is built by, are the same either way.
   each is registered. Until then both carry `blocked_by` on #486.
 - The stock-recipe sweep gains a survivor per type, each naming its machine as the surface
   (ADR-0034).
-- Recipe ids read `planetaryfactory:chemistry/<name>` and `planetaryfactory:oil_processing/<name>`,
+- Recipe ids read `factoryworks:chemistry/<name>` and `factoryworks:oil_processing/<name>`,
   and the research tree unlocks those.
 - A Factorio player reads both machines as smaller than Factorio's, the cost ADR-0072 already
   accepted for the Assembling Machine.

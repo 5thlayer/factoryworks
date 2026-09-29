@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 8
+    },
+    {
+      "ingredient": "oritech:fluid_pipe",
+      "count": 5
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 10
+    }
+  ],
+  "result": {
+    "id": "factoryworks:steam_engine",
+    "count": 1
+  },
+  "time": 10
+}

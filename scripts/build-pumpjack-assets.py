@@ -2,7 +2,7 @@
 """Emit the Pumpjack's and the oil well's corpus row and pack-side assets (#377, ADR-0081).
 
 `data/factorio/machine.json`'s `pumpjack` drill row is copied field by field to
-`mod/src/main/resources/planetaryfactory_core/oil/pumpjack.json`, which `PumpjackCorpus` reads at
+`mod/src/main/resources/factoryworks_core/oil/pumpjack.json`, which `PumpjackCorpus` reads at
 class-init, beside the fluid it pumps: the `crude-oil` row of `data/pack/item-map.json`. Turning
 watts into FE is `PumpjackSpec`'s, where a unit test holds it.
 
@@ -22,10 +22,10 @@ import sys
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MACHINE_CORPUS = os.path.join(ROOT, "data", "factorio", "machine.json")
 ITEM_MAP = os.path.join(ROOT, "data", "pack", "item-map.json")
-RESOURCE = os.path.join(ROOT, "mod", "src", "main", "resources", "planetaryfactory_core", "oil", "pumpjack.json")
-ASSETS = os.path.join(ROOT, "kubejs", "assets", "planetaryfactory")
-DATA = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
-NAMESPACE = "planetaryfactory"
+RESOURCE = os.path.join(ROOT, "mod", "src", "main", "resources", "factoryworks_core", "oil", "pumpjack.json")
+ASSETS = os.path.join(ROOT, "kubejs", "assets", "factoryworks")
+DATA = os.path.join(ROOT, "kubejs", "data", "factoryworks")
+NAMESPACE = "factoryworks"
 
 BLOCK_NAME = "pumpjack"
 PART_NAME = "pumpjack_part"

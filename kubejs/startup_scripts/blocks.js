@@ -1,7 +1,7 @@
 // Custom blocks registered from KubeJS.
 //
-// REGISTRATION BOUNDARY (ADR-0015). KubeJS, the `planetaryfactory_core` mod and
-// datapack JSON all register into the `planetaryfactory` namespace, so a block ID
+// REGISTRATION BOUNDARY (ADR-0015). KubeJS, the `factoryworks_core` mod and
+// datapack JSON all register into the `factoryworks` namespace, so a block ID
 // does not tell you which one produced it. The ownership rule is:
 //
 //   flora and multi-block features -> the mod
@@ -9,14 +9,14 @@
 //   biomes, features, loot, tags   -> datapack JSON
 //
 // Adding a block here that the mod already registers is a startup crash whose
-// message will not mention this file. Check `planetaryfactory_core` first.
+// message will not mention this file. Check `factoryworks_core` first.
 //
 // The two blocks a pickaxe meets on Electro.
 //
 // Neither is a GregTech ore block, and that is the point: Electro registers no ore
 // veins (ADR-0009), so everything hand-mineable there is a plain block placed by a
 // feature or a structure. Both drop through a datapack loot table under
-// `kubejs/data/planetaryfactory/loot_table/blocks/`, which names GregTech's material
+// `kubejs/data/factoryworks/loot_table/blocks/`, which names GregTech's material
 // dust by tag rather than by item id — GregTech registers material items in code, and
 // a tag is the handle that does not depend on guessing its naming scheme.
 //
@@ -27,7 +27,7 @@ StartupEvents.registry('block', (event) => {
   // Loose rubble in and around the ruins, and the whole of a player's early scrap
   // income. Soft and shovel-mineable on purpose: arriving on Electro with nothing is
   // the situation this block exists to rescue.
-  event.create('planetaryfactory:scrap_pile')
+  event.create('factoryworks:scrap_pile')
     .displayName('Scrap Pile')
     .texture('gcyr:block/mars_regolith')
     .gravelSoundType()
@@ -38,7 +38,7 @@ StartupEvents.registry('block', (event) => {
 
   // Lightning-fused glass on the barren interior plateaus, and the only hand-mined
   // source of holmium in the pack.
-  event.create('planetaryfactory:fulgorite')
+  event.create('factoryworks:fulgorite')
     .displayName('Fulgorite')
     .texture('gcyr:block/martian_rock')
     .glassSoundType()
@@ -71,7 +71,7 @@ StartupEvents.registry('block', (event) => {
   // #234's question rather than this file's. It used to name `scripts/build-pick-textures.py` as
   // the precedent for committing one; that script went with GregTech's art (#323), so the
   // precedent is the question and not the gesture.
-  event.create('planetaryfactory:iron_chest')
+  event.create('factoryworks:iron_chest')
     .displayName('Iron Chest')
     .texture('minecraft:entity/chest/copper_exposed')
     .hardness(2.5)
@@ -83,7 +83,7 @@ StartupEvents.registry('block', (event) => {
       be.rightClickOpensInventory('inventory');
     });
 
-  event.create('planetaryfactory:steel_chest')
+  event.create('factoryworks:steel_chest')
     .displayName('Steel Chest')
     .texture('railcraft:entity/chest/void_chest')
     .hardness(3)
@@ -96,12 +96,12 @@ StartupEvents.registry('block', (event) => {
     });
 });
 
-// Sapros's two trees, minus the two saplings: those are `planetaryfactory_core`'s, because
+// Sapros's two trees, minus the two saplings: those are `factoryworks_core`'s, because
 // a sapling is a `SaplingBlock` backed by a `TreeGrower` and no scripting API here exposes
 // one (ADR-0014). Everything else the trees are made of is an ordinary block, so it is here.
 //
 // The trees' shapes are not here either. Each is one `minecraft:tree` configured feature under
-// `kubejs/data/planetaryfactory/worldgen/configured_feature/`, placed by worldgen and grown by
+// `kubejs/data/factoryworks/worldgen/configured_feature/`, placed by worldgen and grown by
 // the sapling from that same definition, so a farmed tree cannot differ from a wild one.
 //
 // `minecraft:logs` and `minecraft:leaves` are what make Create's saw fell these trees and its
@@ -111,9 +111,9 @@ StartupEvents.registry('block', (event) => {
 // from a sapling. Yumako's fruit is in the canopy and Jellynut is in the trunk, so the two
 // still come off different blocks -- but neither tree is a standing crop you return to.
 StartupEvents.registry('block', (event) => {
-  event.create('planetaryfactory:yumako_log')
+  event.create('factoryworks:yumako_log')
     .displayName('Yumako Log')
-    .texture('planetaryfactory:block/yumako_log')
+    .texture('factoryworks:block/yumako_log')
     .soundType('wood')
     .hardness(2.0)
     .resistance(2.0)
@@ -124,9 +124,9 @@ StartupEvents.registry('block', (event) => {
     .tagItem('minecraft:logs')
     .tagItem('minecraft:logs_that_burn');
 
-  event.create('planetaryfactory:yumako_leaves')
+  event.create('factoryworks:yumako_leaves')
     .displayName('Yumako Leaves')
-    .texture('planetaryfactory:block/yumako_leaves')
+    .texture('factoryworks:block/yumako_leaves')
     .soundType('grass')
     .hardness(0.2)
     .resistance(0.2)
@@ -137,9 +137,9 @@ StartupEvents.registry('block', (event) => {
     .tagBlock('minecraft:mineable/hoe')
     .tagItem('minecraft:leaves');
 
-  event.create('planetaryfactory:jellystem_stem')
+  event.create('factoryworks:jellystem_stem')
     .displayName('Jellystem Stem')
-    .texture('planetaryfactory:block/jellystem_stem')
+    .texture('factoryworks:block/jellystem_stem')
     .soundType('wood')
     .hardness(1.5)
     .resistance(1.5)
@@ -150,9 +150,9 @@ StartupEvents.registry('block', (event) => {
     .tagItem('minecraft:logs')
     .tagItem('minecraft:logs_that_burn');
 
-  event.create('planetaryfactory:jellystem_leaves')
+  event.create('factoryworks:jellystem_leaves')
     .displayName('Jellystem Leaves')
-    .texture('planetaryfactory:block/jellystem_leaves')
+    .texture('factoryworks:block/jellystem_leaves')
     .soundType('grass')
     .hardness(0.2)
     .resistance(0.2)
@@ -177,18 +177,18 @@ StartupEvents.registry('block', (event) => {
 // trees'. The two differ only in tint, which is deliberate: what a player reads off the block
 // is which metal, and the shape is the same organism either way.
 StartupEvents.registry('block', (event) => {
-  event.create('planetaryfactory:iron_stromatolite')
+  event.create('factoryworks:iron_stromatolite')
     .displayName('Iron Stromatolite')
-    .texture('planetaryfactory:block/iron_stromatolite')
+    .texture('factoryworks:block/iron_stromatolite')
     .soundType('stone')
     .hardness(1.5)
     .resistance(1.5)
     .requiresTool(false)
     .tagBlock('minecraft:mineable/pickaxe');
 
-  event.create('planetaryfactory:copper_stromatolite')
+  event.create('factoryworks:copper_stromatolite')
     .displayName('Copper Stromatolite')
-    .texture('planetaryfactory:block/copper_stromatolite')
+    .texture('factoryworks:block/copper_stromatolite')
     .soundType('stone')
     .hardness(1.5)
     .resistance(1.5)

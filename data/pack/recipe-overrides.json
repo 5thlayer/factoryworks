@@ -29,7 +29,7 @@
     "",
     "NO ENTRIES TODAY. `stone-brick` was the one entry -- a 2:1 to 1:1 fidelity loss taken because",
     "vanilla's furnace has no m:n shape -- and ADR-0046 reversed it: the count-bearing",
-    "`planetaryfactory:smelting` type is built for `steel-plate` regardless (#155), so `stone-brick`",
+    "`factoryworks:smelting` type is built for `steel-plate` regardless (#155), so `stone-brick`",
     "rides it at the exact Factorio ratio and needs no override. Every other departure known today is",
     "a `!`-routed category, a `native_mechanic` shelf, a `not_emitted` shelf or an `undecided`",
     "item-map row -- none of which belong here. An empty register is the honest state, not a dead",

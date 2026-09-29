@@ -8,11 +8,11 @@ licence governs it.
 Electric Furnace textures (#324)
 --------------------------------
 
-Files:   kubejs/assets/planetaryfactory/textures/block/electric_furnace/bottom.png
-         kubejs/assets/planetaryfactory/textures/block/electric_furnace/front_off.png
-         kubejs/assets/planetaryfactory/textures/block/electric_furnace/front_on.png
-         kubejs/assets/planetaryfactory/textures/block/electric_furnace/side.png
-         kubejs/assets/planetaryfactory/textures/block/electric_furnace/top.png
+Files:   kubejs/assets/factoryworks/textures/block/electric_furnace/bottom.png
+         kubejs/assets/factoryworks/textures/block/electric_furnace/front_off.png
+         kubejs/assets/factoryworks/textures/block/electric_furnace/front_on.png
+         kubejs/assets/factoryworks/textures/block/electric_furnace/side.png
+         kubejs/assets/factoryworks/textures/block/electric_furnace/top.png
 Author:  Futureazoo
 Source:  https://github.com/Futureazoo/TextureRepository
          futureazoo/blocks/tech/bronze_furnace_*.png at commit
@@ -23,38 +23,38 @@ Licence: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 Ore textures (#321)
 -------------------
 
-Files:   kubejs/assets/planetaryfactory/textures/block/ore/coal_stage0.png
-         kubejs/assets/planetaryfactory/textures/block/ore/coal_stage1.png
-         kubejs/assets/planetaryfactory/textures/block/ore/coal_stage2.png
-         kubejs/assets/planetaryfactory/textures/block/ore/coal_stage3.png
-         kubejs/assets/planetaryfactory/textures/block/ore/coal_stage4.png
-         kubejs/assets/planetaryfactory/textures/block/ore/coal_stage5.png
-         kubejs/assets/planetaryfactory/textures/block/ore/coal_stage6.png
-         kubejs/assets/planetaryfactory/textures/block/ore/coal_stage7.png
-         kubejs/assets/planetaryfactory/textures/block/ore/copper_stage0.png
-         kubejs/assets/planetaryfactory/textures/block/ore/copper_stage1.png
-         kubejs/assets/planetaryfactory/textures/block/ore/copper_stage2.png
-         kubejs/assets/planetaryfactory/textures/block/ore/copper_stage3.png
-         kubejs/assets/planetaryfactory/textures/block/ore/copper_stage4.png
-         kubejs/assets/planetaryfactory/textures/block/ore/copper_stage5.png
-         kubejs/assets/planetaryfactory/textures/block/ore/copper_stage6.png
-         kubejs/assets/planetaryfactory/textures/block/ore/copper_stage7.png
-         kubejs/assets/planetaryfactory/textures/block/ore/iron_stage0.png
-         kubejs/assets/planetaryfactory/textures/block/ore/iron_stage1.png
-         kubejs/assets/planetaryfactory/textures/block/ore/iron_stage2.png
-         kubejs/assets/planetaryfactory/textures/block/ore/iron_stage3.png
-         kubejs/assets/planetaryfactory/textures/block/ore/iron_stage4.png
-         kubejs/assets/planetaryfactory/textures/block/ore/iron_stage5.png
-         kubejs/assets/planetaryfactory/textures/block/ore/iron_stage6.png
-         kubejs/assets/planetaryfactory/textures/block/ore/iron_stage7.png
-         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage0.png
-         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage1.png
-         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage2.png
-         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage3.png
-         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage4.png
-         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage5.png
-         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage6.png
-         kubejs/assets/planetaryfactory/textures/block/ore/uranium_stage7.png
+Files:   kubejs/assets/factoryworks/textures/block/ore/coal_stage0.png
+         kubejs/assets/factoryworks/textures/block/ore/coal_stage1.png
+         kubejs/assets/factoryworks/textures/block/ore/coal_stage2.png
+         kubejs/assets/factoryworks/textures/block/ore/coal_stage3.png
+         kubejs/assets/factoryworks/textures/block/ore/coal_stage4.png
+         kubejs/assets/factoryworks/textures/block/ore/coal_stage5.png
+         kubejs/assets/factoryworks/textures/block/ore/coal_stage6.png
+         kubejs/assets/factoryworks/textures/block/ore/coal_stage7.png
+         kubejs/assets/factoryworks/textures/block/ore/copper_stage0.png
+         kubejs/assets/factoryworks/textures/block/ore/copper_stage1.png
+         kubejs/assets/factoryworks/textures/block/ore/copper_stage2.png
+         kubejs/assets/factoryworks/textures/block/ore/copper_stage3.png
+         kubejs/assets/factoryworks/textures/block/ore/copper_stage4.png
+         kubejs/assets/factoryworks/textures/block/ore/copper_stage5.png
+         kubejs/assets/factoryworks/textures/block/ore/copper_stage6.png
+         kubejs/assets/factoryworks/textures/block/ore/copper_stage7.png
+         kubejs/assets/factoryworks/textures/block/ore/iron_stage0.png
+         kubejs/assets/factoryworks/textures/block/ore/iron_stage1.png
+         kubejs/assets/factoryworks/textures/block/ore/iron_stage2.png
+         kubejs/assets/factoryworks/textures/block/ore/iron_stage3.png
+         kubejs/assets/factoryworks/textures/block/ore/iron_stage4.png
+         kubejs/assets/factoryworks/textures/block/ore/iron_stage5.png
+         kubejs/assets/factoryworks/textures/block/ore/iron_stage6.png
+         kubejs/assets/factoryworks/textures/block/ore/iron_stage7.png
+         kubejs/assets/factoryworks/textures/block/ore/uranium_stage0.png
+         kubejs/assets/factoryworks/textures/block/ore/uranium_stage1.png
+         kubejs/assets/factoryworks/textures/block/ore/uranium_stage2.png
+         kubejs/assets/factoryworks/textures/block/ore/uranium_stage3.png
+         kubejs/assets/factoryworks/textures/block/ore/uranium_stage4.png
+         kubejs/assets/factoryworks/textures/block/ore/uranium_stage5.png
+         kubejs/assets/factoryworks/textures/block/ore/uranium_stage6.png
+         kubejs/assets/factoryworks/textures/block/ore/uranium_stage7.png
          data/art/ore_slade_coal.png
          data/art/ore_stone_copper_2.png
          data/art/ore_slade_iron.png

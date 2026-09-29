@@ -27,7 +27,7 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-STRUCTURES = os.path.join(ROOT, "kubejs", "data", "planetaryfactory", "structure")
+STRUCTURES = os.path.join(ROOT, "kubejs", "data", "factoryworks", "structure")
 
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import nbt  # noqa: E402

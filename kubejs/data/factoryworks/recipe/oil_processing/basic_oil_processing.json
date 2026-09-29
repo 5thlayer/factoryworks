@@ -1,0 +1,17 @@
+{
+  "type": "factoryworks:oil_processing",
+  "category": "oil-processing",
+  "fluid_ingredients": [
+    {
+      "ingredient": "oritech:still_oil",
+      "amount": 100
+    }
+  ],
+  "fluid_results": [
+    {
+      "id": "oritech:still_diesel",
+      "amount": 45
+    }
+  ],
+  "time": 100
+}

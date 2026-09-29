@@ -138,9 +138,9 @@ OUTFIELD_ARGUMENTS = (
 RADIUS_CAP = re.compile(r"^min\(\s*([0-9.]+)\s*,")
 
 CRUDE = "crude-oil"
-AMOUNTS = "mod/src/main/resources/planetaryfactory_core/ore/amounts.json"
+AMOUNTS = "mod/src/main/resources/factoryworks_core/ore/amounts.json"
 
-PICK_TIER = "mod/src/main/java/com/planetaryfactory/core/mining/PickTier.java"
+PICK_TIER = "mod/src/main/java/com/factoryworks/core/mining/PickTier.java"
 
 # The four resources ADR-0039's flat mining time speaks for. Uranium is excluded on
 # Factorio's own terms rather than on the pack's: its `mining_time` is 2 and it wants

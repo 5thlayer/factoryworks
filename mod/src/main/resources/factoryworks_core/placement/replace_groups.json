@@ -1,0 +1,13 @@
+{
+  "factoryworks:assembling_machine": "assembling-machine",
+  "factoryworks:assembling_machine_2": "assembling-machine",
+  "factoryworks:assembling_machine_3": "assembling-machine",
+  "factoryworks:chemical_plant": "chemical-plant",
+  "factoryworks:electric_furnace": "furnace",
+  "factoryworks:medium_electric_pole": "electric-pole",
+  "factoryworks:oil_refinery": "oil-refinery",
+  "factoryworks:small_electric_pole": "electric-pole",
+  "factoryworks:steel_furnace": "furnace",
+  "factoryworks:stone_furnace": "furnace",
+  "factoryworks:substation_electric_pole": "substation"
+}

@@ -4,8 +4,8 @@ status: accepted
 
 # Where pack content is registered: mod, KubeJS, or datapack
 
-The pack now has three places to put content: `planetaryfactory_core` (ADR-0014), KubeJS startup
-scripts, and datapack JSON. All three register into the **`planetaryfactory`** namespace, so a block
+The pack now has three places to put content: `factoryworks_core` (ADR-0014), KubeJS startup
+scripts, and datapack JSON. All three register into the **`factoryworks`** namespace, so a block
 ID does not say which one produced it. That is deliberate — and it means the boundary has to be
 written down, because nothing in the IDs enforces it.
 
@@ -18,7 +18,7 @@ once. They are separate documents for that reason.
 
 | Goes in                       | What                                                                                                  |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------- |
-| **`planetaryfactory_core`**   | Flora and any block whose behaviour needs a vanilla class no scripting API exposes — `SaplingBlock`, `TreeGrower`, multi-block growth. |
+| **`factoryworks_core`**   | Flora and any block whose behaviour needs a vanilla class no scripting API exposes — `SaplingBlock`, `TreeGrower`, multi-block growth. |
 | **KubeJS startup scripts**    | Every other custom block and item. GregTech worldgen layers, via `GregTechStartupEvents.WORLD_GEN_LAYERS`. |
 | **Datapack JSON**             | Biomes, noise settings, surface rules, configured and placed features, loot tables, tags, recipes, ore veins, bedrock deposits. |
 | **Resource pack / lang**      | Every player-facing string, including overrides of GCyR's orphaned stone names.                        |
@@ -35,7 +35,7 @@ Two consequences follow, and they are the point of the rule:
 ## Collision convention
 
 Two registration sources writing into one namespace collide the day someone adds
-`planetaryfactory:yumako_log` in KubeJS without knowing the mod already has it. The failure is a
+`factoryworks:yumako_log` in KubeJS without knowing the mod already has it. The failure is a
 startup crash whose message will not say that.
 
 The convention that prevents it is the table above, read as ownership: **flora and multi-block

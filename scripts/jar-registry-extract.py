@@ -32,7 +32,7 @@ MODS = ROOT / "mods"
 VANILLA = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
     "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
 OUT = ROOT / "data" / "jars"
-PACK_JAR = "planetaryfactory_core-"
+PACK_JAR = "factoryworks_core-"
 
 ITEM_DEFINITION = re.compile(r"assets/([a-z0-9_.-]+)/items/([a-z0-9_./-]+)\.json")
 FLUID_TAG = re.compile(r"data/[a-z0-9_.-]+/tags/fluid/.+\.json")

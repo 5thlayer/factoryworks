@@ -41,7 +41,7 @@ import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
+MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 JOURNAL = MOD / "energy/LongSnapshotJournal.java"
 
 COMMENTS = re.compile(r"/\*.*?\*/|//[^\n]*", re.DOTALL)

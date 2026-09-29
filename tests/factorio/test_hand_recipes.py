@@ -17,8 +17,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 GENERATOR = ROOT / "scripts" / "build-hand-recipes.py"
-MACHINE = ROOT / "kubejs/data/planetaryfactory/recipe/assembling"
-HAND = ROOT / "kubejs/data/planetaryfactory/recipe/hand"
+MACHINE = ROOT / "kubejs/data/factoryworks/recipe/assembling"
+HAND = ROOT / "kubejs/data/factoryworks/recipe/hand"
 DSL = ROOT / "kubejs/server_scripts/factorio_tech_dsl.js"
 
 

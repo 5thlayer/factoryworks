@@ -136,7 +136,7 @@
         "",
         "The container is not the process: the Spout fills whatever container the item map names. THIS",
         "READ `a Mekanism portable tank` UNTIL ADR-0035 took the mod out, and the vacancy is filled by",
-        "ADR-0037: `planetaryfactory:barrel`, pack-registered, 50 mB and stacking to 10. Note that it",
+        "ADR-0037: `factoryworks:barrel`, pack-registered, 50 mB and stacking to 10. Note that it",
         "carries LESS per item than a vanilla bucket, not more -- 50 mB is Factorio's 50 units under the",
         "converter's 1:1 rule, and the barrel is meant to be bad at storage. Which container the `barrel`",
         "item maps to is still #87's item map, not this file's routing."
@@ -155,7 +155,7 @@
       "process": "pack:assembling",
       "adr_row": "Mining automation -- the pack (ADR-0043); Extraction (fluid) -- GregTech",
       "cross_owner": "Split by ADR-0043, and the shelf is now two owners rather than one. The two mining drills are the PACK's: GregTech owns no solid extraction on Terra, because `gtceu:lv_miner` deletes an ore block whole whatever amount it held and takes its drops from a loot table Terra's ore blocks deliberately leave empty (ADR-0041). `offshore-pump` and `pumpjack` are still GregTech's fluid rig, untouched. Both halves are still built in the pack's Assembling Machine, since GT's stock Assembler and its whole corpus are removed (ADR-0026) -- so owner and machine differ here for two different reasons at once.",
-      "note": "`offshore-pump` and `pumpjack` are the fluid rig and GregTech's. The two mining drills are the ore ladder and `planetaryfactory_core`'s (#192, #193, #194). Their own recipes are category `crafting`, so the rule in `_comment` gives them a hand surface as well -- the Personal Assembler plans the burner rig at rung 0, which it has to, since the rig is in the starting pocket and a player who loses it has no other route back.",
+      "note": "`offshore-pump` and `pumpjack` are the fluid rig and GregTech's. The two mining drills are the ore ladder and `factoryworks_core`'s (#192, #193, #194). Their own recipes are category `crafting`, so the rule in `_comment` gives them a hand surface as well -- the Personal Assembler plans the burner rig at rung 0, which it has to, since the rig is in the starting pocket and a player who loses it has no other route back.",
       "count": 4
     },
     "production/production-machine": {
@@ -320,7 +320,7 @@
     },
     "production/smelting-machine": {
       "owner": "pack",
-      "reason": "#91, as amended by ADR-0035 and settled by #155: the three furnace tiers are `planetaryfactory_core` blocks -- Stone and Steel fuel-burning, Electric on **EU** at 13 EU/t from a supply-area pole -- reading the pack's own count-bearing `planetaryfactory:smelting` and nothing else. Their build machine is `pack:assembling`, like every other machine.",
+      "reason": "#91, as amended by ADR-0035 and settled by #155: the three furnace tiers are `factoryworks_core` blocks -- Stone and Steel fuel-burning, Electric on **EU** at 13 EU/t from a supply-area pole -- reading the pack's own count-bearing `factoryworks:smelting` and nothing else. Their build machine is `pack:assembling`, like every other machine.",
       "process": "pack:assembling",
       "note": "The ladder is speed-and-fuel only and gates nothing (#91). Mekanism's Energized Smelter left with the mod (ADR-0035); #42's slot conflict dissolved with it. The pack type exists because vanilla's furnace consumes exactly one item and Factorio's steel is 5 plates -- see `intermediate-products/raw-material`.",
       "count": 3,
@@ -358,7 +358,7 @@
         "",
         "What is still open is narrow and is a furnace, not a ladder: WHICH mod's smelter runs these four.",
         "ADR-0017 has no smelting row -- `category-map.json` leaves `smelting.recipe_type` null for the same",
-        "reason -- so answering it ADDS a row to ADR-0017. That is #91, now answered: the three furnaces are `planetaryfactory_core` blocks, so the process is `pack:smelting` and `undecided:smelting` has retired. `steel-plate` is 5 plates to 1, which vanilla's furnace cannot express -- it waits on the pack furnace's own recipe type, not on the shelf."
+        "reason -- so answering it ADDS a row to ADR-0017. That is #91, now answered: the three furnaces are `factoryworks_core` blocks, so the process is `pack:smelting` and `undecided:smelting` has retired. `steel-plate` is 5 plates to 1, which vanilla's furnace cannot express -- it waits on the pack furnace's own recipe type, not on the shelf."
       ],
       "count": 7
     },
@@ -467,7 +467,7 @@
         "`stone-brick` is `smelting` at Factorio's exact 2 stone to 1 (ADR-0046). `stone` is",
         "`minecraft:cobblestone` -- the MINED rock -- and `stone-brick` is `minecraft:stone_bricks`,",
         "the building block. The 2:1 ratio has no vanilla furnace shape, so it rides the count-bearing",
-        "`planetaryfactory:smelting` type with `steel-plate` (#155) and is a reported skip until then.",
+        "`factoryworks:smelting` type with `steel-plate` (#155) and is a reported skip until then.",
         "#87 first shipped a vanilla 1:1 shape here as a fidelity loss; ADR-0046 reversed that.",
         "",
         "LANDFILL IS CUT. Terra is flat (ADR-0019) with no water to fill, so the mechanic has no",
@@ -536,7 +536,7 @@
     "combat/defensive-structure": {
       "owner": "not_emitted",
       "reason": "#26 dropped Military science -- its ingredients feed nothing downstream. THAT PREMISE IS FALSE since #118 (ADR-0055): the combat line has customers and Military science returns. The shelf stays out of the corpus's emit scope only until `item-map.json` carries its rows; the ledger verdict is `planned` and this field is the other axis.",
-      "note": "Contains `radar`, which is emitted on its own row: #368 builds it as `planetaryfactory:radar` (ADR-0079), crafted in the pack's Assembling Machine from Factorio's recipe. The rest of the shelf stays cut.",
+      "note": "Contains `radar`, which is emitted on its own row: #368 builds it as `factoryworks:radar` (ADR-0079), crafted in the pack's Assembling Machine from Factorio's recipe. The rest of the shelf stays cut.",
       "per_recipe": {
         "radar": "pack:assembling",
         "stone-wall": "not_emitted",

@@ -1,0 +1,264 @@
+package com.factoryworks.core.ore;
+
+import com.mojang.logging.LogUtils;
+import com.factoryworks.core.PFAttachments;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
+import com.factoryworks.core.radar.RadarChartData;
+import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+
+/**
+ * The draw: one break gesture takes one unit, and the block stands until the count reaches zero.
+ *
+ * <p>This is ADR-0041's mechanic in one place. Hands and machines take from the same number, which
+ * is what makes ADR-0039's "seconds per ore" literal rather than aspirational -- and it is why a
+ * player's break is <em>cancelled</em> rather than allowed to destroy a block holding a thousand
+ * units. The alternative, a hand break taking one unit and destroying the remainder, hands the
+ * player a way to vandalise a patch for one ore.
+ *
+ * <p><b>A depleted block becomes stone</b>, uniformly, including for stone ore. ADR-0019 flattened
+ * Terra and the fields lie flush with the topsoil; breaking to air would leave a pitted field that
+ * a drill's own footprint then has to sit on.
+ *
+ * <p>The entry retires on any change away from the ore block, not only on depletion -- TNT, a
+ * creative break, a structure overwriting it. Without that, a later ore block at the same position
+ * inherits a stranger's delta and arrives part-mined, which is invisible until a fresh patch pays
+ * out half of what it should.
+ */
+public final class OreMining {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+    /**
+     * The block {@link #draw} is replacing with stone. Its removal reaches {@link #onRemoved} after
+     * its delta has retired, where it would read as a full block lost (#371).
+     */
+    private static @Nullable BlockPos depleting;
+
+    private OreMining() {
+    }
+
+    /**
+     * A player breaking an ore block.
+     *
+     * <p>Cancelled for an ordinary break: either the block stands with one fewer unit in it, or it
+     * is replaced with stone here. Vanilla's own loot never runs -- the table is empty on purpose
+     * -- so {@link #drop} is the only payout, and it is one item. The block's whole amount is
+     * never in a drop, by any route.
+     *
+     * <p><b>Two breaks are not draws and are let through.</b> A creative break is a build gesture,
+     * not mining: cancelling it would leave a creative player unable to remove an ore block at all,
+     * clicking a patch forever and spawning an item each time. And a break with the wrong tool
+     * draws nothing, because vanilla's answer to mining ore bare-handed is no drop -- here that has
+     * to mean the unit stays in the ground rather than being paid out for free. The wrong-tool
+     * break is still cancelled, so the block survives the gesture with its amount intact; only the
+     * creative one actually removes it, and {@link OreBlock#onRemove} retires the delta behind it.
+     */
+    public static void onBreak(BreakBlockEvent event) {
+        if (!(event.getLevel() instanceof ServerLevel level)) {
+            return;
+        }
+        BlockState state = event.getState();
+        if (!(state.getBlock() instanceof OreBlock ore)) {
+            return;
+        }
+        Player player = event.getPlayer();
+        boolean creative = player != null && player.getAbilities().instabuild;
+        boolean correctTool = player == null || player.hasCorrectToolForDrops(state);
+        // Diagnostic: which of the three branches a gesture took. One line per ore break and
+        // nothing at all otherwise, because a patch that pays nothing is indistinguishable from a
+        // patch nobody hit, and the difference is not visible from outside this method.
+        LOGGER.info("ore break: {} at {}, creative={}, correctTool={}",
+                ore.resource().key(), event.getPos(), creative, correctTool);
+        if (creative) {
+            return;
+        }
+        event.setCanceled(true);
+        if (!correctTool) {
+            return;
+        }
+
+        BlockPos pos = event.getPos();
+        OreDelta.Draw draw = draw(level, ore, pos);
+        if (draw.paid() > 0) {
+            drop(level, pos, ore.resource());
+        }
+    }
+
+    /**
+     * Take one unit out of an ore block and leave the position showing what is left.
+     *
+     * <p><b>This is the whole extraction mechanism, and there is deliberately one of it.</b>
+     * ADR-0041 says hands and machines draw from the same number, and a second path that removed a
+     * block outright is exactly what disqualified {@code gtceu:lv_miner} from being Terra's drill:
+     * it calls {@code setBlock(pos, cobblestone)} and takes its drops from the block's loot table,
+     * so it deletes an ore block whole whatever amount it held. So {@link #onBreak} and the mining
+     * rig (#193) both come through here, and neither carries its own copy of the sequence.
+     *
+     * <p>What the caller decides is only where the unit <em>goes</em> -- a hand gets an
+     * {@code ItemEntity} on the ground, a rig banks it in its own buffer and pushes it onto the
+     * tile it faces -- which is why this method pays nothing out itself and hands back the draw.
+     *
+     * <p>Exhaustion retires the position's delta, because the replacement makes
+     * {@link OreBlock#onRemove} fire. An entry that outlived its block would be inherited by the
+     * next block placed there, which would arrive part-mined with nothing to show for it.
+     *
+     * <p>The sharing is structural rather than asserted: this class needs a {@code ServerLevel} and
+     * so cannot be reached from the mod's Minecraft-free test source set. What <em>is</em> asserted
+     * is the number both callers draw from -- {@code OreAmountTest} covers
+     * {@link OreDelta#draw(long, int)} directly, including that a hand and a drill take from it
+     * identically.
+     */
+    public static OreDelta.Draw draw(ServerLevel level, OreBlock ore, BlockPos pos) {
+        @Nullable OutfieldDisc disc = outfieldDiscOf(level, ore, pos);
+        int initial = initialAmount(level, ore, pos, disc);
+        OreDelta delta = deltaOf(level, pos);
+        OreDelta.Draw draw = delta.draw(pos.asLong(), initial);
+        level.getChunk(pos).markUnsaved();
+
+        // debug, not info: this was a hand break's line, one per player gesture. A running rig
+        // draws every few ticks and several rigs would make this the loudest thing in the log.
+        LOGGER.debug("ore draw: {} at {}, initial={}, paid={}, remaining={}, exhausted={}",
+                ore.resource().key(), pos, initial, draw.paid(), draw.remaining(), draw.exhausted());
+        if (disc != null && draw.paid() > 0) {
+            PatchLedgerData.get(level.getServer()).drew(PatchId.of(dimension(level), disc));
+        }
+        if (draw.exhausted()) {
+            // The hole argument is served by the stages and by the patch visibly shrinking; a
+            // crater in a field a drill has to stand on is not.
+            depleting = pos;
+            try {
+                level.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
+            } finally {
+                depleting = null;
+            }
+            if (disc != null) {
+                blockGone(level, disc, 0);
+            }
+        } else {
+            level.setBlockAndUpdate(pos, ore.stateFor(draw.remaining(), initial));
+        }
+        return draw;
+    }
+
+    /** What is left in the block at {@code pos}, for the HUD and for anything else that asks. */
+    public static int remaining(Level level, BlockPos pos, OreBlock ore) {
+        if (!(level instanceof ServerLevel server)) {
+            return 0;
+        }
+        int initial = initialAmount(server, ore, pos);
+        return deltaOf(server, pos).remaining(pos.asLong(), initial);
+    }
+
+    /**
+     * The block's initial amount: its starting field's quotient, else its outfield disc's, else
+     * {@code 0} for a block nothing generated.
+     */
+    public static int initialAmount(ServerLevel level, OreBlock ore, BlockPos pos) {
+        return initialAmount(level, ore, pos, outfieldDiscOf(level, ore, pos));
+    }
+
+    private static int initialAmount(ServerLevel level, OreBlock ore, BlockPos pos, @Nullable OutfieldDisc disc) {
+        return disc != null ? disc.amountPerBlock() : startingAmount(level, ore, pos);
+    }
+
+    private static int startingAmount(ServerLevel level, OreBlock ore, BlockPos pos) {
+        return level.getDataStorage().computeIfAbsent(OreFields.TYPE).startingAmount(ore.resource(), pos).orElse(0);
+    }
+
+    /** The outfield disc a block belongs to, or null for a starting field's block or one nothing generated. */
+    private static @Nullable OutfieldDisc outfieldDiscOf(ServerLevel level, OreBlock ore, BlockPos pos) {
+        OreFields fields = level.getDataStorage().computeIfAbsent(OreFields.TYPE);
+        if (fields.startingAmount(ore.resource(), pos).isPresent()) {
+            return null;
+        }
+        return outfieldDiscAt(level, ore.resource(), pos);
+    }
+
+    private static void blockGone(ServerLevel level, OutfieldDisc disc, int unitsLost) {
+        PatchId patch = PatchId.of(dimension(level), disc);
+        if (PatchLedgerData.get(level.getServer()).blockGone(patch, unitsLost, disc.blockCount())) {
+            RadarChartData.get(level.getServer()).ranOut(patch);
+        }
+    }
+
+    private static String dimension(ServerLevel level) {
+        return level.dimension().identifier().toString();
+    }
+
+    private static @Nullable OutfieldDisc outfieldDiscAt(ServerLevel level, OreResource resource, BlockPos pos) {
+        for (StructureStart start : level.structureManager().startsForStructure(ChunkPos.containing(pos), structure -> true)) {
+            for (StructurePiece piece : start.getPieces()) {
+                if (piece instanceof OutfieldDisc.Source source
+                        && source.disc().resource() == resource
+                        && piece.getBoundingBox().isInside(pos)
+                        && source.covers(pos.getX(), pos.getZ())) {
+                    return source.disc();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Any other route out of being an ore block, so a delta never outlives the block it counted.
+     *
+     * <p>Called from {@link OreBlock#affectNeighborsAfterRemoval}, the one seam every removal goes
+     * through -- depletion, an explosion, a creative break, a structure overwriting the position.
+     * An outfield block removed any way but depletion takes its undrawn units out of its patch's
+     * ledger with it; depletion is counted in {@link #draw} (#371).
+     */
+    public static void onRemoved(Level level, BlockPos pos, OreBlock ore) {
+        if (level instanceof ServerLevel server) {
+            OreDelta delta = deltaOf(server, pos);
+            if (!pos.equals(depleting)) {
+                OutfieldDisc disc = outfieldDiscOf(server, ore, pos);
+                if (disc != null) {
+                    blockGone(server, disc, delta.remaining(pos.asLong(), disc.amountPerBlock()));
+                }
+            }
+            delta.retire(pos.asLong());
+            server.getChunkAt(pos).markUnsaved();
+        }
+    }
+
+    private static OreDelta deltaOf(ServerLevel level, BlockPos pos) {
+        LevelChunk chunk = level.getChunkAt(pos);
+        return chunk.getData(PFAttachments.ORE_DELTA);
+    }
+
+    private static void drop(ServerLevel level, BlockPos pos, OreResource resource) {
+        Identifier id = Identifier.parse(resource.drop());
+        // Air, not a throw. The branch below is the whole handling for an id nothing registers,
+        // and 26.1 turning this lookup into an Optional is not a reason to turn a lost draw into
+        // a crash out of a block break.
+        ItemStack stack = new ItemStack(
+                BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(Items.AIR));
+        if (stack.isEmpty()) {
+            // An id nothing registered resolves to air, so this branch is how
+            // `gtceu:raw_iron` -- an item GregTech never registers, because vanilla covers iron --
+            // ate every iron draw without a word. The unit is already spent by here; say so.
+            LOGGER.error("{} pays out {}, which no mod registers: the draw is lost",
+                    resource.key(), resource.drop());
+            return;
+        }
+        level.addFreshEntity(new ItemEntity(
+                level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack));
+    }
+}

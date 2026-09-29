@@ -16,11 +16,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-RECIPES = ROOT / "kubejs/data/planetaryfactory/recipe"
-LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
+RECIPES = ROOT / "kubejs/data/factoryworks/recipe"
+LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
 NAMES = ROOT / "data/factorio/recipe_name.json"
 TYPES = ("assembling", "chemistry", "oil_processing")
-PREFIX = "recipe.planetaryfactory."
+PREFIX = "recipe.factoryworks."
 
 
 def main():

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "factoryworks:block/chemical_plant"
+    }
+  }
+}

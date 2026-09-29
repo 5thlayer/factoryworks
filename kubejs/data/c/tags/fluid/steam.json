@@ -2,6 +2,6 @@
   "__comment": "The fluid Oritech's Steam Engine accepts (#282, ADR-0062). Replaced, not joined: the pack's steam is the Boiler's, and Oritech's own steam would be a second steam nothing in the chain makes.",
   "replace": true,
   "values": [
-    "planetaryfactory:steam"
+    "factoryworks:steam"
   ]
 }

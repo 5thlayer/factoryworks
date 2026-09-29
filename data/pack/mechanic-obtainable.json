@@ -13,7 +13,7 @@
       "owner": "ADR-0081"
     },
     {
-      "id": "fluid:planetaryfactory:steam",
+      "id": "fluid:factoryworks:steam",
       "mechanic": "boiler",
       "why": "The Boiler turns water and fuel into steam (ADR-0048). No recipe makes steam.",
       "owner": "ADR-0048"

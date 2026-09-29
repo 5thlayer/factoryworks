@@ -6,7 +6,7 @@ Engineer's Pick feels to swing.
 
 ## Why this subtree needs a check of its own
 
-Every other recipe under `kubejs/data/planetaryfactory/recipe/` is generated and is checked against
+Every other recipe under `kubejs/data/factoryworks/recipe/` is generated and is checked against
 the thing that generated it — the Factorio corpus via
 [`recipe-conversion-check.md`](recipe-conversion-check.md). `recipe/assembling/pack/` is not. It is ADR-0031's single
 stated exception, taken by ADR-0039: the corpus authors every recipe it contains, Factorio has no
@@ -25,7 +25,7 @@ cannot hold.
 
 **Nothing may document that subtree in place.** KubeJS validates every file name under `kubejs/`
 and rejects an uppercase letter outright — `Invalid file name: Uppercase 'R' in
-kubejs/data/planetaryfactory/recipe/assembling/pack/README.md`, logged as an ERROR that stops a world from
+kubejs/data/factoryworks/recipe/assembling/pack/README.md`, logged as an ERROR that stops a world from
 loading. A README beside the recipes is not an option, which is why this page carries what would
 otherwise sit next to them.
 
@@ -69,8 +69,8 @@ resolves the layer like any other.
 That the Pick mines a given block class, that Oritech's pipes accept it as a wrench, and that the
 flat second an ore feels right in the hand (2.0s was tried first, and did not). The first two are a world load — ADR-0039's
 GameTests, which #165 names and which nobody has written; the harness they would run on exists as
-of #271 (`./gradlew :planetaryfactory_core:runGameTestServer`), so what is missing is the tests. The last is a human
+of #271 (`./gradlew :factoryworks_core:runGameTestServer`), so what is missing is the tests. The last is a human
 on delivery, in the Terra Slice run.
 
 The arithmetic half — that Factorio's stated seconds survive Minecraft's break-time formula — is
-`MiningSpeedTest`, under `./gradlew :planetaryfactory_core:test`, with no Minecraft in it.
+`MiningSpeedTest`, under `./gradlew :factoryworks_core:test`, with no Minecraft in it.

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Emit Terra's outfield structures and structure sets, one per resource (#320, ADR-0045).
 
-Crude oil's is one `planetaryfactory:oil_field` structure and set, placed the same way (ADR-0081).
+Crude oil's is one `factoryworks:oil_field` structure and set, placed the same way (ADR-0081).
 
-Each resource's patches are one `planetaryfactory:outfield_disc` structure, confined to Terra's
+Each resource's patches are one `factoryworks:outfield_disc` structure, confined to Terra's
 land biome tag, and one `random_spread` structure set. Both placement numbers are read out of
 `data/factorio/resource.json`, not chosen:
 
@@ -29,8 +29,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 CORPUS = REPO / "data" / "factorio" / "resource.json"
-WORLDGEN = REPO / "kubejs" / "data" / "planetaryfactory" / "worldgen"
-NAMESPACE = "planetaryfactory"
+WORLDGEN = REPO / "kubejs" / "data" / "factoryworks" / "worldgen"
+NAMESPACE = "factoryworks"
 CHUNK = 16
 
 # The pack's block name and the corpus's resource.

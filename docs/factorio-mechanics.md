@@ -117,7 +117,7 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 
 - **verdict**: `adapted`
 - **where**: Terra, Ignus, Sapros
-- **via**: `planetaryfactory_core`
+- **via**: `factoryworks_core`
 - **owner**: ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045, ADR-0060
 - **notice**: a patch is one block deep, flush with the terrain, its ragged edge drawn from
   Minecraft's noise, and an ore block shows its amount by stage and Jade line rather than a map layer.
@@ -238,7 +238,7 @@ Sub-rules:
 
 A Factorio tree is a **single entity**: one mining gesture removes it and yields its wood, with no
 trunk, no canopy and no second gesture. Minecraft's log-by-log felling is a mechanic the pack
-inherited rather than one Factorio has, so felling is re-authored in `planetaryfactory_core` — one
+inherited rather than one Factorio has, so felling is re-authored in `factoryworks_core` — one
 gesture at the base removes the connected tree and pays out at the base block.
 
 The **yield diverges from the corpus on purpose**. Factorio's tree gives a flat `wood ×4`; the pack
@@ -277,7 +277,7 @@ Sub-rules:
 
 - **verdict**: `adapted`
 - **where**: all bodies
-- **via**: `planetaryfactory_core`
+- **via**: `factoryworks_core`
 - **owner**: ADR-0043
 - **ticket**: #105; the pumpjack is #377's
 - **notice**: Terra's two rigs are pack-authored and GregTech owns no drill here. A rig works the
@@ -372,7 +372,7 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: all bodies
-- **via**: `oritech`, `planetaryfactory_core`
+- **via**: `oritech`, `factoryworks_core`
 - **owner**: ADR-0060 and ADR-0067 (Oritech's Fluid Pipe is `pipe` and its Portable Tank
   `storage-tank`), ADR-0037 (the barrel), ADR-0050 (the Offshore Pump)
 - **ticket**: #293 (the in-line pump); #106 (the barrel) closed
@@ -381,12 +381,12 @@ Sub-rules:
 
 - **Pipes and storage tanks** — `shipped`. Oritech's Fluid Pipe, laid by Stretch (#452) and taken up
   by Dismantle (#431), and its Portable Tank, both crafted from Factorio's recipes.
-- **The in-line pump** — `planned`, #293. `pump` is `planetaryfactory:pump`, `blocked_by` #293,
+- **The in-line pump** — `planned`, #293. `pump` is `factoryworks:pump`, `blocked_by` #293,
   since Oritech's pump is a well pump.
 
 - **Barrelling and unbarrelling** — `shipped` as `native_mechanic`; `subgroup-owner.json`'s barrel
   shelves emit nothing because the mechanic already works (#93). The container is
-  `planetaryfactory:barrel` (ADR-0037), pack-registered at Factorio's 50 units — 50 mB under the
+  `factoryworks:barrel` (ADR-0037), pack-registered at Factorio's 50 units — 50 mB under the
   converter's 1:1 rule — stacking to 10. **Factorio's fluid restriction is not ported**: the barrel
   accepts any fluid, because that list is a content budget for nine items and eighteen recipes, and
   the pack has one container and none.
@@ -417,7 +417,7 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: all bodies
-- **via**: `planetaryfactory_core` — the three tiers are pack blocks (#91, #149, #155)
+- **via**: `factoryworks_core` — the three tiers are pack blocks (#91, #149, #155)
 - **owner**: #91
 - **ticket**: #432 (the burner tiers' GameTests) and #271 (the Electric tier's); #155 closed
 
@@ -425,10 +425,10 @@ Sub-rules:
 
 - **Ore smelts one-to-one straight to plate, with no intermediate step** — `shipped`. Recorded in
   `subgroup-owner.json`; the pack does not get to add a hop. The converter emits `iron_plate` and
-  `copper_plate` as `planetaryfactory:smelting`.
+  `copper_plate` as `factoryworks:smelting`.
 - **A furnace recipe may consume more than one item** — `shipped`, #155. Vanilla's `SmeltingRecipe`
   holds an `Ingredient` with no count, so Factorio's `steel-plate` (5 plates to 1) has no vanilla
-  shape at all; the pack's three furnaces read a count-bearing `planetaryfactory:smelting` type
+  shape at all; the pack's three furnaces read a count-bearing `factoryworks:smelting` type
   and **only** that one. `stone-brick` (2 stone to 1) rides the same type — ADR-0046 collapsed
   #87's earlier split, which had `stone-brick` take a vanilla 1:1 shape instead. The vanilla type
   is not read alongside it: under ADR-0034's sweep it carries no live recipe, which also makes
@@ -463,11 +463,11 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: all bodies
-- **via**: `planetaryfactory_core`, `oritech`
+- **via**: `factoryworks_core`, `oritech`
 - **owner**: ADR-0026, ADR-0029, ADR-0056, ADR-0060, ADR-0075
 - **ticket**: #120, which tier 3's recipe waits on for `speed-module`. Closed: #87 converts the
   recipes; #326 registers
-  tier 1 as `planetaryfactory:assembling_machine` on Oritech's base, placed and inert (ADR-0071,
+  tier 1 as `factoryworks:assembling_machine` on Oritech's base, placed and inert (ADR-0071,
   ADR-0072); #327 gives it a Held recipe and #328 crafts it at `assembling-machine-1`'s speed 0.5
   and 75 kW, stalling without consuming; #331 emits the recipes naming it, and refuses it every
   `crafting-with-fluid` one, which tier 1's `crafting_categories` does not list; #295 adds tiers 2
@@ -531,7 +531,7 @@ Sub-rules:
   machine 2 will consume 155 kW (150 kW energy consumption + 5 kW drain)"*, about a thirtieth of the
   draw, and the engine default is `energy_usage / 30` since no crafting machine sets the field.
   GregTech has no equivalent -- an idle GT machine consumes nothing -- and reproducing it means real
-  idle draw built in `planetaryfactory_core` for a lesson (*don't over-build*) that ore depletion
+  idle draw built in `factoryworks_core` for a lesson (*don't over-build*) that ore depletion
   (ADR-0020) and Emission already teach more cheaply. Folding it into `EUt` is worse than either: it
   looks like fidelity and behaves as a flat tax. Called **idle draw** in pack prose, never "drain",
   which `CONTEXT.md` owns for an unrelated Sapros mechanic.
@@ -557,7 +557,7 @@ shortfall, then one commitment that pays the whole cost (ADR-0038). Two departur
 deliberate and recorded there: cancellation takes the plan as its unit, and a plan with a missing
 ingredient cannot be started.
 
-**The Assembler ships in `planetaryfactory_core`**, not as pack scripting: KubeJS cannot register a
+**The Assembler ships in `factoryworks_core`**, not as pack scripting: KubeJS cannot register a
 menu or a screen on 1.21.1 (#96, ADR-0015). It has no recipe type of its own — the hand-craftable set
 is a predicate over Assembling Machine 1's recipes (#88), so one emitted recipe serves both surfaces.
 
@@ -741,7 +741,7 @@ Sub-rules:
 
 - **verdict**: `excluded`
 - **where**: all bodies
-- **owner**: [#144](https://github.com/adamico/planetary-factory/issues/144)
+- **owner**: [#144](https://github.com/adamico/factoryworks/issues/144)
 
 Nothing in the pack copies a built shape. Building Gadgets 2 was the closest thing to a blueprint,
 covering the *shape* half and none of the *logistics* half, and it left the manifest with #144:
@@ -798,7 +798,7 @@ Sub-rules:
   circuit rather than a named channel on a coloured wire — there is no reading a whole belt's contents
   off one wire, and no arithmetic on a signal. Until #484 nothing reads or decides with it.
 - **where**: all bodies
-- **via**: `native_mechanic`, `planetaryfactory_core`
+- **via**: `native_mechanic`, `factoryworks_core`
 - **owner**: ADR-0095
 - **ticket**: #482, with #483 for the wire, #484 for the components and #485 for a red and green wire
 
@@ -837,7 +837,7 @@ Sub-rules:
 - **notice**: power reaches a machine in all-or-nothing ticks. A machine short of power stops
   rather than slowing, and nothing carries FE between areas except a wire between two poles.
 - **where**: all bodies
-- **via**: `planetaryfactory_core`, `oritech`
+- **via**: `factoryworks_core`, `oritech`
 - **owner**: ADR-0017 as amended by ADR-0035, ADR-0036, ADR-0060 and ADR-0062
 
 FE is the pack's only energy currency (ADR-0060), at **1 FE = 100 J**. **One** carrier moves it: the
@@ -893,8 +893,8 @@ Sub-rules:
 
 - **Boiler and steam engine as the first power** — `adapted`. **ADR-0062 (#282) makes it two steps
   again**: the pack's Boiler makes steam and the **pack's Steam Engine** burns it into FE, which a
-  pole pulls through the `planetaryfactory:generators` tag. **ADR-0077 (#352)** makes the engine
-  `planetaryfactory:steam_engine`, a pack block on Oritech's engine entity, placed from one item as
+  pole pulls through the `factoryworks:generators` tag. **ADR-0077 (#352)** makes the engine
+  `factoryworks:steam_engine`, a pack block on Oritech's engine entity, placed from one item as
   its whole 2x1x2 footprint and broken as one, like the Assembling Machine; Oritech's own engine is
   swept. A mixin calibrates it to Factorio — 30 mB/s and 450 FE/t per engine at the efficiency
   curve's peak, no water returned — and keeps Oritech's chaining and fill-driven speed. The history
@@ -908,7 +908,7 @@ Sub-rules:
   nothing — it is the prime mover.)* **ADR-0048 re-cut both of the first two steps.** The first was
   #37's LP Solid Boiler; the boiler is now pack-authored, one tier, under ADR-0047's burner model —
   the third customer of the buffer the Furnace and the Burner Mining Drill already share, and #224
-  shipped it: `planetaryfactory:boiler`, fuel and water in, low-temperature steam out at Factorio's
+  shipped it: `factoryworks:boiler`, fuel and water in, low-temperature steam out at Factorio's
   own 60 mB/s. The second
   was *"a Create Steam Engine turns that steam into rotation"*, and it **was never implementable**:
   Create has no steam fluid at all. Its boiler is a Fluid Tank multiblock holding **water**, heated
@@ -920,7 +920,7 @@ Sub-rules:
   Factorio's 5 MJ and 300 kW.
 - **Solar panels** — `adapted`. `solar-panel` is Oritech's Big Solar Panel (ADR-0062, ADR-0067),
   crafted from Factorio's recipe and producing at Oritech's own rate, and it never runs: Oritech
-  assembles it from machine cores the pack does not give. #508 makes it `planetaryfactory:solar_panel`,
+  assembles it from machine cores the pack does not give. #508 makes it `factoryworks:solar_panel`,
   placed as one footprint, at Factorio's 60 kW on Factorio's day curve with a one-tick buffer and no
   weather; per-body output is #7. *Before ADR-0060 both were Power Grid's
   (#148).* It is also
@@ -930,12 +930,12 @@ Sub-rules:
   fluids rather than one**. ADR-0048 registers low-temperature steam, which the Boiler makes and the Steam Engine eats,
   and high-temperature steam, which ADR-0033's reactor emits and only the Steam Turbine takes — two
   registry entries rather than one fluid carrying a temperature, because Factorio has exactly two
-  temperatures with exactly two consumers. Both are `planetaryfactory:`.
+  temperatures with exactly two consumers. Both are `factoryworks:`.
 - **The Steam Turbine, on superheated steam** — `planned`, the pack's, and **the pack's only FE-side
   generator**. *Moved here from [Nuclear fission](#nuclear-fission) by #104*: ADR-0033 names the row
   **for the fluid, not for fission**, and the Turbine has two producers on two bodies — Terra's
   Nuclear Reactor and Ignus's acid neutralisation. Filing a cross-body generator under Terra's
-  fission chapter hid what it is. Superheated steam is a **pack-owned fluid** — `planetaryfactory:`,
+  fission chapter hid what it is. Superheated steam is a **pack-owned fluid** — `factoryworks:`,
   not GregTech's, since `gtceu:steam` is not inert and GregTech's own steam machines accept it,
   which would re-open the power layer #37 removed (ADR-0048; this corrects an earlier "its own GT
   material") — and **only the Turbine accepts it**; ordinary steam keeps the four-step chain above, which the Turbine will not take, and
@@ -1048,7 +1048,7 @@ Sub-rules:
   nests destroyed — the third being why clearing the map is not a permanent win.
 - **Enemies destroy structures** — `adapted`. Factorio's biters eat walls and turrets; Minecraft
   mobs grief nothing, so this is ours to build, and it is bounded to the
-  `planetaryfactory:destructible` tag rather than to anything in the way.
+  `factoryworks:destructible` tag rather than to anything in the way.
 - **Gleba's pentapods** — `unargued`, no verdict. `docs/planets.md` marks them TBD.
 
 ### Wildlife and natural mob spawning
@@ -1093,7 +1093,7 @@ Sub-rules:
 - **Personal firearms** — `planned`. Pistol and SMG, sharing the turrets' ammo. A player expected to
   go and clear a nest needs something to clear it with.
 - **Walls** — `planned`. Factorio's wall and gate, and the designated member of the
-  `planetaryfactory:destructible` tag — without one, every player picks a different block and the
+  `factoryworks:destructible` tag — without one, every player picks a different block and the
   mechanic has no shape.
 - **Military science returns** — `planned`. #26's pruning is reversed on its own stated reason; the
   Factorio tech tree gates `military-2/3/4`, the laser/rocket turrets, `railgun`, `uranium-ammo`,
@@ -1208,7 +1208,7 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **via**: `planetaryfactory_core`
+- **via**: `factoryworks_core`
 - **owner**: #378, which authors the silo rather than waiting on Oritech: Space Age
 - **ticket**: #378, on #25's map of Terra's flow to the first rocket launch
 
@@ -1284,7 +1284,7 @@ undecided mechanic.
 Factorio's character carries four distances: `build_distance` 10, `reach_distance` 10,
 `reach_resource_distance` 2.7 and `enter_vehicle_distance` 3. The pack keeps one reach of 16 for
 placing any block, using any block and breaking a **Building** -- a block whose Factorio item has a
-`place_result`, or a rail planner's `rails`, generated into the `planetaryfactory:buildings` block
+`place_result`, or a rail planner's `rails`, generated into the `factoryworks:buildings` block
 tag. Anything else, ore, trees and terrain included, breaks only within 4.5, in every game mode.
 Entity reach stays at vanilla's 3, which is Factorio's `enter_vehicle_distance`, and raising it would
 also raise melee reach against the biters [Enemies and evolution](#enemies-and-evolution) is balanced
@@ -1334,7 +1334,7 @@ Sub-rules:
 `production/tool` is `undecided` on one recipe, `repair-pack`, and the reason this row carried —
 "nothing on Terra takes damage the way a Factorio entity does; with no biters attacking buildings,
 the whole repair loop has nothing to repair" — **was falsified by ADR-0055**. Enemies now damage
-blocks in the `planetaryfactory:destructible` tag, so there is something to repair.
+blocks in the `factoryworks:destructible` tag, so there is something to repair.
 
 `blocked` rather than `planned`: the premise is gone but the argument has not been had. It is also
 load-bearing in the other direction — ADR-0055 bounded destruction to a tag partly because there is
@@ -1351,7 +1351,7 @@ two.
   rather than kept live, so the map shows it as first charted.
 - **ticket**: #116, confirmed on a player's map; the art is #367
 
-Factorio's Radar (ADR-0045, ADR-0079): a 3x3x3 `planetaryfactory:radar` drawing 150 FE/t that
+Factorio's Radar (ADR-0045, ADR-0079): a 3x3x3 `factoryworks:radar` drawing 150 FE/t that
 charts map at range for its owner's team. It detects nothing hidden, since ore lies on the surface.
 #368 built the machine and the team's chart on the server, and #369 sends the chart to each member's
 FTB Chunks map, late joiners included. Since #370 each outfield patch whose centre is in the chart,
@@ -1407,7 +1407,7 @@ Sub-rules:
 
 - **verdict**: `planned`
 - **where**: all bodies
-- **via**: `planetaryfactory_core` (quick transfer), Mouse Tweaks (in-GUI), `native_mechanic` (pipette)
+- **via**: `factoryworks_core` (quick transfer), Mouse Tweaks (in-GUI), `native_mechanic` (pipette)
 - **owner**: #208
 - **ticket**: #208
 
@@ -1421,7 +1421,7 @@ Sub-rules:
 
 - **Fast entity transfer and fast entity split** — `planned`, #208. The pack calls these **quick
   transfer** and **quick split** (`CONTEXT.md`); Factorio's own names appear here and nowhere else,
-  per ADR-0028. Two `KeyMapping`s in `planetaryfactory_core`, defaulting to `CTRL` + left and right
+  per ADR-0028. Two `KeyMapping`s in `factoryworks_core`, defaulting to `CTRL` + left and right
   mouse and declared in Controls so a conflict with Carry On or Building Gadgets is the player's to
   resolve. Magnitude is Factorio's verbatim — the held stack in, everything the target will give up
   out, halved for the split. The target set is every GregTech machine and every pack-authored block
@@ -1475,7 +1475,7 @@ Sub-rules:
 
 - **verdict**: `blocked`
 - **where**: pack-wide
-- **candidates**: Oritech: Space Age, or `planetaryfactory_core` (#340)
+- **candidates**: Oritech: Space Age, or `factoryworks_core` (#340)
 - **owner**: ADR-0060, ADR-0006, `docs/gdd.md` §2
 - **ticket**: #340 (the wait); #112, #54 closed
 
@@ -1502,7 +1502,7 @@ Sub-rules:
 
 - **verdict**: `blocked`
 - **where**: Terra Orbit, and every body's orbit
-- **candidates**: `planetaryfactory_core`. Oritech: Space Age has no stations (#340)
+- **candidates**: `factoryworks_core`. Oritech: Space Age has no stations (#340)
 - **owner**: ADR-0006
 - **ticket**: #340
 
@@ -1546,7 +1546,7 @@ replace them, since it reproduces neither the chunk loop nor reprocessing.
 
 - **verdict**: `blocked`
 - **where**: pack-wide
-- **candidates**: Oritech: Space Age, or `planetaryfactory_core` (#340)
+- **candidates**: Oritech: Space Age, or `factoryworks_core` (#340)
 - **owner**: `docs/gdd.md` §4
 - **ticket**: #340 (the wait on interplanetary travel); #111 closed
 
@@ -1596,7 +1596,7 @@ mechanics and its absence has never been argued.
 
 - **verdict**: `planned`
 - **where**: Electro
-- **candidates**: `planetaryfactory_core`, as a recycler on an Oritech machine body (ADR-0060)
+- **candidates**: `factoryworks_core`, as a recycler on an Oritech machine body (ADR-0060)
 - **owner**: `docs/gdd.md` §2, `docs/planets.md`
 - **ticket**: #13
 

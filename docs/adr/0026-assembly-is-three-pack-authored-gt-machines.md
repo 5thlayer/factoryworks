@@ -30,10 +30,10 @@ and committed to the repo. The KubeJS `GTRecipeBuilder` is not used.**
 
 | | |
 | --- | --- |
-| Ids | `planetaryfactory:assembling_machine_1` / `_2` / `_3` |
+| Ids | `factoryworks:assembling_machine_1` / `_2` / `_3` |
 | Display | "Assembling Machine 1", "Assembling Machine 2", "Assembling Machine 3" |
 | Registration | `KJSTieredMachineBuilder.tiers([LV, MV, HV])` — one builder call, one recipe type |
-| Recipe type | `planetaryfactory:assembling`, registered via `GTRecipeTypeBuilder` |
+| Recipe type | `factoryworks:assembling`, registered via `GTRecipeTypeBuilder` |
 | Differences between tiers | **Speed and tint. Nothing else.** |
 
 **The names are Factorio's on both layers, and this does not lean on ADR-0004.** That ADR governs
@@ -124,19 +124,19 @@ choosing it.
 Building the row turned up two facts about the API this ADR names, both measured in game rather
 than reasoned about.
 
-**The ids cannot be `planetaryfactory:`.** `KJSTieredMachineBuilder` registers through GregTech's
+**The ids cannot be `factoryworks:`.** `KJSTieredMachineBuilder` registers through GregTech's
 own registrate, which owns the namespace and prefixes each tier's short name, so
 `event.create('assembling_machine').tiers(LV, MV, HV)` produces
 **`gtceu:lv_assembling_machine`**, `gtceu:mv_assembling_machine` and
 `gtceu:hv_assembling_machine`. A namespace passed into `simplebelts` is discarded. `GTRecipeTypes`
 behaves the same way, so the recipe type is **`gtceu:assembling`**, not
-`planetaryfactory:assembling`.
+`factoryworks:assembling`.
 
 The machine table above keeps its display names, because that is what the argument was about: *a
 Factorio player has to recognise the block on sight*. "Assembling Machine 1/2/3" is authored in
 `kubejs/assets/gtceu/lang/en_us.json` and is what the player reads. The ids are internal, and the
 only way to move them into the pack's namespace is to register the machines from
-`planetaryfactory_core` with a registrate of its own — a larger change than this ADR's reasoning
+`factoryworks_core` with a registrate of its own — a larger change than this ADR's reasoning
 asks for, and one that would spend the "no Java" property the row was chosen for.
 
 **The recipe type is created at script-evaluation time, not in a registry event.** KubeJS fires
@@ -169,7 +169,7 @@ built inside that class's own `EDITABLE_UI_CREATOR`, which wraps the recipe type
 outer group padded to 78px to make room for it — the slot is not read off the recipe type, so
 nothing at recipe-type level can decline it.
 
-So the row does get a `MetaMachine` subclass: `SimpleMachine` in `planetaryfactory_core` (written here as
+So the row does get a `MetaMachine` subclass: `SimpleMachine` in `factoryworks_core` (written here as
 `AssemblingMachine` and renamed when ADR-0025's Chemical Plant took the same chassis),
 selected through `KJSTieredMachineBuilder.machine(...)`. **This is not the unbounded work this ADR
 declined.** What was rejected was chasing GT's internals for cover buttons; what is written is one
@@ -222,7 +222,7 @@ Cover buttons are unchanged and still dead chrome, for the reason this ADR alrea
   rocketless: in stock GT the Drilling Rig controllers and most machine blocks are themselves
   Assembler recipes, so ADR-0017's extraction ladder goes with it. Accepted because the pack is
   pre-release and rocket crafting is being reworked regardless.
-- **`recipes.js`'s shaped crafts for `gtceu:lv_machine_hull` and `planetaryfactory:electronic_circuit`
+- **`recipes.js`'s shaped crafts for `gtceu:lv_machine_hull` and `factoryworks:electronic_circuit`
   survive** — they become Assembling Machine 1's ingredients.
 - **GregTech's stock assembler corpus is not addressed here.** It is removed wholesale in the wipe
   that follows, not ported: nothing in it survives the re-authoring.

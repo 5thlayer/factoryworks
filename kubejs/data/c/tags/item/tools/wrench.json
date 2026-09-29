@@ -2,7 +2,7 @@
   "__comment": "Oritech's pipes are the one reader (GenericPipeBlock.useItemOn): a plain click with the Pick toggles a pipe's connection when no Dismantle start is stored. The Pick's other verbs are not carried here -- breaking rides isCorrectToolForDrops, and a Dismantle is groundworks:dismantles (ADR-0039, #300, #448).",
   "replace": false,
   "values": [
-    "planetaryfactory:engineers_iron_pick",
-    "planetaryfactory:engineers_steel_pick"
+    "factoryworks:engineers_iron_pick",
+    "factoryworks:engineers_steel_pick"
   ]
 }

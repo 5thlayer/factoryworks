@@ -28,12 +28,12 @@ import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
+MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 RECIPE = MOD / "recipes/SmeltingRecipe.java"
 REGISTRY = MOD / "recipes/PFRecipes.java"
 CATEGORY_MAP = ROOT / "data/pack/category-map.json"
 
-PACK_SMELTING = "planetaryfactory:smelting"
+PACK_SMELTING = "factoryworks:smelting"
 
 # Reading a recipe off vanilla's type, as opposed to using it to ask an item its burn time --
 # `ItemStack.getBurnTime(RecipeType.SMELTING)` is fuel bookkeeping and is fine.
@@ -72,7 +72,7 @@ class SmeltingType(unittest.TestCase):
         # 26.1 binds an item's data components during the same datapack load that reads the
         # recipes, and `ItemStack.CODEC` refuses an item whose components are not bound yet:
         #
-        #     Couldn't parse data file 'planetaryfactory:stone_brick':
+        #     Couldn't parse data file 'factoryworks:stone_brick':
         #       Item minecraft:stone_bricks does not have components yet
         #
         # One ERROR line at load and the recipe is then absent from the manager -- the same
@@ -105,7 +105,7 @@ class SmeltingType(unittest.TestCase):
         registry = REGISTRY.read_text(encoding="utf-8")
         path = re.search(r'SMELTING\s*=\s*"([a-z0-9_]+)"', registry)
         self.assertIsNotNone(path, "PFRecipes no longer names the type's registry path")
-        self.assertEqual(PACK_SMELTING, f"planetaryfactory:{path.group(1)}")
+        self.assertEqual(PACK_SMELTING, f"factoryworks:{path.group(1)}")
 
         machines = json.loads(CATEGORY_MAP.read_text(encoding="utf-8"))["machines"]
         self.assertEqual(PACK_SMELTING, machines["smelting"]["recipe_type"])

@@ -35,7 +35,7 @@ high-temperature steam, which ADR-0033's reactor emits and only the Steam Turbin
 rather than one fluid carrying a temperature, because Factorio has exactly two temperatures with
 exactly two consumers, and a registry entry expresses that without inventing per-bucket state.
 
-They are `planetaryfactory:`, not GregTech's. This **corrects the ledger's claim that superheated
+They are `factoryworks:`, not GregTech's. This **corrects the ledger's claim that superheated
 steam is "its own GT material"**: `gtceu:steam` is not inert — GregTech's own steam machines accept
 it, and admitting it re-opens the power layer `#37` removed. The pack's Steam Turbine is already
 pack-authored (ADR-0033); a pack machine is authored against a pack fluid.

@@ -37,13 +37,13 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-RIG_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/mining/rig/RigTier.java"
-DRILLS = ROOT / "mod/src/main/resources/planetaryfactory_core/mining/drills.json"
+RIG_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/rig/RigTier.java"
+DRILLS = ROOT / "mod/src/main/resources/factoryworks_core/mining/drills.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
-FUEL = ROOT / "kubejs/data/planetaryfactory/fuel"
+FUEL = ROOT / "kubejs/data/factoryworks/fuel"
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 GENERATOR = ROOT / "scripts/build-rig-assets.py"
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
 
 # `BURNER("burner-mining-drill", 2),` -- the enum constant, the corpus key it reads its ground size
 # from, and the one number here the corpus cannot supply: how many blocks tall it stands.
@@ -60,7 +60,7 @@ def registered_tiers():
 def check_item_map(tiers, item_map, failures):
     """A decided rig must name the block the mod registers.
 
-    `tests/factorio/test_recipe_convert.py` already asserts that a `planetaryfactory:` target is
+    `tests/factorio/test_recipe_convert.py` already asserts that a `factoryworks:` target is
     registered somewhere; what it cannot see is whether *this* rig's row names *this* rig. A row
     pointing at the other rung would resolve, emit a recipe and hand the player the wrong machine.
     An `undecided` row is left alone -- the electric rig is #194's to decide.
@@ -75,7 +75,7 @@ def check_item_map(tiers, item_map, failures):
             continue
         if row.get("status") == "undecided":
             continue
-        expected = f"planetaryfactory:{tier}_mining_drill"
+        expected = f"factoryworks:{tier}_mining_drill"
         if row.get("target") != expected:
             failures.append(
                 f"{factorio_name} maps onto {row.get('target')!r}, but {tier} registers "
@@ -113,14 +113,14 @@ def check_fuel_reaches_a_burner(rows, failures):
             )
 
 
-JADE_PLUGIN = ROOT / "mod/src/main/java/com/planetaryfactory/core/compat/RigJadePlugin.java"
+JADE_PLUGIN = ROOT / "mod/src/main/java/com/factoryworks/core/compat/RigJadePlugin.java"
 
-# `Component.translatable("tooltip.planetaryfactory.rig.jade.no_ore"` -- every key the HUD plugin
+# `Component.translatable("tooltip.factoryworks.rig.jade.no_ore"` -- every key the HUD plugin
 # asks for, read out of the plugin rather than typed here, so a line added to the tooltip without
 # its string fails this check instead of shipping a raw key onto the crosshair. Deliberately any
-# `planetaryfactory` key and not just the `rig.jade.` ones: a line that reuses the rig screen's own
+# `factoryworks` key and not just the `rig.jade.` ones: a line that reuses the rig screen's own
 # strings is exactly as unchecked, and anchoring on the infix would wave it through.
-JADE_KEY_RE = re.compile(r'translatable\(\s*"([a-z_.]*planetaryfactory[a-z_.]+)"')
+JADE_KEY_RE = re.compile(r'translatable\(\s*"([a-z_.]*factoryworks[a-z_.]+)"')
 
 
 def check_jade_lang(lang, failures):
@@ -143,9 +143,9 @@ def check_jade_lang(lang, failures):
 
 def check_screen_lang(lang, failures):
     """The rig screen's own strings. A missing one ships a raw translation key on the hover."""
-    for key in ("tooltip.planetaryfactory.rig.fuel",
-                "tooltip.planetaryfactory.rig.fuel.seconds",
-                "tooltip.planetaryfactory.rig.fuel.out"):
+    for key in ("tooltip.factoryworks.rig.fuel",
+                "tooltip.factoryworks.rig.fuel.seconds",
+                "tooltip.factoryworks.rig.fuel.out"):
         if not lang.get(key):
             failures.append(f"{key} has no lang entry -- the fuel hover would show its raw key")
 

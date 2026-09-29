@@ -1,0 +1,26 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 5
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 5
+    },
+    {
+      "ingredient": "oritech:fluid_pipe",
+      "count": 10
+    }
+  ],
+  "result": {
+    "id": "factoryworks:pumpjack",
+    "count": 1
+  },
+  "time": 100
+}

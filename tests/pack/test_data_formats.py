@@ -33,7 +33,7 @@ WHAT IT CHECKS.
     error either: it is simply never walked, and every file under it is absent.
 
 WHAT IT IS NOT. `kubejs/parked/` is excluded: nothing loads it. The `gtceu:` recipe subtrees it
-used to defer were deleted when #279 re-targeted the converter onto `planetaryfactory:assembling`,
+used to defer were deleted when #279 re-targeted the converter onto `factoryworks:assembling`,
 and a `gtceu:` recipe appearing again fails here like any other stale shape.
 
 It cannot tell whether an id RESOLVES; that is a running server, and the cheap version of it -- a
@@ -69,13 +69,13 @@ DEFERRED_ITEM_MODELS = {
 # model beside it rather than a plain model. `scripts/build-item-definitions.py` holds the same
 # table and writes the shape; this asserts it.
 GECKOLIB_ITEMS = {
-    "planetaryfactory:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
-    "planetaryfactory:assembling_machine_2": "an OritechGeoItem drawing Oritech's assembler model (#295)",
-    "planetaryfactory:assembling_machine_3": "an OritechGeoItem drawing Oritech's assembler model (#295)",
-    "planetaryfactory:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
-    "planetaryfactory:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
-    "planetaryfactory:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",
-    "planetaryfactory:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
+    "factoryworks:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
+    "factoryworks:assembling_machine_2": "an OritechGeoItem drawing Oritech's assembler model (#295)",
+    "factoryworks:assembling_machine_3": "an OritechGeoItem drawing Oritech's assembler model (#295)",
+    "factoryworks:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
+    "factoryworks:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
+    "factoryworks:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",
+    "factoryworks:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
 }
 
 # Where an ingredient can appear in a recipe the pack emits. A value under one of these keys is a
@@ -183,7 +183,7 @@ def ingredient_strings(value, where, key):
         return
     if isinstance(value, dict) and "ingredient" in value:
         # NeoForge's sized ingredient, `{"ingredient": ..., "count"|"amount": n}` -- the list
-        # entries of `planetaryfactory:assembling` (#279). The count is beside the ingredient.
+        # entries of `factoryworks:assembling` (#279). The count is beside the ingredient.
         ingredient_strings(value["ingredient"], where, key)
         return
     if isinstance(value, dict) and "neoforge:ingredient_type" in value:

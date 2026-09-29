@@ -12,8 +12,8 @@ both have an opinion about the same recipe.
 
 The default in force until now was the author's, and it was never decided: it accreted. Two closed
 tickets ruled the circuit tiers' ingredient lists "recipe iteration, the dev's own"
-([`#55`](https://github.com/adamico/planetary-factory/issues/55),
-[`#62`](https://github.com/adamico/planetary-factory/issues/62)), and both did so while assuming the
+([`#55`](https://github.com/adamico/factoryworks/issues/55),
+[`#62`](https://github.com/adamico/factoryworks/issues/62)), and both did so while assuming the
 circuits had to be re-based onto mod items — Create's Electron Tube, Mekanism's Control Circuit —
 each of which is redstone-bound, and redstone is on ADR-0021's cut list. The premise was a dead end,
 not a preference, and `#125` found the corpus's own ladder closes cleanly on Terra's four ores plus
@@ -55,7 +55,7 @@ win over the extracted data.
   their own tags — that ruling holds, and `#62`'s removal of GregTech's and Mekanism's competing
   circuit lines holds with it. What does not hold is their ingredient lists being the author's:
   they are the corpus's. Neither ticket knows this;
-  [`#132`](https://github.com/adamico/planetary-factory/issues/132) is the ticket for that gap.
+  [`#132`](https://github.com/adamico/factoryworks/issues/132) is the ticket for that gap.
 - **`copper-cable` maps onto `powergrid:wire`** rather than becoming a fourth
   first-party item. The item map's rule, stated in its header: borrow an existing item unless the
   row sits on a rung boundary or a mod's competing line would give a parallel escape — then author

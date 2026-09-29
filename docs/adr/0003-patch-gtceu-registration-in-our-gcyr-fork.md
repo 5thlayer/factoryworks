@@ -82,7 +82,7 @@ after)`.
 Only code inside GregTech's material window can add a material, and only a mod can be there. So
 the fork offers a file format instead: `data/<namespace>/gt_materials/<name>.json`, read during
 the window, from any loaded mod's files and from the pack's `kubejs/data` directory. The fork
-learns the format and nothing else — it does not know that `planetaryfactory:scrap` exists, the
+learns the format and nothing else — it does not know that `factoryworks:scrap` exists, the
 same way `GTRegistriesMixin` above does not know which registrations it is rescuing. This is the
 move the ore vein weights already made, shipping as datapack overrides because
 `GregTechServerEvents.oreVeins` proved unusable on 7.0.2.
@@ -128,8 +128,8 @@ GregTech class, which is what makes them testable; the fork gained a JUnit sourc
 its first. Applying a spec to a `Material.Builder` is still only exercised by launching.
 
 **Outcome: verified.** The pack launches clean. `Found 1 data-driven GregTech material(s) in
-namespace(s) [planetaryfactory]` during construction, `Registered data-driven GregTech material
-planetaryfactory:scrap` in the material window, no `Skipping material`, and KubeJS back to 4/4
+namespace(s) [factoryworks]` during construction, `Registered data-driven GregTech material
+factoryworks:scrap` in the material window, no `Skipping material`, and KubeJS back to 4/4
 startup scripts with 0 errors.
 
 The item generation is the part worth recording, because it is what the design was uncertain

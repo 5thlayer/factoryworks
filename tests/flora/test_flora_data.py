@@ -19,16 +19,16 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-DATA = ROOT / "kubejs/data/planetaryfactory"
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+DATA = ROOT / "kubejs/data/factoryworks"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
 # Sapros's worldgen is parked with every body but Terra (ADR-0060) and still checked there, so it
 # cannot rot while it waits; the live tree wins once #23 brings it back.
-WORLDGEN = next(d for d in (DATA / "worldgen", ROOT / "kubejs/parked/data/planetaryfactory/worldgen")
+WORLDGEN = next(d for d in (DATA / "worldgen", ROOT / "kubejs/parked/data/factoryworks/worldgen")
                 if (d / "configured_feature/yumako_tree.json").is_file())
 
 # Ids the mod registers, per ADR-0015's ownership rule. Parsed from the Java rather than
 # hardcoded, so moving one across the boundary fails here instead of at startup.
-MOD_SOURCE = ROOT / "mod/src/main/java/com/planetaryfactory/core/PFBlocks.java"
+MOD_SOURCE = ROOT / "mod/src/main/java/com/factoryworks/core/PFBlocks.java"
 KUBEJS_BLOCKS = ROOT / "kubejs/startup_scripts/blocks.js"
 KUBEJS_ITEMS = ROOT / "kubejs/startup_scripts/items.js"
 
@@ -42,12 +42,12 @@ def check(condition, message):
 
 
 def mod_block_ids():
-    return {"planetaryfactory:" + m
+    return {"factoryworks:" + m
             for m in re.findall(r'sapling\("([a-z_]+)"', MOD_SOURCE.read_text())}
 
 
 def kubejs_ids(path):
-    ids = set(re.findall(r"event\.create\('(planetaryfactory:[a-z_]+)'", path.read_text()))
+    ids = set(re.findall(r"event\.create\('(factoryworks:[a-z_]+)'", path.read_text()))
     # A pattern that stops matching is the one failure this helper cannot report by comparing
     # sets: an empty set agrees with everything. a9a965d's find-and-replace rewrote this regex
     # to `event.simplebelts(` and the check went on passing, so the emptiness is asserted here.
@@ -89,39 +89,39 @@ def main():
     # A block item exists for every block, so a loot table may name either.
     registered = blocks | items
 
-    check(mod_block_ids() == {"planetaryfactory:yumako_sapling",
-                              "planetaryfactory:jellystem_sapling"},
+    check(mod_block_ids() == {"factoryworks:yumako_sapling",
+                              "factoryworks:jellystem_sapling"},
           "the mod registers exactly the two saplings")
     check(not (mod_block_ids() & kubejs_ids(KUBEJS_BLOCKS)),
           "no id is registered by both the mod and KubeJS")
-    check({"planetaryfactory:yumako_fresh", "planetaryfactory:jellynut_fresh"} <= items,
+    check({"factoryworks:yumako_fresh", "factoryworks:jellynut_fresh"} <= items,
           "the two harvested materials are registered, as Fresh")
-    check({"planetaryfactory:iron_bacteria_fresh",
-           "planetaryfactory:copper_bacteria_fresh"} <= items,
+    check({"factoryworks:iron_bacteria_fresh",
+           "factoryworks:copper_bacteria_fresh"} <= items,
           "both ore bacteria are registered, as Fresh")
     check(all(not i.endswith(("_ripe", "_stale", "_spoiling")) for i in items),
           "no Decay stage beyond Fresh ships here")
     # Jelly is what a Biochamber makes from Jellynut, and it belongs to `Puzzle: Sapros`.
     # Registering it here under any name would settle a design decision this ticket does not own.
-    check(not any(re.match(r"planetaryfactory:jelly(_|$)", i) for i in registered),
+    check(not any(re.match(r"factoryworks:jelly(_|$)", i) for i in registered),
           "no id registered here is called Jelly")
 
     for tree in ("yumako", "jellystem"):
         feature = WORLDGEN / f"configured_feature/{tree}_tree.json"
         check(feature.is_file(), f"{tree} has a configured feature")
         referenced = {s for s in json_strings(json.loads(feature.read_text()))
-                      if s.startswith("planetaryfactory:")}
+                      if s.startswith("factoryworks:")}
         unknown = referenced - blocks
         check(not unknown, f"{tree}'s feature names only registered blocks (stray: {unknown})")
 
         placed = WORLDGEN / f"placed_feature/{tree}_tree.json"
         check(placed.is_file(), f"{tree} has a placed feature")
-        check(json.loads(placed.read_text())["feature"] == f"planetaryfactory:{tree}_tree",
+        check(json.loads(placed.read_text())["feature"] == f"factoryworks:{tree}_tree",
               f"{tree}'s placed feature points at its configured feature")
 
     # The grower reaches its tree by resource key, and a typo there fails silently: the
     # sapling simply never grows.
-    grower = (ROOT / "mod/src/main/java/com/planetaryfactory/core/PFTrees.java").read_text()
+    grower = (ROOT / "mod/src/main/java/com/factoryworks/core/PFTrees.java").read_text()
     check('feature(name + "_tree")' in grower and 'grower("yumako")' in grower
           and 'grower("jellystem")' in grower,
           "each grower names its tree's configured feature")
@@ -135,11 +135,11 @@ def main():
     # here only lets this check fail for another family's content.
     foreign = []
     for table in sorted((DATA / "loot_table/blocks").glob("*.json")):
-        if f"planetaryfactory:{table.stem}" not in blocks:
+        if f"factoryworks:{table.stem}" not in blocks:
             foreign.append(table.stem)
             continue
         referenced = {s for s in json_strings(json.loads(table.read_text()))
-                      if s.startswith("planetaryfactory:")}
+                      if s.startswith("factoryworks:")}
         unknown = referenced - registered
         check(not unknown, f"{table.name} drops only registered items (stray: {unknown})")
     # Said out loud rather than skipped in silence, so a flora block that stops being registered
@@ -153,11 +153,11 @@ def main():
     # two trees into one with two textures.
     leaves = json.loads((DATA / "loot_table/blocks/yumako_leaves.json").read_text())
     leaf_drops = set(json_strings(leaves)) & registered
-    check(leaf_drops == {"planetaryfactory:yumako_sapling", "planetaryfactory:yumako_fresh"},
+    check(leaf_drops == {"factoryworks:yumako_sapling", "factoryworks:yumako_fresh"},
           "yumako leaves yield Yumako and the sapling to replant with")
     stem = json.loads((DATA / "loot_table/blocks/jellystem_stem.json").read_text())
     stem_drops = set(json_strings(stem)) & registered
-    check(stem_drops == {"planetaryfactory:jellynut_fresh"},
+    check(stem_drops == {"factoryworks:jellynut_fresh"},
           "a jellystem stem yields Jellynut and not itself")
 
     # A harvest-once tree has no state to track, so the leaves are a plain block again: no
@@ -190,7 +190,7 @@ def main():
         table = json.loads(
             (DATA / f"loot_table/blocks/{metal}_stromatolite.json").read_text())
         drops = set(json_strings(table))
-        check(f"planetaryfactory:{metal}_bacteria_fresh" in drops,
+        check(f"factoryworks:{metal}_bacteria_fresh" in drops,
               f"a {metal} stromatolite yields {metal} bacteria")
         check(not any(d.endswith("_ore") or "/ores" in d or ":ore" in d for d in drops),
               f"no {metal} stromatolite drop is an ore")
@@ -205,12 +205,12 @@ def main():
             (WORLDGEN / f"biome/gleba_{colour}_marshland.json").read_text())
         carried = set(json_strings(biome))
         other = marshlands["red" if colour == "green" else "green"]
-        check(f"planetaryfactory:{tree}_tree" in carried,
+        check(f"factoryworks:{tree}_tree" in carried,
               f"the {colour} marshland carries {tree}")
-        check(f"planetaryfactory:{other}_tree" not in carried,
+        check(f"factoryworks:{other}_tree" not in carried,
               f"the {colour} marshland does not carry {other}")
         for metal in ("iron", "copper"):
-            check(f"planetaryfactory:sapros_{metal}_stromatolite" in carried,
+            check(f"factoryworks:sapros_{metal}_stromatolite" in carried,
                   f"the {colour} marshland carries {metal} stromatolites")
 
     for biome_name in ("gleba_dark_highlands", "gleba_midlands", "gleba_marshes"):
@@ -226,10 +226,10 @@ def main():
     lang = json.loads((ASSETS / "lang/en_us.json").read_text())
     for biome_name in ("gleba_dark_highlands", "gleba_midlands", "gleba_marshes",
                        "gleba_green_marshland", "gleba_red_marshland"):
-        check(f"biome.planetaryfactory.{biome_name}" in lang,
+        check(f"biome.factoryworks.{biome_name}" in lang,
               f"{biome_name} has a display name")
     for sapling in mod_block_ids():
-        key = "block.planetaryfactory." + sapling.split(":")[1]
+        key = "block.factoryworks." + sapling.split(":")[1]
         check(key in lang, f"the mod's {sapling} has a lang entry (the pack names it, not the jar)")
 
     return 1 if failures else 0

@@ -59,7 +59,7 @@ and it is **not built here**, for two reasons.
 **The pack cannot express it.** ADR-0022's extractor drops three technology families because
 Researchd has no concept that fits them — `max_level = "infinite"`, `count_formula`, and `upgrade`
 chains — which is 106 of Factorio's 268 technologies, and `mining-productivity` is the docstring's
-own example. Reaching for it means building levelled research in `planetaryfactory_core` first.
+own example. Reaching for it means building levelled research in `factoryworks_core` first.
 
 **Terra should not be compensated anyway.** ADR-0020 states the answer to *"I need more ore"* and it
 is not a multiplier: Terra is deliberately the bad way to get metal, its ore→plate ratio is the

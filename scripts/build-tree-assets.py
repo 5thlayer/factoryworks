@@ -5,7 +5,7 @@ ADR-0051 charges `amount * seconds_per_log` for one felling gesture, where the a
 own log count and the rate is Factorio's: `tree-01.mining_time 0.55` over `wood 4`, or 0.1375
 seconds. The rate is extracted by `scripts/factorio-tree-extract.py`; this script is the short hop
 from `data/factorio/tree.json` to
-`mod/src/main/resources/planetaryfactory_core/felling/trees.json`, which `TreeCorpus` reads at
+`mod/src/main/resources/factoryworks_core/felling/trees.json`, which `TreeCorpus` reads at
 class-init the same way `PumpCorpus` reads `fluid/pumps.json` and `RigCorpus` reads
 `mining/drills.json`.
 
@@ -30,7 +30,7 @@ import sys
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 TREE_CORPUS = os.path.join(ROOT, "data", "factorio", "tree.json")
 TREE_RESOURCE = os.path.join(
-    ROOT, "mod", "src", "main", "resources", "planetaryfactory_core", "felling", "trees.json"
+    ROOT, "mod", "src", "main", "resources", "factoryworks_core", "felling", "trees.json"
 )
 
 

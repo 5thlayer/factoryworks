@@ -19,11 +19,11 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-WORLDGEN = os.path.join(ROOT, "kubejs", "data", "planetaryfactory", "worldgen")
+WORLDGEN = os.path.join(ROOT, "kubejs", "data", "factoryworks", "worldgen")
 CORPUS = os.path.join(ROOT, "data", "factorio", "resource.json")
-LAND_TAG = os.path.join(ROOT, "kubejs", "data", "planetaryfactory", "tags", "worldgen", "biome", "terra_land.json")
+LAND_TAG = os.path.join(ROOT, "kubejs", "data", "factoryworks", "tags", "worldgen", "biome", "terra_land.json")
 PF_WORLDGEN = os.path.join(
-    ROOT, "mod", "src", "main", "java", "com", "planetaryfactory", "core", "worldgen", "PFWorldgen.java"
+    ROOT, "mod", "src", "main", "java", "com", "factoryworks", "core", "worldgen", "PFWorldgen.java"
 )
 
 RESOURCES = {"coal": "coal", "copper": "copper-ore", "iron": "iron-ore", "stone": "stone", "uranium": "uranium-ore"}
@@ -72,11 +72,11 @@ def main():
         if placement["type"] != "minecraft:random_spread":
             failures.append(f"{name} is placed by {placement['type']}")
         salts.add(placement["salt"])
-        if kind not in types or structure["type"] != f"planetaryfactory:{kind}":
+        if kind not in types or structure["type"] != f"factoryworks:{kind}":
             failures.append(f"{name}'s type {structure['type']} is not the one PFWorldgen registers")
         if structure.get("resource") != block:
             failures.append(f"{name} generates {structure.get('resource')}")
-        if structure["biomes"] != "#planetaryfactory:terra_land":
+        if structure["biomes"] != "#factoryworks:terra_land":
             failures.append(f"{name} is confined to {structure['biomes']}, not Terra's land")
     if len(salts) != len(placed):
         failures.append("two outfield sets share a salt, and with it a grid")

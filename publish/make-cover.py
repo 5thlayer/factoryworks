@@ -11,7 +11,7 @@ from PIL import Image, ImageDraw, ImageFont
 MM=os.path.expanduser('~/minecraft_mods/')
 MC=MM+'mc-26.1.2.109-src/assets/minecraft/textures/'
 BW=MM+'beltworks/src/main/resources/assets/beltworks/textures/block/'
-PK='kubejs/assets/planetaryfactory/textures/block/'
+PK='kubejs/assets/factoryworks/textures/block/'
 BG=(24,26,32)
 ACCENT=(255,146,32)   # Factorio orange
 SIB={'belt':(245,200,40),'ground':(90,165,255),'craft':(80,200,190)}

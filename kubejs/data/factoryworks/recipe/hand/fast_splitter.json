@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "beltworks:splitter",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 10
+    },
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 10
+    }
+  ],
+  "result": {
+    "id": "beltworks:improved_splitter",
+    "count": 1
+  },
+  "time": 40
+}

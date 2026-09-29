@@ -1,5 +1,5 @@
 // The pack's first-party mod (ADR-0014). The pack itself is not a Gradle project;
-// this build exists solely to produce `planetaryfactory_core`'s jar.
+// this build exists solely to produce `factoryworks_core`'s jar.
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -11,10 +11,10 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
-rootProject.name = 'planetaryfactory'
+rootProject.name = 'factoryworks'
 
-include 'planetaryfactory_core'
-project(':planetaryfactory_core').projectDir = file('mod')
+include 'factoryworks_core'
+project(':factoryworks_core').projectDir = file('mod')
 
 def localJars = new groovy.json.JsonSlurper().parse(file('data/pack/local-jars.json')).jars
 gradle.ext.localJars = localJars

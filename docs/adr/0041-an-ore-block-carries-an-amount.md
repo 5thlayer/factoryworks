@@ -132,7 +132,7 @@ blockstate JSON for them, only for machines. Adding a stage property to GT's blo
 into its registration *and* its model provider, across every material and stone type it registers,
 to obtain the behaviour for five.
 
-So **`planetaryfactory_core` registers the ore blocks for the alphabet**, per ADR-0015's rule that
+So **`factoryworks_core` registers the ore blocks for the alphabet**, per ADR-0015's rule that
 mechanism lives in the mod. What makes this affordable is that **the block drops GregTech's raw ore
 item**: the block changes and the item does not, so `item-map.json`, every generated recipe,
 ADR-0032's 1:1 chain and ADR-0034's sweep are all untouched. The bounded cost is worldgen
@@ -202,7 +202,7 @@ shrinking, which is more legible than a crater.
 
 - **`scripts/factorio-resource-extract.py`** and `data/factorio/resource.json` join the corpus;
   `data/factorio/README.md` gains the file and the regeneration step.
-- **`planetaryfactory_core`** registers five ore blocks, the amount derivation, the chunk
+- **`factoryworks_core`** registers five ore blocks, the amount derivation, the chunk
   attachment and codec, the stage property and the Jade line.
 - **`scripts/build-terra-start.py`** deals a **fourth field** and emits pack ore blocks; the hub
   gains a stone connector and pool.
@@ -245,7 +245,7 @@ shrinking, which is more legible than a crater.
 Per `docs/testing/what-to-check.md`:
 
 - *An amount decrements, the block breaks at zero, and a hand draw and a drill operation take from
-  the same number* — **unit test**, `:planetaryfactory_core:test`. The derivation and the delta are
+  the same number* — **unit test**, `:factoryworks_core:test`. The derivation and the delta are
   addressable without a world.
 - *The delta round-trips through its codec* — **unit test**, the failure ADR-0038 names: a codec
   that drops a field returns a patch that silently refilled over a logout.

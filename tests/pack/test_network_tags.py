@@ -13,10 +13,10 @@ import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-POLE = ROOT / "mod/src/main/java/com/planetaryfactory/core/energy/SupplyAreaPoleBlockEntity.java"
-TAGS = ROOT / "kubejs/data/planetaryfactory/tags/block"
+POLE = ROOT / "mod/src/main/java/com/factoryworks/core/energy/SupplyAreaPoleBlockEntity.java"
+TAGS = ROOT / "kubejs/data/factoryworks/tags/block"
 TAG_RE = re.compile(r'TagKey\.create\(\s*Registries\.BLOCK,\s*'
-                    r'Identifier\.fromNamespaceAndPath\(PlanetaryFactoryCore\.NAMESPACE,\s*"([a-z_]+)"\)')
+                    r'Identifier\.fromNamespaceAndPath\(FactoryWorksCore\.NAMESPACE,\s*"([a-z_]+)"\)')
 
 
 class NetworkTags(unittest.TestCase):

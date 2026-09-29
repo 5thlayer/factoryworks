@@ -75,7 +75,7 @@ qualify:
 | `assembling` (LV) | `assembling-machine-1` | 75 | 0.5 | 5 |
 
 > **Amended by #155.** `smelting` now receives a number. The three furnace tiers are
-> `planetaryfactory_core` blocks (Mekanism left in ADR-0035), and the Electric Furnace draws
+> `factoryworks_core` blocks (Mekanism left in ADR-0035), and the Electric Furnace draws
 > **13 EU/t** -- its own 180 kW through this ADR's constant, `180_000 x 32/420_000`, truncated the
 > way the table above truncates. **The constant and `P_max` are unchanged**: 180 kW is well under
 > the Oil Refinery's 420 kW, so nothing regenerates and no other machine's number moves. What does
@@ -118,7 +118,7 @@ Not one crafting machine sets the field — the engine default is `energy_usage 
 source, which is where `machine.json`'s figures come from.
 
 GregTech has no equivalent; an idle GT machine consumes nothing. Reproducing it means real idle draw
-built in `planetaryfactory_core` and taught to the player, for a lesson — *don't over-build* — that
+built in `factoryworks_core` and taught to the player, for a lesson — *don't over-build* — that
 ore depletion (ADR-0020) and Emission already teach more cheaply. Folding it into `EUt` is worse than
 either: it looks like fidelity and behaves as a flat tax.
 

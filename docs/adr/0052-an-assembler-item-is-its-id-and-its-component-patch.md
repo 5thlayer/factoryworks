@@ -24,7 +24,7 @@ key, every committed queue attachment and every unit test fixture is unchanged. 
 item encodes to its id followed by the patch in vanilla's own item-argument syntax:
 
 ```
-researchd:research_pack[researchd:research_pack="planetary_factory:automation_science_pack"]
+researchd:research_pack[researchd:research_pack="factory_works:automation_science_pack"]
 ```
 
 That format and not a hash, because a queue attachment on disk and a refusal line in a log are both

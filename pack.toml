@@ -1,4 +1,4 @@
-name = "Planetary Factory"
+name = "FactoryWorks"
 author = "kc00l"
 version = "0.1.0"
 pack-format = "packwiz:1.1.0"
@@ -6,7 +6,7 @@ pack-format = "packwiz:1.1.0"
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "afbf98df420d9b85026bfcc4fd2e45752a0983b9d4c0ed7b77da8d35a0100e97"
+hash = "2d00fcc8614750c0aa9d1432a71a53a104bae2e8f339a7c407166d8ff150c21c"
 
 [versions]
 minecraft = "26.1.2"

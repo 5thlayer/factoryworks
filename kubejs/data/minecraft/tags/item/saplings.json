@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "planetaryfactory:yumako_sapling",
-    "planetaryfactory:jellystem_sapling"
+    "factoryworks:yumako_sapling",
+    "factoryworks:jellystem_sapling"
   ]
 }

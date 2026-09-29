@@ -21,7 +21,7 @@ together, and every block whose
 placement reads the look -- vanilla's, the belts fork's, the pack's -- turns with no code of its own.
 That is what lets the fork's belt tile, which cannot depend on core, be the first customer, and it
 retires the tile's sneak-flips-facing stand-in (#383), which is offset 2. The gate widens from
-`planetaryfactory:` blocks to the fork's, as it already did for the splitter's plan.
+`factoryworks:` blocks to the fork's, as it already did for the splitter's plan.
 
 **Considered.** An interface in the fork that core dispatches to, or the fork depending on core. Both
 put a contract where none is needed for the held half; a placed rotation is a different action with a

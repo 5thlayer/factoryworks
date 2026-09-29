@@ -3,7 +3,7 @@
 
 Craftworks plans only with `craftworks:assembling`, and a recipe id has one type, so every recipe in
 ADR-0063's hand set gets a second file: `recipe/assembling/<path>.json` becomes
-`recipe/hand/<path>.json`. The hand set is every `planetaryfactory:assembling` recipe whose
+`recipe/hand/<path>.json`. The hand set is every `factoryworks:assembling` recipe whose
 `category` is `crafting`, whichever script wrote it (the corpus converter, the Engineer's Pick
 recipes, the stock re-authoring). A hand recipe with a fluid or with other than one result fails the
 run: Craftworks takes items only and one result.
@@ -23,7 +23,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-RECIPES = ROOT / "kubejs/data/planetaryfactory/recipe"
+RECIPES = ROOT / "kubejs/data/factoryworks/recipe"
 MACHINE = RECIPES / "assembling"
 HAND = RECIPES / "hand"
 ID_LIST = ROOT / "kubejs/server_scripts/hand_recipes.js"

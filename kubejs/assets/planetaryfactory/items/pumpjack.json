@@ -1,9 +1,0 @@
-{
-  "model": {
-    "type": "minecraft:special",
-    "base": "planetaryfactory:item/pumpjack",
-    "model": {
-      "type": "geckolib:geckolib"
-    }
-  }
-}

@@ -1,0 +1,10 @@
+{
+  "type": "factoryworks:smelting",
+  "ingredient": "minecraft:cobblestone",
+  "count": 2,
+  "result": {
+    "id": "minecraft:stone_bricks",
+    "count": 1
+  },
+  "cookingtime": 64
+}

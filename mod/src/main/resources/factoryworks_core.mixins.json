@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.factoryworks.core.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "minecraft.GameTestServerMixin"
+  ],
+  "client": [
+    "minecraft.MinecraftMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

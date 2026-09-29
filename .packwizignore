@@ -54,7 +54,7 @@ mods/*.jar
 !mods/researchd-*.jar
 !mods/Porting-Dead-Libs-*.jar
 
-# `planetaryfactory_core` stays excluded even though it is also local (ADR-0024):
+# `factoryworks_core` stays excluded even though it is also local (ADR-0024):
 # `installToPack` rebuilds it into mods/ on every `./gradlew build` and Gradle
 # jars are not byte-reproducible, so indexing it would dirty index.toml
 # constantly. Its provenance is `mod/`, which git already tracks in full. It is

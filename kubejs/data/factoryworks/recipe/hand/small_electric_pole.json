@@ -1,0 +1,18 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "#minecraft:logs",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:copper_wire",
+      "count": 2
+    }
+  ],
+  "result": {
+    "id": "factoryworks:small_electric_pole",
+    "count": 2
+  },
+  "time": 10
+}

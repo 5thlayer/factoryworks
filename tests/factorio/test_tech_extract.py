@@ -116,7 +116,7 @@ def check_tree(techs):
         for field in ("name", "suggested_id", "localised_name", "source", "cost_kind"):
             check(tech.get(field), f"{tech['name']}: missing {field}")
         check(
-            tech["suggested_id"] == "planetary_factory:" + tech["name"].replace("-", "_"),
+            tech["suggested_id"] == "factory_works:" + tech["name"].replace("-", "_"),
             f"{tech['name']}: suggested_id does not follow from the name",
         )
         check(

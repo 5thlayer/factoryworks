@@ -39,7 +39,7 @@ import zlib
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ITEM_MAP = os.path.join(ROOT, "data", "pack", "item-map.json")
 FLUID_CORPUS = os.path.join(ROOT, "data", "factorio", "fluid.json")
-OUT = os.path.join(ROOT, "mod", "src", "main", "resources", "planetaryfactory_core", "fluid",
+OUT = os.path.join(ROOT, "mod", "src", "main", "resources", "factoryworks_core", "fluid",
                    "tints.json")
 
 # How far, in RGB on [0, 1], a rendered colour may sit from Factorio's before it is retinted.

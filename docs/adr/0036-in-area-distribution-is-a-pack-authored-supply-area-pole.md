@@ -9,7 +9,7 @@ ADR-0035 removes Mekanism, and with it the Universal Cables that `#46` made the 
 distribution *inside* an area. That row cannot be left empty: ADR-0017 teaches the grid as a
 boundary — the grid ends where the machines begin — and the cables were the machine side of it.
 
-**In-area distribution becomes a Factorio supply-area pole, registered in `planetaryfactory_core`.**
+**In-area distribution becomes a Factorio supply-area pole, registered in `factoryworks_core`.**
 A block that scans a radius and pushes EU into every `IEnergyContainer` inside it. **The
 transmission mod becomes Create: Power Grid**, replacing Create: Electro Energetics, gated on one
 bench test.
@@ -264,7 +264,7 @@ arrive through, so the pole calls `addEnergy` and the question does not arise.
   the physical one.
 - **Connectors on every machine**, or **GregTech cables return.** Both fail on the capability
   surface above, before any trade-off.
-- **Author a real cable network in `planetaryfactory_core`.** Rejected: it is the expensive half of
+- **Author a real cable network in `factoryworks_core`.** Rejected: it is the expensive half of
   a power mod, and it buys an idiom Factorio does not have.
 - **Two pole tiers now, the other two later.** Rejected for fidelity. The tiers are cheap once the
   supply-area scan exists — they differ by one number. *#147 settled at three, which is not this

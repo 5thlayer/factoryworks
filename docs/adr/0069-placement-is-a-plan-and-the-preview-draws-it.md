@@ -41,7 +41,7 @@ We rejected a client-side registry of preview rules keyed by item. It needs no r
 drift this decision exists to prevent.
 
 **Every pack block gets one; no other mod's does.** The mechanism is generic and keyed on the held
-item placing a `planetaryfactory:` block. Other mods' placement refusals are theirs, and owning them
+item placing a `factoryworks:` block. Other mods' placement refusals are theirs, and owning them
 is unbounded. The pole's column rules and the rig's footprint are the only two plans that are not
 vanilla's today.
 

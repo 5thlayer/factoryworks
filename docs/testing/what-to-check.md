@@ -14,7 +14,7 @@ own. Harnesses come and go; the claims do not. Find the claim, read off the chec
 | This data parses, and this thing is registered | **Nothing.** Load-time facts are free. |
 | Cross-file references resolve | **Static data check** — `tests/`, no game launch. |
 | This is emitted into a world | **Fixture row** in `WorldgenFixtureTests` (see below). |
-| This pack logic computes something | **Unit test** in `planetaryfactory_core` or `respoiled`. |
+| This pack logic computes something | **Unit test** in `factoryworks_core` or `respoiled`. |
 | This block or entity behaves in-world | **Nothing** if vanilla by construction, else **GameTest**. |
 | This looks or feels right | **Human on delivery.** |
 
@@ -106,7 +106,7 @@ finds a kind rather than inventing one.
 
 **No such assertion is built, and what each removal gets is decided per claim.** A recipe-manager
 dump sees recipes; it does not see *surfaces*. `#140` removed the 2x2 inventory grid, and it did so
-in `planetaryfactory_core` — the slots are inactive and refuse both directions, and `slotsChanged`
+in `factoryworks_core` — the slots are inactive and refuse both directions, and `slotsChanged`
 never resolves a recipe — so every `crafting_shaped` recipe the dump would list is still there and
 still unreachable. Nothing the dump could assert would have caught that grid working, and nothing it
 could assert would catch it coming back. **That removal's check is therefore a human on delivery**,
@@ -119,7 +119,7 @@ pack keeps a surface where reachability is in doubt.
 
 Where the pack computes rather than declares — Decay's sampler, a Freshness transition, anything
 with arithmetic or state in it — the check is an ordinary unit test, run without Minecraft. These
-live in `planetaryfactory_core` or in the `respoiled` fork.
+live in `factoryworks_core` or in the `respoiled` fork.
 
 The line is between pack logic and game features. A subclass that returns a feature holder is
 testing Minecraft, not the pack, and gets nothing.
@@ -145,7 +145,7 @@ harness was stood up for it in `#271`, on the smaller subject the 26.1.2 port le
 faces the pole and the Electric Furnace meet on. (`#156` was the original harness ticket; it was
 closed *not planned*, and `#271` replaced it rather than waiting on it.)
 
-**Running it:** `./gradlew :planetaryfactory_core:runGameTestServer`, from the repo root. It is
+**Running it:** `./gradlew :factoryworks_core:runGameTestServer`, from the repo root. It is
 headless, it needs no display and no human, and it fails the command when a test fails. It runs
 every registered test — there is no namespace filter in 26.1 — which is the mod's own plus
 vanilla's `minecraft:always_pass`.
@@ -157,7 +157,7 @@ artifacts and boots a server — seconds rather than milliseconds — so it belo
 touched mechanism, not to a docs edit. Run it after editing anything under `core/energy/`,
 `core/smelting/`, `core/dismantle/` or `core/gametest/`.
 
-**Where the tests live:** `mod/src/main/java/com/planetaryfactory/core/gametest/`, in the *main*
+**Where the tests live:** `mod/src/main/java/com/factoryworks/core/gametest/`, in the *main*
 source set rather than the test one, because a GameTest is code the game loads. `PFGameTests`
 registers them; a test body is a method taking a `GameTestHelper`. They stand on a generated stone
 platform, `scripts/build-gametest-structures.py`. The pack's recipes are not in the mod jar, so the

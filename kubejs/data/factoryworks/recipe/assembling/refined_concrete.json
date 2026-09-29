@@ -1,0 +1,31 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting-with-fluid",
+  "ingredients": [
+    {
+      "ingredient": "minecraft:gray_concrete",
+      "count": 20
+    },
+    {
+      "ingredient": "ftbmaterials:iron_rod",
+      "count": 8
+    },
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 1
+    }
+  ],
+  "fluid_ingredients": [
+    {
+      "ingredient": "minecraft:water",
+      "amount": 100
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:light_gray_concrete",
+      "count": 10
+    }
+  ],
+  "time": 300
+}

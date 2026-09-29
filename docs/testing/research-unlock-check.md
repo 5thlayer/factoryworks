@@ -19,7 +19,7 @@ nothing.
 ## What it asserts
 
 - every `unlocks` entry in `researchd.js` names a recipe under
-  `kubejs/data/planetaryfactory/recipe/`, keyed as a datapack keys it: `<namespace>:<path>`
+  `kubejs/data/factoryworks/recipe/`, keyed as a datapack keys it: `<namespace>:<path>`
 - a `fromFactorio` call, or an `unlocks` array, that the parser cannot read is a **failure**, not a
   skip. An unlock read by nothing is exactly the unchecked coupling the check exists to catch
 - comments are stripped before parsing, so the file's own prose about `fromFactorio()` is not

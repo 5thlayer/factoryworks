@@ -29,7 +29,7 @@ logistics row. There is one scenario, called S2 here:
 | belts, loaders, splitters | SimpleBelts (a fork) |
 | trains | Railcraft Reborn |
 | machines, fluids | Oritech |
-| everything else | `planetaryfactory_core` |
+| everything else | `factoryworks_core` |
 
 **Leaves:** Create entirely. Create: Power Grid, GCyR, Modern Industrialization and GregTech were already gone.
 **Minecraft version:** 26.1.2. That version is only reachable because Create leaves: Create has no
@@ -52,7 +52,7 @@ Native level** (fact 2), so there are three:
 2. **Fork**: an edit to the pack's fork of SimpleBelts. The fork is about 2,400 lines of Java. The
    pack already maintains three forks (GCyR, Researchd, Respoiled). A change that belongs upstream is
    also shaped as a pull request to Rearth, but adoption never depends on one being accepted.
-3. **Core**: a block or rule in `planetaryfactory_core`.
+3. **Core**: a block or rule in `factoryworks_core`.
 
 **Criteria.** The rows are the ledger's Transport belts and Inserters sub-rules. The grilling that
 commissioned this survey added three criteria the ledger does not have, because Create made them free:
@@ -362,7 +362,7 @@ What pf2612 already runs is **proven to load together**. The rest is what adopti
 | FTB Quests | yes | added after that world load. |
 | AE2, Sophisticated Backpacks | no | **leave**: neither is faithful to Factorio (ADR-0060). |
 | Almost Unified, Tree Harvester, ProbeJS | no | **leave**: with two tech mods none of them does any work for the pack (ADR-0060). |
-| **`planetaryfactory_core`** | no | ours. 16,800 lines. Ten classes on the old capability API, plus the pole on GregTech's (fact 9), plus Minecraft 26.1's renames across everything else. |
+| **`factoryworks_core`** | no | ours. 16,800 lines. Ten classes on the old capability API, plus the pole on GregTech's (fact 9), plus Minecraft 26.1's renames across everything else. |
 | **Researchd** (fork) | no | ours to port. Upstream `Porting-Dead-Mods/Researchd` `main` is 1.21.1. Its only required dependency, Porting Dead Libs, targets 26.1 on `main` (1.1.16). |
 | **Respoiled** (fork) | no | ours to port. Upstream has a `multi/26.1` branch to port against. |
 

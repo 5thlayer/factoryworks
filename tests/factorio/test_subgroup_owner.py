@@ -39,7 +39,7 @@ MODS = {"gregtech", "create", "powergrid", "oritech", "pack"}
 
 # Terminal values: not a machine, and deliberately so. `undecided` means ADR-0017 has no row
 # for the capability -- a decision nobody has taken, not an oversight. `undecided:smelting` was
-# here while #91 was open; the furnaces are `planetaryfactory_core` blocks now, so smelting is
+# here while #91 was open; the furnaces are `factoryworks_core` blocks now, so smelting is
 # `pack:smelting` on the process axis and the terminal has retired.
 TERMINALS = {
     "undecided",

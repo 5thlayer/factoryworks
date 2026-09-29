@@ -43,6 +43,105 @@
       "stack": "item:beltworks:turbo_feeder"
     },
     {
+      "stack": "item:factoryworks:accumulator"
+    },
+    {
+      "stack": "item:factoryworks:advanced_circuit"
+    },
+    {
+      "stack": "item:factoryworks:assembling_machine"
+    },
+    {
+      "stack": "item:factoryworks:assembling_machine_2"
+    },
+    {
+      "stack": "item:factoryworks:barrel"
+    },
+    {
+      "stack": "item:factoryworks:battery"
+    },
+    {
+      "stack": "item:factoryworks:boiler"
+    },
+    {
+      "stack": "item:factoryworks:burner_mining_drill"
+    },
+    {
+      "stack": "item:factoryworks:chemical_plant"
+    },
+    {
+      "stack": "item:factoryworks:electric_engine_unit"
+    },
+    {
+      "stack": "item:factoryworks:electric_furnace"
+    },
+    {
+      "stack": "item:factoryworks:electric_mining_drill"
+    },
+    {
+      "stack": "item:factoryworks:electronic_circuit"
+    },
+    {
+      "stack": "item:factoryworks:engine_unit"
+    },
+    {
+      "stack": "item:factoryworks:engineers_iron_pick"
+    },
+    {
+      "stack": "item:factoryworks:engineers_steel_pick"
+    },
+    {
+      "stack": "item:factoryworks:iron_chest"
+    },
+    {
+      "stack": "item:factoryworks:low_density_structure"
+    },
+    {
+      "stack": "item:factoryworks:medium_electric_pole"
+    },
+    {
+      "stack": "item:factoryworks:offshore_pump"
+    },
+    {
+      "stack": "item:factoryworks:oil_refinery"
+    },
+    {
+      "stack": "item:factoryworks:plastic_bar"
+    },
+    {
+      "stack": "item:factoryworks:processing_unit"
+    },
+    {
+      "stack": "item:factoryworks:pumpjack"
+    },
+    {
+      "stack": "item:factoryworks:radar"
+    },
+    {
+      "stack": "item:factoryworks:rocket_fuel"
+    },
+    {
+      "stack": "item:factoryworks:small_electric_pole"
+    },
+    {
+      "stack": "item:factoryworks:solid_fuel"
+    },
+    {
+      "stack": "item:factoryworks:steam_engine"
+    },
+    {
+      "stack": "item:factoryworks:steel_chest"
+    },
+    {
+      "stack": "item:factoryworks:steel_furnace"
+    },
+    {
+      "stack": "item:factoryworks:stone_furnace"
+    },
+    {
+      "stack": "item:factoryworks:substation_electric_pole"
+    },
+    {
       "stack": "item:ftbfiltersystem:smart_filter"
     },
     {
@@ -208,105 +307,6 @@
       "stack": "item:oritech:portable_tank"
     },
     {
-      "stack": "item:planetaryfactory:accumulator"
-    },
-    {
-      "stack": "item:planetaryfactory:advanced_circuit"
-    },
-    {
-      "stack": "item:planetaryfactory:assembling_machine"
-    },
-    {
-      "stack": "item:planetaryfactory:assembling_machine_2"
-    },
-    {
-      "stack": "item:planetaryfactory:barrel"
-    },
-    {
-      "stack": "item:planetaryfactory:battery"
-    },
-    {
-      "stack": "item:planetaryfactory:boiler"
-    },
-    {
-      "stack": "item:planetaryfactory:burner_mining_drill"
-    },
-    {
-      "stack": "item:planetaryfactory:chemical_plant"
-    },
-    {
-      "stack": "item:planetaryfactory:electric_engine_unit"
-    },
-    {
-      "stack": "item:planetaryfactory:electric_furnace"
-    },
-    {
-      "stack": "item:planetaryfactory:electric_mining_drill"
-    },
-    {
-      "stack": "item:planetaryfactory:electronic_circuit"
-    },
-    {
-      "stack": "item:planetaryfactory:engine_unit"
-    },
-    {
-      "stack": "item:planetaryfactory:engineers_iron_pick"
-    },
-    {
-      "stack": "item:planetaryfactory:engineers_steel_pick"
-    },
-    {
-      "stack": "item:planetaryfactory:iron_chest"
-    },
-    {
-      "stack": "item:planetaryfactory:low_density_structure"
-    },
-    {
-      "stack": "item:planetaryfactory:medium_electric_pole"
-    },
-    {
-      "stack": "item:planetaryfactory:offshore_pump"
-    },
-    {
-      "stack": "item:planetaryfactory:oil_refinery"
-    },
-    {
-      "stack": "item:planetaryfactory:plastic_bar"
-    },
-    {
-      "stack": "item:planetaryfactory:processing_unit"
-    },
-    {
-      "stack": "item:planetaryfactory:pumpjack"
-    },
-    {
-      "stack": "item:planetaryfactory:radar"
-    },
-    {
-      "stack": "item:planetaryfactory:rocket_fuel"
-    },
-    {
-      "stack": "item:planetaryfactory:small_electric_pole"
-    },
-    {
-      "stack": "item:planetaryfactory:solid_fuel"
-    },
-    {
-      "stack": "item:planetaryfactory:steam_engine"
-    },
-    {
-      "stack": "item:planetaryfactory:steel_chest"
-    },
-    {
-      "stack": "item:planetaryfactory:steel_furnace"
-    },
-    {
-      "stack": "item:planetaryfactory:stone_furnace"
-    },
-    {
-      "stack": "item:planetaryfactory:substation_electric_pole"
-    },
-    {
       "stack": "item:railcraft:block_signal"
     },
     {
@@ -332,7 +332,7 @@
         "type": "item",
         "id": "researchd:research_pack",
         "componentChanges": {
-          "researchd:research_pack": "planetary_factory:automation_science_pack"
+          "researchd:research_pack": "factory_works:automation_science_pack"
         }
       }
     },
@@ -341,7 +341,7 @@
         "type": "item",
         "id": "researchd:research_pack",
         "componentChanges": {
-          "researchd:research_pack": "planetary_factory:chemical_science_pack"
+          "researchd:research_pack": "factory_works:chemical_science_pack"
         }
       }
     },
@@ -350,9 +350,12 @@
         "type": "item",
         "id": "researchd:research_pack",
         "componentChanges": {
-          "researchd:research_pack": "planetary_factory:logistic_science_pack"
+          "researchd:research_pack": "factory_works:logistic_science_pack"
         }
       }
+    },
+    {
+      "stack": "fluid:factoryworks:steam"
     },
     {
       "stack": "fluid:minecraft:water"
@@ -374,9 +377,6 @@
     },
     {
       "stack": "fluid:oritech:still_sulfuric_acid"
-    },
-    {
-      "stack": "fluid:planetaryfactory:steam"
     }
   ]
 }

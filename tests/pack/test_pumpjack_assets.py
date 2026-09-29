@@ -22,14 +22,14 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/oil/pumpjack.json"
+RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/oil/pumpjack.json"
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 GENERATOR = ROOT / "scripts/build-pumpjack-assets.py"
-PF_BLOCKS = ROOT / "mod/src/main/java/com/planetaryfactory/core/PFBlocks.java"
-ITEM = ROOT / "mod/src/main/java/com/planetaryfactory/core/oil/PumpjackItem.java"
-SECTOR_PATCHES = ROOT / "mod/src/main/java/com/planetaryfactory/core/radar/SectorPatches.java"
-LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
+PF_BLOCKS = ROOT / "mod/src/main/java/com/factoryworks/core/PFBlocks.java"
+ITEM = ROOT / "mod/src/main/java/com/factoryworks/core/oil/PumpjackItem.java"
+SECTOR_PATCHES = ROOT / "mod/src/main/java/com/factoryworks/core/radar/SectorPatches.java"
+LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
 SPRINGS = ROOT / "kubejs/data/oritech/neoforge/biome_modifier"
 ORITECH_SPRINGS = ("oil_spring", "oil_spring_desert")
 
@@ -62,10 +62,10 @@ def main():
     if not refusal or refusal.group(1) not in lang:
         failures.append("the Pumpjack's refusal message has no lang key, so the gesture shows the raw key")
     marker = re.search(r'CRUDE_OIL = "([^"]+)"', SECTOR_PATCHES.read_text())
-    if not marker or f"map.planetaryfactory.patch.{marker.group(1)}" not in lang:
+    if not marker or f"map.factoryworks.patch.{marker.group(1)}" not in lang:
         failures.append("the oil field's marker has no lang key, so the map shows the raw key")
-    if "map.planetaryfactory.patch.yield" not in lang:
-        failures.append("no lang key map.planetaryfactory.patch.yield, so an oil field's hover shows the raw key")
+    if "map.factoryworks.patch.yield" not in lang:
+        failures.append("no lang key map.factoryworks.patch.yield, so an oil field's hover shows the raw key")
 
     for spring in ORITECH_SPRINGS:
         path = SPRINGS / f"{spring}.json"

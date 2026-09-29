@@ -1,0 +1,7 @@
+{
+  "__comment": "The blocks an Electric Network pulls FE from as accumulators (ADR-0062). The tag, not the block's energy face, decides the role: a face that allows extraction is not enough, or any battery or machine would be drained. The pack's accumulator (#283); a part resolves to its anchor before the tag is asked, so only the anchor is listed. A TagKey whose JSON is missing resolves to an empty tag silently, so the file ships rather than being absent.",
+  "replace": false,
+  "values": [
+    "factoryworks:accumulator"
+  ]
+}

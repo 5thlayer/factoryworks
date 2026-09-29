@@ -3,7 +3,7 @@
 
 Writes one row per Factorio machine whose recipes the pack emits on `AssemblingRecipe`'s shape --
 the three Assembling Machines, the Chemical Plant and the Oil Refinery -- to
-`mod/src/main/resources/planetaryfactory_core/machine/specs.json`, which `MachineSpecs` reads, and
+`mod/src/main/resources/factoryworks_core/machine/specs.json`, which `MachineSpecs` reads, and
 the Overload Limit's constants from `data/factorio/overload.json` beside it, which `OverloadLimit`
 reads (#517).
 
@@ -29,13 +29,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MACHINE_CORPUS = ROOT / "data" / "factorio" / "machine.json"
 CATEGORY_MAP = ROOT / "data" / "pack" / "category-map.json"
-EMITTED = ROOT / "kubejs" / "data" / "planetaryfactory" / "recipe"
-RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/machine/specs.json"
+EMITTED = ROOT / "kubejs" / "data" / "factoryworks" / "recipe"
+RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/machine/specs.json"
 OVERLOAD_CORPUS = ROOT / "data" / "factorio" / "overload.json"
 OVERLOAD = RESOURCE.parent / "overload.json"
 
 # The types that share AssemblingRecipe's record, and so the chassis (ADR-0096).
-CHASSIS_TYPES = ("planetaryfactory:assembling", "planetaryfactory:chemistry", "planetaryfactory:oil_processing")
+CHASSIS_TYPES = ("factoryworks:assembling", "factoryworks:chemistry", "factoryworks:oil_processing")
 
 
 def recipe_type(row, category_map):

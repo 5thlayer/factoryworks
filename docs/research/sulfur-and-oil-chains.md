@@ -73,7 +73,7 @@ is abundant too.
 sourced, so it is a bootstrap rather than a line.
 
 **C. Terra's polymetallic bedrock deposit — GregTech.**
-`kubejs/data/planetaryfactory/gtceu/bedrock_ore/terra_polymetallic_deposit.json` lists
+`kubejs/data/factoryworks/gtceu/bedrock_ore/terra_polymetallic_deposit.json` lists
 `gtceu:sulfur` at weight 1 alongside lead (4) and silver (2). Asserted by the worldgen check at
 `tests/worldgen/expected.json` under `terra.bedrock_ores`. Infinite-ish and automatable, being a
 bedrock deposit.
@@ -96,9 +96,9 @@ Also `sulfur_dioxide_from_sulfur` (Sulfur + Oxygen), `sulfur_trioxide`, `sulfuri
   `tests/worldgen/expected.json`, `terra.forbidden_ore_veins` contains `gtceu:sulfur`. GregTech's
   own `data/gtceu/gtceu/ore_vein/sulfur.json` is Nether-only anyway.
 - The sulfur *vein* and a sulfuric-acid geyser are **Ignus's**:
-  `kubejs/data/planetaryfactory/gtceu/ore_vein/ignus_sulfur.json` and
-  `kubejs/data/planetaryfactory/gtceu/bedrock_fluid/ignus_sulfuric_acid_geyser.json`, both filtered
-  to `planetaryfactory:vulcanus`. Ignus's coal bedrock deposit carries sulfur too.
+  `kubejs/data/factoryworks/gtceu/ore_vein/ignus_sulfur.json` and
+  `kubejs/data/factoryworks/gtceu/bedrock_fluid/ignus_sulfuric_acid_geyser.json`, both filtered
+  to `factoryworks:vulcanus`. Ignus's coal bedrock deposit carries sulfur too.
 
 ### Where the sulfur *slurry* line needs it
 

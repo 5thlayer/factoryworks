@@ -32,24 +32,24 @@
   },
   "machines": {
     "assembling": {
-      "recipe_type": "planetaryfactory:assembling",
-      "note": "ADR-0026's Assembling Machine 1/2/3 and the Personal Assembler's hand set, on the pack's own `planetaryfactory:assembling` (#279). One type across the three Factorio categories, each recipe carrying its `category`, so the hand set stays a predicate over this type: `scripts/build-hand-recipes.py` copies its `crafting` recipes onto `personal_assembler`'s type (ADR-0089). Its GregTech type left with ADR-0060, and the Assembling Machine block #258 builds is to read the same type rather than bring its own."
+      "recipe_type": "factoryworks:assembling",
+      "note": "ADR-0026's Assembling Machine 1/2/3 and the Personal Assembler's hand set, on the pack's own `factoryworks:assembling` (#279). One type across the three Factorio categories, each recipe carrying its `category`, so the hand set stays a predicate over this type: `scripts/build-hand-recipes.py` copies its `crafting` recipes onto `personal_assembler`'s type (ADR-0089). Its GregTech type left with ADR-0060, and the Assembling Machine block #258 builds is to read the same type rather than bring its own."
     },
     "personal_assembler": {
       "recipe_type": "craftworks:assembling",
       "note": "Craftworks' Personal Assembler (ADR-0089), which plans only with its own type. No category routes here: `scripts/build-hand-recipes.py` copies every `crafting` recipe of `assembling` onto this type, under `recipe/hand/`."
     },
     "chemical_plant": {
-      "recipe_type": "planetaryfactory:chemistry",
-      "note": "ADR-0096's Chemical Plant, on `planetaryfactory:chemistry`: the Assembling Machine's recipe record and codec under a type of its own, named after Factorio's category (#488). Its `gtceu:chemical_plant` type left with ADR-0060."
+      "recipe_type": "factoryworks:chemistry",
+      "note": "ADR-0096's Chemical Plant, on `factoryworks:chemistry`: the Assembling Machine's recipe record and codec under a type of its own, named after Factorio's category (#488). Its `gtceu:chemical_plant` type left with ADR-0060."
     },
     "oil_refinery": {
-      "recipe_type": "planetaryfactory:oil_processing",
-      "note": "ADR-0096's Oil Refinery, on `planetaryfactory:oil_processing`: the Assembling Machine's recipe record and codec under a type of its own, named after Factorio's category (#488). Its `gtceu:oil_refinery` type left with ADR-0060."
+      "recipe_type": "factoryworks:oil_processing",
+      "note": "ADR-0096's Oil Refinery, on `factoryworks:oil_processing`: the Assembling Machine's recipe record and codec under a type of its own, named after Factorio's category (#488). Its `gtceu:oil_refinery` type left with ADR-0060."
     },
     "smelting": {
-      "recipe_type": "planetaryfactory:smelting",
-      "note": "Plates and stone brick, on the pack's own `planetaryfactory:smelting` (#155) and on nothing else. The three furnace tiers are `planetaryfactory_core` blocks (Stone, Steel, Electric), which is why `subgroup-owner.json` reads `pack:smelting`. ADR-0032 deleted ADR-0017's Ore processing row -- ore is 1:1, so smelting rides nothing and is the whole of ore-to-plate. The type carries a count on the ingredient, which is what lets `steel-plate` (5 plates to 1) and `stone-brick` (2 stone to 1, ADR-0046) be expressed at all; vanilla `minecraft:smelting` can express neither, and is not read alongside it because ADR-0034's sweep leaves it with no live recipe."
+      "recipe_type": "factoryworks:smelting",
+      "note": "Plates and stone brick, on the pack's own `factoryworks:smelting` (#155) and on nothing else. The three furnace tiers are `factoryworks_core` blocks (Stone, Steel, Electric), which is why `subgroup-owner.json` reads `pack:smelting`. ADR-0032 deleted ADR-0017's Ore processing row -- ore is 1:1, so smelting rides nothing and is the whole of ore-to-plate. The type carries a count on the ingredient, which is what lets `steel-plate` (5 plates to 1) and `stone-brick` (2 stone to 1, ADR-0046) be expressed at all; vanilla `minecraft:smelting` can express neither, and is not read alongside it because ADR-0034's sweep leaves it with no live recipe."
     },
     "centrifuge": {
       "recipe_type": null,

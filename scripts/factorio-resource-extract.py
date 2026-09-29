@@ -61,7 +61,7 @@ starting amount to read and is skipped by name in the output, the way the other 
 report what they left out.
 
 Two files are written from one read. `data/factorio/resource.json` is the corpus, and
-`mod/src/main/resources/planetaryfactory_core/ore/amounts.json` is the slice the mod loads at
+`mod/src/main/resources/factoryworks_core/ore/amounts.json` is the slice the mod loads at
 class-init: the five resources ADR-0041 puts on Terra, their patch totals, their stage ratios, the
 distance law and the outfield density law. It is a *classpath* resource rather than a datapack file because the stage count
 sizes a blockstate property, which is fixed before any world exists -- and it is generated here
@@ -616,7 +616,7 @@ def main():
     parser.add_argument(
         "--mod-out",
         type=Path,
-        default=REPO / "mod/src/main/resources/planetaryfactory_core/ore/amounts.json",
+        default=REPO / "mod/src/main/resources/factoryworks_core/ore/amounts.json",
         help="the slice the mod loads at class-init",
     )
     parser.add_argument(

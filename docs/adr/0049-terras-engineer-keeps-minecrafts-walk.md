@@ -46,7 +46,7 @@ matching Factorio's opening exactly at Minecraft's walk would put the furthest f
 than it currently sits, at about 72 blocks.
 
 **The rejected alternative is the reason this is an ADR.** Setting a flat base speed in
-`planetaryfactory_core` was the obvious fix and is refused: it would spend Block Runner's bonus.
+`factoryworks_core` was the obvious fix and is refused: it would spend Block Runner's bonus.
 §*Terrain modification* is `adapted` specifically so that a **built surface** is the thing that makes
 you faster, which is what Factorio's concrete is for. A global buff would deliver the same seconds
 while deleting the mechanic that is supposed to earn them, which is a worse outcome than the

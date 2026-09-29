@@ -13,22 +13,22 @@
 // exist before these calls run. KubeJS does not load scripts alphabetically.
 
 ResearchdEvents.registerResearchPacks(event => {
-  event.create('planetary_factory:automation_science_pack')
+  event.create('factory_works:automation_science_pack')
     .literalName('Automation Science Pack')
     .color(200, 60, 60)
     .sortingValue(100);
-  event.create('planetary_factory:logistic_science_pack')
+  event.create('factory_works:logistic_science_pack')
     .literalName('Logistic Science Pack')
     .color(60, 200, 60)
     .sortingValue(101);
-  event.create('planetary_factory:chemical_science_pack')
+  event.create('factory_works:chemical_science_pack')
     .literalName('Chemical Science Pack')
     .color(60, 60, 200)
     .sortingValue(102);
 
   // when using the packs in recipes
   // a data component is needed:
-  // Item.of('researchd:research_pack[researchd:research_pack="planetary_factory:automation_science_pack"]')
+  // Item.of('researchd:research_pack[researchd:research_pack="factory_works:automation_science_pack"]')
 });
 
 // Steel axe, the pack's first declared technology and ADR-0039's second tier.
@@ -43,7 +43,7 @@ ResearchdEvents.registerResearchPacks(event => {
 //     craft-triggered method -- its four are consumeItem, consumePack, checkItemPresence and the
 //     combinators. `has` is checkItemPresence, which holds the plates rather than eating them, and
 //     that is the closer of the two: Factorio's trigger charges nothing. A real craft trigger is
-//     mechanism, belongs in `planetaryfactory_core` under ADR-0015, and would serve all seven of
+//     mechanism, belongs in `factoryworks_core` under ADR-0015, and would serve all seven of
 //     #138's trigger technologies rather than this one alone.
 //
 //   - The effect. Factorio's is `character-mining-speed +1`; here it unlocks the Engineer's Steel
@@ -59,9 +59,9 @@ ResearchdEvents.registerResearchPacks(event => {
 // `tests/factorio/test_research_unlocks.py` asserts this id is a recipe the pack emits, which is
 // the coupling that makes the divergence safe.
 fromFactorio('steel-axe', {
-  icon: 'planetaryfactory:engineers_steel_pick',
+  icon: 'factoryworks:engineers_steel_pick',
   has: ['ftbmaterials:steel_plate', 50],
-  unlocks: ['planetaryfactory:assembling/pack/engineers_steel_pick']
+  unlocks: ['factoryworks:assembling/pack/engineers_steel_pick']
 });
 
 // ---------------------------------------------------------------------------------------------
@@ -80,13 +80,13 @@ fromFactorio('steel-axe', {
 
 // `pipe-to-ground` has no pack recipe: underground pipes are excluded.
 fromFactorio('steam-power', {
-  icon: 'planetaryfactory:offshore_pump',
+  icon: 'factoryworks:offshore_pump',
   has: ['ftbmaterials:iron_plate', 50],
   unlocks: [
-    'planetaryfactory:assembling/pipe',
-    'planetaryfactory:assembling/offshore_pump',
-    'planetaryfactory:assembling/boiler',
-    'planetaryfactory:assembling/steam_engine'
+    'factoryworks:assembling/pipe',
+    'factoryworks:assembling/offshore_pump',
+    'factoryworks:assembling/boiler',
+    'factoryworks:assembling/steam_engine'
   ]
 });
 
@@ -94,63 +94,63 @@ fromFactorio('steam-power', {
 // previous script evaluation, and a queued task keeps the ingredient it was queued with. An id tested
 // without both looks exactly like a wrong id.
 fromFactorio('electronics', {
-  icon: 'planetaryfactory:electronic_circuit',
+  icon: 'factoryworks:electronic_circuit',
   has: ['ftbmaterials:copper_plate', 10],
   unlocks: [
-    'planetaryfactory:assembling/copper_cable',
-    'planetaryfactory:assembling/electronic_circuit',
-    'planetaryfactory:assembling/inserter',
-    'planetaryfactory:assembling/lab',
-    'planetaryfactory:assembling/small_electric_pole'
+    'factoryworks:assembling/copper_cable',
+    'factoryworks:assembling/electronic_circuit',
+    'factoryworks:assembling/inserter',
+    'factoryworks:assembling/lab',
+    'factoryworks:assembling/small_electric_pole'
   ]
 });
 
 // --- Rung 1 -------------------------------------------------------------------------------------
 
 fromFactorio('automation-science-pack', {
-  iconPack: 'planetary_factory:automation_science_pack',
+  iconPack: 'factory_works:automation_science_pack',
   has: ['researchd:research_lab', 1],
-  unlocks: ['planetaryfactory:assembling/automation_science_pack']
+  unlocks: ['factoryworks:assembling/automation_science_pack']
 });
 
 fromFactorio('steel-processing', {
   icon: 'ftbmaterials:steel_plate',
   unlocks: [
-    'planetaryfactory:steel_plate',
-    'planetaryfactory:assembling/steel_chest'
+    'factoryworks:steel_plate',
+    'factoryworks:assembling/steel_chest'
   ]
 });
 
 // `long-handed-inserter` has no recipe: the feeder's reach does its job (ADR-0100).
 fromFactorio('automation', {
-  icon: 'planetaryfactory:assembling_machine',
-  unlocks: ['planetaryfactory:assembling/assembling_machine_1']
+  icon: 'factoryworks:assembling_machine',
+  unlocks: ['factoryworks:assembling/assembling_machine_1']
 });
 
 fromFactorio('logistic-science-pack', {
-  iconPack: 'planetary_factory:logistic_science_pack',
-  unlocks: ['planetaryfactory:assembling/logistic_science_pack']
+  iconPack: 'factory_works:logistic_science_pack',
+  unlocks: ['factoryworks:assembling/logistic_science_pack']
 });
 
 // --- Rung 2 -------------------------------------------------------------------------------------
 
 fromFactorio('automation-2', {
-  icon: 'planetaryfactory:assembling_machine_2',
-  unlocks: ['planetaryfactory:assembling/assembling_machine_2']
+  icon: 'factoryworks:assembling_machine_2',
+  unlocks: ['factoryworks:assembling/assembling_machine_2']
 });
 
 fromFactorio('engine', {
-  icon: 'planetaryfactory:engine_unit',
-  unlocks: ['planetaryfactory:assembling/engine_unit']
+  icon: 'factoryworks:engine_unit',
+  unlocks: ['factoryworks:assembling/engine_unit']
 });
 
 // The barrel fill/empty rows are `native_mechanic`, never recipes.
 fromFactorio('fluid-handling', {
   icon: 'oritech:portable_tank',
   unlocks: [
-    'planetaryfactory:assembling/storage_tank',
-    'planetaryfactory:assembling/pump',
-    'planetaryfactory:assembling/barrel'
+    'factoryworks:assembling/storage_tank',
+    'factoryworks:assembling/pump',
+    'factoryworks:assembling/barrel'
   ]
 });
 
@@ -158,13 +158,13 @@ fromFactorio('fluid-handling', {
 // no Researchd method reads a fluid, so declared on its own it would be a dead gate on the Chemical
 // Plant. It costs nothing in Factorio, so the pair's pack cost is unchanged (#206, #138).
 fromFactorio('oil-gathering', {
-  icon: 'planetaryfactory:pumpjack',
+  icon: 'factoryworks:pumpjack',
   unlocks: [
-    'planetaryfactory:assembling/pumpjack',
-    'planetaryfactory:assembling/oil_refinery',
-    'planetaryfactory:assembling/chemical_plant',
-    'planetaryfactory:oil_processing/basic_oil_processing',
-    'planetaryfactory:chemistry/solid_fuel_from_petroleum_gas'
+    'factoryworks:assembling/pumpjack',
+    'factoryworks:assembling/oil_refinery',
+    'factoryworks:assembling/chemical_plant',
+    'factoryworks:oil_processing/basic_oil_processing',
+    'factoryworks:chemistry/solid_fuel_from_petroleum_gas'
   ]
 });
 
@@ -172,18 +172,18 @@ fromFactorio('oil-gathering', {
 fromFactorio('oil-processing', { skip: true });
 
 fromFactorio('plastics', {
-  icon: 'planetaryfactory:plastic_bar',
-  unlocks: ['planetaryfactory:chemistry/plastic_bar']
+  icon: 'factoryworks:plastic_bar',
+  unlocks: ['factoryworks:chemistry/plastic_bar']
 });
 
 fromFactorio('advanced-oil-processing', {
-  icon: 'planetaryfactory:oil_refinery',
+  icon: 'factoryworks:oil_refinery',
   unlocks: [
-    'planetaryfactory:oil_processing/advanced_oil_processing',
-    'planetaryfactory:chemistry/heavy_oil_cracking',
-    'planetaryfactory:chemistry/light_oil_cracking',
-    'planetaryfactory:chemistry/solid_fuel_from_heavy_oil',
-    'planetaryfactory:chemistry/solid_fuel_from_light_oil'
+    'factoryworks:oil_processing/advanced_oil_processing',
+    'factoryworks:chemistry/heavy_oil_cracking',
+    'factoryworks:chemistry/light_oil_cracking',
+    'factoryworks:chemistry/solid_fuel_from_heavy_oil',
+    'factoryworks:chemistry/solid_fuel_from_light_oil'
   ]
 });
 
@@ -194,26 +194,26 @@ fromFactorio('advanced-oil-processing', {
 fromFactorio('logistics', {
   icon: 'beltworks:splitter',
   unlocks: [
-    'planetaryfactory:assembling/splitter',
-    'planetaryfactory:assembling/loader'
+    'factoryworks:assembling/splitter',
+    'factoryworks:assembling/loader'
   ]
 });
 
 fromFactorio('logistics-2', {
   icon: 'beltworks:improved_belt_tile',
   unlocks: [
-    'planetaryfactory:assembling/fast_transport_belt',
-    'planetaryfactory:assembling/fast_splitter',
-    'planetaryfactory:assembling/fast_loader'
+    'factoryworks:assembling/fast_transport_belt',
+    'factoryworks:assembling/fast_splitter',
+    'factoryworks:assembling/fast_loader'
   ]
 });
 
 fromFactorio('logistics-3', {
   icon: 'beltworks:express_belt_tile',
   unlocks: [
-    'planetaryfactory:assembling/express_transport_belt',
-    'planetaryfactory:assembling/express_splitter',
-    'planetaryfactory:assembling/express_loader'
+    'factoryworks:assembling/express_transport_belt',
+    'factoryworks:assembling/express_splitter',
+    'factoryworks:assembling/express_loader'
   ]
 });
 
@@ -223,10 +223,10 @@ fromFactorio('logistics-3', {
 
 fromFactorio('fast-inserter', {
   icon: 'beltworks:express_feeder',
-  unlocks: ['planetaryfactory:assembling/fast_inserter']
+  unlocks: ['factoryworks:assembling/fast_inserter']
 });
 
 fromFactorio('bulk-inserter', {
   icon: 'beltworks:turbo_feeder',
-  unlocks: ['planetaryfactory:assembling/bulk_inserter']
+  unlocks: ['factoryworks:assembling/bulk_inserter']
 });

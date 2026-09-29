@@ -38,7 +38,7 @@ it stops being GregTech's miner — and still hand-writing the renderer and the 
 because `MachineBuilder` exposes no `autoOutput*` setter and GregTech renders no working area at
 all.
 
-**So `planetaryfactory_core` authors both rigs, and GregTech owns no drill on Terra.** ADR-0040's
+**So `factoryworks_core` authors both rigs, and GregTech owns no drill on Terra.** ADR-0040's
 own principle — "the pack authors first-party when fidelity demands it" — applied one rung further
 up than it was willing to go.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assert the `planetaryfactory:buildings` block tag is Factorio's placeable entities (#413).
+"""Assert the `factoryworks:buildings` block tag is Factorio's placeable entities (#413).
 
 `scripts/build-building-tag.py --check` only proves the tag is what the generator would write, so
 each entry is also traced back to a Building row of `data/factorio/building.json` through the item
@@ -18,16 +18,16 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 GENERATOR = ROOT / "scripts" / "build-building-tag.py"
 EXTRACTOR = ROOT / "scripts" / "factorio-building-extract.py"
 CORPUS = ROOT / "data/factorio/building.json"
-TAG = ROOT / "kubejs/data/planetaryfactory/tags/block/buildings.json"
+TAG = ROOT / "kubejs/data/factoryworks/tags/block/buildings.json"
 
 MUST_HOLD = {
-    "furnaces": ("planetaryfactory:stone_furnace", "planetaryfactory:steel_furnace",
-                 "planetaryfactory:electric_furnace"),
-    "poles": ("planetaryfactory:small_electric_pole", "planetaryfactory:medium_electric_pole",
-              "planetaryfactory:substation_electric_pole"),
-    "Assembling Machines": ("planetaryfactory:assembling_machine",
-                            "planetaryfactory:assembling_machine_2",
-                            "planetaryfactory:assembling_machine_3"),
+    "furnaces": ("factoryworks:stone_furnace", "factoryworks:steel_furnace",
+                 "factoryworks:electric_furnace"),
+    "poles": ("factoryworks:small_electric_pole", "factoryworks:medium_electric_pole",
+              "factoryworks:substation_electric_pole"),
+    "Assembling Machines": ("factoryworks:assembling_machine",
+                            "factoryworks:assembling_machine_2",
+                            "factoryworks:assembling_machine_3"),
     "loaders": ("beltworks:loader", "beltworks:improved_loader", "beltworks:express_loader",
                 "beltworks:turbo_loader"),
     "feeders": ("beltworks:feeder", "beltworks:improved_feeder", "beltworks:express_feeder",
@@ -36,7 +36,7 @@ MUST_HOLD = {
               "beltworks:turbo_belt_tile"),
     "splitters": ("beltworks:splitter", "beltworks:improved_splitter", "beltworks:express_splitter",
                   "beltworks:turbo_splitter"),
-    "chests": ("minecraft:chest", "planetaryfactory:iron_chest", "planetaryfactory:steel_chest"),
+    "chests": ("minecraft:chest", "factoryworks:iron_chest", "factoryworks:steel_chest"),
     "pipes": ("oritech:fluid_pipe",),
 }
 

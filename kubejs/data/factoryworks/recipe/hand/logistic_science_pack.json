@@ -1,0 +1,21 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "beltworks:improved_feeder",
+      "count": 1
+    },
+    {
+      "ingredient": "beltworks:belt_tile",
+      "count": 1
+    }
+  ],
+  "result": {
+    "id": "researchd:research_pack",
+    "count": 1,
+    "components": {
+      "researchd:research_pack": "factory_works:logistic_science_pack"
+    }
+  },
+  "time": 120
+}

@@ -33,36 +33,36 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 CONVERTER = ROOT / "scripts/factorio-recipe-convert.py"
 # Subtrees of EMITTED the converter does not write, each held by a check of its own. Read out of
 # the converter rather than restated, so the two can never disagree about what it owns.
 FOREIGN_SUBTREES = tuple(re.findall(r'"([^"]+)"', re.search(
     r"^FOREIGN_SUBTREES = \((.*)\)$", CONVERTER.read_text(encoding="utf-8"), re.MULTILINE).group(1)))
 STARTUP = ROOT / "kubejs/startup_scripts"
-MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
+MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 PF_BLOCKS = MOD / "PFBlocks.java"
 PF_ITEMS = MOD / "PFItems.java"
 POLE_TIER = MOD / "energy/PoleTier.java"
 FURNACE_TIER = MOD / "smelting/FurnaceTier.java"
-RIG_TIER = ROOT / "mod/src/main/java/com/planetaryfactory/core/mining/rig/RigTier.java"
+RIG_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/rig/RigTier.java"
 ASSEMBLING_TIER = MOD / "machine/AssemblingTier.java"
 
 # The pack's own smelting type (#155). Its ingredient carries a count, which vanilla's cannot,
 # and it is the only type the three furnace tiers read.
-PACK_SMELTING = "planetaryfactory:smelting"
+PACK_SMELTING = "factoryworks:smelting"
 
 # The namespaces a LIVE item-map target may live in: this pack, the game, and FTB Materials, which
 # owns the material forms (ADR-0061). Whether a target actually resolves against the installed jars
 # is `tests/pack/test_item_map.py`'s question; this is the coarser one of whether the row names a mod
 # the pack ships at all. A row naming a mod ADR-0060 removed passes only while it is `blocked_by`
 # the ticket that re-targets it (#277, #260), and no emitted recipe may name one.
-NAMESPACES = {"minecraft", "planetaryfactory", "ftbmaterials",
+NAMESPACES = {"minecraft", "factoryworks", "ftbmaterials",
               # `c:` is the common tag namespace, which belongs to no mod.
               "c",
-              # Researchd owns the research-pack item; `planetary_factory:` (an underscore) is the
+              # Researchd owns the research-pack item; `factory_works:` (an underscore) is the
               # id space its packs are declared in, and is not this pack's item namespace.
-              "researchd", "planetary_factory",
+              "researchd", "factory_works",
               # Oritech is the pack's tech mod (ADR-0060): its engine (#282), pipes, tanks and fluids.
               "oritech",
               # Railcraft Reborn's signals and Beltworks' belts, ADR-0060's logistics (#277).
@@ -70,7 +70,7 @@ NAMESPACES = {"minecraft", "planetaryfactory", "ftbmaterials",
 
 
 def mod_registered_blocks():
-    """The `planetaryfactory:` blocks `planetaryfactory_core` registers, not KubeJS.
+    """The `factoryworks:` blocks `factoryworks_core` registers, not KubeJS.
 
     ADR-0015 splits registration by what a thing is: content goes to KubeJS, mechanism to the mod.
     Both land in the same namespace, so an item-map row cannot tell which side registered its
@@ -99,11 +99,11 @@ def mod_registered_blocks():
     blocks |= {f"{tier.lower()}_mining_drill" for tier in rigs}
     blocks |= set(re.findall(r'^\s{4}[A-Z]+\("([a-z0-9_]+)"',
                              ASSEMBLING_TIER.read_text(encoding="utf-8"), re.MULTILINE))
-    return {f"planetaryfactory:{name}" for name in blocks}
+    return {f"factoryworks:{name}" for name in blocks}
 
 
 def mod_registered_items():
-    """The `planetaryfactory:` items `planetaryfactory_core` registers with no block behind them.
+    """The `factoryworks:` items `factoryworks_core` registers with no block behind them.
 
     Everything the mod registered used to be a block, so reading `PFBlocks` and `PoleTier` covered
     it. The barrel (ADR-0037) is the first item that is only an item: it carries a fluid capability,
@@ -111,20 +111,20 @@ def mod_registered_items():
     this its row would read as unregistered while sitting in `PFItems` -- and the natural "fix" for
     that is to weaken the check, which is the one thing it must not do.
     """
-    return {f"planetaryfactory:{name}" for name in re.findall(
+    return {f"factoryworks:{name}" for name in re.findall(
         r'ITEMS\.register(?:SimpleItem|Item)?\(\s*"([a-z0-9_]+)"', PF_ITEMS.read_text(encoding="utf-8"))}
 
 
 def first_party_items():
-    """The `planetaryfactory:` items and machines the pack actually registers.
+    """The `factoryworks:` items and machines the pack actually registers.
 
-    Both halves of ADR-0015's split: the KubeJS startup scripts and `planetaryfactory_core`.
+    Both halves of ADR-0015's split: the KubeJS startup scripts and `factoryworks_core`.
     """
-    items = set(re.findall(r"event\.create\('(planetaryfactory:[a-z0-9_]+)'",
+    items = set(re.findall(r"event\.create\('(factoryworks:[a-z0-9_]+)'",
                            (STARTUP / "items.js").read_text()))
     # A block registers an item too, and the chest ladder is a block (#133): its rows would
     # otherwise read as unregistered while sitting three lines away in `blocks.js`.
-    items |= set(re.findall(r"event\.create\('(planetaryfactory:[a-z0-9_]+)'",
+    items |= set(re.findall(r"event\.create\('(factoryworks:[a-z0-9_]+)'",
                             (STARTUP / "blocks.js").read_text()))
     # Same guard as `kubejs_ids` in the flora check, and for the same reason: an empty
     # first-party set makes every "is this item registered" assertion below pass vacuously,
@@ -182,17 +182,17 @@ def check_item_map(items, corpus, failures):
         if "blocked_by" in row:
             if not isinstance(row["blocked_by"], int):
                 failures.append(f"{name} has blocked_by {row['blocked_by']!r}, not a ticket number")
-        if row.get("source") == "authored" and namespace != "planetaryfactory":
+        if row.get("source") == "authored" and namespace != "factoryworks":
             failures.append(f"{name} is authored but maps onto {target}")
-        if namespace == "planetaryfactory" and row.get("kind") == "item" \
+        if namespace == "factoryworks" and row.get("kind") == "item" \
                 and target not in registered and "blocked_by" not in row:
             failures.append(f"{name} maps onto {target}, which no startup script registers")
         # `blocked_by` is the one escape, and it is narrow: a row whose item is DECIDED but is
-        # `planetaryfactory_core`'s to register, naming the ticket that builds it. KubeJS cannot
+        # `factoryworks_core`'s to register, naming the ticket that builds it. KubeJS cannot
         # register a furnace with a fuel slot or a chunk-charting block, so without this the map
         # could not record a decision the mod has not caught up with -- and the alternative,
         # leaving the row `undecided`, would say nobody had decided rather than nobody had built.
-        if "blocked_by" in row and namespace == "planetaryfactory" and target in registered:
+        if "blocked_by" in row and namespace == "factoryworks" and target in registered:
             failures.append(f"{name} is blocked_by #{row['blocked_by']} and is already "
                             "registered -- drop the field, the ticket landed")
 
@@ -208,7 +208,7 @@ def check_overrides(overrides, corpus, failures):
 
 def input_slots():
     """The most input slots any machine of each recipe type has, read from the spec the mod reads (#489)."""
-    specs = json.loads((ROOT / "mod/src/main/resources/planetaryfactory_core/machine/specs.json").read_text())
+    specs = json.loads((ROOT / "mod/src/main/resources/factoryworks_core/machine/specs.json").read_text())
     slots = {}
     for spec in specs.values():
         slots[spec["recipe_type"]] = max(slots.get(spec["recipe_type"], 0), spec["item_inputs"])
@@ -218,12 +218,12 @@ def input_slots():
 def check_emitted(items, recipe_types, failures):
     """Every emitted recipe resolves through the item map and onto a recipe type that exists.
 
-    Two shapes reach this directory: `planetaryfactory:assembling` (#279) and the pack's furnace
+    Two shapes reach this directory: `factoryworks:assembling` (#279) and the pack's furnace
     type (#155).
     """
     targets = {row["target"] for row in items.values() if "target" in row}
     # A `blocked_by` row is decided but its item is not registered yet -- it arrives with a
-    # `planetaryfactory_core` ticket. A recipe naming one passes every assertion above and then
+    # `factoryworks_core` ticket. A recipe naming one passes every assertion above and then
     # fails at WORLD LOAD, where KubeJS cannot resolve the item: an error in a log, a recipe
     # nothing can craft, and nothing pointing back at the item map. The converter skips these
     # rows; this is the assertion that it is still doing so.

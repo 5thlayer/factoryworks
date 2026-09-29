@@ -19,7 +19,7 @@ Oritech's Energy Transmission Pole leaves the power path; ADR-0060's two-carrier
 visible wire between poles is a separate ticket and is cosmetic to the balance.
 
 **Wireless pull, identified by tag.** A pole recognises a source by the block tags
-`planetaryfactory:generators` and `planetaryfactory:accumulators`, and moves FE through the block's
+`factoryworks:generators` and `factoryworks:accumulators`, and moves FE through the block's
 `Capabilities.Energy.BLOCK` face. The tag, not the face, decides the role: an extract-capable face
 alone would make any third-party battery a generator and drain any machine whose face allows
 extraction.
@@ -39,7 +39,7 @@ stops at when full (`stopOnEnergyFull`). A mixin makes three changes:
   finite. Ours is not: the Offshore Pump draws from one source block forever (ADR-0050). The return
   would move one pump from twenty Boilers to about two hundred and add a silent stall on a full water
   tank, to solve a problem the pack does not have. Returned water is zero and ADR-0050 stands.
-- `planetaryfactory:steam` replaces Oritech's steam in `c:steam`, and the engine's recipe is emitted by the recipe converter
+- `factoryworks:steam` replaces Oritech's steam in `c:steam`, and the engine's recipe is emitted by the recipe converter
   from the `steam-engine` item-map row; Oritech's own crafting recipe is swept.
 
 **Why no subclass, against ADR-0060's rule.** Oritech's chaining looks neighbours up by
@@ -48,7 +48,7 @@ never matches, and engines would silently stop chaining. Using Oritech's block a
 chaining intact, and the pole still reaches it through the tag and the face.
 
 **The accumulator follows the same route.** Oritech's Large Energy Storage (1×3), tagged
-`planetaryfactory:accumulators`, mixed in to Factorio's 5 MJ and 300 kW: 50,000 FE at 150 FE/t.
+`factoryworks:accumulators`, mixed in to Factorio's 5 MJ and 300 kW: 50,000 FE at 150 FE/t.
 This replaces ADR-0060's "the core's accumulator" and restores that one storage block's recipe.
 
 ## Divergences from the corpus (ADR-0054)

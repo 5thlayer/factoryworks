@@ -116,7 +116,7 @@ the named sub-types `liquid`, `pigment`, `infuse_type`, `clean_slurry`, `dirty_s
 
 ```js
 StartupEvents.registry('mekanism:chemical', event => {
-  event.create('planetaryfactory:naphtha').gaseous().tint(0xC8C8C8)
+  event.create('factoryworks:naphtha').gaseous().tint(0xC8C8C8)
 })
 ```
 
@@ -377,7 +377,7 @@ So the decision reduces to the *design* trade #39 already framed, decided on reg
 
 Install `kubejs_mekanism`. On **build.6** if KubeJS stays at `2101.7.1-build.181`; on **build.18**
 only alongside a KubeJS bump to `2101.7.2-build.303` or newer. Then
-`StartupEvents.registry('mekanism:chemical', e => e.create('planetaryfactory:x').gaseous().tint(…))`.
+`StartupEvents.registry('mekanism:chemical', e => e.create('factoryworks:x').gaseous().tint(…))`.
 The addon also upgrades every Mekanism recipe from raw JSON to a typed schema, which is worth having
 regardless of whether a new chemical is ever registered.
 

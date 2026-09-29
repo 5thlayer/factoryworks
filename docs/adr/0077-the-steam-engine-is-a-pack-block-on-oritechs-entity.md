@@ -11,7 +11,7 @@ Oritech's multiblock, which the player assembles by placing three Machine Cores 
 and which breaks into a controller and loose cores. Every other multiblock the pack ships is placed
 from one item and breaks as one (ADR-0069, ADR-0072).
 
-**Decision (#352).** The Steam Engine is `planetaryfactory:steam_engine`, a `planetaryfactory_core` block
+**Decision (#352).** The Steam Engine is `factoryworks:steam_engine`, a `factoryworks_core` block
 whose block entity subclasses Oritech's `SteamEngineEntity`, on the Assembling Machine's pattern
 (ADR-0071). It is placed as its whole 2x1x2 footprint from one item, its other three blocks are
 invisible parts with no block entity, every block of it forwards the anchor's faces and its Jade

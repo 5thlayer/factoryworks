@@ -4,10 +4,10 @@ status: accepted
 
 # The Assembling Machine holds a player-set recipe, and the pack owns its craft cycle
 
-ADR-0060 spends one sentence on the machines: they are `planetaryfactory_core` subclasses of
+ADR-0060 spends one sentence on the machines: they are `factoryworks_core` subclasses of
 Oritech's, and an assembler, chemical plant or refinery holds a **player-set recipe** -- set once,
 inputs filtered to it, no lookup. #277 spent that sentence on *which block*
-(`assembling-machine-1` -> `planetaryfactory:assembling_machine`) and left the mechanism unspent, so
+(`assembling-machine-1` -> `factoryworks:assembling_machine`) and left the mechanism unspent, so
 nothing was buildable and nothing was filed. What the sentence costs was never priced, and the
 price is the whole decision.
 
@@ -17,16 +17,16 @@ path is typed to `OritechRecipe` -- `currentRecipe` is a field of that type, and
 `getCraftingResults` and `getRecipeDuration` all name it. And `OritechRecipe.itemInputs` is
 `List<Ingredient>` with **one entry per input slot, one unit each**: Oritech's own shipped data
 writes a count of 2 as the ingredient repeated twice, in a list exactly as long as the machine has
-slots. `planetaryfactory:assembling` (ADR-0063) carries `List<SizedIngredient>` with Factorio's
+slots. `factoryworks:assembling` (ADR-0063) carries `List<SizedIngredient>` with Factorio's
 counts, and the pack's emitted recipes reach 29 ingredient *units* across 4 distinct ingredients.
 **The pack's recipe type cannot be cast, adapted or widened into the base class's.** Removing the
 lookup is one protected method; everything downstream of it is the cost. Recorded here because it
 is the reason this ADR exists, and it is written down nowhere else but
 `docs/research/oritech-assembler-subclass.md`.
 
-**Decision.** `planetaryfactory:assembling_machine` extends `MultiblockMachineEntity` and
+**Decision.** `factoryworks:assembling_machine` extends `MultiblockMachineEntity` and
 **overrides `workTick()` whole**, running the pack's own craft cycle against a **Held recipe**: a
-`planetaryfactory:assembling` recipe id the player sets, stored in block-entity NBT and resolved
+`factoryworks:assembling` recipe id the player sets, stored in block-entity NBT and resolved
 lazily. The machine keeps Oritech's energy storage, inventory, addon system, GeckoLib model and
 multiblock base; it keeps none of Oritech's recipe machinery. Four input slots, which covers 138 of
 the corpus's 140 recipes in Factorio's three crafting categories. The recipe is set through a
@@ -80,7 +80,7 @@ every bump.
   closed both, recording that "#237's invariant is false as stated" under ADR-0056's slot locking.
   The failure they guarded against -- a recipe going silently unreachable -- survives the change of
   mechanism in a new shape, so one fresh check replaces them, in the GameTest: that every emitted
-  `planetaryfactory:assembling` recipe is selectable, and that a Held recipe survives a world reload
+  `factoryworks:assembling` recipe is selectable, and that a Held recipe survives a world reload
   and still crafts. It is a world load rather than a static check because selectability is a
   question about the server's recipe manager, not about the emitted files. It also guards
   `ItemStack.CODEC`'s binding trap (`tests/pack/test_load_codecs.py`): a dropped field does not

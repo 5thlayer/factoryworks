@@ -118,7 +118,7 @@ Terra reaches (`#138`).
 pack therefore declares `steel-axe` as **`CheckItemPresence` on 50 steel plates** — the item is
 checked, not eaten. That is closer to Factorio than `ConsumeItem` would be, since Factorio's trigger
 charges nothing and leaves the plates in your inventory. A true craft-trigger is mechanism, belongs
-in `planetaryfactory_core` under ADR-0015, and would serve all seven of `#138`'s technologies rather
+in `factoryworks_core` under ADR-0015, and would serve all seven of `#138`'s technologies rather
 than this one; it is not a prerequisite for this decision.
 
 **The effect changes from `character-mining-speed` to `unlock-recipe`, and this is the first time the

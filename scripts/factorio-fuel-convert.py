@@ -44,7 +44,7 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT_DIR = ROOT / "kubejs/data/planetaryfactory/fuel"
+OUT_DIR = ROOT / "kubejs/data/factoryworks/fuel"
 
 
 def load(relative):

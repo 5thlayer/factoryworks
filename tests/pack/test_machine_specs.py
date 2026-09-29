@@ -15,8 +15,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 GENERATOR = ROOT / "scripts" / "build-machine-specs.py"
-RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/machine/specs.json"
-EMITTED = ROOT / "kubejs/data/planetaryfactory/recipe"
+RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/machine/specs.json"
+EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 
 MACHINES = ("assembling-machine-1", "assembling-machine-2", "assembling-machine-3",
             "chemical-plant", "oil-refinery")

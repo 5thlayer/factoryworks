@@ -18,14 +18,14 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-RESOURCE = ROOT / "mod/src/main/resources/planetaryfactory_core/radar/radars.json"
+RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/radar/radars.json"
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 GENERATOR = ROOT / "scripts/build-radar-assets.py"
-PF_BLOCKS = ROOT / "mod/src/main/java/com/planetaryfactory/core/PFBlocks.java"
-ORE_SLICE = ROOT / "mod/src/main/resources/planetaryfactory_core/ore/amounts.json"
-MARKERS = ROOT / "mod/src/main/java/com/planetaryfactory/core/radar/ftb/FtbMapMarkers.java"
-LANG = ROOT / "kubejs/assets/planetaryfactory/lang/en_us.json"
-MARKER_KEY = "map.planetaryfactory.patch."
+PF_BLOCKS = ROOT / "mod/src/main/java/com/factoryworks/core/PFBlocks.java"
+ORE_SLICE = ROOT / "mod/src/main/resources/factoryworks_core/ore/amounts.json"
+MARKERS = ROOT / "mod/src/main/java/com/factoryworks/core/radar/ftb/FtbMapMarkers.java"
+LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
+MARKER_KEY = "map.factoryworks.patch."
 
 
 def main():

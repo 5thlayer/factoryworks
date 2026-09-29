@@ -1,0 +1,21 @@
+{
+  "type": "factoryworks:assembling",
+  "category": "crafting",
+  "ingredients": [
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 1
+    },
+    {
+      "ingredient": "ftbmaterials:iron_plate",
+      "count": 5
+    }
+  ],
+  "results": [
+    {
+      "id": "railcraft:distant_signal",
+      "count": 1
+    }
+  ],
+  "time": 10
+}

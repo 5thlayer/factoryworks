@@ -37,7 +37,7 @@ The network's components are not decided here. With Create gone nothing supplies
 supplied the capability — the four combinators and the display panel — are `undecided` on #484.
 Whether the pack grows past redstone's one channel to a real red and green wire is #485's.
 
-The ledger row stays `adapted`, supplied by `native_mechanic` and `planetaryfactory_core`.
+The ledger row stays `adapted`, supplied by `native_mechanic` and `factoryworks_core`.
 
 **Considered.**
 

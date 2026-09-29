@@ -16,7 +16,7 @@ Three decisions live here, each argued in ADR-0041:
     empty a patch with one hit.
   - **`c:ores` is not decoration.** GregTech's Miner scans that tag (`MinerLogic` reads
     `Tags.Blocks.ORES`), so it is the tag that decides whether rung 1's drill can see a
-    pack-authored block at all. `#planetaryfactory:factorio_mining_time` is the other one: it is
+    pack-authored block at all. `#factoryworks:factorio_mining_time` is the other one: it is
     what gives ADR-0039's flat seconds-per-ore to these blocks, and it already names `#c:ores`.
   - **The stage is the model, not a texture predicate.** One model per stage, one variant per
     stage, so a stage that has no sprite fails at load rather than rendering as a missing texture
@@ -36,11 +36,11 @@ import os
 import sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-CORPUS = os.path.join(ROOT, "mod/src/main/resources/planetaryfactory_core/ore/amounts.json")
-ASSETS = os.path.join(ROOT, "kubejs", "assets", "planetaryfactory")
+CORPUS = os.path.join(ROOT, "mod/src/main/resources/factoryworks_core/ore/amounts.json")
+ASSETS = os.path.join(ROOT, "kubejs", "assets", "factoryworks")
 DATA = os.path.join(ROOT, "kubejs", "data")
 
-NAMESPACE = "planetaryfactory"
+NAMESPACE = "factoryworks"
 
 # What each ore block pays out, and what it is called. The drops mirror `OreResource.java`, which
 # is the mod's own copy of the same decision; `tests/factorio/test_ore_assets.py` asserts the two
@@ -121,7 +121,7 @@ def merge_lang(files):
     lang = json.load(open(path, encoding="utf-8"))
     for ore, spec in ORES.items():
         lang[f"block.{NAMESPACE}.{ore}_ore"] = spec["name"]
-    lang["tooltip.planetaryfactory.ore.jade.amount"] = "Ore left: %s of %s"
+    lang["tooltip.factoryworks.ore.jade.amount"] = "Ore left: %s of %s"
     files[path] = lang
     return files
 

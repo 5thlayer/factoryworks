@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Emit the `planetaryfactory:buildings` block tag, from Factorio's placeable items (#413).
+"""Emit the `factoryworks:buildings` block tag, from Factorio's placeable items (#413).
 
 Joins `data/factorio/building.json`'s Buildings onto `data/pack/item-map.json` and writes the tag
 the mod's break rule reads. An item-map target is an item, and it joins to the block of the same
@@ -25,7 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CORPUS = ROOT / "data" / "factorio" / "building.json"
 ITEM_MAP = ROOT / "data" / "pack" / "item-map.json"
-TAG = ROOT / "kubejs/data/planetaryfactory/tags/block/buildings.json"
+TAG = ROOT / "kubejs/data/factoryworks/tags/block/buildings.json"
 KUBEJS = ROOT / "kubejs"
 MODS = ROOT / "mods"
 VANILLA = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(

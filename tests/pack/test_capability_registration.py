@@ -14,7 +14,7 @@ doesn't do anything", days later, with no thread back to the omission.
 Two things make that reachable here rather than hypothetical. A block entity type is declared in
 one place (`BLOCK_ENTITIES.register`) and its faces in another (`registerCapabilities`), with no
 compiler relationship between them -- adding the first and forgetting the second compiles. And
-`registerCapabilities` is reached only by an `addListener` call in `PlanetaryFactoryCore`, so
+`registerCapabilities` is reached only by an `addListener` call in `FactoryWorksCore`, so
 dropping that one line makes *every* machine in the mod inert at once, again silently.
 
 #265's own acceptance criterion -- that the faces are the Transfer API's rather than the legacy
@@ -42,10 +42,10 @@ import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
+MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 BLOCK_ENTITIES = MOD / "PFBlockEntities.java"
 ITEMS = MOD / "PFItems.java"
-CORE = MOD / "PlanetaryFactoryCore.java"
+CORE = MOD / "FactoryWorksCore.java"
 
 # Block comments and line comments, stripped before every scan: these assertions are about what the
 # code *names*, and the javadoc on these faces has to stay free to explain what they are not built

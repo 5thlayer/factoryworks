@@ -49,7 +49,7 @@ problem, not an absent one: **AlmostUnified stays**, because Create still ships 
 still ships ingots.
 
 **ADR-0053's non-recipe trap does not go away.** Its central finding — that unification reaches
-inside recipes and nowhere else, so a literal item id in KubeJS, in `planetaryfactory_core` or in a
+inside recipes and nowhere else, so a literal item id in KubeJS, in `factoryworks_core` or in a
 research trigger points at whatever unification just orphaned — is a fact about AlmostUnified, not
 about GregTech. Every site ADR-0053 identified has to be re-pointed at MI ids in the same commit
 that regenerates the recipes, `StartingKit.java` included.

@@ -1,0 +1,22 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 2
+    },
+    {
+      "ingredient": "factoryworks:plastic_bar",
+      "count": 2
+    },
+    {
+      "ingredient": "ftbmaterials:copper_wire",
+      "count": 4
+    }
+  ],
+  "result": {
+    "id": "factoryworks:advanced_circuit",
+    "count": 1
+  },
+  "time": 120
+}

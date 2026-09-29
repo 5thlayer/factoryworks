@@ -51,7 +51,7 @@ terrain surface, with Factorio's ragged edge. Terra registers **no ore veins at 
 is a fluid, `adapted` under `#86`, and not an ore patch (ADR-0020 as amended).
 
 **Outfield patches are worldgen; the starting area stays a stamp.** The starting area is stamped by
-`planetaryfactory_core` at server start only because no `StructurePlacement` can see world spawn.
+`factoryworks_core` at server start only because no `StructurePlacement` can see world spawn.
 Outfield patches have no spawn anchor, so they are ordinary worldgen: one `structure_set` per
 resource, which also makes them locatable — the thing the Radar will want.
 

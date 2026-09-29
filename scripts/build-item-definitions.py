@@ -49,13 +49,13 @@ DEFERRED = {
 # `builtin/entity` and draw nothing. Still derived, not decided -- the shape is the one Oritech's own
 # `items/assembler.json` has, and the base is the item model beside it.
 GECKOLIB = {
-    "planetaryfactory:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
-    "planetaryfactory:assembling_machine_2": "an OritechGeoItem drawing Oritech's assembler model (#295)",
-    "planetaryfactory:assembling_machine_3": "an OritechGeoItem drawing Oritech's assembler model (#295)",
-    "planetaryfactory:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
-    "planetaryfactory:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
-    "planetaryfactory:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",
-    "planetaryfactory:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
+    "factoryworks:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
+    "factoryworks:assembling_machine_2": "an OritechGeoItem drawing Oritech's assembler model (#295)",
+    "factoryworks:assembling_machine_3": "an OritechGeoItem drawing Oritech's assembler model (#295)",
+    "factoryworks:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
+    "factoryworks:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
+    "factoryworks:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",
+    "factoryworks:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
 }
 
 

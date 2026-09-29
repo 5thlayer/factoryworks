@@ -5,7 +5,7 @@ ADR-0048 is explicit that the Boiler and the Steam Engine (#224, #225) must be a
 numbers that are *read*, not chosen: `data/factorio/machine.json`'s `boilers` array carries the
 `boiler` prototype and its `generators` array carries `steam-engine` (both added by #188's widened
 extractor). This script copies both rows -- whole, every field, nothing selected -- into
-`mod/src/main/resources/planetaryfactory_core/fluid/steam_chain.json`, which
+`mod/src/main/resources/factoryworks_core/fluid/steam_chain.json`, which
 {@code SteamChainCorpus} reads at class-init the same way {@code PumpCorpus} reads `pumps.json` and
 {@code RigCorpus} reads `mining/drills.json`.
 
@@ -25,7 +25,7 @@ itself -- the `Fluid`, the `FluidType` and the `LiquidBlock` -- is mechanism (AD
 the mod as ordinary Java; only the display names are pack-side data.
 
 **Neither fluid has a bucket**, so there is no bucket model and no bucket lang key to write.
-ADR-0037 already answered portable fluid for this pack -- `planetaryfactory:barrel`, any fluid at
+ADR-0037 already answered portable fluid for this pack -- `factoryworks:barrel`, any fluid at
 Factorio's own 50 mB -- and states that capacity as a rule a later container "does not get to be
 re-argued from Minecraft's bucket" against. See `PFFluids`' javadoc.
 
@@ -43,11 +43,11 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MACHINE_CORPUS = os.path.join(ROOT, "data", "factorio", "machine.json")
 FLUID_CORPUS = os.path.join(ROOT, "data", "factorio", "fluid.json")
 STEAM_CHAIN_RESOURCE = os.path.join(
-    ROOT, "mod", "src", "main", "resources", "planetaryfactory_core", "fluid", "steam_chain.json"
+    ROOT, "mod", "src", "main", "resources", "factoryworks_core", "fluid", "steam_chain.json"
 )
-ASSETS = os.path.join(ROOT, "kubejs", "assets", "planetaryfactory")
-DATA = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
-NAMESPACE = "planetaryfactory"
+ASSETS = os.path.join(ROOT, "kubejs", "assets", "factoryworks")
+DATA = os.path.join(ROOT, "kubejs", "data", "factoryworks")
+NAMESPACE = "factoryworks"
 
 BOILER_NAME = "boiler"
 STEAM_ENGINE_NAME = "steam-engine"
@@ -82,7 +82,7 @@ BOILER_LANG = {
     f"tooltip.{NAMESPACE}.boiler.steam": "Steam: %s / %s mB",
 }
 
-# The two fluids ADR-0048 registers. Both `planetaryfactory:`, never `gtceu:steam` -- see the ADR.
+# The two fluids ADR-0048 registers. Both `factoryworks:`, never `gtceu:steam` -- see the ADR.
 FLUIDS = {
     "steam": "Steam",
     "superheated_steam": "Superheated Steam",

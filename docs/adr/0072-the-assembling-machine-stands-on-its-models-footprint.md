@@ -9,7 +9,7 @@ names the Assembling Machine as 3x3. ADR-0071 says the machine reuses Oritech's 
 ships no art. #326 found that those two cannot both hold: Oritech's model is drawn over Oritech's
 own assembler, a 2x1x2 of controller plus three Machine Cores, and cannot fill a 3x3.
 
-**Decision.** `planetaryfactory:assembling_machine` occupies **two wide, one deep, two tall** --
+**Decision.** `factoryworks:assembling_machine` occupies **two wide, one deep, two tall** --
 exactly Oritech's controller-and-cores layout, `(0,0,0)` plus `AssemblerBlockEntity.getCorePositions()`
 -- placed from one item as a footprint, the way ADR-0069 places every multiblock. The offsets live
 in `core/machine/AssemblingMachineFootprint`, in Oritech's controller-local frame, and are rotated

@@ -5,11 +5,11 @@ ADR-0050 makes the pump the *origin* of every drop of water in the factory: it i
 "water is extracted and transported, never created" becomes a block the player places rather than
 a number in a config file. This script supplies the one thing the mod must not type by hand --
 `pumping_speed` -- plus the ordinary blockstate/model/lang/loot-table plumbing every
-`planetaryfactory:` block needs under ADR-0015's split (mechanism in the mod, assets in the pack).
+`factoryworks:` block needs under ADR-0015's split (mechanism in the mod, assets in the pack).
 
 **Every number is read, not chosen.** `data/factorio/machine.json`'s `pumps` row (added by #210)
 carries the prototype; this script copies the fields the mod reads to
-`mod/src/main/resources/planetaryfactory_core/fluid/pumps.json`, which `PumpCorpus` reads at
+`mod/src/main/resources/factoryworks_core/fluid/pumps.json`, which `PumpCorpus` reads at
 class-init the same way `RigCorpus` reads `mining/drills.json`.
 
 **It copies; it does not derive.** `pumping_speed` is passed through as Factorio states it -- per
@@ -31,11 +31,11 @@ import sys
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MACHINE_CORPUS = os.path.join(ROOT, "data", "factorio", "machine.json")
 PUMP_RESOURCE = os.path.join(
-    ROOT, "mod", "src", "main", "resources", "planetaryfactory_core", "fluid", "pumps.json"
+    ROOT, "mod", "src", "main", "resources", "factoryworks_core", "fluid", "pumps.json"
 )
-ASSETS = os.path.join(ROOT, "kubejs", "assets", "planetaryfactory")
-DATA = os.path.join(ROOT, "kubejs", "data", "planetaryfactory")
-NAMESPACE = "planetaryfactory"
+ASSETS = os.path.join(ROOT, "kubejs", "assets", "factoryworks")
+DATA = os.path.join(ROOT, "kubejs", "data", "factoryworks")
+NAMESPACE = "factoryworks"
 
 BLOCK_NAME = "offshore_pump"
 FACTORIO_NAME = "offshore-pump"

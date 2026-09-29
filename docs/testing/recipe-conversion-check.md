@@ -1,7 +1,7 @@
 # The recipe conversion, and the two checks on it
 
 `scripts/factorio-recipe-convert.py` turns `data/factorio/recipe.json` into recipe JSON on the
-pack's own types under `kubejs/data/planetaryfactory/recipe/`. ADR-0026 is the decision; #87 is the
+pack's own types under `kubejs/data/factoryworks/recipe/`. ADR-0026 is the decision; #87 is the
 build, and #279 re-targeted it from GregTech's types, which left with ADR-0060.
 
 ## What decides what
@@ -24,15 +24,15 @@ Nothing is scaled (#126, which rewrote ADR-0025's table). Item counts transfer 1
 fluid unit is one millibucket, and `energy_required` seconds become ticks at ×20. `crafting_speed`
 and power belong to the machine (ADR-0029), so neither appears in a recipe.
 
-Two shapes come out, both read off the codec in `planetaryfactory_core`:
+Two shapes come out, both read off the codec in `factoryworks_core`:
 
-- **`planetaryfactory:assembling`** (`AssemblingRecipe`) for Factorio's three assembling
+- **`factoryworks:assembling`** (`AssemblingRecipe`) for Factorio's three assembling
   categories: `category`, then optional `ingredients` (NeoForge's sized ingredient,
   `{"ingredient": "<id or #tag>", "count": n}`), `fluid_ingredients` (`{"ingredient", "amount"}`),
   `results` (an item template, `{"id", "count"}`), `fluid_results` (`{"id", "amount"}`), and `time`
   in ticks.
-- **`planetaryfactory:smelting`** for the four smelts (#155).
-- **`planetaryfactory:chemistry`** and **`planetaryfactory:oil_processing`** for the Chemical Plant
+- **`factoryworks:smelting`** for the four smelts (#155).
+- **`factoryworks:chemistry`** and **`factoryworks:oil_processing`** for the Chemical Plant
   and the Oil Refinery (#488, ADR-0096): the assembling shape above under a type each, so each has
   its own EMI tab. The type is the serializer's, not a field of the JSON.
 
@@ -65,7 +65,7 @@ that has one — so 1:n emits and m:n cannot be written at all. Factorio's `stee
 plates and `stone-brick` is 2 stone. #87 first resolved them as a pair split — `steel-plate` earned
 a count-bearing type, `stone-brick` took a vanilla 1:1 shape — and ADR-0046 collapsed the split:
 
-- **Both ride a count-bearing `planetaryfactory:smelting` recipe type** on the pack's three furnaces
+- **Both ride a count-bearing `factoryworks:smelting` recipe type** on the pack's three furnaces
   (#155), read alongside vanilla smelting. `steel-plate` is the only surviving alloy on Terra (#72)
   and was always going to earn that type; once it exists, `stone-brick` at its exact 2:1 ratio is a
   second recipe on it at no extra cost, which is cheaper than the fidelity loss the 1:1 shape bought.
@@ -103,7 +103,7 @@ means "someone will decide this" needs to say who.
 
 **`blocked_by` is the narrow escape for a row whose target the game cannot load yet.** KubeJS
 cannot register a furnace with a fuel slot or a chunk-charting block, so those belong to
-`planetaryfactory_core` and arrive with their ticket, and the check fails once the item *is*
+`factoryworks_core` and arrive with their ticket, and the check fails once the item *is*
 registered — so the map cannot keep pointing at a ticket that closed. Since ADR-0060 it also covers
 a borrowed row whose mod is not on 26.1.2 (#277, #251): the target stays as the standing proposal, and
 `tests/pack/test_item_map.py` asserts every such row is in its `DEFERRED` with the same ticket.

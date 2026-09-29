@@ -10,7 +10,7 @@ the shelf to `a Mekanism portable tank`, the mod left, and the sentence was stru
 answered — leaving ten rows in `data/pack/item-map.json` (`barrel` plus the nine `*-barrel` fluids)
 pointing at `#106` for a container nobody had named.
 
-**The barrel is `planetaryfactory:barrel`, registered in `planetaryfactory_core` as a real
+**The barrel is `factoryworks:barrel`, registered in `factoryworks_core` as a real
 `IFluidHandlerItem`. It holds 50 mB, stacks to 10, accepts any fluid, and is filled and emptied by
 Create's Spout and Item Drain with no recipes at all.**
 

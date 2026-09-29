@@ -38,7 +38,7 @@ leaving the row asserting something nobody re-derived.
 
 ## The mechanism pays out what the block holds
 
-`mod/src/test/java/com/planetaryfactory/core/ore/` under `./gradlew :planetaryfactory_core:test`.
+`mod/src/test/java/com/factoryworks/core/ore/` under `./gradlew :factoryworks_core:test`.
 
 `OreDeltaTest` is the one that matters: a block pays out **exactly** its amount over exactly that
 many gestures, the last unit is paid rather than swallowed by the break that removes the block, and

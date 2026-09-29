@@ -1,0 +1,26 @@
+{
+  "type": "craftworks:assembling",
+  "ingredients": [
+    {
+      "ingredient": "ftbmaterials:steel_plate",
+      "count": 5
+    },
+    {
+      "ingredient": "ftbmaterials:iron_gear",
+      "count": 5
+    },
+    {
+      "ingredient": "factoryworks:electronic_circuit",
+      "count": 5
+    },
+    {
+      "ingredient": "oritech:fluid_pipe",
+      "count": 5
+    }
+  ],
+  "result": {
+    "id": "factoryworks:chemical_plant",
+    "count": 1
+  },
+  "time": 100
+}

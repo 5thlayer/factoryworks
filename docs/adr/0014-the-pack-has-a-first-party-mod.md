@@ -5,7 +5,7 @@ status: accepted
 # The pack has a first-party mod, built in-repo
 
 Sapros's two trees need a first-class `SaplingBlock` backed by a `TreeGrower`. No scripting API in
-this pack exposes one, so the pack acquires **`planetaryfactory_core`**: a first-party NeoForge mod,
+this pack exposes one, so the pack acquires **`factoryworks_core`**: a first-party NeoForge mod,
 built as a Gradle subproject inside this repo.
 
 ## Why Java, precisely
@@ -65,17 +65,17 @@ that way.
 
 ## Naming
 
-Mod ID **`planetaryfactory_core`**. Registry namespace **`planetaryfactory`**.
+Mod ID **`factoryworks_core`**. Registry namespace **`factoryworks`**.
 
 These are deliberately different, and NeoForge allows it — `DeferredRegister.create(Registries.BLOCK,
-"planetaryfactory")` is legal from a mod whose ID is something else.
+"factoryworks")` is legal from a mod whose ID is something else.
 
 - The **ID** avoids colliding with the modpack's own name once published. `_core` is the conventional
   companion-mod suffix and reads as subordinate to the pack rather than as a competing product. A
   scoped name like `_worldgen` was rejected: the remit is deliberately unscoped, and a mod ID cannot
   be renamed without breaking every world that used it.
-- The **namespace** is shared with KubeJS's existing registrations — `planetaryfactory:scrap_pile`
-  and `planetaryfactory:fulgorite` already exist under it. Giving the mod its own namespace would
+- The **namespace** is shared with KubeJS's existing registrations — `factoryworks:scrap_pile`
+  and `factoryworks:fulgorite` already exist under it. Giving the mod its own namespace would
   make every block ID advertise which tool registered it, leaking an implementation detail into
   every tag file, loot table and recipe in the pack.
 

@@ -29,7 +29,7 @@ import sys
 import zlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-TEXTURES = ROOT / "kubejs/assets/planetaryfactory/textures/block"
+TEXTURES = ROOT / "kubejs/assets/factoryworks/textures/block"
 SOURCE = TEXTURES / "substation_electric_pole.png"
 OUT = TEXTURES / "creative_electric_pole.png"
 

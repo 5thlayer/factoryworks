@@ -30,26 +30,26 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 FLUID_CORPUS = ROOT / "data/factorio/fluid.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 GENERATOR = ROOT / "scripts/build-steam-assets.py"
-PF_BLOCKS = ROOT / "mod/src/main/java/com/planetaryfactory/core/PFBlocks.java"
+PF_BLOCKS = ROOT / "mod/src/main/java/com/factoryworks/core/PFBlocks.java"
 
 BLOCK = "boiler"
-BLOCK_ID = f"planetaryfactory:{BLOCK}"
+BLOCK_ID = f"factoryworks:{BLOCK}"
 FACINGS = ("north", "east", "south", "west")
 
 # The screen's own keys, plus the block name. A missing tooltip key renders the raw key on the
 # gauge that exists to say why the machine has stopped.
 LANG_KEYS = (
-    f"block.planetaryfactory.{BLOCK}",
-    "tooltip.planetaryfactory.boiler.fuel",
-    "tooltip.planetaryfactory.boiler.fuel.seconds",
-    "tooltip.planetaryfactory.boiler.fuel.out",
-    "tooltip.planetaryfactory.boiler.water",
-    "tooltip.planetaryfactory.boiler.steam",
+    f"block.factoryworks.{BLOCK}",
+    "tooltip.factoryworks.boiler.fuel",
+    "tooltip.factoryworks.boiler.fuel.seconds",
+    "tooltip.factoryworks.boiler.fuel.out",
+    "tooltip.factoryworks.boiler.water",
+    "tooltip.factoryworks.boiler.steam",
 )
 
 MINECRAFT_TICKS_PER_SECOND = 20

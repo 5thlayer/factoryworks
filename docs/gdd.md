@@ -1,8 +1,8 @@
-# PlanetaryFactory — Game Design Document
+# FactoryWorks — Game Design Document
 
 A Minecraft 26.1.2 / NeoForge modpack reproducing the progression, logistics puzzles and
 interplanetary scope of Factorio's Space Age expansion, built on a curated mod stack and bound
-together by `planetaryfactory_core` and KubeJS into a stationary, automation-first loop.
+together by `factoryworks_core` and KubeJS into a stationary, automation-first loop.
 
 This document describes intended design. Decisions that are hard to reverse are recorded as ADRs in
 `docs/adr/`; domain vocabulary is defined in `CONTEXT.md` and used here verbatim. Where an ADR or
@@ -32,7 +32,7 @@ the packwiz manifest (ADR-0024); ADR-0060 records which of them are pre-releases
 - **Researchd**, forked by the pack — the research tree and the Research Lab that gates it
   (ADR-0022). The tree's shape is Factorio's, extracted rather than transcribed, and research is
   held per team; a machine locks by the team that placed it (ADR-0058's amendment). FTB Quests keeps the book and the reward surface, and gates nothing.
-- **`planetaryfactory_core`** — the pack's own mod, for mechanism no other mod supplies at
+- **`factoryworks_core`** — the pack's own mod, for mechanism no other mod supplies at
   Factorio's numbers (ADR-0014, ADR-0015). Among it: the pole network, the only power carrier
   (ADR-0062), the pack's recipe types (ADR-0063) and the machines built on Oritech's bodies.
 - **KubeJS** — registers the pack's items and runs the stock-recipe sweep (ADR-0015, ADR-0034).
@@ -79,7 +79,7 @@ interplanetary travel (#340).
 ### The launch
 
 The launch is the payoff moment, physical and watchable, and is never simulated. The Rocket Silo is
-a `planetaryfactory_core` machine that makes Rocket Parts and launches, and it does not wait on an
+a `factoryworks_core` machine that makes Rocket Parts and launches, and it does not wait on an
 Oritech release (ADR-0080). What a launch does, with no travel yet to give it a destination, is
 #378.
 
@@ -125,7 +125,7 @@ puzzle belongs to that body and is specified with it, not here.
 ### The Personal Assembler
 
 The vanilla inventory screen itself (ADR-0066), and the player's only hand-crafting surface. Every
-fluid-free `crafting` recipe reaches it (`#88`), on the pack's own `planetaryfactory:assembling`
+fluid-free `crafting` recipe reaches it (`#88`), on the pack's own `factoryworks:assembling`
 type: the hand set is a predicate over the Assembling Machine's recipes, so one emitted recipe
 serves both surfaces (ADR-0063). It is not an item — there is nothing to craft, nothing to lose and
 nothing to grant. Hand-crafting stops being how you *produce* long before it stops being available,

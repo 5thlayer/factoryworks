@@ -1,7 +1,7 @@
 # Where the Rocket Silo's 50-cycle count can live
 
 **Answer in one line: the count lives as an `@Persisted int` on a first-party
-`MetaMachine` subclass in `planetaryfactory_core`, registered as a GregTech multiblock from a KubeJS
+`MetaMachine` subclass in `factoryworks_core`, registered as a GregTech multiblock from a KubeJS
 startup script that hands `.machine(...)` the Java constructor. GregTech already has a
 `consecutiveRecipes` counter and it is the wrong one — it is zeroed the moment the machine idles
 or the structure de-forms. Nothing needs a mixin: the mod already hard-depends on `gtceu`. GCyR's
@@ -75,8 +75,8 @@ public MultiblockMachineBuilderWrapper definition(Function<ResourceLocation, Mul
 
 `createKJSMulti(ResourceLocation)` with no creation function calls
 `GTRegistrate.createIgnoringListenerErrors(id.getNamespace())` — **the definition lands in the
-namespace of the id you pass**, so `planetaryfactory:rocket_silo` registers under
-`planetaryfactory`, consistent with ADR-0015's one-namespace rule.
+namespace of the id you pass**, so `factoryworks:rocket_silo` registers under
+`factoryworks`, consistent with ADR-0015's one-namespace rule.
 
 ### The machine classes
 
@@ -207,7 +207,7 @@ the signature and from `getParallelAmount` delegating to it.)*
 ## 4. Which surface owns the counter — and no mixin is needed
 
 ADR-0015's rule is "the code owns the mechanism, the data owns the content", with
-`planetaryfactory_core` reserved for *"any block whose behaviour needs a vanilla class no scripting
+`factoryworks_core` reserved for *"any block whose behaviour needs a vanilla class no scripting
 API exposes"*. A durable, synced, per-controller integer that survives de-forming is exactly that:
 `MultiblockMachineBuilderWrapper` has no `@Persisted`-equivalent and KubeJS has no way to declare a
 field on a machine. **The counter is the mod's.**
@@ -216,8 +216,8 @@ field on a machine. **The counter is the mod's.**
 `mods/gtceu-*.jar`, and `mod/src/main/resources/META-INF/neoforge.mods.toml` declares
 `modId = "gtceu"`, `type = "required"`, `versionRange = "[7.0.2,)"`, `ordering = "AFTER"`. The mod
 already contains one GregTech mixin,
-`mod/src/main/java/com/planetaryfactory/core/mixin/gtceu/RecipeLogicMixin.java`, registered through
-`mod/src/main/resources/planetaryfactory_core.mixins.json`.
+`mod/src/main/java/com/factoryworks/core/mixin/gtceu/RecipeLogicMixin.java`, registered through
+`mod/src/main/resources/factoryworks_core.mixins.json`.
 
 **A mixin is not needed for the silo.** `MultiblockControllerMachine` and
 `WorkableMultiblockMachine` are public and non-final; subclassing is the documented extension
@@ -242,11 +242,11 @@ Two ways to register it, both verified reachable:
 1. **KubeJS calls into the mod.** `Java.loadClass` exists in this KubeJS build —
    `dev/latvian/mods/kubejs/bindings/JavaWrapper.class` declares
    `loadClass(KubeJSContext, String)` and `tryLoadClass(…)`. A startup script can do
-   `const RocketSilo = Java.loadClass('com.planetaryfactory.core.machine.RocketSiloMachine')` and
+   `const RocketSilo = Java.loadClass('com.factoryworks.core.machine.RocketSiloMachine')` and
    pass `.machine(be => new RocketSilo(be))` to the `multiblock` builder. **The pattern, the tier,
    the recipe type and the shape info stay in a script — data, per ADR-0015 — and only the
    mechanism is compiled.** This is the recommended shape.
-2. **The mod registers it itself** with `GTRegistrate.create("planetaryfactory")` +
+2. **The mod registers it itself** with `GTRegistrate.create("factoryworks")` +
    `registerEventListeners(modEventBus)` + `.multiblock("rocket_silo", RocketSiloMachine::new)`.
    Works, but compiles the pattern, which ADR-0015 argues against.
 
@@ -393,7 +393,7 @@ code, no fork edit — which is what makes #41's "both launch kinds pay the same
 | Persistent custom state | yes — LDLib `@Persisted` / `@DescSynced` + own `ManagedFieldHolder`, or `saveCustomPersistedData`/`loadCustomPersistedData` on `MetaMachine` | verified |
 | Existing recipe counter | `RecipeLogic.consecutiveRecipes`, but zeroed on idle (`onRecipeFinish` line 458), on `resetRecipeLogic` and on structure de-form | verified — **unusable** |
 | Parallels instead of a counter | possible; `getMaxByInput` clamps to inputs present, so it becomes "load 250/250/250 000 mB and run once" | verified mechanism, inferred consequence |
-| Owner under ADR-0015 | `planetaryfactory_core`, as a `WorkableMultiblockMachine` subclass; pattern and tuning stay in KubeJS | ADR-0015 + verified subclass reachability |
+| Owner under ADR-0015 | `factoryworks_core`, as a `WorkableMultiblockMachine` subclass; pattern and tuning stay in KubeJS | ADR-0015 + verified subclass reachability |
 | Mixin needed? | **no** — mod already `compileOnly`s the GregTech jar and hard-depends on `gtceu [7.0.2,)`; LDLib must be added to the compile classpath from GregTech's jarjar | verified |
 | `startRocket` lookup | `MultiblockWorldSavedData.getOrCreate(level).getControllersInChunk(new ChunkPos(blockPosition()))`, filtered by `MultiblockState.cache`; or stamp the silo pos on the entity at build time | verified index, inferred fit |
 | Player-visible progress | `IDisplayUIMachine.addDisplayText` + `MultiblockDisplayText.Builder.addCustom`, or script `additionalDisplay(...)` | verified |

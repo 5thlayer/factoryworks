@@ -9,7 +9,7 @@ StartupEvents.registry('item', event => {
   //
   // THE SCIENCE PACKS ARE NOT HERE. They are Researchd research packs, not plain items:
   // `kubejs/server_scripts/researchd.js` declares them with `registerResearchPacks` under
-  // `planetary_factory:` (an underscore, and not this pack's item namespace), and they are held
+  // `factory_works:` (an underscore, and not this pack's item namespace), and they are held
   // as `researchd:research_pack` carrying a `researchd:research_pack` data component. Registering
   // an item of the same name here would have shipped a second, inert pack the Lab cannot read.
   //
@@ -24,7 +24,7 @@ StartupEvents.registry('item', event => {
   // not with the converter.
   //
   // Their recipes are not written here: they are the corpus's, emitted by
-  // `scripts/factorio-recipe-convert.py` into `kubejs/data/planetaryfactory/recipe/`.
+  // `scripts/factorio-recipe-convert.py` into `kubejs/data/factoryworks/recipe/`.
 
   // Common
   //
@@ -38,21 +38,21 @@ StartupEvents.registry('item', event => {
   // A texture is referenced out of the installed jar, not copied into this repo. ADR-0026's
   // machines already borrow this way; #234 is writing down why that differs from committing a
   // derived sprite, and nothing here is redistributed.
-  event.create('planetaryfactory:electronic_circuit')
+  event.create('factoryworks:electronic_circuit')
     .displayName('Electronic Circuit')
     .texture('railcraft:item/receiver_circuit')
 
-  event.create('planetaryfactory:advanced_circuit')
+  event.create('factoryworks:advanced_circuit')
     .displayName('Advanced Circuit')
     .texture('railcraft:item/controller_circuit')
 
-  event.create('planetaryfactory:processing_unit')
+  event.create('factoryworks:processing_unit')
     .displayName('Processing Unit')
     .texture('railcraft:item/radio_circuit')
 
   // Plastic authors for the same reason: it gates rung 2 (ADR-0025), and a rung-boundary row
   // authors rather than borrows. Its recipe is the Chemical Plant's and arrives with #107.
-  event.create('planetaryfactory:plastic_bar')
+  event.create('factoryworks:plastic_bar')
     .displayName('Plastic Bar')
     .texture('oritech:item/plastic_sheet')
 
@@ -63,13 +63,13 @@ StartupEvents.registry('item', event => {
   // The rocket pair authors on Factorio fidelity (#87): the Rocket Silo's cycle consumes
   // Factorio's own intermediates, which revises #41's HDPE-and-circuits triple.
   //
-  // `planetaryfactory:rocket_fuel` is NOT `gtceu:rocket_fuel`. This is Factorio's solid item, made
+  // `factoryworks:rocket_fuel` is NOT `gtceu:rocket_fuel`. This is Factorio's solid item, made
   // from solid fuel and light oil; GregTech's is the FLUID the GCyR rocket entity burns (#41).
-  event.create('planetaryfactory:solid_fuel')
+  event.create('factoryworks:solid_fuel')
     .displayName('Solid Fuel')
     .texture('minecraft:item/charcoal')
 
-  event.create('planetaryfactory:rocket_fuel')
+  event.create('factoryworks:rocket_fuel')
     .displayName('Rocket Fuel')
     .texture('minecraft:item/blaze_powder')
 
@@ -78,7 +78,7 @@ StartupEvents.registry('item', event => {
   // read as the same kind of thing. `carbon_fibre_strands` is the raw bundle and would not --
   // a Structure is a panel. Note Oritech's spelling is `fibre`; the `carbon_fiber_plate` this
   // replaces was a GTCEu name and never existed here under either spelling.
-  event.create('planetaryfactory:low_density_structure')
+  event.create('factoryworks:low_density_structure')
     .displayName('Low Density Structure')
     .texture('oritech:item/reinforced_carbon_sheet')
 
@@ -90,7 +90,7 @@ StartupEvents.registry('item', event => {
   // that mod's behaviour in the recipe, borrowing its texture puts only the picture there.
   // `basic_battery` rather than `advanced_battery` because the two are a colour pair and this
   // item has no second tier to spend the purple one on.
-  event.create('planetaryfactory:battery')
+  event.create('factoryworks:battery')
     .displayName('Battery')
     .texture('oritech:item/basic_battery')
 
@@ -99,28 +99,28 @@ StartupEvents.registry('item', event => {
   // for the item. The two sprites are borrowed, and from different mods on purpose -- Railcraft's
   // `charge_motor` is plain grey steel and Oritech's `motor` is wound in copper, so the pair reads
   // mechanical-then-electric in the order Factorio's ladder does.
-  event.create('planetaryfactory:engine_unit')
+  event.create('factoryworks:engine_unit')
     .displayName('Engine Unit')
     .texture('railcraft:item/charge_motor')
 
-  event.create('planetaryfactory:electric_engine_unit')
+  event.create('factoryworks:electric_engine_unit')
     .displayName('Electric Engine Unit')
     .texture('oritech:item/motor')
 
   // Sapros
-  event.create('planetaryfactory:yumako_fresh')
+  event.create('factoryworks:yumako_fresh')
     .displayName('Yumako')
-    .texture('planetaryfactory:item/yumako');
+    .texture('factoryworks:item/yumako');
 
-  event.create('planetaryfactory:jellynut_fresh')
+  event.create('factoryworks:jellynut_fresh')
     .displayName('Jellynut')
-    .texture('planetaryfactory:item/jellynut');
+    .texture('factoryworks:item/jellynut');
 
-  event.create('planetaryfactory:iron_bacteria_fresh')
+  event.create('factoryworks:iron_bacteria_fresh')
     .displayName('Iron Bacteria')
-    .texture('planetaryfactory:item/iron_bacteria');
+    .texture('factoryworks:item/iron_bacteria');
 
-  event.create('planetaryfactory:copper_bacteria_fresh')
+  event.create('factoryworks:copper_bacteria_fresh')
     .displayName('Copper Bacteria')
-    .texture('planetaryfactory:item/copper_bacteria');
+    .texture('factoryworks:item/copper_bacteria');
 });

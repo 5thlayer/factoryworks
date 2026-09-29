@@ -29,7 +29,7 @@ time rather than the assertion being weakened, and each ticket deletes its entry
 
 HOW A TARGET IS RESOLVED. By the lang key its namespace's jar ships, which is what
 `test_starting_kit.py` uses and the only registry evidence a static check has. Three namespaces are
-not in `mods/`: `planetaryfactory`'s own items are the mod's lang plus KubeJS's `event.create` ids,
+not in `mods/`: `factoryworks`'s own items are the mod's lang plus KubeJS's `event.create` ids,
 and `minecraft`'s are the installed client jar's -- which is outside the repo, so vanilla rows are
 skipped rather than guessed when it is not there.
 """
@@ -136,7 +136,7 @@ def vanilla_lang():
 def resolves(target):
     """Whether one `namespace:path` names something an installed jar registers."""
     namespace, _, path = target.partition(":")
-    if namespace == "planetaryfactory":
+    if namespace == "factoryworks":
         if target in kubejs_created():
             return True
         keys = pack_lang()

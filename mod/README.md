@@ -1,4 +1,4 @@
-# `planetaryfactory_core`
+# `factoryworks_core`
 
 The pack's first-party NeoForge mod, built as a Gradle subproject of this repo (ADR-0014).
 
@@ -16,7 +16,7 @@ API in this pack exposes:
   argument, including what `concentric_rings` got wrong. The class inlines vanilla's
   `generateJigsaw` so that it can load the chunks under the pieces first — a piece placed over an
   unloaded chunk is written at y=-64, silently, because `Level.getHeight` does not generate. It
-  ships one structure processor with it, `planetaryfactory:ground`, which drops each column of a
+  ships one structure processor with it, `factoryworks:ground`, which drops each column of a
   patch onto the terrain: vanilla's `minecraft:gravity` reads a heightmap whose top is "anything
   that is not air", so a field crossing a wood landed on the canopy.
 - **Research locks** — a mixin teaching GregTech machines to honour Researchd's `unlock_recipe`
@@ -48,10 +48,10 @@ Note the two names, which are deliberately different:
 
 | | |
 | --- | --- |
-| Mod id | `planetaryfactory_core` |
-| Registry namespace | `planetaryfactory` — shared with KubeJS |
+| Mod id | `factoryworks_core` |
+| Registry namespace | `factoryworks` — shared with KubeJS |
 
-So `planetaryfactory:yumako_sapling` is this mod's, and `planetaryfactory:yumako_leaves` is
+So `factoryworks:yumako_sapling` is this mod's, and `factoryworks:yumako_leaves` is
 `kubejs/startup_scripts/blocks.js`'s. Registering the same id twice is a startup crash whose
 message will not mention either file, so read the ownership table in ADR-0015 before adding a block.
 
@@ -60,15 +60,15 @@ message will not mention either file, so read the ownership table in ADR-0015 be
 From the **repo root**, not from `mod/`:
 
 ```sh
-./gradlew :planetaryfactory_core:installToPack
+./gradlew :factoryworks_core:installToPack
 ```
 
 That builds the jar and copies it into `mods/`, which is the whole install step. `mods/` is
 gitignored, so this has to be run once on any machine that intends to launch the pack — including
 after a fresh clone, where the pack will otherwise start with two saplings missing and every
-`planetaryfactory:*_sapling` reference failing to resolve.
+`factoryworks:*_sapling` reference failing to resolve.
 
-`./gradlew :planetaryfactory_core:build` builds without installing. The first run downloads and
+`./gradlew :factoryworks_core:build` builds without installing. The first run downloads and
 decompiles Minecraft and takes a few minutes; later runs are seconds.
 
 Requires **JDK 25** and **ModDevGradle 2.0.147** (the plugin version in `mod/build.gradle`; 2.0.107
@@ -101,7 +101,7 @@ block in `mod/build.gradle`, and the two `parchment_*` keys here, when a 26.1 re
 ## Tests
 
 ```
-./gradlew :planetaryfactory_core:test
+./gradlew :factoryworks_core:test
 ```
 
 JUnit 5, run on a plain JVM. This is the pack's "this pack logic computes something" row in
@@ -121,7 +121,7 @@ that does need a `Level` lives in `ResearchLocks`, holds no rules of its own, an
 human in-game.
 
 The subproject also carries a headless NeoForge GameTest run — `./gradlew
-:planetaryfactory_core:runGameTestServer` from the repo root — which the pack's sibling-clone mods
+:factoryworks_core:runGameTestServer` from the repo root — which the pack's sibling-clone mods
 (GCyR, `respoiled`) have no equivalent of. The tests live in `core/gametest/`, in the **main**
 source set: a GameTest is code the running game loads, so it cannot live in the Minecraft-free
 test source set described above. What is there is only what a JVM test cannot reach; see

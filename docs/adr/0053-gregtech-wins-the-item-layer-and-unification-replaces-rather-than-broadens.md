@@ -29,7 +29,7 @@ Every word there matters, and none of it is visible from any file in this repo:
   The losing item becomes an orphan that no recipe in the pack will take.
 - **Only inside recipes.** The jar ships a `GregTechModernRecipeUnifier` alongside its Create one,
   so the pack's `assembling/` and `chemical_plant/` GT recipes are rewritten like any other. Nothing
-  outside a recipe is. A literal item id in KubeJS, in `planetaryfactory_core`, or in a research
+  outside a recipe is. A literal item id in KubeJS, in `factoryworks_core`, or in a research
   trigger is left exactly as written, pointing at whichever item unification just orphaned.
 
 That combination is silent in both directions and it cost two separate evenings. The chain keeps

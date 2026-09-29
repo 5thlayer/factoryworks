@@ -22,7 +22,7 @@ starts at the LP Steam Miner, which takes steam piped in from a boiler — two b
 connection, and a fuel that is not the coal in your hand. Fidelity to Factorio's opening and
 GregTech's ownership of extraction could not both hold, and the opening won.
 
-So: **`planetaryfactory_core` registers a burner mining drill, and it is rung 0's only drill. The
+So: **`factoryworks_core` registers a burner mining drill, and it is rung 0's only drill. The
 LP Steam Miner leaves the pack.** GregTech keeps the electric ladder — `electric-mining-drill` is
 `gtceu:lv_miner` at rung 1 — and keeps the fluid rig.
 
@@ -41,7 +41,7 @@ steam.
 
 ## What the drill is
 
-- **A first-party block in `planetaryfactory_core`.** ADR-0015 puts mechanism in the mod, and a
+- **A first-party block in `factoryworks_core`.** ADR-0015 puts mechanism in the mod, and a
   fuel-burning miner is mechanism. The mod already registers blocks, block entities and menus — the
   supply-area pole, the furnace ladder, the trees — so this is existing ground.
 - **It burns solid fuel.** No steam, no EU, no FE. That is the entire point of the block.
@@ -74,7 +74,7 @@ gets two, matching Factorio's own Nauvis:
 
 | Rung | Drill | Source |
 | --- | --- | --- |
-| 0 | Burner Mining Drill | `planetaryfactory_core`, this ADR |
+| 0 | Burner Mining Drill | `factoryworks_core`, this ADR |
 | 1 | `gtceu:lv_miner` (Basic Miner) | GregTech, `electric-mining-drill` |
 
 ADR-0017's third rig is Vulcanus's **Big Mining Drill** — planet-locked, that body's puzzle, not

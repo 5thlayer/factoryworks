@@ -33,7 +33,7 @@ import re
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-MOD = ROOT / "mod/src/main/java/com/planetaryfactory/core"
+MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 GUARD = MOD / "transfer/GuardedResourceHandler.java"
 
 # The one place NeoForge's own delegating handler may be named.

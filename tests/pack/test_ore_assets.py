@@ -39,9 +39,9 @@ import test_item_map  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 
-SLICE = ROOT / "mod/src/main/resources/planetaryfactory_core/ore/amounts.json"
-RESOURCE_JAVA = ROOT / "mod/src/main/java/com/planetaryfactory/core/ore/OreResource.java"
-ASSETS = ROOT / "kubejs/assets/planetaryfactory"
+SLICE = ROOT / "mod/src/main/resources/factoryworks_core/ore/amounts.json"
+RESOURCE_JAVA = ROOT / "mod/src/main/java/com/factoryworks/core/ore/OreResource.java"
+ASSETS = ROOT / "kubejs/assets/factoryworks"
 DATA = ROOT / "kubejs/data"
 
 # The tag GregTech's Miner scans. Not decoration: `MinerLogic` reads `Tags.Blocks.ORES`, which is
@@ -118,7 +118,7 @@ def main():
             if f"stage={stage}" not in variants:
                 failures.append(f"{block} has no variant for stage={stage}")
 
-        loot = DATA / "planetaryfactory/loot_table/blocks" / f"{block}.json"
+        loot = DATA / "factoryworks/loot_table/blocks" / f"{block}.json"
         if loot.is_file() and json.loads(loot.read_text()).get("pools"):
             # ADR-0041 rejects "a hand break taking one unit and destroying the remainder" because
             # it "hands the player a way to vandalise a patch for one ore". A loot table that pays
@@ -128,7 +128,7 @@ def main():
                 f"{block}'s loot table pays out -- an explosion would buy a whole block's amount "
                 "for one item, which is the vandalism route ADR-0041 closed")
 
-    if "tooltip.planetaryfactory.ore.jade.amount" not in json.loads(
+    if "tooltip.factoryworks.ore.jade.amount" not in json.loads(
             (ASSETS / "lang/en_us.json").read_text()):
         failures.append("the Jade line has no lang key, so the amount would render as a raw key")
 
@@ -136,7 +136,7 @@ def main():
         failures.append("no c:ores tag -- GregTech's Miner scans it, and would see no pack ore")
     else:
         tagged = set(json.loads(ORES_TAG.read_text())["values"])
-        missing = {f"planetaryfactory:{ore}_ore" for ore in java} - tagged
+        missing = {f"factoryworks:{ore}_ore" for ore in java} - tagged
         if missing:
             failures.append(f"{sorted(missing)} are outside c:ores, so no drill can see them")
 
@@ -147,7 +147,7 @@ def main():
         failures.append("scripts/build-ore-textures.py has no one-line SOURCED table to read credits from")
     for ore, art in (json.loads(sourced.group(1)) if sourced else {}).items():
         credited = [f"data/art/{art}"] + [
-            f"kubejs/assets/planetaryfactory/textures/block/ore/{ore}_stage{n}.png" for n in range(stages)]
+            f"kubejs/assets/factoryworks/textures/block/ore/{ore}_stage{n}.png" for n in range(stages)]
         for file in credited:
             if file not in notice:
                 failures.append(f"{file} is borrowed art with no credit in NOTICE")

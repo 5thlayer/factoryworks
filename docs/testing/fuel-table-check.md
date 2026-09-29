@@ -14,7 +14,7 @@ Four artifacts, in a line, none of which can be checked from either end alone:
 data/factorio/fuel.json     name, fuel_value, fuel_category         (#185)
 data/pack/item-map.json     Factorio name -> pack item or tag       (ADR-0026)
   -> scripts/factorio-fuel-convert.py
-kubejs/data/planetaryfactory/fuel/*.json    what the game loads
+kubejs/data/factoryworks/fuel/*.json    what the game loads
   -> PFFuel / FuelTable                     what a furnace asks
 ```
 
@@ -70,8 +70,8 @@ its own raw string, that the category pair still means what the filter assumes, 
 burner furnaces accept `chemical` at `effectivity: 1`. This check makes the same division on the
 artifact the game actually reads.
 
-`mod/src/test/java/com/planetaryfactory/core/smelting/FuelBufferTest.java` and `FuelTableTest.java`
-are the **arithmetic and the rule**, under `./gradlew :planetaryfactory_core:test`: that a tick is
+`mod/src/test/java/com/factoryworks/core/smelting/FuelBufferTest.java` and `FuelTableTest.java`
+are the **arithmetic and the rule**, under `./gradlew :factoryworks_core:test`: that a tick is
 paid in full or not at all, that the remainder survives the next lighting, that an item with no row
 does not burn, and that a tag row burns every member.
 
