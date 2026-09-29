@@ -7,8 +7,8 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 /**
  * A crafting machine's fluid face, on every block of the footprint (ADR-0074, ADR-0075, ADR-0096):
- * a fluid the Held recipe names goes to its own input tank, anything else is refused, and only the
- * output tanks give anything back.
+ * a fluid the Held recipe names goes to its own input tank up to the Overload Limit (#519), anything
+ * else is refused, and only the output tanks give anything back.
  */
 public class AssemblingMachineFluidHandler extends GuardedResourceHandler<FluidResource> {
 
@@ -29,7 +29,7 @@ public class AssemblingMachineFluidHandler extends GuardedResourceHandler<FluidR
         if (machine.inputTankFor(resource) != index) {
             return 0;
         }
-        return super.insert(index, resource, amount, transaction);
+        return super.insert(index, resource, Math.min(amount, machine.fluidOverloadRoom(index)), transaction);
     }
 
     @Override

@@ -615,6 +615,19 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
                 .orElse(-1);
     }
 
+    /** The Overload Limit left in input tank {@code index}, whatever the crafting speed (#519). Server only. */
+    public int fluidOverloadRoom(int index) {
+        if (!(level instanceof ServerLevel server)) {
+            return 0;
+        }
+        return AssemblingMachineRecipes.resolve(server, held, spec())
+                .map(holder -> holder.value().fluidIngredients())
+                .filter(ingredients -> index < ingredients.size())
+                .map(ingredients -> OverloadLimit.get().fluidRoom(ingredients.get(index).amount(),
+                        tank.getAmountAsInt(index)))
+                .orElse(0);
+    }
+
     /** Output tank {@code result}'s fill in mB. */
     public long outputTankAmount(int result) {
         return tank.getAmountAsLong(FLUID_INPUTS + result);

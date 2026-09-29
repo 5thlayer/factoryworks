@@ -10,12 +10,13 @@ import java.nio.charset.StandardCharsets;
 /**
  * The Overload Limit: how many crafts' worth of an ingredient automated insertion leaves in a
  * machine, Factorio's {@code clamp(ceil(factor * speed / energy_required) + 1, minimum, maximum)}.
+ * A fluid input holds {@code fluidCrafts} crafts' worth whatever the speed (#519).
  * The constants are read from {@code planetaryfactory_core/machine/overload.json}, which
  * {@code scripts/build-machine-specs.py} copies out of the corpus (#517).
  *
  * <p>Pure: no Minecraft types.
  */
-public record OverloadLimit(double factor, int minimum, int maximum) {
+public record OverloadLimit(double factor, int minimum, int maximum, int fluidCrafts) {
 
     private static final String PATH = "/planetaryfactory_core/machine/overload.json";
     private static final double TICKS_PER_SECOND = 20.0;
@@ -39,6 +40,11 @@ public record OverloadLimit(double factor, int minimum, int maximum) {
         return Math.max(0, perCraft * crafts - held);
     }
 
+    /** How many more mB a tank holding {@code held} takes of a fluid ingredient needing {@code perCraft}. */
+    public int fluidRoom(int perCraft, int held) {
+        return room(perCraft, fluidCrafts, held);
+    }
+
     private static OverloadLimit load() {
         try (InputStream stream = OverloadLimit.class.getResourceAsStream(PATH)) {
             if (stream == null) {
@@ -48,7 +54,8 @@ public record OverloadLimit(double factor, int minimum, int maximum) {
             return new OverloadLimit(
                     root.get("dynamic_recipe_overload_factor").getAsDouble(),
                     root.get("minimum_recipe_overload_multiplier").getAsInt(),
-                    root.get("maximum_recipe_overload_multiplier").getAsInt());
+                    root.get("maximum_recipe_overload_multiplier").getAsInt(),
+                    root.get("fluid_input_multiplier").getAsInt());
         } catch (IOException e) {
             throw new IllegalStateException("could not read " + PATH, e);
         }

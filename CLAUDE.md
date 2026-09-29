@@ -236,7 +236,8 @@ listener turns all three red). `AssemblingFluidTests` holds tier 2's tank: concr
 and leaves 50, 50 mB stalls with nothing drawn or taken, the fluid face on the anchor and a hull
 block takes water only with concrete held and never gives it back, tier 2 holds concrete where tier
 1 refuses it, tier 1 has no fluid face, a changed recipe voids the tank and the tank survives the
-save hook. A `takeFluids` that always feeds and a change that keeps the tank turn four red. The
+save hook. The fluid face fills an input tank to four crafts' worth and no further, on either block and
+per tank on the Chemical Plant (#519); the rule is `OverloadLimitTest`. A `takeFluids` that always feeds and a change that keeps the tank turn four red. The
 per-tier figures are `AssemblingMachineSpecTest`, the fluid stall's order `AssemblingStallTest`. `ChemicalPlantTests` holds
 the Chemical Plant on the same chassis (#490, ADR-0096): plastic in 20 ticks for 2,100 FE, typed; a full
 output and no coal stall with nothing drawn or taken; heavy oil cracking's two fluids
