@@ -62,6 +62,8 @@ final class ChemicalPlantTests {
         tests.test("chemical_plant_stalls_unfed", 100, ChemicalPlantTests::stallsUnfed);
         tests.test("chemical_plant_fluid_face_routes_by_the_held_recipe", 20,
                 ChemicalPlantTests::fluidFaceRoutesByTheHeldRecipe);
+        tests.test("chemical_plant_fluid_face_stops_each_tank_at_the_overload_limit", 20,
+                ChemicalPlantTests::fluidFaceStopsEachTankAtTheOverloadLimit);
         tests.test("chemical_plant_refuses_another_machines_recipe", 20,
                 helper -> CHASSIS.refusesOtherRecipes(helper, placeWhole(helper), PLASTIC, List.of(CABLE, BASIC_OIL)));
         tests.test("chemical_plant_keeps_its_recipe_over_a_reload", 20,
@@ -82,7 +84,7 @@ final class ChemicalPlantTests {
         long[] gas = new long[1];
         helper.startSequence()
                 .thenExecute(() -> {
-                    feedPlastic(helper, machine, 8, 200);
+                    feedPlastic(helper, machine, 8, 80);
                     machine.energyStorage.set(CHARGE);
                 })
                 .thenIdle(1)
@@ -113,11 +115,11 @@ final class ChemicalPlantTests {
     /** Room for one bar, and a craft makes two. */
     private static void stallsOnAFullOutput(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = placeWhole(helper);
-        feedPlastic(helper, machine, 4, 100);
+        feedPlastic(helper, machine, 4, 80);
         machine.inventory.set(OUTPUT, ItemResource.of(item("planetaryfactory:plastic_bar")), 63);
         machine.energyStorage.set(CHARGE);
         helper.runAfterDelay(2 * TICKS_PER_CRAFT, () -> {
-            assertStalled(helper, machine, AssemblingStall.OUTPUT_FULL, 4, 100);
+            assertStalled(helper, machine, AssemblingStall.OUTPUT_FULL, 4, 80);
             helper.succeed();
         });
     }
@@ -125,10 +127,10 @@ final class ChemicalPlantTests {
     /** Gas and power, and no coal. */
     private static void stallsUnfed(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = placeWhole(helper);
-        feedPlastic(helper, machine, 0, 100);
+        feedPlastic(helper, machine, 0, 80);
         machine.energyStorage.set(CHARGE);
         helper.runAfterDelay(2 * TICKS_PER_CRAFT, () -> {
-            assertStalled(helper, machine, AssemblingStall.NO_INGREDIENTS, 0, 100);
+            assertStalled(helper, machine, AssemblingStall.NO_INGREDIENTS, 0, 80);
             helper.succeed();
         });
     }
@@ -208,6 +210,19 @@ final class ChemicalPlantTests {
             helper.fail("a machine stalled on " + expected + " took input: " + machine.inventory.getItem(0) + ", "
                     + machine.tank().getAmountAsLong(0) + " mB", ANCHOR);
         }
+    }
+
+    /** Heavy oil cracking's 30 water and 40 heavy oil, four crafts' worth each, typed (#519). */
+    private static void fluidFaceStopsEachTankAtTheOverloadLimit(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = placeWhole(helper);
+        CHASSIS.hold(helper, machine, CRACKING);
+        ResourceHandler<FluidResource> face = CHASSIS.fluidFace(helper, ANCHOR);
+        FluidResource water = FluidResource.of(Fluids.WATER);
+        FluidResource heavy = FluidResource.of(fluid(HEAVY_OIL));
+        expectMoved(helper, ANCHOR, "water", 120, face, (f, tx) -> f.insert(water, 1000, tx));
+        expectMoved(helper, ANCHOR, "heavy oil", 160, face, (f, tx) -> f.insert(heavy, 1000, tx));
+        expectMoved(helper, ANCHOR, "water past the limit", 0, face, (f, tx) -> f.insert(water, 10, tx));
+        helper.succeed();
     }
 
     /** Coal into slot 0 directly, and the gas through the face, so a face refusing it fails here. */

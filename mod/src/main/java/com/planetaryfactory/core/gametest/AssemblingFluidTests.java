@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 /**
@@ -60,6 +61,8 @@ final class AssemblingFluidTests {
                 AssemblingFluidTests::fluidFaceTakesOnlyTheHeldFluid);
         tests.test("assembling_machine_has_no_fluid_face", 20,
                 AssemblingFluidTests::tierOneHasNoFluidFace);
+        tests.test("assembling_machine_2_fluid_face_stops_at_the_overload_limit", 20,
+                AssemblingFluidTests::fluidFaceStopsAtTheOverloadLimit);
         tests.test("assembling_machine_2_holds_a_fluid_recipe", 20,
                 AssemblingFluidTests::holdsAFluidRecipe);
         tests.test("assembling_machine_2_voids_its_tank_on_a_change", 20,
@@ -150,6 +153,20 @@ final class AssemblingFluidTests {
         helper.succeed();
     }
 
+    /** Four crafts' worth of concrete's 100 mB, typed from the Factorio probe (#519). */
+    private static void fluidFaceStopsAtTheOverloadLimit(GameTestHelper helper) {
+        AssemblingMachineBlockEntity machine = placeWhole(helper, AssemblingTier.TWO);
+        TIER_TWO.hold(helper, machine, CONCRETE);
+        FluidResource water = FluidResource.of(Fluids.WATER);
+        for (BlockPos at : List.of(ANCHOR, TIER_TWO.hullBlock())) {
+            ResourceHandler<FluidResource> face = TIER_TWO.fluidFace(helper, at);
+            ((FluidStacksResourceHandler) machine.tank()).set(0, water, 150);
+            expectMoved(helper, at, "water up to the limit", 250, face, (f, tx) -> f.insert(water, 1000, tx));
+            expectMoved(helper, at, "water past the limit", 0, face, (f, tx) -> f.insert(water, 100, tx));
+        }
+        helper.succeed();
+    }
+
     /** Tier 1 has no tank, so no pipe finds one, on the anchor or a hull block. */
     private static void tierOneHasNoFluidFace(GameTestHelper helper) {
         placeWhole(helper, AssemblingTier.ONE);
@@ -195,7 +212,7 @@ final class AssemblingFluidTests {
     private static void keepsItsTankOverAReload(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = placeWhole(helper, AssemblingTier.TWO);
         TIER_TWO.hold(helper, machine, CONCRETE);
-        fill(helper, machine, 420);
+        fill(helper, machine, 320);
         CompoundTag saved = machine.saveWithFullMetadata(helper.getLevel().registryAccess());
         BlockEntity loaded = BlockEntity.loadStatic(machine.getBlockPos(), machine.getBlockState(), saved,
                 helper.getLevel().registryAccess());
@@ -203,8 +220,8 @@ final class AssemblingFluidTests {
             helper.fail("the saved machine reloaded as " + loaded, ANCHOR);
             return;
         }
-        if (reloaded.tank().getAmountAsLong(0) != 420 || !reloaded.tank().getResource(0).equals(FluidResource.of(Fluids.WATER))) {
-            helper.fail("420 mB of water reloaded as " + reloaded.tank().getAmountAsLong(0) + " mB of "
+        if (reloaded.tank().getAmountAsLong(0) != 320 || !reloaded.tank().getResource(0).equals(FluidResource.of(Fluids.WATER))) {
+            helper.fail("320 mB of water reloaded as " + reloaded.tank().getAmountAsLong(0) + " mB of "
                     + reloaded.tank().getResource(0), ANCHOR);
             return;
         }

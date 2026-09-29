@@ -100,7 +100,8 @@ def main():
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
 
-    overload = json.loads(OVERLOAD_CORPUS.read_text(encoding="utf-8"))["constants"]
+    corpus = json.loads(OVERLOAD_CORPUS.read_text(encoding="utf-8"))
+    overload = {**corpus["constants"], "fluid_input_multiplier": corpus["measured"]["fluid_input"]["multiplier"]}
     outputs = {RESOURCE: specs(), OVERLOAD: overload}
     for path, data in outputs.items():
         text = json.dumps(data, indent=2) + "\n"
