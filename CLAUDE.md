@@ -1107,13 +1107,18 @@ Beltworks jar is an unmanaged hashed entry and `factoryworks_core` is not indexe
 
 Beltworks is a **local jar**: `data/pack/local-jars.json` pins the version the Pack runs, and
 `scripts/sync-local-jars.py beltworks=<version>` writes the pin, copies that jar out of `~/.m2` into
-`mods/`, refreshes the manifest and rebuilds the core mod (#465, ADR-0024). The build reads the same
+`mods/`, refreshes the manifest and rebuilds the core mod (#465, ADR-0024). A row with a `curseforge`
+project id (Beltworks, Craftworks) also gets `mods/<mod>.pw.toml` naming that version's CurseForge
+file, and the jar itself is not indexed, so an export references it rather than bundling it (#532);
+the sync fails when CurseForge lists no such file. The build reads the same
 table and names no Library (#475, ADR-0090): every pinned jar, and every jar its row `nests`, is on
 the compile classpath and the dev runs, and each nested artifact's range is read from the jarjar
 metadata into `neoforge.mods.toml` as `<artifact>_version_range`. So the Pack names no Groundworks
 version, and adding a Library is a row and a sync. `tests/pack/test_local_jars.py` runs
 the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
-holds it, and nests Groundworks; a newer version in `~/.m2` is named without failing. Run it after
+holds it, and nests Groundworks; a newer version in `~/.m2` is named without failing. For a
+`curseforge` row the metafile names the pinned file and project and hashes the installed jar, and
+`index.toml` holds the metafile, not the jar; the check contacts nothing. Run it after
 the sync or any change to `mods/`. Take a new Beltworks with the sync, never by copying a jar.
 A change that crosses Groundworks, Beltworks and the Pack goes through the `release-train` skill
 (`skillworks:release-train`, from 5thlayer/skillworks): each checkout is owned by the session working in it, and

@@ -1,0 +1,13 @@
+name = "Craftworks: Personal Assembler"
+filename = "craftworks-0.2.0.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "11cc5e7cf6f6fa332717019db73219d916178efc"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 9018587
+project-id = 1715876

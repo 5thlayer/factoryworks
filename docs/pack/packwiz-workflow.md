@@ -43,12 +43,13 @@ the `*client*.toml` files) is excluded too — it is not pack behaviour.
 metafiles and that an installer fetches the jars. Here the pack root *is* the playable instance, so
 the jars sit right next to their metafiles — and `refresh` would happily index each managed mod
 twice, once as its metafile and once as a raw hashed jar (465 index entries become 586). So
-`.packwizignore` carries `mods/*.jar`, with a negation re-including only the local jar, whose hash
-records which build is installed:
+`.packwizignore` carries `mods/*.jar`, with negations re-including only the local jars on no public
+index, whose hash records which build is installed:
 
 ```
 mods/*.jar
-!mods/beltworks-*.jar
+!mods/researchd-*.jar
+!mods/Porting-Dead-Libs-*.jar
 ```
 
 A consequence worth knowing: because `refresh` cannot see the managed jars, it cannot notice one
@@ -57,27 +58,24 @@ for.
 
 ## The local jars
 
-Two jars are built rather than downloaded, and neither exists on a public index.
+The jars `data/pack/local-jars.json` pins are installed from `~/.m2` rather than downloaded, since
+the Pack compiles and runs its GameTests against them. How the manifest names each depends on
+whether it has a CurseForge file:
 
 | Jar | How it is tracked |
 | --- | --- |
-| `beltworks` local jar (`5thlayer/beltworks`) | pinned in `data/pack/local-jars.json`, installed from `~/.m2`; unmanaged entry in `index.toml` — path plus sha256, no metafile |
-| `factoryworks_core` | **not indexed at all** |
+| Beltworks, Craftworks | row carries a `curseforge` project id; `mods/<mod>.pw.toml` names the pinned version's CurseForge file, and the jar beside it is not indexed (#532) |
+| Researchd, Porting Dead Libs | unmanaged entry in `index.toml` — path plus sha256, no metafile — until upstream publishes their 26.1 builds (#524) |
+| FactoryWorks Core | `mods/factoryworks-core.pw.toml` names its released CurseForge file (ADR-0101); the jar `installToPack` builds is not indexed |
 
-`factoryworks_core` is excluded in `.packwizignore`. It is rebuilt into `mods/` by
-`installToPack` on every `./gradlew build`, Gradle jars are not byte-reproducible, and its source is
-fully tracked in `mod/` — so indexing it would dirty the manifest on every build while recording
-nothing git does not already have.
-
-`packwiz update --all` prints this for the unmanaged jars:
+`packwiz update --all` prints this for the two unmanaged jars:
 
 ```
-A supported update system for "beltworks-0.1.1.jar" cannot be found.
+A supported update system for "researchd-1.3.4-26.1.jar" cannot be found.
 ```
 
-**That is expected, non-fatal and non-mutating.** It is not a defect to fix. Publishing the local
-jars as GitHub release assets would make them ordinary updatable mods, and that is deliberately
-deferred — see ADR-0024 and the publish ticket.
+**That is expected, non-fatal and non-mutating.** Don't take Beltworks or Craftworks through
+`packwiz update` either: the pin, not CurseForge's latest file, decides their version.
 
 ### Taking a new Beltworks
 
@@ -93,12 +91,19 @@ scripts/sync-local-jars.py --check           # assert mods/ matches the pins; no
 ```
 
 A sync copies each pinned jar out of `~/.m2`, never out of a build folder, removes every other jar
-its row's pattern matches, runs `scripts/pack-check.sh --fix` and then `installToPack`, and says
+its row's pattern matches, writes `mods/<mod>.pw.toml` for a row with a `curseforge` project id
+(through `packwiz curseforge add` on the file CurseForge's listing names for the pinned version,
+failing when it lists none — the release train uploads before the Pack syncs, and a file still in
+review is not listed), runs `scripts/pack-check.sh --fix` and then `installToPack`, and says
 whether the core mod compiled. It runs no GameTests. Review the manifest diff before committing it:
 `--fix` absorbs unrelated drift too. Don't run it while the game is running.
 
 `--check` fails when the jar in `mods/` is not the pinned one, differs from `~/.m2`'s by sha256
-(a version republished, or a jar copied by hand), or nests nothing its row names. It skips the
+(a version republished, or a jar copied by hand), or nests nothing its row names. For a
+`curseforge` row it also fails when the metafile names another version or project, hashes another
+file than the installed jar (CurseForge's file is not `~/.m2`'s), or when `index.toml` indexes the
+jar rather than the metafile; it contacts nothing, so it holds the metafile to the pin and never to
+CurseForge. It skips the
 sha256, and says so, on a machine whose `~/.m2` lacks the pin, and names newer versions `~/.m2`
 holds without failing.
 

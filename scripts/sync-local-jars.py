@@ -2,12 +2,16 @@
 """Install the 5thlayer jars `data/pack/local-jars.json` pins, from `~/.m2` (#465, ADR-0024).
 
 A `mod=version` argument rewrites that row's pin first. Every run then copies each pinned jar out
-of `~/.m2` into `mods/`, removing any other file its row's pattern matches, refreshes the manifest
+of `~/.m2` into `mods/`, removing any other file its row's pattern matches. A row with a
+`curseforge` project id gets `mods/<mod>.pw.toml` naming the pinned version's CurseForge file, and
+fails naming the version when CurseForge lists no such file (#532). It then refreshes the manifest
 with `scripts/pack-check.sh --fix` and rebuilds the core mod with `installToPack`.
 
-`--check` changes nothing. It fails when the jar in `mods/` is not the pinned one, differs from
-`~/.m2`'s by sha256, or nests nothing its row names; it skips the sha256 when `~/.m2` lacks the pin,
-and names newer versions `~/.m2` holds without failing.
+`--check` changes nothing and contacts nothing. It fails when the jar in `mods/` is not the pinned
+one, differs from `~/.m2`'s by sha256, or nests nothing its row names; it skips the sha256 when
+`~/.m2` lacks the pin, and names newer versions `~/.m2` holds without failing. For a `curseforge`
+row it also fails when the metafile names another file or project, hashes another jar, or when
+`index.toml` indexes the jar instead of the metafile.
 
 Don't run it while the game is running: it rewrites jars in `mods/`.
 
@@ -25,6 +29,9 @@ import re
 import shutil
 import subprocess
 import sys
+import tomllib
+import urllib.parse
+import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
@@ -34,6 +41,10 @@ TABLE = ROOT / "data" / "pack" / "local-jars.json"
 MODS = ROOT / "mods"
 M2 = Path.home() / ".m2" / "repository"
 JARJAR = "META-INF/jarjar/metadata.json"
+INDEX = ROOT / "index.toml"
+# The upload API can't list a project's files, so the website's own listing, which needs no key,
+# does. It omits a file still under review.
+CURSEFORGE_FILES = "https://www.curseforge.com/api/v1/mods/{project}/files"
 
 
 def artifact_dir(row):
@@ -54,8 +65,16 @@ def installed(row):
     return sorted(p for p in MODS.iterdir() if fnmatch.fnmatch(p.name, row["pattern"]))
 
 
+def metafile(row):
+    return MODS / f"{row['mod']}.pw.toml"
+
+
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def sha1(path):
+    return hashlib.sha1(path.read_bytes()).hexdigest()
 
 
 def nested(jar):
@@ -104,9 +123,39 @@ def check_row(row):
         else:
             print(f"ok   {row['mod']} {row['version']} nests {artifact} {inside[artifact]}")
 
+    if "curseforge" in row:
+        failures += check_metafile(row, jar)
+
     waiting = newer(row)
     if waiting:
         print(f"note {row['mod']}: ~/.m2 holds {', '.join(waiting)}, newer than the pin")
+    return failures
+
+
+def check_metafile(row, jar):
+    meta = metafile(row)
+    name = f"mods/{meta.name}"
+    if not meta.is_file():
+        return [f"{row['mod']}: no {name} -- run scripts/sync-local-jars.py"]
+    toml = tomllib.loads(meta.read_text(encoding="utf-8"))
+    curseforge = toml.get("update", {}).get("curseforge", {})
+    failures = []
+    if toml.get("filename") != jar.name:
+        failures.append(f"{row['mod']}: {name} names {toml.get('filename')}, not the pinned {jar.name}")
+    if curseforge.get("project-id") != row["curseforge"]:
+        failures.append(f"{row['mod']}: {name} names CurseForge project {curseforge.get('project-id')}, "
+                        f"not {row['curseforge']}")
+    download = toml.get("download", {})
+    if download.get("hash-format") == "sha1" and download.get("hash") != sha1(jar):
+        failures.append(f"{row['mod']}: {name} hashes another file than mods/{jar.name} "
+                        f"-- CurseForge's {row['version']} is not ~/.m2's")
+    index = {f["file"] for f in tomllib.loads(INDEX.read_text(encoding="utf-8")).get("files", [])}
+    if f"mods/{jar.name}" in index:
+        failures.append(f"{row['mod']}: index.toml indexes mods/{jar.name}, which {name} names")
+    if name not in index:
+        failures.append(f"{row['mod']}: index.toml does not index {name}")
+    if not failures:
+        print(f"ok   {row['mod']} {row['version']} is CurseForge file {curseforge['file-id']}")
     return failures
 
 
@@ -144,6 +193,43 @@ def install(row):
     print(f"installed mods/{jar_name(row)} from {source}")
 
 
+def curseforge_file(row):
+    url = CURSEFORGE_FILES.format(project=row["curseforge"])
+    page_index, seen = 0, 0
+    while True:
+        query = urllib.parse.urlencode({"pageIndex": page_index, "pageSize": 50})
+        request = urllib.request.Request(f"{url}?{query}", headers={"Accept": "application/json"})
+        with urllib.request.urlopen(request) as response:
+            page = json.load(response)
+        for file in page["data"]:
+            if file.get("fileName") == jar_name(row):
+                return file["id"]
+        seen += len(page["data"])
+        if not page["data"] or seen >= page["pagination"].get("totalCount", 0):
+            sys.exit(f"CurseForge project {row['curseforge']} lists no {jar_name(row)} -- upload "
+                     f"{row['mod']} {row['version']} first, or wait for CurseForge to approve it")
+        page_index += 1
+
+
+def naming_project(project):
+    return [p for p in MODS.glob("*.pw.toml")
+            if tomllib.loads(p.read_text(encoding="utf-8")).get("update", {})
+            .get("curseforge", {}).get("project-id") == project]
+
+
+def write_metafile(row):
+    file_id = curseforge_file(row)
+    for stale in naming_project(row["curseforge"]):
+        stale.unlink()
+    run(f"the {row['mod']} metafile", ["packwiz", "curseforge", "add", "--addon-id", str(row["curseforge"]),
+                                       "--file-id", str(file_id), "-y"])
+    written = naming_project(row["curseforge"])
+    if len(written) != 1:
+        sys.exit(f"packwiz wrote {len(written)} metafiles for {row['mod']}, not one")
+    # packwiz names the file after the project's slug; the refresh after re-indexes the rename.
+    written[0].rename(metafile(row))
+
+
 def run(step, command):
     print(f"\n$ {' '.join(command)}")
     if subprocess.run(command, cwd=ROOT).returncode != 0:
@@ -166,6 +252,8 @@ def main():
         pin(table, args.pins)
     for row in table["jars"]:
         install(row)
+        if "curseforge" in row:
+            write_metafile(row)
     run("the manifest refresh", ["scripts/pack-check.sh", "--fix"])
     run("the core mod's build", ["./gradlew", ":factoryworks_core:installToPack"])
     print("\ncompiled and installed factoryworks_core against the pinned jars")

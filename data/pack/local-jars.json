@@ -6,6 +6,7 @@
       "artifact": "beltworks",
       "version": "0.3.13",
       "pattern": "beltworks-*.jar",
+      "curseforge": 1714527,
       "nests": [
         "groundworks"
       ]
@@ -15,7 +16,8 @@
       "group": "io.github.5thlayer",
       "artifact": "craftworks",
       "version": "0.2.0",
-      "pattern": "craftworks-*.jar"
+      "pattern": "craftworks-*.jar",
+      "curseforge": 1715876
     },
     {
       "mod": "researchd",

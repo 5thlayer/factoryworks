@@ -34,11 +34,11 @@ hash = "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
 
 [[files]]
 file = "NOTICE"
-hash = "449168189ad4b0d51ce5e9b6473ee4012fe72ddaba4fdb8da064bd8b5e94b433"
+hash = "54d9c31dfea6c8f84871aa78cef02d24e468127d8fd314633e5185a8d9d7c0c5"
 
 [[files]]
 file = "REUSE.toml"
-hash = "c0e035c46c9780f1d3e474f9f78c005f3f2eb3eb05786eae37236c82d232fb7f"
+hash = "54b475cbc5c353ff36bde794069dd990b60652e5443d5d385e3e536910e46bc3"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -310,7 +310,7 @@ hash = "24f61a524701d4c2296f81e23ed84c089043b905a6419c88cd86aecd146675bc"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "0f14aab3dac9f163d0bbc57a20a5b6ac8bb708f51376bfbba296d09ed4b19f2a"
+hash = "7816f85ecadcce98c73e89ebaf0fdc52ab8f863b74d27d463828dd474c3ad6c7"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -390,7 +390,7 @@ hash = "63940a48f2f6b160083c9182a9b2f3d90f0f239e7089602b75fcd3c7ff110667"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/burner_mining_drill_part.json"
-hash = "1c88c265676c38f0654b97792d80ec94102deb59b6d971e61b55c22f72ff7926"
+hash = "ee7e624750e746cc3ace216c1f3495117d80854d42cfc03fe8f1646c4c6e6d7a"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/chemical_plant.json"
@@ -422,7 +422,7 @@ hash = "2ea04498503d33b7fccd821afdc2584268d78dfd6055a173b06cedc583b25d25"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/electric_mining_drill_part.json"
-hash = "4bffe8aa8d695136a54cf22adbd1c41594b75791dc3c97981fb0731e89c888ee"
+hash = "c8ebc6a0ae1895fcbc75149d363afaa3b26ee6a4ef52d62517eb968cb77abfed"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/iron_ore.json"
@@ -642,11 +642,19 @@ hash = "0d14823f507cacd3b533610f0f0e2addd623aa4d8a0a797a1c2dc26c3fdba17a"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/burner_mining_drill.json"
-hash = "c061096c7ba3deb017d0097b09390f9a95c24861e0ce7b7c485f94e5f467ec7f"
+hash = "2c91689837614129cda58d659c1733331ecbd238b04fca17f3db5c22027d8a61"
 
 [[files]]
-file = "kubejs/assets/factoryworks/models/block/burner_mining_drill_part.json"
-hash = "c061096c7ba3deb017d0097b09390f9a95c24861e0ce7b7c485f94e5f467ec7f"
+file = "kubejs/assets/factoryworks/models/block/burner_mining_drill_front.json"
+hash = "22a16537633fe0428a58d16899ddaf15eff72439a68629e8700bd3d960217c34"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/burner_mining_drill_front_on.json"
+hash = "8763b054834028438e5d4e0d2593a2b49c9cb414f53979dfa15b33b26798eab4"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/burner_mining_drill_port.json"
+hash = "fdccced2a90d347f527b6c98b5e1f98fbcf9c13847a135bbf03a4f02f42d61e8"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/chemical_plant.json"
@@ -666,11 +674,19 @@ hash = "e991890361a2b033bf4091627a74288abd00ca6c0ccdb9c57b9f0c5952bb128c"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/electric_mining_drill.json"
-hash = "b71397ff983d624378cfa1574783d4f238007159c3318d21fdc2fdd9f2af9788"
+hash = "95c15de98a4bbdd047c0c4d009145827b6e8e4724588d5fa670e50a4dbc37319"
 
 [[files]]
-file = "kubejs/assets/factoryworks/models/block/electric_mining_drill_part.json"
-hash = "b71397ff983d624378cfa1574783d4f238007159c3318d21fdc2fdd9f2af9788"
+file = "kubejs/assets/factoryworks/models/block/electric_mining_drill_front.json"
+hash = "c90535acb4bec35348b6c7043e6afe41251fd485417b698682a7347e671bb04d"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/electric_mining_drill_front_on.json"
+hash = "60efd52b8c4420e43597abe4455c9519438085661d8f60db8971436c7ca66522"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/electric_mining_drill_port.json"
+hash = "32540975f5a982c0e5f7088c95849d3e7756731a89ebf5faf43edb117f64f11d"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/jellystem_sapling.json"
@@ -922,7 +938,7 @@ hash = "f6ccff97fe0253b75e3b7e4b2cce23b802e4da3b206c4f633288545cacf9034a"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/burner_mining_drill.json"
-hash = "dfe082950b9e59c4490e103fbd6df657d7e8f3ac86902e44fad3004960ba3b32"
+hash = "ad5f510540b7b6a8a324743835f7ddbcaa218f395b6ed00efbce99779429ce48"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/chemical_plant.json"
@@ -938,7 +954,7 @@ hash = "a3f07a124a6beec921d86e8e661d4475887bb1cada6354ba12bdc7a7b77289bf"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/electric_mining_drill.json"
-hash = "cec179ae9e7fd5aa0a10e216494f9489fedb39e9dfe90051270f36a5edf235f4"
+hash = "c1281644314a5cc553b8d22f9f36ea32e38a3327309bedfe382e9042f02f56c6"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/engineers_iron_pick.json"
@@ -1005,6 +1021,26 @@ file = "kubejs/assets/factoryworks/obtainable/sources.json"
 hash = "5f181ab79cb943dc4cd482bba40dfd19f995f8810d390efb9f6bdd0c4c97027d"
 
 [[files]]
+file = "kubejs/assets/factoryworks/textures/block/burner_mining_drill/bottom.png"
+hash = "24d0d20adab228a4e13a73d13129cfcf98ca414b4d31a65f28348ffecb75095a"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/burner_mining_drill/front_off.png"
+hash = "bbddacaaee4644bc25ce7e310af1ca71be5b4648f42de21e8ba290562c3f8119"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/burner_mining_drill/front_on.png"
+hash = "b269c08c1dcec927132bd011064f6fd144a6a678297af7bfce2fdbbec85d4841"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/burner_mining_drill/side.png"
+hash = "058f74681c955a59b6be1ade0790802516da17c7bf7d8036e319eeea7f0c4dcc"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/burner_mining_drill/top.png"
+hash = "e93d76341e115a3ad9d45b9ae318a5cb31adbc3468393bd6fb23497347b4c12f"
+
+[[files]]
 file = "kubejs/assets/factoryworks/textures/block/copper_stromatolite.png"
 hash = "6c50e423fd15a16b1699d4b97b261102a1a0ad0c6685fe9f9ed6fa61da090cd6"
 
@@ -1033,6 +1069,26 @@ file = "kubejs/assets/factoryworks/textures/block/electric_furnace/top.png"
 hash = "8c373e3142952dbd96be1c44754454d57a8cc64830d506790f212d545b0c99c7"
 
 [[files]]
+file = "kubejs/assets/factoryworks/textures/block/electric_mining_drill/bottom.png"
+hash = "47b2cd9e83b790a8824fc97d63f448d5c7ad2922abba4d59f0e42367bb9eeab4"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/electric_mining_drill/front_off.png"
+hash = "808ac885bd59613c0617865d1cab89657427b30ab96b04d805649c24db7a9c39"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/electric_mining_drill/front_on.png"
+hash = "e6959fe6adb2a238276d3d0a2735d8314a10fb9b291050f121d488def820dce3"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/electric_mining_drill/side.png"
+hash = "64a11358ac45fb58a216160603575ea0ea91f9e1ab5e734d3ac3ee756806773b"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/electric_mining_drill/top.png"
+hash = "88fddc8773354d5acb5e33c49890368c67d1c741bf73be64bd9e8c9d47ed766d"
+
+[[files]]
 file = "kubejs/assets/factoryworks/textures/block/iron_stromatolite.png"
 hash = "4b018f17f58cdb85ffb841f67b294c2c26ee5643edc72c790e58d1d01a8d73a1"
 
@@ -1051,6 +1107,10 @@ hash = "c4c8f5b363881e5fa2255e3983ca5e5a808eae512fe94bda4f02e25899c5474f"
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/medium_electric_pole.png"
 hash = "0bfb7be4dd39c33a6a3c7f2f931eb80f96475258cfb30f03adcf7a237d2e649e"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/mining_drill_port.png"
+hash = "bf738fd9e206ce18f49e4379f5ca6bbf856efeb719e137ad048a47c7c8db2bb5"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage0.png"
@@ -2847,8 +2907,9 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
-file = "mods/beltworks-0.3.13.jar"
-hash = "aebfadea10a6874f49d239755e58ffcf4790cc79f003ac6632c852802bcaa8c2"
+file = "mods/beltworks.pw.toml"
+hash = "6c7a0c9f900a809d319edfdb1352353d1fce60e4756740542e76960a292004ad"
+metafile = true
 
 [[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
@@ -2881,8 +2942,9 @@ hash = "8cd3a3e3f55d69d8fbb6aab75a721aaf7a8c1ec9d1bc64065380dcc9fdc39530"
 metafile = true
 
 [[files]]
-file = "mods/craftworks-0.2.0.jar"
-hash = "dc5c070e39c94ff7f0579465dd3a095b9955f62f936eb0f42e475331c0fb8459"
+file = "mods/craftworks.pw.toml"
+hash = "08367053d143a9d7ec3715c5928d8ccba008b50aa553881963a07edd63263c64"
+metafile = true
 
 [[files]]
 file = "mods/extreme-sound-muffler.pw.toml"
