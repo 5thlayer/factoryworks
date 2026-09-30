@@ -584,5 +584,5 @@ _Avoid_: solar swarm, dyson sphere
 ### Shipping the pack
 
 **Alpha**:
-The closed test of the pack with Factorio players that comes before its first public upload. The first upload waits for it.
+The closed test of the pack, with modded-Minecraft tech players who have never played Factorio, that comes before its first public upload. The first upload waits for it.
 _Avoid_: beta, playtest, early access
