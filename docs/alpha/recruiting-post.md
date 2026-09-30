@@ -1,6 +1,6 @@
 # Recruiting post: r/feedthebeast
 
-For r/feedthebeast, with the "I made something" flair, and trimmed for the showcase channels of the Oritech and Railcraft Reborn Discords. Before posting, replace `<DISCORD_INVITE>` and attach three or four GIFs: a belt line feeding an assembling machine, a row of steam engines coming up to power, an oil refinery running, and the placement preview laying a belt run in one drag.
+For r/feedthebeast, with the "I made something" flair, and trimmed for the showcase channels of the Oritech and Railcraft Reborn Discords. Before posting, replace `<DISCORD_INVITE>` and attach the three clips in `publish/`: `assembly_showcase.mp4`, `steam_showcase.mp4` and `oil_showcase.mp4`.
 
 ---
 
@@ -19,7 +19,7 @@ I'm looking for 10–20 people to test a tech pack I've been building, and I'd e
 
 The design is inspired by Factorio and uses its numbers and recipe tree. You don't need to know Factorio, though; I want to find out whether the pack teaches its loop to people who don't.
 
-**The Alpha.** The current build is playable from spawn to plastic, and it will be updated while you play, toward a rocket launch. Worlds carry over between updates unless I announce a wipe. Single-player only for now.
+**The Alpha.** The first build goes up in the coming weeks, playable from spawn to plastic, and it will be updated while you play, toward a rocket launch. Worlds carry over between updates unless I announce a wipe. Single-player only for now.
 
 **What I ask of testers:** play at your own pace, file bugs on GitHub, and tell us on Discord wherever you get stuck or confused. Being stuck is the most useful report you can give me.
 
