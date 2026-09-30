@@ -277,10 +277,6 @@ file = "data/factorio/recipe.json"
 hash = "7ecfe6c7b5a71265d7a3661dd26bf8fd78073c6705d2615018b52a733e469a66"
 
 [[files]]
-file = "data/factorio/recipe_name.json"
-hash = "89ea74c74ff432efc9afdb6b2ec374cd5afbaf5d651f749638b5d8be1d01ee23"
-
-[[files]]
 file = "data/factorio/resource.json"
 hash = "d8f0669fbf78f24beba60873a40f942b9802dd496c649c2c0585679a963afd20"
 
@@ -290,7 +286,7 @@ hash = "e30efb5bd025b03b63be59dc56a52913b96219333d57897d33ceb817450688f8"
 
 [[files]]
 file = "data/factorio/technology.json"
-hash = "153ef135fb2c6132f603acb5f364ab19b8d72aaa9d72693ef588b2e896c53fff"
+hash = "5680227f1b45869ce8b8951f6a6fcc9fbecbe81023ad2780f7f88586d1972d29"
 
 [[files]]
 file = "data/factorio/tree.json"
@@ -626,7 +622,7 @@ hash = "c4f3b3ee106426f1322240cc01e60027429b080937c9c02917d8560bdbd4fec0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "dea66656b04e76a6c7379beb8d302bef1f95e403a191d764e2693895760f7558"
+hash = "b7052c902787aca39b100b322e32801ae38b772976977e7b80ad8899e204aa61"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/accumulator_part.json"
@@ -2766,11 +2762,11 @@ hash = "86617f3214fa891dbf9c4009aab509f759da6a12dc09d4f8f0669cdd428ca979"
 
 [[files]]
 file = "kubejs/server_scripts/factorio_tech_data.js"
-hash = "9059116c39bae1adbaa3d31dc2edda5c3410fe6a8133056063f81fe9e2f66b8f"
+hash = "30f321f08ef37e940df3d8f62b2c065b43fbe886d636a71fb6c233f88fa8005d"
 
 [[files]]
 file = "kubejs/server_scripts/factorio_tech_dsl.js"
-hash = "044d2fd51aac78fc0f1b2b7dd5a09d1a8cc6623f455fcbc484b7bfe56d6266aa"
+hash = "3b6ce1e2bfbfa281bd41a83c7d5f52184b8fd7ecf5bfc1933000919ebaa5a6bd"
 
 [[files]]
 file = "kubejs/server_scripts/hand_recipes.js"
