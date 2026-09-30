@@ -302,11 +302,11 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "3d8c60d30438ac467e62626b56686372d77afb1716ef0377f810e2ddfdf914d5"
+hash = "229071f20d7faa538bd26723d7a245c21c6aa97a814fbddb2c6e128e3211ab17"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "cbb2509c240d4aa2fc605519dbcc622e1782ea2dd9d3a1cf293cc50ebd6c7366"
+hash = "7f8a9f2f7ce5690226611c093ec781917cfb1dd9a19256e6ec086fc6f4e26c95"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -318,7 +318,7 @@ hash = "d81b95a34d1e8b3f8452aec2eebdb1423f2ae178ae5f49595959102d5198b43f"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "5be6dadcc303d115fd9a1ce10e4b9fefd294df647d6e1321bab1764f61d263ce"
+hash = "0f14aab3dac9f163d0bbc57a20a5b6ac8bb708f51376bfbba296d09ed4b19f2a"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -622,7 +622,7 @@ hash = "c4f3b3ee106426f1322240cc01e60027429b080937c9c02917d8560bdbd4fec0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "b7052c902787aca39b100b322e32801ae38b772976977e7b80ad8899e204aa61"
+hash = "2c6e898e281d4b95fb0fe37746bef3aebf675972dbda418c1164e23eb7413a6a"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/accumulator_part.json"
@@ -1251,6 +1251,10 @@ hash = "79b51b3ac405bf781a92fe280df946e82f99d276b8a9dee2a97384855ed8588b"
 [[files]]
 file = "kubejs/assets/oritech/lang/en_us.json"
 hash = "4849b3bdf290930054a304aa986822c8b31fa4b74e0104936e0e29a3cdcd365a"
+
+[[files]]
+file = "kubejs/client_scripts/chest_tooltips.js"
+hash = "567750918854e55549f822db96d38ca1b72295ace3ae7a123ebf6f7a215c998b"
 
 [[files]]
 file = "kubejs/client_scripts/jsconfig.json"
@@ -2861,8 +2865,8 @@ hash = "8cd3a3e3f55d69d8fbb6aab75a721aaf7a8c1ec9d1bc64065380dcc9fdc39530"
 metafile = true
 
 [[files]]
-file = "mods/craftworks-0.1.3.jar"
-hash = "cb6c26f50bd37a0d467ee439323af9fa7235f8c637c82ebe1842de42735e5f00"
+file = "mods/craftworks-0.2.0.jar"
+hash = "dc5c070e39c94ff7f0579465dd3a095b9955f62f936eb0f42e475331c0fb8459"
 
 [[files]]
 file = "mods/emi-unofficial-port-unstable.pw.toml"
