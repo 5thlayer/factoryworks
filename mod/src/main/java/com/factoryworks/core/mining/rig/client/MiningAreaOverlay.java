@@ -2,6 +2,11 @@ package com.factoryworks.core.mining.rig.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.factoryworks.core.mining.rig.RigBlock;
+import com.factoryworks.core.mining.rig.RigCorpus;
+import com.factoryworks.core.mining.rig.RigDirections;
+import com.factoryworks.core.mining.rig.RigFacing;
+import com.factoryworks.core.mining.rig.RigGeometry.Offset;
+import com.factoryworks.core.mining.rig.RigOutputTile;
 import com.factoryworks.core.mining.rig.RigMiningArea;
 import com.factoryworks.core.mining.rig.RigPartBlockEntity;
 import com.factoryworks.core.ore.OreBlock;
@@ -30,6 +35,8 @@ public final class MiningAreaOverlay {
     private static final int TINT = 0x6060C0FF;
 
     /** Above the face it tints, so the two never z-fight. */
+    private static final int ARROW = 0xD0FFA020;
+
     private static final float LIFT = 1.0F / 512;
 
     private MiningAreaOverlay() {
@@ -84,6 +91,40 @@ public final class MiningAreaOverlay {
                 buffer.addVertex(pose, x, y, z + 1).setColor(TINT);
                 buffer.addVertex(pose, x + 1, y, z + 1).setColor(TINT);
                 buffer.addVertex(pose, x + 1, y, z).setColor(TINT);
+            }
+        });
+    }
+
+    /**
+     * An arrow on the Drop Position of a rig that would stand at {@code anchor}, pointing away from
+     * it (#535). The tile is {@link RigOutputTile}'s, the one the rig ejects onto.
+     */
+    public static void drawDropPosition(SubmitNodeCollector collector, PoseStack poseStack, Vec3 camera,
+            BlockPos anchor, BlockState anchorState) {
+        if (!(anchorState.getBlock() instanceof RigBlock rig)) {
+            return;
+        }
+        RigFacing facing = RigDirections.toRigFacing(anchorState.getValue(RigBlock.FACING));
+        RigFacing right = facing.rightOf();
+        RigCorpus.Row row = RigCorpus.get().rowOf(rig.tier());
+        Offset tile = RigOutputTile.of(row.width(), row.height(), row.vectorX(), row.vectorY(), facing);
+        float originX = (float) (anchor.getX() + tile.dx() + 0.5 - camera.x());
+        float y = (float) (anchor.getY() + tile.dy() + LIFT - camera.y());
+        float originZ = (float) (anchor.getZ() + tile.dz() + 0.5 - camera.z());
+
+        // Tile-local (along, across) -> world; a triangle is a quad with a repeated corner.
+        float[][][] quads = {
+            {{-0.35F, -0.09F}, {-0.35F, 0.09F}, {0.05F, 0.09F}, {0.05F, -0.09F}},
+            {{0.05F, -0.3F}, {0.05F, 0.3F}, {0.4F, 0.0F}, {0.4F, 0.0F}},
+        };
+        collector.submitCustomGeometry(poseStack, RenderTypes.debugQuads(), (pose, buffer) -> {
+            for (float[][] quad : quads) {
+                for (float[] corner : quad) {
+                    buffer.addVertex(pose,
+                            originX + facing.dx() * corner[0] + right.dx() * corner[1], y,
+                            originZ + facing.dz() * corner[0] + right.dz() * corner[1])
+                            .setColor(ARROW);
+                }
             }
         });
     }
