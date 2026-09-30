@@ -1,5 +1,11 @@
 package com.factoryworks.core.oil;
 
+import com.factoryworks.core.machine.footprint.MachineTooltip;
+import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.machine.footprint.FootprintItem;
 import com.factoryworks.core.placement.PackRefusal;
@@ -41,5 +47,14 @@ public class PumpjackItem extends FootprintItem {
             player.sendSystemMessage(Component.translatable(NO_WELL_KEY), true);
         }
         return super.place(context);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+                                Consumer<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, tooltip, flag);
+        for (MachineTooltip.Line line : MachineTooltip.pumpjack(PumpjackBlockEntity.spec().fePerTick())) {
+            tooltip.accept(Component.translatable(line.key(), line.args().toArray()).withStyle(ChatFormatting.GRAY));
+        }
     }
 }

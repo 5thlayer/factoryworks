@@ -43,11 +43,35 @@ public final class MachineTooltip {
         return List.of(line("draws", number(fePerTick)), line("charts", number(nearReach), number(reach)));
     }
 
+    public static List<Line> furnace(double craftingSpeed, long joulesPerTick, long fePerTick) {
+        return List.of(line("speed", number(craftingSpeed)), energy(joulesPerTick, fePerTick));
+    }
+
+    public static List<Line> drill(double miningSpeed, long joulesPerTick, long fePerTick) {
+        return List.of(line("mines", number(miningSpeed)), energy(joulesPerTick, fePerTick));
+    }
+
+    public static List<Line> boiler(int steamPerSecond, long joulesPerTick) {
+        return List.of(line("makes_steam", number(steamPerSecond)), line("burns", number(joulesPerTick)));
+    }
+
+    public static List<Line> offshorePump(int waterPerSecond) {
+        return List.of(line("pumps_water", number(waterPerSecond)), line("place_beside_water"));
+    }
+
+    public static List<Line> pumpjack(long fePerTick) {
+        return List.of(line("pumps_crude"), line("draws", number(fePerTick)));
+    }
+
+    private static Line energy(long joulesPerTick, long fePerTick) {
+        return joulesPerTick > 0 ? line("burns", number(joulesPerTick)) : line("draws", number(fePerTick));
+    }
+
     private static Line line(String key, String... args) {
         return new Line(PREFIX + key, List.of(args));
     }
 
     private static String number(double value) {
-        return new DecimalFormat("#,##0.#", DecimalFormatSymbols.getInstance(Locale.ROOT)).format(value);
+        return new DecimalFormat("#,##0.##", DecimalFormatSymbols.getInstance(Locale.ROOT)).format(value);
     }
 }

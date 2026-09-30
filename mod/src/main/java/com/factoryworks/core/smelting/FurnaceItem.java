@@ -1,5 +1,11 @@
 package com.factoryworks.core.smelting;
 
+import com.factoryworks.core.machine.footprint.MachineTooltip;
+import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import io.github._5thlayer.groundworks.PlacementPlan;
 import io.github._5thlayer.groundworks.Placements;
 import io.github._5thlayer.groundworks.PlansPlacement;
@@ -58,5 +64,14 @@ public class FurnaceItem extends BlockItem implements PlansPlacement {
 
     private static String id(Block block) {
         return BuiltInRegistries.BLOCK.getKey(block).toString();
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+                                Consumer<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, tooltip, flag);
+        for (MachineTooltip.Line line : MachineTooltip.furnace(tier().craftingSpeed(), tier().joulesPerTick(), tier().fePerTick())) {
+            tooltip.accept(Component.translatable(line.key(), line.args().toArray()).withStyle(ChatFormatting.GRAY));
+        }
     }
 }

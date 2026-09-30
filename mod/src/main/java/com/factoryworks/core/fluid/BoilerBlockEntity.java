@@ -80,6 +80,10 @@ public class BoilerBlockEntity extends BlockEntity implements Container, MenuPro
     /** ADR-0047's multiplier on the way *in* to the buffer. Factorio's is 1. */
     private static final double EFFECTIVITY = CORPUS.boilerEffectivity();
 
+    public static int steamPerSecond() {
+        return BoilerSpec.milliBucketsPerSecond(CORPUS.boilerEnergyConsumption(), JOULES_PER_MILLIBUCKET);
+    }
+
     private static final int MILLIBUCKETS_PER_TICK =
             BoilerSpec.milliBucketsPerTick(JOULES_PER_TICK, JOULES_PER_MILLIBUCKET);
 
