@@ -1,8 +1,44 @@
 hash-format = "sha256"
 
 [[files]]
+file = "LICENSE"
+hash = "c64b624c9bc7b998944cbe76b8139feb12d6f063f260074170934ef4f36d8020"
+
+[[files]]
+file = "LICENSES/Apache-2.0.txt"
+hash = "074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff"
+
+[[files]]
+file = "LICENSES/CC-BY-4.0.txt"
+hash = "d557539df68e771cc1eedcc91d13f70fca930e508d11eedcafa4b15db49e3744"
+
+[[files]]
+file = "LICENSES/CC-BY-NC-SA-4.0.txt"
+hash = "600ca4e25fe11762b75a97e714707fab48bb778374e92d24c6ca068791661c11"
+
+[[files]]
+file = "LICENSES/LGPL-3.0-only.txt"
+hash = "996af0513df21f7496288951c41428a03c174e9e4a9d63665c57d670f845ccb1"
+
+[[files]]
+file = "LICENSES/LicenseRef-Mojang.txt"
+hash = "2e6528fa0e3fb40fadcd4c6c7c0f39a81f83c2ea122ac3acf25eda32fb609518"
+
+[[files]]
+file = "LICENSES/LicenseRef-Wube-Factorio-Data.txt"
+hash = "be31ba5a7f332d8d8e9819b77c7af6d4b029af7fc59d2bb2729bb27a05f662ae"
+
+[[files]]
+file = "LICENSES/MIT.txt"
+hash = "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
+
+[[files]]
 file = "NOTICE"
-hash = "fae5523509abe6684127b6b54c5a0f05b292bddbb3b89fa82adf33d59f32d260"
+hash = "449168189ad4b0d51ce5e9b6473ee4012fe72ddaba4fdb8da064bd8b5e94b433"
+
+[[files]]
+file = "REUSE.toml"
+hash = "d70e9fd8563ef197fa0118d045498d67cfc30c3e275be0525c81abad864af174"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
