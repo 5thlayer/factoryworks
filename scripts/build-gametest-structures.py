@@ -30,9 +30,11 @@ DATA_VERSION = 4790  # 26.1.2, world_version in the client jar's version.json.
 # crossed the wire. Seven tall: the floor, and six blocks of headroom, which covers the pole's +-2
 # vertical reach from a machine standing on it, and the pole's own MAX_SEGMENTS column with a block
 # to spare above it, which is what the Placement Preview's column tests need to reach the cap (#297).
-SIZE = (23, 7, 7)
-TEMPLATES = {"platform.nbt": SIZE}
-FLOOR = "minecraft:stone"
+# The showcase scenes' floor is smooth stone because it is filmed (#538).
+TEMPLATES = {
+    "platform.nbt": ((23, 7, 7), "minecraft:stone"),
+    "scene.nbt": ((24, 8, 16), "minecraft:smooth_stone"),
+}
 
 
 def platform(size):
@@ -83,20 +85,20 @@ def main():
         # one this script would write. Here it is nearly a formality -- the platform has no input
         # to go stale against, no corpus and no tuning dial, which is why no test file owns it --
         # but a committed binary nobody can re-derive is the thing the rule exists to prevent.
-        for name, size in TEMPLATES.items():
+        for name, (size, floor) in TEMPLATES.items():
             path = os.path.join(STRUCTURES, name)
             if not os.path.exists(path):
                 print("FAIL: %s does not exist; run this script" % os.path.relpath(path, ROOT))
                 return 1
-            want = _rendered(name, size, [{"Name": FLOOR}], platform(size))
+            want = _rendered(name, size, [{"Name": floor}], platform(size))
             if open(path, "rb").read() != want:
                 print("FAIL: %s is stale; re-run this script" % os.path.relpath(path, ROOT))
                 return 1
         print("ok: the gametest platforms are up to date")
         return 0
     os.makedirs(STRUCTURES, exist_ok=True)
-    for name, size in TEMPLATES.items():
-        write_template(os.path.join(STRUCTURES, name), size, [{"Name": FLOOR}], platform(size))
+    for name, (size, floor) in TEMPLATES.items():
+        write_template(os.path.join(STRUCTURES, name), size, [{"Name": floor}], platform(size))
     return 0
 
 

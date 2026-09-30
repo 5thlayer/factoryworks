@@ -51,6 +51,11 @@ public final class PFGameTests {
     static final Identifier PLATFORM =
             Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, "gametest/platform");
 
+    static final Identifier SCENE =
+            Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, "gametest/scene");
+
+    static final String SHOWCASE_NAMESPACE = "factoryworks_showcase";
+
     private static final DeferredRegister<MapCodec<? extends GameTestInstance>> TEST_TYPES =
             DeferredRegister.create(Registries.TEST_INSTANCE_TYPE, FactoryWorksCore.NAMESPACE);
 
@@ -109,6 +114,9 @@ public final class PFGameTests {
         if (ModList.get().isLoaded("beltworks")) {
             BeltworksPackTests.register(registrar);
         }
+        if (ModList.get().isLoaded("oritech") && ModList.get().isLoaded("beltworks")) {
+            ShowcaseScenes.register(registrar);
+        }
     }
 
     /** What a test file is handed: a name, a tick budget and a body. */
@@ -119,6 +127,14 @@ public final class PFGameTests {
             PFGameTestInstance.define(id, body);
             event.registerTest(id, new PFGameTestInstance(id, new TestData<>(
                     environment, PLATFORM, maxTicks, 0, true, Rotation.NONE)));
+        }
+
+        // Its own namespace keeps a scene out of the check run's `factoryworks:*` (#538).
+        void showcase(String name, int maxTicks, Consumer<GameTestHelper> body) {
+            Identifier id = Identifier.fromNamespaceAndPath(SHOWCASE_NAMESPACE, name);
+            PFGameTestInstance.define(id, body);
+            event.registerTest(id, new PFGameTestInstance(id, new TestData<>(
+                    environment, SCENE, maxTicks, 0, true, Rotation.NONE)));
         }
     }
 }
