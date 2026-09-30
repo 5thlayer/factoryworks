@@ -907,12 +907,12 @@ Sub-rules:
 
 - **verdict**: `adapted`
 - **notice**: the Steam Engine is Oritech's engine under a pack block, calibrated by mixin to
-  Factorio's 30 mB/s and 450 FE/t, and the solar panel is Oritech's Big Solar Panel at Oritech's own
-  output until #508 makes it a pack block at Factorio's.
+  Factorio's 30 mB/s and 450 FE/t, and the solar panel is a pack block on Oritech's Big Solar Panel
+  entity at Factorio's 60 kW on Factorio's day (#508).
 - **where**: all bodies
 - **via**: `pack`, `oritech`
 - **owner**: ADR-0048, ADR-0060, ADR-0062, ADR-0077
-- **ticket**: #135 (the Steam Turbine), #508 (the Solar Panel), #7 (per-body solar); #104, #189, #224, #283 closed
+- **ticket**: #135 (the Steam Turbine), #7 (per-body solar); #104, #189, #224, #283 closed
 
 Sub-rules:
 
@@ -943,13 +943,12 @@ Sub-rules:
   ADR-0036 selected Power Grid for.
 - **Accumulators** — `shipped`, #283. `accumulator` is Oritech's Large Energy Storage, mixed in to
   Factorio's 5 MJ and 300 kW.
-- **Solar panels** — `adapted`. `solar-panel` is Oritech's Big Solar Panel (ADR-0062, ADR-0067),
-  crafted from Factorio's recipe and producing at Oritech's own rate, and it never runs: Oritech
-  assembles it from machine cores the pack does not give. #508 makes it `factoryworks:solar_panel`,
-  placed as one footprint, at Factorio's 60 kW on Factorio's day curve with a one-tick buffer and no
-  weather; per-body output is #7. *Before ADR-0060 both were Power Grid's
-  (#148).* It is also
-  the *planet* Electro's identity — see [Day and night cycle](#day-and-night-cycle).
+- **Solar panels** — `shipped`, #529-#531. `solar-panel` is `factoryworks:solar_panel`, a pack block on
+  Oritech's Big Solar Panel entity (ADR-0062, ADR-0077), placed and broken as one footprint with no
+  machine cores. It makes Factorio's 60 kW (30 FE/t) at noon along Factorio's day curve, nothing at
+  night or under a roof, with a one-tick buffer and no weather. It is crafted from Factorio's
+  recipe, Oritech's own panel is swept and unlisted, and Jade shows what it is making now.
+  Per-body output is #7. *Before ADR-0060 both were Power Grid's (#148).*
 - **Steam as a stored, pipeable intermediate** — `shipped` for low-temperature steam, which the
   Boiler makes and pipes carry to the Steam Engine; high-temperature steam waits on #135. **Two
   fluids rather than one**. ADR-0048 registers low-temperature steam, which the Boiler makes and the Steam Engine eats,
@@ -1423,10 +1422,11 @@ network's player-facing half, and they go with it.
 
 Sub-rules:
 
-- **Solar output follows the cycle, and accumulators bridge the night** — `planned`. On Terra, #508:
-  the panel follows Factorio's day curve and banks no night, so the Accumulator carries it, at
-  Factorio's 0.84 per panel once #509 lands. On Electro it is the planet's identity, and #7's; Electro's
-  own cycle is #8's.
+- **Solar output follows the cycle, and accumulators bridge the night on Terra** — `shipped`, #529-#531.
+  The panel follows Factorio's day curve and banks no night, so the Accumulator carries it, at
+  Factorio's 0.84 per panel on Terra's seven-minute day (#509).
+- **Solar output on Electro** — `planned`, #7. It is the planet's identity, a multiplier on the
+  Terra panel's output; Electro's own cycle is #8's.
 
 ### Controls
 
