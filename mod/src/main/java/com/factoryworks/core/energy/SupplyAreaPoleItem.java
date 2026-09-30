@@ -1,6 +1,7 @@
 package com.factoryworks.core.energy;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Player;
@@ -135,31 +136,22 @@ public class SupplyAreaPoleItem extends BlockItem implements PlansPlacement {
                                 Consumer<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, display, tooltip, flag);
         PoleTier tier = tier();
-
-        // What it covers. Stated as Factorio states it -- a square of tiles -- plus the vertical
-        // band, which is the dimension Factorio has no answer for and a player cannot guess.
         tooltip.accept(Component.translatable("tooltip.factoryworks.pole.area",
-                tier.supplySize(), tier.supplySize(), tier.verticalRadius())
-                .withStyle(ChatFormatting.GRAY));
-
-        // That it is wireless. The load-bearing line: a Minecraft player who is not told this will
-        // go looking for the cable, fail to find one, and conclude the pole is broken.
+                tier.supplySize(), tier.supplySize()).withStyle(ChatFormatting.GRAY));
+        // A player not told it is wireless goes looking for the cable and concludes the pole is broken.
         tooltip.accept(Component.translatable("tooltip.factoryworks.pole.wireless")
                 .withStyle(ChatFormatting.GRAY));
-
-        // And, for the creative pole, the one thing that makes it not the substation it is wearing
-        // the footprint of. A dev tool that looks like a shipped block is one a player can leave in
-        // a world and then read a self-sufficient factory off; the pink sprite says it at a
-        // distance and this says it in the hand.
         if (getBlock() instanceof CreativeSupplyAreaPoleBlock) {
             tooltip.accept(Component.translatable("tooltip.factoryworks.pole.creative")
                     .withStyle(ChatFormatting.LIGHT_PURPLE));
         }
-
-        // That height does not move the area, and how to add height. One line for both, because
-        // they are the same fact from two sides: the column exists so the wire can go up, and the
-        // footprint stays on the ground while it does. Saying only the first would replace an
-        // invisible bug with an invisible rule.
+        if (!Minecraft.getInstance().hasShiftDown()) {
+            tooltip.accept(Component.translatable("tooltip.factoryworks.hold_shift")
+                    .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
+            return;
+        }
+        tooltip.accept(Component.translatable("tooltip.factoryworks.pole.band", tier.verticalRadius())
+                .withStyle(ChatFormatting.DARK_GRAY));
         tooltip.accept(Component.translatable("tooltip.factoryworks.pole.column",
                 Component.translatable(getBlock().getDescriptionId()), PoleColumn.MAX_SEGMENTS)
                 .withStyle(ChatFormatting.DARK_GRAY));
