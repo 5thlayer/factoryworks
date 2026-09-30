@@ -2940,11 +2940,6 @@ hash = "f6966f01757d2a20fbe0284e06d9e37d89bcd8da62eacce859c985a5b3115842"
 metafile = true
 
 [[files]]
-file = "mods/jei.pw.toml"
-hash = "8c39e373f88438ebdf1d43f9d3559d34efda520b6ee9d41d15c40a1abd626d15"
-metafile = true
-
-[[files]]
 file = "mods/just-zoom.pw.toml"
 hash = "e0182594d0b9b7b429584c705ddbf08c5ddc1bf5b083acc931c05a7fd1d33e90"
 metafile = true
