@@ -4,6 +4,8 @@ FactoryWorks is an overhaul modpack that plays like Factorio. You start with a f
 
 **NeoForge, Minecraft 26.1.2 only.** FactoryWorks is early work: Terra, the starting planet, is the only one so far.
 
+**Join the [Discord](https://discord.gg/m3ta8fuCca)** for builds, help, and the Alpha's tester applications.
+
 ## Features
 
 - **Factorio's recipes, not Minecraft's.** Recipes are converted from Factorio's data rather than written by hand, with their ingredients, counts and craft times. Every stock recipe is removed, and the few Minecraft items the pack keeps are re-authored to fit.
