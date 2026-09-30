@@ -8,13 +8,13 @@ status: accepted
 in this design that is written down nowhere. It is the reason ADR-0007's cost estimate for closing
 the Nether was wrong — *"blaze powder, netherite, ender pearls and every recipe in the stack that
 assumes them"* is an inventory of recipes that do not ship — and it mis-scoped
-[`#127`](https://github.com/adamico/factoryworks/issues/127), which was filed to enumerate that
+[`#127`](https://github.com/5thlayer/factoryworks/issues/127), which was filed to enumerate that
 cost and closed unstarted once someone said the sentence out loud.
-[`#124`](https://github.com/adamico/factoryworks/issues/124) flagged the gap in its own answer
+[`#124`](https://github.com/5thlayer/factoryworks/issues/124) flagged the gap in its own answer
 and declined to ticket it.
 
 What exists instead is scattered and partial. ADR-0017 records removals per capability row, in a
-column headed *the losing blocks*. [`#97`](https://github.com/adamico/factoryworks/issues/97)
+column headed *the losing blocks*. [`#97`](https://github.com/5thlayer/factoryworks/issues/97)
 forbids the pack *emitting* a vanilla shaped recipe. ADR-0031 says the corpus authors every recipe it
 contains. None of the three states the general case, and none of them covers a recipe the pack never
 had an opinion about — which is most of them.
@@ -33,7 +33,7 @@ the manifest is 111 entries.
 The premise is usually said as though removal were a policy the pack chose. For one recipe type it is
 not a choice at all.
 
-[`#90`](https://github.com/adamico/factoryworks/issues/90) removed the vanilla crafting grid, and
+[`#90`](https://github.com/5thlayer/factoryworks/issues/90) removed the vanilla crafting grid, and
 `#34` finished the job on ADR-0017's Hand-crafting surface row: the Crafting Table, Crafting on a
 Stick, CraftingTweaks, Sophisticated Backpacks' Crafting Upgrade, AE2's terminals, Create's Mechanical
 Crafter and Mekanism's Formulaic Assemblicator are all cut. **After that there is no block in the pack
@@ -62,7 +62,7 @@ surface" and that this "closes by accident rather than by decision". That is tru
 pack authors and false of the ones it merely fails to remove. **This is the exception with the
 sharpest teeth, because it is the one nobody chose.**
 
-**Closed by [`#140`](https://github.com/adamico/factoryworks/issues/140).** The grid is removed
+**Closed by [`#140`](https://github.com/5thlayer/factoryworks/issues/140).** The grid is removed
 in `factoryworks_core`, where it always had to be: an `InventoryMenu` mixin replaces the result
 and the four input slots with slots that are inactive and refuse both directions, and cancels
 `slotsChanged` so the result container is never filled by anything — including the recipe book,
@@ -73,7 +73,7 @@ reading of the rest of the shaped set.
 
 ### 2. Recipe types that are not the grid
 
-The grid is gone; the furnace is not. [`#91`](https://github.com/adamico/factoryworks/issues/91)
+The grid is gone; the furnace is not. [`#91`](https://github.com/5thlayer/factoryworks/issues/91)
 puts the four `smelting` recipes on **vanilla `minecraft:smelting`** — `data/pack/category-map.json`
 records it — with vanilla's Furnace renamed as the rung-0 tier. Vanilla's *recipe type* survives and
 carries pack-authored content.
@@ -85,7 +85,7 @@ smelting is curated, not deleted** — and by the same argument so is any other 
 
 ### 3. `native_mechanic` — a capability that needs no recipe
 
-[`#93`](https://github.com/adamico/factoryworks/issues/93) verified in
+[`#93`](https://github.com/5thlayer/factoryworks/issues/93) verified in
 `create-1.21.1-6.0.10.jar` that `GenericItemFilling.canItemBeFilled` and
 `GenericItemEmptying.canItemBeEmptied` key on the item's `IFluidHandlerItem` capability: the Spout
 fills and the Item Drain drains any fluid-holding item **with no recipe at all**. Create's shipped
@@ -208,14 +208,14 @@ grep is empty apart from ADR-0016's Sapros loot tables, which are about the oppo
   `minecraft:the_nether`. Noted here because this ADR quotes that cost estimate as its motivating
   failure and the estimate is still standing in the file.
 - **Nothing in this ADR is implemented.** ~~There is no recipe removal anywhere in the repo~~ —
-  **no longer true as of [`#143`](https://github.com/adamico/factoryworks/issues/143)**, which
+  **no longer true as of [`#143`](https://github.com/5thlayer/factoryworks/issues/143)**, which
   ships the sweep and its survivor allowlist. See the section below, amended. As written this was a
   rule for work that had not started, which is the cheapest moment to write it and the reason it was
   worth writing then.
 
 ## A survivor names a surface, not a mod
 
-**Amendment, [`#172`](https://github.com/adamico/factoryworks/issues/172).** `#144` asked
+**Amendment, [`#172`](https://github.com/5thlayer/factoryworks/issues/172).** `#144` asked
 whether the allowlist could admit a whole mod's line as one decision — `{ mod: 'powergrid' }`
 rather than a row per surface — because Create: Power Grid arrived on the critical path with its
 own recipes swept and its blocks uncraftable. That would bend the rule at the top of this ADR,
@@ -297,8 +297,8 @@ recipes and nothing else.** This is the same fact as §1's, read from the other 
 
 ## The tail, decided
 
-**Amendment, [`#441`](https://github.com/adamico/factoryworks/issues/441), for
-[`#144`](https://github.com/adamico/factoryworks/issues/144).** §7 is no longer open. The
+**Amendment, [`#441`](https://github.com/5thlayer/factoryworks/issues/441), for
+[`#144`](https://github.com/5thlayer/factoryworks/issues/144).** §7 is no longer open. The
 manifest it described went with ADR-0060, and the tail is now the jars on the 26.1.2 manifest that
 ship recipes, plus vanilla.
 
@@ -321,10 +321,10 @@ no cycle.
 
 | kept | from | ticket | why |
 | --- | --- | --- | --- |
-| smart filter | FTB Filter System | [`#442`](https://github.com/adamico/factoryworks/issues/442) | the SimpleBelts fork's loader reads it as its filter; the first row, and the line the others reuse |
-| stairs (stone, cobblestone, stone bricks, and each log Terra grows) | vanilla | [`#444`](https://github.com/adamico/factoryworks/issues/444) | traversal and base building |
-| ladders | vanilla | [`#444`](https://github.com/adamico/factoryworks/issues/444) | traversal |
-| sand, glass, glass panes | vanilla | [`#445`](https://github.com/adamico/factoryworks/issues/445) | sand on the Assembling Machine, glass a smelt on `factoryworks:smelting` since the vanilla furnace is inert, panes a hand recipe |
+| smart filter | FTB Filter System | [`#442`](https://github.com/5thlayer/factoryworks/issues/442) | the SimpleBelts fork's loader reads it as its filter; the first row, and the line the others reuse |
+| stairs (stone, cobblestone, stone bricks, and each log Terra grows) | vanilla | [`#444`](https://github.com/5thlayer/factoryworks/issues/444) | traversal and base building |
+| ladders | vanilla | [`#444`](https://github.com/5thlayer/factoryworks/issues/444) | traversal |
+| sand, glass, glass panes | vanilla | [`#445`](https://github.com/5thlayer/factoryworks/issues/445) | sand on the Assembling Machine, glass a smelt on `factoryworks:smelting` since the vanilla furnace is inert, panes a hand recipe |
 
 `#444` and `#445` rewrite rather than flatten: planks and sticks are not kept, so vanilla's stairs,
 ladder and pane recipes name inputs nothing makes, and each count and yield is chosen and recorded
@@ -341,7 +341,7 @@ filter would arrive a rung after the loaders that read it.
 - **SimpleBelts fork.** The pack authors the belts (`#398`).
 - **Railcraft Reborn.** Its plates and gears are already removed (ADR-0060), and the train rows the
   corpus maps are emitted by the converter. The rest of rail is
-  [`#435`](https://github.com/adamico/factoryworks/issues/435)'s.
+  [`#435`](https://github.com/5thlayer/factoryworks/issues/435)'s.
 - **FTB Materials.** The corpus already authors the forms the pack keeps: plate, gear, rod and wire
   (ADR-0061). Its own stock routes to them are not kept.
 - **Oritech.** Nothing beyond the rows the item map already names, which the converter emits. Its
@@ -356,7 +356,7 @@ filter would arrive a rung after the loaders that read it.
 
 ## The state on the ground, recorded because it is not what the docs imply
 
-**Amended by [`#143`](https://github.com/adamico/factoryworks/issues/143): the first two
+**Amended by [`#143`](https://github.com/5thlayer/factoryworks/issues/143): the first two
 bullets below are no longer true.** `kubejs/server_scripts/recipes.js` is the default-deny sweep
 and `kubejs/server_scripts/recipe_survivors.js` is the allowlist it re-admits by name; the
 corpus emits into `kubejs/data/factoryworks/recipe/` (`#87`). The rest of the section stands,

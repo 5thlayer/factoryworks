@@ -29,8 +29,8 @@ first two are published. #301 already bars "Factorio" and its coined names from 
   mod stays out of the index; how the jar reaches the manifest is #70's.
 - **The rename reaches every identifier.** The registry namespace `planetaryfactory` becomes
   `factoryworks`, the mod id `planetaryfactory_core` becomes `factoryworks_core`, the package
-  `com.planetaryfactory` becomes `com.factoryworks`, and the GitHub repository `planetary-factory`
-  becomes `factoryworks`. The split between the pack's namespace and the mod's id is kept, so the
+  `com.planetaryfactory` becomes `com.factoryworks`, and the GitHub repository
+  `adamico/planetary-factory` becomes `5thlayer/factoryworks`, beside the Libraries it builds on. The split between the pack's namespace and the mod's id is kept, so the
   rename is a substitution and not a redesign. The live docs follow, ADRs included, since they are
   state. Closed tickets and commits keep the old ids as history. It lands before the first upload
   (#70) and before the repository goes public (#306), as a pull request with nothing else open.
