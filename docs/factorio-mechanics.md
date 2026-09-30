@@ -627,7 +627,11 @@ Sub-rules:
   left with ADR-0060.*
 - **Balancers** — `shipped`. A balancer is built from splitters, not bought as a block: chained
   splitters make Factorio's 2x2 and 4x4 balancers (#349).
-- **Splitter priority and filter** — `planned` on 5thlayer/beltworks#19.
+- **Splitter priority and filter** — `shipped`. A splitter's screen, opened by sneaking and using
+  either half with an empty hand, sets an input priority, an output priority and a filter. The
+  filter is set by clicking its slot with an item or dragging one from the item list, and takes
+  nothing. What it matches goes only to the output-priority side and everything else only to the
+  other, each waiting when its side backs up (5thlayer/beltworks#20, 5thlayer/beltworks#21, 5thlayer/beltworks#22).
 - **Two lanes per belt** — `excluded`. Lane balancing is a compression trick for a conveyor one tile
   wide on a plane — what you do when the only free axis runs along the belt. It goes with the
   undergrounds and for the same reason (ADR-0044). *This entry read `by-consequence` of Create
@@ -638,6 +642,14 @@ Sub-rules:
 - **Side-loading** — `adapted`. A belt feeding the side of a straight tile merges into the line it
   feeds, into its gaps, with the line from behind going first; a full line backs the side up. With
   one lane there is no far lane to fill, so it is Factorio's side-load reduced to a merge (#409).
+- **Drop onto a belt** (`Z`) — `adapted` via vanilla's drop key. Q aimed at a belt tile puts one
+  item from the selected slot into the tile's line at the aimed point, or at the nearest gap on the
+  same tile, and throws nothing; a tile with no gap keeps the item in the slot and says why on the
+  action bar. Ctrl+Q, and Q aimed at anything but a belt tile, stay vanilla's throw. It reaches the
+  player's block interaction range, which the Pack's Building reach sets to 16 (#413). An item that
+  lands on a tile joins the line where it lands when there is room, a stack one item at a time, and
+  otherwise rests on the items under it, moving with them, until a gap opens
+  (5thlayer/beltworks#91, 5thlayer/beltworks#92). `Z` into a machine stays `excluded` under Controls.
 - **Belt as buffer** — `shipped`. A backed-up belt queues from its end at eight items per block at
   every tier, so a 64-tile belt holds 512 (#344). *This entry read `excluded`,
   against Create's one item per block.*
