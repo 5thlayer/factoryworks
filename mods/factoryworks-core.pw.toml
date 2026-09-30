@@ -1,0 +1,13 @@
+name = "FactoryWorks Core"
+filename = "factoryworks_core-0.1.1.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "d6d807d81f469481c66fa3358a8e70d629a0925a"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 9019226
+project-id = 1718187

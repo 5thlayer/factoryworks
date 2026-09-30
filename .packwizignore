@@ -57,11 +57,9 @@ mods/*.jar
 !mods/researchd-*.jar
 !mods/Porting-Dead-Libs-*.jar
 
-# `factoryworks_core` stays excluded even though it is also local (ADR-0024):
-# `installToPack` rebuilds it into mods/ on every `./gradlew build` and Gradle
-# jars are not byte-reproducible, so indexing it would dirty index.toml
-# constantly. Its provenance is `mod/`, which git already tracks in full. It is
-# covered by the `mods/*.jar` rule above and deliberately not re-included.
+# `factoryworks_core` is indexed by its metafile, mods/factoryworks-core.pw.toml, naming the
+# released CurseForge file (ADR-0101). The jar `installToPack` builds into mods/ for dev runs is
+# not byte-reproducible, so it stays covered by the `mods/*.jar` rule above.
 
 # --- Per-user and per-run state, never pack behaviour -------------------------
 # NOTE: the repo root is also the live game instance, so it accumulates directories
