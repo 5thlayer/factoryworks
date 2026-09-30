@@ -254,6 +254,11 @@ tasks.named('processResources', ProcessResources).configure {
     }
 }
 
+// The jar is published on its own, so it carries the licence texts LGPL and CC BY require (ADR-0102).
+tasks.named('jar', Jar) {
+    from(rootDir) { include 'LICENSE', 'NOTICE', 'LICENSES/**' }
+}
+
 // The pack loads jars from `mods/`, which is gitignored. Build straight into it so
 // `./gradlew build` is the whole install step.
 if (siblingBuilds) {
