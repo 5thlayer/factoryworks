@@ -286,7 +286,7 @@ class LicensingTest(unittest.TestCase):
             "tests/pack/test_licensing.py": "LGPL-3.0-only",
             "kubejs/server_scripts/recipes.js": "LGPL-3.0-only",
             "docs/adr/0101-the-pack-is-factoryworks-an-overhaul-modpack.md": "CC-BY-4.0",
-            "publish/description.md": "CC-BY-4.0",
+            "README.md": "CC-BY-4.0",
             "data/pack/item-map.json": "CC-BY-4.0",
             "gradlew": "Apache-2.0",
         }

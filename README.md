@@ -1,3 +1,5 @@
+![FactoryWorks](https://raw.githubusercontent.com/5thlayer/factoryworks/main/publish/factoryworks-cover.png)
+
 FactoryWorks is an overhaul modpack that plays like Factorio. You start with a furnace, a burner drill and a pick beside four ore fields, and build a factory from there: every recipe, rate and research is carried over from Factorio's own data, and the crafting grid, stock recipes, mobs, the Nether and the End are gone.
 
 **NeoForge, Minecraft 26.1.2 only.** FactoryWorks is early work: Terra, the starting planet, is the only one so far.
@@ -18,6 +20,15 @@ FactoryWorks is an overhaul modpack that plays like Factorio. You start with a f
 ## Built with
 
 FactoryWorks' rules live in its own mod, **FactoryWorks Core**, and in three mods made alongside it: [Beltworks](https://www.curseforge.com/minecraft/mc-mods/beltworks) for belts, [Craftworks](https://www.curseforge.com/minecraft/mc-mods/craftworks) for the Personal Assembler, and Groundworks, bundled in Beltworks, for placement. Research runs on Researchd. Other mods supply parts: Oritech's machine models, FTB Materials' items, FTB Chunks' map, FTB Quests' guide book, and EMI's item list.
+
+## Working on the pack
+
+- This repository is the pack's live CurseForge instance: configs, KubeJS scripts, data and the manifest sit where the game reads them.
+- After a fresh clone, `./gradlew :factoryworks_core:installToPack` builds FactoryWorks Core into `mods/`, which git does not track.
+- `uv run --with pytest pytest tests/` runs every check.
+- The pack's vocabulary is in [CONTEXT.md](https://github.com/5thlayer/factoryworks/blob/main/CONTEXT.md), its decisions in [docs/adr](https://github.com/5thlayer/factoryworks/tree/main/docs/adr), and what it does with each Factorio mechanic in [docs/factorio-mechanics.md](https://github.com/5thlayer/factoryworks/blob/main/docs/factorio-mechanics.md).
+- Report bugs and ideas on the [issue tracker](https://github.com/5thlayer/factoryworks/issues).
+- Beltworks, Craftworks and Groundworks are developed in their own repositories: [5thlayer/beltworks](https://github.com/5thlayer/beltworks), [5thlayer/craftworks](https://github.com/5thlayer/craftworks), [5thlayer/groundworks](https://github.com/5thlayer/groundworks).
 
 ## Credits
 
