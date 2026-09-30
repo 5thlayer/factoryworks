@@ -68,10 +68,15 @@ path = ["publish/**/*.png"]
 SPDX-FileCopyrightText = ["Rearth", "Malcolm Riley", "Mojang AB", "2026 5thlayer"]
 SPDX-License-Identifier = "CC-BY-4.0 AND LicenseRef-Mojang"
 
-# The Electric Furnace's art, copied unmodified from Futureazoo's TextureRepository (NOTICE). It is
+# The Electric Furnace's and the Mining Drills' art, copied unmodified from Futureazoo's TextureRepository (NOTICE). It is
 # not the Pack's to relicense, and NonCommercial is a restriction the Pack's own licences lack.
 [[annotations]]
-path = ["kubejs/assets/factoryworks/textures/block/electric_furnace/*.png"]
+path = [
+    "kubejs/assets/factoryworks/textures/block/electric_furnace/*.png",
+    "kubejs/assets/factoryworks/textures/block/burner_mining_drill/*.png",
+    "kubejs/assets/factoryworks/textures/block/electric_mining_drill/*.png",
+    "kubejs/assets/factoryworks/textures/block/mining_drill_port.png",
+]
 SPDX-FileCopyrightText = "Futureazoo"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
 

@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/orientable_with_bottom",
   "textures": {
-    "front": "factoryworks:block/electric_mining_drill/side",
+    "front": "factoryworks:block/mining_drill_port",
     "side": "factoryworks:block/electric_mining_drill/side",
     "top": "factoryworks:block/electric_mining_drill/top",
     "bottom": "factoryworks:block/electric_mining_drill/bottom",

@@ -20,9 +20,10 @@ The rig seam (ADR-0043). Two different generated things are asserted here, and t
     never turns, and neither half fails anywhere else. The fuel table is default-deny and category
     filtered, so "there are fuel files" is not the assertion -- "at least one names a `chemical`
     fuel against a real item" is.
-  - **The facing is visible.** Each rig and part model names a `front` texture and its blockstate
-    turns it through all four quarters. Whether every hop from blockstate to texture, the lang key
-    and the loot table resolve is `test_block_assets.py`'s (#254).
+  - **The facing and the port are visible.** Each part's `panel` resolves to its own front face on
+    every facing, and the port is one texture on both tiers (#536). Whether every hop from
+    blockstate to texture, the lang key and the loot table resolve is `test_block_assets.py`'s
+    (#254).
 
 The tier list is read out of `RigTier.java` rather than typed here, so a third rung added to the
 enum is held to the corpus too.
@@ -150,6 +151,57 @@ def check_screen_lang(lang, failures):
             failures.append(f"{key} has no lang entry -- the fuel hover would show its raw key")
 
 
+PORT_TEXTURE = "factoryworks:block/mining_drill_port"
+PANELS = ("casing", "front", "port")
+FACINGS = {"north": 0, "east": 90, "south": 180, "west": 270}
+
+
+def front_of(model):
+    declared = json.loads((ASSETS / f"models/{model.split(':', 1)[-1]}.json").read_text())
+    return (declared.get("textures") or {}).get("front")
+
+
+def check_panels(tier, failures):
+    """The front face each block wears (#536).
+
+    Which block of the footprint wears which panel is `RigPanelsTest`'s. What is held here is that
+    each panel resolves to the face it names on every facing: the port only on `panel=port`, and
+    the same texture on both tiers, so a player learns one sign.
+    """
+    block = f"{tier}_mining_drill"
+    textures = f"factoryworks:block/{block}"
+    expected = {"casing": f"{textures}/side", "front": f"{textures}/front", "port": PORT_TEXTURE}
+
+    anchor = json.loads((ASSETS / f"blockstates/{block}.json").read_text()).get("variants") or {}
+    for key, entry in anchor.items():
+        if front_of(entry["model"]) != expected["casing"]:
+            failures.append(
+                f"{block}'s anchor at {key} wears {front_of(entry['model'])!r} -- the anchor is the "
+                "back corner and never the port or the front"
+            )
+    if {entry.get("y", 0) for entry in anchor.values()} != set(FACINGS.values()):
+        failures.append(f"{block}'s blockstate does not turn through all four quarters")
+
+    part = json.loads((ASSETS / f"blockstates/{block}_part.json").read_text()).get("variants") or {}
+    for facing, y in FACINGS.items():
+        for panel in PANELS:
+            key = f"facing={facing},panel={panel}"
+            entry = part.get(key)
+            if entry is None:
+                failures.append(f"{block}_part has no variant {key}")
+                continue
+            if entry.get("y", 0) != y:
+                failures.append(f"{block}_part's {key} turns {entry.get('y', 0)}, not {y}")
+            if front_of(entry["model"]) != expected[panel]:
+                failures.append(
+                    f"{block}_part's {key} wears {front_of(entry['model'])!r} on its front, "
+                    f"not {expected[panel]!r}"
+                )
+    stray = set(part) - {f"facing={f},panel={p}" for f in FACINGS for p in PANELS}
+    if stray:
+        failures.append(f"{block}_part names variants no state has: {sorted(stray)}")
+
+
 def main():
     failures = []
     tiers = registered_tiers()
@@ -207,31 +259,7 @@ def main():
                     f"says {corpus_categories!r}"
                 )
 
-        block = f"{tier}_mining_drill"
-        for name in (block, f"{block}_part"):
-            variants = json.loads((ASSETS / f"blockstates/{name}.json").read_text()).get("variants") or {}
-            seen_rotations = set()
-            for definition in variants.values():
-                entry = definition if isinstance(definition, dict) else definition[0]
-                model = entry["model"]
-                seen_rotations.add(entry.get("y", 0))
-                # THE FACING HAS TO BE VISIBLE ON THE BLOCK. ADR-0043 gives a rig one output tile
-                # and makes placement a decision the player gets right or wrong; a `cube_all` model
-                # renders every side the same, so a mis-faced rig looks exactly like a correct one
-                # until it fails to fill anything.
-                declared = json.loads((ASSETS / f"models/{model.split(':', 1)[-1]}.json").read_text())
-                if not (declared.get("textures") or {}).get("front"):
-                    failures.append(
-                        f"{name}'s model {model} declares no `front` texture -- its facing would "
-                        "be invisible, and a mis-faced rig would look identical to a correct one"
-                    )
-
-            if seen_rotations != {0, 90, 180, 270}:
-                failures.append(
-                    f"{name}'s blockstate turns the model through {sorted(seen_rotations)} rather "
-                    "than all four quarters -- the front face would point the wrong way on "
-                    "at least one facing"
-                )
+        check_panels(tier, failures)
 
     stray = set(rows) - {factorio for factorio, _ in tiers.values()}
     if stray:
@@ -249,7 +277,7 @@ def main():
         print(f"FAIL {index}: {failure}")
     if failures:
         return 1
-    print(f"ok   {len(tiers)} rigs, every number matches the corpus, every facing is visible")
+    print(f"ok   {len(tiers)} rigs, every number matches the corpus, every panel wears its face")
     return 0
 
 

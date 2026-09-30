@@ -51,7 +51,7 @@ public final class RigOutputTile {
             throw new IllegalArgumentException("a rig footprint is at least 1x1, got "
                     + width + "x" + height);
         }
-        int lateral = (int) Math.floor(vectorX + width / 2.0);
+        int lateral = lateral(width, vectorX);
         // Factorio's +y runs south -- backwards, where the footprint's depth runs forwards along
         // the facing -- so the index is counted from the far end rather than used as it stands.
         int depth = (height - 1) - (int) Math.floor(vectorY + height / 2.0);
@@ -64,5 +64,10 @@ public final class RigOutputTile {
                 // not on the rig's roof.
                 0,
                 facing.dz() * depth + right.dz() * lateral);
+    }
+
+    /** The column of the footprint the Drop Position sits in front of, counted from the anchor. */
+    public static int lateral(int width, double vectorX) {
+        return (int) Math.floor(vectorX + width / 2.0);
     }
 }

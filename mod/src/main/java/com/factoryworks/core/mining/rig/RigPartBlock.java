@@ -6,6 +6,7 @@ import com.factoryworks.core.machine.footprint.FootprintTurn;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -41,6 +42,8 @@ public class RigPartBlock extends BaseEntityBlock implements FootprintTurn {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
+    public static final EnumProperty<Panel> PANEL = EnumProperty.create("panel", Panel.class);
+
     public static final com.mojang.serialization.MapCodec<RigPartBlock> CODEC =
             com.mojang.serialization.codecs.RecordCodecBuilder.mapCodec(instance -> instance.group(
                     com.mojang.serialization.Codec.STRING
@@ -65,7 +68,9 @@ public class RigPartBlock extends BaseEntityBlock implements FootprintTurn {
                 // it drop something -- the item lives in code, not in a loot table roll.
                 .noLootTable());
         this.tier = tier;
-        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(getStateDefinition().any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(PANEL, Panel.CASING));
     }
 
     public RigTier tier() {
@@ -79,7 +84,7 @@ public class RigPartBlock extends BaseEntityBlock implements FootprintTurn {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, PANEL);
     }
 
     @Override
@@ -118,5 +123,21 @@ public class RigPartBlock extends BaseEntityBlock implements FootprintTurn {
             player.openMenu(rig, buf -> buf.writeEnum(rig.tier()));
         }
         return InteractionResult.CONSUME;
+    }
+
+    /** {@link RigPanel} as a blockstate value, which the Minecraft-free enum cannot be. */
+    public enum Panel implements StringRepresentable {
+        CASING,
+        FRONT,
+        PORT;
+
+        public static Panel of(RigPanel panel) {
+            return valueOf(panel.name());
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name().toLowerCase(java.util.Locale.ROOT);
+        }
     }
 }

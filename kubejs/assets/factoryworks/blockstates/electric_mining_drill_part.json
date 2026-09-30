@@ -1,18 +1,48 @@
 {
   "variants": {
-    "facing=north": {
-      "model": "factoryworks:block/electric_mining_drill_part"
+    "facing=north,panel=casing": {
+      "model": "factoryworks:block/electric_mining_drill"
     },
-    "facing=east": {
-      "model": "factoryworks:block/electric_mining_drill_part",
+    "facing=north,panel=front": {
+      "model": "factoryworks:block/electric_mining_drill_front"
+    },
+    "facing=north,panel=port": {
+      "model": "factoryworks:block/electric_mining_drill_port"
+    },
+    "facing=east,panel=casing": {
+      "model": "factoryworks:block/electric_mining_drill",
       "y": 90
     },
-    "facing=south": {
-      "model": "factoryworks:block/electric_mining_drill_part",
+    "facing=east,panel=front": {
+      "model": "factoryworks:block/electric_mining_drill_front",
+      "y": 90
+    },
+    "facing=east,panel=port": {
+      "model": "factoryworks:block/electric_mining_drill_port",
+      "y": 90
+    },
+    "facing=south,panel=casing": {
+      "model": "factoryworks:block/electric_mining_drill",
       "y": 180
     },
-    "facing=west": {
-      "model": "factoryworks:block/electric_mining_drill_part",
+    "facing=south,panel=front": {
+      "model": "factoryworks:block/electric_mining_drill_front",
+      "y": 180
+    },
+    "facing=south,panel=port": {
+      "model": "factoryworks:block/electric_mining_drill_port",
+      "y": 180
+    },
+    "facing=west,panel=casing": {
+      "model": "factoryworks:block/electric_mining_drill",
+      "y": 270
+    },
+    "facing=west,panel=front": {
+      "model": "factoryworks:block/electric_mining_drill_front",
+      "y": 270
+    },
+    "facing=west,panel=port": {
+      "model": "factoryworks:block/electric_mining_drill_port",
       "y": 270
     }
   }

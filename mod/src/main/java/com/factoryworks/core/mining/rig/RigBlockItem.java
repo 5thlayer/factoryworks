@@ -75,8 +75,9 @@ public class RigBlockItem extends BlockItem implements PlansPlacement {
         Direction facing = context.getHorizontalDirection();
         RigFacing rigFacing = RigDirections.toRigFacing(facing);
         RigCorpus.Row row = RigCorpus.get().rowOf(tier);
+        int tall = tier.blocksTall();
         List<RigGeometry.Offset> offsets = RigGeometry.footprint(
-                row.width(), row.height(), tier.blocksTall(), rigFacing);
+                row.width(), row.height(), tall, rigFacing);
 
         BlockState anchorState = PFBlocks.rig(tier).get().defaultBlockState()
                 .setValue(RigBlock.FACING, facing);
@@ -88,7 +89,10 @@ public class RigBlockItem extends BlockItem implements PlansPlacement {
         for (RigGeometry.Offset offset : offsets) {
             BlockPos pos = anchorPos.offset(offset.dx(), offset.dy(), offset.dz());
             boolean anchor = offset.dx() == 0 && offset.dy() == 0 && offset.dz() == 0;
-            blocks.add(new PlacementPlan.Placed(pos, anchor ? anchorState : partState));
+            BlockState state = anchor ? anchorState : partState.setValue(RigPartBlock.PANEL,
+                    RigPartBlock.Panel.of(RigPanels.of(
+                            row.width(), row.height(), tall, row.vectorX(), rigFacing, offset)));
+            blocks.add(new PlacementPlan.Placed(pos, state));
             if (!level.isInWorldBounds(pos) || !level.getBlockState(pos).canBeReplaced()) {
                 fits = false;
             }
