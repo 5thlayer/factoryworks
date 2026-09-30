@@ -27,18 +27,20 @@ Mining Drill textures (#536)
 ----------------------------
 
 Files:   kubejs/assets/factoryworks/textures/block/burner_mining_drill/bottom.png
-         kubejs/assets/factoryworks/textures/block/burner_mining_drill/front.png
+         kubejs/assets/factoryworks/textures/block/burner_mining_drill/front_off.png
+         kubejs/assets/factoryworks/textures/block/burner_mining_drill/front_on.png
          kubejs/assets/factoryworks/textures/block/burner_mining_drill/side.png
          kubejs/assets/factoryworks/textures/block/burner_mining_drill/top.png
          kubejs/assets/factoryworks/textures/block/electric_mining_drill/bottom.png
-         kubejs/assets/factoryworks/textures/block/electric_mining_drill/front.png
+         kubejs/assets/factoryworks/textures/block/electric_mining_drill/front_off.png
+         kubejs/assets/factoryworks/textures/block/electric_mining_drill/front_on.png
          kubejs/assets/factoryworks/textures/block/electric_mining_drill/side.png
          kubejs/assets/factoryworks/textures/block/electric_mining_drill/top.png
          kubejs/assets/factoryworks/textures/block/mining_drill_port.png
 Author:  Futureazoo
 Source:  https://github.com/Futureazoo/TextureRepository
-         futureazoo/blocks/tech/iron_blastfurnace_{bottom,front_on,side,top}.png,
-         futureazoo/blocks/tech/durasteel_eblastfurnace_{bottom,front_on,side,top}.png and
+         futureazoo/blocks/tech/iron_blastfurnace_{bottom,front_off,front_on,side,top}.png,
+         futureazoo/blocks/tech/durasteel_eblastfurnace_{bottom,front_off,front_on,side,top}.png and
          futureazoo/blocks/tech/iron_macerator_front_off.png at commit
          c22b100f1b4c22f7793175310d42e44688ba2e98, copied unmodified and renamed
 Licence: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International

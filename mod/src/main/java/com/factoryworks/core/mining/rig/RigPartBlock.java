@@ -21,6 +21,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
@@ -44,6 +46,9 @@ public class RigPartBlock extends BaseEntityBlock implements FootprintTurn {
 
     public static final EnumProperty<Panel> PANEL = EnumProperty.create("panel", Panel.class);
 
+    /** Only the front panel shows it: the drill is mining this tick (#536). */
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
+
     public static final com.mojang.serialization.MapCodec<RigPartBlock> CODEC =
             com.mojang.serialization.codecs.RecordCodecBuilder.mapCodec(instance -> instance.group(
                     com.mojang.serialization.Codec.STRING
@@ -64,13 +69,15 @@ public class RigPartBlock extends BaseEntityBlock implements FootprintTurn {
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()
                 .sound(SoundType.METAL)
+                .lightLevel(state -> state.getValue(LIT) ? 13 : 0)
                 // A part is never obtained on its own; picking with the wrong tool must not make
                 // it drop something -- the item lives in code, not in a loot table roll.
                 .noLootTable());
         this.tier = tier;
         registerDefaultState(getStateDefinition().any()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(PANEL, Panel.CASING));
+                .setValue(PANEL, Panel.CASING)
+                .setValue(LIT, false));
     }
 
     public RigTier tier() {
@@ -84,7 +91,7 @@ public class RigPartBlock extends BaseEntityBlock implements FootprintTurn {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PANEL);
+        builder.add(FACING, PANEL, LIT);
     }
 
     @Override

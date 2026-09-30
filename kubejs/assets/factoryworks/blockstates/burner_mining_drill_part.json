@@ -1,47 +1,92 @@
 {
   "variants": {
-    "facing=north,panel=casing": {
+    "facing=north,lit=false,panel=casing": {
       "model": "factoryworks:block/burner_mining_drill"
     },
-    "facing=north,panel=front": {
+    "facing=north,lit=true,panel=casing": {
+      "model": "factoryworks:block/burner_mining_drill"
+    },
+    "facing=north,lit=false,panel=front": {
       "model": "factoryworks:block/burner_mining_drill_front"
     },
-    "facing=north,panel=port": {
+    "facing=north,lit=true,panel=front": {
+      "model": "factoryworks:block/burner_mining_drill_front_on"
+    },
+    "facing=north,lit=false,panel=port": {
       "model": "factoryworks:block/burner_mining_drill_port"
     },
-    "facing=east,panel=casing": {
+    "facing=north,lit=true,panel=port": {
+      "model": "factoryworks:block/burner_mining_drill_port"
+    },
+    "facing=east,lit=false,panel=casing": {
       "model": "factoryworks:block/burner_mining_drill",
       "y": 90
     },
-    "facing=east,panel=front": {
+    "facing=east,lit=true,panel=casing": {
+      "model": "factoryworks:block/burner_mining_drill",
+      "y": 90
+    },
+    "facing=east,lit=false,panel=front": {
       "model": "factoryworks:block/burner_mining_drill_front",
       "y": 90
     },
-    "facing=east,panel=port": {
+    "facing=east,lit=true,panel=front": {
+      "model": "factoryworks:block/burner_mining_drill_front_on",
+      "y": 90
+    },
+    "facing=east,lit=false,panel=port": {
       "model": "factoryworks:block/burner_mining_drill_port",
       "y": 90
     },
-    "facing=south,panel=casing": {
+    "facing=east,lit=true,panel=port": {
+      "model": "factoryworks:block/burner_mining_drill_port",
+      "y": 90
+    },
+    "facing=south,lit=false,panel=casing": {
       "model": "factoryworks:block/burner_mining_drill",
       "y": 180
     },
-    "facing=south,panel=front": {
+    "facing=south,lit=true,panel=casing": {
+      "model": "factoryworks:block/burner_mining_drill",
+      "y": 180
+    },
+    "facing=south,lit=false,panel=front": {
       "model": "factoryworks:block/burner_mining_drill_front",
       "y": 180
     },
-    "facing=south,panel=port": {
+    "facing=south,lit=true,panel=front": {
+      "model": "factoryworks:block/burner_mining_drill_front_on",
+      "y": 180
+    },
+    "facing=south,lit=false,panel=port": {
       "model": "factoryworks:block/burner_mining_drill_port",
       "y": 180
     },
-    "facing=west,panel=casing": {
+    "facing=south,lit=true,panel=port": {
+      "model": "factoryworks:block/burner_mining_drill_port",
+      "y": 180
+    },
+    "facing=west,lit=false,panel=casing": {
       "model": "factoryworks:block/burner_mining_drill",
       "y": 270
     },
-    "facing=west,panel=front": {
+    "facing=west,lit=true,panel=casing": {
+      "model": "factoryworks:block/burner_mining_drill",
+      "y": 270
+    },
+    "facing=west,lit=false,panel=front": {
       "model": "factoryworks:block/burner_mining_drill_front",
       "y": 270
     },
-    "facing=west,panel=port": {
+    "facing=west,lit=true,panel=front": {
+      "model": "factoryworks:block/burner_mining_drill_front_on",
+      "y": 270
+    },
+    "facing=west,lit=false,panel=port": {
+      "model": "factoryworks:block/burner_mining_drill_port",
+      "y": 270
+    },
+    "facing=west,lit=true,panel=port": {
       "model": "factoryworks:block/burner_mining_drill_port",
       "y": 270
     }

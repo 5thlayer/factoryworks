@@ -126,9 +126,11 @@ def blockstate(model_name):
     }
 
 
-def panel_model_name(block_name, panel):
+def panel_model_name(block_name, panel, lit=False):
     # The casing is the anchor's own model, which never wears the port or the front (#536).
     suffix = "" if panel == "casing" else f"_{panel}"
+    if panel == "front" and lit:
+        suffix += "_on"
     return f"{NAMESPACE}:block/{block_name}{suffix}"
 
 
@@ -136,18 +138,23 @@ def part_blockstate(block_name):
     variants = {}
     for facing, y in FACINGS.items():
         for panel in PANELS:
-            entry = {"model": panel_model_name(block_name, panel)}
-            if y:
-                entry["y"] = y
-            variants[f"facing={facing},panel={panel}"] = entry
+            for lit in (False, True):
+                entry = {"model": panel_model_name(block_name, panel, lit)}
+                if y:
+                    entry["y"] = y
+                variants[f"facing={facing},lit={str(lit).lower()},panel={panel}"] = entry
     return {"variants": variants}
 
 
-def panel_model(block_name, panel):
+def panel_model(block_name, panel, lit=False):
     """`orientable_with_bottom` puts `front` on the north face, which the blockstate turns to the
     rig's facing. Only a panel's front differs; every other face is occluded or the casing."""
     textures = f"{NAMESPACE}:block/{block_name}"
-    front = {"casing": f"{textures}/side", "front": f"{textures}/front", "port": PORT_TEXTURE}[panel]
+    front = {
+        "casing": f"{textures}/side",
+        "front": f"{textures}/front_{'on' if lit else 'off'}",
+        "port": PORT_TEXTURE,
+    }[panel]
     return {
         "parent": "minecraft:block/orientable_with_bottom",
         "textures": {
@@ -196,8 +203,10 @@ def planned_files(drills):
         model_name = f"{NAMESPACE}:block/{block_name}"
         files[os.path.join(ASSETS, "blockstates", f"{block_name}.json")] = blockstate(model_name)
         for panel in PANELS:
-            path = panel_model_name(block_name, panel).split("/", 1)[1]
-            files[os.path.join(ASSETS, "models", "block", f"{path}.json")] = panel_model(block_name, panel)
+            for lit in ((False, True) if panel == "front" else (False,)):
+                path = panel_model_name(block_name, panel, lit).split("/", 1)[1]
+                files[os.path.join(ASSETS, "models", "block", f"{path}.json")] = panel_model(
+                    block_name, panel, lit)
         # The held drill shows its machine front rather than a bare casing.
         files[os.path.join(ASSETS, "models", "item", f"{block_name}.json")] = item_model(
             panel_model_name(block_name, "front"))

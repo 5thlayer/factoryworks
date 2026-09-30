@@ -35,6 +35,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -224,17 +225,36 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
                 // the progress really is being held.
                 duration = 0;
             }
+            setLit(server, false);
             push(server);
             return;
         }
 
         duration = RigRate.operationTicks(row.miningSpeed(), target.miningTime());
         boolean powered = pay();
+        setLit(server, powered);
         if (cycle.tick(powered, duration)) {
             complete(server, target);
         }
         push(server);
         setChanged();
+    }
+
+    private void setLit(ServerLevel server, boolean lit) {
+        Direction facing = getBlockState().getValue(RigBlock.FACING);
+        RigFacing rigFacing = RigDirections.toRigFacing(facing);
+        for (Offset offset : RigGeometry.footprint(row.width(), row.height(), tier.blocksTall(), rigFacing)) {
+            if (RigPanels.of(row.width(), row.height(), tier.blocksTall(), row.vectorX(), rigFacing, offset)
+                    != RigPanel.FRONT) {
+                continue;
+            }
+            BlockPos pos = getBlockPos().offset(offset.dx(), offset.dy(), offset.dz());
+            BlockState state = server.getBlockState(pos);
+            if (state.getBlock() instanceof RigPartBlock && state.getValue(RigPartBlock.LIT) != lit) {
+                server.setBlock(pos, state.setValue(RigPartBlock.LIT, lit), Block.UPDATE_CLIENTS);
+            }
+            return;
+        }
     }
 
     /** The block the rig's {@link RigRotation} is on, or {@code null} when nothing is left to mine. */

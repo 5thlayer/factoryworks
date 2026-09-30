@@ -165,16 +165,19 @@ def check_panels(tier, failures):
     """The front face each block wears (#536).
 
     Which block of the footprint wears which panel is `RigPanelsTest`'s. What is held here is that
-    each panel resolves to the face it names on every facing: the port only on `panel=port`, and
-    the same texture on both tiers, so a player learns one sign.
+    each panel resolves to the face it names on every facing: the port only on `panel=port`, the same
+    texture on both tiers, and the front lit only while `lit=true`.
     """
     block = f"{tier}_mining_drill"
     textures = f"factoryworks:block/{block}"
-    expected = {"casing": f"{textures}/side", "front": f"{textures}/front", "port": PORT_TEXTURE}
+    def expected(panel, lit):
+        if panel == "front":
+            return f"{textures}/front_{'on' if lit else 'off'}"
+        return {"casing": f"{textures}/side", "port": PORT_TEXTURE}[panel]
 
     anchor = json.loads((ASSETS / f"blockstates/{block}.json").read_text()).get("variants") or {}
     for key, entry in anchor.items():
-        if front_of(entry["model"]) != expected["casing"]:
+        if front_of(entry["model"]) != expected("casing", False):
             failures.append(
                 f"{block}'s anchor at {key} wears {front_of(entry['model'])!r} -- the anchor is the "
                 "back corner and never the port or the front"
@@ -185,19 +188,23 @@ def check_panels(tier, failures):
     part = json.loads((ASSETS / f"blockstates/{block}_part.json").read_text()).get("variants") or {}
     for facing, y in FACINGS.items():
         for panel in PANELS:
-            key = f"facing={facing},panel={panel}"
-            entry = part.get(key)
-            if entry is None:
-                failures.append(f"{block}_part has no variant {key}")
-                continue
-            if entry.get("y", 0) != y:
-                failures.append(f"{block}_part's {key} turns {entry.get('y', 0)}, not {y}")
-            if front_of(entry["model"]) != expected[panel]:
-                failures.append(
-                    f"{block}_part's {key} wears {front_of(entry['model'])!r} on its front, "
-                    f"not {expected[panel]!r}"
-                )
-    stray = set(part) - {f"facing={f},panel={p}" for f in FACINGS for p in PANELS}
+            for lit in ("false", "true"):
+                key = f"facing={facing},lit={lit},panel={panel}"
+                entry = part.get(key)
+                if entry is None:
+                    failures.append(f"{block}_part has no variant {key}")
+                    continue
+                if entry.get("y", 0) != y:
+                    failures.append(f"{block}_part's {key} turns {entry.get('y', 0)}, not {y}")
+                want = expected(panel, lit == "true")
+                if front_of(entry["model"]) != want:
+                    failures.append(
+                        f"{block}_part's {key} wears {front_of(entry['model'])!r} on its front, "
+                        f"not {want!r}"
+                    )
+    stray = set(part) - {
+        f"facing={f},lit={lit},panel={p}" for f in FACINGS for p in PANELS for lit in ("false", "true")
+    }
     if stray:
         failures.append(f"{block}_part names variants no state has: {sorted(stray)}")
 
