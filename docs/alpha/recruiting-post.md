@@ -1,6 +1,6 @@
 # Recruiting post: r/feedthebeast
 
-For r/feedthebeast, with the "I made something" flair, and trimmed for the showcase channels of the Oritech and Railcraft Reborn Discords. Before posting, replace `<DISCORD_INVITE>` and attach the three clips in `publish/`: `assembly_showcase.mp4`, `steam_showcase.mp4` and `oil_showcase.mp4`.
+For r/feedthebeast, with the "I made something" flair, and trimmed for the showcase channels of the Oritech and Railcraft Reborn Discords. Before posting, attach the three clips in `publish/`: `assembly_showcase.mp4`, `steam_showcase.mp4` and `oil_showcase.mp4`.
 
 ---
 
@@ -23,6 +23,6 @@ The design is inspired by Factorio and uses its numbers and recipe tree. You don
 
 **What I ask of testers:** play at your own pace, file bugs on GitHub, and tell us on Discord wherever you get stuck or confused. Being stuck is the most useful report you can give me.
 
-Apply on the Discord: <DISCORD_INVITE>
+Apply on the Discord: https://discord.gg/m3ta8fuCca
 
 No money involved anywhere: the pack earns nothing.
