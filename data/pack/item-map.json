@@ -783,8 +783,7 @@
       "kind": "item",
       "target": "factoryworks:solar_panel",
       "source": "authored",
-      "note": "A `factoryworks_core` block on Oritech's Big Solar Panel entity, placed from one item as its whole footprint and broken as one (ADR-0077, #529). It makes Factorio's 60 kW along Factorio's day and nothing under a roof (#530). The recipe is Factorio's, emitted by the converter; Oritech's own panel and its crafting recipe are swept (ADR-0034, #531).",
-      "ticket": 508
+      "note": "A `factoryworks_core` block on Oritech's Big Solar Panel entity, placed from one item as its whole footprint and broken as one (ADR-0077, #529). It makes Factorio's 60 kW along Factorio's day and nothing under a roof (#530). The recipe is Factorio's, emitted by the converter; Oritech's own panel and its crafting recipe are swept (ADR-0034, #531)."
     },
     "solar-panel-equipment": {
       "status": "undecided",
