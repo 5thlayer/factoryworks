@@ -140,3 +140,5 @@ __pycache__/
 mods/.replaced/
 allowed_symlinks.txt
 debug-profile.json
+# Backups a mod writes when it rewrites its config; never pack behaviour.
+*.bak
