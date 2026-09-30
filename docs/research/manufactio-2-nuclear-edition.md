@@ -455,4 +455,4 @@ which does not mean none exists.
   `overrides/config/nuclearcraft.cfg`, `overrides/config/advRocketry/PlanetDefs.xml`
 - Original for the diff: `Manufactio-1.35.zip` (https://mediafilez.forgecdn.net/files/3582/169/Manufactio-1.35.zip), `manifest.json`
 - YouTube videos: the URLs in section 7. Metadata came from `https://www.youtube.com/oembed?url=…` and the watch pages.
-- Our ledger: `/Users/kc00l/curseforge/Instances/PlanetaryFactory/docs/factorio-mechanics.md`
+- Our ledger: [`docs/factorio-mechanics.md`](../factorio-mechanics.md)

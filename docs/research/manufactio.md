@@ -375,4 +375,4 @@ exists.
 - YouTube videos: the URLs in section 6. Metadata came from `https://www.youtube.com/oembed?url=…` and the watch pages.
 - Web search results: modpackindex (https://www.modpackindex.com/modpack/5515/manufactio) and 9minecraft
   (https://www.9minecraft.net/manufactio-modpack/). Neither was used for any figure above.
-- Our ledger: `/Users/kc00l/curseforge/Instances/PlanetaryFactory/docs/factorio-mechanics.md`
+- Our ledger: [`docs/factorio-mechanics.md`](../factorio-mechanics.md)
