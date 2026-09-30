@@ -33,7 +33,7 @@ Wube's wiki states its terms at https://wiki.factorio.com/Factorio:Copyrights: i
   extractor cannot bring it back (#303). Git history is not rewritten.
 - **Monetisation.** CurseForge Rewards is off for the project, and the project page says the pack
   earns nothing. If Rewards cannot be turned off, the points are donated and the page says that
-  instead. #308 carries it out.
+  instead. This holds from the first upload, so #70 carries it out.
 - **The launch sequence.** Minecraft channels may see milestones early. At completion Wube gets a
   courtesy heads-up, once, from the author. About two weeks later the author posts once to
   r/factorio and to the official forums. The posts go out whether or not Wube replies. #308 carries
