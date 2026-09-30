@@ -1,5 +1,10 @@
 ## Unreleased
 
+- The Solar Panel, drawing Factorio's 60 kW through the day and nothing at night or under a roof.
+- A mining drill takes turns over the ore in its area, ten operations to a block.
+- The placement preview draws an arrow on each drill's Drop Position.
+- Machines, poles, chests and the Accumulator have short tooltips, with more behind Shift.
+
 ## 0.1.0
 
 First release, for the FactoryWorks modpack on NeoForge, Minecraft 26.1.2.
