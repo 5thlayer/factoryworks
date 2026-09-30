@@ -2947,6 +2947,11 @@ hash = "08367053d143a9d7ec3715c5928d8ccba008b50aa553881963a07edd63263c64"
 metafile = true
 
 [[files]]
+file = "mods/emi-unofficial-port-unstable.pw.toml"
+hash = "4f2b02a68a2cb7f91d22790bb64cfaed7e9f226a1c61080a860af2abef703c1e"
+metafile = true
+
+[[files]]
 file = "mods/extreme-sound-muffler.pw.toml"
 hash = "0b57b31298be758c33b18b2b7a6ef26585a7e6cf917295fa5227a84301485907"
 metafile = true
@@ -3053,11 +3058,6 @@ metafile = true
 [[files]]
 file = "mods/searchables.pw.toml"
 hash = "82e084e5fe83f87a01bc7f030f5ca0d59274122e6d634bdcb5d4c9cb3385dd71"
-metafile = true
-
-[[files]]
-file = "mods/semi.pw.toml"
-hash = "abbe6a47b9a0e1fc9ee670387e7a2e39ffaf7b9171361f662da5014adce0da24"
 metafile = true
 
 [[files]]
