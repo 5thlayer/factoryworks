@@ -4,3 +4,12 @@
 #  researchd:  Locked while Researchd blocks the recipe for the player's team.
 #For example ["researchd"].
 lockSources = ["researchd"]
+#Whether vanilla's crafting recipes are Assembling recipes, from the pack built into the
+#mod. Off, they stay at the crafting table and a pack ships its own Assembling recipes.
+vanillaRecipes = true
+#Whether other mods' shaped and shapeless crafting recipes become Assembling recipes at
+#their own ids as recipes load (ADR-0011). Off, they stay at the crafting table.
+modRecipes = true
+#Mods' crafting recipes that modRecipes leaves at the crafting table: a namespace keeps
+#all of a mod's, a recipe id just that one. For example ["create", "mekanism:jetpack"].
+modRecipesExcluded = []
