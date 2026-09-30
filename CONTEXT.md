@@ -586,3 +586,7 @@ _Avoid_: solar swarm, dyson sphere
 **Alpha**:
 The first public release of the pack, tested by a recruited group of modded-Minecraft tech players, most of whom have never played Factorio. It opens once the pack is playable to plastic, takes updates while the testers play, and ends once the pack is playable to a rocket launch.
 _Avoid_: beta, playtest, early access
+
+**Alpha Tester**:
+A player accepted into the Alpha through its application, who holds the tester role on the pack's Discord. Any player may report a bug; only an Alpha Tester is counted as part of the Alpha.
+_Avoid_: playtester, beta tester
