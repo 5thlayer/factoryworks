@@ -580,3 +580,9 @@ _Avoid_: pending raid, queued attack
 **Dyson Swarm**:
 The late-game orbital power infrastructure.
 _Avoid_: solar swarm, dyson sphere
+
+### Shipping the pack
+
+**Alpha**:
+The closed test of the pack with Factorio players that comes before its first public upload. The first upload waits for it.
+_Avoid_: beta, playtest, early access
