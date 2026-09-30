@@ -94,6 +94,11 @@ public final class PFItems {
             "steam_engine",
             props -> new FootprintItem(props, PFBlocks.STEAM_ENGINE_FOOTPRINT, 0.7f, "steam_engine"));
 
+    /** The Solar Panel's item (#529), on Oritech's own {@code big_solar_panel} model at its 0.7. */
+    public static final DeferredHolder<Item, FootprintItem> SOLAR_PANEL = ITEMS.registerItem(
+            "solar_panel",
+            props -> new FootprintItem(props, PFBlocks.SOLAR_PANEL_FOOTPRINT, 0.7f, "big_solar_panel"));
+
     public static final DeferredHolder<Item, AccumulatorItem> ACCUMULATOR =
             ITEMS.registerItem("accumulator", AccumulatorItem::new);
 
@@ -160,6 +165,7 @@ public final class PFItems {
         FUNCTIONAL.add(CHEMICAL_PLANT);
         FUNCTIONAL.add(OIL_REFINERY);
         FUNCTIONAL.add(STEAM_ENGINE);
+        FUNCTIONAL.add(SOLAR_PANEL);
         FUNCTIONAL.add(ACCUMULATOR);
         FUNCTIONAL.add(RADAR);
         FUNCTIONAL.add(PUMPJACK);

@@ -614,6 +614,16 @@
       "tile_height": 2
     }
   ],
+  "solar_panels": [
+    {
+      "name": "solar-panel",
+      "type": "solar-panel",
+      "production": 60000.0,
+      "fast_replaceable_group": "solar-panel",
+      "tile_width": 3,
+      "tile_height": 3
+    }
+  ],
   "categories": {
     "advanced-crafting": [
       "assembling-machine/assembling-machine-1",

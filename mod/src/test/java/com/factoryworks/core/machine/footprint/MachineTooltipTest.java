@@ -47,6 +47,14 @@ class MachineTooltipTest {
                 MachineTooltip.radar(150, 4, 14));
     }
 
+    @Test
+    void theSolarPanelShowsItsPeakAndItsSky() {
+        assertEquals(List.of(
+                        new MachineTooltip.Line("tooltip.factoryworks.makes_up_to", List.of("30")),
+                        new MachineTooltip.Line("tooltip.factoryworks.needs_open_sky", List.of())),
+                MachineTooltip.solarPanel(30));
+    }
+
     private static MachineTooltip.Line line(String key, String... args) {
         return new MachineTooltip.Line("tooltip.factoryworks." + key, List.of(args));
     }
