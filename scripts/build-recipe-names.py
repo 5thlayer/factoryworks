@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Write the lang key of every emitted chassis recipe, as Factorio names it (#490).
+"""Write the lang key of every emitted chassis recipe (#490, #303).
 
 A recipe's key is `recipe.factoryworks.<type>.<name>`, for its id
-`factoryworks:<type>/<name>`. Its value is `data/factorio/recipe_name.json`'s entry for the
-Factorio recipe the file was converted from, or `%s` where there is none: the game fills that with
-the main product's name, as Factorio does. Every recipe has a key so a server can send the name
-without knowing which recipes have one.
+`factoryworks:<type>/<name>`. Factorio names a recipe after its product unless it has no single
+product of its own name, and then it names the recipe itself. The corpus holds no Wube text
+(ADR-0103), so such a recipe is named from its id -- `heavy-oil-cracking` reads "Heavy oil
+cracking" -- and every other recipe's value is `%s`, which the game fills with the main product's
+name. Every recipe has a key so a server can send the name without knowing which recipes have one.
 
 The keys live in `kubejs/assets/factoryworks/lang/en_us.json` beside hand-written ones, so the
 script owns only the `recipe.factoryworks.` prefix: it drops every key under it and appends the
@@ -23,20 +24,33 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-NAMES = REPO / "data/factorio/recipe_name.json"
+CORPUS = REPO / "data/factorio/recipe.json"
 RECIPES = REPO / "kubejs/data/factoryworks/recipe"
 LANG = REPO / "kubejs/assets/factoryworks/lang/en_us.json"
 TYPES = ("assembling", "chemistry", "oil_processing")
 PREFIX = "recipe.factoryworks."
 
 
+def id_name(recipe_id):
+    words = recipe_id.replace("-", " ")
+    return words[:1].upper() + words[1:]
+
+
+def names_itself(row):
+    """A recipe that is not one product under its own name has no product to be named after."""
+    results = row["results"]
+    return len(results) != 1 or results[0]["name"] != row["name"]
+
+
 def keys():
-    names = json.loads(NAMES.read_text(encoding="utf-8"))
+    corpus = {row["name"]: row for row in json.loads(CORPUS.read_text(encoding="utf-8"))}
     out = {}
     for recipe_type in TYPES:
         for path in sorted((RECIPES / recipe_type).rglob("*.json")):
             key = ".".join(path.relative_to(RECIPES).with_suffix("").parts)
-            out[PREFIX + key] = names.get(path.stem.replace("_", "-"), "%s")
+            recipe_id = path.stem.replace("_", "-")
+            row = corpus.get(recipe_id)
+            out[PREFIX + key] = id_name(recipe_id) if row and names_itself(row) else "%s"
     return out
 
 
