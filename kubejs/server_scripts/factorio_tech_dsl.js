@@ -58,7 +58,7 @@ function fromFactorio(name, over) {
 
 // The corpus holds no display text, so a research reads as its id (ADR-0103).
 function idName(name) {
-  var words = name.replace(/-/g, ' ');
+  var words = name.replace(/-/g, ' ').replace(/\bmk(\d)/g, 'MK$1');
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
