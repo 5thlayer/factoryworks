@@ -386,12 +386,16 @@ The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **E
 _Avoid_: pickaxe, the pick, mining tool, wrench
 
 **Burner Mining Drill**:
-Terra's rung 0 drill and the pack's own block: it burns solid fuel, occupies one place, and breaks the ore blocks in an area beneath it. It exists because Factorio's opening machine is a fuel-burning drill and GregTech ships none — its extraction line starts at a steam miner fed by a boiler — so ADR-0040 authors it first-party and removes the LP Steam Miner. It is in the opening pocket rather than crafted, because a drill covering four tiles beats hand-mining from the first minute.
+Terra's rung 0 drill and the pack's own block: it burns solid fuel, stands as one machine two blocks wide, deep and tall, and breaks the ore blocks in an area beneath it. It exists because Factorio's opening machine is a fuel-burning drill and GregTech ships none — its extraction line starts at a steam miner fed by a boiler — so ADR-0040 authors it first-party and removes the LP Steam Miner. It is in the opening pocket rather than crafted, because a drill covering four tiles beats hand-mining from the first minute.
 _Avoid_: burner drill, steam miner, LP Steam Miner, mining rig
 
-**Basic Miner**:
-Terra's rung 1 drill, `gtceu:lv_miner`, and the ladder's second and last rung — it arrives with the electricity that runs it and is what makes the **outfield patches** worth reaching. GregTech owns the electric ladder; rung 0's drill is the pack's (ADR-0040).
-_Avoid_: Basic Ore Drilling Rig, electric drill, LV miner
+**Electric Mining Drill**:
+Terra's rung 1 drill and the pack's own block, the ladder's second and last rung: one machine three blocks wide, deep and tall, run on electricity from a pole, mining a wider area than the **Burner Mining Drill**. It arrives with the electricity that runs it and is what makes the **outfield patches** worth reaching.
+_Avoid_: Basic Miner, Basic Ore Drilling Rig, electric drill, LV miner
+
+**Drop Position**:
+The one tile a drill pushes its ore into, just past its front edge: the left column of a **Burner Mining Drill** as seen from behind, and the middle column of an **Electric Mining Drill**. It is Factorio's, never the pack's choice. The drill hands ore only to a machine or container standing there, and stops when there is none or it is full; nothing is dropped on the ground. The player sees it before placing and on a built drill.
+_Avoid_: export block, output block, output face, output tile, eject tile
 
 **Operation**:
 One unit of mining work against an ore block: it consumes one unit of the block's amount and pays out `yield` items. Drills and hands both perform them, which is what makes "seconds per ore" literal rather than aspirational. Terra's two drills differ in operations per second, footprint and reach, never in yield, which stays 1.0 until a productivity bonus raises it on another body.
