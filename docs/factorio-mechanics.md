@@ -308,6 +308,9 @@ Sub-rules:
   departures: crude leaves through **any face**, where Factorio's has one rotatable output; the model
   is Oritech's Pump scaled to 3x3, a human check on delivery; and the two module slots wait for
   modules.
+- **A drill takes turns over the ore beneath it** — `shipped` (#537). Ten operations on a block, then
+  the next block with ore in the area's fixed order, wrapping; a block that empties hands over at
+  once, and every block gets the same share whatever its ore or amount, as Factorio's does.
 - **Burner tier before electric** — `adapted`. The tier exists and is Factorio's own block rather
   than GregTech's steam stand-in. ADR-0040.
 - **The electric drill is powered by a pole's supply area** — `shipped` (#194). It takes no fuel and

@@ -39,9 +39,7 @@ public final class RigArea {
     /**
      * Every tile the rig works, anchor-relative, in a fixed order.
      *
-     * <p>The order matters and is deliberately stable: the rig takes the first ore-bearing tile in
-     * this list each operation, so a shifting order could abandon a half-mined block mid-patch.
-     * Fixed, it works one block until that block is gone.
+     * <p>The order is stable because {@link RigRotation} walks it by index and saves that index.
      *
      * @param width the footprint's {@code tile_width}
      * @param height the footprint's {@code tile_height}

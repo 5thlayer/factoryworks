@@ -12,6 +12,7 @@ import com.factoryworks.core.smelting.FurnaceCycle;
 import com.factoryworks.core.smelting.FurnaceEnergyBuffer;
 import com.factoryworks.core.smelting.PFFuel;
 
+import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -98,6 +99,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
     private final FurnaceEnergyBuffer energy;
     private final LongSnapshotJournal journal;
     private final FurnaceCycle cycle = new FurnaceCycle();
+    private final RigRotation rotation = new RigRotation();
 
     /** The duration of the operation in progress, so the client's gauge has something to scale to. */
     private int duration;
@@ -235,26 +237,22 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
         setChanged();
     }
 
-    /**
-     * The first ore-bearing tile in the rig's area, or {@code null}.
-     *
-     * <p>{@link RigArea} fixes the order, so the rig works one block until that block is gone
-     * rather than shuffling across the patch and leaving a field of part-mined blocks.
-     */
+    /** The block the rig's {@link RigRotation} is on, or {@code null} when nothing is left to mine. */
     @Nullable
     private Target nextTarget(ServerLevel server) {
-        for (BlockPos pos : RigMiningArea.positions(
-                getBlockPos(), tier, getBlockState().getValue(RigBlock.FACING))) {
-            if (!(server.getBlockState(pos).getBlock() instanceof OreBlock ore)) {
-                continue;
-            }
-            if (OreMining.remaining(server, pos, ore) <= 0) {
-                continue;
-            }
-            OreCorpus.Resource resource = ore.resource().corpus();
-            return new Target(pos, ore, ore.resource().drop(), resource.miningTime());
+        List<BlockPos> tiles = RigMiningArea.positions(
+                getBlockPos(), tier, getBlockState().getValue(RigBlock.FACING));
+        int chosen = rotation.current(tiles.size(), i -> {
+            BlockPos pos = tiles.get(i);
+            return server.getBlockState(pos).getBlock() instanceof OreBlock ore
+                    && OreMining.remaining(server, pos, ore) > 0;
+        });
+        if (chosen < 0) {
+            return null;
         }
-        return null;
+        BlockPos pos = tiles.get(chosen);
+        OreBlock ore = (OreBlock) server.getBlockState(pos).getBlock();
+        return new Target(pos, ore, ore.resource().drop(), ore.resource().corpus().miningTime());
     }
 
     /**
@@ -290,6 +288,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
 
     /** One operation: one unit out of the ground, through {@link OreMining} and not around it. */
     private void complete(ServerLevel server, Target target) {
+        rotation.completed();
         OreDelta.Draw draw = OreMining.draw(server, target.ore(), target.pos());
         if (draw.paid() > 0) {
             // ADR-0043's yield-per-operation, fixed at 1.0 and dormant on Terra: one unit drawn is
@@ -535,6 +534,7 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
         ContainerHelper.loadAllItems(input, items);
         cycle.setProgress(input.getIntOr("Progress", 0));
         duration = input.getIntOr("Duration", 0);
+        rotation.load(input.getIntOr("TurnBlock", 0), input.getIntOr("TurnSpent", 0));
         fuel.load(input.getLongOr("FuelJoules", 0L), input.getLongOr("FuelLitJoules", 0L));
         energy.setStoredFe(input.getLongOr("EnergyFe", 0L));
         // A rig that logged out mid-stall comes back stalled and still holding it. A buffer that
@@ -548,6 +548,8 @@ public class RigBlockEntity extends BlockEntity implements Container, MenuProvid
         ContainerHelper.saveAllItems(output, items);
         output.putInt("Progress", cycle.progress());
         output.putInt("Duration", duration);
+        output.putInt("TurnBlock", rotation.index());
+        output.putInt("TurnSpent", rotation.spent());
         output.putLong("FuelJoules", fuel.storedJoules());
         output.putLong("FuelLitJoules", fuel.lastLitJoules());
         output.putLong("EnergyFe", energy.getEnergyStored());
