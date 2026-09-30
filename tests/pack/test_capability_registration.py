@@ -77,6 +77,7 @@ FACES = {
     "oil_refinery": ("registerOilRefineryCapabilities", ("Energy", "Fluid")),
     "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
     # Energy (#283): a pole charges and draws it, on every block of the footprint.
+    "solar_panel": ("registerSolarPanelCapabilities", ("Energy",)),
     "accumulator": ("registerAccumulatorCapabilities", ("Energy",)),
     # Energy (#368): the scan draws FE, on every block of the footprint.
     "radar": ("registerRadarCapabilities", ("Energy",)),

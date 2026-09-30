@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "factoryworks:item/solar_panel",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

@@ -46,6 +46,7 @@ final class FootprintBreakTests {
                 "oil_refinery", PFBlocks.OIL_REFINERY_FOOTPRINT,
                 "steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 "accumulator", PFBlocks.ACCUMULATOR_FOOTPRINT,
+                "solar_panel", PFBlocks.SOLAR_PANEL_FOOTPRINT,
                 "radar", PFBlocks.RADAR_FOOTPRINT,
                 "pumpjack", PFBlocks.PUMPJACK_FOOTPRINT);
         machines.forEach((name, machine) -> {

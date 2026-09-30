@@ -100,6 +100,8 @@ POLE_TYPE = "electric-pole"
 
 ACCUMULATOR_TYPE = "accumulator"
 
+SOLAR_TYPE = "solar-panel"
+
 # Factorio's default electric drain, from the engine rather than from any prototype: an
 # electric energy source with no `drain` set draws 1/30 of its `energy_usage` while idle.
 DEFAULT_DRAIN_FRACTION = 30
@@ -452,6 +454,26 @@ def extract_accumulators(dump, scope):
     return accumulators
 
 
+def extract_solar_panels(dump, scope):
+    """Solar panels: the peak `production` the pack's panel is calibrated to (#529)."""
+    panels = []
+    for name, prototype in sorted((dump.get(SOLAR_TYPE) or {}).items()):
+        if name not in scope:
+            continue
+        width, height = footprint(prototype)
+        panels.append(
+            {
+                "name": name,
+                "type": SOLAR_TYPE,
+                "production": si(prototype.get("production")),
+                "fast_replaceable_group": prototype.get("fast_replaceable_group"),
+                "tile_width": width,
+                "tile_height": height,
+            }
+        )
+    return panels
+
+
 def extract_generators(dump, scope):
     """Generators, and the one number of theirs Factorio does not state.
 
@@ -557,6 +579,7 @@ def main():
     radars = extract_radars(dump, scope)
     poles = extract_poles(dump, scope)
     accumulators = extract_accumulators(dump, scope)
+    solar_panels = extract_solar_panels(dump, scope)
     categories = extract_categories(dump)
 
     out = {
@@ -569,6 +592,7 @@ def main():
         "radars": radars,
         "poles": poles,
         "accumulators": accumulators,
+        "solar_panels": solar_panels,
         "categories": categories,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -641,6 +665,12 @@ def main():
             f"in {(accumulator['input_flow_limit'] or 0) / 1000:g} kW  "
             f"out {(accumulator['output_flow_limit'] or 0) / 1000:g} kW  "
             f"{accumulator['tile_width']}x{accumulator['tile_height']}"
+        )
+    print("\nsolar panels:")
+    for panel in solar_panels:
+        print(
+            f"  {panel['name']:22} {(panel['production'] or 0) / 1000:g} kW  "
+            f"{panel['tile_width']}x{panel['tile_height']}"
         )
     print("\ncategories with no crafting entity: "
           + ", ".join(n for n, who in categories.items() if not who))

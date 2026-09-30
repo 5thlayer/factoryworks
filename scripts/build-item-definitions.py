@@ -56,6 +56,7 @@ GECKOLIB = {
     "factoryworks:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
     "factoryworks:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",
     "factoryworks:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
+    "factoryworks:solar_panel": "an OritechGeoItem drawing Oritech's big solar panel model (#529)",
 }
 
 

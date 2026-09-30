@@ -63,6 +63,10 @@ public final class MachineTooltip {
         return List.of(line("pumps_crude"), line("draws", number(fePerTick)));
     }
 
+    public static List<Line> solarPanel(long fePerTick) {
+        return List.of(line("makes_up_to", number(fePerTick)), line("needs_open_sky"));
+    }
+
     private static Line energy(long joulesPerTick, long fePerTick) {
         return joulesPerTick > 0 ? line("burns", number(joulesPerTick)) : line("draws", number(fePerTick));
     }

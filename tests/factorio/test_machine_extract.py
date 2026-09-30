@@ -109,6 +109,10 @@ ACCUMULATOR_CONSTANTS = {
     "output_flow_limit": "OUTPUT_FLOW_WATTS",
 }
 RADAR_TILES = (3, 3)
+
+# The solar panel's prototype as the dump states it, for when the dump is not on disk (#529).
+SOLAR_PROTOTYPE = {"production": "60kW"}
+SOLAR_TILES = (3, 3)
 SI = {"k": 1e3, "M": 1e6}
 
 # The key set every crafting-machine row has carried since `#126`. Pinned alongside the
@@ -187,6 +191,23 @@ def accumulator_failures(accumulator):
         typed = float(match.group(1).replace("_", "")) if match else None
         if typed != want:
             failures.append(f"AccumulatorSpec.{constant} is {typed!r}, the corpus says {want!r}")
+    return failures
+
+
+def solar_panel_failures(panel):
+    if panel is None:
+        return ["no solar-panel -- #529's Solar Panel has no peak to read"]
+    failures = []
+    prototype = SOLAR_PROTOTYPE
+    if DUMP.is_file():
+        prototype = json.loads(DUMP.read_text(encoding="utf-8"))["solar-panel"]["solar-panel"]
+    else:
+        print(f"note no dump at {DUMP}; the solar panel row is compared to the transcription")
+    want = si(prototype["production"])
+    if panel.get("production") != want:
+        failures.append(f"solar-panel's production is {panel.get('production')!r}, the prototype says {want!r}")
+    if (panel.get("tile_width"), panel.get("tile_height")) != SOLAR_TILES:
+        failures.append(f"solar-panel is {panel.get('tile_width')}x{panel.get('tile_height')}, not 3x3")
     return failures
 
 
@@ -279,6 +300,8 @@ def main():
     failures.extend(radar_failures(radars.get("radar")))
     accumulators = {a["name"]: a for a in data.get("accumulators") or []}
     failures.extend(accumulator_failures(accumulators.get("accumulator")))
+    panels = {p["name"]: p for p in data.get("solar_panels") or []}
+    failures.extend(solar_panel_failures(panels.get("solar-panel")))
 
     for machine in (
         machines
