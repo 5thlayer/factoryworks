@@ -584,5 +584,5 @@ _Avoid_: solar swarm, dyson sphere
 ### Shipping the pack
 
 **Alpha**:
-The closed test of the pack, with modded-Minecraft tech players, most of whom have never played Factorio, that comes before its first public upload. It opens once the pack is playable to plastic, takes updates while the testers play, and ends once the pack is playable to a rocket launch. The first upload waits for it.
+The first public release of the pack, tested by a recruited group of modded-Minecraft tech players, most of whom have never played Factorio. It opens once the pack is playable to plastic, takes updates while the testers play, and ends once the pack is playable to a rocket launch.
 _Avoid_: beta, playtest, early access
