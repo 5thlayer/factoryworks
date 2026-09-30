@@ -1078,6 +1078,21 @@ credit in `NOTICE` resolving to the licence `NOTICE` names, the mod declaring wh
 gives it, and `.packwizignore` leaving the licence texts in the upload. The core jar bundles them too. Run it after adding a file of a new kind, any third-party art, or an edit to
 `REUSE.toml`.
 
+### Coined-name check
+
+No string a player reads names a coined Factorio term (#304, ADR-0103). `COINED_TERMS` in
+`tests/pack/test_licensing.py` is a recorded deny-list, term to reason, matched as whole words,
+case-insensitive, plural included; a term that matches nothing is the passing state, so nothing
+there goes stale. It scans every value of every shipped lang file (`kubejs/assets/*/lang/` and the
+mod's), skipping keys that start with `_`; the literal argument of each `.displayName(...)` in
+`kubejs/startup_scripts/`, with comments ignored; the text in `config/ftbquests/quests/` (the lang
+file, and any inline `title`, `subtitle` or `description`); and the name each declared, non-`skip`
+research ends up with in `researchd.js`, which is its `name:` override or else the id-derived name
+`idName()` builds, plus the research packs' `literalName`. Registry ids and lang keys are exempt, and
+`kubejs/parked/` and `publish/` are out of scope. A source that yields no strings fails, so a
+scanner that stops matching cannot pass by finding nothing. Run it after adding a lang entry, a
+display name, a quest or a research.
+
 ### Pack manifest
 
 The jar set is a packwiz manifest tracked in git (ADR-0024) — `pack.toml`, `index.toml` and one

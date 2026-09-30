@@ -22,6 +22,21 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 CORPUS_LICENCE = "LicenseRef-Wube-Factorio-Data"
 
+# ADR-0103, #304: coined proper nouns of Wube's never appear in a string a player reads. A deny-list,
+# so a term that matches nothing is the passing state.
+COINED_TERMS = {
+    "Nauvis": "Wube's name for the starting planet",
+    "Vulcanus": "Wube's name for a Space Age planet",
+    "Fulgora": "Wube's name for a Space Age planet",
+    "Gleba": "Wube's name for a Space Age planet",
+    "Aquilo": "Wube's name for a Space Age planet",
+    "biter": "Wube's name for its melee enemy",
+    "spitter": "Wube's name for its ranged enemy",
+    "Wube": "the rights holder's own name; credit belongs in NOTICE and the store pages",
+    "Factorio": "a trademark, kept out of player-facing text (ADR-0103)",
+}
+COINED = re.compile(r"\b(?:" + "|".join(COINED_TERMS) + r")s?\b", re.I)
+
 
 def _glob(pattern):
     """REUSE's glob: `*` stops at `/`, `**` does not, and `**/` may match no directory."""
@@ -72,7 +87,156 @@ def _ids(expression):
     return {t for t in re.split(r"\s+(?:AND|OR)\s+", expression.strip())}
 
 
+def _js_code(text):
+    """`text` with `//` and `/* */` comments blanked, string literals left alone."""
+    out, i, quote = [], 0, None
+    while i < len(text):
+        c = text[i]
+        if quote:
+            out.append(c)
+            if c == "\\":
+                out.append(text[i + 1])
+                i += 1
+            elif c == quote:
+                quote = None
+        elif c in "'\"`":
+            quote = c
+            out.append(c)
+        elif text.startswith("//", i):
+            i = text.find("\n", i)
+            i = len(text) if i < 0 else i - 1
+        elif text.startswith("/*", i):
+            i = text.find("*/", i) + 1
+        else:
+            out.append(c)
+        i += 1
+    return "".join(out)
+
+
+_JS_STRING = r"""'((?:[^'\\\n]|\\.)*)'|"((?:[^"\\\n]|\\.)*)\""""
+
+
+def _unescape(s):
+    return re.sub(r"\\(.)", r"\1", s)
+
+
+def _strings(text):
+    return [_unescape(a or b) for a, b in re.findall(_JS_STRING, text)]
+
+
+def _lang_values(path):
+    """Every value of a lang file that is shown, which is every one whose key is not a `_` comment."""
+    text = path.read_text(encoding="utf-8")
+    if path.suffix == ".json":
+        return [v for k, v in json.loads(text).items() if not k.startswith("_")]
+    # FTB Quests' lang is JSON5: a value is a string no colon follows, in a list or after a key.
+    out = []
+    for m in re.finditer(_JS_STRING, text):
+        if re.match(r"\s*:", text[m.end():]):
+            continue
+        out.append(_unescape(m.group(1) or m.group(2)))
+    return out
+
+
+def _lang_sources():
+    files = sorted((ROOT / "kubejs/assets").glob("*/lang/*.json"))
+    files += sorted((ROOT / "mod/src/main/resources/assets").glob("*/lang/*.json"))
+    return {str(p.relative_to(ROOT)): _lang_values(p) for p in files}
+
+
+def _quest_sources():
+    quests = ROOT / "config/ftbquests/quests"
+    out = {}
+    for p in sorted(quests.glob("lang/*/*.json5")):
+        out[str(p.relative_to(ROOT))] = _lang_values(p)
+    # A chapter or quest may carry its text inline instead of in the lang file.
+    for p in sorted(quests.glob("chapters/*.json5")) + [quests / "data.json5"]:
+        text = p.read_text(encoding="utf-8")
+        out[str(p.relative_to(ROOT))] = [
+            s for m in re.finditer(
+                r"\b(?:title|subtitle|description)\s*:\s*(\[[^\]]*\]|" + _JS_STRING + ")", text)
+            for s in _strings(m.group(1))]
+    return out
+
+
+def _display_names():
+    out = {}
+    for p in sorted((ROOT / "kubejs/startup_scripts").glob("*.js")):
+        code = _js_code(p.read_text(encoding="utf-8"))
+        out[str(p.relative_to(ROOT))] = [
+            _unescape(a or b) for a, b in re.findall(r"\.displayName\(\s*(?:" + _JS_STRING + r")\s*\)", code)]
+    return out
+
+
+def _declared_researches():
+    """(id, name) of each research the DSL registers: declared, not `skip`, and in the corpus."""
+    code = _js_code((ROOT / "kubejs/server_scripts/researchd.js").read_text(encoding="utf-8"))
+    corpus = {t["name"] for t in json.loads(
+        (ROOT / "data/factorio/technology.json").read_text(encoding="utf-8"))}
+    out = []
+    for m in re.finditer(r"\bfromFactorio\(\s*'([^']+)'\s*(?:,\s*(\{))?", code):
+        name, i = m.group(1), m.end()
+        top = []
+        if m.group(2):
+            depth, quote = 0, None
+            for j in range(m.end() - 1, len(code)):
+                c = code[j]
+                if quote:
+                    if depth == 1:
+                        top.append(c)
+                    if c == "\\":
+                        pass
+                    elif c == quote and code[j - 1] != "\\":
+                        quote = None
+                    continue
+                if c in "'\"`":
+                    quote = c
+                elif c == "{":
+                    depth += 1
+                elif c == "}":
+                    depth -= 1
+                    if depth == 0:
+                        break
+                if depth == 1:
+                    top.append(c)
+        body = "".join(top)
+        if name not in corpus or re.search(r"\bskip\s*:\s*true\b", body):
+            continue
+        given = re.search(r"\bname\s*:\s*(?:" + _JS_STRING + ")", body)
+        if given:
+            out.append((name, _unescape(given.group(1) or given.group(2))))
+        else:
+            words = name.replace("-", " ")
+            words = re.sub(r"\bmk(\d)", r"MK\1", words)
+            out.append((name, words[:1].upper() + words[1:]))
+    return out
+
+
+def _pack_names():
+    code = _js_code((ROOT / "kubejs/server_scripts/researchd.js").read_text(encoding="utf-8"))
+    return [_unescape(a or b) for a, b in re.findall(r"\.literalName\(\s*(?:" + _JS_STRING + r")\s*\)", code)]
+
+
+def _player_text():
+    """source -> the strings a player reads from it."""
+    out = {**_lang_sources(), **_quest_sources(), **_display_names()}
+    out["kubejs/server_scripts/researchd.js (researches)"] = [n for _, n in _declared_researches()]
+    out["kubejs/server_scripts/researchd.js (research packs)"] = _pack_names()
+    return out
+
+
 class LicensingTest(unittest.TestCase):
+    def test_no_coined_factorio_name_in_a_string_a_player_reads(self):
+        text = _player_text()
+        for source in ("kubejs/assets/factoryworks/lang/en_us.json",
+                       "config/ftbquests/quests/lang/en_us/quests.json5",
+                       "kubejs/startup_scripts/blocks.js", "kubejs/startup_scripts/items.js",
+                       "kubejs/server_scripts/researchd.js (researches)"):
+            self.assertTrue(text[source], f"{source} yielded no strings; the scan has rotted")
+        hits = {f"{src}: {s!r}": m.group(0) for src, strings in text.items() for s in strings
+                if (m := COINED.search(s))}
+        self.assertEqual({}, hits, "a coined name in player-facing text (ADR-0103)")
+
     def test_every_tracked_file_has_a_licence_and_a_holder(self):
         bare = [p for p in _tracked() if (a := _licence_of(p)) is None
                 or not a.get("SPDX-License-Identifier") or not a.get("SPDX-FileCopyrightText")]
