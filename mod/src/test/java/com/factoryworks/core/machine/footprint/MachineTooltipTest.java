@@ -46,4 +46,44 @@ class MachineTooltipTest {
                         new MachineTooltip.Line("tooltip.factoryworks.charts", List.of("4", "14"))),
                 MachineTooltip.radar(150, 4, 14));
     }
+
+    private static MachineTooltip.Line line(String key, String... args) {
+        return new MachineTooltip.Line("tooltip.factoryworks." + key, List.of(args));
+    }
+
+    @Test
+    void aBurnerFurnaceShowsItsSpeedAndBurn() {
+        assertEquals(List.of(line("speed", "1"), line("burns", "4,500")), MachineTooltip.furnace(1.0, 4_500, 0));
+    }
+
+    @Test
+    void anElectricFurnaceShowsItsSpeedAndDraw() {
+        assertEquals(List.of(line("speed", "2"), line("draws", "90")), MachineTooltip.furnace(2.0, 0, 90));
+    }
+
+    @Test
+    void aBurnerDrillShowsItsRateAndBurn() {
+        assertEquals(List.of(line("mines", "0.25"), line("burns", "7,500")), MachineTooltip.drill(0.25, 7_500, 0));
+    }
+
+    @Test
+    void anElectricDrillShowsItsRateAndDraw() {
+        assertEquals(List.of(line("mines", "0.5"), line("draws", "45")), MachineTooltip.drill(0.5, 0, 45));
+    }
+
+    @Test
+    void theBoilerShowsItsSteamAndBurn() {
+        assertEquals(List.of(line("makes_steam", "60"), line("burns", "90,000")), MachineTooltip.boiler(60, 90_000));
+    }
+
+    @Test
+    void theOffshorePumpShowsItsWaterAndItsSiting() {
+        assertEquals(List.of(line("pumps_water", "1,200"), line("place_beside_water")),
+                MachineTooltip.offshorePump(1_200));
+    }
+
+    @Test
+    void thePumpjackShowsNoYieldAndItsDraw() {
+        assertEquals(List.of(line("pumps_crude"), line("draws", "45")), MachineTooltip.pumpjack(45));
+    }
 }

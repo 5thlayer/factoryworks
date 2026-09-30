@@ -1,5 +1,12 @@
 package com.factoryworks.core.mining.rig;
 
+import com.factoryworks.core.machine.footprint.MachineTooltip;
+import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
@@ -123,5 +130,17 @@ public class RigBlockItem extends BlockItem implements PlansPlacement {
 
         context.getItemInHand().consume(1, player);
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+                                Consumer<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, tooltip, flag);
+        RigCorpus.Row row = RigCorpus.get().rowOf(tier);
+        long joules = row.burnsFuel() ? RigRate.joulesPerTick(row.energyUsage()) : 0;
+        long fe = row.burnsFuel() ? 0 : RigRate.fePerTick(row.energyUsage());
+        for (MachineTooltip.Line line : MachineTooltip.drill(row.miningSpeed(), joules, fe)) {
+            tooltip.accept(Component.translatable(line.key(), line.args().toArray()).withStyle(ChatFormatting.GRAY));
+        }
     }
 }

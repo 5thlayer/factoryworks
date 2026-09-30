@@ -3,6 +3,7 @@ package com.factoryworks.core;
 import com.factoryworks.core.energy.CreativeSupplyAreaPoleBlock;
 import com.factoryworks.core.energy.AccumulatorItem;
 import com.factoryworks.core.energy.PoleTier;
+import com.factoryworks.core.fluid.BoilerItem;
 import com.factoryworks.core.smelting.FurnaceItem;
 import com.factoryworks.core.smelting.FurnaceTier;
 import com.factoryworks.core.energy.SupplyAreaPoleItem;
@@ -149,7 +150,7 @@ public final class PFItems {
             RIGS.put(tier, item);
             FUNCTIONAL.add(item);
         }
-        FUNCTIONAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.BOILER));
+        FUNCTIONAL.add(ITEMS.registerItem("boiler", BoilerItem::new));
         // Not registerSimpleBlockItem: the pump refuses to place away from water, and the refusal
         // is the item's, because by the time a block exists it is too late to decline.
         FUNCTIONAL.add(ITEMS.registerItem("offshore_pump",
