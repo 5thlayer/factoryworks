@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.1.1
+
 - The Solar Panel, drawing Factorio's 60 kW through the day and nothing at night or under a roof.
 - A mining drill takes turns over the ore in its area, ten operations to a block.
 - The placement preview draws an arrow on each drill's Drop Position.
