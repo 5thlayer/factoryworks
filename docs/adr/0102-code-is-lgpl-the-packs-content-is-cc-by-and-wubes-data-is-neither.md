@@ -9,7 +9,7 @@ of its own: `NOTICE` lists what was copied in and says nothing of what the rest 
 store pages already say LGPL for the code and CC BY for the assets (`publish/description.md`), so
 this ADR makes the repository say the same. It records the licences only. The rest of #302's policy
 -- audience, fidelity promise, naming and asset rules, monetisation, launch sequence, the commitment
-on Wube's requests and the citation of Wube's copyright terms -- is not decided here.
+on Wube's requests and the citation of Wube's copyright terms -- is not decided here; it is #525's.
 
 **Decision.**
 
@@ -30,6 +30,10 @@ on Wube's requests and the citation of Wube's copyright terms -- is not decided 
 - **The map is `REUSE.toml` and `LICENSES/`,** laid out as Beltworks has them, checked by
   `reuse lint` in CI and by `tests/pack/test_licensing.py`, which implements the same rule for a
   machine without libmagic.
+- **The upload carries the texts.** The core mod's jar bundles `LICENSE`, `NOTICE` and
+  `LICENSES/`, as Beltworks' does, since the jar is published on its own. The Pack's manifest
+  indexes the same files and `REUSE.toml`, so the modpack carries them too; `.packwizignore` does
+  not exclude them.
 - **No file carries an SPDX header.** Beltworks and the Libraries mark their Java files. Nothing in
   the core mod is a fork, so one licence covers each tree, a glob is the whole map, and 400
   identical headers would say nothing more. The cost is that a file copied
@@ -44,6 +48,7 @@ Library through ADR-0090's gate and takes that Library's licence.
 **Beside the 5thlayer mods.** Beltworks (MIT code, CC BY 4.0 assets and Rearth's code), Groundworks
 and Craftworks (MIT) are separate jars the Pack depends on, and the core mod compiles against them.
 MIT and CC BY 4.0 place no condition an LGPL-3.0-only mod cannot meet on being depended on.
+Respoiled is parked until #481 and is not in the Pack, so its licence is checked when it returns.
 
 **Open: Researchd and Porting Dead Libs.** This ADR does not call them compatible. Both are under
 Porting Dead Mods' Common Sense License 1.0, which allows redistribution only of a fork altered by

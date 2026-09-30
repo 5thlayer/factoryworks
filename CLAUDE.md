@@ -1072,8 +1072,8 @@ ADR-0102): code LGPL-3.0-only, the Pack's content CC BY 4.0, Wube's corpus under
 third-party files under their own. No file carries an SPDX header. `tests/pack/test_licensing.py`
 implements `reuse lint`'s rule, since that tool needs libmagic and CI runs it, and holds the
 boundaries a glob edit can silently move: the corpus never under the Pack's licences, each art
-credit in `NOTICE` resolving to the licence `NOTICE` names, and the mod declaring what the map
-gives it. Run it after adding a file of a new kind, any third-party art, or an edit to
+credit in `NOTICE` resolving to the licence `NOTICE` names, the mod declaring what the map
+gives it, and `.packwizignore` leaving the licence texts in the upload. The core jar bundles them too. Run it after adding a file of a new kind, any third-party art, or an edit to
 `REUSE.toml`.
 
 ### Pack manifest

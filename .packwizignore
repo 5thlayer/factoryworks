@@ -18,9 +18,8 @@ skills-lock.json
 .vscode/
 /publish/
 *.md
-/LICENSE
-/LICENSES/
-/REUSE.toml
+# `LICENSE`, `LICENSES/` and `REUSE.toml` are not listed: the upload must carry the licence
+# texts (ADR-0102).
 .gitignore
 .gitattributes
 # Editor scratch, alive only while a file is open -- and gone by the time a

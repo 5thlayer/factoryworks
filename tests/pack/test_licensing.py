@@ -134,11 +134,31 @@ class LicensingTest(unittest.TestCase):
                 self.assertIn(want, _ids(_licence_of(f)["SPDX-License-Identifier"]), f)
         self.assertGreater(checked, 30)
 
+    def test_the_packs_licence_texts_exist(self):
+        for path in ("LICENSE", "LICENSES/LGPL-3.0-only.txt", "LICENSES/CC-BY-4.0.txt",
+                     f"LICENSES/{CORPUS_LICENCE}.txt"):
+            self.assertTrue((ROOT / path).is_file(), path)
+
     def test_the_corpus_readme_states_the_exclusion(self):
         readme = (ROOT / "data/factorio/README.md").read_text(encoding="utf-8")
-        self.assertIn(CORPUS_LICENCE, readme)
-        self.assertIn("LGPL-3.0", readme)
-        self.assertIn("CC BY 4.0", readme)
+        section = re.search(r"^## Licence\n(.*?)(?=^## )", readme, re.M | re.S)
+        self.assertIsNotNone(section, "data/factorio/README.md has no Licence section")
+        prose = " ".join(section.group(1).split())
+        self.assertIn("Wube Software's", prose)
+        self.assertIn("under neither of the Pack's licences", prose)
+        for name in ("LGPL-3.0-only", "CC BY 4.0", CORPUS_LICENCE,
+                     "kubejs/server_scripts/factorio_tech_data.js"):
+            self.assertIn(name, prose)
+
+    def test_the_upload_carries_the_licence_texts(self):
+        # packwiz indexes what `.packwizignore` does not exclude, and the upload is the index.
+        paths = ["LICENSE", "NOTICE", "REUSE.toml"] + sorted(
+            str(p.relative_to(ROOT)) for p in (ROOT / "LICENSES").glob("*.txt"))
+        out = subprocess.run(
+            ["git", "-c", "core.excludesFile=.packwizignore", "check-ignore", "--no-index", "-v",
+             *paths], cwd=ROOT, capture_output=True, text=True).stdout
+        self.assertEqual([], [line for line in out.splitlines()
+                              if line.startswith(".packwizignore:")])
 
 
 if __name__ == "__main__":
