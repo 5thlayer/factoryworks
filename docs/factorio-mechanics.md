@@ -741,7 +741,7 @@ Sub-rules:
 
 - **verdict**: `excluded`
 - **where**: all bodies
-- **owner**: [#144](https://github.com/adamico/factoryworks/issues/144)
+- **owner**: [#144](https://github.com/5thlayer/factoryworks/issues/144)
 
 Nothing in the pack copies a built shape. Building Gadgets 2 was the closest thing to a blueprint,
 covering the *shape* half and none of the *logistics* half, and it left the manifest with #144:
