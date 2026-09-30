@@ -1,4 +1,4 @@
-## 0.1.0
+## Unreleased
 
 First release, for the FactoryWorks modpack on NeoForge, Minecraft 26.1.2.
 
