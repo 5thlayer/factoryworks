@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Release FactoryWorks Core at <version> from HEAD (ADR-0101): publish/core/changelog.md's Unreleased
 # entries become <version>'s, the build and unit tests pass, and the jar is published to the local
-# maven repository, tagged core-v<version>, and uploaded to CurseForge by scripts/upload.py.
+# maven repository, tagged core-v<version>, and uploaded to CurseForge and Modrinth by scripts/upload.py.
 #
 #   scripts/release.sh [--no-upload] <version>
 #
@@ -58,6 +58,6 @@ if [[ -z "$upload_now" ]]; then
     echo "Upload with: scripts/upload.py $version"
 elif ! "${upload[@]}" "$version"; then
     echo "release: $version is released and tagged, but the upload failed; retry it with" >&2
-    echo "release:   scripts/upload.py $version" >&2
+    echo "release:   scripts/upload.py --site <site> $version, for each site named above" >&2
 fi
 echo "Push with: git push origin HEAD $tag"
