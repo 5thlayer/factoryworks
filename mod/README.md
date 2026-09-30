@@ -9,45 +9,45 @@ The pack's first-party NeoForge mod, built as a Gradle subproject of this repo (
 
 ## What is in here, and what is not
 
-Its remit is **mechanism only** (ADR-0015). Today that is these things, none of which a scripting
-API in this pack exposes:
+Its remit is **mechanism only** (ADR-0015): what a scripting API in this pack cannot express. Each
+machine is the pack's own block, several on an Oritech model or entity (ADR-0060). Today that is:
 
-- **Flora** — two `SaplingBlock`s and their `TreeGrower`.
-- **Terra's starting area** — `worldgen/TerraStartingArea` stamps the `terra_start` jigsaw pool
-  onto world spawn on `ServerStartedEvent`, once per world. Vanilla cannot express this: a
-  `StructurePlacement` is handed a `ChunkGeneratorStructureState` and nothing else, so no
-  placement type — custom ones included — can see world spawn. The templates, the pools and all
-  the randomisation stay datapack data; only the "put it here" is Java. ADR-0019 has the whole
-  argument, including what `concentric_rings` got wrong. The class inlines vanilla's
-  `generateJigsaw` so that it can load the chunks under the pieces first — a piece placed over an
-  unloaded chunk is written at y=-64, silently, because `Level.getHeight` does not generate. It
-  ships one structure processor with it, `factoryworks:ground`, which drops each column of a
-  patch onto the terrain: vanilla's `minecraft:gravity` reads a heightmap whose top is "anything
-  that is not air", so a field crossing a wood landed on the canopy.
-- **Research locks** — a mixin teaching GregTech machines to honour Researchd's `unlock_recipe`
-  effects, plus the `research/` package behind it. KubeJS cannot mixin, and GregTech never asks the
-  vanilla `RecipeManager`, so there is nowhere else this can live.
-- **The idle-machine reason** — a second GregTech mixin, on the recipe logic's own `IFancyTooltip`
-  status question, so a machine that is idle only because of an incomplete research says which
-  research (issue #79). The answer is derived from the machine's current contents at the moment of
-  asking and never stored; ADR-0027 is why the refusal cannot speak for itself, and #76 is what the
-  stored alternative costs.
+- **Furnaces** (`smelting/`) — the Stone, Steel and Electric Furnace, the pack's own smelting
+  recipe type, and the fuel table the burners read (ADR-0047).
+- **Mining** (`mining/`) — the Engineer's Pick (ADR-0039) and the burner and electric mining drills,
+  rigs that eject onto the ground (ADR-0043).
+- **Ore** (`ore/`) — an ore block that carries an amount and a patch that runs out (ADR-0041), and
+  the outfield discs laid across Terra (ADR-0045).
+- **Oil** (`oil/`) — oil wells and the Pumpjack; crude is infinite (ADR-0081).
+- **Steam and fluids** (`fluid/`) — the Offshore Pump (ADR-0050), the Boiler (ADR-0048), the Steam
+  Engine on Oritech's entity (ADR-0077), the Barrel, and Oritech's oil fluids drawn in Factorio's
+  colours (ADR-0067).
+- **Electricity** (`energy/`) — the poles, their wires and supply areas, the one network that
+  carries power (ADR-0036, ADR-0062, ADR-0068), and the Accumulator.
+- **Crafting machines** (`machine/`, `recipes/`) — the three Assembling Machines, the Chemical
+  Plant and the Oil Refinery on one chassis and one recipe shape (ADR-0096), and the Held recipe
+  EMI sets (ADR-0073).
+- **The Radar** (`radar/`) — charting through FTB Chunks and marking the patches it finds (ADR-0079).
+- **Building** — placement as a plan the preview draws (`placement/`, ADR-0069), Fast Replace
+  (ADR-0082), the Pick's Dismantle and Stretch of Oritech's pipes (`dismantle/`, `stretch/`,
+  ADR-0086), and Reach (`reach/`). The mechanisms are Groundworks'; this is the pack's side of them.
+- **Trees** (`felling/`, `PFTrees`) — felling a tree whole (ADR-0051), and two saplings.
+- **Terra's world** (`worldgen/`) — the starting area stamped onto world spawn (ADR-0019), the
+  `factoryworks:ground` processor, the outfield and oil-field structures, and vanilla spawning
+  turned off (ADR-0093).
+- **The starting kit** (`start/`) — granted once per player.
+- **Glue** — `compat/` (Jade tooltips, EMI's recipe categories and Fill Recipe, Researchd's machine
+  locks), `network/`, `transfer/`'s guarded item and fluid faces, and the Minecraft and Oritech
+  mixins.
+- **`gametest/`** — the pack's GameTests (below).
 - **Not the Personal Assembler.** It is Craftworks, a local jar (ADR-0089). The pack ships only
   its recipes, the `hand/` copies `scripts/build-hand-recipes.py` writes, and `config/craftworks-server.toml`.
 
-- **The lock annotation** — a recipe the viewing team has not researched is marked in both recipe
-  viewers, from `compat/emi` and `compat/jei` over the shared `research/client` note (issue #75).
-  JEI is a plugin its own annotation scan discovers. EMI is a mixin instead: its decorator API
-  registers fine but only runs behind `EmiConfig.showRecipeDecorators`, which defaults off for
-  players, so the documented seam is invisible to them. Either way these are Java interfaces and
-  render calls, which is another thing KubeJS cannot do.
-
-Nothing a designer would tune is compiled in: tree shape, drop counts, growth chance, display names,
-models and textures are all pack data. **The jar's only asset is its own lang file**, holding the
-handful of strings the mod itself emits — the GregTech lock refusal, and the lock wording the recipe
-viewers and an idle machine share — because a string a Java class passes to `Component.translatable` has no pack-side author to own
-it. Which research locks which recipe is likewise data — `kubejs/server_scripts/researchd.js` — and
-this mod only enforces whatever that declares.
+Nothing a designer would tune is compiled in. A machine's figures are read from resources under
+`factoryworks_core/` that the repo's generators write from the Factorio corpus, and models,
+textures, display names and recipes are pack data. The jar's own lang file holds only the strings a
+Java class passes to `Component.translatable` with no pack-side author to own them. Which research
+locks which recipe is `kubejs/server_scripts/researchd.js`; this mod only asks Researchd.
 
 Note the two names, which are deliberately different:
 
@@ -110,24 +110,17 @@ block in `mod/build.gradle`, and the two `parchment_*` keys here, when a 26.1 re
 ```
 
 JUnit 5, run on a plain JVM. This is the pack's "this pack logic computes something" row in
-[what to check](../docs/testing/what-to-check.md), and it covers exactly that: `research/` holds the
-recipe-to-research index, the lock-bypass dedupe, the retry that keeps a locked machine ticking, the
-viewer's lock lookup and the idle machine's derived status, plus `assembler/` — the Assembler queue's
-reservation, its serial execution, its refund on cancel and its pause on a full inventory — and all of
-them are written free of any Minecraft type so the check needs no game. What touches Minecraft is glue that
-holds no rules — `ResearchLocks`, `research/client` and the two viewers' compat code — and it is the
-"looks or feels right" row instead: checked by a human on delivery. Registration — blocks, items, trees — still has nothing to assert that
-the game does not assert louder at startup, and gets no test.
+[what to check](../docs/testing/what-to-check.md): each package's rules and arithmetic — a machine's
+rate and stall, a pole network, an ore amount, a tree's shape — are written free of any Minecraft
+type and tested under `src/test/`, so the check needs no game. Registration — blocks, items, trees
+— has nothing to assert that the game does not assert louder at startup, and gets no test.
 
 **The test source set is deliberately absent from `neoForge.mods` in `build.gradle`**, so Minecraft
 is not on its classpath. That is what keeps the split honest: logic that drifts into needing a
-`Level` stops compiling in the test source set rather than quietly becoming untestable. The glue
-that does need a `Level` lives in `ResearchLocks`, holds no rules of its own, and is checked by a
-human in-game.
+`Level` stops compiling in the test source set rather than quietly becoming untestable.
 
 The subproject also carries a headless NeoForge GameTest run — `./gradlew
-:factoryworks_core:runGameTestServer` from the repo root — which the pack's sibling-clone mods
-(GCyR, `respoiled`) have no equivalent of. The tests live in `core/gametest/`, in the **main**
+:factoryworks_core:runGameTestServer` from the repo root. The tests live in `core/gametest/`, in the **main**
 source set: a GameTest is code the running game loads, so it cannot live in the Minecraft-free
 test source set described above. What is there is only what a JVM test cannot reach; see
 `docs/testing/what-to-check.md`.
