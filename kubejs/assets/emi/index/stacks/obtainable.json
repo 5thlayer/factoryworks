@@ -70,6 +70,9 @@
       "stack": "item:factoryworks:chemical_plant"
     },
     {
+      "stack": "item:factoryworks:creative_electric_pole"
+    },
+    {
       "stack": "item:factoryworks:electric_engine_unit"
     },
     {

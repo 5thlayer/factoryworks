@@ -3,7 +3,8 @@
 
 Obtainable is derived from every output of every recipe the pack emits, every item the starting kit
 grants, `data/pack/mechanic-obtainable.json`, the hand-kept rows for what a mechanic produces with
-no recipe, and the drops of every block the live worldgen places. No mob spawns, so none drops (ADR-0093). Reads only
+no recipe, and the drops of every block the live worldgen places. `data/pack/creative-listed.json`
+adds the Pack's creative test items to the index only; they are not Obtainable (ADR-0105). No mob spawns, so none drops (ADR-0093). Reads only
 committed files: the pack's own data and the jar corpus under `data/jars/`.
 
 The worldgen walk starts at each live dimension (`kubejs/data/`, never `kubejs/parked/`): its noise
@@ -46,6 +47,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RECIPES = ROOT / "kubejs/data/factoryworks/recipe"
 KIT = ROOT / "mod/src/main/java/com/factoryworks/core/start/StartingKit.java"
 MECHANICS = ROOT / "data/pack/mechanic-obtainable.json"
+CREATIVE = ROOT / "data/pack/creative-listed.json"
 INDEX = ROOT / "kubejs/assets/emi/index/stacks/obtainable.json"
 SOURCES = ROOT / "kubejs/assets/factoryworks/obtainable/sources.json"
 LIVE = ROOT / "kubejs/data"
@@ -109,6 +111,10 @@ def kit_items():
 
 def mechanic_rows():
     return json.loads(MECHANICS.read_text(encoding="utf-8"))["rows"]
+
+
+def creative_rows():
+    return json.loads(CREATIVE.read_text(encoding="utf-8"))["rows"]
 
 
 @functools.cache
@@ -325,6 +331,7 @@ def derived():
 
 def index(drops):
     stacks = recipe_outputs() | kit_items() | set(drops) | {row["id"] for row in mechanic_rows()}
+    stacks |= {"item:" + row["id"] for row in creative_rows()}
     ordered = sorted(stacks, key=lambda stack: (not stack.startswith("item:"), stack))
     return {"filters": ["/.*/"], "added": [{"stack": emi_stack(stack)} for stack in ordered]}
 

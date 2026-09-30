@@ -98,6 +98,49 @@ class MechanicFailures(unittest.TestCase):
         self.assertEqual([], mechanic_failures([self.ROW], set(), {self.ROW["id"]}))
 
 
+def creative_failures(rows, derived, known):
+    failures = []
+    for row in rows:
+        stack, why = row.get("id", ""), row.get("why")
+        if set(row) != {"id", "why"} or not isinstance(why, str) or not why.strip():
+            failures.append("%s: a row is exactly {id, why}, with a reason" % stack)
+        if not stack.startswith(PACK + ":") or "item:" + stack not in known:
+            failures.append("%s names no item the pack registers" % stack)
+        if "item:" + stack in derived:
+            failures.append("%s is already Obtainable -- delete the row" % stack)
+    return failures
+
+
+def strings(node):
+    if isinstance(node, str):
+        yield node
+    elif isinstance(node, dict):
+        for value in node.values():
+            yield from strings(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from strings(value)
+
+
+class CreativeFailures(unittest.TestCase):
+    ROW = {"id": "factoryworks:creative_electric_pole", "why": "w"}
+    KNOWN = {"item:factoryworks:creative_electric_pole"}
+
+    def test_a_live_row_passes(self):
+        self.assertEqual([], creative_failures([self.ROW], set(), self.KNOWN))
+
+    def test_a_foreign_or_unregistered_row_fails(self):
+        self.assertTrue(creative_failures([self.ROW], set(), set()))
+        row = {"id": "oritech:creative_thing", "why": "w"}
+        self.assertTrue(creative_failures([row], set(), {"item:oritech:creative_thing"}))
+
+    def test_a_row_without_a_reason_fails(self):
+        self.assertTrue(creative_failures([dict(self.ROW, why=" ")], set(), self.KNOWN))
+
+    def test_an_obtainable_row_fails(self):
+        self.assertTrue(creative_failures([self.ROW], self.KNOWN, self.KNOWN))
+
+
 class LootRule(unittest.TestCase):
     SHEARS = {"condition": "minecraft:match_tool", "predicate": {"items": "minecraft:shears"}}
     SILK = {"condition": "minecraft:match_tool", "predicate": {"predicates": {
@@ -211,6 +254,23 @@ class ObtainableIndex(unittest.TestCase):
     def test_the_mechanic_list_is_live(self):
         self.assertEqual([], mechanic_failures(
             self.generator.mechanic_rows(), self.generator.derived(), registered()))
+
+    def test_the_creative_list_is_live(self):
+        self.assertEqual([], creative_failures(
+            self.generator.creative_rows(), self.generator.derived(), registered()))
+
+    def test_creative_items_are_listed_and_not_obtainable(self):
+        rows = self.generator.creative_rows()
+        self.assertTrue(rows)
+        for row in rows:
+            self.assertIn("item:" + row["id"], self.added)
+            self.assertNotIn("item:" + row["id"], self.generator.derived())
+
+    def test_no_pack_recipe_takes_a_creative_item(self):
+        creative = {row["id"] for row in self.generator.creative_rows()}
+        for path in (KUBEJS / "data" / PACK / "recipe").rglob("*.json"):
+            found = creative & set(strings(json.loads(path.read_text(encoding="utf-8"))))
+            self.assertEqual(set(), found, str(path.relative_to(ROOT)))
 
 
 if __name__ == "__main__":

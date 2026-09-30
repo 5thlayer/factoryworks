@@ -625,6 +625,11 @@ asserts that no block only a parked body places is a source. No mob drop is deri
 jar update, a converter run, an edit to the live worldgen, or an edit to the kit or the mechanic
 list. Whether EMI shows exactly the allowlist is a human check: F3+T on a running client.
 
+`data/pack/creative-listed.json` (ADR-0105, #539) adds the Pack's own creative test items, `{id, why}`
+and `factoryworks:` only, to the emitted index and to nothing else: they are not Obtainable, so no
+derivation reads them and `test_obtainable_index.py` fails a recipe that takes one, a row naming no
+registered item, and a row already Obtainable.
+
 ### Transfer-face check
 
 `tests/pack/test_transfer_guards.py` asserts every item and fluid face in the mod is reachable by
