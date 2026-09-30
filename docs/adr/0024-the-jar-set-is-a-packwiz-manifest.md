@@ -51,7 +51,9 @@ through a release breaks that. Route A costs nothing and records the exact hash.
 
 Revisit per jar when publish lands. `gcyr` will be the cheap one — it already has `auto_publish.yml`.
 
-**`factoryworks_core` is excluded from the index entirely.** Its provenance is `mod/`, which is
+**`factoryworks_core` is excluded from the index entirely.** *Amended by ADR-0101: once released, the
+manifest names it by CurseForge file id through `mods/factoryworks-core.pw.toml`; the jar
+`installToPack` builds stays unindexed for dev runs (#533).* Its provenance is `mod/`, which is
 fully tracked; hashing the build output records nothing git does not already have. Gradle jars are
 not byte-reproducible by default, so indexing it would dirty `index.toml` on every `./gradlew build`
 and train everyone to ignore the drift check. This slightly weakens the "the manifest reconstructs
