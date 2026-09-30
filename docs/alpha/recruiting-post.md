@@ -1,6 +1,6 @@
 # Recruiting post: r/feedthebeast
 
-For r/feedthebeast with the recruiting flair, and trimmed for the showcase channels of the Oritech and Railcraft Reborn Discords. Before posting, replace `<DISCORD_INVITE>` and attach three or four GIFs: a belt line feeding an assembling machine, a row of steam engines coming up to power, an oil refinery running, and the placement preview laying a belt run in one drag.
+For r/feedthebeast, under whichever flair fits a modpack post, and trimmed for the showcase channels of the Oritech and Railcraft Reborn Discords. Before posting, replace `<DISCORD_INVITE>` and attach three or four GIFs: a belt line feeding an assembling machine, a row of steam engines coming up to power, an oil refinery running, and the placement preview laying a belt run in one drag.
 
 ---
 
