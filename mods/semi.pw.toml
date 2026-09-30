@@ -1,0 +1,13 @@
+name = "SEMI (Seasonal EMI)"
+filename = "semi-1.1.24+26.1.2+neoforge.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "094e76ee4a7c44d823d47813ed34384fd002e64a"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 8945319
+project-id = 1706958

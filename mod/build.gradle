@@ -111,7 +111,7 @@ dependencies {
     // implements GeckoLib's `GeoBlockEntity`; javac needs the supertype to resolve the hierarchy.
     compileOnly fileTree(
             dir: rootProject.file('mods'),
-            include: ['oritech-*.jar', 'researchd-*.jar', 'emi-*.jar', 'jei-*.jar',
+            include: ['oritech-*.jar', 'researchd-*.jar', 'semi-*.jar', 'jei-*.jar',
                       'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar',
                       'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar',
                       'ftb-chunks-neoforge-26.1.2.8.jar'])
