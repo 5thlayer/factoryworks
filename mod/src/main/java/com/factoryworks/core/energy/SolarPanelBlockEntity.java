@@ -20,10 +20,18 @@ import rearth.oritech.block.entity.generators.BigSolarPanelEntity;
  * The Solar Panel's anchor (#529): Oritech's Big Solar Panel entity under the pack's own type, placed
  * as a footprint (ADR-0077), so it has no cores and its core quality stays Oritech's default of 1.
  *
- * <p>It makes the spec's peak every tick into a one-tick buffer, and a pole pulls it through
- * {@code factoryworks:generators} (ADR-0062); Oritech's push into neighbours is switched off.
+ * <p>It makes the peak times {@link SolarDayCurve}'s multiplier into a one-tick buffer, and only with
+ * the sky open above the footprint. A pole pulls it through {@code factoryworks:generators}
+ * (ADR-0062); Oritech's push into neighbours is switched off.
  */
 public class SolarPanelBlockEntity extends BigSolarPanelEntity {
+
+    /** The footprint is two blocks tall, so the sky is asked one above its top. */
+    private static final int SKY_PROBE_HEIGHT = 2;
+
+    private double carry;
+    private long tickFe;
+    private long worked = Long.MIN_VALUE;
 
     public SolarPanelBlockEntity(BlockPos pos, BlockState state) {
         super(pos, state);
@@ -40,14 +48,36 @@ public class SolarPanelBlockEntity extends BigSolarPanelEntity {
         return getType().builtInRegistryHolder();
     }
 
+    /** Whole FE for this tick; the fraction owed is carried to the next (ADR-0062). */
     @Override
     public int getProductionRate() {
-        return (int) SolarPanelSpec.get().peakFePerTick();
+        return (int) tickFe;
     }
 
+    /** Oritech asks this once a tick before the rate, so it is where the tick's energy is worked out. */
     @Override
     public boolean isProducing() {
-        return true;
+        if (level != null && worked == level.getGameTime()) {
+            return tickFe > 0;
+        }
+        worked = level == null ? Long.MIN_VALUE : level.getGameTime();
+        double multiplier = level == null || !level.canSeeSky(worldPosition.above(SKY_PROBE_HEIGHT))
+                ? 0.0
+                : SolarDayCurve.multiplier(daytime());
+        SolarOutput.Tick tick = SolarOutput.tick(SolarPanelSpec.get().peakFePerTick(), multiplier, carry);
+        tickFe = tick.fe();
+        carry = tick.carry();
+        return tickFe > 0;
+    }
+
+    /** Oritech folds the panel outside 0-12,500, so this reports day exactly while the curve is above zero. */
+    @Override
+    public long getAdjustedTimeOfDay() {
+        return level == null ? 18000L : SolarDayCurve.animationTimeOfDay(daytime());
+    }
+
+    private double daytime() {
+        return SolarDayCurve.fromClockFraction(DayFraction.of(level));
     }
 
     @Override
