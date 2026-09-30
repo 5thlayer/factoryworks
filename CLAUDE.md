@@ -166,7 +166,8 @@ What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `Furnace
 `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). `ShowcaseScenes` (#538) are not checks but factories built for filming, under
-`factoryworks_showcase:*` so the run never selects them; `docs/alpha/showcase-scenes.md` says how to
+`factoryworks_showcase:*` so the run never selects them. They are datapack test instances rather
+than event registrations, because a production launch never fires `RegisterGameTestsEvent`; `docs/alpha/showcase-scenes.md` says how to
 run one, and swapping the run's selector for theirs runs all three headless. What is here is only what a JVM test cannot reach: that Craftworks plans every hand copy the
 server loaded, resolves a tag ingredient to its items and has no copy of a fluid recipe; that each of
 the three types on `AssemblingRecipe`'s shape (assembling, chemistry, oil processing, ADR-0096) loads

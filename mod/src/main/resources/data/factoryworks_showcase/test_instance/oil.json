@@ -1,0 +1,7 @@
+{
+  "type": "factoryworks:code",
+  "body": "factoryworks_showcase:oil",
+  "environment": "minecraft:default",
+  "structure": "factoryworks:gametest/scene",
+  "max_ticks": 4800
+}

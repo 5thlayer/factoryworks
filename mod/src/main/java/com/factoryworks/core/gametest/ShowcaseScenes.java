@@ -43,10 +43,15 @@ final class ShowcaseScenes {
     private ShowcaseScenes() {
     }
 
-    static void register(PFGameTests.Registrar tests) {
-        tests.showcase("assembly_line", 2400, ShowcaseScenes::assemblyLine);
-        tests.showcase("steam_power", 2400, ShowcaseScenes::steamPower);
-        tests.showcase("oil", 4800, ShowcaseScenes::oil);
+    /** Each scene's instance is `data/factoryworks_showcase/test_instance/<scene>.json`. */
+    static void defineBodies() {
+        define("assembly_line", ShowcaseScenes::assemblyLine);
+        define("steam_power", ShowcaseScenes::steamPower);
+        define("oil", ShowcaseScenes::oil);
+    }
+
+    private static void define(String name, java.util.function.Consumer<GameTestHelper> body) {
+        PFGameTestInstance.define(Identifier.fromNamespaceAndPath("factoryworks_showcase", name), body);
     }
 
     /** Copper plates become cable, and cable with iron plates becomes circuits. */

@@ -166,9 +166,7 @@ def main():
     jvm = expand(nf["arguments"]["jvm"] + mc["arguments"]["jvm"])
     game = expand(mc["arguments"]["game"] + nf["arguments"]["game"])
 
-    # Registers the GameTests, so `/test run factoryworks_showcase:<scene>` works in this client (#538).
-    cmd = [str(JAVA), "-Xmx6G", "-XstartOnFirstThread", "-Dneoforge.enableGameTest=true", *jvm,
-           nf["mainClass"], *game]
+    cmd = [str(JAVA), "-Xmx6G", "-XstartOnFirstThread", *jvm, nf["mainClass"], *game]
     if "--demo" in cmd:
         cmd.remove("--demo")
     args = sys.argv[1:]
