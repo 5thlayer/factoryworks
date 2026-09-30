@@ -347,4 +347,4 @@ Index), none with reception data.
 - Original for the diff: `Manufactio-1.35.zip` (https://mediafilez.forgecdn.net/files/3582/169/Manufactio-1.35.zip)
 - Companion reports: `docs/research/manufactio.md`, `docs/research/manufactio-2-nuclear-edition.md`
 - YouTube: https://www.youtube.com/watch?v=kEgN0SdAYGs, metadata from `https://www.youtube.com/oembed?url=…` and the watch page
-- Our ledger: `/Users/kc00l/curseforge/Instances/PlanetaryFactory/docs/factorio-mechanics.md`
+- Our ledger: [`docs/factorio-mechanics.md`](../factorio-mechanics.md)
