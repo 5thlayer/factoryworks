@@ -55,6 +55,12 @@ public class SolarPanelBlockEntity extends BigSolarPanelEntity {
         return Set.of();
     }
 
+    /** Oritech's animation reads its core-assembly flag, which a footprint never sets; false holds it packaged. */
+    @Override
+    public boolean isActive(BlockState state) {
+        return true;
+    }
+
     @Override
     public List<Vec3i> getCorePositions() {
         return List.of();
