@@ -93,8 +93,8 @@ def nestedArtifacts = localJars.collectMany { it.nests ?: [] }.unique()
 def siblingNests = localJars.findAll { it.mod in siblingMods }.collectMany { it.nests ?: [] } as Set
 
 dependencies {
-    // EMI and JEI are here for the recipe-viewer lock annotation (issue #75), and Jade for the
-    // pole's live HUD line (#147). All three plugin classes are found by their own host's
+    // EMI is here for the recipe-viewer lock annotation (issue #75), and Jade for the
+    // pole's live HUD line (#147). Both plugin classes are found by their own host's
     // annotation scan and referenced from nowhere else in the mod, so none of the jars is needed
     // at runtime for the rest of it to load.
     //
@@ -111,7 +111,7 @@ dependencies {
     // implements GeckoLib's `GeoBlockEntity`; javac needs the supertype to resolve the hierarchy.
     compileOnly fileTree(
             dir: rootProject.file('mods'),
-            include: ['oritech-*.jar', 'researchd-*.jar', 'semi-*.jar', 'jei-*.jar',
+            include: ['oritech-*.jar', 'researchd-*.jar', 'semi-*.jar',
                       'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar',
                       'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar',
                       'ftb-chunks-neoforge-26.1.2.8.jar'])

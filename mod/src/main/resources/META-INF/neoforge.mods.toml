@@ -66,18 +66,11 @@ config = "factoryworks_core.mixins.json"
 [[mixins]]
 config = "factoryworks_core.oritech.mixins.json"
 
-# Both recipe viewers ship with the pack and both were listing a research-locked recipe exactly
-# like an unlocked one (issue #75). Neither is required for the mod to load. JEI is driven by a
-# plugin its own annotation scan discovers; EMI needs a mixin, because the equivalent EMI seam is
-# gated behind a developer-facing config flag that is off for players -- see RecipeDisplayMixin.
+# EMI marks research-locked recipes (issue #75) and is not required for the mod to load. It needs a
+# mixin, because its own seam is gated behind a developer-facing config flag that is off for
+# players -- see RecipeDisplayMixin.
 [[dependencies.${mod_id}]]
 modId = "emi"
-type = "optional"
-ordering = "AFTER"
-side = "CLIENT"
-
-[[dependencies.${mod_id}]]
-modId = "jei"
 type = "optional"
 ordering = "AFTER"
 side = "CLIENT"

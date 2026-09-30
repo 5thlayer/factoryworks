@@ -42,7 +42,7 @@ import snownee.jade.api.config.IPluginConfig;
  * already provide (ADR-0036 commits to touching no internals, and the division of teaching labour
  * is the ADR's).
  *
- * <p>Like the EMI and JEI plugins, this class is found by Jade's own annotation scan and is
+ * <p>Like the EMI plugin, this class is found by Jade's own annotation scan and is
  * referenced from nowhere else in the mod, so the jar is a compile-time dependency only.
  */
 @WailaPlugin

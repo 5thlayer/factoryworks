@@ -250,7 +250,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         return bars;
     }
 
-    /** The fluid of the bar under the mouse, for EMI's and JEI's recipe and usage keys. */
+    /** The fluid of the bar under the mouse, for EMI's recipe and usage keys. */
     public Optional<FluidBar> fluidBarAt(double mouseX, double mouseY) {
         return fluidBars().stream()
                 .filter(bar -> bar.fluid().isPresent() && bar.contains(mouseX, mouseY))
