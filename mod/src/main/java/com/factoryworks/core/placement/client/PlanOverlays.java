@@ -45,13 +45,15 @@ final class PlanOverlays {
         }
     }
 
-    /** The ore a held rig would work (#195). */
+    /** The ore a held rig would work (#195) and the tile it would eject onto (#535). */
     private static void drawMiningArea(SubmitCustomGeometryEvent event, ClientLevel level, PlacementPlan plan) {
         if (plan.isRefused()) {
             return;
         }
         PlacementPlan.Placed first = plan.blocks().getFirst();
         MiningAreaOverlay.drawFor(event.getSubmitNodeCollector(), event.getPoseStack(), level,
+                event.getLevelRenderState().cameraRenderState.pos, first.pos(), first.state());
+        MiningAreaOverlay.drawDropPosition(event.getSubmitNodeCollector(), event.getPoseStack(),
                 event.getLevelRenderState().cameraRenderState.pos, first.pos(), first.state());
     }
 }
