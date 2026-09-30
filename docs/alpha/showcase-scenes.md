@@ -11,7 +11,7 @@ The assembly line and the oil scene are powered by a creative pole; the steam sc
 ## Running one
 
 1. Install the core jar with `./gradlew :factoryworks_core:installToPack` while the game is closed.
-2. In the CurseForge app, open the instance's profile options and add `-Dneoforge.enableGameTest=true` to its JVM arguments. Without it the scenes are not registered.
+2. Launch with `scripts/launch.py` (or `skillworks:quicklaunch`), which passes `-Dneoforge.enableGameTest=true`. From the CurseForge app, add that flag to the instance's JVM arguments instead; without it the scenes are not registered.
 3. Create a creative world, fly to about y 200 so the sky hides the terrain, and run `/test run factoryworks_showcase:<scene>`.
 4. `/test clearall` removes the scenes.
 
