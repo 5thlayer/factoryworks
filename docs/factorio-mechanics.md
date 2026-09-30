@@ -629,7 +629,7 @@ Sub-rules:
   splitters make Factorio's 2x2 and 4x4 balancers (#349).
 - **Splitter priority and filter** — `shipped`. A splitter's screen, opened by sneaking and using
   either half with an empty hand, sets an input priority, an output priority and a filter. The
-  filter is set by clicking its slot with an item or dragging one from the item list, and takes
+  filter is set by clicking its slot with an item or dragging one from JEI or EMI, and takes
   nothing. What it matches goes only to the output-priority side and everything else only to the
   other, each waiting when its side backs up (5thlayer/beltworks#20, 5thlayer/beltworks#21, 5thlayer/beltworks#22).
 - **Two lanes per belt** — `excluded`. Lane balancing is a compression trick for a conveyor one tile
