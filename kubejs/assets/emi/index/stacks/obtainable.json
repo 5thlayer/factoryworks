@@ -124,6 +124,9 @@
       "stack": "item:factoryworks:small_electric_pole"
     },
     {
+      "stack": "item:factoryworks:solar_panel"
+    },
+    {
       "stack": "item:factoryworks:solid_fuel"
     },
     {
@@ -293,9 +296,6 @@
     },
     {
       "stack": "item:minecraft:yellow_concrete"
-    },
-    {
-      "stack": "item:oritech:big_solar_panel"
     },
     {
       "stack": "item:oritech:fluid_pipe"

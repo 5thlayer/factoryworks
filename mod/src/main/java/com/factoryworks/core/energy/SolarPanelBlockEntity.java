@@ -76,6 +76,12 @@ public class SolarPanelBlockEntity extends BigSolarPanelEntity {
         return level == null ? 18000L : SolarDayCurve.animationTimeOfDay(daytime());
     }
 
+    /** What the panel made this tick, in whole FE; worked out on ask so a HUD never reads a stale tick. */
+    public long currentOutputFe() {
+        isProducing();
+        return tickFe;
+    }
+
     private double daytime() {
         return SolarDayCurve.fromClockFraction(DayFraction.of(level));
     }
