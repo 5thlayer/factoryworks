@@ -7,7 +7,6 @@ var FACTORIO_TECHS = [
   {
     "name": "advanced-asteroid-processing",
     "suggested_id": "factory_works:advanced_asteroid_processing",
-    "localised_name": "Advanced asteroid processing",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -79,7 +78,6 @@ var FACTORIO_TECHS = [
   {
     "name": "advanced-circuit",
     "suggested_id": "factory_works:advanced_circuit",
-    "localised_name": "Advanced circuit",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -113,7 +111,6 @@ var FACTORIO_TECHS = [
   {
     "name": "advanced-combinators",
     "suggested_id": "factory_works:advanced_combinators",
-    "localised_name": "Advanced combinators",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -152,7 +149,6 @@ var FACTORIO_TECHS = [
   {
     "name": "advanced-material-processing",
     "suggested_id": "factory_works:advanced_material_processing",
-    "localised_name": "Advanced material processing",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -187,7 +183,6 @@ var FACTORIO_TECHS = [
   {
     "name": "advanced-material-processing-2",
     "suggested_id": "factory_works:advanced_material_processing_2",
-    "localised_name": "advanced-material-processing-2",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -226,7 +221,6 @@ var FACTORIO_TECHS = [
   {
     "name": "advanced-oil-processing",
     "suggested_id": "factory_works:advanced_oil_processing",
-    "localised_name": "Advanced oil processing",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -280,7 +274,6 @@ var FACTORIO_TECHS = [
   {
     "name": "agricultural-science-pack",
     "suggested_id": "factory_works:agricultural_science_pack",
-    "localised_name": "Agricultural science pack",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -306,7 +299,6 @@ var FACTORIO_TECHS = [
   {
     "name": "agriculture",
     "suggested_id": "factory_works:agriculture",
-    "localised_name": "Agriculture",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -335,7 +327,6 @@ var FACTORIO_TECHS = [
   {
     "name": "artificial-soil",
     "suggested_id": "factory_works:artificial_soil",
-    "localised_name": "Artificial soil",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -364,7 +355,6 @@ var FACTORIO_TECHS = [
   {
     "name": "artillery",
     "suggested_id": "factory_works:artillery",
-    "localised_name": "Artillery",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -428,7 +418,6 @@ var FACTORIO_TECHS = [
   {
     "name": "asteroid-reprocessing",
     "suggested_id": "factory_works:asteroid_reprocessing",
-    "localised_name": "Asteroid reprocessing",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -482,7 +471,6 @@ var FACTORIO_TECHS = [
   {
     "name": "atomic-bomb",
     "suggested_id": "factory_works:atomic_bomb",
-    "localised_name": "Atomic bomb",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -534,7 +522,6 @@ var FACTORIO_TECHS = [
   {
     "name": "automated-rail-transportation",
     "suggested_id": "factory_works:automated_rail_transportation",
-    "localised_name": "Automated rail transportation",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -576,7 +563,6 @@ var FACTORIO_TECHS = [
   {
     "name": "automation",
     "suggested_id": "factory_works:automation",
-    "localised_name": "Automation",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -610,7 +596,6 @@ var FACTORIO_TECHS = [
   {
     "name": "automation-2",
     "suggested_id": "factory_works:automation_2",
-    "localised_name": "automation-2",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -646,7 +631,6 @@ var FACTORIO_TECHS = [
   {
     "name": "automation-3",
     "suggested_id": "factory_works:automation_3",
-    "localised_name": "automation-3",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -690,7 +674,6 @@ var FACTORIO_TECHS = [
   {
     "name": "automation-science-pack",
     "suggested_id": "factory_works:automation_science_pack",
-    "localised_name": "Automation science pack",
     "source": "base",
     "essential": true,
     "prerequisites": [
@@ -714,7 +697,6 @@ var FACTORIO_TECHS = [
   {
     "name": "automobilism",
     "suggested_id": "factory_works:automobilism",
-    "localised_name": "Automobilism",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -749,7 +731,6 @@ var FACTORIO_TECHS = [
   {
     "name": "bacteria-cultivation",
     "suggested_id": "factory_works:bacteria_cultivation",
-    "localised_name": "Bacteria cultivation",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -776,7 +757,6 @@ var FACTORIO_TECHS = [
   {
     "name": "battery",
     "suggested_id": "factory_works:battery",
-    "localised_name": "Battery",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -810,7 +790,6 @@ var FACTORIO_TECHS = [
   {
     "name": "battery-equipment",
     "suggested_id": "factory_works:battery_equipment",
-    "localised_name": "Personal battery",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -845,7 +824,6 @@ var FACTORIO_TECHS = [
   {
     "name": "battery-mk2-equipment",
     "suggested_id": "factory_works:battery_mk2_equipment",
-    "localised_name": "Personal battery MK2",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -889,7 +867,6 @@ var FACTORIO_TECHS = [
   {
     "name": "battery-mk3-equipment",
     "suggested_id": "factory_works:battery_mk3_equipment",
-    "localised_name": "Personal battery MK3",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -940,7 +917,6 @@ var FACTORIO_TECHS = [
   {
     "name": "belt-immunity-equipment",
     "suggested_id": "factory_works:belt_immunity_equipment",
-    "localised_name": "Belt immunity equipment",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -974,7 +950,6 @@ var FACTORIO_TECHS = [
   {
     "name": "big-mining-drill",
     "suggested_id": "factory_works:big_mining_drill",
-    "localised_name": "Big mining drill",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -998,7 +973,6 @@ var FACTORIO_TECHS = [
   {
     "name": "biochamber",
     "suggested_id": "factory_works:biochamber",
-    "localised_name": "Biochamber",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1035,7 +1009,6 @@ var FACTORIO_TECHS = [
   {
     "name": "bioflux",
     "suggested_id": "factory_works:bioflux",
-    "localised_name": "Bioflux",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1062,7 +1035,6 @@ var FACTORIO_TECHS = [
   {
     "name": "bioflux-processing",
     "suggested_id": "factory_works:bioflux_processing",
-    "localised_name": "Bioflux processing",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1102,7 +1074,6 @@ var FACTORIO_TECHS = [
   {
     "name": "biolab",
     "suggested_id": "factory_works:biolab",
-    "localised_name": "Biolab",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1163,7 +1134,6 @@ var FACTORIO_TECHS = [
   {
     "name": "biter-egg-handling",
     "suggested_id": "factory_works:biter_egg_handling",
-    "localised_name": "Biter egg handling",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1189,7 +1159,6 @@ var FACTORIO_TECHS = [
   {
     "name": "bulk-inserter",
     "suggested_id": "factory_works:bulk_inserter",
-    "localised_name": "Bulk inserter",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1229,7 +1198,6 @@ var FACTORIO_TECHS = [
   {
     "name": "calcite-processing",
     "suggested_id": "factory_works:calcite_processing",
-    "localised_name": "Calcite processing",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1262,7 +1230,6 @@ var FACTORIO_TECHS = [
   {
     "name": "captive-biter-spawner",
     "suggested_id": "factory_works:captive_biter_spawner",
-    "localised_name": "Captive biter spawner",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1334,7 +1301,6 @@ var FACTORIO_TECHS = [
   {
     "name": "captivity",
     "suggested_id": "factory_works:captivity",
-    "localised_name": "Captivity",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1386,7 +1352,6 @@ var FACTORIO_TECHS = [
   {
     "name": "carbon-fiber",
     "suggested_id": "factory_works:carbon_fiber",
-    "localised_name": "Carbon fiber",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1432,7 +1397,6 @@ var FACTORIO_TECHS = [
   {
     "name": "chemical-science-pack",
     "suggested_id": "factory_works:chemical_science_pack",
-    "localised_name": "Chemical science pack",
     "source": "base",
     "essential": true,
     "prerequisites": [
@@ -1467,7 +1431,6 @@ var FACTORIO_TECHS = [
   {
     "name": "circuit-network",
     "suggested_id": "factory_works:circuit_network",
-    "localised_name": "Circuit network",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1529,7 +1492,6 @@ var FACTORIO_TECHS = [
   {
     "name": "cliff-explosives",
     "suggested_id": "factory_works:cliff_explosives",
-    "localised_name": "Cliff explosives",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1581,7 +1543,6 @@ var FACTORIO_TECHS = [
   {
     "name": "coal-liquefaction",
     "suggested_id": "factory_works:coal_liquefaction",
-    "localised_name": "Coal liquefaction",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1627,7 +1588,6 @@ var FACTORIO_TECHS = [
   {
     "name": "concrete",
     "suggested_id": "factory_works:concrete",
-    "localised_name": "Concrete",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1678,7 +1638,6 @@ var FACTORIO_TECHS = [
   {
     "name": "construction-robotics",
     "suggested_id": "factory_works:construction_robotics",
-    "localised_name": "Construction robotics",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1737,7 +1696,6 @@ var FACTORIO_TECHS = [
   {
     "name": "cryogenic-plant",
     "suggested_id": "factory_works:cryogenic_plant",
-    "localised_name": "Cryogenic plant",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -1768,7 +1726,6 @@ var FACTORIO_TECHS = [
   {
     "name": "cryogenic-science-pack",
     "suggested_id": "factory_works:cryogenic_science_pack",
-    "localised_name": "Cryogenic science pack",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -1791,7 +1748,6 @@ var FACTORIO_TECHS = [
   {
     "name": "defender",
     "suggested_id": "factory_works:defender",
-    "localised_name": "Defender",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1833,7 +1789,6 @@ var FACTORIO_TECHS = [
   {
     "name": "destroyer",
     "suggested_id": "factory_works:destroyer",
-    "localised_name": "Destroyer",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1881,7 +1836,6 @@ var FACTORIO_TECHS = [
   {
     "name": "discharge-defense-equipment",
     "suggested_id": "factory_works:discharge_defense_equipment",
-    "localised_name": "Discharge defense",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1926,7 +1880,6 @@ var FACTORIO_TECHS = [
   {
     "name": "distractor",
     "suggested_id": "factory_works:distractor",
-    "localised_name": "Distractor",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -1970,7 +1923,6 @@ var FACTORIO_TECHS = [
   {
     "name": "effect-transmission",
     "suggested_id": "factory_works:effect_transmission",
-    "localised_name": "Effect transmission",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2013,7 +1965,6 @@ var FACTORIO_TECHS = [
   {
     "name": "electric-energy-accumulators",
     "suggested_id": "factory_works:electric_energy_accumulators",
-    "localised_name": "electric-energy-accumulators",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2048,7 +1999,6 @@ var FACTORIO_TECHS = [
   {
     "name": "electric-energy-distribution-1",
     "suggested_id": "factory_works:electric_energy_distribution_1",
-    "localised_name": "electric-energy-distribution-1",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2091,7 +2041,6 @@ var FACTORIO_TECHS = [
   {
     "name": "electric-energy-distribution-2",
     "suggested_id": "factory_works:electric_energy_distribution_2",
-    "localised_name": "electric-energy-distribution-2",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2130,7 +2079,6 @@ var FACTORIO_TECHS = [
   {
     "name": "electric-engine",
     "suggested_id": "factory_works:electric_engine",
-    "localised_name": "Electric engine",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2168,7 +2116,6 @@ var FACTORIO_TECHS = [
   {
     "name": "electric-mining-drill",
     "suggested_id": "factory_works:electric_mining_drill",
-    "localised_name": "Electric mining drill",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2198,7 +2145,6 @@ var FACTORIO_TECHS = [
   {
     "name": "electromagnetic-plant",
     "suggested_id": "factory_works:electromagnetic_plant",
-    "localised_name": "Electromagnetic plant",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -2234,7 +2180,6 @@ var FACTORIO_TECHS = [
   {
     "name": "electromagnetic-science-pack",
     "suggested_id": "factory_works:electromagnetic_science_pack",
-    "localised_name": "Electromagnetic science pack",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -2257,7 +2202,6 @@ var FACTORIO_TECHS = [
   {
     "name": "electronics",
     "suggested_id": "factory_works:electronics",
-    "localised_name": "Electronics",
     "source": "base",
     "essential": false,
     "prerequisites": [],
@@ -2295,7 +2239,6 @@ var FACTORIO_TECHS = [
   {
     "name": "energy-shield-equipment",
     "suggested_id": "factory_works:energy_shield_equipment",
-    "localised_name": "Energy shield equipment",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2334,7 +2277,6 @@ var FACTORIO_TECHS = [
   {
     "name": "energy-shield-mk2-equipment",
     "suggested_id": "factory_works:energy_shield_mk2_equipment",
-    "localised_name": "Energy shield MK2 equipment",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2391,7 +2333,6 @@ var FACTORIO_TECHS = [
   {
     "name": "engine",
     "suggested_id": "factory_works:engine",
-    "localised_name": "Engine",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2426,7 +2367,6 @@ var FACTORIO_TECHS = [
   {
     "name": "exoskeleton-equipment",
     "suggested_id": "factory_works:exoskeleton_equipment",
-    "localised_name": "Exoskeleton equipment",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2466,7 +2406,6 @@ var FACTORIO_TECHS = [
   {
     "name": "explosive-rocketry",
     "suggested_id": "factory_works:explosive_rocketry",
-    "localised_name": "Explosive rocketry",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2509,7 +2448,6 @@ var FACTORIO_TECHS = [
   {
     "name": "explosives",
     "suggested_id": "factory_works:explosives",
-    "localised_name": "Explosives",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2543,7 +2481,6 @@ var FACTORIO_TECHS = [
   {
     "name": "fast-inserter",
     "suggested_id": "factory_works:fast_inserter",
-    "localised_name": "Fast inserter",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2573,7 +2510,6 @@ var FACTORIO_TECHS = [
   {
     "name": "fish-breeding",
     "suggested_id": "factory_works:fish_breeding",
-    "localised_name": "Fish breeding",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -2623,7 +2559,6 @@ var FACTORIO_TECHS = [
   {
     "name": "fission-reactor-equipment",
     "suggested_id": "factory_works:fission_reactor_equipment",
-    "localised_name": "Portable fission reactor",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2672,7 +2607,6 @@ var FACTORIO_TECHS = [
   {
     "name": "flamethrower",
     "suggested_id": "factory_works:flamethrower",
-    "localised_name": "Flamethrower",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2719,7 +2653,6 @@ var FACTORIO_TECHS = [
   {
     "name": "flammables",
     "suggested_id": "factory_works:flammables",
-    "localised_name": "Flammables",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2748,7 +2681,6 @@ var FACTORIO_TECHS = [
   {
     "name": "fluid-handling",
     "suggested_id": "factory_works:fluid_handling",
-    "localised_name": "Fluid handling",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2863,7 +2795,6 @@ var FACTORIO_TECHS = [
   {
     "name": "fluid-wagon",
     "suggested_id": "factory_works:fluid_wagon",
-    "localised_name": "Fluid wagon",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -2898,7 +2829,6 @@ var FACTORIO_TECHS = [
   {
     "name": "foundation",
     "suggested_id": "factory_works:foundation",
-    "localised_name": "Foundation",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -2964,7 +2894,6 @@ var FACTORIO_TECHS = [
   {
     "name": "foundry",
     "suggested_id": "factory_works:foundry",
-    "localised_name": "Foundry",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3044,7 +2973,6 @@ var FACTORIO_TECHS = [
   {
     "name": "fusion-reactor",
     "suggested_id": "factory_works:fusion_reactor",
-    "localised_name": "Fusion reactor",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3118,7 +3046,6 @@ var FACTORIO_TECHS = [
   {
     "name": "fusion-reactor-equipment",
     "suggested_id": "factory_works:fusion_reactor_equipment",
-    "localised_name": "Portable fusion reactor",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3185,7 +3112,6 @@ var FACTORIO_TECHS = [
   {
     "name": "gate",
     "suggested_id": "factory_works:gate",
-    "localised_name": "Gate",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3220,7 +3146,6 @@ var FACTORIO_TECHS = [
   {
     "name": "gun-turret",
     "suggested_id": "factory_works:gun_turret",
-    "localised_name": "Gun turret",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3250,7 +3175,6 @@ var FACTORIO_TECHS = [
   {
     "name": "heating-tower",
     "suggested_id": "factory_works:heating_tower",
-    "localised_name": "Heating tower",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3287,7 +3211,6 @@ var FACTORIO_TECHS = [
   {
     "name": "heavy-armor",
     "suggested_id": "factory_works:heavy_armor",
-    "localised_name": "Heavy armor",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3318,7 +3241,6 @@ var FACTORIO_TECHS = [
   {
     "name": "holmium-processing",
     "suggested_id": "factory_works:holmium_processing",
-    "localised_name": "Holmium processing",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3345,7 +3267,6 @@ var FACTORIO_TECHS = [
   {
     "name": "jellynut",
     "suggested_id": "factory_works:jellynut",
-    "localised_name": "Jellynut",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3374,7 +3295,6 @@ var FACTORIO_TECHS = [
   {
     "name": "kovarex-enrichment-process",
     "suggested_id": "factory_works:kovarex_enrichment_process",
-    "localised_name": "Kovarex enrichment process",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3421,7 +3341,6 @@ var FACTORIO_TECHS = [
   {
     "name": "lamp",
     "suggested_id": "factory_works:lamp",
-    "localised_name": "Lamp",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3451,7 +3370,6 @@ var FACTORIO_TECHS = [
   {
     "name": "land-mine",
     "suggested_id": "factory_works:land_mine",
-    "localised_name": "Land mines",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3490,7 +3408,6 @@ var FACTORIO_TECHS = [
   {
     "name": "landfill",
     "suggested_id": "factory_works:landfill",
-    "localised_name": "Landfill",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3524,7 +3441,6 @@ var FACTORIO_TECHS = [
   {
     "name": "landing-pad-unloading-bay",
     "suggested_id": "factory_works:landing_pad_unloading_bay",
-    "localised_name": "Landing pad unloading bay",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3570,7 +3486,6 @@ var FACTORIO_TECHS = [
   {
     "name": "laser",
     "suggested_id": "factory_works:laser",
-    "localised_name": "Laser",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3604,7 +3519,6 @@ var FACTORIO_TECHS = [
   {
     "name": "laser-turret",
     "suggested_id": "factory_works:laser_turret",
-    "localised_name": "Laser turret",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3647,7 +3561,6 @@ var FACTORIO_TECHS = [
   {
     "name": "lightning-collector",
     "suggested_id": "factory_works:lightning_collector",
-    "localised_name": "Lightning collector",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3693,7 +3606,6 @@ var FACTORIO_TECHS = [
   {
     "name": "lithium-processing",
     "suggested_id": "factory_works:lithium_processing",
-    "localised_name": "Lithium processing",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -3723,7 +3635,6 @@ var FACTORIO_TECHS = [
   {
     "name": "logistic-robotics",
     "suggested_id": "factory_works:logistic_robotics",
-    "localised_name": "Logistic robotics",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3786,7 +3697,6 @@ var FACTORIO_TECHS = [
   {
     "name": "logistic-science-pack",
     "suggested_id": "factory_works:logistic_science_pack",
-    "localised_name": "Logistic science pack",
     "source": "base",
     "essential": true,
     "prerequisites": [
@@ -3816,7 +3726,6 @@ var FACTORIO_TECHS = [
   {
     "name": "logistic-system",
     "suggested_id": "factory_works:logistic_system",
-    "localised_name": "Logistic system",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3870,7 +3779,6 @@ var FACTORIO_TECHS = [
   {
     "name": "logistics",
     "suggested_id": "factory_works:logistics",
-    "localised_name": "Logistics",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3904,7 +3812,6 @@ var FACTORIO_TECHS = [
   {
     "name": "logistics-2",
     "suggested_id": "factory_works:logistics_2",
-    "localised_name": "logistics-2",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3947,7 +3854,6 @@ var FACTORIO_TECHS = [
   {
     "name": "logistics-3",
     "suggested_id": "factory_works:logistics_3",
-    "localised_name": "logistics-3",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -3998,7 +3904,6 @@ var FACTORIO_TECHS = [
   {
     "name": "low-density-structure",
     "suggested_id": "factory_works:low_density_structure",
-    "localised_name": "Low density structure",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4037,7 +3942,6 @@ var FACTORIO_TECHS = [
   {
     "name": "lubricant",
     "suggested_id": "factory_works:lubricant",
-    "localised_name": "Lubricant",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4075,7 +3979,6 @@ var FACTORIO_TECHS = [
   {
     "name": "mech-armor",
     "suggested_id": "factory_works:mech_armor",
-    "localised_name": "Mech armor",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -4130,7 +4033,6 @@ var FACTORIO_TECHS = [
   {
     "name": "metallurgic-science-pack",
     "suggested_id": "factory_works:metallurgic_science_pack",
-    "localised_name": "Metallurgic science pack",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -4153,7 +4055,6 @@ var FACTORIO_TECHS = [
   {
     "name": "military",
     "suggested_id": "factory_works:military",
-    "localised_name": "Military",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4191,7 +4092,6 @@ var FACTORIO_TECHS = [
   {
     "name": "military-2",
     "suggested_id": "factory_works:military_2",
-    "localised_name": "military-2",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4231,7 +4131,6 @@ var FACTORIO_TECHS = [
   {
     "name": "military-3",
     "suggested_id": "factory_works:military_3",
-    "localised_name": "military-3",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4282,7 +4181,6 @@ var FACTORIO_TECHS = [
   {
     "name": "military-4",
     "suggested_id": "factory_works:military_4",
-    "localised_name": "military-4",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4334,7 +4232,6 @@ var FACTORIO_TECHS = [
   {
     "name": "military-science-pack",
     "suggested_id": "factory_works:military_science_pack",
-    "localised_name": "Military science pack",
     "source": "base",
     "essential": true,
     "prerequisites": [
@@ -4369,7 +4266,6 @@ var FACTORIO_TECHS = [
   {
     "name": "modular-armor",
     "suggested_id": "factory_works:modular_armor",
-    "localised_name": "Modular armor",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4404,7 +4300,6 @@ var FACTORIO_TECHS = [
   {
     "name": "modules",
     "suggested_id": "factory_works:modules",
-    "localised_name": "Modules",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4433,7 +4328,6 @@ var FACTORIO_TECHS = [
   {
     "name": "night-vision-equipment",
     "suggested_id": "factory_works:night_vision_equipment",
-    "localised_name": "Nightvision equipment",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4467,7 +4361,6 @@ var FACTORIO_TECHS = [
   {
     "name": "nuclear-fuel-reprocessing",
     "suggested_id": "factory_works:nuclear_fuel_reprocessing",
-    "localised_name": "Nuclear fuel reprocessing",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4510,7 +4403,6 @@ var FACTORIO_TECHS = [
   {
     "name": "nuclear-power",
     "suggested_id": "factory_works:nuclear_power",
-    "localised_name": "Nuclear power",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4564,7 +4456,6 @@ var FACTORIO_TECHS = [
   {
     "name": "oil-gathering",
     "suggested_id": "factory_works:oil_gathering",
-    "localised_name": "Oil gathering",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4598,7 +4489,6 @@ var FACTORIO_TECHS = [
   {
     "name": "oil-processing",
     "suggested_id": "factory_works:oil_processing",
-    "localised_name": "Oil processing",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4635,7 +4525,6 @@ var FACTORIO_TECHS = [
   {
     "name": "overgrowth-soil",
     "suggested_id": "factory_works:overgrowth_soil",
-    "localised_name": "Overgrowth soil",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -4695,7 +4584,6 @@ var FACTORIO_TECHS = [
   {
     "name": "personal-laser-defense-equipment",
     "suggested_id": "factory_works:personal_laser_defense_equipment",
-    "localised_name": "Personal laser defense",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4741,7 +4629,6 @@ var FACTORIO_TECHS = [
   {
     "name": "personal-roboport-equipment",
     "suggested_id": "factory_works:personal_roboport_equipment",
-    "localised_name": "Personal roboport",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4780,7 +4667,6 @@ var FACTORIO_TECHS = [
   {
     "name": "personal-roboport-mk2-equipment",
     "suggested_id": "factory_works:personal_roboport_mk2_equipment",
-    "localised_name": "Personal roboport MK2",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -4832,7 +4718,6 @@ var FACTORIO_TECHS = [
   {
     "name": "planet-discovery-aquilo",
     "suggested_id": "factory_works:planet_discovery_aquilo",
-    "localised_name": "Planet discovery Aquilo",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -4915,7 +4800,6 @@ var FACTORIO_TECHS = [
   {
     "name": "planet-discovery-fulgora",
     "suggested_id": "factory_works:planet_discovery_fulgora",
-    "localised_name": "Planet discovery Fulgora",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -4967,7 +4851,6 @@ var FACTORIO_TECHS = [
   {
     "name": "planet-discovery-gleba",
     "suggested_id": "factory_works:planet_discovery_gleba",
-    "localised_name": "Planet discovery Gleba",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -5015,7 +4898,6 @@ var FACTORIO_TECHS = [
   {
     "name": "planet-discovery-vulcanus",
     "suggested_id": "factory_works:planet_discovery_vulcanus",
-    "localised_name": "Planet discovery Vulcanus",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -5062,7 +4944,6 @@ var FACTORIO_TECHS = [
   {
     "name": "plastics",
     "suggested_id": "factory_works:plastics",
-    "localised_name": "Plastics",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5096,7 +4977,6 @@ var FACTORIO_TECHS = [
   {
     "name": "power-armor",
     "suggested_id": "factory_works:power_armor",
-    "localised_name": "Power armor",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5136,7 +5016,6 @@ var FACTORIO_TECHS = [
   {
     "name": "power-armor-mk2",
     "suggested_id": "factory_works:power_armor_mk2",
-    "localised_name": "Power armor MK2",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5184,7 +5063,6 @@ var FACTORIO_TECHS = [
   {
     "name": "processing-unit",
     "suggested_id": "factory_works:processing_unit",
-    "localised_name": "Processing unit",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5222,7 +5100,6 @@ var FACTORIO_TECHS = [
   {
     "name": "production-science-pack",
     "suggested_id": "factory_works:production_science_pack",
-    "localised_name": "Production science pack",
     "source": "base",
     "essential": true,
     "prerequisites": [
@@ -5262,7 +5139,6 @@ var FACTORIO_TECHS = [
   {
     "name": "promethium-science-pack",
     "suggested_id": "factory_works:promethium_science_pack",
-    "localised_name": "Promethium science pack",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -5333,7 +5209,6 @@ var FACTORIO_TECHS = [
   {
     "name": "quantum-processor",
     "suggested_id": "factory_works:quantum_processor",
-    "localised_name": "Quantum processor",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -5399,7 +5274,6 @@ var FACTORIO_TECHS = [
   {
     "name": "radar",
     "suggested_id": "factory_works:radar",
-    "localised_name": "Radar",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5429,7 +5303,6 @@ var FACTORIO_TECHS = [
   {
     "name": "rail-support-foundations",
     "suggested_id": "factory_works:rail_support_foundations",
-    "localised_name": "Rail support foundations",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -5491,7 +5364,6 @@ var FACTORIO_TECHS = [
   {
     "name": "railgun",
     "suggested_id": "factory_works:railgun",
-    "localised_name": "Railgun",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -5565,7 +5437,6 @@ var FACTORIO_TECHS = [
   {
     "name": "railway",
     "suggested_id": "factory_works:railway",
-    "localised_name": "Railway",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5612,7 +5483,6 @@ var FACTORIO_TECHS = [
   {
     "name": "recycling",
     "suggested_id": "factory_works:recycling",
-    "localised_name": "Recycling",
     "source": "recycler",
     "essential": false,
     "prerequisites": [
@@ -5642,7 +5512,6 @@ var FACTORIO_TECHS = [
   {
     "name": "repair-pack",
     "suggested_id": "factory_works:repair_pack",
-    "localised_name": "Repair pack",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5672,7 +5541,6 @@ var FACTORIO_TECHS = [
   {
     "name": "robotics",
     "suggested_id": "factory_works:robotics",
-    "localised_name": "Robotics",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5711,7 +5579,6 @@ var FACTORIO_TECHS = [
   {
     "name": "rocket-fuel",
     "suggested_id": "factory_works:rocket_fuel",
-    "localised_name": "Rocket fuel",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5750,7 +5617,6 @@ var FACTORIO_TECHS = [
   {
     "name": "rocket-silo",
     "suggested_id": "factory_works:rocket_silo",
-    "localised_name": "Rocket silo",
     "source": "base",
     "essential": true,
     "prerequisites": [
@@ -5814,7 +5680,6 @@ var FACTORIO_TECHS = [
   {
     "name": "rocket-turret",
     "suggested_id": "factory_works:rocket_turret",
-    "localised_name": "Rocket turret",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -5867,7 +5732,6 @@ var FACTORIO_TECHS = [
   {
     "name": "rocketry",
     "suggested_id": "factory_works:rocketry",
-    "localised_name": "Rocketry",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5911,7 +5775,6 @@ var FACTORIO_TECHS = [
   {
     "name": "solar-energy",
     "suggested_id": "factory_works:solar_energy",
-    "localised_name": "Solar energy",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5946,7 +5809,6 @@ var FACTORIO_TECHS = [
   {
     "name": "solar-panel-equipment",
     "suggested_id": "factory_works:solar_panel_equipment",
-    "localised_name": "Portable solar panel",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -5981,7 +5843,6 @@ var FACTORIO_TECHS = [
   {
     "name": "space-platform",
     "suggested_id": "factory_works:space_platform",
-    "localised_name": "Space platform",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6023,7 +5884,6 @@ var FACTORIO_TECHS = [
   {
     "name": "space-platform-thruster",
     "suggested_id": "factory_works:space_platform_thruster",
-    "localised_name": "Space platform thruster",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6077,7 +5937,6 @@ var FACTORIO_TECHS = [
   {
     "name": "space-science-pack",
     "suggested_id": "factory_works:space_science_pack",
-    "localised_name": "Space science pack",
     "source": "base",
     "essential": true,
     "prerequisites": [
@@ -6100,7 +5959,6 @@ var FACTORIO_TECHS = [
   {
     "name": "spidertron",
     "suggested_id": "factory_works:spidertron",
-    "localised_name": "Spidertron",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6163,7 +6021,6 @@ var FACTORIO_TECHS = [
   {
     "name": "stack-inserter",
     "suggested_id": "factory_works:stack_inserter",
-    "localised_name": "Stack inserter",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6224,7 +6081,6 @@ var FACTORIO_TECHS = [
   {
     "name": "steam-power",
     "suggested_id": "factory_works:steam_power",
-    "localised_name": "Steam power",
     "source": "base",
     "essential": false,
     "prerequisites": [],
@@ -6262,7 +6118,6 @@ var FACTORIO_TECHS = [
   {
     "name": "steel-axe",
     "suggested_id": "factory_works:steel_axe",
-    "localised_name": "Steel axe",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6286,7 +6141,6 @@ var FACTORIO_TECHS = [
   {
     "name": "steel-processing",
     "suggested_id": "factory_works:steel_processing",
-    "localised_name": "Steel processing",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6320,7 +6174,6 @@ var FACTORIO_TECHS = [
   {
     "name": "stellar-discovery-solar-system-edge",
     "suggested_id": "factory_works:stellar_discovery_solar_system_edge",
-    "localised_name": "Stellar discovery solar system edge",
     "source": "space-age",
     "essential": true,
     "prerequisites": [
@@ -6388,7 +6241,6 @@ var FACTORIO_TECHS = [
   {
     "name": "stone-wall",
     "suggested_id": "factory_works:stone_wall",
-    "localised_name": "Stone wall",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6418,7 +6270,6 @@ var FACTORIO_TECHS = [
   {
     "name": "sulfur-processing",
     "suggested_id": "factory_works:sulfur_processing",
-    "localised_name": "Sulfur processing",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6456,7 +6307,6 @@ var FACTORIO_TECHS = [
   {
     "name": "tank",
     "suggested_id": "factory_works:tank",
-    "localised_name": "Tank",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6508,7 +6358,6 @@ var FACTORIO_TECHS = [
   {
     "name": "tesla-weapons",
     "suggested_id": "factory_works:tesla_weapons",
-    "localised_name": "Tesla weapons",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6571,7 +6420,6 @@ var FACTORIO_TECHS = [
   {
     "name": "toolbelt",
     "suggested_id": "factory_works:toolbelt",
-    "localised_name": "Toolbelt",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6605,7 +6453,6 @@ var FACTORIO_TECHS = [
   {
     "name": "toolbelt-equipment",
     "suggested_id": "factory_works:toolbelt_equipment",
-    "localised_name": "Toolbelt equipment",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6653,7 +6500,6 @@ var FACTORIO_TECHS = [
   {
     "name": "tree-seeding",
     "suggested_id": "factory_works:tree_seeding",
-    "localised_name": "Tree seeding",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6699,7 +6545,6 @@ var FACTORIO_TECHS = [
   {
     "name": "tungsten-carbide",
     "suggested_id": "factory_works:tungsten_carbide",
-    "localised_name": "Tungsten carbide",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6734,7 +6579,6 @@ var FACTORIO_TECHS = [
   {
     "name": "tungsten-steel",
     "suggested_id": "factory_works:tungsten_steel",
-    "localised_name": "Tungsten steel",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6757,7 +6601,6 @@ var FACTORIO_TECHS = [
   {
     "name": "turbo-transport-belt",
     "suggested_id": "factory_works:turbo_transport_belt",
-    "localised_name": "Turbo transport belt",
     "source": "space-age",
     "essential": false,
     "prerequisites": [
@@ -6816,7 +6659,6 @@ var FACTORIO_TECHS = [
   {
     "name": "uranium-ammo",
     "suggested_id": "factory_works:uranium_ammo",
-    "localised_name": "Uranium ammo",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6872,7 +6714,6 @@ var FACTORIO_TECHS = [
   {
     "name": "uranium-mining",
     "suggested_id": "factory_works:uranium_mining",
-    "localised_name": "Uranium mining",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6911,7 +6752,6 @@ var FACTORIO_TECHS = [
   {
     "name": "uranium-processing",
     "suggested_id": "factory_works:uranium_processing",
-    "localised_name": "Uranium processing",
     "source": "base",
     "essential": false,
     "prerequisites": [
@@ -6940,7 +6780,6 @@ var FACTORIO_TECHS = [
   {
     "name": "utility-science-pack",
     "suggested_id": "factory_works:utility_science_pack",
-    "localised_name": "Utility science pack",
     "source": "base",
     "essential": true,
     "prerequisites": [
@@ -6980,7 +6819,6 @@ var FACTORIO_TECHS = [
   {
     "name": "yumako",
     "suggested_id": "factory_works:yumako",
-    "localised_name": "Yumako",
     "source": "space-age",
     "essential": false,
     "prerequisites": [

@@ -38,7 +38,7 @@ var PF_TECH_OVERRIDES = {};
  *   iconPack          research pack id, for pack researches
  *   unlocks           array of recipe ids the research grants
  *   unlocksDimensions array of dimension ids the research opens
- *   name              override the localised name from the data
+ *   name              override the name read off the id (`oil-processing` -> "Oil processing")
  *   has               ['item id', count] -- the pack's form of a Factorio research trigger
  *   method            a raw ResearchMethod, for anything `has` cannot express
  *   gatedBy           extra parent research ids -- this is where OUR planet gating goes
@@ -54,6 +54,12 @@ var PF_TECH_OVERRIDES = {};
  */
 function fromFactorio(name, over) {
   PF_TECH_OVERRIDES[name] = over || {};
+}
+
+// The corpus holds no display text, so a research reads as its id (ADR-0103).
+function idName(name) {
+  var words = name.replace(/-/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
 function pfId(name) {
@@ -109,7 +115,7 @@ ResearchdEvents.registerResearches((event) => {
       research.icon(over.icon);
     }
 
-    research.literalName(over.name || tech.localised_name);
+    research.literalName(over.name || idName(tech.name));
 
     var parents = resolveParents(tech, {}).concat(over.gatedBy || []);
     if (parents.length) research.parents(parents);

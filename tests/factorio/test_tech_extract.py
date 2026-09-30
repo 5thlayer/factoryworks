@@ -113,7 +113,7 @@ def check_tree(techs):
     check(len(by_name) == len(techs), "duplicate technology names in technology.json")
 
     for tech in techs:
-        for field in ("name", "suggested_id", "localised_name", "source", "cost_kind"):
+        for field in ("name", "suggested_id", "source", "cost_kind"):
             check(tech.get(field), f"{tech['name']}: missing {field}")
         check(
             tech["suggested_id"] == "factory_works:" + tech["name"].replace("-", "_"),
