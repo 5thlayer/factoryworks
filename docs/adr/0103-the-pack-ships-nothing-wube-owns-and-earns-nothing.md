@@ -24,7 +24,8 @@ Wube's wiki states its terms at https://wiki.factorio.com/Factorio:Copyrights: i
 - **The naming rule.** "Factorio" is the inspiration in a description, as "inspired by Factorio",
   and never in the pack's name, logo, art or branding. Coined proper nouns (the Space Age planet
   names, Nauvis, biter, spitter, Wube, Factorio) never appear in a string a player reads. Registry
-  ids and lang keys are functional and exempt. Descriptive machine names that are plain English stay
+  ids and lang keys are functional and exempt. So is the mechanic ledger (#307), which compares the pack
+  with Factorio and has to name what it compares. Descriptive machine names that are plain English stay
   (Foundry, Recycler). One that is not, such as Biochamber, is renamed when its machine lands. #304
   holds the term table and the check over lang values.
 - **The asset rule.** The pack ships no Wube art, sound or game text, and no wiki text or image,

@@ -1,6 +1,96 @@
 # The Factorio mechanic ledger
 
-Every mechanic Factorio has — base game and Space Age — and what this pack does about it.
+Every mechanic Factorio has, base game and Space Age, and what FactoryWorks does about it: built as
+Factorio has it, adapted to Minecraft's shape, planned, blocked, or left out on purpose, each with its
+reason. It is the list the pack is developed against, so it changes as the pack does.
+
+The first release is Terra, the starting planet. The other planets are parked until travel between
+them is built, so a mechanic that belongs to one of them says *parked*. Mechanics are named as
+Factorio names them, and each section gives the pack's own name beside it.
+
+## Verdicts
+
+| verdict | meaning |
+| --- | --- |
+| `planned` | in, not built |
+| `shipped` | in, built — registered *and* its warranted check under `docs/testing/what-to-check.md` passing |
+| `adapted` | in, but Minecraft's shape differs. Mandatory `notice` sentence |
+| `blocked` | wanted, no known implementation |
+| `excluded` | deliberately not reproduced. Requires a written reason |
+
+## Summary
+
+### Base game
+
+| mechanic | verdict | where |
+| --- | --- | --- |
+| [Resource patches and finite ore](#resource-patches-and-finite-ore) | `adapted` | Terra; Ignus, Sapros parked |
+| [Manual mining](#manual-mining) | `adapted` | Terra |
+| [Trees and wood](#trees-and-wood) | `adapted` | Terra |
+| [Mining drills](#mining-drills) | `adapted` | Terra |
+| [Water as a resource](#water-as-a-resource) | `adapted` | Terra |
+| [Fluid handling](#fluid-handling) | `shipped` | Terra |
+| [Oil processing](#oil-processing) | `planned` | Terra; Ignus, Gelida parked |
+| [Smelting](#smelting) | `shipped` | Terra |
+| [Assembling machines and recipe categories](#assembling-machines-and-recipe-categories) | `shipped` | Terra |
+| [Handcrafting and the crafting queue](#handcrafting-and-the-crafting-queue) | `shipped` | Terra |
+| [Transport belts](#transport-belts) | `adapted` | Terra |
+| [Inserters](#inserters) | `adapted` | Terra |
+| [Logistic robots](#logistic-robots) | `excluded` | — |
+| [Construction robots and blueprints](#construction-robots-and-blueprints) | `excluded` | Terra |
+| [Building by hand: placement preview and fast replace](#building-by-hand-placement-preview-and-fast-replace) | `shipped` | Terra |
+| [Trains](#trains) | `adapted` | Terra |
+| [Circuit network](#circuit-network) | `adapted` | Terra |
+| [Electric network and transmission](#electric-network-and-transmission) | `adapted` | Terra |
+| [Power generation](#power-generation) | `adapted` | Terra |
+| [Nuclear fission](#nuclear-fission) | `adapted` | Terra |
+| [Pollution](#pollution) | `planned` | Terra |
+| [Enemies and evolution](#enemies-and-evolution) | `planned` | Terra |
+| [Wildlife and natural mob spawning](#wildlife-and-natural-mob-spawning) | `shipped` | Terra |
+| [Combat: guns, ammo, turrets, walls](#combat-guns-ammo-turrets-walls) | `planned` | Terra |
+| [Armor and the equipment grid](#armor-and-the-equipment-grid) | `planned` | Terra |
+| [Capsules](#capsules) | `planned` | Terra |
+| [Modules and beacons](#modules-and-beacons) | `blocked` | — |
+| [Research and science packs](#research-and-science-packs) | `planned` | Terra |
+| [The technology tree](#the-technology-tree) | `shipped` | Terra |
+| [Rocket silo and rocket launch](#rocket-silo-and-rocket-launch) | `planned` | Terra |
+| [Character movement on foot](#character-movement-on-foot) | `adapted` | Terra |
+| [Character reach](#character-reach) | `adapted` | Terra |
+| [Personal transport](#personal-transport) | `blocked` | — |
+| [Terrain modification](#terrain-modification) | `adapted` | Terra |
+| [Repair and entity damage](#repair-and-entity-damage) | `blocked` | — |
+| [Radar and map exploration](#radar-and-map-exploration) | `adapted` | Terra |
+| [The logistic request and trash system](#the-logistic-request-and-trash-system) | `excluded` | — |
+| [Day and night cycle](#day-and-night-cycle) | `shipped` | Terra; Sapros parked |
+| [Controls](#controls) | `planned` | Terra |
+| [Factoriopedia](#factoriopedia) | `planned` | Terra |
+
+### Space Age
+
+| mechanic | verdict | where |
+| --- | --- | --- |
+| [Interplanetary travel](#interplanetary-travel) | `blocked` | between planets, parked |
+| [Space platforms](#space-platforms) | `blocked` | orbits, parked |
+| [Asteroid mining and reprocessing](#asteroid-mining-and-reprocessing) | `blocked` | orbits, parked |
+| [Interplanetary logistics](#interplanetary-logistics) | `blocked` | between planets, parked |
+| [Spoilage](#spoilage) | `adapted` | Sapros parked |
+| [Quality](#quality) | `blocked` | — |
+| [Recycling](#recycling) | `planned` | Electro parked |
+| [Vulcanus: lava and calcite](#vulcanus-lava-and-calcite) | `planned` | Ignus parked |
+| [Fulgora: scrap and lightning](#fulgora-scrap-and-lightning) | `planned` | Electro parked |
+| [Gleba: agriculture and nutrients](#gleba-agriculture-and-nutrients) | `planned` | Sapros parked |
+| [Aquilo: cold and ammonia](#aquilo-cold-and-ammonia) | `planned` | Gelida parked |
+| [Planet-locked buildings](#planet-locked-buildings) | `planned` | each planet; Terra only so far |
+| [Elevated rails](#elevated-rails) | `excluded` | — |
+| [Fusion power](#fusion-power) | `planned` | Gelida parked |
+| [The Shattered Planet](#the-shattered-planet) | `blocked` | Atlantis parked |
+
+---
+
+## Conventions
+
+The Summary's `where` names what the first release has. A section's `where` names every body the design
+places the mechanic on, parked or not.
 
 **Row keys are Factorio's own names** (`Gleba`, not Sapros; `Vulcanus`, not Ignus). This is a declared
 exception to `CONTEXT.md`'s _Avoid_ lists, on the same footing as `data/factorio/*.json`: the ledger's
@@ -14,16 +104,6 @@ is `not_emitted` and the pack still ships a Radar (#57).
 
 **This file does not place anything on a progression ladder.** A row of `planned` says the pack has
 the mechanic; where on Terra's ladder it lands is #25's call, and it may land nowhere near Terra.
-
-## Verdicts
-
-| verdict | meaning |
-| --- | --- |
-| `planned` | in, not built |
-| `shipped` | in, built — registered *and* its warranted check under `docs/testing/what-to-check.md` passing |
-| `adapted` | in, but Minecraft's shape differs. Mandatory `notice` sentence |
-| `blocked` | wanted, no known implementation |
-| `excluded` | deliberately not reproduced. Requires a written reason |
 
 `owner` is an ADR/issue link where the decision was already made, `unargued` where this ledger is the
 first place it has been written down, or `by-consequence` where it fell out of a decision about
@@ -41,73 +121,6 @@ first place — the mod id was `electroenergetics`. The three rows that wrote `e
 GCyR. `candidates` is free
 text and commits to no jar; **`pack` is admissible as a candidate only with a named mechanism**
 (ADR-0015).
-
-## Summary
-
-### Base game
-
-| mechanic | verdict | where |
-| --- | --- | --- |
-| [Resource patches and finite ore](#resource-patches-and-finite-ore) | `adapted` | Terra, Ignus, Sapros |
-| [Manual mining](#manual-mining) | `adapted` | all bodies |
-| [Trees and wood](#trees-and-wood) | `adapted` | all bodies |
-| [Mining drills](#mining-drills) | `adapted` | all bodies |
-| [Water as a resource](#water-as-a-resource) | `adapted` | all bodies |
-| [Fluid handling](#fluid-handling) | `shipped` | all bodies |
-| [Oil processing](#oil-processing) | `planned` | Terra, Ignus, Gelida |
-| [Smelting](#smelting) | `shipped` | all bodies |
-| [Assembling machines and recipe categories](#assembling-machines-and-recipe-categories) | `shipped` | all bodies |
-| [Handcrafting and the crafting queue](#handcrafting-and-the-crafting-queue) | `shipped` | all bodies |
-| [Transport belts](#transport-belts) | `adapted` | all bodies |
-| [Inserters](#inserters) | `adapted` | all bodies |
-| [Logistic robots](#logistic-robots) | `excluded` | — |
-| [Construction robots and blueprints](#construction-robots-and-blueprints) | `excluded` | all bodies |
-| [Building by hand: placement preview and fast replace](#building-by-hand-placement-preview-and-fast-replace) | `shipped` | all bodies |
-| [Trains](#trains) | `adapted` | Terra |
-| [Circuit network](#circuit-network) | `adapted` | all bodies |
-| [Electric network and transmission](#electric-network-and-transmission) | `adapted` | all bodies |
-| [Power generation](#power-generation) | `adapted` | all bodies |
-| [Nuclear fission](#nuclear-fission) | `adapted` | Terra |
-| [Pollution](#pollution) | `planned` | all bodies |
-| [Enemies and evolution](#enemies-and-evolution) | `planned` | Terra |
-| [Wildlife and natural mob spawning](#wildlife-and-natural-mob-spawning) | `shipped` | Terra |
-| [Combat: guns, ammo, turrets, walls](#combat-guns-ammo-turrets-walls) | `planned` | Terra |
-| [Armor and the equipment grid](#armor-and-the-equipment-grid) | `planned` | Terra |
-| [Capsules](#capsules) | `planned` | Terra |
-| [Modules and beacons](#modules-and-beacons) | `blocked` | — |
-| [Research and science packs](#research-and-science-packs) | `planned` | all bodies |
-| [The technology tree](#the-technology-tree) | `shipped` | pack-wide |
-| [Rocket silo and rocket launch](#rocket-silo-and-rocket-launch) | `planned` | all bodies |
-| [Character movement on foot](#character-movement-on-foot) | `adapted` | all bodies |
-| [Character reach](#character-reach) | `adapted` | all bodies |
-| [Personal transport](#personal-transport) | `blocked` | — |
-| [Terrain modification](#terrain-modification) | `adapted` | all bodies |
-| [Repair and entity damage](#repair-and-entity-damage) | `blocked` | — |
-| [Radar and map exploration](#radar-and-map-exploration) | `adapted` | Terra |
-| [The logistic request and trash system](#the-logistic-request-and-trash-system) | `excluded` | — |
-| [Day and night cycle](#day-and-night-cycle) | `shipped` | Terra, Sapros |
-| [Controls](#controls) | `planned` | all bodies |
-| [Factoriopedia](#factoriopedia) | `planned` | pack-wide |
-
-### Space Age
-
-| mechanic | verdict | where |
-| --- | --- | --- |
-| [Interplanetary travel](#interplanetary-travel) | `blocked` | pack-wide |
-| [Space platforms](#space-platforms) | `blocked` | Terra Orbit and every orbit |
-| [Asteroid mining and reprocessing](#asteroid-mining-and-reprocessing) | `blocked` | orbits |
-| [Interplanetary logistics](#interplanetary-logistics) | `blocked` | pack-wide |
-| [Spoilage](#spoilage) | `adapted` | Sapros, pack-wide |
-| [Quality](#quality) | `blocked` | — |
-| [Recycling](#recycling) | `planned` | Electro |
-| [Vulcanus: lava and calcite](#vulcanus-lava-and-calcite) | `planned` | Ignus |
-| [Fulgora: scrap and lightning](#fulgora-scrap-and-lightning) | `planned` | Electro |
-| [Gleba: agriculture and nutrients](#gleba-agriculture-and-nutrients) | `planned` | Sapros |
-| [Aquilo: cold and ammonia](#aquilo-cold-and-ammonia) | `planned` | Gelida |
-| [Planet-locked buildings](#planet-locked-buildings) | `planned` | all bodies |
-| [Elevated rails](#elevated-rails) | `excluded` | — |
-| [Fusion power](#fusion-power) | `planned` | Gelida |
-| [The Shattered Planet](#the-shattered-planet) | `blocked` | Atlantis |
 
 ---
 
