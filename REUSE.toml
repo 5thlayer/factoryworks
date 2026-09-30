@@ -68,6 +68,13 @@ path = ["publish/**/*.png"]
 SPDX-FileCopyrightText = ["Rearth", "Malcolm Riley", "Mojang AB", "2026 5thlayer"]
 SPDX-License-Identifier = "CC-BY-4.0 AND LicenseRef-Mojang"
 
+# The showcase clips (#534, #538) film the game: Oritech's machines and Beltworks' belts, Minecraft's
+# textures, and in the steam scene the Electric Furnace's CC BY-NC-SA art.
+[[annotations]]
+path = ["publish/**/*.mp4"]
+SPDX-FileCopyrightText = ["Rearth", "Malcolm Riley", "Futureazoo", "Mojang AB", "2026 5thlayer"]
+SPDX-License-Identifier = "CC-BY-4.0 AND LicenseRef-Mojang AND CC-BY-NC-SA-4.0"
+
 # The Electric Furnace's and the Mining Drills' art, copied unmodified from Futureazoo's TextureRepository (NOTICE). It is
 # not the Pack's to relicense, and NonCommercial is a restriction the Pack's own licences lack.
 [[annotations]]
