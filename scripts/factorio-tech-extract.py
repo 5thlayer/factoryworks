@@ -95,27 +95,6 @@ def allowlist(data_dir):
     return owner
 
 
-def locale_names(data_dir):
-    """The `[technology-name]` section of each mod's English locale, flattened.
-
-    The dump gives a technology no display name at all: Factorio resolves
-    `technology-name.<name>` at draw time. Since every research is hand-written with a
-    literal name anyway, resolving here means the reference file reads like the game.
-    """
-    names = {}
-    for mod in SOURCE_MODS:
-        for path in sorted((data_dir / mod / "locale" / "en").glob("*.cfg")):
-            section = None
-            for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
-                line = line.strip()
-                if line.startswith("[") and line.endswith("]"):
-                    section = line[1:-1]
-                elif section == "technology-name" and "=" in line and not line.startswith("#"):
-                    key, _, value = line.partition("=")
-                    names[key.strip()] = value.strip()
-    return names
-
-
 def pf_id(name):
     return "factory_works:" + name.replace("-", "_")
 
@@ -287,7 +266,6 @@ def main():
     raw = dump.get("technology") or {}
     derivable = set(dump.get("recipe") or {}) | set(dump.get("item") or {})
     owner = allowlist(args.factorio_data)
-    names = locale_names(args.factorio_data)
 
     contaminated = sorted(set(raw) - set(owner))
     # Declared in technology.lua but absent from the dump: a later data stage removed or
@@ -317,7 +295,6 @@ def main():
             {
                 "name": name,
                 "suggested_id": pf_id(name),
-                "localised_name": names.get(name, name),
                 "source": owner[name],
                 "essential": bool(tech.get("essential")),
                 "prerequisites": surviving_parents(name, raw, keep),
