@@ -1,7 +1,0 @@
-{
-  "type": "factoryworks:code",
-  "body": "factoryworks_showcase:assembly_line",
-  "environment": "minecraft:default",
-  "structure": "factoryworks:gametest/scene",
-  "max_ticks": 2400
-}

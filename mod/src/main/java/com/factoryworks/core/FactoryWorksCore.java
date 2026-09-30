@@ -88,6 +88,9 @@ public final class FactoryWorksCore {
         modBus.addListener(Reach::onEntityAttributes);
         // Game bus, not the mod bus: this one fires per running server, not per mod load.
         NeoForge.EVENT_BUS.addListener(TerraStartingArea::onServerStarted);
+        if (ModList.get().isLoaded("oritech") && ModList.get().isLoaded("beltworks")) {
+            NeoForge.EVENT_BUS.addListener(com.factoryworks.core.showcase.ShowcaseCommand::onRegisterCommands);
+        }
         // Every Electric Network in a level settles once per level tick (ADR-0062). Poles only
         // report and scan; without this line no pole moves any energy at all.
         NeoForge.EVENT_BUS.addListener(com.factoryworks.core.energy.ElectricNetworks::onLevelTick);

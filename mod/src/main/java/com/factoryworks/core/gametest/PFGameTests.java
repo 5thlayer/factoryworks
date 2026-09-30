@@ -51,6 +51,9 @@ public final class PFGameTests {
     static final Identifier PLATFORM =
             Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, "gametest/platform");
 
+    static final Identifier SCENE =
+            Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, "gametest/scene");
+
     private static final DeferredRegister<MapCodec<? extends GameTestInstance>> TEST_TYPES =
             DeferredRegister.create(Registries.TEST_INSTANCE_TYPE, FactoryWorksCore.NAMESPACE);
 
@@ -66,11 +69,6 @@ public final class PFGameTests {
         // The event fires only when game tests are enabled -- a production server never reaches
         // it -- so there is no guard here beyond that one.
         modBus.addListener(PFGameTests::onRegisterTests);
-        // A production launch never fires that event, so the scenes are datapack test instances,
-        // whose bodies must exist before the datapack loads (#538).
-        if (ModList.get().isLoaded("oritech") && ModList.get().isLoaded("beltworks")) {
-            ShowcaseScenes.defineBodies();
-        }
     }
 
     private static void onRegisterTests(RegisterGameTestsEvent event) {
@@ -114,6 +112,9 @@ public final class PFGameTests {
         if (ModList.get().isLoaded("beltworks")) {
             BeltworksPackTests.register(registrar);
         }
+        if (ModList.get().isLoaded("oritech") && ModList.get().isLoaded("beltworks")) {
+            ShowcaseSceneTests.register(registrar);
+        }
     }
 
     /** What a test file is handed: a name, a tick budget and a body. */
@@ -124,6 +125,14 @@ public final class PFGameTests {
             PFGameTestInstance.define(id, body);
             event.registerTest(id, new PFGameTestInstance(id, new TestData<>(
                     environment, PLATFORM, maxTicks, 0, true, Rotation.NONE)));
+        }
+
+        // Its own namespace keeps a scene out of the check run's `factoryworks:*` (#538).
+        void showcase(String name, int maxTicks, Consumer<GameTestHelper> body) {
+            Identifier id = Identifier.fromNamespaceAndPath("factoryworks_showcase", name);
+            PFGameTestInstance.define(id, body);
+            event.registerTest(id, new PFGameTestInstance(id, new TestData<>(
+                    environment, SCENE, maxTicks, 0, true, Rotation.NONE)));
         }
     }
 }
