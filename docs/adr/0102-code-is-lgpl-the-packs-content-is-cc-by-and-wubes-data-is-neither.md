@@ -9,7 +9,8 @@ of its own: `NOTICE` lists what was copied in and says nothing of what the rest 
 store pages already say LGPL for the code and CC BY for the assets (`publish/description.md`), so
 this ADR makes the repository say the same. It records the licences only. The rest of #302's policy
 -- audience, fidelity promise, naming and asset rules, monetisation, launch sequence, the commitment
-on Wube's requests and the citation of Wube's copyright terms -- is not decided here; it is #525's.
+on Wube's requests and the citation of Wube's copyright terms -- is not decided here; it is
+ADR-0103's.
 
 **Decision.**
 
