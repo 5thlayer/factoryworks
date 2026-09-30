@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.1.0
+
 First release, for the FactoryWorks modpack on NeoForge, Minecraft 26.1.2.
 
 - Stone, Steel and Electric Furnaces, and Burner and Electric Mining Drills.
