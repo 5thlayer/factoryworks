@@ -94,8 +94,11 @@ is stale.
 ## Files
 
 - **`technology.json`** — the tree. One object per technology: `name` (Factorio's kebab-case, the
-  key `fromFactorio()` uses), `suggested_id`, `localised_name`, `source`, `prerequisites`,
-  `cost_kind` (`packs` or `trigger`), `unit`, `research_trigger`, `effects`, `icon`.
+  key `fromFactorio()` uses), `suggested_id`, `source`, `prerequisites`,
+  `cost_kind` (`packs` or `trigger`), `unit`, `research_trigger`, `effects`, `icon`. It carries no
+  display name: Wube's English is Wube's (ADR-0103), and `factorio_tech_dsl.js` reads a research's
+  name off its id, hyphens to spaces and the first letter capitalised, unless the declaration
+  gives a `name`.
 - **`recipe.json`** — the recipe corpus the pack's recipes are generated from (ADR-0026). One
   object per recipe: `name`, `category` (the primary one), `categories` (all of them),
   `unlocked_by` (the technology, or `null` for enabled-from-the-start), `energy_required`,
@@ -242,12 +245,6 @@ effect recording the rule that produced them.
 
   The denominator lives in `machine.json`, not here: ADR-0047 spends a fuel item's joules at
   the machine's own `energy_usage`, scaled by its burner `effectivity`.
-
-- **`recipe_name.json`** — Factorio's English `[recipe-name]` locale entries, read from the
-  install's `base` and `space-age` locale files rather than the dump, for the recipes in
-  `recipe.json`; barrel recipes, whose names take a parameter, are left out. A recipe with no entry
-  is named after its main product, which is the game's to say. `scripts/build-recipe-names.py`
-  turns it into the pack's lang keys (#490).
 
 - **`fluid.json`** — the two thermal constants ADR-0050/#210's pump:boiler ratio needs, and
   nothing else. One `fluids` array. **Scope is deliberately narrow**: only the fluids

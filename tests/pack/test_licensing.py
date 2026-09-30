@@ -12,6 +12,7 @@ never fall under either of the Pack's licences, and each art credit in `NOTICE` 
 licence `NOTICE` names for it.
 """
 
+import json
 import pathlib
 import re
 import subprocess
@@ -92,6 +93,26 @@ class LicensingTest(unittest.TestCase):
         self.assertGreater(len(corpus), 10)
         wrong = [p for p in corpus if _licence_of(p)["SPDX-License-Identifier"] != CORPUS_LICENCE]
         self.assertEqual([], wrong)
+
+    def test_the_corpus_holds_no_wube_display_text(self):
+        # ADR-0103, #303: a `localised_*` field or a copy of the locale files is Wube's English.
+        def keys(node):
+            if isinstance(node, dict):
+                for key, value in node.items():
+                    yield key
+                    yield from keys(value)
+            elif isinstance(node, list):
+                for value in node:
+                    yield from keys(value)
+
+        json_files = [p for p in _tracked() if p.startswith("data/factorio/") and p.endswith(".json")]
+        self.assertGreater(len(json_files), 10)
+        held = {p: sorted({k for k in keys(json.loads((ROOT / p).read_text(encoding="utf-8")))
+                           if k.startswith("localised_")}) for p in json_files}
+        self.assertEqual({}, {p: k for p, k in held.items() if k})
+        self.assertFalse((ROOT / "data/factorio/recipe_name.json").exists())
+        tech = (ROOT / "kubejs/server_scripts/factorio_tech_data.js").read_text(encoding="utf-8")
+        self.assertNotIn("localised_", tech)
 
     def test_the_packs_own_work_is_under_the_packs_licences(self):
         expect = {

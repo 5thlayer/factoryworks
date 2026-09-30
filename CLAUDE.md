@@ -280,13 +280,15 @@ anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `co
 
 ### Recipe name check
 
-A chassis recipe is named as Factorio names it (#490): its own `recipe-name` locale entry, or else
-its main product. `scripts/factorio-recipe-name-extract.py` copies the entries into
-`data/factorio/recipe_name.json`, and `scripts/build-recipe-names.py` writes a
-`recipe.factoryworks.<type>.<name>` key for every emitted assembling, chemistry and oil
-processing recipe, with the entry or `%s`, which `AssemblingMachineRecipes.name` fills with the
-product. `tests/pack/test_recipe_names.py` runs both `--check`s and holds the keys to the emitted
-recipes both ways. Run it after any converter run.
+The corpus holds no Wube text (ADR-0103, #303), so a chassis recipe is named from what
+`data/factorio/recipe.json` holds (#490). Factorio names a recipe after its main product unless it
+is not one product under its own name -- advanced oil processing has three results, heavy oil
+cracking one that is not its id -- and then it names the recipe itself. `scripts/build-recipe-names.py`
+writes a `recipe.factoryworks.<type>.<name>` key for every emitted assembling, chemistry and oil
+processing recipe: for such a recipe its id read as words (`heavy-oil-cracking` is "Heavy oil
+cracking"), and `%s` for every other, which `AssemblingMachineRecipes.name` fills with the product.
+`tests/pack/test_recipe_names.py` runs the `--check` and re-derives both halves from the corpus,
+holding the keys to the emitted recipes both ways. Run it after any converter run.
 
 ### Machine spec check
 
