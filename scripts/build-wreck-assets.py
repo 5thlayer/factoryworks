@@ -111,6 +111,9 @@ def planned_files():
         if name == "cargo_hold":
             # Same model either way; the property only says which block owns the inventory (#548).
             variants = {f"anchor={flag}": {"model": model} for flag in ("false", "true")}
+        if name == "wreck_hull":
+            # One model until the hull has art of its own (#551).
+            variants = {f"scorched={flag}": {"model": model} for flag in ("false", "true")}
         files[os.path.join(ASSETS, "blockstates", f"{name}.json")] = {"variants": variants}
         files[os.path.join(ASSETS, "models", "block", f"{name}.json")] = {
             "parent": "minecraft:block/cube_all",

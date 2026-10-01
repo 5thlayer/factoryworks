@@ -538,7 +538,11 @@ the generator's `--check` and reads the generated `.nbt` files.
 It also holds the wreck (ADR-0107, #545) at every hub's centre: hull floor and roof, the one
 doorway on the template's +z long wall, windows on the -z and -x walls, the cargo hold in the +x
 wall as a 5x2 centred along z with exactly one `anchor=true` block, the bottom middle one (#548),
-and the pool beside the doorway and off its line. `TerraStartingArea` reads none of that: it
+and the pool beside the doorway and off its line. The sealed room is held on the generator's
+undamaged hull, and the damage on the template is held to the -z half, the nose and the roof, never
+the engine end, the +z wall, the doorway or the spawn; Factorio's debris is held to its count per
+size class and kept off the wreck, the pool, the doorway's line, the hold's face and the connectors
+(#550). `TerraStartingArea` reads none of that: it
 puts the spawn point on the floor at the hub's centre facing template +z turned by the hub's
 rotation, and the hub's processor list lays the wreck's box on one height. A doorway moved or a
 level box that misses the wreck fails here; the stamp itself is a world. `PlayerSpawnFinderMixin`

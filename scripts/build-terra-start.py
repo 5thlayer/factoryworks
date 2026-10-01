@@ -276,7 +276,8 @@ NOSE_HALF_WIDTH = (2, 3, 4)
 LAYER_HALF_WIDTH = (5, 5, 5, 5, 5, 4, 3)
 # The first x of each layer: the nose slopes back toward the roof.
 LAYER_START_X = (0, 0, 0, 0, 0, 1, 2)
-WRECK_HULL = {"Name": "factoryworks:wreck_hull"}
+WRECK_HULL = {"Name": "factoryworks:wreck_hull", "Properties": {"scorched": "false"}}
+SCORCHED_HULL = {"Name": "factoryworks:wreck_hull", "Properties": {"scorched": "true"}}
 WRECK_WINDOW = {"Name": "factoryworks:wreck_window"}
 # One block of the ten is the anchor, the one with the inventory. A boolean does not rotate with the
 # template, which a stored direction to the anchor would (ADR-0107).
@@ -286,6 +287,26 @@ HOLD_WIDTH = 5
 # Light blocks are for reading the room at night; nothing spawns on Terra (ADR-0093).
 WRECK_LIGHT = {"Name": "minecraft:light", "Properties": {"level": "15", "waterlogged": "false"}}
 AIR = {"Name": "minecraft:air"}
+
+# The wreck's damage (#550) lands only on the -z half, the nose and the roof: the engine end holds
+# the cargo hold, and the +z wall the doorway the pool sits beside.
+SCORCH_NEAR = 0.6
+SCORCH_ELSEWHERE = 0.2
+# Earth heaped against the nose, by distance from the hull: the wreck reads as half buried.
+HEAP_HEIGHT = {1: 2, 2: 1}
+EARTH = {"Name": "minecraft:dirt"}
+TURF = {"Name": "minecraft:grass_block", "Properties": {"snowy": "false"}}
+# A piece of each Factorio size class, in blocks; how many of each is the corpus's.
+DEBRIS_SHAPES = {
+    "big": [(0, 1, 0), (1, 1, 0), (0, 2, 0)],
+    "medium": [(0, 1, 0), (1, 1, 0)],
+    "small": [(0, 1, 0)],
+}
+# The trail runs behind the engine end and off toward -z, away from the hold's face and the pool:
+# its bearing, in degrees from +x toward -z, and how far one piece may stray from it.
+DEBRIS_BEARING = (25, 65)
+DEBRIS_SPREAD = 12
+DEBRIS_CLEARANCE = 3
 
 
 def patch_span(resource):
@@ -382,6 +403,126 @@ def wreck_blocks():
     return cells
 
 
+def debris_counts():
+    """How many pieces of each size class Factorio's crash site has, read off the corpus."""
+    with open(os.path.join(ROOT, "data", "factorio", "container.json")) as handle:
+        rows = json.load(handle)["debris"]
+    return {size: sum(1 for row in rows
+                      if row["name"].startswith("crash-site-spaceship-wreck-%s-" % size))
+            for size in DEBRIS_SHAPES}
+
+
+def damaged_wreck(rng):
+    """`wreck_blocks` with its damage: a caved roof with its fall on the floor below, a breach and
+    missing panes on the -z wall and the nose, and scorch around them."""
+    sx, sy, sz = WRECK_SIZE
+    cells = {(x, y, z): entry for x, y, z, entry in wreck_blocks()}
+    mid_z = sz // 2
+    damage = set()
+
+    hole_x, hole_w, hole_d = rng.randint(3, 8), rng.choice((2, 3)), rng.choice((2, 3))
+    for x in range(hole_x, hole_x + hole_w):
+        for z in range(2, 2 + hole_d):
+            cells[(x, sy - 1, z)] = AIR
+            damage.add((x, sy - 1, z))
+            if rng.random() < 0.5:
+                cells[(x, 1, z)] = WRECK_HULL
+
+    breach_x = rng.randint(4, sx - 5)
+    for cell in ((breach_x, 1, 0), (breach_x, 2, 0), (breach_x + 1, 1, 0)):
+        cells[cell] = AIR
+        damage.add(cell)
+
+    panes = [c for c, entry in cells.items() if entry == WRECK_WINDOW]
+    for side in ([c for c in panes if c[2] == 0], [c for c in panes if c[0] == 0]):
+        for cell in rng.sample(side, min(len(side) - 1, rng.randint(1, 3))):
+            cells[cell] = AIR
+            damage.add(cell)
+
+    for (x, y, z), entry in list(cells.items()):
+        if entry != WRECK_HULL or x == sx - 1 or not (z < mid_z or x <= 2 or y == sy - 1):
+            continue
+        open_side = any(not in_hull(x + dx, y + dy, z + dz) or (x + dx, y + dy, z + dz) in damage
+                        for dx, dy, dz in ((-1, 0, 0), (0, 0, -1), (0, 1, 0)))
+        near = any(max(abs(x - a), abs(y - b), abs(z - c)) <= 2 for a, b, c in damage)
+        if open_side and rng.random() < (SCORCH_NEAR if near else SCORCH_ELSEWHERE):
+            cells[(x, y, z)] = SCORCHED_HULL
+    return [(x, y, z, entry) for (x, y, z), entry in sorted(cells.items())]
+
+
+def earth_heap():
+    """Earth piled against the nose, in the wreck's coordinates, as (x, y, z, palette entry)."""
+    sx, _, sz = WRECK_SIZE
+    hull = {(x, z) for x in range(sx) for z in range(sz) if in_hull(x, 1, z)}
+    cells = []
+    for x in range(-max(HEAP_HEIGHT), 3):
+        for z in range(-max(HEAP_HEIGHT), sz + max(HEAP_HEIGHT)):
+            if (x, z) in hull:
+                continue
+            distance = min(max(abs(x - hx), abs(z - hz)) for hx, hz in hull)
+            height = HEAP_HEIGHT.get(distance, 0)
+            if x < 0 and abs(z - sz // 2) <= 1:
+                # Below the nose's windows.
+                height = min(height, 1)
+            for y in range(1, height + 1):
+                cells.append((x, y, z, TURF if y == height else EARTH))
+    return cells
+
+
+def debris_keep_clear(width, door_x, occupied):
+    """What the debris keeps off besides the pool, as hub (x, z) -> margin: the wreck and its heap,
+    the doorway's line, the hold's face and the connectors."""
+    sx, _, sz = WRECK_SIZE
+    ox, oz = wreck_origin(width)
+    keep_clear = {}
+    for x in range(-max(HEAP_HEIGHT), sx):
+        for z in range(-max(HEAP_HEIGHT), sz + max(HEAP_HEIGHT)):
+            keep_clear[(ox + x, oz + z)] = DEBRIS_CLEARANCE
+    for z in range(oz + sz, width):
+        keep_clear[(door_x, z)] = 1
+    for x in range(ox + sx, width):
+        for z in range(oz + sz // 2 - 3, oz + sz // 2 + 4):
+            keep_clear[(x, z)] = 0
+    for x, z in occupied:
+        keep_clear[(x, z)] = 3
+    return keep_clear
+
+
+def scatter_debris(rng, width, keep_clear):
+    """Factorio's debris along one bearing behind the wreck, in hub coordinates, as
+    (x, y, z, palette entry). `keep_clear` is every hub column a piece may not come within its
+    margin of: (x, z) -> margin."""
+    sx, _, sz = WRECK_SIZE
+    ox, oz = wreck_origin(width)
+    cx, cz = ox + sx // 2, oz + sz // 2
+    bearing = rng.uniform(*DEBRIS_BEARING)
+    reach = (sx // 2 + DEBRIS_CLEARANCE + 1, width // 2 - 2)
+    placed, cells = set(), []
+    for size, count in sorted(debris_counts().items()):
+        for _ in range(count):
+            for _attempt in range(500):
+                angle = math.radians(bearing + rng.uniform(-DEBRIS_SPREAD, DEBRIS_SPREAD))
+                distance = rng.uniform(*reach)
+                x0 = round(cx + distance * math.cos(angle))
+                z0 = round(cz - distance * math.sin(angle))
+                turn = rng.randrange(4)
+                shape = [(x0 + (dx, -dz, -dx, dz)[turn], y, z0 + (dz, dx, -dz, -dx)[turn])
+                         for dx, y, dz in DEBRIS_SHAPES[size]]
+                columns = {(x, z) for x, _, z in shape}
+                if all(1 <= x < width - 1 and 1 <= z < width - 1 for x, z in columns) \
+                        and not any(max(abs(x - a), abs(z - b)) <= margin
+                                    for x, z in columns for (a, b), margin in keep_clear.items()) \
+                        and not any(max(abs(x - a), abs(z - b)) <= 1
+                                    for x, z in columns for a, b in placed):
+                    break
+            else:
+                raise AssertionError("no room for %s debris along bearing %.0f" % (size, bearing))
+            placed |= columns
+            entry = {"Name": "factoryworks:wreck_debris_%s" % size}
+            cells += [(x, y, z, entry) for x, y, z in shape]
+    return cells
+
+
 def hub_width():
     return 2 * (max(patch_span(resource) for resource in PATCHES) + SCATTER) + 1
 
@@ -457,7 +598,10 @@ def build_hub(rng, index, offsets):
     # The wreck holds the centre: the connectors are all on the outer faces and the fields all run
     # outward from them, so the middle is the one part of the footprint nothing else claims.
     ox, oz = wreck_origin(width)
-    for x, y, z, entry in wreck_blocks():
+    wreck_rng = random.Random("%d-wreck-%d" % (SEED, index))
+    wreck = {(x, y, z): entry for x, y, z, entry in damaged_wreck(wreck_rng)}
+    wreck.update({(x, y, z): entry for x, y, z, entry in earth_heap()})
+    for (x, y, z), entry in sorted(wreck.items()):
         assert (ox + x, oz + z) not in occupied, "hub %d's wreck covers a connector" % index
         blocks.append({
             "pos": [nbt.Int(ox + x), nbt.Int(y), nbt.Int(oz + z)],
@@ -469,6 +613,7 @@ def build_hub(rng, index, offsets):
     water = state_of({"Name": "minecraft:water", "Properties": {"level": "0"}})
     air = state_of(AIR)
     cells = disc(rng, POOL_RADIUS)
+    keep_clear = {}
     door_x = ox + WRECK_SIZE[0] // 2
     wall_z = oz + WRECK_SIZE[2] - 1
     shift_x = door_x + POOL_GAP + 1 - min(dx for dx, _ in cells)
@@ -477,6 +622,7 @@ def build_hub(rng, index, offsets):
         x, z = shift_x + dx, shift_z + dz
         assert 0 <= x < width and 0 <= z < width, "hub %d's pool leaves the hub" % index
         assert (x, z) not in occupied, "hub %d floods a connector at %d,%d" % (index, x, z)
+        keep_clear[(x, z)] = 2
         blocks.append({
             "pos": [nbt.Int(x), nbt.Int(0), nbt.Int(z)],
             "state": nbt.Int(water),
@@ -486,6 +632,13 @@ def build_hub(rng, index, offsets):
                 "pos": [nbt.Int(x), nbt.Int(y), nbt.Int(z)],
                 "state": nbt.Int(air),
             })
+
+    keep_clear.update(debris_keep_clear(width, door_x, occupied))
+    for x, y, z, entry in scatter_debris(wreck_rng, width, keep_clear):
+        blocks.append({
+            "pos": [nbt.Int(x), nbt.Int(y), nbt.Int(z)],
+            "state": nbt.Int(state_of(entry)),
+        })
 
     write_template(os.path.join(STRUCTURES, "terra_start_hub_%d.nbt" % index),
                    (width, max(WRECK_SIZE[1], 1 + POOL_CLEARANCE), width), palette, blocks)

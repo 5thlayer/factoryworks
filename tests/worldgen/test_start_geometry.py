@@ -26,10 +26,13 @@ doorway on another wall, a wreck off the centre or a level box that misses it is
 player wakes in a wall or the room is staggered, with nothing in a log. The hull is curved
 (#549), so the room is found by walking it from the spawn rather than read off the box's faces.
 
-Reads the generated .nbt templates, not the generator's own tables, so it fails if
-`scripts/build-terra-start.py` is edited and not re-run.
+Reads the generated .nbt templates, so it fails if `scripts/build-terra-start.py` is edited and not
+re-run. The one exception is the wreck's undamaged hull, which the damage (#550) has opened, so it
+is taken from the generator's `wreck_blocks` and the template is held to it cell by cell.
 """
 
+import functools
+import importlib.util
 import itertools
 import json
 import os
@@ -54,6 +57,11 @@ SIZES = ["small", "medium", "large"]
 WRECK = (15, 7, 11)
 HULL = "factoryworks:wreck_hull"
 BEVEL = ("factoryworks:wreck_hull_stairs", "factoryworks:wreck_hull_slab")
+# What the damage may leave where the hull stood, besides hull and air: the earth heaped on the nose.
+DAMAGE_FILL = ("minecraft:dirt", "minecraft:grass_block")
+# Blocks a piece of each size class is, and how far debris keeps from the wreck (#550).
+DEBRIS_BLOCKS = {"big": 3, "medium": 2, "small": 1}
+DEBRIS_CLEARANCE = 3
 WINDOW = "factoryworks:wreck_window"
 HOLD = "factoryworks:cargo_hold"
 # The pool may sit no further than this from the doorway's outer cell.
@@ -115,29 +123,41 @@ def level_box():
     return box["min_x"], box["min_z"], box["max_x"], box["max_z"]
 
 
-def wreck_failures(hub_file, hub, width):
-    """The wreck at the hub's centre, a room sealed but for its doorway on +z, and the level box
-    over exactly it."""
-    failures = []
-    at = blocks_by_pos(hub)
+@functools.lru_cache(maxsize=None)
+def generator():
+    spec = importlib.util.spec_from_file_location(
+        "build_terra_start", os.path.join(ROOT, "scripts", "build-terra-start.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def undamaged_hull():
+    """The wreck before its damage, as the generator builds it: {(x, y, z): palette entry}."""
+    return {(x, y, z): entry for x, y, z, entry in generator().wreck_blocks()}
+
+
+def hull_room(whole):
+    """The undamaged hull's room: the air reached from the spawn without crossing the doorway."""
     sx, sy, sz = WRECK
-    centre = width // 2
-    ox, oz = centre - sx // 2, centre - sz // 2
-    if hub["size"][1] < sy:
-        failures.append("%s is %d tall: the wreck needs %d" % (hub_file, hub["size"][1], sy))
-    if level_box() != (ox, oz, ox + sx - 1, oz + sz - 1):
-        failures.append("%s: the level box %s is not the wreck's footprint %s"
-                        % (hub_file, level_box(), (ox, oz, ox + sx - 1, oz + sz - 1)))
-
-    props = properties_by_pos(hub)
-
-    def name(cell):
+    door = {(sx // 2, 1, sz - 1), (sx // 2, 2, sz - 1)}
+    seen, todo = set(), [(sx // 2, 1, sz // 2)]
+    while todo:
+        cell = todo.pop()
+        if cell in seen or cell in door \
+                or whole.get(cell, {}).get("Name") not in ("minecraft:air", "minecraft:light"):
+            continue
+        seen.add(cell)
         x, y, z = cell
-        return at.get((ox + x, y, oz + z))
+        todo += [(x + 1, y, z), (x - 1, y, z), (x, y + 1, z), (x, y - 1, z), (x, y, z + 1), (x, y, z - 1)]
+    return seen
 
-    def prop(cell, key):
-        x, y, z = cell
-        return props.get((ox + x, y, oz + z), {}).get(key)
+
+def hull_failures(label, name, prop):
+    """The hull's shape, undamaged: a room sealed but for its doorway on +z, windows on -z and the
+    nose, the hold flush in the engine end, the spawn on the floor, every light inside."""
+    failures = []
+    sx, sy, sz = WRECK
 
     def in_box(cell):
         x, y, z = cell
@@ -167,7 +187,7 @@ def wreck_failures(hub_file, hub, width):
     for cell in cells:
         if cell[1] > 0 and name(cell) not in (HULL, WINDOW, HOLD, "minecraft:air",
                                               "minecraft:light") + BEVEL:
-            failures.append("%s: wreck cell %s is %s" % (hub_file, cell, name(cell)))
+            failures.append("%s: wreck cell %s is %s" % (label, cell, name(cell)))
 
     spawn = (sx // 2, 1, sz // 2)
     door = [(sx // 2, 1, sz - 1), (sx // 2, 2, sz - 1)]
@@ -176,11 +196,11 @@ def wreck_failures(hub_file, hub, width):
     outside = flood(boundary, set(door))
     if room & outside:
         failures.append("%s: the wreck's room reaches the open air at %s, not only by the doorway"
-                        % (hub_file, sorted(room & outside)[:3]))
+                        % (label, sorted(room & outside)[:3]))
     openings = sorted({n for c in room for n, _ in around(c) if passable(n) and n not in room})
     if openings != door:
         failures.append("%s: the wreck's openings are %s, not the doorway %s"
-                        % (hub_file, openings, door))
+                        % (label, openings, door))
 
     # A stair or slab is solid only on some faces, so the room may meet it only on one of them:
     # the bottom of either, or a straight stair's tall back.
@@ -194,7 +214,7 @@ def wreck_failures(hub_file, hub, width):
                     and n[1] == cell[1]
             if name(n) in BEVEL and not full:
                 failures.append("%s: the room meets the open side of %s at %s"
-                                % (hub_file, name(n), n))
+                                % (label, name(n), n))
 
     def faces_out(cell):
         sides = set()
@@ -207,41 +227,160 @@ def wreck_failures(hub_file, hub, width):
     sides = set().union(*(faces_out(c) for c in windows)) if windows else set()
     if sides != {"-z", "-x"}:
         failures.append("%s: windows face %s, not the -z long wall and the nose"
-                        % (hub_file, sorted(sides)))
+                        % (label, sorted(sides)))
     if any(not any(n in room for n, _ in around(c, horizontal=True)) for c in windows):
-        failures.append("%s: a window does not look into the room" % hub_file)
+        failures.append("%s: a window does not look into the room" % label)
 
     holds = sorted(c for c in cells if name(c) == HOLD)
     want = sorted((sx - 1, y, sz // 2 + dz) for y in (1, 2) for dz in range(-2, 3))
     if holds != want:
         failures.append("%s: cargo holds at %s, not the 5x2 flush in the engine end, %s"
-                        % (hub_file, holds, want))
+                        % (label, holds, want))
     if any((x - 1, y, z) not in room for x, y, z in holds):
-        failures.append("%s: the cargo hold does not open into the room" % hub_file)
+        failures.append("%s: the cargo hold does not open into the room" % label)
     if any(name((x + 1, y, z)) not in (None, "minecraft:air") for x, y, z in holds):
-        failures.append("%s: the cargo hold is closed from outside" % hub_file)
+        failures.append("%s: the cargo hold is closed from outside" % label)
     anchors = sorted(c for c in holds if prop(c, "anchor") == "true")
     if anchors != [(sx - 1, 1, sz // 2)]:
         failures.append("%s: cargo hold anchors at %s, not the one bottom middle block"
-                        % (hub_file, anchors))
+                        % (label, anchors))
 
     if name((spawn[0], 0, spawn[2])) != HULL or name(spawn) != "minecraft:air" \
             or name((spawn[0], 2, spawn[2])) != "minecraft:air":
-        failures.append("%s: the spawn at the hub's centre is not two air on the floor" % hub_file)
+        failures.append("%s: the spawn at the hub's centre is not two air on the floor" % label)
     if any(name((x, 0, z)) != HULL for x, y, z in room if y == 1):
-        failures.append("%s: the room has no hull floor somewhere" % hub_file)
+        failures.append("%s: the room has no hull floor somewhere" % label)
     lights = [c for c in cells if name(c) == "minecraft:light"]
     if not lights or any(c not in room for c in lights):
-        failures.append("%s: the wreck's lights are not all in its room" % hub_file)
+        failures.append("%s: the wreck's lights are not all in its room" % label)
 
     def width_at(x, y):
         return sum(1 for z in range(sz) if name((x, y, z)) not in (None, "minecraft:air"))
 
     if not width_at(0, 1) < width_at(sx - 1, 1):
-        failures.append("%s: the nose is no narrower than the engine end" % hub_file)
+        failures.append("%s: the nose is no narrower than the engine end" % label)
     if not width_at(sx // 2, sy - 1) < width_at(sx // 2, 0):
-        failures.append("%s: the roof is no narrower than the floor" % hub_file)
+        failures.append("%s: the roof is no narrower than the floor" % label)
+    return failures
+
+
+def wreck_failures(hub_file, hub, width):
+    """The wreck at the hub's centre, the level box over exactly it, its hull's shape, and its
+    damage only where #550 allows it."""
+    failures = []
+    at = blocks_by_pos(hub)
+    props = properties_by_pos(hub)
+    sx, sy, sz = WRECK
+    centre = width // 2
+    ox, oz = centre - sx // 2, centre - sz // 2
+    if hub["size"][1] < sy:
+        failures.append("%s is %d tall: the wreck needs %d" % (hub_file, hub["size"][1], sy))
+    if level_box() != (ox, oz, ox + sx - 1, oz + sz - 1):
+        failures.append("%s: the level box %s is not the wreck's footprint %s"
+                        % (hub_file, level_box(), (ox, oz, ox + sx - 1, oz + sz - 1)))
+
+    positions = [tuple(block["pos"]) for block in hub["blocks"]]
+    if len(positions) != len(set(positions)):
+        failures.append("%s writes some position twice; vanilla places one and drops the other "
+                        "by its own ordering" % hub_file)
+    whole = undamaged_hull()
+    failures += hull_failures("the undamaged hull", lambda c: whole.get(c, {}).get("Name"),
+                              lambda c, key: whole.get(c, {}).get("Properties", {}).get(key))
+
+    def state(cell):
+        x, y, z = cell
+        return at.get((ox + x, y, oz + z)), props.get((ox + x, y, oz + z), {})
+
+    door = {(sx // 2, 1, sz - 1), (sx // 2, 2, sz - 1)}
+    spawn = {(sx // 2, 1, sz // 2), (sx // 2, 2, sz // 2)}
+    hull = {c for c, e in whole.items() if e["Name"] not in ("minecraft:air", "minecraft:light")}
+
+    room = hull_room(whole)
+
+    def exposed(cell):
+        """A hull cell whose -x or -z side, or top, faces the open air: where damage may land."""
+        x, y, z = cell
+        return any(n not in hull and n not in room
+                   for n in ((x - 1, y, z), (x, y, z - 1), (x, y + 1, z)))
+
+    caved = {(x, z) for (x, y, z) in hull if y == sy - 1 and state((x, y, z))[0] == "minecraft:air"}
+    if not caved:
+        failures.append("%s: the wreck's roof has not caved" % hub_file)
+    for cell, entry in sorted(whole.items()):
+        if (entry["Name"], entry.get("Properties", {})) == state(cell):
+            continue
+        x, y, z = cell
+        now = state(cell)[0]
+        allowed = (cell not in door | spawn and x < sx - 1 and (
+            (cell in hull and exposed(cell) and now in (HULL, "minecraft:air"))
+            or (cell in room and y == 1 and (x, z) in caved and now == HULL)
+            or (cell not in hull and cell not in room and x <= 2 and now in DAMAGE_FILL)))
+        if not allowed:
+            failures.append("%s: wreck cell %s is %s, damaged where #550 allows none"
+                            % (hub_file, cell, now))
+    panes = [c for c in whole if state(c)[0] == WINDOW]
+    if not any(z == 0 for _, _, z in panes) or not any(x == 0 for x, _, _ in panes):
+        failures.append("%s: the damage took every pane from a side" % hub_file)
+    for x, y, z in panes:
+        front = at.get((ox + x - 1, y, oz + z)) if x == 0 else at.get((ox + x, y, oz + z - 1))
+        if front in DAMAGE_FILL:
+            failures.append("%s: the window at %s is buried" % (hub_file, (x, y, z)))
+    if not any(state(c)[1].get("scorched") == "true" for c in whole):
+        failures.append("%s: nothing on the wreck is scorched" % hub_file)
     return failures, (ox, oz, ox + sx - 1, oz + sz - 1), (ox + sx // 2, oz + sz)
+
+
+def debris_failures(hub_file, hub, width, pool, connectors, outside_door):
+    """Factorio's debris, held off the wreck, the pool, the doorway's line, the hold's face and
+    the connectors."""
+    failures = []
+    at = blocks_by_pos(hub)
+    sx, _, sz = WRECK
+    ox, oz = width // 2 - sx // 2, width // 2 - sz // 2
+    with open(os.path.join(ROOT, "data", "factorio", "container.json")) as handle:
+        rows = json.load(handle)["debris"]
+    for size, blocks_per_piece in DEBRIS_BLOCKS.items():
+        cells = {pos for pos, name in at.items() if name == "factoryworks:wreck_debris_" + size}
+        want = sum(1 for row in rows if row["name"].startswith("crash-site-spaceship-wreck-%s-" % size))
+        pieces = []
+        for cell in sorted(cells):
+            if any(cell in piece for piece in pieces):
+                continue
+            piece, todo = set(), [cell]
+            while todo:
+                c = todo.pop()
+                if c in piece:
+                    continue
+                piece.add(c)
+                x, y, z = c
+                todo += [n for n in ((x + 1, y, z), (x - 1, y, z), (x, y + 1, z), (x, y - 1, z),
+                                     (x, y, z + 1), (x, y, z - 1)) if n in cells]
+            pieces.append(piece)
+        if len(pieces) != want or any(len(p) != blocks_per_piece for p in pieces):
+            failures.append("%s: %s debris is %s blocks a piece, not Factorio's %d pieces of %d"
+                            % (hub_file, size, sorted(len(p) for p in pieces), want,
+                               blocks_per_piece))
+        if want < 1:
+            failures.append("the corpus has no %s debris -- re-run the container extractor" % size)
+        for x, y, z in sorted(cells):
+            def near(a, b, margin, x=x, z=z):
+                return max(abs(x - a), abs(z - b)) <= margin
+
+            if y < 1 or not (0 <= x < width and 0 <= z < width):
+                failures.append("%s: %s debris at %s is not on the hub's ground" % (hub_file, size, (x, y, z)))
+            if ox - DEBRIS_CLEARANCE <= x <= ox + sx - 1 + DEBRIS_CLEARANCE \
+                    and oz - DEBRIS_CLEARANCE <= z <= oz + sz - 1 + DEBRIS_CLEARANCE:
+                failures.append("%s: %s debris at %d,%d is within %d of the wreck"
+                                % (hub_file, size, x, z, DEBRIS_CLEARANCE))
+            if x > ox + sx - 1 and abs(z - (oz + sz // 2)) <= 3:
+                failures.append("%s: %s debris at %d,%d is before the hold's face" % (hub_file, size, x, z))
+            if z >= outside_door[1] and abs(x - outside_door[0]) <= 1:
+                failures.append("%s: %s debris at %d,%d is on the doorway's line" % (hub_file, size, x, z))
+            if any(near(a, b, 2) for a, b in pool):
+                failures.append("%s: %s debris at %d,%d is by the pool" % (hub_file, size, x, z))
+            if any(near(cx, cz, 3) for (cx, _, cz), _, _ in connectors):
+                failures.append("%s: %s debris at %d,%d is by a connector" % (hub_file, size, x, z))
+    return failures
 
 
 def patch_box(connector, facing, template):
@@ -320,6 +459,7 @@ def main():
 
         found, wreck_box, outside_door = wreck_failures(hub_file, hub, width)
         failures.extend(found)
+        failures.extend(debris_failures(hub_file, hub, width, pool, connectors, outside_door))
         for x, z in sorted(pool):
             if overlaps((x, z, x, z), wreck_box):
                 failures.append("%s: pool cell %d,%d is inside the wreck" % (hub_file, x, z))
