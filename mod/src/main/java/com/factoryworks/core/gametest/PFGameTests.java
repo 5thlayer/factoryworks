@@ -78,12 +78,9 @@ public final class PFGameTests {
         EnergyFaceTests.register(registrar);
         BurnerFurnaceTests.register(registrar);
         FurnaceOverloadTests.register(registrar);
-        ElectricNetworkTests.register(registrar);
-        PoleWireTests.register(registrar);
         HandSetTests.register(registrar);
         AssemblingFamilyTests.register(registrar);
         PlacementPlanTests.register(registrar);
-        PoleColumnCostTests.register(registrar);
         BoilerTests.register(registrar);
         RigBreakTests.register(registrar);
         ElectricRigTests.register(registrar);

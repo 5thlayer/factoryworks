@@ -3,7 +3,7 @@ package com.factoryworks.core.machine.footprint;
 import java.util.function.Supplier;
 
 import com.mojang.serialization.MapCodec;
-import com.factoryworks.core.energy.EnergyOwnerBlock;
+import io.github._5thlayer.wireworks.EnergyOwnerBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

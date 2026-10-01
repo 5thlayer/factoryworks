@@ -1,12 +1,13 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.energy.PoleTier;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.PoleTier;
+import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +39,7 @@ final class BeltworksPackTests {
 
     // A small pole with no generator still probes: the loader must hold nothing after it (#348).
     private static void probeLeavesNothing(GameTestHelper helper) {
-        helper.setBlock(POLE, PFBlocks.pole(PoleTier.SMALL).get());
+        helper.setBlock(POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
         helper.setBlock(LOADER, BlockContent.loaderFor(BeltTier.IMPROVED).defaultBlockState()
                 .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
         helper.startSequence().thenIdle(45).thenExecute(() -> {

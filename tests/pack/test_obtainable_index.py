@@ -98,14 +98,19 @@ class MechanicFailures(unittest.TestCase):
         self.assertEqual([], mechanic_failures([self.ROW], set(), {self.ROW["id"]}))
 
 
+# The Pack's own namespace and its Libraries', whose items the Pack's Bindings test (ADR-0105).
+CREATIVE_NAMESPACES = {PACK} | {row["mod"] for row in json.loads(
+    (ROOT / "data/pack/local-jars.json").read_text())["jars"] if row["group"] == "io.github.5thlayer"}
+
+
 def creative_failures(rows, derived, known):
     failures = []
     for row in rows:
         stack, why = row.get("id", ""), row.get("why")
         if set(row) != {"id", "why"} or not isinstance(why, str) or not why.strip():
             failures.append("%s: a row is exactly {id, why}, with a reason" % stack)
-        if not stack.startswith(PACK + ":") or "item:" + stack not in known:
-            failures.append("%s names no item the pack registers" % stack)
+        if stack.split(":")[0] not in CREATIVE_NAMESPACES or "item:" + stack not in known:
+            failures.append("%s names no item the Pack or one of its Libraries registers" % stack)
         if "item:" + stack in derived:
             failures.append("%s is already Obtainable -- delete the row" % stack)
     return failures
@@ -123,8 +128,8 @@ def strings(node):
 
 
 class CreativeFailures(unittest.TestCase):
-    ROW = {"id": "factoryworks:creative_electric_pole", "why": "w"}
-    KNOWN = {"item:factoryworks:creative_electric_pole"}
+    ROW = {"id": "wireworks:creative_electric_pole", "why": "w"}
+    KNOWN = {"item:wireworks:creative_electric_pole"}
 
     def test_a_live_row_passes(self):
         self.assertEqual([], creative_failures([self.ROW], set(), self.KNOWN))

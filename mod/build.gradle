@@ -214,7 +214,7 @@ tasks.register('linkKubeJS') {
 // A run writes a missing config out with its defaults, so a real file here is one of those.
 tasks.register('linkServerConfigs') {
     description = 'Links the dev runs\' server configs to the pack\'s.'
-    def names = ['beltworks-server.toml', 'factoryworks_core-server.toml']
+    def names = ['beltworks-server.toml', 'factoryworks_core-server.toml', 'wireworks-server.toml']
     doLast {
         names.each { name ->
             def link = file("run/config/${name}").toPath()

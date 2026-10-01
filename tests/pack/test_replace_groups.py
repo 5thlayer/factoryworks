@@ -4,7 +4,7 @@
 `scripts/build-replace-groups.py` joins `data/factorio/machine.json`'s `fast_replaceable_group`
 onto `data/pack/item-map.json` and writes the resource the mod reads. Its `--check` only proves the
 resource is what the generator would write, so each entry is also traced back: its key is a block
-the pack has a blockstate for, and some corpus row maps to that key and carries that group. #299's
+the pack has a blockstate for, or a Library's jar registers, and some corpus row maps to that key and carries that group. #299's
 three families are named because a generator that dropped them would still pass both.
 
 Usage: tests/pack/test_replace_groups.py
@@ -31,11 +31,13 @@ def entry_failures(actual):
     items = json.loads((ROOT / "data/pack/item-map.json").read_text(encoding="utf-8"))["items"]
     rows = {row["name"]: row for row in machine["machines"] + machine["poles"]}
     target_of = {name: items.get(name, {}).get("target") for name in rows}
+    # A Library's blocks, such as Wireworks' poles, whose group the Pack states (#476).
+    jar_items = set(json.loads((ROOT / "data/jars/item.json").read_text(encoding="utf-8"))["items"])
     failures = []
     for block, group in sorted(actual.items()):
         namespace, _, path = block.partition(":")
-        if namespace != "factoryworks" or not (BLOCKSTATES / f"{path}.json").is_file():
-            failures.append(f"{block} is not a block the pack registers a blockstate for")
+        if not ((BLOCKSTATES / f"{path}.json").is_file() if namespace == "factoryworks" else block in jar_items):
+            failures.append(f"{block} is neither a block the pack registers a blockstate for nor one a jar registers")
         sources = [name for name, target in target_of.items() if target == block]
         if not sources:
             failures.append(f"{block} traces to no corpus row")

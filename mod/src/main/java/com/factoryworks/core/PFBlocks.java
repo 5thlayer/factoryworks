@@ -1,6 +1,5 @@
 package com.factoryworks.core;
 
-import com.factoryworks.core.energy.PoleTier;
 import com.factoryworks.core.machine.AssemblingMachineBlock;
 import com.factoryworks.core.machine.AssemblingMachineFootprint;
 import com.factoryworks.core.machine.AssemblingTier;
@@ -23,8 +22,6 @@ import com.factoryworks.core.radar.RadarPartBlock;
 import com.factoryworks.core.ore.OreResource;
 import com.factoryworks.core.smelting.FurnaceBlock;
 import com.factoryworks.core.smelting.FurnaceTier;
-import com.factoryworks.core.energy.CreativeSupplyAreaPoleBlock;
-import com.factoryworks.core.energy.SupplyAreaPoleBlock;
 import com.factoryworks.core.fluid.BoilerBlock;
 import com.factoryworks.core.fluid.OffshorePumpBlock;
 import com.factoryworks.core.energy.AccumulatorBlock;
@@ -54,14 +51,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * The blocks the mod itself registers: the two saplings, the pole blocks, the furnace and rig
+ * The blocks the mod itself registers: the two saplings, the furnace and rig
  * ladders, the Boiler, the pump, the Assembling Machine, the Steam Engine, the Radar, the Pumpjack
  * and the oil well.
- *
- * <p>The supply-area poles are here (ADR-0036) -- the three tiers and the creative pole (#272),
- * which is one block beside the ladder rather than a row in it. They are mechanism -- a block
- * entity that scans and pushes energy -- so ADR-0015 puts them in the mod rather than in KubeJS,
- * while their models, textures and names stay data in the pack like everything else.
  *
  * <p>Everything else the trees are made of -- logs, leaves, stems, fruit -- is registered by
  * {@code kubejs/startup_scripts/blocks.js}, into this same namespace. The boundary is ADR-0015;
@@ -235,37 +227,12 @@ public final class PFBlocks {
     }
 
     /**
-     * Factorio's three furnace tiers (#155), keyed the same way the poles are: the id comes from
-     * the tier rather than being typed out twice.
+     * Factorio's three furnace tiers (#155), keyed by tier: the id comes from the tier rather than
+     * being typed out twice.
      */
     private static final Map<FurnaceTier, DeferredHolder<Block, FurnaceBlock>> FURNACES =
             new EnumMap<>(FurnaceTier.class);
 
-    /**
-     * One block per {@link PoleTier}, in declaration order, so the four ids are derived from the
-     * tier rather than typed out twice.
-     */
-    private static final Map<PoleTier, DeferredHolder<Block, SupplyAreaPoleBlock>> POLES =
-            new EnumMap<>(PoleTier.class);
-
-    static {
-        for (PoleTier tier : PoleTier.values()) {
-            POLES.put(tier, BLOCKS.registerBlock(tier.blockName(),
-                    props -> new SupplyAreaPoleBlock(tier, props)));
-        }
-    }
-
-    /**
-     * The creative pole (#272): a supply-area pole with a ledger that is always full, so an energy
-     * face can be checked by hand without first building a power chain.
-     *
-     * <p>Registered beside the ladder rather than in it. {@link PoleTier} is Factorio's footprint
-     * ladder and three loops walk it; a creative row would reach the item map, the recipe sweep and
-     * the mechanic ledger, none of which have a row to give a dev tool.
-     */
-    public static final DeferredHolder<Block, CreativeSupplyAreaPoleBlock> CREATIVE_POLE =
-            BLOCKS.registerBlock(CreativeSupplyAreaPoleBlock.BLOCK_NAME,
-                    CreativeSupplyAreaPoleBlock::new);
 
     static {
         for (FurnaceTier tier : FurnaceTier.values()) {
@@ -276,7 +243,7 @@ public final class PFBlocks {
 
     /**
      * The two rigs' anchors, and the parts that surround them (#192, ADR-0043). One anchor and one
-     * part block per tier, the way the furnace and pole ladders are one class per tier -- the
+     * part block per tier, the way the furnace ladder is one class per tier -- the
      * anchor holds the block entity and every part forwards a break to it.
      */
     private static final Map<RigTier, DeferredHolder<Block, RigBlock>> RIGS = new EnumMap<>(RigTier.class);
@@ -324,19 +291,6 @@ public final class PFBlocks {
         return ORES.get(resource);
     }
 
-    public static DeferredHolder<Block, SupplyAreaPoleBlock> pole(PoleTier tier) {
-        return POLES.get(tier);
-    }
-
-    /**
-     * Every pole block, for the block entity type that serves all of them -- the three tiers and
-     * the creative pole, which is one too and would have no block entity at all if it were left
-     * out of this set.
-     */
-    public static Set<Block> poleBlocks() {
-        return Stream.concat(POLES.values().stream(), Stream.of(CREATIVE_POLE))
-                .map(DeferredHolder::get).collect(Collectors.toUnmodifiableSet());
-    }
 
     public static DeferredHolder<Block, AssemblingMachineBlock> assemblingMachine(AssemblingTier tier) {
         return ASSEMBLING_MACHINES.get(tier);

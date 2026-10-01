@@ -21,7 +21,7 @@ import rearth.oritech.block.entity.generators.BigSolarPanelEntity;
  * as a footprint (ADR-0077), so it has no cores and its core quality stays Oritech's default of 1.
  *
  * <p>It makes the peak times {@link SolarDayCurve}'s multiplier into a one-tick buffer, and only with
- * the sky open above the footprint. A pole pulls it through {@code factoryworks:generators}
+ * the sky open above the footprint. A pole pulls it through {@code wireworks:generators}
  * (ADR-0062); Oritech's push into neighbours is switched off.
  */
 public class SolarPanelBlockEntity extends BigSolarPanelEntity {

@@ -23,8 +23,8 @@ TAG = ROOT / "kubejs/data/factoryworks/tags/block/buildings.json"
 MUST_HOLD = {
     "furnaces": ("factoryworks:stone_furnace", "factoryworks:steel_furnace",
                  "factoryworks:electric_furnace"),
-    "poles": ("factoryworks:small_electric_pole", "factoryworks:medium_electric_pole",
-              "factoryworks:substation_electric_pole"),
+    "poles": ("wireworks:small_electric_pole", "wireworks:medium_electric_pole",
+              "wireworks:substation_electric_pole"),
     "Assembling Machines": ("factoryworks:assembling_machine",
                             "factoryworks:assembling_machine_2",
                             "factoryworks:assembling_machine_3"),

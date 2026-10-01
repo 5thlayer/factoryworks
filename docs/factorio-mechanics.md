@@ -866,7 +866,7 @@ Sub-rules:
 - **notice**: power reaches a machine in all-or-nothing ticks. A machine short of power stops
   rather than slowing, and nothing carries FE between areas except a wire between two poles.
 - **where**: all bodies
-- **via**: `factoryworks_core`, `oritech`
+- **via**: `wireworks`, `oritech`
 - **owner**: ADR-0017 as amended by ADR-0035, ADR-0036, ADR-0060 and ADR-0062
 
 FE is the pack's only energy currency (ADR-0060), at **1 FE = 100 J**. **One** carrier moves it: the
@@ -922,7 +922,7 @@ Sub-rules:
 
 - **Boiler and steam engine as the first power** — `adapted`. **ADR-0062 (#282) makes it two steps
   again**: the pack's Boiler makes steam and the **pack's Steam Engine** burns it into FE, which a
-  pole pulls through the `factoryworks:generators` tag. **ADR-0077 (#352)** makes the engine
+  pole pulls through the `wireworks:generators` tag. **ADR-0077 (#352)** makes the engine
   `factoryworks:steam_engine`, a pack block on Oritech's engine entity, placed from one item as
   its whole 2x1x2 footprint and broken as one, like the Assembling Machine; Oritech's own engine is
   swept. A mixin calibrates it to Factorio — 30 mB/s and 450 FE/t per engine at the efficiency

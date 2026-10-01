@@ -3,7 +3,7 @@ package com.factoryworks.core.mining.rig;
 import javax.annotation.Nullable;
 
 import com.factoryworks.core.PFBlockEntities;
-import com.factoryworks.core.energy.EnergyOwner;
+import io.github._5thlayer.wireworks.EnergyOwner;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -48,7 +48,7 @@ public class RigPartBlockEntity extends BlockEntity implements EnergyOwner {
     /** Without it a pole counts one electric rig once per block it reaches (#194). */
     @Override
     @Nullable
-    public BlockPos factoryworks$energyOwner() {
+    public BlockPos wireworks$energyOwner() {
         return anchorPos;
     }
 

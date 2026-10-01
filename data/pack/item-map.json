@@ -551,9 +551,9 @@
     },
     "medium-electric-pole": {
       "kind": "item",
-      "target": "factoryworks:medium_electric_pole",
-      "source": "authored",
-      "note": "ADR-0036's supply-area pole, registered in `factoryworks_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
+      "target": "wireworks:medium_electric_pole",
+      "source": "borrowed",
+      "note": "ADR-0036's supply-area pole, registered by Wireworks since #476. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
     },
     "metallic-asteroid-chunk": {
       "status": "undecided",
@@ -769,9 +769,9 @@
     },
     "small-electric-pole": {
       "kind": "item",
-      "target": "factoryworks:small_electric_pole",
-      "source": "authored",
-      "note": "ADR-0036's supply-area pole, registered in `factoryworks_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
+      "target": "wireworks:small_electric_pole",
+      "source": "borrowed",
+      "note": "ADR-0036's supply-area pole, registered by Wireworks since #476. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
     },
     "small-lamp": {
       "kind": "item",
@@ -893,9 +893,9 @@
     },
     "substation": {
       "kind": "item",
-      "target": "factoryworks:substation_electric_pole",
-      "source": "authored",
-      "note": "ADR-0036's supply-area pole, registered in `factoryworks_core` by #147. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
+      "target": "wireworks:substation_electric_pole",
+      "source": "borrowed",
+      "note": "ADR-0036's supply-area pole, registered by Wireworks since #476. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
     },
     "sulfur": {
       "kind": "item",

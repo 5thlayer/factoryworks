@@ -58,9 +58,6 @@ COMMENTS = re.compile(r"/\*.*?\*/|//[^\n]*", re.DOTALL)
 # a new machine and assert nothing. A type that genuinely wants no face records an empty tuple,
 # which is then a decision somebody wrote down.
 FACES = {
-    # No face (ADR-0062): a pole holds no energy and nothing feeds it. Its network pulls from
-    # generators where they stand, and that path is held by the listener assertion below.
-    "supply_area_pole": (None, ()),
     "furnace": ("registerFurnaceCapabilities", ("Item", "Energy")),
     # Item (#540): NeoForge wires vanilla's chest types only, so the pack's own gets its own.
     "chest": ("registerChestCapabilities", ("Item",)),
@@ -224,11 +221,6 @@ class CapabilityRegistration(unittest.TestCase):
                                   "own; without one it is inert, and neither FACES nor LADDERS "
                                   "above can see that it is missing")
 
-    def test_the_electric_network_settle_is_wired_to_the_game_bus(self):
-        # A pole has no face, so FACES cannot see its path. Every pole moves energy only through
-        # the level tick ElectricNetworks listens on (ADR-0062), and dropping that one line leaves
-        # every pole in the pack placing, scanning and powering nothing, with nothing logged.
-        self.assertIn("ElectricNetworks::onLevelTick", code_of(CORE))
 
     def test_the_rig_part_forwards_to_its_anchor(self):
         # Three quarters of a 2x2 is part, and which corner holds the anchor is not visible. A

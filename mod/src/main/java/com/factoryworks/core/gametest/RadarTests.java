@@ -1,5 +1,6 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -46,7 +47,7 @@ final class RadarTests {
 
     private static void fedRadarCharts(GameTestHelper helper) {
         UUID owner = place(helper);
-        helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
+        helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
         BlockPos anchor = helper.absolutePos(FLOOR.above());
         Sector own = Sector.ofBlock(anchor.getX(), anchor.getZ());
         Set<Sector> nearby = new HashSet<>();

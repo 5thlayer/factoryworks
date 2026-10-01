@@ -1,6 +1,6 @@
 package com.factoryworks.core.mixin.oritech;
 
-import com.factoryworks.core.energy.EnergyOwner;
+import io.github._5thlayer.wireworks.EnergyOwner;
 import com.factoryworks.core.fluid.SteamChainCorpus;
 import com.factoryworks.core.fluid.SteamEngineSpec;
 import com.factoryworks.core.machine.footprint.FootprintPartBlock;
@@ -98,7 +98,7 @@ public abstract class SteamEngineEntityMixin extends MultiblockGeneratorBlockEnt
     }
 
     @Override
-    public BlockPos factoryworks$energyOwner() {
+    public BlockPos wireworks$energyOwner() {
         SteamEngineEntity self = (SteamEngineEntity) (Object) this;
         return self.inSlaveMode() ? self.master.getBlockPos() : null;
     }

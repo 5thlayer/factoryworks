@@ -1,11 +1,12 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.Optional;
 
 import com.factoryworks.core.energy.AccumulatorBlockEntity;
 import com.factoryworks.core.energy.AccumulatorStatus;
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.energy.PoleTier;
+import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceTier;
 
@@ -59,7 +60,7 @@ final class AccumulatorTests {
 
     /** A creative pole offers without limit, so only the accumulator's own rate holds the charge. */
     private static void chargesAtThreeHundredKw(GameTestHelper helper) {
-        helper.setBlock(CREATIVE, PFBlocks.CREATIVE_POLE.get());
+        helper.setBlock(CREATIVE, WireworksRegistries.CREATIVE_POLE.get());
         place(helper);
         long[] before = new long[1];
         helper.startSequence()
@@ -82,7 +83,7 @@ final class AccumulatorTests {
      * covers the furnace too, and would feed it without the accumulator.
      */
     private static void feedsAMachineWithNoGenerator(GameTestHelper helper) {
-        helper.setBlock(CREATIVE, PFBlocks.CREATIVE_POLE.get());
+        helper.setBlock(CREATIVE, WireworksRegistries.CREATIVE_POLE.get());
         place(helper);
         long[] charged = new long[1];
         helper.startSequence()
@@ -93,7 +94,7 @@ final class AccumulatorTests {
                     if (charged[0] <= 0L) {
                         helper.fail("the creative pole never charged the accumulator", ACCUMULATOR);
                     }
-                    helper.setBlock(SMALL_POLE, PFBlocks.pole(PoleTier.SMALL).get());
+                    helper.setBlock(SMALL_POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
                     helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
                 })
                 .thenIdle(SETTLE)

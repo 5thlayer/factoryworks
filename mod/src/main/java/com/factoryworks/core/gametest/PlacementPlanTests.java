@@ -1,5 +1,6 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,11 +15,7 @@ import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.ChemicalPlantBlockEntity;
 import com.factoryworks.core.machine.OilRefineryBlockEntity;
 import com.factoryworks.core.machine.OilRefineryFootprint;
-import com.factoryworks.core.energy.LevelWires;
-import com.factoryworks.core.energy.PoleColumn;
-import com.factoryworks.core.energy.PoleLinks;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
-import com.factoryworks.core.energy.PoleTier;
+import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineFootprint;
 import com.factoryworks.core.fluid.SteamEngineBlockEntity;
@@ -73,7 +70,7 @@ import net.minecraft.world.phys.Vec3;
  *
  * <p>This is the one check ADR-0069 asks for by name, and the only one that can exist. The geometry
  * underneath a plan is Minecraft-free and already tested -- {@code RigGeometryTest} for the
- * footprint, {@code PoleColumnTest} for the column -- and whether the preview <em>draws</em> right
+ * footprint; a pole column's plan is Wireworks' -- and whether the preview <em>draws</em> right
  * is a human check on delivery. What is left is the seam the decision exists to protect: a plan
  * that disagrees with the click. That needs a world, a held stack and a real use gesture, so it is
  * here.
@@ -97,11 +94,6 @@ final class PlacementPlanTests {
     static void register(PFGameTests.Registrar tests) {
         tests.test("plan_matches_placement_for_a_furnace", 20,
                 PlacementPlanTests::furnaceMatchesPlacement);
-        tests.test("plan_matches_placement_for_a_pole", 20, PlacementPlanTests::poleMatchesPlacement);
-        tests.test("plan_extends_a_pole_column", 20, PlacementPlanTests::poleExtendsColumn);
-        tests.test("plan_refuses_a_full_pole_column", 20, PlacementPlanTests::poleColumnFull);
-        tests.test("plan_refuses_a_blocked_pole_top", 20, PlacementPlanTests::poleBlockedTop);
-        tests.test("plan_refuses_another_group_at_a_pole", 20, PlacementPlanTests::poleOtherGroup);
         tests.test("plan_matches_placement_for_a_rig", 20, PlacementPlanTests::rigMatchesPlacement);
         tests.test("plan_refuses_a_rig_whole", 20, PlacementPlanTests::rigRefusesWhole);
         tests.test("plan_matches_placement_for_an_assembling_machine", 20,
@@ -160,65 +152,6 @@ final class PlacementPlanTests {
     private static void furnaceMatchesPlacement(GameTestHelper helper) {
         check(helper, new ItemStack(PFBlocks.furnace(FurnaceTier.values()[0]).get()),
                 FLOOR, Direction.UP, false);
-        helper.succeed();
-    }
-
-    /** The pole placing normally, on the ground, which is still its own item's plan. */
-    private static void poleMatchesPlacement(GameTestHelper helper) {
-        check(helper, pole(PoleTier.SMALL), FLOOR, Direction.UP, false);
-        helper.succeed();
-    }
-
-    /**
-     * The extension: aimed at the <em>base</em>, and the plan must name the top, not the side.
-     * Aiming at the base is the case that matters -- it is how a player raises a pole past their
-     * own reach, and a preview drawn where vanilla would have put the block would describe a
-     * placement the pack does not perform.
-     */
-    private static void poleExtendsColumn(GameTestHelper helper) {
-        column(helper, 2);
-        PlacementPlan plan = check(helper, pole(PoleTier.SMALL), ABOVE_FLOOR, Direction.NORTH, false);
-        BlockPos placed = plan.blocks().getFirst().pos();
-        if (placed.getY() != helper.absolutePos(ABOVE_FLOOR).getY() + 2) {
-            helper.fail("a pole aimed at a column's base planned a segment somewhere other than "
-                    + "the top of the column", ABOVE_FLOOR);
-        }
-        helper.succeed();
-    }
-
-    private static void poleColumnFull(GameTestHelper helper) {
-        column(helper, PoleColumn.MAX_SEGMENTS);
-        refusal(check(helper, pole(PoleTier.SMALL), ABOVE_FLOOR, Direction.NORTH, true),
-                PackRefusal.COLUMN_FULL, helper);
-        helper.succeed();
-    }
-
-    private static void poleBlockedTop(GameTestHelper helper) {
-        column(helper, 1);
-        helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
-        refusal(check(helper, pole(PoleTier.SMALL), ABOVE_FLOOR, Direction.NORTH, true),
-                PackRefusal.BLOCKED_TOP, helper);
-        helper.succeed();
-    }
-
-    /**
-     * A substation is alone in its Replace Group (ADR-0082), so aimed at a small column it is
-     * refused, not placed beside it.
-     *
-     * <p>The column is three tall on purpose. The refusal is drawn at the top of the column the
-     * player aimed at, and on a one-tall column "the top of that column" and "just above the block
-     * I hit" are the same block -- so a one-tall fixture cannot tell a correct answer from a walk
-     * that gave up.
-     */
-    private static void poleOtherGroup(GameTestHelper helper) {
-        column(helper, 3);
-        PlacementPlan plan = check(helper, pole(PoleTier.SUBSTATION), ABOVE_FLOOR, Direction.NORTH, true);
-        refusal(plan, PackRefusal.OTHER_REPLACE_GROUP, helper);
-        BlockPos refusedAt = plan.blocks().getFirst().pos();
-        if (refusedAt.getY() != helper.absolutePos(ABOVE_FLOOR).getY() + 3) {
-            helper.fail("the other-group refusal was drawn somewhere other than the top of the "
-                    + "column that was aimed at", ABOVE_FLOOR);
-        }
         helper.succeed();
     }
 
@@ -868,175 +801,59 @@ final class PlacementPlanTests {
     }
 
     /**
-     * Fast Replace on pole columns (#389, ADR-0082): the plan names every segment, the click swaps
-     * the column in place for one item, and the wires stay where they were.
+     * The Pack's pole Replace group (ADR-0082): small and medium replace each other through
+     * Wireworks' column builder, and the substation is alone. The replace itself is Wireworks'
+     * {@code PoleReplaceTests}; these hold only the group the Pack states.
      */
     static final class PoleReplaces {
-
-        /** Within a small pole's 7.5 of the column's base, so the two are wired on placement. */
-        private static final BlockPos NEIGHBOUR = ABOVE_FLOOR.east(5);
-        /**
-         * Nearer the base than {@link #NEIGHBOUR}, but wired only to it, since the two ends of a
-         * placed pole's wires never share a neighbour. A base wired afresh would take it first.
-         */
-        private static final BlockPos BESIDE = ABOVE_FLOOR.east(3);
-        private static final String OTHER_GROUP_KEY = "message.factoryworks.replace.other_group";
-        private static final String NO_ROOM_KEY = "message.factoryworks.replace.no_room";
 
         private PoleReplaces() {
         }
 
         static void register(PFGameTests.Registrar tests) {
-            tests.test("replace_small_pole_column_with_medium", 20,
-                    helper -> replaces(helper, PoleTier.SMALL, PoleTier.MEDIUM, 1));
-            tests.test("replace_medium_pole_column_with_small", 20,
-                    helper -> replaces(helper, PoleTier.MEDIUM, PoleTier.SMALL, 0));
-            tests.test("replace_small_pole_column_with_medium_at_its_top", 20,
-                    helper -> replaces(helper, PoleTier.SMALL, PoleTier.MEDIUM, 2));
-            tests.test("replace_pole_refuses_a_substation_on_a_small_column", 20,
-                    helper -> refuses(helper, PoleTier.SMALL, 3, PoleTier.SUBSTATION, 2, false,
-                            PackRefusal.OTHER_REPLACE_GROUP, OTHER_GROUP_KEY));
-            tests.test("replace_pole_refuses_a_small_pole_on_a_substation", 20,
-                    helper -> refuses(helper, PoleTier.SUBSTATION, 1, PoleTier.SMALL, 0, false,
-                            PackRefusal.OTHER_REPLACE_GROUP, OTHER_GROUP_KEY));
-            tests.test("replace_pole_refused_with_no_room_changes_nothing", 20,
-                    helper -> refuses(helper, PoleTier.SMALL, 3, PoleTier.MEDIUM, 2, true,
-                            PackRefusal.NO_ROOM_TO_RETURN, NO_ROOM_KEY));
+            tests.test("pole_group_replaces_small_with_medium", 20, PoleReplaces::smallWithMedium);
+            tests.test("pole_group_leaves_the_substation_alone", 20, PoleReplaces::substationAlone);
         }
 
-        /** A three-segment column of {@code from}, clicked at segment {@code aimed} with {@code to}. */
-        private static void replaces(GameTestHelper helper, PoleTier from, PoleTier to, int aimed) {
-            standing(helper, from, 3);
-            BlockPos base = helper.absolutePos(ABOVE_FLOOR);
-            Set<PoleLinks.Wire> wires = wires(helper);
-            LevelWires levelWires = LevelWires.of(helper.getLevel());
-            if (!levelWires.contains(base, helper.absolutePos(NEIGHBOUR))
-                    || levelWires.contains(base, helper.absolutePos(BESIDE))) {
-                helper.fail("the fixture was not wired base to neighbour only", ABOVE_FLOOR);
-            }
-            ListeningPlayer player = new ListeningPlayer(helper);
-            player.setItemInHand(InteractionHand.MAIN_HAND, pole(to, 2));
-            BlockPos target = ABOVE_FLOOR.above(aimed);
-            BlockHitResult hit = hit(helper, target);
-            PlacementPlan plan = plan(helper, player, hit, target);
-
-            List<BlockPos> column = List.of(base, base.above(), base.above(2));
-            BlockState segment = PFBlocks.pole(to).get().defaultBlockState();
-            List<PlacementPlan.Placed> expected = column.stream()
-                    .map(pos -> new PlacementPlan.Placed(pos, segment)).toList();
-            if (plan.isRefused() || !plan.replaces().equals(column) || !plan.blocks().equals(expected)) {
-                helper.fail("the plan was not a replace of the whole column by " + to + ": " + plan, target);
-            }
-            BlockState above = helper.getBlockState(ABOVE_FLOOR.above(3));
-
-            helper.useBlock(target, player, hit);
-
-            for (PlacementPlan.Placed placed : plan.blocks()) {
-                if (!helper.getLevel().getBlockState(placed.pos()).equals(placed.state())) {
-                    helper.fail("the replace left " + helper.getLevel().getBlockState(placed.pos()),
-                            helper.relativePos(placed.pos()));
+        private static void smallWithMedium(GameTestHelper helper) {
+            column(helper, PoleTier.SMALL, 2);
+            ListeningPlayer player = clicked(helper, PoleTier.MEDIUM);
+            for (int i = 0; i < 2; i++) {
+                if (!helper.getBlockState(ABOVE_FLOOR.above(i)).is(WireworksRegistries.pole(PoleTier.MEDIUM).get())) {
+                    helper.fail("a medium pole did not replace the small column", ABOVE_FLOOR.above(i));
                 }
             }
-            if (!helper.getBlockState(ABOVE_FLOOR.above(3)).equals(above)) {
-                helper.fail("the replace changed the height of the column", ABOVE_FLOOR.above(3));
-            }
-            if (!wires(helper).equals(wires)) {
-                helper.fail("the replace changed the wires from " + wires + " to " + wires(helper), ABOVE_FLOOR);
-            }
-            if (helper.getBlockEntity(ABOVE_FLOOR, SupplyAreaPoleBlockEntity.class).tier() != to) {
-                helper.fail("the column's base is not a " + to + " pole", ABOVE_FLOOR);
-            }
-            ItemStack hand = player.getMainHandItem();
-            if (!hand.is(PFBlocks.pole(to).get().asItem()) || hand.getCount() != 1) {
-                helper.fail("the hand holds " + hand + " where one " + to + " pole should be left", target);
-            }
-            int returned = player.getInventory().countItem(PFBlocks.pole(from).get().asItem());
-            if (returned != 1) {
-                helper.fail(returned + " " + from + " poles came back, not one", target);
+            if (player.getInventory().countItem(WireworksRegistries.poleItem(PoleTier.SMALL).get()) != 1) {
+                helper.fail("the replace did not hand back one small pole", ABOVE_FLOOR);
             }
             helper.succeed();
         }
 
-        private static void refuses(GameTestHelper helper, PoleTier standing, int height, PoleTier held,
-                                    int aimed, boolean full, PackRefusal expected, String reason) {
-            standing(helper, standing, height);
-            ListeningPlayer player = new ListeningPlayer(helper);
-            if (full) {
-                Replaces.fill(player);
-            }
-            player.setItemInHand(InteractionHand.MAIN_HAND, pole(held, 2));
-            BlockPos target = ABOVE_FLOOR.above(aimed);
-            BlockHitResult hit = hit(helper, target);
-            PlacementPlan plan = plan(helper, player, hit, target);
-            if (plan.refusal() != expected || plan.isReplace() != (expected == PackRefusal.NO_ROOM_TO_RETURN)) {
-                helper.fail("expected the refusal " + expected + " but the plan was " + plan, target);
-            }
-            Map<BlockPos, BlockState> world = world(helper);
-            Set<PoleLinks.Wire> wires = wires(helper);
-            List<ItemStack> inventory = Replaces.inventory(player);
-
-            helper.useBlock(target, player, hit);
-
-            if (!world(helper).equals(world) || !wires(helper).equals(wires)
-                    || !ItemStack.listMatches(Replaces.inventory(player), inventory)) {
-                helper.fail("a refused replace changed the world, the wires or the inventory", target);
-            }
-            if (!player.heard.contains(reason)) {
-                helper.fail("a refused replace did not name " + reason + " on the action bar", target);
+        private static void substationAlone(GameTestHelper helper) {
+            column(helper, PoleTier.SMALL, 2);
+            clicked(helper, PoleTier.SUBSTATION);
+            for (int i = 0; i < 2; i++) {
+                if (!helper.getBlockState(ABOVE_FLOOR.above(i)).is(WireworksRegistries.pole(PoleTier.SMALL).get())) {
+                    helper.fail("a substation replaced a small column", ABOVE_FLOOR.above(i));
+                }
             }
             helper.succeed();
         }
 
-        /** A column of {@code tier} on the floor, a small pole wired to its base, and one wired past it. */
-        private static void standing(GameTestHelper helper, PoleTier tier, int height) {
+        private static void column(GameTestHelper helper, PoleTier tier, int height) {
             for (int i = 0; i < height; i++) {
-                helper.setBlock(ABOVE_FLOOR.above(i), PFBlocks.pole(tier).get());
+                helper.setBlock(ABOVE_FLOOR.above(i), WireworksRegistries.pole(tier).get());
             }
-            helper.setBlock(NEIGHBOUR, PFBlocks.pole(PoleTier.SMALL).get());
-            helper.setBlock(BESIDE, PFBlocks.pole(PoleTier.SMALL).get());
         }
 
-        private static PlacementPlan plan(GameTestHelper helper, Player player, BlockHitResult hit, BlockPos target) {
-            PlacementPlan plan = Placements.planFor(helper.getLevel(), player,
-                    InteractionHand.MAIN_HAND, player.getMainHandItem(), hit);
-            if (plan == null) {
-                helper.fail("no plan at all where one was expected", target);
-                throw new IllegalStateException("unreachable");
-            }
-            return plan;
-        }
-
-        private static BlockHitResult hit(GameTestHelper helper, BlockPos target) {
-            BlockPos absolute = helper.absolutePos(target);
-            return new BlockHitResult(Vec3.atCenterOf(absolute).relative(Direction.NORTH, 0.5),
-                    Direction.NORTH, absolute, false);
-        }
-
-        /** The column's positions, one above it, and the block north of each, where a fall-through would place. */
-        private static Map<BlockPos, BlockState> world(GameTestHelper helper) {
-            Map<BlockPos, BlockState> states = new HashMap<>();
-            for (int i = 0; i <= PoleColumn.MAX_SEGMENTS; i++) {
-                BlockPos pos = ABOVE_FLOOR.above(i);
-                states.put(pos, helper.getBlockState(pos));
-                states.put(pos.north(), helper.getBlockState(pos.north()));
-            }
-            return states;
-        }
-
-        /** The wires with an end in this fixture: the level's are shared with every test beside it. */
-        private static Set<PoleLinks.Wire> wires(GameTestHelper helper) {
-            Set<PoleLinks.Pos> ends = new HashSet<>();
-            for (BlockPos pos : List.of(ABOVE_FLOOR, NEIGHBOUR, BESIDE)) {
-                BlockPos absolute = helper.absolutePos(pos);
-                ends.add(new PoleLinks.Pos(absolute.getX(), absolute.getY(), absolute.getZ()));
-            }
-            return LevelWires.of(helper.getLevel()).wires().all().stream()
-                    .filter(wire -> ends.contains(wire.a()) || ends.contains(wire.b()))
-                    .collect(Collectors.toSet());
-        }
-
-        private static ItemStack pole(PoleTier tier, int count) {
-            return new ItemStack(PFBlocks.pole(tier).get(), count);
+        /** A plain click through the player's game mode, where Groundworks takes a Fast Replace. */
+        private static ListeningPlayer clicked(GameTestHelper helper, PoleTier held) {
+            ListeningPlayer player = new ListeningPlayer(helper);
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(WireworksRegistries.pole(held).get(), 2));
+            BlockPos absolute = helper.absolutePos(ABOVE_FLOOR);
+            player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND,
+                    new BlockHitResult(Vec3.atCenterOf(absolute).relative(Direction.NORTH, 0.5), Direction.NORTH, absolute, false));
+            return player;
         }
     }
 
@@ -1338,19 +1155,6 @@ final class PlacementPlanTests {
 
         private static Item item(String id) {
             return BuiltInRegistries.ITEM.getValue(Identifier.parse(id));
-        }
-    }
-
-    // ---- fixtures --------------------------------------------------------------------------
-
-    private static ItemStack pole(PoleTier tier) {
-        return new ItemStack(PFBlocks.pole(tier).get());
-    }
-
-    /** A small-pole column {@code segments} tall, standing on the floor. */
-    private static void column(GameTestHelper helper, int segments) {
-        for (int i = 0; i < segments; i++) {
-            helper.setBlock(ABOVE_FLOOR.above(i), PFBlocks.pole(PoleTier.SMALL).get());
         }
     }
 }

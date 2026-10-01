@@ -1,5 +1,6 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import static com.factoryworks.core.gametest.ChassisFixture.expectMoved;
 
 import java.util.List;
@@ -7,8 +8,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.energy.PoleTier;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.PoleTier;
+import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineMenu;
 import com.factoryworks.core.machine.AssemblingMachineRecipes;
@@ -244,7 +245,7 @@ final class AssemblingMachineTests {
         // Two blocks past the hull block: inside a small pole's +-2, and the anchor at 3 is not.
         BlockPos pole = part.offset(step.multiply(2));
         helper.startSequence()
-                .thenExecute(() -> helper.setBlock(pole, PFBlocks.pole(PoleTier.SMALL).get()))
+                .thenExecute(() -> helper.setBlock(pole, WireworksRegistries.pole(PoleTier.SMALL).get()))
                 .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5)
                 .thenExecute(() -> {
                     int found = helper.getBlockEntity(pole, SupplyAreaPoleBlockEntity.class).machineCount();

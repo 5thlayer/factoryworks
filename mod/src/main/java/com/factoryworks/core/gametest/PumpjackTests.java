@@ -1,5 +1,6 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.PFItems;
 import com.factoryworks.core.oil.OilWellBlockEntity;
@@ -48,7 +49,7 @@ final class PumpjackTests {
 
     private static void fedPumpjackPumps(GameTestHelper helper) {
         place(helper);
-        helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
+        helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
         helper.startSequence()
                 .thenIdle(TICKS)
                 .thenExecute(() -> {

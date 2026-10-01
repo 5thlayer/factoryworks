@@ -32,7 +32,6 @@ public final class PFNetwork {
         registrar.playToServer(HoldRecipePacket.TYPE, HoldRecipePacket.STREAM_CODEC, HoldRecipePacket::handle);
         // A data pack is server truth, and the fuel table has to reach a client for an item to say
         // what it is worth (ADR-0047).
-        registrar.playToClient(PoleWiresPacket.TYPE, PoleWiresPacket.STREAM_CODEC, PoleWiresPacket::handle);
         registrar.playToClient(FuelTablePacket.TYPE, FuelTablePacket.STREAM_CODEC, FuelTablePacket::handle);
         registrar.playToClient(RadarChunkPacket.TYPE, RadarChunkPacket.STREAM_CODEC, RadarChunkPacket::handle);
         registrar.playToClient(RadarMarkersPacket.TYPE, RadarMarkersPacket.STREAM_CODEC, RadarMarkersPacket::handle);

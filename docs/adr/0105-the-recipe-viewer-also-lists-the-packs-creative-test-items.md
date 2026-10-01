@@ -24,3 +24,11 @@ the vanilla creative tabs or `/give`, which is not where a recipe-viewer player 
 **Consequences.** The index is no longer only "what exists to be had": a creative-listed item
 appears in it as well. A player recognises it by its name, and the list stays short because each
 row has to name what it tests.
+
+## Amended by #476, on a Library's creative item
+
+The creative electric pole moved to Wireworks, a 5thlayer Library the Pack pins and binds
+(ADR-0090), and its id is now `wireworks:creative_electric_pole`. "Only items the Pack registers"
+becomes only items the Pack or one of its 5thlayer Libraries registers. The reason for excluding
+other jars' creative items does not reach a Library: the Pack's Bindings and their GameTests hold it
+to the Pack's rules as they hold the Pack's own blocks. Other jars stay excluded.

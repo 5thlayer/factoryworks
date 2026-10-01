@@ -1,11 +1,12 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.PFItems;
-import com.factoryworks.core.energy.PoleTier;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.PoleTier;
+import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.mining.rig.RigBlock;
 import com.factoryworks.core.mining.rig.RigBlockEntity;
 import com.factoryworks.core.mining.rig.RigMiningArea;
@@ -59,7 +60,7 @@ final class ElectricRigTests {
     /** A pole with no generator: it finds the drill once, reads its whole buffer, and leaks nothing. */
     private static void poleCountsRigOnce(GameTestHelper helper) {
         Layout layout = place(helper);
-        setPole(helper, layout, PFBlocks.pole(PoleTier.SMALL).get());
+        setPole(helper, layout, WireworksRegistries.pole(PoleTier.SMALL).get());
         helper.startSequence()
                 .thenIdle(45)
                 .thenExecute(() -> {
@@ -86,7 +87,7 @@ final class ElectricRigTests {
     private static void poweredRigMines(GameTestHelper helper) {
         Layout layout = place(helper);
         seedIron(helper, layout);
-        setPole(helper, layout, PFBlocks.CREATIVE_POLE.get());
+        setPole(helper, layout, WireworksRegistries.CREATIVE_POLE.get());
         long[] window = new long[1];
         int[] mark = new int[2];
         helper.startSequence()
@@ -99,7 +100,7 @@ final class ElectricRigTests {
                     }
                 })
                 .thenExecute(() -> {
-                    setPole(helper, layout, PFBlocks.pole(PoleTier.SMALL).get());
+                    setPole(helper, layout, WireworksRegistries.pole(PoleTier.SMALL).get());
                     setStored(helper, layout, FE_PER_TICK * 10L);
                     setProgress(helper, layout, 10);
                     window[0] = stored(helper, layout);

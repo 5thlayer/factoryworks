@@ -31,6 +31,10 @@ public final class ReplaceGroups {
     }
 
     /** A block never replaces itself: the same tier in hand extends a pole or opens a screen (ADR-0082). */
+    public boolean isIn(String group, String block) {
+        return group.equals(groupByBlock.get(block));
+    }
+
     public boolean canReplace(String held, String placed) {
         String group = groupByBlock.get(held);
         return group != null && !held.equals(placed) && group.equals(groupByBlock.get(placed));

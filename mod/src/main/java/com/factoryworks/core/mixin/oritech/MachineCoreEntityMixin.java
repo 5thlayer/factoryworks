@@ -1,6 +1,6 @@
 package com.factoryworks.core.mixin.oritech;
 
-import com.factoryworks.core.energy.EnergyOwner;
+import io.github._5thlayer.wireworks.EnergyOwner;
 import net.minecraft.core.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import rearth.oritech.block.entity.MachineCoreEntity;
@@ -17,7 +17,7 @@ import rearth.oritech.block.entity.MachineCoreEntity;
 public abstract class MachineCoreEntityMixin implements EnergyOwner {
 
     @Override
-    public BlockPos factoryworks$energyOwner() {
+    public BlockPos wireworks$energyOwner() {
         MachineCoreEntity self = (MachineCoreEntity) (Object) this;
         // The same two conditions under which the core exposes the controller's face at all.
         return self.isEnabled() && self.getCachedController() != null

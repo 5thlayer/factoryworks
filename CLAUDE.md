@@ -161,7 +161,7 @@ And KubeJS reads a Better Advanced Tooltips class on a server as well, so that j
 classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there because the pack's
 recipes name their items.
 
-What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `ElectricNetworkTests` (#280), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
+What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `SolarPanelTests` (#529), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
 `PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
@@ -176,8 +176,8 @@ scan finds an Electric Furnace at all, that the pole's demand probe — an inser
 transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
 starved one freezes where it stood; that an Electric Mining Drill reached only through its part
 blocks is one machine, draws 45 FE/t, mines when fed and freezes when starved (making the part its
-own energy owner, returning false from `pay`, or dropping the journal each turn one red); and that power crosses a wire between linked poles, stops
-beyond reach, and stops again when the link is broken. And that a pole reaching only a slave Steam Engine's
+own energy owner, returning false from `pay`, or dropping the journal each turn one red). How power crosses a wire, stops beyond
+reach and stops when the link is broken is Wireworks' own GameTests (#476). And that a pole reaching only a slave Steam Engine's
 parts draws the whole row's 1,350 FE/t from the master, once, feeding neither -- `SupplyScanTest` holds
 the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red --
 and that the row scan chains an engine whose part, not its anchor, stands in the row; skipping the
@@ -266,9 +266,7 @@ once and fills it, and a small pole reaching only a hull block still finds it: t
 no block entity, so they resolve to the anchor through `EnergyOwnerBlock` in `SupplyAreaScan`, and
 without it one machine counts as four. Each was checked against the defect it exists for: dropping
 the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
-furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red; making no
-two poles link, never rebuilding the network, and never dropping a broken pole each turn a network
-test red.
+furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red.
 `tests/pack/test_energy_faces.py` and `tests/pack/test_capability_registration.py` are the static
 half and read source text, so they cannot see any of those three.
 
@@ -323,7 +321,7 @@ parse with typed figures. Run them after a converter run or re-extracting the co
 Which blocks may Fast Replace which is Factorio's `fast_replaceable_group` (ADR-0082), never typed.
 `scripts/factorio-machine-extract.py` writes it onto the machine and pole rows, and
 `scripts/build-replace-groups.py` joins it onto `data/pack/item-map.json` into the resource
-`ReplaceGroups` reads. A row that is `undecided`, `not_emitted` or `blocked_by`, or whose target is not the pack's block, is a recorded skip.
+`ReplaceGroups` reads. A row that is `undecided`, `not_emitted` or `blocked_by`, or whose target is neither the pack's block nor Wireworks', is a recorded skip.
 `tests/factorio/test_machine_extract.py` holds the groups against the dump when it is on disk.
 `tests/pack/test_replace_groups.py` runs the generator's `--check` and holds the resource to its
 own join of the two inputs. `ReplaceGroupsTest` covers the parse and the same-group rule. Run them
@@ -362,10 +360,10 @@ Groundworks library's, which Beltworks bundles and the pack compiles against as 
 installed Beltworks jar (#446, #465). `Placements.planFor` is the one entry point, and every `factoryworks:` block, and every
 other block with a facing, an axis or a rotation (`Oriented`, #450), is opted into the vanilla plan in
 `FactoryWorksCore`; a door or bed draws one half, an accepted quirk. Only an item whose placement is *not* vanilla's implements
-`PlansPlacement` -- the pole's column, the rig's footprint, the pump's dry site -- and its refusals are
-`PackRefusal`. What the pack draws beside a plan is `placement/client/`, on the library's
-`PlacementPreviewEvent`: the supply area, mining area and wires as an `Overlay`, a family dismantle
-as a `Takeover`.
+`PlansPlacement` -- the rig's footprint, the pump's dry site -- and its refusals are `PackRefusal`.
+What the pack draws beside a plan is `placement/client/`, on the library's `PlacementPreviewEvent`:
+the mining area as an `Overlay`, a family dismantle as a `Takeover`. A pole's column plan, its
+supply area and its wires are Wireworks' (#476).
 
 `gametest/PlacementPlanTests` is the check ADR-0069 asks for by name, and the only one that can
 exist: ask each item for a plan, then use the block the way a player does, then hold the world to
@@ -373,19 +371,16 @@ what the plan promised. An accepted plan must have put **every** block down in t
 refused plan must have changed **nothing**, which is read before the gesture as well as after,
 because "nothing changed" is not the same claim as "the positions are empty". Both halves are load-
 bearing -- the preview's two failure modes are promising a placement that does not happen and
-refusing one that does. Each test was checked against the defect it exists for: forcing the pole
-to the vanilla plan turns four red, forcing the rig's footprint to always fit turns one red,
-flattening the rig to a single layer turns two more, dropping the pump's water question turns one,
-and giving up on the other-group column walk turns another. A belt piece plans itself, and
+refusing one that does. Each test was checked against the defect it exists for: forcing the rig's
+footprint to always fit turns one red, flattening the rig to a single layer turns two more, and
+dropping the pump's water question turns one. A belt piece plans itself, and
 Beltworks' GameTests hold it. The Assembling Machine's two (#326) are
 the rig's pair for its 2x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
 red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
-after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Three fixtures are load-bearing rather
-than arbitrary -- the other-group column is three tall because on a one-tall column "the top of the
-column" and "just above the block I hit" are the same block, the rig's size is compared against
-`RigGeometry`'s own footprint rather than a floor, and the rig's obstruction sits a block *up*,
-where a player cannot see it. The geometry underneath stays Minecraft-free (`RigGeometry`,
-`PoleColumn`) and is unit-tested there.
+after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Two fixtures are load-bearing rather
+than arbitrary -- the rig's size is compared against `RigGeometry`'s own footprint rather than a
+floor, and the rig's obstruction sits a block *up*, where a player cannot see it. The geometry
+underneath stays Minecraft-free (`RigGeometry`) and is unit-tested there.
 
 A Fast Replace is a plan too (#388, ADR-0082): its `replaces` names the block it swaps out, and
 `PlacementPlanTests.Replaces` asks for it, clicks, and holds the world, the new furnace's contents and
@@ -394,12 +389,11 @@ over, the last held item's freed slot, and a full inventory refused with nothing
 reason on the action bar. A sneak places beside, and a same-tier furnace or another group's block
 replaces nothing. Skipping the handover or letting the inventory check pass turns three red. The
 blue the preview draws a replace in is a human check on delivery.
-`PlacementPlanTests.PoleReplaces` holds the pole column's (#389): a three-segment small column
-clicked at its base, middle or top becomes a medium one of the same height, and back, keeping
-exactly the wires touching it, for one item spent and one returned. A substation on a small column
-and a small pole on a substation, and a full inventory, change nothing and name their reason. The
-fixture stands a third pole wired past the neighbour, since a base wired afresh would take it first;
-swapping with the block's placement and removal hooks turns both replaces red.
+A pole column's replace is Groundworks' Fast Replace through Wireworks' `PoleColumnReplace`, held by
+Wireworks' own GameTests. The Pack states only the group (#476): `FactoryWorksCore` passes the
+builder to `FastReplace.group` with the blocks `ReplaceGroups` puts in Factorio's `electric-pole`.
+`PlacementPlanTests.PoleReplaces` holds that statement: a medium pole replaces a small column, and a
+substation does not. Dropping the statement turns the first red.
 `PlacementPlanTests.AssemblingReplaces` holds the Assembling Machine's (#390), registered only with
 Oritech loaded: tier 1 to 2 keeps copper cable Held, the items, the craft scaled to tier 2's 14 ticks
 and the FE; tier 2 to 1 with concrete clears the recipe, voids the tank, drops the fluid face and
@@ -683,9 +677,8 @@ than discovered so that a new machine fails here instead of being answered "none
 genuinely wants no face records an empty tuple, which is then a decision somebody wrote down.
 `ITEM_FACES` is asserted by *counting* `event.registerItem` calls rather than by matching their
 shape, because the next one will be spelled differently and a shape-matching regex would let it
-past — which is the failure the table exists to catch. Four assertions are the pack's own rather
-than generic plumbing — the pole has **no** face (ADR-0062), so what is asserted instead is that
-`ElectricNetworks::onLevelTick` is wired, the one line without which no pole moves energy; each of
+past — which is the failure the table exists to catch. Three assertions are the pack's own rather
+than generic plumbing — each of
 the **ladders** registers for every tier off its own
 enum (a loop over fewer ships the remaining tiers inert, and the face assertion cannot see it
 because the spelling is still there), the rig's **parts** answer as well as its anchor (which
@@ -1149,6 +1142,12 @@ holds it, and nests Groundworks; a newer version in `~/.m2` is named without fai
 `curseforge` row the metafile names the pinned file and project and hashes the installed jar, and
 `index.toml` holds the metafile, not the jar; the check contacts nothing. Run it after
 the sync or any change to `mods/`. Take a new Beltworks with the sync, never by copying a jar.
+Wireworks, the electric poles, is pinned the same way (#476). It has no CurseForge project yet, so
+its jar is indexed by hash and negated in `.packwizignore`. Its Bindings are the Pack's:
+`config/wireworks-server.toml` sets Factorio's supply areas and wire reaches, held to the corpus by
+`tests/pack/test_wireworks_config.py`; `kubejs/data/wireworks/tags/` puts the Picks in `wire_tools`
+and the Pack's generators and accumulator in their tags, held by `tests/pack/test_network_tags.py`;
+and `FactoryWorksCore` states the pole Replace group.
 A change that crosses Groundworks, Beltworks and the Pack goes through the `release-train` skill
 (`skillworks:release-train`, from 5thlayer/skillworks): each checkout is owned by the session working in it, and
 nothing is pushed without the user's word.

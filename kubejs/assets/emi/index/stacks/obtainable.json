@@ -70,9 +70,6 @@
       "stack": "item:factoryworks:chemical_plant"
     },
     {
-      "stack": "item:factoryworks:creative_electric_pole"
-    },
-    {
       "stack": "item:factoryworks:electric_engine_unit"
     },
     {
@@ -100,9 +97,6 @@
       "stack": "item:factoryworks:low_density_structure"
     },
     {
-      "stack": "item:factoryworks:medium_electric_pole"
-    },
-    {
       "stack": "item:factoryworks:offshore_pump"
     },
     {
@@ -124,9 +118,6 @@
       "stack": "item:factoryworks:rocket_fuel"
     },
     {
-      "stack": "item:factoryworks:small_electric_pole"
-    },
-    {
       "stack": "item:factoryworks:solar_panel"
     },
     {
@@ -143,9 +134,6 @@
     },
     {
       "stack": "item:factoryworks:stone_furnace"
-    },
-    {
-      "stack": "item:factoryworks:substation_electric_pole"
     },
     {
       "stack": "item:ftbfiltersystem:smart_filter"
@@ -356,6 +344,18 @@
           "researchd:research_pack": "factory_works:logistic_science_pack"
         }
       }
+    },
+    {
+      "stack": "item:wireworks:creative_electric_pole"
+    },
+    {
+      "stack": "item:wireworks:medium_electric_pole"
+    },
+    {
+      "stack": "item:wireworks:small_electric_pole"
+    },
+    {
+      "stack": "item:wireworks:substation_electric_pole"
     },
     {
       "stack": "fluid:factoryworks:steam"

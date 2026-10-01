@@ -28,18 +28,15 @@
     "factoryworks:electric_furnace",
     "factoryworks:electric_mining_drill",
     "factoryworks:iron_chest",
-    "factoryworks:medium_electric_pole",
     "factoryworks:offshore_pump",
     "factoryworks:oil_refinery",
     "factoryworks:pumpjack",
     "factoryworks:radar",
-    "factoryworks:small_electric_pole",
     "factoryworks:solar_panel",
     "factoryworks:steam_engine",
     "factoryworks:steel_chest",
     "factoryworks:steel_furnace",
     "factoryworks:stone_furnace",
-    "factoryworks:substation_electric_pole",
     "minecraft:chest",
     "minecraft:rail",
     "oritech:fluid_pipe",
@@ -47,6 +44,9 @@
     "oritech:portable_tank",
     "railcraft:block_signal",
     "railcraft:distant_signal",
-    "railcraft:iron_buffer_stop_track"
+    "railcraft:iron_buffer_stop_track",
+    "wireworks:medium_electric_pole",
+    "wireworks:small_electric_pole",
+    "wireworks:substation_electric_pole"
   ]
 }

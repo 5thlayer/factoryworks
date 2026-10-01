@@ -6,7 +6,7 @@ import static com.factoryworks.core.gametest.ChassisFixture.fluid;
 import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.energy.PoleTier;
+import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingStall;
 

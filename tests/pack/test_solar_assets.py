@@ -6,7 +6,7 @@
   - The resource is compared with the corpus row field by field here too, so a hand-edited
     resource that someone also taught the generator to accept still fails.
   - The block names the generator writes files for are the ones `PFBlocks` registers, and the
-    panel is in `factoryworks:generators`, without which no pole draws it (ADR-0062).
+    panel is in `wireworks:generators`, without which no pole draws it (ADR-0062).
 
 Usage: tests/pack/test_solar_assets.py
 """
@@ -21,7 +21,7 @@ RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/energy/solar_panels.
 MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 GENERATOR = ROOT / "scripts/build-solar-assets.py"
 PF_BLOCKS = ROOT / "mod/src/main/java/com/factoryworks/core/PFBlocks.java"
-GENERATORS_TAG = ROOT / "kubejs/data/factoryworks/tags/block/generators.json"
+GENERATORS_TAG = ROOT / "kubejs/data/wireworks/tags/block/generators.json"
 FIELDS = ("production", "tile_width", "tile_height")
 
 
@@ -50,7 +50,7 @@ def main():
             failures.append(f"PFBlocks registers no {name!r}, which the generator writes files for")
 
     if "factoryworks:solar_panel" not in json.loads(GENERATORS_TAG.read_text())["values"]:
-        failures.append("factoryworks:generators does not hold the Solar Panel, so no pole draws it")
+        failures.append("wireworks:generators does not hold the Solar Panel, so no pole draws it")
 
     for index, failure in enumerate(failures, 1):
         print(f"FAIL {index}: {failure}")

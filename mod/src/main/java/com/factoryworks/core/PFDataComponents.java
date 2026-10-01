@@ -1,6 +1,5 @@
 package com.factoryworks.core;
 
-import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
@@ -25,17 +24,6 @@ public final class PFDataComponents {
                     () -> DataComponentType.<SimpleFluidContent>builder()
                             .persistent(SimpleFluidContent.CODEC)
                             .networkSynchronized(SimpleFluidContent.STREAM_CODEC)
-                            .build());
-
-    /**
-     * The first end of a wire the Engineer's Pick is holding: the anchor pole's base and its
-     * dimension (ADR-0068). On the stack, so it survives a relog and a client can draw from it.
-     */
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<GlobalPos>>
-            PENDING_WIRE = DATA_COMPONENTS.register("pending_wire",
-                    () -> DataComponentType.<GlobalPos>builder()
-                            .persistent(GlobalPos.CODEC)
-                            .networkSynchronized(GlobalPos.STREAM_CODEC)
                             .build());
 
     private PFDataComponents() {

@@ -129,8 +129,8 @@ def main():
     # Only this file's own blocks. `loot_table/blocks/` is shared with every other pack-authored
     # block, and `registered` above is built from the two sources flora is registered through --
     # the mod's saplings and KubeJS -- so a block registered in Java anywhere else reads as a
-    # stray item here. It is not: the Electric Pole is registered from `PoleTier.java` and its
-    # loot tables are asserted by `tests/pack/test_pole_assets.py`, which reads that enum. Each
+    # stray item here. It is not: the furnaces and machines have loot tables of their own,
+    # asserted by `tests/pack/test_block_assets.py`. Each
     # family checks its own drops against its own registry, and sweeping the whole directory from
     # here only lets this check fail for another family's content.
     foreign = []

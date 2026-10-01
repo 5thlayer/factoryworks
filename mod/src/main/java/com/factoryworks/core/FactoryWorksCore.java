@@ -8,7 +8,10 @@ import com.factoryworks.core.gametest.PFGameTests;
 import com.factoryworks.core.fluid.PFFluidTypes;
 import com.factoryworks.core.fluid.PFFluids;
 import com.factoryworks.core.fluid.WaterConservation;
-import com.factoryworks.core.energy.client.PoleWireClient;
+import io.github._5thlayer.groundworks.FastReplace;
+import net.minecraft.resources.Identifier;
+import io.github._5thlayer.wireworks.PoleColumnReplace;
+import com.factoryworks.core.placement.ReplaceGroups;
 import com.factoryworks.core.placement.Oriented;
 import com.factoryworks.core.placement.client.PlacementPreviewClient;
 import com.factoryworks.core.fluid.client.BoilerClient;
@@ -91,11 +94,10 @@ public final class FactoryWorksCore {
         if (ModList.get().isLoaded("oritech") && ModList.get().isLoaded("beltworks")) {
             NeoForge.EVENT_BUS.addListener(com.factoryworks.core.showcase.ShowcaseCommand::onRegisterCommands);
         }
-        // Every Electric Network in a level settles once per level tick (ADR-0062). Poles only
-        // report and scan; without this line no pole moves any energy at all.
-        NeoForge.EVENT_BUS.addListener(com.factoryworks.core.energy.ElectricNetworks::onLevelTick);
-        NeoForge.EVENT_BUS.addListener(com.factoryworks.core.energy.ElectricNetworks::onLevelUnload);
-        NeoForge.EVENT_BUS.addListener(com.factoryworks.core.energy.LevelWires::onChunkSent);
+        // Wireworks states no Replace group; Factorio's pole group is the Pack's (ADR-0082).
+        FastReplace.group(Identifier.fromNamespaceAndPath(NAMESPACE, "electric_poles"),
+                block -> ReplaceGroups.get().isIn("electric-pole", BuiltInRegistries.BLOCK.getKey(block).toString()),
+                PoleColumnReplace.BUILDER);
         // Water is extracted and transported, never created (ADR-0050): re-asserted every server
         // start rather than defaulted once, because a player's own /gamerule toggle would otherwise
         // survive a reload.
@@ -134,8 +136,6 @@ public final class FactoryWorksCore {
             com.factoryworks.core.oil.client.PumpjackClient.register(modBus);
             SteamFluidClient.register(modBus);
             BoilerClient.register(modBus);
-            // The wire between linked poles (#281); cosmetic, the balance never reads it.
-            PoleWireClient.register(modBus);
             PlacementPreviewClient.register();
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,
             // so vanilla's intuitions about what burns are wrong in both directions.

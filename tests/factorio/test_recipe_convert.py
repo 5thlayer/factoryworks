@@ -43,7 +43,6 @@ STARTUP = ROOT / "kubejs/startup_scripts"
 MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 PF_BLOCKS = MOD / "PFBlocks.java"
 PF_ITEMS = MOD / "PFItems.java"
-POLE_TIER = MOD / "energy/PoleTier.java"
 FURNACE_TIER = MOD / "smelting/FurnaceTier.java"
 RIG_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/rig/RigTier.java"
 ASSEMBLING_TIER = MOD / "machine/AssemblingTier.java"
@@ -67,7 +66,9 @@ NAMESPACES = {"minecraft", "factoryworks", "ftbmaterials",
               # Oritech is the pack's tech mod (ADR-0060): its engine (#282), pipes, tanks and fluids.
               "oritech",
               # Railcraft Reborn's signals and Beltworks' belts, ADR-0060's logistics (#277).
-              "railcraft", "beltworks"}
+              "railcraft", "beltworks",
+              # Wireworks' electric poles, a Library carved out of the pack (#476).
+              "wireworks"}
 
 
 def mod_registered_blocks():
@@ -79,9 +80,9 @@ def mod_registered_blocks():
     Reading only the startup scripts would now report four registered blocks as unregistered, and
     the natural "fix" for that is to weaken the check, which is the one thing it must not do.
 
-    The poles, the furnaces, the mining rigs and the Assembling Machines derive their ids from their tier enums, so they are
-    read the same way rather than typed out: a fifth pole tier, a fourth furnace or a third rung of
-    the drill ladder is then registered here without this file being edited.
+    The furnaces, the mining rigs and the Assembling Machines derive their ids from their tier enums, so they are
+    read the same way rather than typed out: a fourth furnace or a third rung of the drill ladder is
+    then registered here without this file being edited.
 
     The rig parts are deliberately absent. A part has no `BlockItem` -- it is placed only by the
     anchor's own item and never held -- so a row naming one would be a row naming something a
@@ -89,9 +90,6 @@ def mod_registered_blocks():
     """
     blocks = set(re.findall(r'BLOCKS\.register(?:Block)?\("([a-z0-9_]+)"',
                             (PF_BLOCKS).read_text(encoding="utf-8")))
-    tiers = re.findall(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]",
-                       POLE_TIER.read_text(encoding="utf-8"), re.MULTILINE)
-    blocks |= {f"{tier.lower()}_electric_pole" for tier in tiers}
     furnaces = re.findall(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]",
                           FURNACE_TIER.read_text(encoding="utf-8"), re.MULTILINE)
     blocks |= {f"{tier.lower()}_furnace" for tier in furnaces}
@@ -108,8 +106,8 @@ def mod_registered_blocks():
 def mod_registered_items():
     """The `factoryworks:` items `factoryworks_core` registers with no block behind them.
 
-    Everything the mod registered used to be a block, so reading `PFBlocks` and `PoleTier` covered
-    it. The barrel (ADR-0037) is the first item that is only an item: it carries a fluid capability,
+    Everything the mod registered used to be a block, so reading `PFBlocks` and the tier enums
+    covered it. The barrel (ADR-0037) is the first item that is only an item: it carries a fluid capability,
     which is mechanism and therefore the mod's under ADR-0015, and it has nothing to place. Without
     this its row would read as unregistered while sitting in `PFItems` -- and the natural "fix" for
     that is to weaken the check, which is the one thing it must not do.

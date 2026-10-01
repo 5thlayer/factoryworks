@@ -1,9 +1,10 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineMenu;
 import com.factoryworks.core.machine.AssemblingStall;
@@ -156,7 +157,7 @@ record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, 
         helper.startSequence()
                 .thenExecute(() -> {
                     machine.energyStorage.set(0L);
-                    helper.setBlock(pole, PFBlocks.CREATIVE_POLE.get());
+                    helper.setBlock(pole, WireworksRegistries.CREATIVE_POLE.get());
                 })
                 .thenIdle(RESCAN_INTERVAL + 5)
                 .thenExecute(() -> {

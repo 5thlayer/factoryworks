@@ -1,8 +1,9 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.energy.PoleTier;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.PoleTier;
+import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceSlots;
 import com.factoryworks.core.smelting.FurnaceTier;
@@ -88,7 +89,7 @@ final class EnergyFaceTests {
         // Placing the machine into a pole that has already scanned makes the *rescan* the thing
         // under test, which is the half that decides whether a machine placed next to a running
         // factory is ever picked up.
-        helper.setBlock(POLE, PFBlocks.pole(PoleTier.SMALL).get());
+        helper.setBlock(POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
         helper.startSequence()
                 .thenIdle(5)
                 .thenExecute(() -> {
@@ -147,7 +148,7 @@ final class EnergyFaceTests {
      * <p>Fed by a creative pole, then cut off by swapping it for a small pole with nothing to give.
      */
     private static void poweredFurnaceSmelts(GameTestHelper helper) {
-        helper.setBlock(POLE, PFBlocks.CREATIVE_POLE.get());
+        helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
         helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
         long[] window = new long[1];
         int[] progressMark = new int[1];
@@ -173,7 +174,7 @@ final class EnergyFaceTests {
                 // furnace's stored FE reads 90 higher or lower depending on which went first.
                 // Ten ticks' worth, so the buffer cannot run out inside the window.
                 .thenExecute(() -> {
-                    helper.setBlock(POLE, PFBlocks.pole(PoleTier.SMALL).get());
+                    helper.setBlock(POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
                     setStored(helper, FE_PER_TICK * 10L);
                     window[0] = stored(helper);
                     progressMark[0] = progress(helper);
@@ -218,7 +219,7 @@ final class EnergyFaceTests {
     }
 
     private static void place(GameTestHelper helper) {
-        helper.setBlock(POLE, PFBlocks.pole(PoleTier.SMALL).get());
+        helper.setBlock(POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
         helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
     }
 

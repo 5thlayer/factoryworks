@@ -1,12 +1,13 @@
 package com.factoryworks.core.showcase;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.energy.PoleTier;
+import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.HeldRecipe;
@@ -126,7 +127,7 @@ public final class ShowcaseScenes {
         belt(site, new BlockPos(15, 1, 8), Direction.EAST, 4);
         feeder(site, new BlockPos(14, 1, 8), Direction.EAST);
 
-        site.set(new BlockPos(10, 1, 5), PFBlocks.CREATIVE_POLE.get());
+        site.set(new BlockPos(10, 1, 5), WireworksRegistries.CREATIVE_POLE.get());
         return new Product(List.of(out), item("factoryworks:electronic_circuit"));
     }
 
@@ -147,8 +148,8 @@ public final class ShowcaseScenes {
         belt(site, new BlockPos(4, 1, 7), Direction.NORTH, 3);
         site.set(new BlockPos(4, 1, 8), loaderState(Direction.NORTH));
 
-        site.set(new BlockPos(8, 1, 6), PFBlocks.pole(PoleTier.SMALL).get());
-        site.set(new BlockPos(14, 1, 8), PFBlocks.pole(PoleTier.MEDIUM).get());
+        site.set(new BlockPos(8, 1, 6), WireworksRegistries.pole(PoleTier.SMALL).get());
+        site.set(new BlockPos(14, 1, 8), WireworksRegistries.pole(PoleTier.MEDIUM).get());
 
         List<BlockPos> outs = List.of(new BlockPos(12, 1, 6), new BlockPos(16, 1, 6));
         for (BlockPos output : outs) {
@@ -197,7 +198,7 @@ public final class ShowcaseScenes {
         belt(site, plant.south(2), Direction.SOUTH, 3);
         site.set(plant.south(), loaderState(Direction.SOUTH));
 
-        site.set(new BlockPos(6, 1, 7), PFBlocks.CREATIVE_POLE.get());
+        site.set(new BlockPos(6, 1, 7), WireworksRegistries.CREATIVE_POLE.get());
         return new Product(List.of(out), item("factoryworks:plastic_bar"));
     }
 

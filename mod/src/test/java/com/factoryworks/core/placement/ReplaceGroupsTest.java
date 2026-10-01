@@ -11,9 +11,9 @@ class ReplaceGroupsTest {
     private static final String STONE = "factoryworks:stone_furnace";
     private static final String STEEL = "factoryworks:steel_furnace";
     private static final String ELECTRIC = "factoryworks:electric_furnace";
-    private static final String SMALL = "factoryworks:small_electric_pole";
-    private static final String MEDIUM = "factoryworks:medium_electric_pole";
-    private static final String SUBSTATION = "factoryworks:substation_electric_pole";
+    private static final String SMALL = "wireworks:small_electric_pole";
+    private static final String MEDIUM = "wireworks:medium_electric_pole";
+    private static final String SUBSTATION = "wireworks:substation_electric_pole";
     private static final String ASSEMBLER_1 = "factoryworks:assembling_machine";
     private static final String ASSEMBLER_3 = "factoryworks:assembling_machine_3";
 

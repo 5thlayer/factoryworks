@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.factoryworks.core.PFBlockEntities;
-import com.factoryworks.core.energy.ElectricNetworks;
+import io.github._5thlayer.wireworks.ElectricNetworks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

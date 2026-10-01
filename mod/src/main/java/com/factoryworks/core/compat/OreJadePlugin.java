@@ -29,8 +29,8 @@ import snownee.jade.api.config.IPluginConfig;
  * be asked for. Jade takes a plain {@code Class<?>}, so an ore block needs no block entity to carry
  * a line here, which is the whole point of ADR-0041's storage choice.
  *
- * <p>Found by Jade's own annotation scan and referenced from nowhere else in the mod, exactly like
- * {@link PoleJadePlugin}, so the jar stays a compile-time dependency.
+ * <p>Found by Jade's own annotation scan and referenced from nowhere else in the mod, so the jar
+ * stays a compile-time dependency.
  */
 @WailaPlugin
 public class OreJadePlugin implements IWailaPlugin {

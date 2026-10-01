@@ -1,11 +1,12 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.energy.DayFraction;
-import com.factoryworks.core.energy.NetworkReading;
-import com.factoryworks.core.energy.PoleTier;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
-import com.factoryworks.core.energy.SupplyAreaScan;
+import io.github._5thlayer.wireworks.NetworkReading;
+import io.github._5thlayer.wireworks.PoleTier;
+import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.SupplyAreaScan;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceTier;
 
@@ -75,7 +76,7 @@ final class SolarPanelTests {
         }
         PFBlocks.SOLAR_PANEL_FOOTPRINT.placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), Direction.NORTH);
         BlockPos furnace = pole.offset(0, 0, 2);
-        helper.setBlock(pole, PFBlocks.pole(PoleTier.SMALL).get());
+        helper.setBlock(pole, WireworksRegistries.pole(PoleTier.SMALL).get());
         helper.setBlock(furnace, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
 
         var generators = SupplyAreaScan.of(helper.getLevel(), helper.absolutePos(pole), PoleTier.SMALL).generators();

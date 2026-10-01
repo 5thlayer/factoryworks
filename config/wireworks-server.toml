@@ -1,0 +1,12 @@
+# Factorio's electric poles (ADR-0036): the supply area and wire reach of each tier.
+[small]
+	supplySize = 5
+	wireReach = 7.5
+
+[medium]
+	supplySize = 7
+	wireReach = 9.0
+
+[substation]
+	supplySize = 18
+	wireReach = 18.0

@@ -1,5 +1,6 @@
 package com.factoryworks.core.energy;
 
+import io.github._5thlayer.wireworks.ElectricNetworks;
 import java.util.List;
 import java.util.Optional;
 

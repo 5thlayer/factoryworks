@@ -1,7 +1,7 @@
 package com.factoryworks.core.reach;
 
 import com.factoryworks.core.FactoryWorksCore;
-import com.factoryworks.core.energy.EnergyOwner;
+import io.github._5thlayer.wireworks.EnergyOwner;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;

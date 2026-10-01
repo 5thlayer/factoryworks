@@ -1,13 +1,10 @@
 package com.factoryworks.core;
 
-import com.factoryworks.core.energy.CreativeSupplyAreaPoleBlock;
 import com.factoryworks.core.energy.AccumulatorItem;
-import com.factoryworks.core.energy.PoleTier;
 import com.factoryworks.core.fluid.BoilerItem;
 import com.factoryworks.core.chest.ChestTier;
 import com.factoryworks.core.smelting.FurnaceItem;
 import com.factoryworks.core.smelting.FurnaceTier;
-import com.factoryworks.core.energy.SupplyAreaPoleItem;
 import com.factoryworks.core.fluid.BarrelFluidHandler;
 import com.factoryworks.core.fluid.BarrelItem;
 import com.factoryworks.core.fluid.OffshorePumpItem;
@@ -39,7 +36,7 @@ import java.util.Map;
  * Block items for what {@link PFBlocks} registers.
  *
  * <p>The saplings need one so they can be held, planted by hand and placed by a Create Deployer
- * through the normal use-on path. The poles need one to be placed at all.
+ * through the normal use-on path.
  *
  * <p>The barrel is the exception: an item with no block behind it, and the only thing here that is a
  * mechanism rather than a way to hold a block. It is Factorio's barrel (ADR-0037), and it exists in
@@ -135,17 +132,6 @@ public final class PFItems {
         }
         NATURAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.YUMAKO_SAPLING));
         NATURAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.JELLYSTEM_SAPLING));
-        for (PoleTier tier : PoleTier.values()) {
-            // Not registerSimpleBlockItem: the pole carries the only description of itself the
-            // pack has, so its item is a SupplyAreaPoleItem for the tooltip alone.
-            FUNCTIONAL.add(ITEMS.registerItem(PFBlocks.pole(tier).getId().getPath(),
-                    props -> new SupplyAreaPoleItem(PFBlocks.pole(tier).get(), props)));
-        }
-        // The creative pole (#272), in the tab beside the poles it imitates and craftable nowhere:
-        // no recipe is emitted for it and the sweep admits none, which is what keeps a dev tool out
-        // of survival.
-        FUNCTIONAL.add(ITEMS.registerItem(CreativeSupplyAreaPoleBlock.BLOCK_NAME,
-                props -> new SupplyAreaPoleItem(PFBlocks.CREATIVE_POLE.get(), props)));
         for (FurnaceTier tier : FurnaceTier.values()) {
             FUNCTIONAL.add(ITEMS.registerItem(tier.blockName(),
                     props -> new FurnaceItem(PFBlocks.furnace(tier).get(), props)));
@@ -209,8 +195,6 @@ public final class PFItems {
     }
 
     static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
-        // A pole is not a natural block. It goes where a player already looks for something that
-        // moves power around, next to the rest of the machinery.
         if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
             NATURAL.forEach(entry -> event.accept(entry.get()));
         } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {

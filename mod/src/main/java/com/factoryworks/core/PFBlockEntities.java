@@ -3,8 +3,6 @@ package com.factoryworks.core;
 import com.factoryworks.core.chest.PackChestBlockEntity;
 import com.factoryworks.core.wreck.CargoHoldBlockEntity;
 import com.factoryworks.core.wreck.CargoHoldItemHandler;
-import com.factoryworks.core.energy.PoleTier;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.fluid.BoilerBlockEntity;
 import com.factoryworks.core.fluid.BoilerItemHandler;
 import com.factoryworks.core.fluid.OffshorePumpBlockEntity;
@@ -47,35 +45,27 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 
 /**
- * Block entities: the supply-area pole and the furnace ladder.
+ * Block entities: the furnace ladder and the machines.
  *
- * <p>All four pole tiers share one {@link BlockEntityType}, and so do all three furnace tiers:
- * each set differs in numbers its tier enum carries and in nothing else, so there is one behaviour
- * and several blocks pointing at it.
+ * <p>All three furnace tiers share one {@link BlockEntityType}: they differ in numbers their tier
+ * enum carries and in nothing else, so there is one behaviour and several blocks pointing at it.
  */
 public final class PFBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, FactoryWorksCore.NAMESPACE);
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SupplyAreaPoleBlockEntity>>
-            SUPPLY_AREA_POLE = BLOCK_ENTITIES.register("supply_area_pole",
-                    // No data fixer, which 26.1's constructor no longer has a slot for anyway.
-                    // The pack is pre-release and carries no world forward, which is the standing
-                    // position rather than an oversight here.
-                    () -> new BlockEntityType<>(SupplyAreaPoleBlockEntity::new, PFBlocks.poleBlocks()));
-
     /**
      * All three furnace tiers share one type (#155). They differ in speed and in where their
      * energy comes from, both of which are on {@link FurnaceTier}, so there is one behaviour and
-     * three blocks pointing at it -- the same arrangement as the pole above.
+     * three blocks pointing at it.
      */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FurnaceBlockEntity>>
             FURNACE = BLOCK_ENTITIES.register("furnace",
                     () -> new BlockEntityType<>(FurnaceBlockEntity::new, PFBlocks.furnaceBlocks()));
 
     /**
-     * Both rigs' anchors share one type (#192, ADR-0043), the same arrangement as the pole and
-     * furnace above. It carries no fields yet -- #192 is an inert footprint -- so both tiers are
+     * Both rigs' anchors share one type (#192, ADR-0043), the same arrangement as the furnace
+     * above. It carries no fields yet -- #192 is an inert footprint -- so both tiers are
      * genuinely identical here; #193/#194 are what will need the tier on this entity.
      */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RigBlockEntity>>

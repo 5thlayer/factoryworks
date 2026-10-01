@@ -1,9 +1,10 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.wireworks.WireworksRegistries;
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.energy.NetworkReading;
-import com.factoryworks.core.energy.PoleTier;
-import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.NetworkReading;
+import io.github._5thlayer.wireworks.PoleTier;
+import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.fluid.PFFluids;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceTier;
@@ -83,7 +84,7 @@ final class SteamEngineNetworkTests {
         for (BlockPos engine : new BlockPos[] {at.a(), at.b(), at.c()}) {
             place(helper, engine, at.facing());
         }
-        helper.setBlock(at.pole(), PFBlocks.pole(PoleTier.SMALL).get());
+        helper.setBlock(at.pole(), WireworksRegistries.pole(PoleTier.SMALL).get());
         helper.setBlock(at.furnace(), PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
 
         long[] produced = {0L};

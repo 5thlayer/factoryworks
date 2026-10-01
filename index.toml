@@ -249,6 +249,10 @@ file = "data/factorio/building.json"
 hash = "83f7a354973ab3ebb9b1b8a1e82226788a605529681364a22f092b86efb6f490"
 
 [[files]]
+file = "data/factorio/container.json"
+hash = "1d67352427cf441d7d49feb5e7f26f82299116ba29f5f79fea46b1c2e443235f"
+
+[[files]]
 file = "data/factorio/enemy.json"
 hash = "1f6525e6b4ed98c3431c3fe0c9b36801fa9902e085d417a8885fa5a83fad3815"
 
@@ -322,7 +326,7 @@ hash = "24f61a524701d4c2296f81e23ed84c089043b905a6419c88cd86aecd146675bc"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "e04624a62010e8dea87eb37b2039bedb07bcfcfd194582e03589b595be556a5c"
+hash = "172ba111f4711a49bd0887fac01a47ad3b7d686ade045e4b36024bed123ef70e"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -403,6 +407,10 @@ hash = "63940a48f2f6b160083c9182a9b2f3d90f0f239e7089602b75fcd3c7ff110667"
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/burner_mining_drill_part.json"
 hash = "ee7e624750e746cc3ace216c1f3495117d80854d42cfc03fe8f1646c4c6e6d7a"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/cargo_hold.json"
+hash = "283ae96f1dc85eb732fbf496212597363cb63e8556e27ddb46edacef99aefa8f"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/chemical_plant.json"
@@ -537,6 +545,14 @@ file = "kubejs/assets/factoryworks/blockstates/uranium_ore.json"
 hash = "ae3c02fce000831d8010c902ba4c4842e1ca708416793d85dec8919ed2e996a4"
 
 [[files]]
+file = "kubejs/assets/factoryworks/blockstates/wreck_hull.json"
+hash = "0a673500bfd6120735052999d68c2478ecff15ab6af4347ca2f89a2abdbe8018"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/wreck_window.json"
+hash = "8d9e55b8b1132cf4623c5c033c9069e28d05798a9b1042d66783d6a99e49e611"
+
+[[files]]
 file = "kubejs/assets/factoryworks/blockstates/yumako_sapling.json"
 hash = "53ffaf23425a3a02253b769af8d6eed16f34ebdd1fe1934e9d02acbe80d440aa"
 
@@ -654,7 +670,7 @@ hash = "c4f3b3ee106426f1322240cc01e60027429b080937c9c02917d8560bdbd4fec0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "fa8abadc4ec92aeba8faae2ef061fb90878363a89fafa90bd24b80c9694a975f"
+hash = "831278b97bd6ad66b6a951ef2ad990cc47318b3cefe367b2f10a7afb5fd4a246"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/accumulator_part.json"
@@ -683,6 +699,10 @@ hash = "8763b054834028438e5d4e0d2593a2b49c9cb414f53979dfa15b33b26798eab4"
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/burner_mining_drill_port.json"
 hash = "fdccced2a90d347f527b6c98b5e1f98fbcf9c13847a135bbf03a4f02f42d61e8"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/cargo_hold.json"
+hash = "33461b3e66e46177cef9652e3f79956ad30f37daa0248c4ddf398e033b15ef18"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/chemical_plant.json"
@@ -943,6 +963,14 @@ hash = "1f1b8e874d0bc348b73cf0cfcdd9759b7e7d72863bf5d707f8f352cfec58013f"
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/substation_electric_pole.json"
 hash = "bd71199aba89be3ed41d7e432f667f7228a566b229c294a07e526b91f559c9a3"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_hull.json"
+hash = "21e5a7cecc5afd48073ba637e06b309f291192b6b21333c76b9d16171c754369"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_window.json"
+hash = "71349626b29ca4cd66e4706aabe6617eea4b9489a9e6cb17280562eb96d39ecd"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/yumako_sapling.json"
@@ -2386,15 +2414,15 @@ hash = "ca2956988a3f44e1261a3e3ce4bd41e3afaa6b7970bf2779c1283d0d5c120c4a"
 
 [[files]]
 file = "kubejs/data/factoryworks/structure/terra_start_hub_0.nbt"
-hash = "ac2f2e3aea05988cdb091bf682e52ec862787b6ccbd2a3e53018f1066e745209"
+hash = "0b998c90f3d597fcef7197751b7bf7cdddc43bcb15f7b3e30ab782a9e7b967d5"
 
 [[files]]
 file = "kubejs/data/factoryworks/structure/terra_start_hub_1.nbt"
-hash = "6778b83fd5df4c47f313377d422d9f7badb49a5845a54c6e45a507bb474c0a07"
+hash = "70b5201a76509b993f7ef2efdc8a1f17dd0277e79ee18e1d31f6f1c0ab611e51"
 
 [[files]]
 file = "kubejs/data/factoryworks/structure/terra_start_hub_2.nbt"
-hash = "3684cb9bcc6b8eb5be123bfad0b784dee1ddcdb3cc1381a0d52b85d15c4752e3"
+hash = "e9f62affcdcf2728e489b992fc71372ca64ac810b16264176206af5f61aa9c1a"
 
 [[files]]
 file = "kubejs/data/factoryworks/structure/terra_start_iron_large.nbt"
@@ -2493,6 +2521,10 @@ file = "kubejs/data/factoryworks/worldgen/processor_list/terra_start_ground.json
 hash = "e0daaf27e9d4e8ac5cbca5ecd5a49f2a3bbbbef8fa5897d0cb9d21971ee1fe54"
 
 [[files]]
+file = "kubejs/data/factoryworks/worldgen/processor_list/terra_start_hub_ground.json"
+hash = "5e195efddfa736ed464a119e6407609f2673a4b677fc2ed0af0325a208b1e201"
+
+[[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/oil_field.json"
 hash = "70765e3af5155cefbaf6e2b674c369de82118b42290ac903a80258eca764920c"
 
@@ -2542,7 +2574,7 @@ hash = "1e62730de0351ebfa41f27b9f66952bee8bcbf0ec174c01ec4ff174c59f565f3"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/template_pool/terra_start.json"
-hash = "42c62ed61d320a46351ab9ce764c688c5eacf81e0d33eba66138fe558d0f3449"
+hash = "bca517c91a2a236912b11a692ab34ebc2261fcc823be3ba81c88a21061747414"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/template_pool/terra_start_coal.json"
@@ -3139,6 +3171,10 @@ metafile = true
 file = "mods/trashslot.pw.toml"
 hash = "71c920bbbf7464754a2e7beb48e8dae545795cc6c36206623a45188a8072e03b"
 metafile = true
+
+[[files]]
+file = "mods/wireworks-0.1.0.jar"
+hash = "defcb1e1b5af4331587802072ebcc2ff6f7eb51eebcdb434336d3cc08d8f7706"
 
 [[files]]
 file = "player.env"

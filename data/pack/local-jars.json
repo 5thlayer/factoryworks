@@ -20,6 +20,16 @@
       "curseforge": 1715876
     },
     {
+      "mod": "wireworks",
+      "group": "io.github.5thlayer",
+      "artifact": "wireworks",
+      "version": "0.1.0",
+      "pattern": "wireworks-*.jar",
+      "nests": [
+        "groundworks"
+      ]
+    },
+    {
       "mod": "researchd",
       "group": "com.portingdeadmods.researchd",
       "artifact": "researchd",
