@@ -62,6 +62,7 @@ Factorio names them, and each section gives the pack's own name beside it.
 | [Radar and map exploration](#radar-and-map-exploration) | `adapted` | Terra |
 | [The logistic request and trash system](#the-logistic-request-and-trash-system) | `excluded` | — |
 | [Day and night cycle](#day-and-night-cycle) | `shipped` | Terra; Sapros parked |
+| [Crash site](#crash-site) | `planned` | Terra |
 | [Controls](#controls) | `planned` | Terra |
 | [Factoriopedia](#factoriopedia) | `planned` | Terra |
 
@@ -1430,6 +1431,21 @@ Sub-rules:
   Factorio's 0.84 per panel on Terra's seven-minute day (#509).
 - **Solar output on Electro** — `planned`, #7. It is the planet's identity, a multiplier on the
   Terra panel's output; Electro's own cycle is #8's.
+
+### Crash site
+
+- **verdict**: `planned`
+- **where**: Terra
+- **via**: `pack`
+- **owner**: ADR-0107
+- **ticket**: #498
+
+Factorio's freeplay starts the engineer beside the ship they crashed in, once per world, for the
+first player: the hull and its debris are minable for nothing, and its containers hold the starting
+plates. Terra's **wreck** is one indestructible room at the hub's centre that the player wakes in and
+returns to after dying, with one five-slot cargo hold (the `crash-site-spaceship`'s inventory) filled
+with the Hold once per world. The debris, the scattered segments and the opening cutscene are not
+reproduced.
 
 ### Controls
 
