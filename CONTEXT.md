@@ -244,7 +244,11 @@ _Avoid_: pond, lake, starting water, spawn pool
 
 **Wreck**:
 The ship the player crashed in, standing in the hub, and where the player wakes on a new world and returns after dying. A roofed room no block of which can be broken, with an open doorway, windows and one **cargo hold**. It is there for the fiction and to hold the cargo; it is not a shelter, since nothing on Terra attacks at night (ADR-0093). There is one per world.
-_Avoid_: crash site, ship, spaceship, debris, wreckage
+_Avoid_: crash site, ship, spaceship, wreckage
+
+**Debris**:
+The breakable pieces of the **wreck** scattered on the hub's ground around it, as many as Factorio's crash site scatters. Breaking one yields nothing, and none holds anything.
+_Avoid_: wreckage, scrap, wreck pieces
 
 **Cargo hold**:
 The wreck's one container, set flush in its wall so it opens from inside and from outside, and as unbreakable as the rest of the wreck. A new world's cargo hold holds the **Hold**, once per world: a player who joins later finds whatever is left.
