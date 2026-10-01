@@ -265,11 +265,17 @@ POOL_CLEARANCE = 2
 # Dry blocks between the pool and the wreck's wall, and between it and the doorway's line.
 POOL_GAP = 2
 
-# The wreck (ADR-0107): #134's box, outside x, y, z, at the hub's centre. Hull floor and roof, an
-# open doorway two tall in the middle of the +z long wall, windows on the -z long wall and the -x
-# short wall, and the cargo hold, five by two, flush in the +x short wall (#548). `TerraStartingArea` faces the spawn
-# toward template +z, and `test_start_geometry.py` holds the doorway there.
+# The wreck (ADR-0107): a ship's hull inside a box of outside x, y, z at the hub's centre. A nose at
+# -x, a blunt engine end at +x, walls that curve in at the top. An open doorway two tall in the
+# middle of the +z long wall, windows on the -z long wall and the nose, and the cargo hold, five by
+# two, flush in the flat engine end (#548, #549). `TerraStartingArea` faces the spawn toward
+# template +z, and `test_start_geometry.py` holds the doorway there.
 WRECK_SIZE = (15, 7, 11)
+# The hull's half-width in z at the nose, one entry per x from the tip, and by layer, bottom up.
+NOSE_HALF_WIDTH = (2, 3, 4)
+LAYER_HALF_WIDTH = (5, 5, 5, 5, 5, 4, 3)
+# The first x of each layer: the nose slopes back toward the roof.
+LAYER_START_X = (0, 0, 0, 0, 0, 1, 2)
 WRECK_HULL = {"Name": "factoryworks:wreck_hull"}
 WRECK_WINDOW = {"Name": "factoryworks:wreck_window"}
 # One block of the ten is the anchor, the one with the inventory. A boolean does not rotate with the
@@ -297,35 +303,79 @@ def along_face(resource, dx, dz):
     return dz if PATCHES[resource]["facing"] in ("east", "west") else dx
 
 
-def wreck_blocks():
-    """The wreck in its own coordinates, as (x, y, z, palette entry), every cell of its box.
+def in_hull(x, y, z):
+    """Whether a cell of the wreck's box lies inside the hull's outer surface."""
+    sx, sy, sz = WRECK_SIZE
+    if not (0 <= y < sy and LAYER_START_X[y] <= x < sx):
+        return False
+    nose = NOSE_HALF_WIDTH[x] if x < len(NOSE_HALF_WIDTH) else LAYER_HALF_WIDTH[0]
+    return abs(z - sz // 2) <= min(nose, LAYER_HALF_WIDTH[y])
 
-    The interior is written as air so whatever grew there is cleared. The floor is template y=0,
-    which replaces the ground block the way the pool and the fields do.
+
+def bevel(x, y, z):
+    """The palette entry smoothing a top edge of the hull, or None where the hull stays square.
+
+    A cell with open air above and beside it is an edge. Below the roof a stair rises toward the
+    hull's middle, an outer corner where the nose turns; on the roof a bottom slab finishes the
+    curve. The engine end is left square, so the hold's face stays flat.
+    """
+    if in_hull(x, y + 1, z):
+        return None
+    out_x = not in_hull(x - 1, y, z)
+    out_z = [d for d in (-1, 1) if not in_hull(x, y, z + d)]
+    if not out_x and not out_z:
+        return None
+    if y == WRECK_SIZE[1] - 1:
+        return {"Name": "factoryworks:wreck_hull_slab",
+                "Properties": {"type": "bottom", "waterlogged": "false"}}
+    if out_x and out_z:
+        facing, shape = "east", "outer_right" if out_z == [-1] else "outer_left"
+    elif out_x:
+        facing, shape = "east", "straight"
+    else:
+        facing, shape = "south" if out_z == [-1] else "north", "straight"
+    return {"Name": "factoryworks:wreck_hull_stairs",
+            "Properties": {"facing": facing, "half": "bottom", "shape": shape,
+                           "waterlogged": "false"}}
+
+
+def wreck_blocks():
+    """The wreck in its own coordinates, as (x, y, z, palette entry).
+
+    Every cell of the box above the floor is written, as air outside the hull, so whatever grew
+    there is cleared. The floor is template y=0, which replaces the ground block the way the pool
+    and the fields do, and the ground outside the hull's floor is left as it is.
     """
     sx, sy, sz = WRECK_SIZE
     door_x = sx // 2
+    mid_z = sz // 2
     cells = []
     for x in range(sx):
         for y in range(sy):
             for z in range(sz):
-                wall_x = x in (0, sx - 1)
-                wall_z = z in (0, sz - 1)
-                if y in (0, sy - 1):
-                    entry = WRECK_HULL
-                elif not (wall_x or wall_z):
-                    entry = WRECK_LIGHT if (y == sy - 2 and x in (3, sx - 4) and z in (2, sz - 3)) else AIR
+                if not in_hull(x, y, z):
+                    if y > 0:
+                        cells.append((x, y, z, AIR))
+                    continue
+                # Diagonals count: an outer corner stair is open on its room side (#549).
+                shell = y in (0, sy - 1) or any(
+                    not in_hull(x + dx, y + dy, z + dz)
+                    for dx, dy, dz in ((1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, 0, 1), (0, 0, -1),
+                                       (1, 0, 1), (1, 0, -1), (-1, 0, 1), (-1, 0, -1)))
+                edge = bevel(x, y, z) if shell else None
+                if not shell:
+                    entry = WRECK_LIGHT if (y == sy - 2 and x in (3, sx - 4)
+                                            and z in (2, sz - 3)) else AIR
+                elif edge is not None:
+                    entry = edge
                 elif z == sz - 1 and x == door_x and y in (1, 2):
                     entry = AIR
-                elif wall_x and wall_z:
-                    entry = WRECK_HULL
-                elif z == 0 and y in (2, 3) and 2 <= x <= sx - 3:
+                elif z == 0 and y in (2, 3) and 4 <= x <= sx - 3:
                     entry = WRECK_WINDOW
-                elif x == 0 and y in (2, 3) and 2 <= z <= sz - 3:
+                elif x == 0 and y in (2, 3) and abs(z - mid_z) <= 1:
                     entry = WRECK_WINDOW
-                elif (x == sx - 1 and y in (1, 2)
-                        and abs(z - sz // 2) <= HOLD_WIDTH // 2):
-                    entry = CARGO_HOLD_ANCHOR if (y == 1 and z == sz // 2) else CARGO_HOLD
+                elif x == sx - 1 and y in (1, 2) and abs(z - mid_z) <= HOLD_WIDTH // 2:
+                    entry = CARGO_HOLD_ANCHOR if (y == 1 and z == mid_z) else CARGO_HOLD
                 else:
                     entry = WRECK_HULL
                 cells.append((x, y, z, entry))

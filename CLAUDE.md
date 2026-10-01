@@ -280,7 +280,7 @@ anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `co
 
 ### Wreck check
 
-The wreck's three blocks, the hull, the window and the cargo hold, have hardness -1 and no item
+The wreck's blocks, the hull with its stairs and slab, the window and the cargo hold, have hardness -1 and no item
 (ADR-0107, #544). The hold's slot count is Factorio's `crash-site-spaceship` `inventory_size`:
 `scripts/factorio-container-extract.py` writes `data/factorio/container.json`, and
 `scripts/build-wreck-assets.py` copies the row into the resource `CargoHoldCorpus` reads and writes

@@ -22,8 +22,10 @@ The Opening begins inside the **wreck** (`docs/spec/terra-progression.md`, beat 
 
 ## Decision
 
-**The wreck is fiction and the cargo hold's home, not a shelter.** It is #134's box, 15×11×7 outside
-and 13×9×5 inside, at the hub's centre, roofed, with windows and an open doorway in a long wall. The
+**The wreck is fiction and the cargo hold's home, not a shelter.** It is a ship's hull inside #134's
+15×11×7 box (#549): a nose at one end, a blunt engine end at the other with the cargo hold flush in
+it, and walls that curve in toward the roof, at the hub's centre, with windows and an open doorway
+in a long wall. The
 water pool moves out of the centre to beside the doorway. There is no door and no lever. Invisible
 `minecraft:light` blocks keep the room readable at night. Every block of the wreck has hardness -1.
 
@@ -67,4 +69,4 @@ the mod's too.
   facts about that build.
 - `StartingKitGrant` grants the Pocket only, and `StartingKit.HOLD` becomes what the stamp puts in
   the cargo hold.
-- The wreck's art is vanilla's for now; its own art and a ship's shape are a follow-up.
+- The wreck's art is vanilla's for now; its own art and its damage are #547's.

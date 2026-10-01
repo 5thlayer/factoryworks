@@ -7,7 +7,7 @@
     copy is held to the corpus field by field.
   - **The screen's shape.** The hold opens vanilla's hopper screen, which is five slots and
     refuses any other size. The corpus has to still say five.
-  - **No item.** None of the three blocks has an item, an item model, an item definition or a
+  - **No item.** None of the wreck blocks has an item, an item model, an item definition or a
     loot table.
 
 Whether the blockstates, models, textures and lang keys resolve is `test_block_assets.py`'s.
@@ -29,7 +29,7 @@ LOOT = ROOT / "kubejs/data/factoryworks/loot_table/blocks"
 
 FACTORIO_NAME = "crash-site-spaceship"
 COPIED_FIELDS = ("inventory_size",)
-BLOCKS = ("wreck_hull", "wreck_window", "cargo_hold")
+BLOCKS = ("wreck_hull", "wreck_hull_stairs", "wreck_hull_slab", "wreck_window", "cargo_hold")
 HOPPER_SLOTS = 5
 
 

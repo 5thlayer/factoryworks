@@ -182,6 +182,8 @@
   "block.factoryworks.wreck_hull": "Wreck Hull",
   "block.factoryworks.wreck_window": "Wreck Window",
   "block.factoryworks.cargo_hold": "Cargo Hold",
+  "block.factoryworks.wreck_hull_stairs": "Wreck Hull Stairs",
+  "block.factoryworks.wreck_hull_slab": "Wreck Hull Slab",
   "recipe.factoryworks.assembling.accumulator": "%s",
   "recipe.factoryworks.assembling.advanced_circuit": "%s",
   "recipe.factoryworks.assembling.assembling_machine_1": "%s",

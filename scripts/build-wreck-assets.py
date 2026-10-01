@@ -4,7 +4,7 @@
 The cargo hold's slot count is Factorio's `crash-site-spaceship` `inventory_size`. This copies the
 row out of `data/factorio/container.json` into
 `mod/src/main/resources/factoryworks_core/wreck/containers.json`, which `CargoHoldCorpus` reads,
-and writes the blockstate, model and lang name of the three wreck blocks. None has an item, a loot
+and writes the blockstates, models and lang names of the wreck's blocks. None has an item, a loot
 table or an item model.
 
 Usage:
@@ -34,6 +34,34 @@ BLOCKS = {
     "wreck_window": ("Wreck Window", "minecraft:block/tinted_glass"),
     "cargo_hold": ("Cargo Hold", "minecraft:block/chiseled_copper"),
 }
+# The hull's bevel, drawn in the hull's texture.
+SHAPED = {
+    "wreck_hull_stairs": "Wreck Hull Stairs",
+    "wreck_hull_slab": "Wreck Hull Slab",
+}
+FACING_Y = {"east": 0, "south": 90, "west": 180, "north": 270}
+
+
+def stairs_blockstate(model):
+    variants = {}
+    for facing, y in FACING_Y.items():
+        for half in ("bottom", "top"):
+            for shape in ("straight", "inner_left", "inner_right", "outer_left", "outer_right"):
+                suffix = "" if shape == "straight" else "_" + shape.split("_")[0]
+                turn = y
+                if shape.endswith("left") and half == "bottom":
+                    turn -= 90
+                if shape.endswith("right") and half == "top":
+                    turn += 90
+                variant = {"model": model + suffix}
+                if half == "top":
+                    variant["x"] = 180
+                if turn % 360:
+                    variant["y"] = turn % 360
+                if variant.keys() - {"model"}:
+                    variant["uvlock"] = True
+                variants[f"facing={facing},half={half},shape={shape}"] = variant
+    return {"variants": variants}
 
 
 def row_from_corpus():
@@ -64,7 +92,28 @@ def planned_files():
             "parent": "minecraft:block/cube_all",
             "textures": {"all": texture},
         }
+    hull = BLOCKS["wreck_hull"][1]
+    sides = {"bottom": hull, "top": hull, "side": hull}
+    stairs = f"{NAMESPACE}:block/wreck_hull_stairs"
+    files[os.path.join(ASSETS, "blockstates", "wreck_hull_stairs.json")] = stairs_blockstate(stairs)
+    for suffix, parent in (("", "stairs"), ("_inner", "inner_stairs"), ("_outer", "outer_stairs")):
+        files[os.path.join(ASSETS, "models", "block", f"wreck_hull_stairs{suffix}.json")] = {
+            "parent": f"minecraft:block/{parent}",
+            "textures": sides,
+        }
+    slab = f"{NAMESPACE}:block/wreck_hull_slab"
+    files[os.path.join(ASSETS, "blockstates", "wreck_hull_slab.json")] = {"variants": {
+        "type=bottom": {"model": slab},
+        "type=top": {"model": slab + "_top"},
+        "type=double": {"model": f"{NAMESPACE}:block/wreck_hull"},
+    }}
+    for suffix, parent in (("", "slab"), ("_top", "slab_top")):
+        files[os.path.join(ASSETS, "models", "block", f"wreck_hull_slab{suffix}.json")] = {
+            "parent": f"minecraft:block/{parent}",
+            "textures": sides,
+        }
     lang = {f"block.{NAMESPACE}.{name}": display for name, (display, _) in BLOCKS.items()}
+    lang.update({f"block.{NAMESPACE}.{name}": display for name, display in SHAPED.items()})
     return files, lang
 
 

@@ -27,8 +27,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.StairsShape;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -56,6 +58,12 @@ final class WreckTests {
     static void register(PFGameTests.Registrar tests) {
         tests.test("wreck_hull_survives_a_survival_break", 20,
                 helper -> survivesBreak(helper, PFBlocks.WRECK_HULL.get().defaultBlockState()));
+        tests.test("wreck_hull_stairs_survives_a_survival_break", 20,
+                helper -> survivesBreak(helper, PFBlocks.WRECK_HULL_STAIRS.get().defaultBlockState()));
+        tests.test("wreck_hull_slab_survives_a_survival_break", 20,
+                helper -> survivesBreak(helper, PFBlocks.WRECK_HULL_SLAB.get().defaultBlockState()));
+        tests.test("wreck_hull_stairs_keeps_its_shape_beside_a_placed_block", 20,
+                WreckTests::stairsKeepShape);
         tests.test("wreck_window_survives_a_survival_break", 20,
                 helper -> survivesBreak(helper, PFBlocks.WRECK_WINDOW.get().defaultBlockState()));
         tests.test("cargo_hold_part_survives_a_survival_break", 20,
@@ -190,6 +198,17 @@ final class WreckTests {
         AABB area = new AABB(pos).inflate(8);
         helper.assertValueEqual(level.getEntities(EntityType.ITEM, area, e -> true).size(), 0,
                 "items dropped");
+        helper.succeed();
+    }
+
+    private static void stairsKeepShape(GameTestHelper helper) {
+        BlockState corner = PFBlocks.WRECK_HULL_STAIRS.get().defaultBlockState()
+                .setValue(StairBlock.FACING, Direction.EAST)
+                .setValue(StairBlock.SHAPE, StairsShape.OUTER_RIGHT);
+        helper.setBlock(AT, corner);
+        helper.setBlock(AT.west(), Blocks.STONE);
+        helper.assertValueEqual(helper.getBlockState(AT).getValue(StairBlock.SHAPE),
+                StairsShape.OUTER_RIGHT, "the corner's shape");
         helper.succeed();
     }
 

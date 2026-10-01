@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "factoryworks:block/wreck_hull_slab"
+    },
+    "type=top": {
+      "model": "factoryworks:block/wreck_hull_slab_top"
+    },
+    "type=double": {
+      "model": "factoryworks:block/wreck_hull"
+    }
+  }
+}

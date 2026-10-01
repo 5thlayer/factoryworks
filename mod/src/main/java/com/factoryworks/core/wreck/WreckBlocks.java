@@ -4,7 +4,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 
-/** What the three wreck blocks share: nothing breaks, burns, blasts or pushes them (ADR-0107). */
+/** What the wreck blocks share: nothing breaks, burns, blasts or pushes them (ADR-0107). */
 final class WreckBlocks {
 
     private WreckBlocks() {

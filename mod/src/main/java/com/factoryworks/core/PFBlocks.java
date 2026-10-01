@@ -34,6 +34,8 @@ import com.factoryworks.core.chest.ChestTier;
 import com.factoryworks.core.chest.PackChestBlock;
 import com.factoryworks.core.wreck.CargoHoldBlock;
 import com.factoryworks.core.wreck.WreckHullBlock;
+import com.factoryworks.core.wreck.WreckHullSlabBlock;
+import com.factoryworks.core.wreck.WreckHullStairsBlock;
 import com.factoryworks.core.wreck.WreckWindowBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SaplingBlock;
@@ -195,9 +197,16 @@ public final class PFBlocks {
     public static final FootprintMachine PUMPJACK_FOOTPRINT = new FootprintMachine(
             PumpjackFootprint.FOOTPRINT, PUMPJACK, PUMPJACK_PART, () -> PFItems.PUMPJACK.get());
 
-    /** The wreck's three blocks (ADR-0107): none has an item, and nothing breaks them. */
+    /** The wreck's blocks (ADR-0107): none has an item, and nothing breaks them. */
     public static final DeferredHolder<Block, WreckHullBlock> WRECK_HULL =
             BLOCKS.registerBlock("wreck_hull", WreckHullBlock::new);
+
+    public static final DeferredHolder<Block, WreckHullStairsBlock> WRECK_HULL_STAIRS =
+            BLOCKS.registerBlock("wreck_hull_stairs",
+                    props -> new WreckHullStairsBlock(WRECK_HULL.get().defaultBlockState(), props));
+
+    public static final DeferredHolder<Block, WreckHullSlabBlock> WRECK_HULL_SLAB =
+            BLOCKS.registerBlock("wreck_hull_slab", WreckHullSlabBlock::new);
 
     public static final DeferredHolder<Block, WreckWindowBlock> WRECK_WINDOW =
             BLOCKS.registerBlock("wreck_window", WreckWindowBlock::new);
