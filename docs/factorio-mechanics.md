@@ -1351,6 +1351,9 @@ Sub-rules:
   **The walking-speed bonus does have an analogue**: Block Runner gives a block a configurable
   walk/run speed, which is exactly what Factorio's concrete is for. The earlier `excluded` verdict
   was written before that mod was in the pack and is superseded rather than reversed on argument.
+- **Laying a floor over terrain** — `adapted`. Factorio places a tile over grass or another tile;
+  here a Fast Replace lays stone bricks or concrete over dirt, grass or gravel, through a group typed
+  in data rather than read from the corpus (ADR-0108, #552).
 
 ### Repair and entity damage
 
