@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Terra's starting area: no two ore fields may claim the same ground, and the hub has water.
+"""Terra's starting area: no two ore fields may claim the same ground, and the hub has its wreck
+and its water.
 
 Vanilla drops a jigsaw child whose bounding box overlaps one already placed, and it does so
 without logging anything -- a rejected child is an ordinary outcome, not an error. So a hub
@@ -18,16 +19,26 @@ refuses a bucket and Create's water wheel is the pack's only rotational source b
 line, so a hub that arrives without its pool ships as "rung 0 has no power" -- with nothing in any
 log, because a template that quietly lost a block is not an error either.
 
+The wreck (ADR-0107) is held to its shape here because `TerraStartingArea` reads none of it: it
+puts the spawn at the hub's centre, one block above the floor, facing template +z, and the
+`factoryworks:ground` level box in `terra_start_hub_ground` lays the wreck on one height. A
+doorway on another wall, a wreck off the centre or a level box that misses it is a world where the
+player wakes in a wall or the room is staggered, with nothing in a log.
+
 Reads the generated .nbt templates, not the generator's own tables, so it fails if
 `scripts/build-terra-start.py` is edited and not re-run.
 """
 
 import itertools
+import json
 import os
+import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 STRUCTURES = os.path.join(ROOT, "kubejs", "data", "factoryworks", "structure")
+HUB_GROUND = os.path.join(ROOT, "kubejs", "data", "factoryworks", "worldgen", "processor_list",
+                          "terra_start_hub_ground.json")
 
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import nbt  # noqa: E402
@@ -37,6 +48,14 @@ STEP = {"east": (1, 0), "west": (-1, 0), "north": (0, -1), "south": (0, 1)}
 # addition that pushes two boxes into each other on some draws and not others.
 RESOURCES = ["iron", "copper", "coal", "stone"]
 SIZES = ["small", "medium", "large"]
+
+# #134's box, outside x, y, z (ADR-0107).
+WRECK = (15, 7, 11)
+HULL = "factoryworks:wreck_hull"
+WINDOW = "factoryworks:wreck_window"
+HOLD = "factoryworks:cargo_hold"
+# The pool may sit no further than this from the doorway's outer cell.
+POOL_REACH = 8
 
 
 def jigsaws(template):
@@ -73,6 +92,76 @@ def water(template):
     return cells, air
 
 
+def blocks_by_pos(template):
+    palette = template["palette"]
+    return {tuple(block["pos"]): palette[block["state"]]["Name"] for block in template["blocks"]}
+
+
+def level_box():
+    with open(HUB_GROUND) as handle:
+        processors = json.load(handle)["processors"]
+    boxes = [p["level"] for p in processors if p.get("processor_type") == "factoryworks:ground"
+             and "level" in p]
+    assert len(boxes) == 1, "%s has %d level boxes, expected one" % (HUB_GROUND, len(boxes))
+    box = boxes[0]
+    return box["min_x"], box["min_z"], box["max_x"], box["max_z"]
+
+
+def wreck_failures(hub_file, hub, width):
+    """The wreck at the hub's centre, its doorway on +z, and the level box over exactly it."""
+    failures = []
+    at = blocks_by_pos(hub)
+    sx, sy, sz = WRECK
+    centre = width // 2
+    ox, oz = centre - sx // 2, centre - sz // 2
+    if hub["size"][1] < sy:
+        failures.append("%s is %d tall: the wreck needs %d" % (hub_file, hub["size"][1], sy))
+    if level_box() != (ox, oz, ox + sx - 1, oz + sz - 1):
+        failures.append("%s: the level box %s is not the wreck's footprint %s"
+                        % (hub_file, level_box(), (ox, oz, ox + sx - 1, oz + sz - 1)))
+
+    holds, windows, openings = [], set(), []
+    for x in range(sx):
+        for z in range(sz):
+            for y in (0, sy - 1):
+                if at.get((ox + x, y, oz + z)) != HULL:
+                    failures.append("%s: wreck %s at %d,%d,%d is %s, not hull"
+                                    % (hub_file, "floor" if y == 0 else "roof", x, y, z,
+                                       at.get((ox + x, y, oz + z))))
+            on_wall = x in (0, sx - 1) or z in (0, sz - 1)
+            for y in range(1, sy - 1):
+                name = at.get((ox + x, y, oz + z))
+                if not on_wall:
+                    if name not in ("minecraft:air", "minecraft:light"):
+                        failures.append("%s: wreck interior %d,%d,%d is %s"
+                                        % (hub_file, x, y, z, name))
+                elif name == HOLD:
+                    holds.append((x, y, z))
+                elif name == WINDOW:
+                    windows.add("+x" if x == sx - 1 else "-x" if x == 0
+                                else "+z" if z == sz - 1 else "-z")
+                elif name != HULL:
+                    openings.append((x, y, z))
+
+    door = [(sx // 2, 1, sz - 1), (sx // 2, 2, sz - 1)]
+    if sorted(openings) != door:
+        failures.append("%s: the wreck's openings are %s, not the doorway %s"
+                        % (hub_file, sorted(openings), door))
+    if windows != {"-z", "-x"}:
+        failures.append("%s: windows on %s, not the -z long wall and the -x short wall"
+                        % (hub_file, sorted(windows)))
+    if holds != [(sx - 1, 1, sz // 2)]:
+        failures.append("%s: cargo holds at %s, not one flush in the +x short wall"
+                        % (hub_file, holds))
+    spawn = (centre, 1, centre)
+    if at.get((spawn[0], 0, spawn[2])) != HULL or at.get(spawn) != "minecraft:air" \
+            or at.get((spawn[0], 2, spawn[2])) != "minecraft:air":
+        failures.append("%s: the spawn at the hub's centre is not two air on the floor" % hub_file)
+    if not any(name == "minecraft:light" for name in at.values()):
+        failures.append("%s: the wreck has no light" % hub_file)
+    return failures, (ox, oz, ox + sx - 1, oz + sz - 1), (ox + sx // 2, oz + sz)
+
+
 def patch_box(connector, facing, template):
     """Where a patch template lands, in hub-local coordinates.
 
@@ -99,6 +188,13 @@ def overlaps(a, b):
 
 
 def main():
+    generator = subprocess.run(
+        [sys.executable, os.path.join(ROOT, "scripts", "build-terra-start.py"), "--check"],
+        capture_output=True, text=True)
+    print(generator.stdout, end="")
+    if generator.returncode != 0:
+        return 1
+
     failures = []
     patches = {
         (resource, size): nbt.read(
@@ -140,6 +236,17 @@ def main():
             if (x, 1, z) not in air:
                 failures.append("%s: pool cell %d,%d has nothing cleared above it" % (hub_file, x, z))
 
+        found, wreck_box, outside_door = wreck_failures(hub_file, hub, width)
+        failures.extend(found)
+        for x, z in sorted(pool):
+            if overlaps((x, z, x, z), wreck_box):
+                failures.append("%s: pool cell %d,%d is inside the wreck" % (hub_file, x, z))
+            if x == outside_door[0]:
+                failures.append("%s: pool cell %d,%d is on the doorway's line" % (hub_file, x, z))
+        if pool and min(abs(x - outside_door[0]) + abs(z - outside_door[1])
+                        for x, z in pool) > POOL_REACH:
+            failures.append("%s: the pool is more than %d from the doorway" % (hub_file, POOL_REACH))
+
         pool_box = (min(x for x, _ in pool), min(z for _, z in pool),
                     max(x for x, _ in pool), max(z for _, z in pool)) if pool else None
 
@@ -167,8 +274,8 @@ def main():
     if failures:
         print("\n%d starting-area geometry failure(s)" % len(set(failures)))
         return 1
-    print("ok   %d hub variant(s) x %d size draw(s): every hub has its pool, and no field "
-          "overlaps another, the pool or the hub"
+    print("ok   %d hub variant(s) x %d size draw(s): every hub has its wreck and its pool by the "
+          "doorway, and no field overlaps another, the pool or the hub"
           % (len(hubs), len(SIZES) ** len(RESOURCES)))
     return 0
 

@@ -6,10 +6,12 @@ import com.factoryworks.core.ore.OreBlock;
 import com.factoryworks.core.ore.OreCensus;
 import com.factoryworks.core.ore.OreFields;
 import com.factoryworks.core.ore.OreResource;
+import com.factoryworks.core.wreck.WreckSpawn;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
@@ -20,6 +22,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
@@ -37,7 +41,8 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.level.dimension.DimensionType;
 
 /**
- * Terra's opening: the hub, its four ore fields and its water pool, stamped at world spawn.
+ * Terra's opening: the hub, its four ore fields, its water pool and the wreck, stamped at world
+ * spawn, after which the spawn point moves onto the wreck's floor.
  *
  * <p>ADR-0019 asks for a <em>spawn-anchored</em> starting area, and vanilla cannot express that.
  * A {@code StructurePlacement} decides which chunks a structure occupies from
@@ -77,8 +82,8 @@ public final class TerraStartingArea {
 
     /**
      * The name every hub connector carries. Vanilla offsets the hub so that the connector it picks
-     * lands on the given position, so the player spawns on the hub edge with the fields radiating
-     * away -- which is the reading ADR-0019 wants.
+     * lands on the given position, so the hub's centre, where the wreck is, is not that position:
+     * the spawn point is moved afterwards ({@link #moveSpawnIntoWreck}).
      */
     private static final Identifier START_JIGSAW =
             Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, "terra_start_hub");
@@ -184,6 +189,15 @@ public final class TerraStartingArea {
 
         loadChunks(level, pieces);
 
+        // Read before placing: the wreck's floor replaces the ground block this finds, which is
+        // how the hub's level box lays it (GroundProcessor).
+        PoolElementStructurePiece hub = (PoolElementStructurePiece) pieces.getFirst();
+        BoundingBox hubBox = hub.getBoundingBox();
+        int centreX = (hubBox.minX() + hubBox.maxX()) / 2;
+        int centreZ = (hubBox.minZ() + hubBox.maxZ()) / 2;
+        BlockPos wreckFloor = new BlockPos(centreX, GroundProcessor.ground(level, centreX, centreZ) + 1,
+                centreZ);
+
         RandomSource random = level.getRandom();
         for (StructurePiece piece : pieces) {
             if (piece instanceof PoolElementStructurePiece poolPiece) {
@@ -192,8 +206,26 @@ public final class TerraStartingArea {
             }
         }
         recordFields(level, pieces);
+        moveSpawnIntoWreck(level, wreckFloor, hub.getRotation());
         LOGGER.info("Terra's starting area placed at {}, {}, {}: {} pieces",
                 spawn.getX(), spawn.getY(), spawn.getZ(), pieces.size());
+    }
+
+    /**
+     * The world's spawn point to the wreck's floor, facing its doorway (ADR-0107). The doorway is
+     * template +z in every hub variant ({@code tests/worldgen/test_start_geometry.py}), turned by
+     * the hub's rotation.
+     */
+    private static void moveSpawnIntoWreck(ServerLevel level, BlockPos floor, Rotation rotation) {
+        if (!WreckSpawn.onWreckFloor(level, floor)) {
+            LOGGER.error("Terra's wreck is not under {}: the spawn point stays where vanilla put it",
+                    floor);
+            return;
+        }
+        float yaw = rotation.rotate(Direction.SOUTH).toYRot();
+        level.setRespawnData(LevelData.RespawnData.of(level.dimension(), floor, yaw, 0.0F));
+        LOGGER.info("Terra's spawn point moved into the wreck at {}, facing {}", floor,
+                rotation.rotate(Direction.SOUTH));
     }
 
     /**

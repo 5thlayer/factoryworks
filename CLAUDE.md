@@ -163,7 +163,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `ElectricNetworkTests` (#280), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `SolarPanelTests` (#529), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
-`PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544), and `BeltworksPackTests`, registered only when
+`PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). `ShowcaseSceneTests` (#538) build the `core/showcase/` scenes that `/factoryworks showcase` builds
 for filming, under `factoryworks_showcase:*` so the run never selects them; swap the run's selector
@@ -290,7 +290,8 @@ the blocks' blockstates, models and lang names. `tests/pack/test_wreck_assets.py
 holds the copy to the corpus field by field, holds the corpus to the hopper screen's five slots and
 holds the blocks to no item; `CargoHoldCorpusTest` is the parse. `gametest/WreckTests` holds a
 survival player breaking each block through the game mode, the hold's face taking and giving on
-every side on both overloads, and its contents through the save hook. Run them after editing
+every side on both overloads, its contents through the save hook, and the spawn on the wreck's
+floor (#545). Run them after editing
 `core/wreck/` or the generator. How the blocks look is a human check on delivery.
 
 ### Recipe name check
@@ -523,8 +524,18 @@ delivery. Run the static check after editing the generator, and the GameTest run
 ore fields: every hub connector sits on the face it points out of, and no two fields overlap each
 other or the hub, for every hub variant against every combination of size variants. Vanilla drops
 an overlapping jigsaw child silently, so this failure ships as "three patches instead of four" on
-some seeds and nothing in a log. Run it after any edit to `scripts/build-terra-start.py`; it reads
-the generated `.nbt` files, so it also catches forgetting to re-run the generator.
+some seeds and nothing in a log. Run it after any edit to `scripts/build-terra-start.py`; it runs
+the generator's `--check` and reads the generated `.nbt` files.
+
+It also holds the wreck (ADR-0107, #545) at every hub's centre: hull floor and roof, the one
+doorway on the template's +z long wall, windows on the -z and -x walls, the cargo hold in the +x
+wall, and the pool beside the doorway and off its line. `TerraStartingArea` reads none of that: it
+puts the spawn point on the floor at the hub's centre facing template +z turned by the hub's
+rotation, and the hub's processor list lays the wreck's box on one height. A doorway moved or a
+level box that misses the wreck fails here; the stamp itself is a world. `PlayerSpawnFinderMixin`
+returns that spawn point unscattered at its own height, and `WreckTests` holds `findSpawn` to a
+roofed room's floor; removing the mixin turns it red. Waking inside, respawning inside and seeing
+the fields from the doorway are a human check on delivery.
 
 It is the only check standing behind the opening, and it cannot see the opening being *absent*:
 the pools, the processor list and the hub's jigsaw names are referenced from

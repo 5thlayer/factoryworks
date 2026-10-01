@@ -38,15 +38,19 @@ couple of seconds a block is about that. Stone is the fourth field and sits outs
 is ADR-0041's late addition, it is not on the hand-mining path the hour measures, and its own
 mid-size patch adds ~260 on top. It is a tuning number, not a discrete choice.
 
-Run from anywhere; writes into `kubejs/data/factoryworks/`.
+Run from anywhere; writes into `kubejs/data/factoryworks/`. `--check` writes nothing and exits 1
+if any generated file is stale.
 """
 
+import contextlib
 import importlib
+import io
 import json
 import math
 import os
 import random
 import sys
+import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import nbt  # noqa: E402
@@ -252,8 +256,26 @@ SCATTER = 7
 # is level with the grass around it and every neighbouring column is solid terrain at that y --
 # nothing to spill into, on a world ADR-0019 makes flat. `POOL_CLEARANCE` layers of air go above
 # it so that whatever grew there (tall grass is two blocks) is not left standing in the water.
+#
+# It sits beside the wreck's doorway (ADR-0107), off the doorway's own line so the way out is dry
+# ground.
+
 POOL_RADIUS = 4
 POOL_CLEARANCE = 2
+# Dry blocks between the pool and the wreck's wall, and between it and the doorway's line.
+POOL_GAP = 2
+
+# The wreck (ADR-0107): #134's box, outside x, y, z, at the hub's centre. Hull floor and roof, an
+# open doorway two tall in the middle of the +z long wall, windows on the -z long wall and the -x
+# short wall, and the cargo hold flush in the +x short wall. `TerraStartingArea` faces the spawn
+# toward template +z, and `test_start_geometry.py` holds the doorway there.
+WRECK_SIZE = (15, 7, 11)
+WRECK_HULL = {"Name": "factoryworks:wreck_hull"}
+WRECK_WINDOW = {"Name": "factoryworks:wreck_window"}
+CARGO_HOLD = {"Name": "factoryworks:cargo_hold"}
+# Light blocks are for reading the room at night; nothing spawns on Terra (ADR-0093).
+WRECK_LIGHT = {"Name": "minecraft:light", "Properties": {"level": "15", "waterlogged": "false"}}
+AIR = {"Name": "minecraft:air"}
 
 
 def patch_span(resource):
@@ -271,8 +293,52 @@ def along_face(resource, dx, dz):
     return dz if PATCHES[resource]["facing"] in ("east", "west") else dx
 
 
+def wreck_blocks():
+    """The wreck in its own coordinates, as (x, y, z, palette entry), every cell of its box.
+
+    The interior is written as air so whatever grew there is cleared. The floor is template y=0,
+    which replaces the ground block the way the pool and the fields do.
+    """
+    sx, sy, sz = WRECK_SIZE
+    door_x = sx // 2
+    cells = []
+    for x in range(sx):
+        for y in range(sy):
+            for z in range(sz):
+                wall_x = x in (0, sx - 1)
+                wall_z = z in (0, sz - 1)
+                if y in (0, sy - 1):
+                    entry = WRECK_HULL
+                elif not (wall_x or wall_z):
+                    entry = WRECK_LIGHT if (y == sy - 2 and x in (3, sx - 4) and z in (2, sz - 3)) else AIR
+                elif z == sz - 1 and x == door_x and y in (1, 2):
+                    entry = AIR
+                elif wall_x and wall_z:
+                    entry = WRECK_HULL
+                elif z == 0 and y in (2, 3) and 2 <= x <= sx - 3:
+                    entry = WRECK_WINDOW
+                elif x == 0 and y in (2, 3) and 2 <= z <= sz - 3:
+                    entry = WRECK_WINDOW
+                elif x == sx - 1 and y == 1 and z == sz // 2:
+                    entry = CARGO_HOLD
+                else:
+                    entry = WRECK_HULL
+                cells.append((x, y, z, entry))
+    return cells
+
+
+def hub_width():
+    return 2 * (max(patch_span(resource) for resource in PATCHES) + SCATTER) + 1
+
+
+def wreck_origin(width):
+    """The wreck's -x -z corner in hub coordinates: centred, so the hub's centre is its floor's."""
+    sx, _, sz = WRECK_SIZE
+    return width // 2 - sx // 2, width // 2 - sz // 2
+
+
 def build_hub(rng, index, offsets):
-    """One hub variant: one connector per resource, at scattered positions, and the water pool.
+    """One hub variant: one connector per resource, at scattered positions, the wreck and the pool.
 
     The hub places no *terrain* block of its own. Its job is to hold the four connectors far
     enough apart, and at different enough offsets, that the fields do not land on a fixed figure
@@ -304,7 +370,7 @@ def build_hub(rng, index, offsets):
     # drops whichever it happens to try second -- silently, since a rejected child is not an error.
     # Making the hub at least as wide as the widest field plus its scatter keeps every field's
     # sideways extent inside the hub's own footprint, so no two can reach each other's corner.
-    width = 2 * (max(patch_span(resource) for resource in offsets) + SCATTER) + 1
+    width = hub_width()
     occupied = set()
     for resource, (dx, dz) in offsets.items():
         facing = PATCHES[resource]["facing"]
@@ -333,13 +399,28 @@ def build_hub(rng, index, offsets):
             "nbt": block_nbt,
         })
 
-    # The pool, at the hub's centre: the connectors are all on the outer faces and the fields all
-    # run outward from them, so the middle is the one part of the footprint nothing else claims.
+    # The wreck holds the centre: the connectors are all on the outer faces and the fields all run
+    # outward from them, so the middle is the one part of the footprint nothing else claims.
+    ox, oz = wreck_origin(width)
+    for x, y, z, entry in wreck_blocks():
+        assert (ox + x, oz + z) not in occupied, "hub %d's wreck covers a connector" % index
+        blocks.append({
+            "pos": [nbt.Int(ox + x), nbt.Int(y), nbt.Int(oz + z)],
+            "state": nbt.Int(state_of(entry)),
+        })
+
+    # The pool beside the doorway: its nearest cell POOL_GAP clear of the wall and of the doorway's
+    # line, on the +x side.
     water = state_of({"Name": "minecraft:water", "Properties": {"level": "0"}})
-    air = state_of({"Name": "minecraft:air"})
-    centre = width // 2
-    for dx, dz in disc(rng, POOL_RADIUS):
-        x, z = centre + dx, centre + dz
+    air = state_of(AIR)
+    cells = disc(rng, POOL_RADIUS)
+    door_x = ox + WRECK_SIZE[0] // 2
+    wall_z = oz + WRECK_SIZE[2] - 1
+    shift_x = door_x + POOL_GAP + 1 - min(dx for dx, _ in cells)
+    shift_z = wall_z + POOL_GAP + 1 - min(dz for _, dz in cells)
+    for dx, dz in cells:
+        x, z = shift_x + dx, shift_z + dz
+        assert 0 <= x < width and 0 <= z < width, "hub %d's pool leaves the hub" % index
         assert (x, z) not in occupied, "hub %d floods a connector at %d,%d" % (index, x, z)
         blocks.append({
             "pos": [nbt.Int(x), nbt.Int(0), nbt.Int(z)],
@@ -352,7 +433,7 @@ def build_hub(rng, index, offsets):
             })
 
     write_template(os.path.join(STRUCTURES, "terra_start_hub_%d.nbt" % index),
-                   (width, 1 + POOL_CLEARANCE, width), palette, blocks)
+                   (width, max(WRECK_SIZE[1], 1 + POOL_CLEARANCE), width), palette, blocks)
 
 
 def write_json(path, obj):
@@ -364,6 +445,23 @@ def write_json(path, obj):
 
 
 def build_datapack(hub_count):
+    ox, oz = wreck_origin(hub_width())
+    write_json(os.path.join(WORLDGEN, "processor_list", "terra_start_hub_ground.json"), {
+        "_comment": "Generated by scripts/build-terra-start.py. The ground drop of "
+                    "terra_start_ground, except that the wreck's box is laid on one height, the "
+                    "ground at its centre, so its walls and roof stay level over uneven ground "
+                    "(ADR-0107).",
+        "processors": [{
+            "processor_type": "factoryworks:ground",
+            "level": {
+                "min_x": ox,
+                "min_z": oz,
+                "max_x": ox + WRECK_SIZE[0] - 1,
+                "max_z": oz + WRECK_SIZE[2] - 1,
+            },
+        }],
+    })
+
     write_json(os.path.join(PF, "tags", "worldgen", "biome", "terra_land.json"), {
         "_comment": "Generated by scripts/build-terra-start.py. Terra's land biomes: every "
                     "palette biome but the sea (#356).",
@@ -373,8 +471,8 @@ def build_datapack(hub_count):
 
     write_json(os.path.join(WORLDGEN, "template_pool", "terra_start.json"), {
         "_comment": "Generated by scripts/build-terra-start.py. Hub variants: the four connectors "
-                    "that decide where the fields land, and the water pool rung 0's Offshore "
-                    "Pump is sited on (ADR-0050).",
+                    "that decide where the fields land, the wreck the player wakes in (ADR-0107), "
+                    "and the water pool rung 0's Offshore Pump is sited on (ADR-0050).",
         "fallback": "minecraft:empty",
         "elements": [
             {
@@ -382,11 +480,11 @@ def build_datapack(hub_count):
                 "element": {
                     "element_type": "minecraft:single_pool_element",
                     "location": "factoryworks:terra_start_hub_%d" % index,
-                    # Same pair as a patch, and for the same reason: the pool has to sit in the
+                    # Rigid for the patches' reason: the pool and the wreck have to sit in the
                     # ground rather than at the hub's own y, and `rigid` is what keeps vanilla's
-                    # gravity processor -- which reads a heightmap that stops at leaves -- off it.
+                    # gravity processor -- which reads a heightmap that stops at leaves -- off them.
                     "projection": "rigid",
-                    "processors": "factoryworks:terra_start_ground",
+                    "processors": "factoryworks:terra_start_hub_ground",
                 },
             }
             for index in range(hub_count)
@@ -440,7 +538,7 @@ def build_datapack(hub_count):
     # places the opening. See ADR-0019's amendment and issue #313.
 
 
-def main():
+def generate():
     rng = random.Random(SEED)
     os.makedirs(STRUCTURES, exist_ok=True)
 
@@ -461,6 +559,40 @@ def main():
         build_hub(rng, index, offsets)
 
     build_datapack(len(hub_offsets))
+
+
+def check():
+    """Generate into a scratch tree and compare it to the committed one, writing nothing."""
+    global PF, STRUCTURES, WORLDGEN
+    committed = PF
+    with tempfile.TemporaryDirectory() as scratch:
+        PF = scratch
+        STRUCTURES = os.path.join(PF, "structure")
+        WORLDGEN = os.path.join(PF, "worldgen")
+        with contextlib.redirect_stdout(io.StringIO()):
+            generate()
+        stale = []
+        for folder, _, names in os.walk(scratch):
+            for name in names:
+                fresh = os.path.join(folder, name)
+                relative = os.path.relpath(fresh, scratch)
+                target = os.path.join(committed, relative)
+                with open(fresh, "rb") as a:
+                    want = a.read()
+                if not os.path.isfile(target) or open(target, "rb").read() != want:
+                    stale.append(relative)
+    for relative in sorted(stale):
+        print("stale %s -- re-run scripts/build-terra-start.py" % relative)
+    if stale:
+        return 1
+    print("ok   Terra's starting area templates and datapack files are current")
+    return 0
+
+
+def main():
+    if "--check" in sys.argv[1:]:
+        sys.exit(check())
+    generate()
 
 
 if __name__ == "__main__":

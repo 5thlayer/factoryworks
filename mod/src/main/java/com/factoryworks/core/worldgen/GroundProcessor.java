@@ -1,6 +1,9 @@
 package com.factoryworks.core.worldgen;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.LevelReader;
@@ -36,12 +39,20 @@ import org.jetbrains.annotations.Nullable;
  * is therefore flat at the hub's y while the blocks are not -- which costs nothing here, because the
  * boxes are only used for the sibling-overlap test and no two of them overlap in x/z anyway
  * ({@code tests/worldgen/test_start_geometry.py}).
+ *
+ * <p>An optional {@code level} box, in template x/z, lays every block inside it on one height: the
+ * ground at the box's centre. The wreck is a building, and dropped column by column its walls and
+ * roof would follow every bump in the ground (ADR-0107).
  */
 public final class GroundProcessor extends StructureProcessor {
-    public static final GroundProcessor INSTANCE = new GroundProcessor();
-    public static final MapCodec<GroundProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
+    public static final MapCodec<GroundProcessor> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            instance.group(LevelBox.CODEC.optionalFieldOf("level").forGetter(p -> p.levelBox))
+                    .apply(instance, GroundProcessor::new));
 
-    private GroundProcessor() {
+    private final Optional<LevelBox> levelBox;
+
+    private GroundProcessor(Optional<LevelBox> levelBox) {
+        this.levelBox = levelBox;
     }
 
     @Nullable
@@ -58,7 +69,15 @@ public final class GroundProcessor extends StructureProcessor {
         // `blockInfo` is the template-space original and `relativeBlockInfo` the world-space one
         // -- the same split vanilla's gravity processor relies on. The template's own y is kept as
         // an offset from the ground, so a template can still be more than one block thick.
-        int y = ground(level, placed.getX(), placed.getZ()) + blockInfo.pos().getY();
+        BlockPos local = blockInfo.pos();
+        int base = levelBox.filter(box -> box.contains(local.getX(), local.getZ()))
+                .map(box -> {
+                    BlockPos centre = StructureTemplate.calculateRelativePosition(settings,
+                            new BlockPos(box.centreX(), 0, box.centreZ())).offset(offset);
+                    return ground(level, centre.getX(), centre.getZ());
+                })
+                .orElseGet(() -> ground(level, placed.getX(), placed.getZ()));
+        int y = base + local.getY();
         return new StructureTemplate.StructureBlockInfo(
                 new BlockPos(placed.getX(), y, placed.getZ()),
                 relativeBlockInfo.state(),
@@ -86,6 +105,27 @@ public final class GroundProcessor extends StructureProcessor {
         return state.blocksMotion()
                 && !state.is(BlockTags.LOGS)
                 && !state.is(BlockTags.LEAVES);
+    }
+
+    /** Inclusive, in template x/z. */
+    record LevelBox(int minX, int minZ, int maxX, int maxZ) {
+        static final Codec<LevelBox> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.INT.fieldOf("min_x").forGetter(LevelBox::minX),
+                Codec.INT.fieldOf("min_z").forGetter(LevelBox::minZ),
+                Codec.INT.fieldOf("max_x").forGetter(LevelBox::maxX),
+                Codec.INT.fieldOf("max_z").forGetter(LevelBox::maxZ)).apply(instance, LevelBox::new));
+
+        boolean contains(int x, int z) {
+            return x >= minX && x <= maxX && z >= minZ && z <= maxZ;
+        }
+
+        int centreX() {
+            return (minX + maxX) / 2;
+        }
+
+        int centreZ() {
+            return (minZ + maxZ) / 2;
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.factoryworks.core.gametest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.wreck.CargoHoldBlockEntity;
@@ -13,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket.Action;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.PlayerSpawnFinder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
@@ -22,8 +24,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -33,7 +38,10 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
-/** The wreck's blocks hold against a survival player, and the cargo hold's face and save hook work (ADR-0107). */
+/**
+ * The wreck's blocks hold against a survival player, the cargo hold's face and save hook work, and
+ * a spawn on the wreck's floor stays there (ADR-0107).
+ */
 final class WreckTests {
 
     private static final BlockPos AT = new BlockPos(2, 1, 3);
@@ -52,6 +60,7 @@ final class WreckTests {
                 helper -> survivesBreak(helper, PFBlocks.CARGO_HOLD.get()));
         tests.test("cargo_hold_face_takes_and_gives_on_every_side", 20, WreckTests::faceOnEverySide);
         tests.test("cargo_hold_contents_survive_its_save_hook", 20, WreckTests::survivesSave);
+        tests.test("spawn_finder_keeps_the_wreck_floor_under_its_roof", 100, WreckTests::spawnOnFloor);
     }
 
     private static void survivesBreak(GameTestHelper helper, Block block) {
@@ -143,6 +152,41 @@ final class WreckTests {
             }
         }
         helper.succeed();
+    }
+
+    /** A roofed wreck room with the level's spawn on its floor, which vanilla never answers. */
+    private static void spawnOnFloor(GameTestHelper helper) {
+        BlockState hull = PFBlocks.WRECK_HULL.get().defaultBlockState();
+        for (int x = 0; x <= 4; x++) {
+            for (int z = 0; z <= 4; z++) {
+                for (int y = 1; y <= 5; y++) {
+                    boolean shell = y == 1 || y == 5 || x == 0 || x == 4 || z == 0 || z == 4;
+                    helper.setBlock(new BlockPos(x, y, z), shell ? hull : Blocks.AIR.defaultBlockState());
+                }
+            }
+        }
+        ServerLevel level = helper.getLevel();
+        BlockPos floor = helper.absolutePos(new BlockPos(2, 2, 2));
+
+        // Radius 0 so vanilla searches this column alone.
+        GameRules rules = level.getGameRules();
+        int radius = rules.get(GameRules.RESPAWN_RADIUS);
+        LevelData.RespawnData before = level.getRespawnData();
+        CompletableFuture<Vec3> found;
+        try {
+            rules.set(GameRules.RESPAWN_RADIUS, 0, level.getServer());
+            level.setRespawnData(LevelData.RespawnData.of(level.dimension(), floor, 0.0F, 0.0F));
+            found = PlayerSpawnFinder.findSpawn(level, floor);
+        } finally {
+            level.setRespawnData(before);
+            rules.set(GameRules.RESPAWN_RADIUS, radius, level.getServer());
+        }
+
+        Vec3 want = Vec3.atBottomCenterOf(floor);
+        helper.succeedWhen(() -> {
+            helper.assertTrue(found.isDone(), "the spawn search is still running");
+            helper.assertValueEqual(found.join(), want, "spawn for a player with no respawn point");
+        });
     }
 
     private static int insert(ResourceHandler<ItemResource> face, ItemResource item) {
