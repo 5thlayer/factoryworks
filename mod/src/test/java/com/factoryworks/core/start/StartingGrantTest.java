@@ -19,11 +19,11 @@ import org.junit.jupiter.api.Test;
 class StartingGrantTest {
 
     @Test
-    void aFreshPlayerIsGrantedTheWholeKit() {
+    void aFreshPlayerIsGrantedThePocket() {
         StartingGrant grant = new StartingGrant();
 
         assertFalse(grant.granted());
-        assertEquals(StartingKit.ALL, grant.claim());
+        assertEquals(StartingKit.POCKET, grant.claim());
         assertTrue(grant.granted());
     }
 
@@ -77,12 +77,11 @@ class StartingGrantTest {
                 .getOrThrow(error -> new AssertionError("the grant would not decode: " + error));
 
         assertFalse(read.granted());
-        assertEquals(StartingKit.ALL, read.claim());
+        assertEquals(StartingKit.POCKET, read.claim());
     }
 
     @Test
-    void theKitIsThePocketThenTheHold() {
-        assertEquals(StartingKit.POCKET.size() + StartingKit.HOLD.size(), StartingKit.ALL.size());
-        assertEquals(StartingKit.POCKET, StartingKit.ALL.subList(0, StartingKit.POCKET.size()));
+    void theHoldIsNeverGrantedToAPlayer() {
+        assertTrue(new StartingGrant().claim().stream().noneMatch(StartingKit.HOLD::contains));
     }
 }

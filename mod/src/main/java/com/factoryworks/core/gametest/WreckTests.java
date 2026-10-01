@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import com.factoryworks.core.PFBlocks;
+import com.factoryworks.core.start.StartingKit;
 import com.factoryworks.core.wreck.CargoHoldBlockEntity;
 import com.factoryworks.core.wreck.CargoHoldCorpus;
 
@@ -60,6 +61,7 @@ final class WreckTests {
                 helper -> survivesBreak(helper, PFBlocks.CARGO_HOLD.get()));
         tests.test("cargo_hold_face_takes_and_gives_on_every_side", 20, WreckTests::faceOnEverySide);
         tests.test("cargo_hold_contents_survive_its_save_hook", 20, WreckTests::survivesSave);
+        tests.test("stamped_cargo_hold_holds_exactly_the_hold", 20, WreckTests::stampedHoldIsFilled);
         tests.test("spawn_finder_keeps_the_wreck_floor_under_its_roof", 100, WreckTests::spawnOnFloor);
     }
 
@@ -150,6 +152,45 @@ final class WreckTests {
                 helper.fail("slot " + slot + " reloaded as " + got + ", not " + want, AT);
                 return;
             }
+        }
+        helper.succeed();
+    }
+
+    /**
+     * The wreck the server stamped at start, not one built here: its hold is the stamp's work. The
+     * GameTest server moves the respawn point to its own test site, so the hold is found among the
+     * block entities of the chunks around the world origin, where the stamp put the hub.
+     */
+    private static void stampedHoldIsFilled(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        List<CargoHoldBlockEntity> holds = new ArrayList<>();
+        for (int x = -8; x <= 8; x++) {
+            for (int z = -8; z <= 8; z++) {
+                for (BlockEntity entity : level.getChunk(x, z).getBlockEntities().values()) {
+                    if (entity instanceof CargoHoldBlockEntity found) {
+                        holds.add(found);
+                    }
+                }
+            }
+        }
+        helper.assertValueEqual(holds.size(), 1, "stamped cargo holds near the origin");
+        CargoHoldBlockEntity hold = holds.getFirst();
+
+        List<ItemStack> want = new ArrayList<>();
+        for (StartingKit.Entry entry : StartingKit.HOLD) {
+            want.add(new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.parse(entry.item())),
+                    entry.count()));
+        }
+        List<ItemStack> got = new ArrayList<>();
+        for (int slot = 0; slot < hold.getContainerSize(); slot++) {
+            if (!hold.getItem(slot).isEmpty()) {
+                got.add(hold.getItem(slot));
+            }
+        }
+        helper.assertValueEqual(got.size(), want.size(), "stacks in the stamped cargo hold: " + got);
+        for (int i = 0; i < want.size(); i++) {
+            helper.assertTrue(ItemStack.matches(want.get(i), got.get(i)),
+                    "slot " + i + " holds " + got.get(i) + ", not " + want.get(i));
         }
         helper.succeed();
     }

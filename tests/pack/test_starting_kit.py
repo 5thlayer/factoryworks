@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assert the starting kit #203 grants is the one the spec specifies, and that every id resolves.
+"""Assert the starting kit #203 grants (the pocket) and puts in the cargo hold (the hold, ADR-0107) is the one the spec specifies, and that every id resolves.
 
 `docs/testing/what-to-check.md`'s "cross-file references resolve" claim. The kit is a list of item
 id STRINGS -- it has to be, because that is what makes the once-per-player rule a Minecraft-free
@@ -14,7 +14,7 @@ Three things are checked, and the second and third are the ones a compiler could
    is the pack's authority on how a Factorio item is spelled here.
 2. **The pocket is the spec's pocket.** Not a superset: an extra tool in the pocket is a beat the
    opening no longer teaches, and it fails nothing else.
-3. **Nothing in the hold is otherwise unobtainable.** The spec's own sentence -- the moment the hold
+3. **Nothing in the hold, which the stamp puts in the wreck's cargo hold, is otherwise unobtainable.** The spec's own sentence -- the moment the hold
    contains a green circuit, rung 0 has stopped being taught. The hold is asserted to be exactly the
    three Factorio names the spec lists, at single-digit counts.
 """

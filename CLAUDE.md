@@ -163,7 +163,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `SolarPanelTests` (#529), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
-`PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545), and `BeltworksPackTests`, registered only when
+`PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545, #546), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). `ShowcaseSceneTests` (#538) build the `core/showcase/` scenes that `/factoryworks showcase` builds
 for filming, under `factoryworks_showcase:*` so the run never selects them; swap the run's selector
@@ -433,10 +433,12 @@ is a world load.
 
 ### Starting kit check
 
-The pocket and the hold `docs/spec/terra-progression.md` specifies are granted once per *player*
-by `core/start/`, not once per join — a grant that re-fires on login is an unlimited iron supply
-and would invalidate every pace reading after the first relog (#203). Two checks, neither of which
-launches the game. `tests/pack/test_starting_kit.py` asserts every granted id resolves — ours
+The pocket `docs/spec/terra-progression.md` specifies is granted once per *player* by `core/start/`,
+not once per join, and the hold is put in the wreck's cargo hold by `TerraStartingArea`'s stamp, once
+per world (ADR-0107, #546). `gametest/WreckTests` finds the cargo hold the server stamped around the
+level's spawn and holds it to exactly `StartingKit.HOLD`; removing the stamp's fill turns it red.
+A grant that re-fires on login is an unlimited iron supply and would invalidate every pace reading
+after the first relog (#203). Two static checks, neither of which launches the game. `tests/pack/test_starting_kit.py` asserts every granted id resolves — ours
 against the tier enums that produce the registry paths, every foreign one against the installed jars
 (the quest book is the only one today, since the prospector went with #323), the hold against
 `data/pack/item-map.json` — and that the pocket is the spec's pocket and the hold exactly the spec's

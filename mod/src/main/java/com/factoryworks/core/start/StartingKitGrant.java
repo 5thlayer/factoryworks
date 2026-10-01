@@ -13,10 +13,10 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import org.slf4j.Logger;
 
 /**
- * The starting kit, handed over on first join (#203).
+ * The pocket, handed over on first join (#203).
  *
- * <p>The spec has specified the pocket and the hold since the Opening was written, and nothing
- * granted them. The stub #170 allowed -- a {@code /give} string the tester types before starting the
+ * <p>The spec has specified the pocket since the Opening was written, and nothing
+ * granted it. The stub #170 allowed -- a {@code /give} string the tester types before starting the
  * clock -- is enough for the links pass, which tolerates wrong numbers entirely, and not enough for
  * the pace run: ADR-0040 put the drill in the pocket for a <em>pacing</em> reason, and beat 4 sits at
  * the twenty-minute mark. There is exactly one uncontaminated pace reading, and a run whose opening
@@ -30,10 +30,6 @@ import org.slf4j.Logger;
  *
  * <p>FTB Quests does not hand out its own book on first join in {@code 2101.1.31} -- the setting
  * that used to is gone, and nothing in the jar grants one -- so the pocket's book is the only book.
- *
- * <p>The wreck itself, spawning inside it and the habitable volume (#100 / #134) stay out of the
- * slice, so the hold's three stacks land in the inventory alongside the pocket rather than in a
- * cargo hold. When #133 arrives, the hold moves into it and the pocket does not.
  */
 public final class StartingKitGrant {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -48,7 +44,7 @@ public final class StartingKitGrant {
             return;
         }
         StartingGrant grant = player.getData(PFAttachments.STARTING_GRANT);
-        // claim() marks the attachment as it hands the kit over, and the attachment is the one the
+        // claim() marks the attachment as it hands the pocket over, and the attachment is the one the
         // player holds -- so the flag is already set by the time anything is delivered. A delivery
         // that throws halfway costs the items rather than handing out a second kit next login,
         // which is the same order TerraStartingArea marks its stamp in and for the same reason.

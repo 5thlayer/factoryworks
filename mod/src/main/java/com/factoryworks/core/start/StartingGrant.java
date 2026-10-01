@@ -3,7 +3,7 @@ package com.factoryworks.core.start;
 import java.util.List;
 
 /**
- * Whether this player has already been handed the starting kit (#203).
+ * Whether this player has already been handed the pocket (#203).
  *
  * <p>Once per <em>player</em>, not once per join. A grant that re-fires on login is an unlimited
  * iron supply, and it would invalidate every pace reading taken after the first relog -- silently,
@@ -32,7 +32,7 @@ public final class StartingGrant {
     }
 
     /**
-     * Take the kit, if it has not been taken.
+     * Take the pocket, if it has not been taken.
      *
      * <p>Returns the entries to deliver the first time and an empty list every time after, and
      * marks itself in the same call: there is no way to read the flag, act, and forget to write it.
@@ -42,6 +42,6 @@ public final class StartingGrant {
             return List.of();
         }
         granted = true;
-        return StartingKit.ALL;
+        return StartingKit.POCKET;
     }
 }

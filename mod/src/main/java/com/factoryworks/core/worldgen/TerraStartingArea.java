@@ -2,6 +2,9 @@ package com.factoryworks.core.worldgen;
 
 import com.mojang.logging.LogUtils;
 import com.factoryworks.core.FactoryWorksCore;
+import com.factoryworks.core.PFBlocks;
+import com.factoryworks.core.start.StartingKit;
+import com.factoryworks.core.wreck.CargoHoldBlockEntity;
 import com.factoryworks.core.ore.OreBlock;
 import com.factoryworks.core.ore.OreCensus;
 import com.factoryworks.core.ore.OreFields;
@@ -15,7 +18,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -207,6 +213,7 @@ public final class TerraStartingArea {
         }
         recordFields(level, pieces);
         moveSpawnIntoWreck(level, wreckFloor, hub.getRotation());
+        fillCargoHold(level, wreckFloor);
         LOGGER.info("Terra's starting area placed at {}, {}, {}: {} pieces",
                 spawn.getX(), spawn.getY(), spawn.getZ(), pieces.size());
     }
@@ -226,6 +233,38 @@ public final class TerraStartingArea {
         level.setRespawnData(LevelData.RespawnData.of(level.dimension(), floor, yaw, 0.0F));
         LOGGER.info("Terra's spawn point moved into the wreck at {}, facing {}", floor,
                 rotation.rotate(Direction.SOUTH));
+    }
+
+    /**
+     * The Hold into the wreck's cargo hold (ADR-0107). The hub is rotated, so the hold is found in
+     * the world around the floor rather than computed from template coordinates; the wreck's box is
+     * 15x11x7, so 8 blocks reaches every wall.
+     */
+    private static void fillCargoHold(ServerLevel level, BlockPos floor) {
+        CargoHoldBlockEntity hold = null;
+        for (BlockPos pos : BlockPos.betweenClosed(floor.offset(-8, -1, -8), floor.offset(8, 8, 8))) {
+            if (level.getBlockState(pos).is(PFBlocks.CARGO_HOLD.get())
+                    && level.getBlockEntity(pos) instanceof CargoHoldBlockEntity found) {
+                hold = found;
+                break;
+            }
+        }
+        if (hold == null) {
+            LOGGER.error("Terra's wreck has no cargo hold near {}: the Hold is not placed", floor);
+            return;
+        }
+        for (StartingKit.Entry entry : StartingKit.HOLD) {
+            Item item = Identifier.tryParse(entry.item()) == null ? null
+                    : BuiltInRegistries.ITEM.getOptional(Identifier.parse(entry.item())).orElse(null);
+            if (item == null) {
+                LOGGER.error("The Hold names {}, which is not a registered item", entry.item());
+                continue;
+            }
+            ItemStack rest = hold.put(new ItemStack(item, entry.count()));
+            if (!rest.isEmpty()) {
+                LOGGER.error("Terra's cargo hold would not take all of {}: {} left over", entry, rest);
+            }
+        }
     }
 
     /**
