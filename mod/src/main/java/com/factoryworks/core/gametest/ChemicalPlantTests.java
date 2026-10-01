@@ -1,6 +1,6 @@
 package com.factoryworks.core.gametest;
 
-import static com.factoryworks.core.gametest.ChassisFixture.expectMoved;
+import static com.factoryworks.core.gametest.Faces.expectMoved;
 import static com.factoryworks.core.gametest.ChassisFixture.fluid;
 
 import java.util.List;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import rearth.oritech.block.blocks.addons.MachineAddonBlock;
@@ -154,7 +153,7 @@ final class ChemicalPlantTests {
         ((FluidStacksResourceHandler) machine.tank()).set(outputTank, light, 90);
         int step = 0;
         for (BlockPos at : List.of(ANCHOR, ANCHOR.above())) {
-            ResourceHandler<FluidResource> face = CHASSIS.fluidFace(helper, at);
+            ResourceHandler<FluidResource> face = Faces.fluid(helper, at);
             if (face == null) {
                 helper.fail("no fluid face at " + at, at);
                 return;
@@ -219,7 +218,7 @@ final class ChemicalPlantTests {
     private static void fluidFaceStopsEachTankAtTheOverloadLimit(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = placeWhole(helper);
         CHASSIS.hold(helper, machine, CRACKING);
-        ResourceHandler<FluidResource> face = CHASSIS.fluidFace(helper, ANCHOR);
+        ResourceHandler<FluidResource> face = Faces.fluid(helper, ANCHOR);
         FluidResource water = FluidResource.of(Fluids.WATER);
         FluidResource heavy = FluidResource.of(fluid(HEAVY_OIL));
         expectMoved(helper, ANCHOR, "water", 120, face, (f, tx) -> f.insert(water, 1000, tx));
@@ -232,10 +231,8 @@ final class ChemicalPlantTests {
     private static void loneOutputTakesTheUnusedBox(GameTestHelper helper) {
         AssemblingMachineBlockEntity machine = placeWhole(helper);
         CHASSIS.hold(helper, machine, CRACKING);
-        int took;
-        try (Transaction tx = Transaction.openRoot()) {
-            took = machine.tank().insert(CHASSIS.outputTank(machine, 0), FluidResource.of(fluid(LIGHT_OIL)), 1000, tx);
-        }
+        int took = Faces.simulate(machine.tank(),
+                (f, tx) -> f.insert(CHASSIS.outputTank(machine, 0), FluidResource.of(fluid(LIGHT_OIL)), 1000, tx));
         if (took != 200) {
             helper.fail("the light oil tank took " + took + " mB, expected 200", ANCHOR);
             return;
@@ -249,7 +246,7 @@ final class ChemicalPlantTests {
         if (coal > 0) {
             machine.inventory.set(0, ItemResource.of(item("minecraft:coal")), coal);
         }
-        expectMoved(helper, ANCHOR, "petroleum gas", gas, CHASSIS.fluidFace(helper, ANCHOR),
+        expectMoved(helper, ANCHOR, "petroleum gas", gas, Faces.fluid(helper, ANCHOR),
                 (f, tx) -> f.insert(FluidResource.of(fluid(PETROLEUM_GAS)), gas, tx));
     }
 

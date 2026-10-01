@@ -10,12 +10,9 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
  * What a placed Boiler does in a world, and nothing that can be asked without one (#274, #224).
@@ -132,21 +129,25 @@ final class BoilerTests {
         // room to say it in: a refusal that is really an empty tank would pass vacuously.
         setWater(helper, BoilerBlockEntity.WATER_CAPACITY / 2);
         setSteam(helper, BoilerBlockEntity.STEAM_CAPACITY / 2);
-        ResourceHandler<FluidResource> face = fluidFace(helper);
+        ResourceHandler<FluidResource> face = Faces.fluid(helper, BOILER);
+        if (face == null) {
+            helper.fail("the Boiler has no fluid capability: it is inert", BOILER);
+            return;
+        }
 
-        int waterIn = simulateInsert(face, water);
+        int waterIn = Faces.simulate(face, (f, tx) -> f.insert(water, 1, tx));
         if (waterIn <= 0) {
             helper.fail("the fluid face refused water on the way in", BOILER);
         }
-        int steamIn = simulateInsert(face, steam);
+        int steamIn = Faces.simulate(face, (f, tx) -> f.insert(steam, 1, tx));
         if (steamIn != 0) {
             helper.fail("the fluid face took " + steamIn + " mB of steam on the way in", BOILER);
         }
-        int steamOut = simulateExtract(face, steam);
+        int steamOut = Faces.simulate(face, (f, tx) -> f.extract(steam, 1, tx));
         if (steamOut <= 0) {
             helper.fail("the fluid face refused steam on the way out", BOILER);
         }
-        int waterOut = simulateExtract(face, water);
+        int waterOut = Faces.simulate(face, (f, tx) -> f.extract(water, 1, tx));
         if (waterOut != 0) {
             helper.fail("a pipe drained " + waterOut + " mB of water back out of the Boiler",
                     BOILER);
@@ -163,19 +164,17 @@ final class BoilerTests {
     private static void itemFaceTakesFuelOnly(GameTestHelper helper) {
         helper.setBlock(BOILER, PFBlocks.BOILER.get());
         ItemResource coal = ItemResource.of(new ItemStack(Items.COAL));
-        ResourceHandler<ItemResource> face = itemFace(helper);
-
-        try (Transaction tx = Transaction.openRoot()) {
-            int taken = face.insert(coal, 1, tx);
-            if (taken != 1) {
-                helper.fail("the item face took " + taken + " coal, expected 1", BOILER);
-            }
-            tx.commit();
+        ResourceHandler<ItemResource> face = Faces.item(helper, BOILER);
+        if (face == null) {
+            helper.fail("the Boiler has no item capability: it is inert", BOILER);
+            return;
         }
+
+        Faces.expectMoved(helper, BOILER, "coal into the item face", 1, face, (f, tx) -> f.insert(coal, 1, tx));
         if (boiler(helper).getItem(BoilerSlots.FUEL).getCount() != 1) {
             helper.fail("the inserted coal did not reach the fuel slot", BOILER);
         }
-        int given = simulateExtract(face, coal);
+        int given = Faces.simulate(face, (f, tx) -> f.extract(coal, 1, tx));
         if (given != 0) {
             helper.fail("a funnel pulled " + given + " coal back out of the Boiler", BOILER);
         }
@@ -183,39 +182,6 @@ final class BoilerTests {
     }
 
     // -- the plumbing ---------------------------------------------------------------------------
-
-    private static <T extends Resource> int simulateInsert(
-            ResourceHandler<T> face, T resource) {
-        try (Transaction tx = Transaction.openRoot()) {
-            return face.insert(resource, 1, tx);
-        }
-    }
-
-    private static <T extends Resource> int simulateExtract(
-            ResourceHandler<T> face, T resource) {
-        try (Transaction tx = Transaction.openRoot()) {
-            return face.extract(resource, 1, tx);
-        }
-    }
-
-    /** The fluid face as a pipe finds it: through the capability, not off the block entity. */
-    private static ResourceHandler<FluidResource> fluidFace(GameTestHelper helper) {
-        ResourceHandler<FluidResource> face = helper.getLevel().getCapability(
-                Capabilities.Fluid.BLOCK, helper.absolutePos(BOILER), null);
-        if (face == null) {
-            helper.fail("the Boiler has no fluid capability: it is inert", BOILER);
-        }
-        return face;
-    }
-
-    private static ResourceHandler<ItemResource> itemFace(GameTestHelper helper) {
-        ResourceHandler<ItemResource> face = helper.getLevel().getCapability(
-                Capabilities.Item.BLOCK, helper.absolutePos(BOILER), null);
-        if (face == null) {
-            helper.fail("the Boiler has no item capability: it is inert", BOILER);
-        }
-        return face;
-    }
 
     private static BoilerBlockEntity boiler(GameTestHelper helper) {
         return helper.getBlockEntity(BOILER, BoilerBlockEntity.class);

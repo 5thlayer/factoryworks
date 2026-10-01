@@ -1,6 +1,6 @@
 package com.factoryworks.core.gametest;
 
-import static com.factoryworks.core.gametest.ChassisFixture.expectMoved;
+import static com.factoryworks.core.gametest.Faces.expectMoved;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
@@ -17,7 +17,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
@@ -94,7 +93,7 @@ final class FurnaceOverloadTests {
 
     private static ResourceHandler<ItemResource> place(GameTestHelper helper, FurnaceTier tier) {
         helper.setBlock(FURNACE, PFBlocks.furnace(tier).get());
-        return helper.getLevel().getCapability(Capabilities.Item.BLOCK, helper.absolutePos(FURNACE), null);
+        return Faces.item(helper, FURNACE);
     }
 
     private static FurnaceBlockEntity furnace(GameTestHelper helper) {

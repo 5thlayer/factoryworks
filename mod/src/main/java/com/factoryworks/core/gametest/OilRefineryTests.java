@@ -1,6 +1,6 @@
 package com.factoryworks.core.gametest;
 
-import static com.factoryworks.core.gametest.ChassisFixture.expectMoved;
+import static com.factoryworks.core.gametest.Faces.expectMoved;
 import static com.factoryworks.core.gametest.ChassisFixture.fluid;
 
 import java.util.List;
@@ -17,7 +17,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 
 /**
@@ -141,10 +140,7 @@ final class OilRefineryTests {
             String fluid, int size) {
         int tank = CHASSIS.outputTank(machine, output);
         ((FluidStacksResourceHandler) machine.tank()).set(tank, FluidResource.EMPTY, 0);
-        int took;
-        try (Transaction tx = Transaction.openRoot()) {
-            took = machine.tank().insert(tank, FluidResource.of(fluid(fluid)), 1000, tx);
-        }
+        int took = Faces.simulate(machine.tank(), (f, tx) -> f.insert(tank, FluidResource.of(fluid(fluid)), 1000, tx));
         if (took != size) {
             helper.fail("output tank " + output + " took " + took + " mB of " + fluid + ", expected " + size, ANCHOR);
         }
@@ -178,7 +174,7 @@ final class OilRefineryTests {
         }
         int step = 0;
         for (BlockPos at : List.of(ANCHOR, ANCHOR.above(3))) {
-            ResourceHandler<FluidResource> face = CHASSIS.fluidFace(helper, at);
+            ResourceHandler<FluidResource> face = Faces.fluid(helper, at);
             if (face == null) {
                 helper.fail("no fluid face at " + at, at);
                 return;
@@ -217,7 +213,7 @@ final class OilRefineryTests {
     /** Both fluids through the face, so a face refusing either fails here. */
     private static void feed(GameTestHelper helper, AssemblingMachineBlockEntity machine, int water, int crude) {
         CHASSIS.hold(helper, machine, ADVANCED);
-        ResourceHandler<FluidResource> face = CHASSIS.fluidFace(helper, ANCHOR);
+        ResourceHandler<FluidResource> face = Faces.fluid(helper, ANCHOR);
         if (water > 0) {
             expectMoved(helper, ANCHOR, "water", water, face,
                     (f, tx) -> f.insert(FluidResource.of(Fluids.WATER), water, tx));

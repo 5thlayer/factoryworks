@@ -1,7 +1,7 @@
 package com.factoryworks.core.gametest;
 
 import io.github._5thlayer.wireworks.WireworksRegistries;
-import static com.factoryworks.core.gametest.ChassisFixture.expectMoved;
+import static com.factoryworks.core.gametest.Faces.expectMoved;
 
 import java.util.List;
 import java.util.Set;
@@ -123,7 +123,7 @@ final class AssemblingMachineTests {
         ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
         ItemResource stone = ItemResource.of(Items.STONE);
         for (BlockPos at : List.of(ANCHOR, part)) {
-            ResourceHandler<ItemResource> face = CHASSIS.itemFace(helper, at);
+            ResourceHandler<ItemResource> face = Faces.item(helper, at);
             if (face == null) {
                 helper.fail("no item face at " + at, at);
                 return;
@@ -158,7 +158,7 @@ final class AssemblingMachineTests {
     /** No Held recipe: no slot takes anything, on either overload. */
     private static void withNoRecipeTakesNothing(GameTestHelper helper) {
         place(helper);
-        ResourceHandler<ItemResource> face = CHASSIS.itemFace(helper, ANCHOR);
+        ResourceHandler<ItemResource> face = Faces.item(helper, ANCHOR);
         ItemResource plate = ItemResource.of(item("ftbmaterials:iron_plate"));
         expectMoved(helper, ANCHOR, "plate, slot-less, with no recipe", 0, face, (f, tx) -> f.insert(plate, 8, tx));
         for (int slot = 0; slot < AssemblingMachineBlockEntity.INPUTS; slot++) {
@@ -174,7 +174,7 @@ final class AssemblingMachineTests {
         AssemblingMachineBlockEntity machine = place(helper);
         machine.setHeldRecipe(HeldRecipe.of(BOILER), player(helper));
         machine.cycleInputMode();
-        ResourceHandler<ItemResource> face = CHASSIS.itemFace(helper, ANCHOR);
+        ResourceHandler<ItemResource> face = Faces.item(helper, ANCHOR);
         ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
         expectMoved(helper, ANCHOR, "fluid pipes into slot 1 after a mode cycle", 8, face,
                 (f, tx) -> f.insert(1, fluidPipe, 8, tx));
@@ -190,7 +190,7 @@ final class AssemblingMachineTests {
     private static void holdsInputToTheOverloadLimit(GameTestHelper helper, AssemblingTier tier, int limit) {
         AssemblingMachineBlockEntity machine = place(helper, tier);
         machine.setHeldRecipe(HeldRecipe.of(CABLE), player(helper));
-        ResourceHandler<ItemResource> face = CHASSIS.itemFace(helper, ANCHOR);
+        ResourceHandler<ItemResource> face = Faces.item(helper, ANCHOR);
         ItemResource plate = ItemResource.of(item("ftbmaterials:copper_plate"));
         expectMoved(helper, ANCHOR, "plates, slot-less, into an empty machine", limit, face,
                 (f, tx) -> f.insert(plate, 8, tx));

@@ -1,6 +1,6 @@
 package com.factoryworks.core.gametest;
 
-import static com.factoryworks.core.gametest.ChassisFixture.expectMoved;
+import static com.factoryworks.core.gametest.Faces.expectMoved;
 
 import java.util.List;
 
@@ -133,7 +133,7 @@ final class AssemblingFluidTests {
         FluidResource water = FluidResource.of(Fluids.WATER);
         FluidResource lava = FluidResource.of(Fluids.LAVA);
         for (BlockPos at : List.of(ANCHOR, TIER_TWO.hullBlock())) {
-            ResourceHandler<FluidResource> face = TIER_TWO.fluidFace(helper, at);
+            ResourceHandler<FluidResource> face = Faces.fluid(helper, at);
             if (face == null) {
                 helper.fail("tier 2 has no fluid face at " + at, at);
                 return;
@@ -159,7 +159,7 @@ final class AssemblingFluidTests {
         TIER_TWO.hold(helper, machine, CONCRETE);
         FluidResource water = FluidResource.of(Fluids.WATER);
         for (BlockPos at : List.of(ANCHOR, TIER_TWO.hullBlock())) {
-            ResourceHandler<FluidResource> face = TIER_TWO.fluidFace(helper, at);
+            ResourceHandler<FluidResource> face = Faces.fluid(helper, at);
             ((FluidStacksResourceHandler) machine.tank()).set(0, water, 150);
             expectMoved(helper, at, "water up to the limit", 250, face, (f, tx) -> f.insert(water, 1000, tx));
             expectMoved(helper, at, "water past the limit", 0, face, (f, tx) -> f.insert(water, 100, tx));
@@ -171,7 +171,7 @@ final class AssemblingFluidTests {
     private static void tierOneHasNoFluidFace(GameTestHelper helper) {
         placeWhole(helper, AssemblingTier.ONE);
         for (BlockPos at : List.of(ANCHOR, TIER_TWO.hullBlock())) {
-            if (TIER_TWO.fluidFace(helper, at) != null) {
+            if (Faces.fluid(helper, at) != null) {
                 helper.fail("tier 1 answers a fluid face at " + at, at);
                 return;
             }
@@ -235,7 +235,7 @@ final class AssemblingFluidTests {
 
     /** Through the machine's own face, so a fill the face refuses fails here rather than later. */
     private static void fill(GameTestHelper helper, AssemblingMachineBlockEntity machine, int millibuckets) {
-        ResourceHandler<FluidResource> face = TIER_TWO.fluidFace(helper, ANCHOR);
+        ResourceHandler<FluidResource> face = Faces.fluid(helper, ANCHOR);
         expectMoved(helper, ANCHOR, "filling the tank", millibuckets, face,
                 (f, tx) -> f.insert(FluidResource.of(Fluids.WATER), millibuckets, tx));
     }

@@ -22,12 +22,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.resource.Resource;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
  * The helpers every machine on the crafting chassis (ADR-0096) tests the same way. Each machine's
@@ -56,30 +50,6 @@ record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, 
         machine.setHeldRecipe(HeldRecipe.of(id), helper.makeMockPlayer(GameType.SURVIVAL));
         if (!machine.heldRecipeResolves()) {
             helper.fail(id + " does not resolve on the " + name + ", so this proves nothing", anchor);
-        }
-    }
-
-    ResourceHandler<FluidResource> fluidFace(GameTestHelper helper, BlockPos at) {
-        return helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, helper.absolutePos(at), null);
-    }
-
-    ResourceHandler<ItemResource> itemFace(GameTestHelper helper, BlockPos at) {
-        return helper.getLevel().getCapability(Capabilities.Item.BLOCK, helper.absolutePos(at), null);
-    }
-
-    interface Move<R extends Resource> {
-        int apply(ResourceHandler<R> face, Transaction tx);
-    }
-
-    static <R extends Resource> void expectMoved(GameTestHelper helper, BlockPos at, String what, int expected,
-            ResourceHandler<R> face, Move<R> move) {
-        int moved;
-        try (Transaction tx = Transaction.openRoot()) {
-            moved = move.apply(face, tx);
-            tx.commit();
-        }
-        if (moved != expected) {
-            helper.fail(what + " moved " + moved + ", expected " + expected, at);
         }
     }
 
