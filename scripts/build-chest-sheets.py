@@ -3,9 +3,9 @@
 
 No installed jar ships an iron chest sheet, so it is derived from `data/art/iron_frame_side.png`
 and laid out the way 26.1's `ChestModel` reads a single chest: a 64x64 sheet of three boxes, each
-with the standard box UV. The lid and base faces tile the source at the face's own sheet
-coordinates with a 1px border at 55% brightness; the latch is the source at 135%. Every other
-pixel is transparent.
+with the standard box UV. Each lid and base face is the top-left corner of the source's interior,
+inside its own 2px frame, with a 1px border at 55% brightness; the latch is the source at 135%.
+Every other pixel is transparent.
 
     uv run --with pillow scripts/build-chest-sheets.py
     uv run --with pillow scripts/build-chest-sheets.py --check    # what tests/ runs
@@ -39,6 +39,8 @@ def box(u, v, w, h, d):
 LID = box(0, 0, 14, 5, 14)
 BASE = box(0, 19, 14, 10, 14)
 LATCH = box(0, 0, 2, 4, 1)
+# The source's own dark frame, which drew a seam across the chest's front when faces sampled it (#543).
+FRAME = 2
 
 
 def tile(src, w, h, ox=0, oy=0):
@@ -53,8 +55,9 @@ def build():
     src = Image.open(SOURCE).convert("RGBA")
     sheet = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
     border = tuple(ImageEnhance.Brightness(src).enhance(0.55).getpixel((0, 0)))
+    interior = src.crop((FRAME, FRAME, src.width - FRAME, src.height - FRAME))
     for x, y, w, h in LID + BASE:
-        face = tile(src, w, h, x, y)
+        face = tile(interior, w, h)
         ImageDraw.Draw(face).rectangle([0, 0, w - 1, h - 1], outline=border)
         sheet.paste(face, (x, y))
     latch = ImageEnhance.Brightness(src).enhance(1.35)
