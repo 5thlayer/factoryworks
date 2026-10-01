@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Build the Iron Chest's sheet from Futureazoo's iron frame (#543).
+"""Build the Iron and Steel Chests' sheets from committed art (#543).
 
-No installed jar ships an iron chest sheet, so it is derived from `data/art/iron_frame_side.png`
-and laid out the way 26.1's `ChestModel` reads a single chest: a 64x64 sheet of three boxes, each
-with the standard box UV. Each lid and base face is cut from the source at `ORIGIN`, clear of its
-frame and rivet, with a 1px border at 55% brightness; the latch is the source at 135%.
-Every other pixel is transparent.
+No installed jar ships either sheet, so each is derived from a texture under `data/art/` and laid
+out the way 26.1's `ChestModel` reads a single chest: a 64x64 sheet of three boxes, each with the
+standard box UV. Each lid and base face is cut from its source at the chest's origin, wrapping
+where the source is smaller than the face, with a 1px border at 55% brightness; the latch is the
+source at 135%. Every other pixel is transparent.
 
     uv run --with pillow scripts/build-chest-sheets.py
     uv run --with pillow scripts/build-chest-sheets.py --check    # what tests/ runs
@@ -20,8 +20,15 @@ import sys
 from PIL import Image, ImageDraw, ImageEnhance
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "data/art/iron_frame_side.png"
-OUT = ROOT / "kubejs/assets/factoryworks/textures/entity/chest/iron_chest.png"
+OUT = ROOT / "kubejs/assets/factoryworks/textures/entity/chest"
+
+# chest -> (source, origin). The iron origin is clear of its source's 2px frame, which drew a seam
+# across the chest's front, and of the dark rivet at (3, 3). The steel origin centres one of the
+# source's two 8px plates on a 14px face (#543).
+CHESTS = {
+    "iron_chest": (ROOT / "data/art/iron_frame_side.png", (5, 2)),
+    "steel_chest": (ROOT / "data/art/metal_alloy_block.png", (5, 0)),
+}
 
 
 def box(u, v, w, h, d):
@@ -39,9 +46,6 @@ def box(u, v, w, h, d):
 LID = box(0, 0, 14, 5, 14)
 BASE = box(0, 19, 14, 10, 14)
 LATCH = box(0, 0, 2, 4, 1)
-# Clear of the source's 2px frame, which drew a seam across the chest's front, and of the dark
-# rivet at (3, 3), which marked every face's corner (#543).
-ORIGIN = (5, 2)
 
 
 def tile(src, w, h, ox=0, oy=0):
@@ -52,13 +56,12 @@ def tile(src, w, h, ox=0, oy=0):
     return out
 
 
-def build():
-    src = Image.open(SOURCE).convert("RGBA")
+def build(source, origin):
+    src = Image.open(source).convert("RGBA")
     sheet = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
     border = tuple(ImageEnhance.Brightness(src).enhance(0.55).getpixel((0, 0)))
-    interior = src.crop((*ORIGIN, src.width - 2, src.height - 2))
     for x, y, w, h in LID + BASE:
-        face = tile(interior, w, h)
+        face = tile(src, w, h, *origin)
         ImageDraw.Draw(face).rectangle([0, 0, w - 1, h - 1], outline=border)
         sheet.paste(face, (x, y))
     latch = ImageEnhance.Brightness(src).enhance(1.35)
@@ -68,17 +71,22 @@ def build():
 
 
 def main():
-    sheet = build()
-    if "--check" in sys.argv:
-        if not OUT.exists() or Image.open(OUT).convert("RGBA").tobytes() != sheet.tobytes():
-            print(f"FAIL: {OUT.relative_to(ROOT)} is missing or stale")
-            return 1
-        print("ok   the Iron Chest sheet matches its source")
-        return 0
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    sheet.save(OUT)
-    print(f"wrote {OUT.relative_to(ROOT)}")
-    return 0
+    check = "--check" in sys.argv
+    failed = 0
+    for chest, (source, origin) in CHESTS.items():
+        sheet = build(source, origin)
+        out = OUT / f"{chest}.png"
+        if check:
+            if not out.exists() or Image.open(out).convert("RGBA").tobytes() != sheet.tobytes():
+                print(f"FAIL: {out.relative_to(ROOT)} is missing or stale")
+                failed = 1
+            else:
+                print(f"ok   {out.relative_to(ROOT)} matches its source")
+            continue
+        out.parent.mkdir(parents=True, exist_ok=True)
+        sheet.save(out)
+        print(f"wrote {out.relative_to(ROOT)}")
+    return failed
 
 
 if __name__ == "__main__":

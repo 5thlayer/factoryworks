@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assert the Iron Chest's sheet is still what its generator derives from its source (#543).
+"""Assert the Iron and Steel Chests' sheets are still what their generator derives from their sources (#543).
 
 A sheet edited in place, or a source that changed under it, fails here rather than surviving until
 the next regeneration reverts it. The generator needs Pillow, so it runs through `uv`.

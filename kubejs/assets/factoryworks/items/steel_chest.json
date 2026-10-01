@@ -4,7 +4,7 @@
     "base": "factoryworks:item/steel_chest",
     "model": {
       "type": "minecraft:chest",
-      "texture": "railcraft:void_chest"
+      "texture": "factoryworks:steel_chest"
     }
   }
 }

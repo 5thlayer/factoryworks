@@ -82,7 +82,7 @@ GECKOLIB_ITEMS = {
 # Items drawn as vanilla's chest model over the item model beside it (#540). The generator holds
 # the same table.
 CHEST_ITEMS = {"factoryworks:iron_chest": "factoryworks:iron_chest",
-               "factoryworks:steel_chest": "railcraft:void_chest"}
+               "factoryworks:steel_chest": "factoryworks:steel_chest"}
 
 # Where an ingredient can appear in a recipe the pack emits. A value under one of these keys is a
 # 26.1 ingredient: a string, or a list of them.

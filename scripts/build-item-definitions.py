@@ -64,7 +64,7 @@ GECKOLIB = {
 # has (#540), in the sprite under `entity/chest/` that `ChestTier` names for the block (#541).
 CHEST = {
     "factoryworks:iron_chest": "factoryworks:iron_chest",
-    "factoryworks:steel_chest": "railcraft:void_chest",
+    "factoryworks:steel_chest": "factoryworks:steel_chest",
 }
 
 

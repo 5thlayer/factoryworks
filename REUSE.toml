@@ -51,12 +51,14 @@ path = [
 SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "CC-BY-4.0"
 
-# Art from malcolmriley's unused-textures: the ore sprites and the unmodified copies they are
-# derived from (NOTICE).
+# Art from malcolmriley's unused-textures: the ore sprites, the Steel Chest's sheet and the
+# unmodified copies they are derived from (NOTICE).
 [[annotations]]
 path = [
     "kubejs/assets/factoryworks/textures/block/ore/*.png",
+    "kubejs/assets/factoryworks/textures/entity/chest/steel_chest.png",
     "data/art/ore_*.png",
+    "data/art/metal_alloy_block.png",
 ]
 SPDX-FileCopyrightText = ["Malcolm Riley", "2026 5thlayer"]
 SPDX-License-Identifier = "CC-BY-4.0"
