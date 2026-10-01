@@ -33,6 +33,8 @@ import com.factoryworks.core.fluid.SteamEngineFootprint;
 import com.factoryworks.core.chest.ChestTier;
 import com.factoryworks.core.chest.PackChestBlock;
 import com.factoryworks.core.wreck.CargoHoldBlock;
+import com.factoryworks.core.wreck.DebrisSize;
+import com.factoryworks.core.wreck.WreckDebrisBlock;
 import com.factoryworks.core.wreck.WreckHullBlock;
 import com.factoryworks.core.wreck.WreckHullSlabBlock;
 import com.factoryworks.core.wreck.WreckHullStairsBlock;
@@ -213,6 +215,18 @@ public final class PFBlocks {
 
     public static final DeferredHolder<Block, CargoHoldBlock> CARGO_HOLD =
             BLOCKS.registerBlock("cargo_hold", CargoHoldBlock::new);
+
+    /** The wreck's Debris (#550): breakable, with no item and nothing to drop. */
+    public static final DeferredHolder<Block, WreckDebrisBlock> WRECK_DEBRIS_BIG =
+            BLOCKS.registerBlock("wreck_debris_big", props -> new WreckDebrisBlock(DebrisSize.BIG, props));
+
+    public static final DeferredHolder<Block, WreckDebrisBlock> WRECK_DEBRIS_MEDIUM =
+            BLOCKS.registerBlock("wreck_debris_medium",
+                    props -> new WreckDebrisBlock(DebrisSize.MEDIUM, props));
+
+    public static final DeferredHolder<Block, WreckDebrisBlock> WRECK_DEBRIS_SMALL =
+            BLOCKS.registerBlock("wreck_debris_small",
+                    props -> new WreckDebrisBlock(DebrisSize.SMALL, props));
 
     /** An oil well (ADR-0081): only worldgen places one, and nothing breaks it. */
     public static final DeferredHolder<Block, OilWellBlock> OIL_WELL =

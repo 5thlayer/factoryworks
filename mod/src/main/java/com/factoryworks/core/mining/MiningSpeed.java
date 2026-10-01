@@ -36,6 +36,11 @@ public final class MiningSpeed {
         return hardness * TICKS_PER_HARDNESS / (seconds * TICKS_PER_SECOND);
     }
 
+    /** The hardness a block needs to take exactly this many seconds at this speed. */
+    public static float hardnessFor(float seconds, float speed) {
+        return seconds * speed * TICKS_PER_SECOND / TICKS_PER_HARDNESS;
+    }
+
     /** The inverse, which is what a test asserts and a reader checks against Factorio. */
     public static float secondsAt(float hardness, float speed) {
         if (hardness <= 0.0f) return 0.0f;

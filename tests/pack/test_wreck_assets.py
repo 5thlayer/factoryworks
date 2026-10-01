@@ -29,7 +29,9 @@ LOOT = ROOT / "kubejs/data/factoryworks/loot_table/blocks"
 
 FACTORIO_NAME = "crash-site-spaceship"
 COPIED_FIELDS = ("inventory_size",)
-BLOCKS = ("wreck_hull", "wreck_hull_stairs", "wreck_hull_slab", "wreck_window", "cargo_hold")
+BLOCKS = ("wreck_hull", "wreck_hull_stairs", "wreck_hull_slab", "wreck_window", "cargo_hold",
+          "wreck_debris_big", "wreck_debris_medium", "wreck_debris_small")
+DEBRIS_RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/wreck/debris.json"
 HOPPER_SLOTS = 5
 
 
@@ -57,6 +59,16 @@ def main():
             failures.append(
                 f"the corpus states inventory_size {row.get('inventory_size')!r}, not {HOPPER_SLOTS} "
                 "-- the cargo hold opens vanilla's hopper screen, which is exactly five slots")
+
+    corpus_debris = json.loads(CORPUS.read_text()).get("debris", [])
+    mod_debris = json.loads(DEBRIS_RESOURCE.read_text()) if DEBRIS_RESOURCE.is_file() else {}
+    for size in ("big", "medium", "small"):
+        times = {row["minable"]["mining_time"] for row in corpus_debris
+                 if row["name"].startswith(f"crash-site-spaceship-wreck-{size}-")}
+        if [mod_debris.get(size, {}).get("mining_time")] != sorted(times):
+            failures.append(f"debris.json's {size} mining_time is "
+                            f"{mod_debris.get(size, {}).get('mining_time')!r}, the corpus's "
+                            f"{sorted(times)} -- every number here is extracted")
 
     for name in BLOCKS:
         for path in (ASSETS / f"items/{name}.json", ASSETS / f"models/item/{name}.json",

@@ -284,7 +284,11 @@ The wreck's blocks, the hull with its stairs and slab, the window and the cargo 
 (ADR-0107, #544). The hold's slot count is Factorio's `crash-site-spaceship` `inventory_size`:
 `scripts/factorio-container-extract.py` writes `data/factorio/container.json`, and
 `scripts/build-wreck-assets.py` copies the row into the resource `CargoHoldCorpus` reads and writes
-the blocks' blockstates, models and lang names. `tests/pack/test_wreck_assets.py` runs its `--check`,
+the blocks' blockstates, models and lang names. The **Debris** is three blocks, one per Factorio size
+class, each breakable for nothing in its class's `mining_time` by hand: the extractor writes the
+`crash-site-spaceship-wreck-*` rows, the generator copies each class's time into the resource
+`DebrisCorpus` reads, and `DebrisCorpusTest` holds the hardness to Factorio's seconds on both Picks
+(#550). `tests/pack/test_wreck_assets.py` runs its `--check`,
 holds the copy to the corpus field by field, holds the corpus to the hopper screen's five slots and
 holds the blocks to no item; `CargoHoldCorpusTest` is the parse. `gametest/WreckTests` holds a
 survival player breaking each block through the game mode, the hold's face taking and giving on
@@ -295,7 +299,8 @@ walk is `HoldAnchorTest`, finds it from any part by a bounded flood fill. The It
 registered on the block, so every part answers with the anchor's inventory. `WreckTests` builds the
 hold along x and along z and holds an insert through any part, on both overloads, to coming out of
 any other, a hold with no anchor or two to answering nothing, one block entity in ten, and a
-survival break of a part or the anchor to leaving it standing. Resolving a part to itself, giving
+survival break of a part or the anchor to leaving it standing, and a survival break of each debris
+block to removing it with no drop. Resolving a part to itself, giving
 every block a block entity and registering the face on the anchor's type each turn tests red.
 Run them after editing `core/wreck/` or the generator. How the blocks look is a human check on delivery.
 

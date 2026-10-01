@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Extract Factorio's container prototypes the pack sizes an inventory from into the container corpus.
+"""Extract Factorio's crash site into the container corpus.
 
-Only `crash-site-spaceship` today: the cargo hold in the wreck is that container, and its slot
-count is `inventory_size` (ADR-0107). The raw field goes in unchanged.
+`crash-site-spaceship` is the wreck's cargo hold, and its slot count is `inventory_size`
+(ADR-0107). Every `crash-site-spaceship-wreck-*` is a piece of the wreck's **Debris** (#550),
+whichever prototype type Factorio files it under. The raw fields go in unchanged.
 
 Usage:
 
@@ -26,13 +27,21 @@ CONTAINERS = ("crash-site-spaceship",)
 
 FIELDS = ("inventory_size", "inventory_type")
 
+DEBRIS_PREFIX = "crash-site-spaceship-wreck-"
+DEBRIS_FIELDS = ("collision_box", "minable")
+
 
 def extract(dump):
     rows = []
     for name in CONTAINERS:
         prototype = dump["container"][name]
         rows.append({"name": name, **{f: prototype[f] for f in FIELDS if f in prototype}})
-    return {"containers": rows}
+    debris = sorted(
+        ({"name": name, **{f: prototype[f] for f in DEBRIS_FIELDS if f in prototype}}
+         for prototypes in dump.values() for name, prototype in prototypes.items()
+         if name.startswith(DEBRIS_PREFIX)),
+        key=lambda row: row["name"])
+    return {"containers": rows, "debris": debris}
 
 
 def main():
@@ -54,6 +63,8 @@ def main():
     print(f"wrote {args.out.relative_to(REPO)}\n")
     for row in corpus["containers"]:
         print(f"  {row['name']:24} inventory_size {row['inventory_size']}")
+    for row in corpus["debris"]:
+        print(f"  {row['name']:40} mining_time {row['minable']['mining_time']}")
 
 
 if __name__ == "__main__":

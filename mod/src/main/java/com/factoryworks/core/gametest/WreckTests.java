@@ -37,6 +37,7 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -64,6 +65,11 @@ final class WreckTests {
                 helper -> survivesBreak(helper, PFBlocks.WRECK_HULL_SLAB.get().defaultBlockState()));
         tests.test("wreck_hull_stairs_keeps_its_shape_beside_a_placed_block", 20,
                 WreckTests::stairsKeepShape);
+        for (var debris : List.of(PFBlocks.WRECK_DEBRIS_BIG, PFBlocks.WRECK_DEBRIS_MEDIUM,
+                PFBlocks.WRECK_DEBRIS_SMALL)) {
+            tests.test(debris.getId().getPath() + "_breaks_for_nothing", 60,
+                    helper -> breaksForNothing(helper, debris.get().defaultBlockState()));
+        }
         tests.test("wreck_window_survives_a_survival_break", 20,
                 helper -> survivesBreak(helper, PFBlocks.WRECK_WINDOW.get().defaultBlockState()));
         tests.test("cargo_hold_part_survives_a_survival_break", 20,
@@ -176,15 +182,7 @@ final class WreckTests {
         helper.setBlock(AT, state);
         ServerLevel level = helper.getLevel();
         BlockPos pos = helper.absolutePos(AT);
-
-        // Not makeMockServerPlayerInLevel: joining the level fires KubeJS's login sync, which
-        // refuses the mock connection.
-        var player = FakePlayerFactory.getMinecraft(level);
-        player.setGameMode(GameType.SURVIVAL);
-        Vec3 feet = helper.absoluteVec(new Vec3(2.5, 1, 5.5));
-        player.setPos(feet.x, feet.y, feet.z);
-        player.setItemInHand(InteractionHand.MAIN_HAND,
-                new ItemStack(BuiltInRegistries.ITEM.getValue(PICK)));
+        var player = survivalPlayerWithPick(helper);
 
         player.gameMode.handleBlockBreakAction(pos, Action.START_DESTROY_BLOCK, Direction.SOUTH,
                 level.getMaxY(), 0);
@@ -195,6 +193,39 @@ final class WreckTests {
                 level.getMaxY(), 1);
 
         helper.assertTrue(level.getBlockState(pos).is(block), "the block was broken");
+        AABB area = new AABB(pos).inflate(8);
+        helper.assertValueEqual(level.getEntities(EntityType.ITEM, area, e -> true).size(), 0,
+                "items dropped");
+        helper.succeed();
+    }
+
+    private static FakePlayer survivalPlayerWithPick(
+            GameTestHelper helper) {
+        // Not makeMockServerPlayerInLevel: joining the level fires KubeJS's login sync, which
+        // refuses the mock connection.
+        var player = FakePlayerFactory.getMinecraft(helper.getLevel());
+        player.setGameMode(GameType.SURVIVAL);
+        Vec3 feet = helper.absoluteVec(new Vec3(2.5, 1, 5.5));
+        player.setPos(feet.x, feet.y, feet.z);
+        player.setItemInHand(InteractionHand.MAIN_HAND,
+                new ItemStack(BuiltInRegistries.ITEM.getValue(PICK)));
+        return player;
+    }
+
+    private static void breaksForNothing(GameTestHelper helper, BlockState state) {
+        helper.setBlock(AT, state);
+        ServerLevel level = helper.getLevel();
+        BlockPos pos = helper.absolutePos(AT);
+        var player = survivalPlayerWithPick(helper);
+        player.gameMode.handleBlockBreakAction(pos, Action.START_DESTROY_BLOCK, Direction.SOUTH,
+                level.getMaxY(), 0);
+        for (int tick = 0; tick < 400; tick++) {
+            player.gameMode.tick();
+        }
+        player.gameMode.handleBlockBreakAction(pos, Action.STOP_DESTROY_BLOCK, Direction.SOUTH,
+                level.getMaxY(), 1);
+
+        helper.assertTrue(level.getBlockState(pos).isAir(), "the debris still stands");
         AABB area = new AABB(pos).inflate(8);
         helper.assertValueEqual(level.getEntities(EntityType.ITEM, area, e -> true).size(), 0,
                 "items dropped");

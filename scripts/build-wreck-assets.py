@@ -4,8 +4,9 @@
 The cargo hold's slot count is Factorio's `crash-site-spaceship` `inventory_size`. This copies the
 row out of `data/factorio/container.json` into
 `mod/src/main/resources/factoryworks_core/wreck/containers.json`, which `CargoHoldCorpus` reads,
-and writes the blockstates, models and lang names of the wreck's blocks. None has an item, a loot
-table or an item model.
+and each debris size class's `mining_time` into `.../wreck/debris.json`, which `DebrisCorpus`
+reads (#550). It writes the blockstates, models and lang names of the wreck's blocks and its
+debris. None has an item, a loot table or an item model.
 
 Usage:
 
@@ -22,6 +23,9 @@ CONTAINER_CORPUS = os.path.join(ROOT, "data", "factorio", "container.json")
 RESOURCE = os.path.join(
     ROOT, "mod", "src", "main", "resources", "factoryworks_core", "wreck", "containers.json"
 )
+DEBRIS_RESOURCE = os.path.join(
+    ROOT, "mod", "src", "main", "resources", "factoryworks_core", "wreck", "debris.json"
+)
 ASSETS = os.path.join(ROOT, "kubejs", "assets", "factoryworks")
 NAMESPACE = "factoryworks"
 
@@ -33,7 +37,12 @@ BLOCKS = {
     "wreck_hull": ("Wreck Hull", "minecraft:block/iron_block"),
     "wreck_window": ("Wreck Window", "minecraft:block/tinted_glass"),
     "cargo_hold": ("Cargo Hold", "minecraft:block/chiseled_copper"),
+    "wreck_debris_big": ("Big Wreck Debris", "minecraft:block/raw_iron_block"),
+    "wreck_debris_medium": ("Medium Wreck Debris", "minecraft:block/raw_iron_block"),
+    "wreck_debris_small": ("Small Wreck Debris", "minecraft:block/raw_iron_block"),
 }
+DEBRIS_PREFIX = "crash-site-spaceship-wreck-"
+DEBRIS_CLASSES = ("big", "medium", "small")
 # The hull's bevel, drawn in the hull's texture.
 SHAPED = {
     "wreck_hull_stairs": "Wreck Hull Stairs",
@@ -79,8 +88,23 @@ def row_from_corpus():
     return {FACTORIO_NAME: {field: row[field] for field in REQUIRED_FIELDS}}
 
 
+def debris_from_corpus():
+    """Each size class's one mining time, read off every prototype of the class."""
+    with open(CONTAINER_CORPUS, encoding="utf-8") as handle:
+        rows = json.load(handle).get("debris", [])
+    classes = {}
+    for size in DEBRIS_CLASSES:
+        times = {row["minable"]["mining_time"] for row in rows
+                 if row["name"].startswith(f"{DEBRIS_PREFIX}{size}-")}
+        if len(times) != 1:
+            sys.exit(f"{size} debris has mining times {sorted(times)} in {CONTAINER_CORPUS} "
+                     "-- re-run scripts/factorio-container-extract.py")
+        classes[size] = {"mining_time": times.pop()}
+    return classes
+
+
 def planned_files():
-    files = {RESOURCE: row_from_corpus()}
+    files = {RESOURCE: row_from_corpus(), DEBRIS_RESOURCE: debris_from_corpus()}
     for name, (_, texture) in BLOCKS.items():
         model = f"{NAMESPACE}:block/{name}"
         variants = {"": {"model": model}}

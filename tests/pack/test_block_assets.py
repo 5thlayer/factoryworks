@@ -41,6 +41,7 @@ NO_ITEM = {
     r".*_ore": "placed by worldgen and paid out by OreMining, never picked up (ADR-0041)",
     r"oil_well": "placed by worldgen and never broken (ADR-0081)",
     r"wreck_hull(_stairs|_slab)?|wreck_window|cargo_hold": "the wreck's blocks, never held by a player (ADR-0107)",
+    r"wreck_debris_(big|medium|small)": "the wreck's Debris, broken for nothing (#550)",
     r"(superheated_)?steam": "a fluid's world block; no fluid here has a bucket (ADR-0037)",
 }
 

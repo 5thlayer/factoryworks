@@ -1,0 +1,11 @@
+{
+  "big": {
+    "mining_time": 1.25
+  },
+  "medium": {
+    "mining_time": 1
+  },
+  "small": {
+    "mining_time": 0.75
+  }
+}

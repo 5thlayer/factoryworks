@@ -42,6 +42,22 @@ public enum PickTier {
      */
     public static final float MINING_TIME = 0.5f;
 
+    /**
+     * Vanilla's own iron-pickaxe speed, expressed per unit of Factorio mining speed.
+     *
+     * <p>{@code 12 x 0.5 = 6}, which is exactly {@code Tiers.IRON}, so the Iron Pick is a vanilla
+     * iron pickaxe everywhere the tag does not reach. The Steel Pick doubles it for the same
+     * reason it halves the flat time: {@code steel-axe} adds 1 to a base mining speed of 0.5, and
+     * ADR-0039 records the research's outcome as "mining doubles" rather than "ore mining
+     * doubles" -- Factorio's own {@code character-mining-speed} applies to everything the
+     * character mines, so stopping the boost at the tag would be the divergence, not carrying it.
+     *
+     * <p>That does put the Steel Pick at 12, above netherite's 9. Nothing is being outclassed:
+     * ADR-0034's sweep leaves the pack no other pickaxe at any tier, so vanilla's ladder is not a
+     * ceiling this has to fit under -- it is a ladder the pack does not have.
+     */
+    private static final float VANILLA_SPEED_PER_MINING_SPEED = 12.0f;
+
     private final String id;
     private final float miningSpeed;
 
@@ -56,6 +72,11 @@ public enum PickTier {
 
     public float miningSpeed() {
         return miningSpeed;
+    }
+
+    /** The speed this tier reports on a block outside Factorio's flat mining time. */
+    public float vanillaSpeed() {
+        return VANILLA_SPEED_PER_MINING_SPEED * miningSpeed;
     }
 
     /** Seconds to take one of Terra's resources, which is the whole number the player feels. */
