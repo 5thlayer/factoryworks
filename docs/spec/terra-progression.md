@@ -52,13 +52,13 @@ them and the player reads neither.
 
 ## Opening — the first twenty minutes
 
-The wreck is `#100` and `#134`: indestructible, habitable, one cargo hold, and you spawn inside it.
+The wreck is ADR-0107: indestructible, roofed, open by a doorway, one cargo hold, and you wake inside it.
 
 | # | Beat | Surface |
 | --- | --- | --- |
 | 1 | Wake up inside the wreck. The book is in your inventory; its tooltip points at the inventory. | — |
 | 2 | Open the inventory. The Personal Assembler is already there. Craft one thing, badly, slowly. | Personal Assembler |
-| 3 | Leave. Four ore fields are visible from the door. | — |
+| 3 | Leave. Four ore fields are visible from the doorway. | — |
 | 4 | Place the Stone Furnace and the Burner Mining Drill from your pocket, the drill facing the furnace. First plates. | hand |
 | 5 | Walk out past the starting fields. The outfield's patches are flush with the topsoil and visible on foot. | — |
 | 6 | Drill → belt → Furnace → chest. Something runs while you watch. | machine-fed |
@@ -77,9 +77,8 @@ Beat 6 is the twenty-minute mark and the first machine-fed beat in the pack.
   and beats hands even at 0.25 items/s, which is what earns it a slot in a pocket Factorio is
   famously stingy about.
 - **Hold**: iron plate, copper plate, coal. Single digits, matching freeplay's eight-plate debris
-  chest.
-- **No weapon.** Factorio hands you a pistol; here the wreck is the answer to night one (`#134`),
-  and a door is a better answer than a pistol.
+  chest. They are in the wreck's cargo hold, put there once per world (ADR-0107).
+- **No weapon.** Factorio hands you a pistol; here nothing attacks (ADR-0093).
 
 **The Pick is the one tool, and it is craftable.** `wood ×1` plus `iron plate ×1`, both of which the
 opening already puts within reach — a log comes off a tree barehanded and the hold carries plates.

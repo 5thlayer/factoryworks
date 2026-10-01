@@ -102,3 +102,10 @@ pack's trees with no integration code, provided the blocks carry `minecraft:logs
   reason to be compiled, and `blocks.js` already demonstrates the scripted path working.
 - **Ship the mod's JSON as builtin data, datapack-overridable.** Rejected: two sources for the same
   file is how an afternoon disappears into editing the copy that is not being read.
+
+## Amended by ADR-0107
+
+The wreck's blocks, its cargo hold included, are `factoryworks_core`'s, not KubeJS's. #133's
+finding that a KubeJS block entity can carry the hold stands as a fact about KubeJS 2101.7.1, but
+on 26.1 the mod registers the Pack's machines and chests, and the hold is filled by the starting
+area's stamp, which is the mod's. The table's second row no longer claims every other custom block.
