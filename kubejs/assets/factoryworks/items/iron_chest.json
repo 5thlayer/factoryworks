@@ -4,7 +4,7 @@
     "base": "factoryworks:item/iron_chest",
     "model": {
       "type": "minecraft:chest",
-      "texture": "minecraft:normal"
+      "texture": "minecraft:copper_exposed"
     }
   }
 }

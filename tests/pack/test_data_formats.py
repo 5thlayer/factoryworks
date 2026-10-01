@@ -81,7 +81,8 @@ GECKOLIB_ITEMS = {
 
 # Items drawn as vanilla's chest model over the item model beside it (#540). The generator holds
 # the same table.
-CHEST_ITEMS = ("factoryworks:iron_chest", "factoryworks:steel_chest")
+CHEST_ITEMS = {"factoryworks:iron_chest": "minecraft:copper_exposed",
+               "factoryworks:steel_chest": "railcraft:void_chest"}
 
 # Where an ingredient can appear in a recipe the pack emits. A value under one of these keys is a
 # 26.1 ingredient: a string, or a list of them.
@@ -162,7 +163,7 @@ def check_item_definitions():
                     check(model.get("type") == "minecraft:special"
                           and model.get("base") == "%s:item/%s" % (namespace.name, name)
                           and model.get("model") == {"type": "minecraft:chest",
-                                                     "texture": "minecraft:normal"},
+                                                     "texture": CHEST_ITEMS["%s:%s" % (namespace.name, name)]},
                           "%s is recorded as a chest but is not the special chest model over "
                           "the item model beside it, so the item draws nothing" % where)
                     continue

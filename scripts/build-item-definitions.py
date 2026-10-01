@@ -60,11 +60,11 @@ GECKOLIB = {
 }
 
 
-# Items drawn as vanilla's chest model in its wooden sprite, by the same `special` shape vanilla's
-# `items/chest.json` has (#540). Each is derived from the item model beside it, like GECKOLIB.
+# Items drawn as vanilla's chest model, by the same `special` shape vanilla's `items/chest.json`
+# has (#540), in the sprite under `entity/chest/` that `ChestTier` names for the block (#541).
 CHEST = {
-    "factoryworks:iron_chest": "a vanilla chest, wooden until each tier has its own art (#540)",
-    "factoryworks:steel_chest": "a vanilla chest, wooden until each tier has its own art (#540)",
+    "factoryworks:iron_chest": "minecraft:copper_exposed",
+    "factoryworks:steel_chest": "railcraft:void_chest",
 }
 
 
@@ -99,7 +99,7 @@ def definitions():
                         "model": {
                             "type": "minecraft:special",
                             "base": f"{namespace}:item/{item}",
-                            "model": {"type": "minecraft:chest", "texture": "minecraft:normal"},
+                            "model": {"type": "minecraft:chest", "texture": CHEST[f"{namespace}:{item}"]},
                         }
                     }
                     continue
