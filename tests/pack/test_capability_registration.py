@@ -64,6 +64,8 @@ FACES = {
     "furnace": ("registerFurnaceCapabilities", ("Item", "Energy")),
     # Item (#540): NeoForge wires vanilla's chest types only, so the pack's own gets its own.
     "chest": ("registerChestCapabilities", ("Item",)),
+    # Item (ADR-0107): automation feeds and drains the wreck's hold, on every side.
+    "cargo_hold": ("registerCargoHoldCapabilities", ("Item",)),
     # Energy (#194): the electric rig's alone at run time, registered for both tiers.
     "rig": ("registerRigCapabilities", ("Item", "Energy")),
     "rig_part": ("registerRigCapabilities", ("Item", "Energy")),

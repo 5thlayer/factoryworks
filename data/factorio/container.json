@@ -1,0 +1,9 @@
+{
+  "containers": [
+    {
+      "name": "crash-site-spaceship",
+      "inventory_size": 5,
+      "inventory_type": "normal"
+    }
+  ]
+}

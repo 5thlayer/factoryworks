@@ -1,6 +1,8 @@
 package com.factoryworks.core;
 
 import com.factoryworks.core.chest.PackChestBlockEntity;
+import com.factoryworks.core.wreck.CargoHoldBlockEntity;
+import com.factoryworks.core.wreck.CargoHoldItemHandler;
 import com.factoryworks.core.energy.PoleTier;
 import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.fluid.BoilerBlockEntity;
@@ -165,6 +167,11 @@ public final class PFBlockEntities {
             CHEST = BLOCK_ENTITIES.register("chest",
                     () -> new BlockEntityType<>(PackChestBlockEntity::new, PFBlocks.chestBlocks()));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CargoHoldBlockEntity>>
+            CARGO_HOLD = BLOCK_ENTITIES.register("cargo_hold",
+                    () -> new BlockEntityType<>(CargoHoldBlockEntity::new,
+                            java.util.Set.of(PFBlocks.CARGO_HOLD.get())));
+
     private PFBlockEntities() {
     }
 
@@ -175,6 +182,7 @@ public final class PFBlockEntities {
     static void registerCapabilities(RegisterCapabilitiesEvent event) {
         registerFurnaceCapabilities(event);
         registerChestCapabilities(event);
+        registerCargoHoldCapabilities(event);
         registerRigCapabilities(event);
         registerPumpCapabilities(event);
         registerBoilerCapabilities(event);
@@ -242,6 +250,12 @@ public final class PFBlockEntities {
     private static void registerChestCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.Item.BLOCK, CHEST.get(),
                 (chest, side) -> VanillaContainerWrapper.of(chest));
+    }
+
+    /** Unsided: automation feeds and drains the hold from outside the wreck (ADR-0107). */
+    private static void registerCargoHoldCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.Item.BLOCK, CARGO_HOLD.get(),
+                (hold, side) -> new CargoHoldItemHandler(hold));
     }
 
     private static void registerFurnaceCapabilities(RegisterCapabilitiesEvent event) {

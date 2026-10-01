@@ -163,7 +163,7 @@ recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `ElectricNetworkTests` (#280), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
 `BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `SolarPanelTests` (#529), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
-`PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), and `BeltworksPackTests`, registered only when
+`PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). `ShowcaseSceneTests` (#538) build the `core/showcase/` scenes that `/factoryworks showcase` builds
 for filming, under `factoryworks_showcase:*` so the run never selects them; swap the run's selector
@@ -279,6 +279,19 @@ in no batch — this repo has no aggregate runner, and this is the one check tha
 boots a server, so it is run against a change that touched mechanism. Run it after editing
 anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`,
 `core/reach/`, `core/dismantle/`, `core/stretch/`, `core/worldgen/` or `core/gametest/`.
+
+### Wreck check
+
+The wreck's three blocks, the hull, the window and the cargo hold, have hardness -1 and no item
+(ADR-0107, #544). The hold's slot count is Factorio's `crash-site-spaceship` `inventory_size`:
+`scripts/factorio-container-extract.py` writes `data/factorio/container.json`, and
+`scripts/build-wreck-assets.py` copies the row into the resource `CargoHoldCorpus` reads and writes
+the blocks' blockstates, models and lang names. `tests/pack/test_wreck_assets.py` runs its `--check`,
+holds the copy to the corpus field by field, holds the corpus to the hopper screen's five slots and
+holds the blocks to no item; `CargoHoldCorpusTest` is the parse. `gametest/WreckTests` holds a
+survival player breaking each block through the game mode, the hold's face taking and giving on
+every side on both overloads, and its contents through the save hook. Run them after editing
+`core/wreck/` or the generator. How the blocks look is a human check on delivery.
 
 ### Recipe name check
 

@@ -35,6 +35,9 @@ import com.factoryworks.core.fluid.SteamEngineBlock;
 import com.factoryworks.core.fluid.SteamEngineFootprint;
 import com.factoryworks.core.chest.ChestTier;
 import com.factoryworks.core.chest.PackChestBlock;
+import com.factoryworks.core.wreck.CargoHoldBlock;
+import com.factoryworks.core.wreck.WreckHullBlock;
+import com.factoryworks.core.wreck.WreckWindowBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -199,6 +202,16 @@ public final class PFBlocks {
 
     public static final FootprintMachine PUMPJACK_FOOTPRINT = new FootprintMachine(
             PumpjackFootprint.FOOTPRINT, PUMPJACK, PUMPJACK_PART, () -> PFItems.PUMPJACK.get());
+
+    /** The wreck's three blocks (ADR-0107): none has an item, and nothing breaks them. */
+    public static final DeferredHolder<Block, WreckHullBlock> WRECK_HULL =
+            BLOCKS.registerBlock("wreck_hull", WreckHullBlock::new);
+
+    public static final DeferredHolder<Block, WreckWindowBlock> WRECK_WINDOW =
+            BLOCKS.registerBlock("wreck_window", WreckWindowBlock::new);
+
+    public static final DeferredHolder<Block, CargoHoldBlock> CARGO_HOLD =
+            BLOCKS.registerBlock("cargo_hold", CargoHoldBlock::new);
 
     /** An oil well (ADR-0081): only worldgen places one, and nothing breaks it. */
     public static final DeferredHolder<Block, OilWellBlock> OIL_WELL =
