@@ -5,7 +5,8 @@ A `mod=version` argument rewrites that row's pin first. Every run then copies ea
 of `~/.m2` into `mods/`, removing any other file its row's pattern matches. A row with a
 `curseforge` project id gets `mods/<mod>.pw.toml` naming the pinned version's CurseForge file, and
 fails naming the version when CurseForge lists no such file (#532). It then refreshes the manifest
-with `scripts/pack-check.sh --fix` and rebuilds the core mod with `installToPack`.
+with `scripts/pack-check.sh --fix` and rebuilds the core mod with `installToPack`. Nothing is
+written until every pinned jar is in `~/.m2` and CurseForge lists every `curseforge` row's file.
 
 `--check` changes nothing and contacts nothing. It fails when the jar in `mods/` is not the pinned
 one, differs from `~/.m2`'s by sha256, or nests nothing its row names; it skips the sha256 when
@@ -177,14 +178,23 @@ def pin(table, assignments):
         if mod not in by_mod:
             sys.exit(f"{mod} has no row in {TABLE.relative_to(ROOT)} (rows: {', '.join(by_mod)})")
         by_mod[mod]["version"] = version
-    TABLE.write_text(json.dumps(table, indent=2) + "\n", encoding="utf-8")
+
+
+def preflight(rows):
+    """Every refusal the sync can meet, so that a refused sync leaves the tree as it was."""
+    file_ids = {}
+    for row in rows:
+        installed(row)
+        if not published(row).is_file():
+            sys.exit(f"{published(row)} does not exist -- publish {row['mod']} {row['version']} "
+                     f"with publishToMavenLocal first")
+        if "curseforge" in row:
+            file_ids[row["mod"]] = curseforge_file(row)
+    return file_ids
 
 
 def install(row):
     source = published(row)
-    if not source.is_file():
-        sys.exit(f"{source} does not exist -- publish {row['mod']} {row['version']} "
-                 f"with publishToMavenLocal first")
     for stale in installed(row):
         if stale.name != jar_name(row):
             stale.unlink()
@@ -217,8 +227,7 @@ def naming_project(project):
             .get("curseforge", {}).get("project-id") == project]
 
 
-def write_metafile(row):
-    file_id = curseforge_file(row)
+def write_metafile(row, file_id):
     for stale in naming_project(row["curseforge"]):
         stale.unlink()
     run(f"the {row['mod']} metafile", ["packwiz", "curseforge", "add", "--addon-id", str(row["curseforge"]),
@@ -250,10 +259,13 @@ def main():
         return
     if args.pins:
         pin(table, args.pins)
+    file_ids = preflight(table["jars"])
+    if args.pins:
+        TABLE.write_text(json.dumps(table, indent=2) + "\n", encoding="utf-8")
     for row in table["jars"]:
         install(row)
         if "curseforge" in row:
-            write_metafile(row)
+            write_metafile(row, file_ids[row["mod"]])
     run("the manifest refresh", ["scripts/pack-check.sh", "--fix"])
     run("the core mod's build", ["./gradlew", ":factoryworks_core:installToPack"])
     print("\ncompiled and installed factoryworks_core against the pinned jars")
