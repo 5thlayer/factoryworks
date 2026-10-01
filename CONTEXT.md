@@ -235,12 +235,16 @@ The structure stamped onto world spawn once per world, and the only place a **st
 _Avoid_: spawn structure, starting hub, tutorial area, start island
 
 **Hub**:
-The starting area's centre piece, and where the player spawns. It places no terrain of its own: it is what holds the four fields apart and carries the water pool.
+The starting area's centre piece. It places no terrain of its own: it is what holds the four fields apart and carries the water pool and the **wreck**.
 _Avoid_: spawn platform, base, hub structure
 
 **Water pool**:
 The body of water in the hub, one block deep and flush with the ground. Since water is never created (ADR-0050), it is what makes water somewhere rung 0 already stands rather than somewhere it has to go.
 _Avoid_: pond, lake, starting water, spawn pool
+
+**Wreck**:
+The ship the player crashed in, standing in the hub, and where the player wakes on a new world and returns after dying. A sealed room no block of which can be broken, with a door, windows and one **cargo hold**. It is there for the fiction and to hold the cargo; it is not a shelter, since nothing on Terra attacks at night (ADR-0093). There is one per world.
+_Avoid_: crash site, ship, spaceship, debris, wreckage
 
 **Quest Book**:
 The book in the player's pocket, which explains what a block does and why the player wants it. It never shows a cost: prices are the research graph's, and the two are kept apart because prices move and verbs do not. It gates nothing: a quest may tick when the game sees its step done, but no progression waits on one (ADR-0034).
