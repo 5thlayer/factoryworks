@@ -97,6 +97,12 @@ def blocks_by_pos(template):
     return {tuple(block["pos"]): palette[block["state"]]["Name"] for block in template["blocks"]}
 
 
+def anchors_by_pos(template):
+    palette = template["palette"]
+    return {tuple(block["pos"]): palette[block["state"]].get("Properties", {}).get("anchor")
+            for block in template["blocks"]}
+
+
 def level_box():
     with open(HUB_GROUND) as handle:
         processors = json.load(handle)["processors"]
@@ -150,9 +156,15 @@ def wreck_failures(hub_file, hub, width):
     if windows != {"-z", "-x"}:
         failures.append("%s: windows on %s, not the -z long wall and the -x short wall"
                         % (hub_file, sorted(windows)))
-    if holds != [(sx - 1, 1, sz // 2)]:
-        failures.append("%s: cargo holds at %s, not one flush in the +x short wall"
-                        % (hub_file, holds))
+    want = sorted((sx - 1, y, sz // 2 + dz) for y in (1, 2) for dz in range(-2, 3))
+    if sorted(holds) != want:
+        failures.append("%s: cargo holds at %s, not the 5x2 flush in the +x short wall, %s"
+                        % (hub_file, sorted(holds), want))
+    flags = anchors_by_pos(hub)
+    anchors = sorted((x, y, z) for x, y, z in holds if flags[(ox + x, y, oz + z)] == "true")
+    if anchors != [(sx - 1, 1, sz // 2)]:
+        failures.append("%s: cargo hold anchors at %s, not the one bottom middle block"
+                        % (hub_file, anchors))
     spawn = (centre, 1, centre)
     if at.get((spawn[0], 0, spawn[2])) != HULL or at.get(spawn) != "minecraft:air" \
             or at.get((spawn[0], 2, spawn[2])) != "minecraft:air":

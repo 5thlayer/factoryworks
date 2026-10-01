@@ -289,8 +289,15 @@ holds the copy to the corpus field by field, holds the corpus to the hopper scre
 holds the blocks to no item; `CargoHoldCorpusTest` is the parse. `gametest/WreckTests` holds a
 survival player breaking each block through the game mode, the hold's face taking and giving on
 every side on both overloads, its contents through the save hook, and the spawn on the wreck's
-floor (#545). Run them after editing
-`core/wreck/` or the generator. How the blocks look is a human check on delivery.
+floor (#545). The hold is ten blocks, 5x2, and stores no offsets, since the template is rotated per
+world (#548): the `anchor` boolean marks the one block with a block entity, and `HoldAnchor`, whose
+walk is `HoldAnchorTest`, finds it from any part by a bounded flood fill. The Item face is
+registered on the block, so every part answers with the anchor's inventory. `WreckTests` builds the
+hold along x and along z and holds an insert through any part, on both overloads, to coming out of
+any other, a hold with no anchor or two to answering nothing, one block entity in ten, and a
+survival break of a part or the anchor to leaving it standing. Resolving a part to itself, giving
+every block a block entity and registering the face on the anchor's type each turn tests red.
+Run them after editing `core/wreck/` or the generator. How the blocks look is a human check on delivery.
 
 ### Recipe name check
 
@@ -525,7 +532,8 @@ the generator's `--check` and reads the generated `.nbt` files.
 
 It also holds the wreck (ADR-0107, #545) at every hub's centre: hull floor and roof, the one
 doorway on the template's +z long wall, windows on the -z and -x walls, the cargo hold in the +x
-wall, and the pool beside the doorway and off its line. `TerraStartingArea` reads none of that: it
+wall as a 5x2 centred along z with exactly one `anchor=true` block, the bottom middle one (#548),
+and the pool beside the doorway and off its line. `TerraStartingArea` reads none of that: it
 puts the spawn point on the floor at the hub's centre facing template +z turned by the hub's
 rotation, and the hub's processor list lays the wreck's box on one height. A doorway moved or a
 level box that misses the wreck fails here; the stamp itself is a world. `PlayerSpawnFinderMixin`

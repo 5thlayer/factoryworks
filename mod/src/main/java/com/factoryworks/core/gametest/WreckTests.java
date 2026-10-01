@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.start.StartingKit;
+import com.factoryworks.core.wreck.CargoHoldBlock;
 import com.factoryworks.core.wreck.CargoHoldBlockEntity;
 import com.factoryworks.core.wreck.CargoHoldCorpus;
 
@@ -54,19 +55,117 @@ final class WreckTests {
 
     static void register(PFGameTests.Registrar tests) {
         tests.test("wreck_hull_survives_a_survival_break", 20,
-                helper -> survivesBreak(helper, PFBlocks.WRECK_HULL.get()));
+                helper -> survivesBreak(helper, PFBlocks.WRECK_HULL.get().defaultBlockState()));
         tests.test("wreck_window_survives_a_survival_break", 20,
-                helper -> survivesBreak(helper, PFBlocks.WRECK_WINDOW.get()));
-        tests.test("cargo_hold_survives_a_survival_break", 20,
-                helper -> survivesBreak(helper, PFBlocks.CARGO_HOLD.get()));
+                helper -> survivesBreak(helper, PFBlocks.WRECK_WINDOW.get().defaultBlockState()));
+        tests.test("cargo_hold_part_survives_a_survival_break", 20,
+                helper -> survivesBreak(helper, hold(false)));
+        tests.test("cargo_hold_anchor_survives_a_survival_break", 20,
+                helper -> survivesBreak(helper, hold(true)));
+        tests.test("cargo_hold_shares_one_inventory_along_x", 20,
+                helper -> sharedInventory(helper, true));
+        tests.test("cargo_hold_shares_one_inventory_along_z", 20,
+                helper -> sharedInventory(helper, false));
+        tests.test("cargo_hold_any_part_resolves_the_anchor", 20, WreckTests::anyPartResolvesAnchor);
+        tests.test("cargo_hold_without_an_anchor_answers_nothing", 20, WreckTests::noAnchor);
+        tests.test("cargo_hold_with_two_anchors_answers_nothing", 20, WreckTests::twoAnchors);
+        tests.test("cargo_hold_has_one_block_entity", 20, WreckTests::oneBlockEntity);
         tests.test("cargo_hold_face_takes_and_gives_on_every_side", 20, WreckTests::faceOnEverySide);
         tests.test("cargo_hold_contents_survive_its_save_hook", 20, WreckTests::survivesSave);
         tests.test("stamped_cargo_hold_holds_exactly_the_hold", 20, WreckTests::stampedHoldIsFilled);
         tests.test("spawn_finder_keeps_the_wreck_floor_under_its_roof", 100, WreckTests::spawnOnFloor);
     }
 
-    private static void survivesBreak(GameTestHelper helper, Block block) {
-        helper.setBlock(AT, block.defaultBlockState());
+    private static BlockState hold(boolean anchor) {
+        return PFBlocks.CARGO_HOLD.get().defaultBlockState().setValue(CargoHoldBlock.ANCHOR, anchor);
+    }
+
+    /** The hold's ten blocks, five along an axis and two up, the anchor at the bottom middle. */
+    private static List<BlockPos> buildHold(GameTestHelper helper, boolean alongX, int anchors) {
+        List<BlockPos> cells = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            for (int y = 0; y < 2; y++) {
+                BlockPos at = alongX ? new BlockPos(1 + i, 1 + y, 1) : new BlockPos(1, 1 + y, 1 + i);
+                boolean anchor = y == 0 && (i == 2 || (anchors == 2 && i == 4));
+                if (anchors == 0) {
+                    anchor = false;
+                }
+                helper.setBlock(at, hold(anchor));
+                cells.add(at);
+            }
+        }
+        return cells;
+    }
+
+    private static ResourceHandler<ItemResource> faceAt(GameTestHelper helper, BlockPos at, Direction side) {
+        return helper.getLevel().getCapability(Capabilities.Item.BLOCK, helper.absolutePos(at), side);
+    }
+
+    private static void sharedInventory(GameTestHelper helper, boolean alongX) {
+        List<BlockPos> cells = buildHold(helper, alongX, 1);
+        List<ItemResource> items = distinctItems(2);
+        for (int i = 0; i < cells.size(); i++) {
+            Direction side = i % 2 == 0 ? null : Direction.UP;
+            ResourceHandler<ItemResource> in = faceAt(helper, cells.get(i), side);
+            ResourceHandler<ItemResource> out = faceAt(helper, cells.get((i + 3) % cells.size()), null);
+            if (in == null || out == null) {
+                helper.fail("a part of the hold has no item face", cells.get(i));
+                return;
+            }
+            int last = CargoHoldCorpus.get().slots() - 1;
+            helper.assertValueEqual(insert(in, items.get(0)), 1, "slot-less insert through part " + i);
+            helper.assertValueEqual(extract(out, items.get(0)), 1, "slot-less extract from another part");
+            helper.assertValueEqual(insertAt(in, last, items.get(1)), 1, "slot insert through part " + i);
+            helper.assertValueEqual(extractAt(out, last, items.get(1)), 1, "slot extract from another part");
+        }
+        helper.succeed();
+    }
+
+    private static void anyPartResolvesAnchor(GameTestHelper helper) {
+        for (boolean alongX : new boolean[] {true, false}) {
+            List<BlockPos> cells = buildHold(helper, alongX, 1);
+            for (BlockPos at : cells) {
+                CargoHoldBlockEntity anchor = CargoHoldBlock.anchorOf(helper.getLevel(), helper.absolutePos(at));
+                helper.assertTrue(anchor != null && anchor.getBlockState().getValue(CargoHoldBlock.ANCHOR),
+                        "the part at " + at + " resolves to the anchor");
+            }
+            cells.forEach(at -> helper.setBlock(at, Blocks.AIR.defaultBlockState()));
+        }
+        helper.succeed();
+    }
+
+    private static void noAnchor(GameTestHelper helper) {
+        for (BlockPos at : buildHold(helper, true, 0)) {
+            helper.assertTrue(faceAt(helper, at, null) == null, "an anchorless hold answers at " + at);
+            helper.assertTrue(CargoHoldBlock.anchorOf(helper.getLevel(), helper.absolutePos(at)) == null,
+                    "an anchorless hold has an inventory at " + at);
+        }
+        helper.succeed();
+    }
+
+    private static void twoAnchors(GameTestHelper helper) {
+        for (BlockPos at : buildHold(helper, true, 2)) {
+            helper.assertTrue(faceAt(helper, at, null) == null, "a two-anchor hold answers at " + at);
+            helper.assertTrue(CargoHoldBlock.anchorOf(helper.getLevel(), helper.absolutePos(at)) == null,
+                    "a two-anchor hold has an inventory at " + at);
+        }
+        helper.succeed();
+    }
+
+    private static void oneBlockEntity(GameTestHelper helper) {
+        int entities = 0;
+        for (BlockPos at : buildHold(helper, false, 1)) {
+            if (helper.getLevel().getBlockEntity(helper.absolutePos(at)) != null) {
+                entities++;
+            }
+        }
+        helper.assertValueEqual(entities, 1, "block entities in a ten-block hold");
+        helper.succeed();
+    }
+
+    private static void survivesBreak(GameTestHelper helper, BlockState state) {
+        Block block = state.getBlock();
+        helper.setBlock(AT, state);
         ServerLevel level = helper.getLevel();
         BlockPos pos = helper.absolutePos(AT);
 
@@ -95,7 +194,7 @@ final class WreckTests {
     }
 
     private static void faceOnEverySide(GameTestHelper helper) {
-        helper.setBlock(AT, PFBlocks.CARGO_HOLD.get().defaultBlockState());
+        helper.setBlock(AT, hold(true));
         List<ItemResource> items = distinctItems(2);
         List<Direction> sides = new ArrayList<>(List.of(Direction.values()));
         sides.add(null);
@@ -121,7 +220,7 @@ final class WreckTests {
     }
 
     private static void survivesSave(GameTestHelper helper) {
-        helper.setBlock(AT, PFBlocks.CARGO_HOLD.get().defaultBlockState());
+        helper.setBlock(AT, hold(true));
         BlockPos absolute = helper.absolutePos(AT);
         BlockEntity original = helper.getLevel().getBlockEntity(absolute);
         if (!(original instanceof CargoHoldBlockEntity hold)) {

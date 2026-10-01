@@ -1,6 +1,9 @@
 {
   "variants": {
-    "": {
+    "anchor=false": {
+      "model": "factoryworks:block/cargo_hold"
+    },
+    "anchor=true": {
       "model": "factoryworks:block/cargo_hold"
     }
   }

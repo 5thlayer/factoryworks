@@ -1,6 +1,7 @@
 package com.factoryworks.core;
 
 import com.factoryworks.core.chest.PackChestBlockEntity;
+import com.factoryworks.core.wreck.CargoHoldBlock;
 import com.factoryworks.core.wreck.CargoHoldBlockEntity;
 import com.factoryworks.core.wreck.CargoHoldItemHandler;
 import com.factoryworks.core.fluid.BoilerBlockEntity;
@@ -242,10 +243,15 @@ public final class PFBlockEntities {
                 (chest, side) -> VanillaContainerWrapper.of(chest));
     }
 
-    /** Unsided: automation feeds and drains the hold from outside the wreck (ADR-0107). */
+    /**
+     * Unsided, on the block rather than the anchor's type so a part answers too, with the anchor's
+     * inventory (ADR-0107, #548).
+     */
     private static void registerCargoHoldCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.Item.BLOCK, CARGO_HOLD.get(),
-                (hold, side) -> new CargoHoldItemHandler(hold));
+        event.registerBlock(Capabilities.Item.BLOCK, (level, pos, state, blockEntity, side) -> {
+            CargoHoldBlockEntity hold = CargoHoldBlock.anchorOf(level, pos);
+            return hold == null ? null : new CargoHoldItemHandler(hold);
+        }, PFBlocks.CARGO_HOLD.get());
     }
 
     private static void registerFurnaceCapabilities(RegisterCapabilitiesEvent event) {

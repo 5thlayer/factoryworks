@@ -267,12 +267,16 @@ POOL_GAP = 2
 
 # The wreck (ADR-0107): #134's box, outside x, y, z, at the hub's centre. Hull floor and roof, an
 # open doorway two tall in the middle of the +z long wall, windows on the -z long wall and the -x
-# short wall, and the cargo hold flush in the +x short wall. `TerraStartingArea` faces the spawn
+# short wall, and the cargo hold, five by two, flush in the +x short wall (#548). `TerraStartingArea` faces the spawn
 # toward template +z, and `test_start_geometry.py` holds the doorway there.
 WRECK_SIZE = (15, 7, 11)
 WRECK_HULL = {"Name": "factoryworks:wreck_hull"}
 WRECK_WINDOW = {"Name": "factoryworks:wreck_window"}
-CARGO_HOLD = {"Name": "factoryworks:cargo_hold"}
+# One block of the ten is the anchor, the one with the inventory. A boolean does not rotate with the
+# template, which a stored direction to the anchor would (ADR-0107).
+CARGO_HOLD = {"Name": "factoryworks:cargo_hold", "Properties": {"anchor": "false"}}
+CARGO_HOLD_ANCHOR = {"Name": "factoryworks:cargo_hold", "Properties": {"anchor": "true"}}
+HOLD_WIDTH = 5
 # Light blocks are for reading the room at night; nothing spawns on Terra (ADR-0093).
 WRECK_LIGHT = {"Name": "minecraft:light", "Properties": {"level": "15", "waterlogged": "false"}}
 AIR = {"Name": "minecraft:air"}
@@ -319,8 +323,9 @@ def wreck_blocks():
                     entry = WRECK_WINDOW
                 elif x == 0 and y in (2, 3) and 2 <= z <= sz - 3:
                     entry = WRECK_WINDOW
-                elif x == sx - 1 and y == 1 and z == sz // 2:
-                    entry = CARGO_HOLD
+                elif (x == sx - 1 and y in (1, 2)
+                        and abs(z - sz // 2) <= HOLD_WIDTH // 2):
+                    entry = CARGO_HOLD_ANCHOR if (y == 1 and z == sz // 2) else CARGO_HOLD
                 else:
                     entry = WRECK_HULL
                 cells.append((x, y, z, entry))

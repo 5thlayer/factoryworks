@@ -61,7 +61,8 @@ FACES = {
     "furnace": ("registerFurnaceCapabilities", ("Item", "Energy")),
     # Item (#540): NeoForge wires vanilla's chest types only, so the pack's own gets its own.
     "chest": ("registerChestCapabilities", ("Item",)),
-    # Item (ADR-0107): automation feeds and drains the wreck's hold, on every side.
+    # Item (ADR-0107, #548): automation feeds and drains the wreck's hold, on every side. Registered
+    # on the block, so each of its ten blocks answers with the anchor's inventory.
     "cargo_hold": ("registerCargoHoldCapabilities", ("Item",)),
     # Energy (#194): the electric rig's alone at run time, registered for both tiers.
     "rig": ("registerRigCapabilities", ("Item", "Energy")),
@@ -103,7 +104,7 @@ LADDERS = {
 # entity *type*, and a block reusing an existing type needs no row there -- which is exactly how a
 # face can go missing with every check in this repo still green. Empty since the creative pole's
 # face went with every pole's (ADR-0062); kept so the next such block has a row to land in.
-UNLADDERED_BLOCKS = {}
+UNLADDERED_BLOCKS = {"registerCargoHoldCapabilities": ("PFBlocks.CARGO_HOLD",)}
 
 # The Barrel's face is on the item rather than a block, so it is registered in `PFItems` and no
 # block-side assertion sees it. Listed for the same reason FACES is: a second item capability
@@ -221,6 +222,15 @@ class CapabilityRegistration(unittest.TestCase):
                                   "own; without one it is inert, and neither FACES nor LADDERS "
                                   "above can see that it is missing")
 
+
+    def test_the_cargo_hold_face_is_on_the_block_and_resolves_the_anchor(self):
+        # A registration on the anchor's block entity type leaves nine of the hold's ten blocks
+        # silent (#548).
+        body = method_body(self.source, "registerCargoHoldCapabilities")
+        self.assertIsNotNone(body)
+        self.assertIn("event.registerBlock(", body)
+        self.assertNotIn("registerBlockEntity", body)
+        self.assertIn("CargoHoldBlock.anchorOf(", body)
 
     def test_the_rig_part_forwards_to_its_anchor(self):
         # Three quarters of a 2x2 is part, and which corner holds the anchor is not visible. A

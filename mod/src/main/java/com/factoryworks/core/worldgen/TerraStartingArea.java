@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.factoryworks.core.FactoryWorksCore;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.start.StartingKit;
+import com.factoryworks.core.wreck.CargoHoldBlock;
 import com.factoryworks.core.wreck.CargoHoldBlockEntity;
 import com.factoryworks.core.ore.OreBlock;
 import com.factoryworks.core.ore.OreCensus;
@@ -29,6 +30,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -238,12 +240,13 @@ public final class TerraStartingArea {
     /**
      * The Hold into the wreck's cargo hold (ADR-0107). The hub is rotated, so the hold is found in
      * the world around the floor rather than computed from template coordinates; the wreck's box is
-     * 15x11x7, so 8 blocks reaches every wall.
+     * 15x11x7, so 8 blocks reaches every wall. Only the anchor block has an inventory (#548).
      */
     private static void fillCargoHold(ServerLevel level, BlockPos floor) {
         CargoHoldBlockEntity hold = null;
         for (BlockPos pos : BlockPos.betweenClosed(floor.offset(-8, -1, -8), floor.offset(8, 8, 8))) {
-            if (level.getBlockState(pos).is(PFBlocks.CARGO_HOLD.get())
+            BlockState state = level.getBlockState(pos);
+            if (state.is(PFBlocks.CARGO_HOLD.get()) && state.getValue(CargoHoldBlock.ANCHOR)
                     && level.getBlockEntity(pos) instanceof CargoHoldBlockEntity found) {
                 hold = found;
                 break;
