@@ -302,11 +302,11 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "229071f20d7faa538bd26723d7a245c21c6aa97a814fbddb2c6e128e3211ab17"
+hash = "9dae4f251177654e187b218a0d310047f6ba4e3e3189a48e5d6e7340dad0f7b7"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "7f8a9f2f7ce5690226611c093ec781917cfb1dd9a19256e6ec086fc6f4e26c95"
+hash = "d5aea971a99bb9f099567210cbedec3e706513090b5ee842c7d80fdcc1f1b7ab"
 
 [[files]]
 file = "data/pack/category-map.json"
