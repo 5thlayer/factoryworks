@@ -2,7 +2,7 @@ package com.factoryworks.core.chest;
 
 /** The two chests above vanilla's 27 slots (#540), each a block of nine columns. */
 public enum ChestTier {
-    IRON("iron_chest", 4, 2.5f, "minecraft", "copper_exposed"),
+    IRON("iron_chest", 4, 2.5f, "factoryworks", "iron_chest"),
     STEEL("steel_chest", 6, 3.0f, "railcraft", "void_chest");
 
     private final String blockName;

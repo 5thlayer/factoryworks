@@ -94,6 +94,20 @@ Source:  https://github.com/malcolmriley/unused-textures
 Licence: Creative Commons Attribution 4.0 International
          https://creativecommons.org/licenses/by/4.0/
 
+Iron Chest sheet (#543)
+-----------------------
+
+Files:   data/art/iron_frame_side.png
+         kubejs/assets/factoryworks/textures/entity/chest/iron_chest.png
+Author:  Futureazoo
+Source:  https://github.com/Futureazoo/TextureRepository
+         futureazoo/blocks/tech/iron_frame_side.png at commit
+         c22b100f1b4c22f7793175310d42e44688ba2e98. The file under data/art/ is the unmodified
+         copy. The chest sheet is derived from it by scripts/build-chest-sheets.py, which tiles it
+         over the chest's faces with a darker border and a lighter latch.
+Licence: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+         https://creativecommons.org/licenses/by-nc-sa/4.0/
+
 Beltworks (#342, #447)
 ----------------------
 

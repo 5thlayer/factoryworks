@@ -56,7 +56,7 @@ SPDX-License-Identifier = "CC-BY-4.0"
 [[annotations]]
 path = [
     "kubejs/assets/factoryworks/textures/block/ore/*.png",
-    "data/art/*.png",
+    "data/art/ore_*.png",
 ]
 SPDX-FileCopyrightText = ["Malcolm Riley", "2026 5thlayer"]
 SPDX-License-Identifier = "CC-BY-4.0"
@@ -83,6 +83,8 @@ path = [
     "kubejs/assets/factoryworks/textures/block/burner_mining_drill/*.png",
     "kubejs/assets/factoryworks/textures/block/electric_mining_drill/*.png",
     "kubejs/assets/factoryworks/textures/block/mining_drill_port.png",
+    "data/art/iron_frame_side.png",
+    "kubejs/assets/factoryworks/textures/entity/chest/iron_chest.png",
 ]
 SPDX-FileCopyrightText = "Futureazoo"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
