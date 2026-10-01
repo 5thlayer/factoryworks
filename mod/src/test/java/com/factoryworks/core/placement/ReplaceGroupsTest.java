@@ -11,9 +11,9 @@ class ReplaceGroupsTest {
     private static final String STONE = "factoryworks:stone_furnace";
     private static final String STEEL = "factoryworks:steel_furnace";
     private static final String ELECTRIC = "factoryworks:electric_furnace";
-    private static final String SMALL = "wireworks:small_electric_pole";
-    private static final String MEDIUM = "wireworks:medium_electric_pole";
-    private static final String SUBSTATION = "wireworks:substation_electric_pole";
+    private static final String SMALL = "wireworks:small_pole";
+    private static final String MEDIUM = "wireworks:medium_pole";
+    private static final String LARGE = "wireworks:large_pole";
     private static final String ASSEMBLER_1 = "factoryworks:assembling_machine";
     private static final String ASSEMBLER_3 = "factoryworks:assembling_machine_3";
 
@@ -31,8 +31,8 @@ class ReplaceGroupsTest {
     @Test
     @DisplayName("the substation is alone in its group")
     void substationReplacesNoPole() {
-        assertFalse(groups.canReplace(SUBSTATION, SMALL));
-        assertFalse(groups.canReplace(MEDIUM, SUBSTATION));
+        assertFalse(groups.canReplace(LARGE, SMALL));
+        assertFalse(groups.canReplace(MEDIUM, LARGE));
     }
 
     @Test

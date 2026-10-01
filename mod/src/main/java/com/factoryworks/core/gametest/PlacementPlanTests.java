@@ -831,7 +831,7 @@ final class PlacementPlanTests {
 
         private static void substationAlone(GameTestHelper helper) {
             column(helper, PoleTier.SMALL, 2);
-            clicked(helper, PoleTier.SUBSTATION);
+            clicked(helper, PoleTier.LARGE);
             for (int i = 0; i < 2; i++) {
                 if (!helper.getBlockState(ABOVE_FLOOR.above(i)).is(WireworksRegistries.pole(PoleTier.SMALL).get())) {
                     helper.fail("a substation replaced a small column", ABOVE_FLOOR.above(i));

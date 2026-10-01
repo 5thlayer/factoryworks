@@ -128,8 +128,8 @@ def strings(node):
 
 
 class CreativeFailures(unittest.TestCase):
-    ROW = {"id": "wireworks:creative_electric_pole", "why": "w"}
-    KNOWN = {"item:wireworks:creative_electric_pole"}
+    ROW = {"id": "wireworks:creative_pole", "why": "w"}
+    KNOWN = {"item:wireworks:creative_pole"}
 
     def test_a_live_row_passes(self):
         self.assertEqual([], creative_failures([self.ROW], set(), self.KNOWN))

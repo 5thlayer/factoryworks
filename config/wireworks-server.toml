@@ -1,12 +1,29 @@
-# Factorio's electric poles (ADR-0036): the supply area and wire reach of each tier.
 [small]
+	#The side of the square the pole supplies, in blocks.
+	# Default: 5
+	# Range: 1 ~ 64
 	supplySize = 5
+	#How far a wire reaches from this pole, in blocks.
+	# Default: 7.5
+	# Range: 1.0 ~ 64.0
 	wireReach = 7.5
 
 [medium]
+	#The side of the square the pole supplies, in blocks.
+	# Default: 7
+	# Range: 1 ~ 64
 	supplySize = 7
+	#How far a wire reaches from this pole, in blocks.
+	# Default: 9.0
+	# Range: 1.0 ~ 64.0
 	wireReach = 9.0
 
-[substation]
+[large]
+	#The side of the square the pole supplies, in blocks.
+	# Default: 18
+	# Range: 1 ~ 64
 	supplySize = 18
+	#How far a wire reaches from this pole, in blocks.
+	# Default: 18.0
+	# Range: 1.0 ~ 64.0
 	wireReach = 18.0

@@ -23,7 +23,7 @@
       "mod": "wireworks",
       "group": "io.github.5thlayer",
       "artifact": "wireworks",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "pattern": "wireworks-*.jar",
       "nests": [
         "groundworks"

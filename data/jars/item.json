@@ -9,7 +9,7 @@
     "oritech-2.0.0-exp6.jar",
     "railcraft-reborn-26.1.2-1.4.3.jar",
     "researchd-1.3.4-26.1.jar",
-    "wireworks-0.1.0.jar"
+    "wireworks-0.2.0.jar"
   ],
   "items": [
     "beltworks:belt_tile",
@@ -3066,9 +3066,9 @@
     "researchd:green_research_pack_icon",
     "researchd:research_lab",
     "researchd:research_pack",
-    "wireworks:creative_electric_pole",
-    "wireworks:medium_electric_pole",
-    "wireworks:small_electric_pole",
-    "wireworks:substation_electric_pole"
+    "wireworks:creative_pole",
+    "wireworks:large_pole",
+    "wireworks:medium_pole",
+    "wireworks:small_pole"
   ]
 }

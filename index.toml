@@ -34,11 +34,11 @@ hash = "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
 
 [[files]]
 file = "NOTICE"
-hash = "3f3b2e309b7fb977cbf33ae730228ed0f3db577a4ee85b437dac7cdc54cadb49"
+hash = "d07f7f62331bab976a5bd3e95a08ca57973598fa3afd6a1ed1918cfccbdfe801"
 
 [[files]]
 file = "REUSE.toml"
-hash = "e850036d6601aa045450b062e09ed82485548db2dcf75e36cfd64b3789239fd7"
+hash = "8689e1fdaefc44d2ea8ba3badafbbfaaad93eb376023a9cb3040a2742322cd8c"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -217,6 +217,10 @@ file = "config/trashslot-common.toml"
 hash = "e206fb54c03e7d6c3c4661cf2e01b7c704b3265f9200cb382e5ed6aba2c18fb3"
 
 [[files]]
+file = "config/wireworks-server.toml"
+hash = "6a4f823dba88f78890fc879ef0f04f856b98bdfdc3594aa323e1f99f36dce8e5"
+
+[[files]]
 file = "config/yacl.json5"
 hash = "121b93764159be6fb7dab523b29a844e2bb78400ce8c48f52135a097e9b0006e"
 
@@ -245,12 +249,32 @@ file = "data/art/ore_stone_soul.png"
 hash = "5e970d1ac2684c2443b55634f9e5d0c1f3c5e99ae9be8fbdafb4e3d5d90ce917"
 
 [[files]]
+file = "data/art/space-plating-access-hatch.png"
+hash = "76b6f11710a22448746b356a6d304f6c793132006f2e388d00c2272372333fa2"
+
+[[files]]
+file = "data/art/space-plating-rivets-horizontal.png"
+hash = "65330d09a34822cc8f7e4fb0e964cf47372256d28b4b424559d3c562425452e3"
+
+[[files]]
+file = "data/art/space-plating-stripe-black-horizontal-damaged.png"
+hash = "29496651773a42c342de3224717530ef17517a448d887a338ee59bf7f6340a22"
+
+[[files]]
+file = "data/art/space-plating-stripe-gray-horizontal-damaged.png"
+hash = "e2f766b80659cdd196aca50058eebab2877e10214bb2b2aa03e885b348837119"
+
+[[files]]
+file = "data/art/steel_block_rusty.png"
+hash = "7622dafba949677b49f20a3d67ccb971d14f13b5ef1a25895eba24bd97f7ac19"
+
+[[files]]
 file = "data/factorio/building.json"
 hash = "83f7a354973ab3ebb9b1b8a1e82226788a605529681364a22f092b86efb6f490"
 
 [[files]]
 file = "data/factorio/container.json"
-hash = "1d67352427cf441d7d49feb5e7f26f82299116ba29f5f79fea46b1c2e443235f"
+hash = "de3c5327dacc091f01616a277be93901d191699c82125db4e7dc1767d4f4a8cd"
 
 [[files]]
 file = "data/factorio/enemy.json"
@@ -306,11 +330,11 @@ hash = "c2e77552e4ae6acb0c367cd92294e22b10abdbe6f538b77daf11af843575e628"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "9dae4f251177654e187b218a0d310047f6ba4e3e3189a48e5d6e7340dad0f7b7"
+hash = "46f601df8f67410c83e7f004064ba5dc1e49e4c3d2efc55e9a165e8df30a9e5f"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "d5aea971a99bb9f099567210cbedec3e706513090b5ee842c7d80fdcc1f1b7ab"
+hash = "22d4f35a2632c53de2da59daf8fd6433944db1ef8810703c527f70daafe72855"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -318,15 +342,15 @@ hash = "fe9e48a84065d10c47f81bfefe74ff27d5c2b371bb3064b5c510b71680070098"
 
 [[files]]
 file = "data/pack/creative-listed.json"
-hash = "8ccdcbd2280421b2804454b7a7444a379e64eaf927aeaa2f10e2b1daf82739c9"
+hash = "28d9ad42f6dafc1ce83ee9cb0188b3ce34904d104631d1e375bc24812d6f44f3"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "24f61a524701d4c2296f81e23ed84c089043b905a6419c88cd86aecd146675bc"
+hash = "692779475e5f07dfa545c318a5e202181762049da63a42c958f88b4ec0bcb406"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "172ba111f4711a49bd0887fac01a47ad3b7d686ade045e4b36024bed123ef70e"
+hash = "e646edb1463ecb05d2dd449e28731d5d8e8aec0894364c8d0c1386292ffba7d1"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -362,7 +386,7 @@ hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "7cf08a2a01a474d2be599cd4594540348a812a50caff21458a10b8155d715743"
+hash = "463bffb1ddfc891324bed57f710274ab67b48b9c9fe2e73d9395d60d577e9d67"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/accumulator.json"
@@ -410,7 +434,7 @@ hash = "ee7e624750e746cc3ace216c1f3495117d80854d42cfc03fe8f1646c4c6e6d7a"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/cargo_hold.json"
-hash = "283ae96f1dc85eb732fbf496212597363cb63e8556e27ddb46edacef99aefa8f"
+hash = "acedca9b3b6eb39cdaeeae7c9c729cfc16b75025698ddd55c15d52439e76571f"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/chemical_plant.json"
@@ -427,10 +451,6 @@ hash = "994c86c72ba98f4c28bbf69a8ca9daa58de03c6cc823fff83f77421e44ec5f30"
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/copper_ore.json"
 hash = "8aa2c94c1663bf4ab8ef9cc568e0dd700f1d5633511eeb014d1db1b787c3d240"
-
-[[files]]
-file = "kubejs/assets/factoryworks/blockstates/creative_electric_pole.json"
-hash = "5588403f9884d813e331321512616a87fd82e4665f2abe465519504be754c4c0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/electric_furnace.json"
@@ -455,10 +475,6 @@ hash = "177c43ef9b3c171972c91ea43a5393a0966425e08778a704778b5c2b78d5545c"
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/jellystem_sapling.json"
 hash = "22225f0cd06ad86ce90d5ae548bfec0f95c454faee7f471ca44322aa41950b7c"
-
-[[files]]
-file = "kubejs/assets/factoryworks/blockstates/medium_electric_pole.json"
-hash = "23cfe4da8d8d6d3601ebefaefcd6632775c3bdaf3f1cf2052237c49e26496556"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/offshore_pump.json"
@@ -491,10 +507,6 @@ hash = "73c76b956f18ba3e3d35a51f2f730b9e30e0d87e63552c0f5ed9b8d36412aaec"
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/radar_part.json"
 hash = "73c76b956f18ba3e3d35a51f2f730b9e30e0d87e63552c0f5ed9b8d36412aaec"
-
-[[files]]
-file = "kubejs/assets/factoryworks/blockstates/small_electric_pole.json"
-hash = "bff12042d994406baee21403622cc9578f9669f2bad867a8e117b2e7403d1eff"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/solar_panel.json"
@@ -533,10 +545,6 @@ file = "kubejs/assets/factoryworks/blockstates/stone_ore.json"
 hash = "81aa7b90c42db2af584c3836ad94ecc5e9981c369219dc17f72c925fc2eaf109"
 
 [[files]]
-file = "kubejs/assets/factoryworks/blockstates/substation_electric_pole.json"
-hash = "ecc56cd3453138ad7b906a10a33620ce524ccbab0b3d98a9534c1d3b97afc3f0"
-
-[[files]]
 file = "kubejs/assets/factoryworks/blockstates/superheated_steam.json"
 hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
 
@@ -545,8 +553,28 @@ file = "kubejs/assets/factoryworks/blockstates/uranium_ore.json"
 hash = "ae3c02fce000831d8010c902ba4c4842e1ca708416793d85dec8919ed2e996a4"
 
 [[files]]
+file = "kubejs/assets/factoryworks/blockstates/wreck_debris_big.json"
+hash = "2996dd0533ec53ae3cf510d7189b26a829632944c639385fe2741a0b237dd5b2"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/wreck_debris_medium.json"
+hash = "987e2b776d34d1720826d14a2fcf6d4908005481525e7b4a593c90a58384966b"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/wreck_debris_small.json"
+hash = "7ef116d15a5023af0fac8b3a19bf7d7d2fbacca65db10428915baa71c16b3516"
+
+[[files]]
 file = "kubejs/assets/factoryworks/blockstates/wreck_hull.json"
-hash = "0a673500bfd6120735052999d68c2478ecff15ab6af4347ca2f89a2abdbe8018"
+hash = "a8e42c352ee349526b4ef74465e45bf50bd2196c2f7d7fe63e91bb1aefb2066f"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/wreck_hull_slab.json"
+hash = "311c91fe8d78b2ea7029fe1060dbb0436717017a12cd6f57f4970d23f3f722c3"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/wreck_hull_stairs.json"
+hash = "343e3811a6e552dbf135182ccf489bb176f2fcc51a1191f8604bfc3adb1b3371"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/wreck_window.json"
@@ -589,10 +617,6 @@ file = "kubejs/assets/factoryworks/items/chemical_plant.json"
 hash = "89127eb2a86e25dce57705c3bccb670fd8bb3a07227f231076c7ffb98b830422"
 
 [[files]]
-file = "kubejs/assets/factoryworks/items/creative_electric_pole.json"
-hash = "6670200bb702d052fc41921956f4d8bffdf64c21d2f440a1de7312e00e9d82d2"
-
-[[files]]
 file = "kubejs/assets/factoryworks/items/electric_furnace.json"
 hash = "a73ba5e77a6c8ad0eacaa0de9cb7b9afd1276831d3f418871d8405e2bd096c62"
 
@@ -617,10 +641,6 @@ file = "kubejs/assets/factoryworks/items/jellystem_sapling.json"
 hash = "08d48954c5fb5ca73f2589c9eb9d055af5bf2b3008e3df2ed0af2edbe607b937"
 
 [[files]]
-file = "kubejs/assets/factoryworks/items/medium_electric_pole.json"
-hash = "8e0c2b25f5bdb94e247e6839e57ba6ad1f938038c0b71b9f7831fbae59d02a53"
-
-[[files]]
 file = "kubejs/assets/factoryworks/items/offshore_pump.json"
 hash = "72e771465e0a8cacdb2a736ddef95fc80e06cb5a20cbb0cb4ab79c20bfa3c5ab"
 
@@ -635,10 +655,6 @@ hash = "0eda993f2436d9eeb1d3f8705a14eda703d321baf212ebf32ae0b14128aa99ec"
 [[files]]
 file = "kubejs/assets/factoryworks/items/radar.json"
 hash = "fc668556d00de66a7c609aa743d39fc12167c513ddbaadbb76fd6d8739cd3e9f"
-
-[[files]]
-file = "kubejs/assets/factoryworks/items/small_electric_pole.json"
-hash = "0ef169d39e7bdffb35f1a363092606b8ae41e371d41a3da64fed5f6cc9c5c6b3"
 
 [[files]]
 file = "kubejs/assets/factoryworks/items/solar_panel.json"
@@ -661,16 +677,12 @@ file = "kubejs/assets/factoryworks/items/stone_furnace.json"
 hash = "1b5ca54de2feaf6bc799e52df2fe0d8c877aa3a19dfc12ad3f2c22bb05c130d7"
 
 [[files]]
-file = "kubejs/assets/factoryworks/items/substation_electric_pole.json"
-hash = "2129bc3c64008ba0ced721c7e29c7d25e43c52b77487a5bdc500e110946d2a48"
-
-[[files]]
 file = "kubejs/assets/factoryworks/items/yumako_sapling.json"
 hash = "c4f3b3ee106426f1322240cc01e60027429b080937c9c02917d8560bdbd4fec0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "831278b97bd6ad66b6a951ef2ad990cc47318b3cefe367b2f10a7afb5fd4a246"
+hash = "d6b2d5b9ee99f17405070666bf36e326196a9e2971471e74a19ffab9aa867a23"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/accumulator_part.json"
@@ -702,15 +714,11 @@ hash = "fdccced2a90d347f527b6c98b5e1f98fbcf9c13847a135bbf03a4f02f42d61e8"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/cargo_hold.json"
-hash = "33461b3e66e46177cef9652e3f79956ad30f37daa0248c4ddf398e033b15ef18"
+hash = "7b46fd0b4a6d59b91690359b22853511fc70a08dbf8a1500b1dbe0668acefa6f"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/chemical_plant.json"
 hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/creative_electric_pole.json"
-hash = "efc566248bbd959042e6704f7ccec9b0bbacc8cb2501f642d17d4a760cec7a95"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/electric_furnace.json"
@@ -743,10 +751,6 @@ hash = "a1fc1dfd261ee2c002b7f68ba8c31818c3ab2e05572247110bcb637fe05c2f00"
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/jellystem_sapling.json"
 hash = "b04826faa9be069759dfc6cf134dda7f6dcdfae496f5d061ed44f163ba3a8ce0"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/medium_electric_pole.json"
-hash = "39dc2be168d3da91e61f3df57a4a54be6ca35342e42b37cb52ac6dcdd2e308e3"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/offshore_pump.json"
@@ -929,10 +933,6 @@ file = "kubejs/assets/factoryworks/models/block/radar.json"
 hash = "da21131c0518f34db49a626349f771944d281d8c07273c01136577ffcee6db3e"
 
 [[files]]
-file = "kubejs/assets/factoryworks/models/block/small_electric_pole.json"
-hash = "f04825336c78a3c03798f43d014349560aef92a33a236d16e7edef31f06ced28"
-
-[[files]]
 file = "kubejs/assets/factoryworks/models/block/solar_panel.json"
 hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
 
@@ -961,16 +961,48 @@ file = "kubejs/assets/factoryworks/models/block/stone_furnace_on.json"
 hash = "1f1b8e874d0bc348b73cf0cfcdd9759b7e7d72863bf5d707f8f352cfec58013f"
 
 [[files]]
-file = "kubejs/assets/factoryworks/models/block/substation_electric_pole.json"
-hash = "bd71199aba89be3ed41d7e432f667f7228a566b229c294a07e526b91f559c9a3"
+file = "kubejs/assets/factoryworks/models/block/wreck_debris_big.json"
+hash = "66f4310289495573747e222f12616f7fecfae386f85ff99e7cb7c1f6e3da3597"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_debris_medium.json"
+hash = "96adddc5374289fc03f1bd47b6a0a0f983263a7170f0cb41a0409b043464803f"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_debris_small.json"
+hash = "e17c5348e40a196abf219b509f9c2247965f177c3fcb5f7372bbcd65e8d59fee"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/wreck_hull.json"
-hash = "21e5a7cecc5afd48073ba637e06b309f291192b6b21333c76b9d16171c754369"
+hash = "f92706c262e9e0a86386976fcb156ba3b4b36d76af282edd2e043050612b774d"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_hull_scorched.json"
+hash = "fb8a447fdde18eab40bff14d6f73048acaa7083cb50a7aed24d684d549586681"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_hull_slab.json"
+hash = "1ca8987ecb2020219a925dd7624436c30a3e9184ff67c1d6082767350c506429"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_hull_slab_top.json"
+hash = "075bb7d095f469d93b6e00341f59c2acf83108a319af838606e4b17974b84d26"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_hull_stairs.json"
+hash = "752f3ae076a55b6fae4faa04a3f1c98246c6f0d73500bbb10c51de7ff92ba916"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_hull_stairs_inner.json"
+hash = "0978cc5c7f9b57437a8dfbbf14544021e4c35745fe945a00a061bbb03380b439"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/wreck_hull_stairs_outer.json"
+hash = "408f410ba50d1b48be77d5ffa99d726ecf2501b24f2e46150201cd78ec2d8d2c"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/wreck_window.json"
-hash = "71349626b29ca4cd66e4706aabe6617eea4b9489a9e6cb17280562eb96d39ecd"
+hash = "fee3b8c28db4878a27a7cb32dae218dd73c513fe9ff462bce081cbdb6416b992"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/yumako_sapling.json"
@@ -1009,10 +1041,6 @@ file = "kubejs/assets/factoryworks/models/item/chemical_plant.json"
 hash = "235ba76540ec93990f91a343c5132cd9226ab1ebf23d6a47dbfce2daa868f68b"
 
 [[files]]
-file = "kubejs/assets/factoryworks/models/item/creative_electric_pole.json"
-hash = "2323dbcb21a244920702b281c89e1be95937d387cc4344f67c3f8fe01cfd6229"
-
-[[files]]
 file = "kubejs/assets/factoryworks/models/item/electric_furnace.json"
 hash = "a3f07a124a6beec921d86e8e661d4475887bb1cada6354ba12bdc7a7b77289bf"
 
@@ -1037,10 +1065,6 @@ file = "kubejs/assets/factoryworks/models/item/jellystem_sapling.json"
 hash = "ca33be9009fd27df0843f6bb5adad81bccbb2acb3819512baac5d21c7efb3853"
 
 [[files]]
-file = "kubejs/assets/factoryworks/models/item/medium_electric_pole.json"
-hash = "fdf90c36de0b796c68161d1bed7710eb87e69097cf59e189a79f0936ba390e96"
-
-[[files]]
 file = "kubejs/assets/factoryworks/models/item/offshore_pump.json"
 hash = "e6f1b05bbb038b287f2bf604ff6944dd4275739a15bdd45b520b5b09d931e25a"
 
@@ -1055,10 +1079,6 @@ hash = "33b247ec80e61863530c3ab08f874ee32e9452fcfad374b28c6845502f3524ce"
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/radar.json"
 hash = "1cce9a1a73c9bc46be81b4526417a026913625f659cebd413bcf45d1211ecc03"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/item/small_electric_pole.json"
-hash = "ac15d5d04fb0a82c7e78ec77ccd41ccbac5571ac72c20d5138903278c847e3ff"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/solar_panel.json"
@@ -1079,10 +1099,6 @@ hash = "16f1c529efed4826bd02141a53f3f1e957d3791de695f53de2b826ee8de45375"
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/stone_furnace.json"
 hash = "b2c2365f371e0aef406ef9610115463b296ec07debf2eeeee04153309ce70fb2"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/item/substation_electric_pole.json"
-hash = "2f4e6a8163a892a8be73f7d880383fb9788831d5edc74328597dfde64fe5724a"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/yumako_sapling.json"
@@ -1115,10 +1131,6 @@ hash = "e93d76341e115a3ad9d45b9ae318a5cb31adbc3468393bd6fb23497347b4c12f"
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/copper_stromatolite.png"
 hash = "6c50e423fd15a16b1699d4b97b261102a1a0ad0c6685fe9f9ed6fa61da090cd6"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/creative_electric_pole.png"
-hash = "b804064333da8154b7ebd3cac99949917edebf46000133e575235ae42bb45576"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/electric_furnace/bottom.png"
@@ -1175,10 +1187,6 @@ hash = "f20613e95e3aaff99815a33258e9da96e236288b9561d4d11f4be9d594469f8e"
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/jellystem_stem.png"
 hash = "c4c8f5b363881e5fa2255e3983ca5e5a808eae512fe94bda4f02e25899c5474f"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/medium_electric_pole.png"
-hash = "0bfb7be4dd39c33a6a3c7f2f931eb80f96475258cfb30f03adcf7a237d2e649e"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/mining_drill_port.png"
@@ -1345,12 +1353,32 @@ file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage7.png"
 hash = "01ab2bc337c268c107cdc11b6c6541bce279741a21dbcf8a0594547f264f9a2c"
 
 [[files]]
-file = "kubejs/assets/factoryworks/textures/block/small_electric_pole.png"
-hash = "b5026734bad8f46b2bcc617e34624c94bfdb69032acd5475bd537ef32df39a9c"
+file = "kubejs/assets/factoryworks/textures/block/wreck/cargo_hold.png"
+hash = "d0ca82ece9dea5f1030cc7c484d5bb2970f6ae806574b34d8a41cb23bfe4831c"
 
 [[files]]
-file = "kubejs/assets/factoryworks/textures/block/substation_electric_pole.png"
-hash = "e69c85711c8e1cca112d6d723561399a2c6a323470cf4f4f83ef7c4b65e9669c"
+file = "kubejs/assets/factoryworks/textures/block/wreck/debris_big.png"
+hash = "193bbc923e69fed57fb0d9b59ea120252933d5b32cd2153f0353758fe684dd19"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/wreck/debris_medium.png"
+hash = "feddbd61924100118819605a6621c39f596eaf523a25331cd370ddc55613fde0"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/wreck/debris_small.png"
+hash = "d5451e5e1ab1f452bf1b49e988e2a1e4b0f3d5708a89d24b862f2c1ddfbabd22"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/wreck/hull.png"
+hash = "cb51053bc8eddc03b3b9e01fb0b48c2b4d69aff7a415596e84c90c184df63b47"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/wreck/hull_scorched.png"
+hash = "26ab7af202aa2229d9b277638891897af59d90303c275c8bb7c7196a642f7b9f"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/wreck/window.png"
+hash = "6dac40b6fd0da3bb1da30a2391ecbda14684f56742130e5a2686abf8ed563ed8"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/yumako_leaves.png"
@@ -1525,10 +1553,6 @@ file = "kubejs/data/factoryworks/loot_table/blocks/copper_stromatolite.json"
 hash = "a4496040c13ede9a244122d724f9c537e4e3636bc7d48a773b016e41c72a6d52"
 
 [[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/creative_electric_pole.json"
-hash = "bb151b02a95b00fdde006f4f62063ba068bee009c4c8c8dcda11cb37ac1af2f3"
-
-[[files]]
 file = "kubejs/data/factoryworks/loot_table/blocks/electric_furnace.json"
 hash = "4c6e9716d55d7df63e0bc7647a545f0fe734442f91d8af76000943c1bcde8824"
 
@@ -1569,10 +1593,6 @@ file = "kubejs/data/factoryworks/loot_table/blocks/jellystem_stem.json"
 hash = "4be4c844b4bcddb422015d9bfa3a7aa04daad1a49e0bf19153071bb61b881bfe"
 
 [[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/medium_electric_pole.json"
-hash = "98dfa199d0e4e0a5def4daa8ffbab95775304fe0b8f97d76409d243ddb6028ed"
-
-[[files]]
 file = "kubejs/data/factoryworks/loot_table/blocks/offshore_pump.json"
 hash = "f5c6469c2f056b6b5c609d4ae284805ed4503f37b41718896eff6d63cdd68598"
 
@@ -1591,10 +1611,6 @@ hash = "3be74f9c769fbf4313cbf6611e02dffb1f9a9daa61b87ec08a6a9a3d73a4338f"
 [[files]]
 file = "kubejs/data/factoryworks/loot_table/blocks/scrap_pile.json"
 hash = "9883d710e25702d7b0605d433b1095cb983afe08e12636d51c44527fba2c0fbb"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/small_electric_pole.json"
-hash = "bb95d6a98dad215fee7ff5582ac417a5a9d6023cd3a281289834a83e8ff3869e"
 
 [[files]]
 file = "kubejs/data/factoryworks/loot_table/blocks/solar_panel.json"
@@ -1619,10 +1635,6 @@ hash = "493e71eb3939d31855a60a8b45114e1285479fa1a4f4326c91fcec536063b4e4"
 [[files]]
 file = "kubejs/data/factoryworks/loot_table/blocks/stone_ore.json"
 hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/substation_electric_pole.json"
-hash = "3ed8bce530ecf82ef499d5e8220718979ca8c7f3487a3a2abe879b28ba74f4e8"
 
 [[files]]
 file = "kubejs/data/factoryworks/loot_table/blocks/uranium_ore.json"
@@ -1790,7 +1802,7 @@ hash = "573c76f2ad04e8ddbd0d07a0895696be80853d22388cc3c2f192f97a2fb6a816"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/medium_electric_pole.json"
-hash = "2e794fbad1222ea67848539fd68d95ede0094af1905ca5ab0965be7b65e0bf95"
+hash = "9b1af1a3286696c9cf711a339ba64fa90e6bd1e4dc665c7402f2ce8017e917ed"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/offshore_pump.json"
@@ -1838,7 +1850,7 @@ hash = "97667f877934dd81ca21982668a5cf772d2d16cb9d4bea5257e6745043535516"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/small_electric_pole.json"
-hash = "fca19f2b394b1487e1a1b51342bf95695cbe7df8ccea5bfa3a10b3f801fb0318"
+hash = "8bb8386939ce4858ceaab17fe5e3a489cf44cf3a2aa54cad4ac86dd87b26469c"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/small_lamp.json"
@@ -1970,7 +1982,7 @@ hash = "45a56ef94d4059e5b74dc7a72ff12d4477debee8ae05d409394fd4337b9d3390"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/substation.json"
-hash = "c3b71553de6d812ce2711dc5566162acccfd27b9596254d9fcd101e2cbcff1bf"
+hash = "081e9692714b9ea0b9c08b093181f9c040c6e169284fb671ad0aa6d6724c8d31"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/train_stop.json"
@@ -2166,7 +2178,7 @@ hash = "46526fe0646e2bfe98c000d43d90af2f1740637287d74430e2c2c53d225a29f9"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/hand/medium_electric_pole.json"
-hash = "0a7c65ee2155163ce4c447c75f58c5a50bc369edc5257b08117e52d655aa166f"
+hash = "77ad7b330ea027d6cd97af91b3e5fb267d0faabfdaae7ec2db95693e3dc3c844"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/hand/offshore_pump.json"
@@ -2210,7 +2222,7 @@ hash = "531adca8f3f072847821e2346a01e04c7fe6ed318b951bc780620777f8a8f0e5"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/hand/small_electric_pole.json"
-hash = "38dde849ac1e2fe59a4206b3e48787bb2dc530276034deb13fb4154d9162d8e6"
+hash = "2040e34aca02d47595b826a87f44534f6440fe689ea3d91e1f0ffef6605d81e8"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/hand/small_lamp.json"
@@ -2342,7 +2354,7 @@ hash = "037f06a5b2e39573a3a710bc9d3f51ebc96e76ab0a3d6db5a47c48f762919fac"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/hand/substation.json"
-hash = "ac7c741d2c0a457154ae6baa65fa6bc2bcfd9e69cc466d6ce6c184830a5d8c61"
+hash = "859a0b1d712bb74a415a3a9809dc7e59d75d8844b882f6fcda4863f14069848d"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/hand/train_stop.json"
@@ -2414,15 +2426,15 @@ hash = "ca2956988a3f44e1261a3e3ce4bd41e3afaa6b7970bf2779c1283d0d5c120c4a"
 
 [[files]]
 file = "kubejs/data/factoryworks/structure/terra_start_hub_0.nbt"
-hash = "0b998c90f3d597fcef7197751b7bf7cdddc43bcb15f7b3e30ab782a9e7b967d5"
+hash = "e3a1e48b833c0b15bb05004185708387133792d953759e67dae85f441f8919aa"
 
 [[files]]
 file = "kubejs/data/factoryworks/structure/terra_start_hub_1.nbt"
-hash = "70b5201a76509b993f7ef2efdc8a1f17dd0277e79ee18e1d31f6f1c0ab611e51"
+hash = "96b5ff62ed552c64a6e61008b44fb74efa10ca275ef9b892d57fff24015e6551"
 
 [[files]]
 file = "kubejs/data/factoryworks/structure/terra_start_hub_2.nbt"
-hash = "e9f62affcdcf2728e489b992fc71372ca64ac810b16264176206af5f61aa9c1a"
+hash = "508396d975ebadf4c4890efb4274b43cdeb28192ab15c8d89dffbd4501cfcb8a"
 
 [[files]]
 file = "kubejs/data/factoryworks/structure/terra_start_iron_large.nbt"
@@ -2449,12 +2461,8 @@ file = "kubejs/data/factoryworks/structure/terra_start_stone_small.nbt"
 hash = "95706d93e205d6120e8e98a59144add769c07dcc24048f4ac17226b3a2e0af5f"
 
 [[files]]
-file = "kubejs/data/factoryworks/tags/block/accumulators.json"
-hash = "e5ba78c356d6fee15aad64b76177aa7d59b838c719bf0cac320b4840300b3104"
-
-[[files]]
 file = "kubejs/data/factoryworks/tags/block/buildings.json"
-hash = "79fedb69da4093656151842acbc1e385bbf724bd64500daa8b2023368033e458"
+hash = "fea061bfa7b99be690a246849044ed04cf229f43590db4d6c0eb03ce314d0153"
 
 [[files]]
 file = "kubejs/data/factoryworks/tags/block/dismantle/pipes.json"
@@ -2467,10 +2475,6 @@ hash = "cbab82c4d2472193b5e4bddb109e2067a46f02e300f69791dca54b9fa991dcc1"
 [[files]]
 file = "kubejs/data/factoryworks/tags/block/fellable.json"
 hash = "c60b14abc03d117f0183d09cd271a8b4c263dcbf07ddf92befe9f5266ec36fe4"
-
-[[files]]
-file = "kubejs/data/factoryworks/tags/block/generators.json"
-hash = "6d8c9fbd260636290a0b406effb92e27b23cd161a065c5c6bb06405325eabcc7"
 
 [[files]]
 file = "kubejs/data/factoryworks/tags/worldgen/biome/terra_land.json"
@@ -2593,8 +2597,16 @@ file = "kubejs/data/factoryworks/worldgen/template_pool/terra_start_stone.json"
 hash = "369cb97871ca277f5df23af0ad3f2c1a3aa3f58688e5a45e0182b1bf705c67fd"
 
 [[files]]
+file = "kubejs/data/groundworks/tags/block/replace_group/floor.json"
+hash = "710cf27ebd027d6a89d740ac677335bca57464e1a381f6d75afabf1536870b4a"
+
+[[files]]
 file = "kubejs/data/groundworks/tags/item/dismantles.json"
 hash = "3532d4662bff150e01a59f6f3148213c78ce6e65fea8aa4d12b30efbfed0edc7"
+
+[[files]]
+file = "kubejs/data/groundworks/tags/item/stretches.json"
+hash = "6038c49c531db51f0f2585aa90b274cbf8c4d8e366ffecb2a498e34b5c79d0fe"
 
 [[files]]
 file = "kubejs/data/minecraft/dimension/overworld.json"
@@ -2751,6 +2763,18 @@ hash = "003a38d109ac87f9da363fc7d62a00daaa83f83509fa0518e3ca0f15b12b115b"
 [[files]]
 file = "kubejs/data/oritech/neoforge/biome_modifier/oil_spring_desert.json"
 hash = "003a38d109ac87f9da363fc7d62a00daaa83f83509fa0518e3ca0f15b12b115b"
+
+[[files]]
+file = "kubejs/data/wireworks/tags/block/accumulators.json"
+hash = "4b5ddd51334a525224290c58726ff4fb8171af88018d0e58586b10aa8e27d9ec"
+
+[[files]]
+file = "kubejs/data/wireworks/tags/block/generators.json"
+hash = "60060e9413517c95a26780f9434dd91d8b9626618066acf6f439442a69832365"
+
+[[files]]
+file = "kubejs/data/wireworks/tags/item/wire_tools.json"
+hash = "3532d4662bff150e01a59f6f3148213c78ce6e65fea8aa4d12b30efbfed0edc7"
 
 [[files]]
 file = "kubejs/parked/data/factoryworks/dimension/aquilo.json"
@@ -3173,8 +3197,8 @@ hash = "71c920bbbf7464754a2e7beb48e8dae545795cc6c36206623a45188a8072e03b"
 metafile = true
 
 [[files]]
-file = "mods/wireworks-0.1.0.jar"
-hash = "defcb1e1b5af4331587802072ebcc2ff6f7eb51eebcdb434336d3cc08d8f7706"
+file = "mods/wireworks-0.2.0.jar"
+hash = "6927352d15fad84d110fef0836914013727ea0f25fd70e2630bf301fa11f7223"
 
 [[files]]
 file = "player.env"

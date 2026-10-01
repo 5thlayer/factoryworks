@@ -1,0 +1,10 @@
+{
+  "block.wireworks.small_pole": "Small Electric Pole",
+  "block.wireworks.medium_pole": "Medium Electric Pole",
+  "block.wireworks.large_pole": "Substation",
+  "block.wireworks.creative_pole": "Creative Electric Pole",
+  "item.wireworks.small_pole": "Small Electric Pole",
+  "item.wireworks.medium_pole": "Medium Electric Pole",
+  "item.wireworks.large_pole": "Substation",
+  "item.wireworks.creative_pole": "Creative Electric Pole"
+}

@@ -45,8 +45,8 @@
     "railcraft:block_signal",
     "railcraft:distant_signal",
     "railcraft:iron_buffer_stop_track",
-    "wireworks:medium_electric_pole",
-    "wireworks:small_electric_pole",
-    "wireworks:substation_electric_pole"
+    "wireworks:large_pole",
+    "wireworks:medium_pole",
+    "wireworks:small_pole"
   ]
 }

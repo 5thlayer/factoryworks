@@ -7,7 +7,7 @@
   "factoryworks:oil_refinery": "oil-refinery",
   "factoryworks:steel_furnace": "furnace",
   "factoryworks:stone_furnace": "furnace",
-  "wireworks:medium_electric_pole": "electric-pole",
-  "wireworks:small_electric_pole": "electric-pole",
-  "wireworks:substation_electric_pole": "substation"
+  "wireworks:large_pole": "substation",
+  "wireworks:medium_pole": "electric-pole",
+  "wireworks:small_pole": "electric-pole"
 }

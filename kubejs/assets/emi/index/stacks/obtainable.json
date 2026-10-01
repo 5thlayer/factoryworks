@@ -346,16 +346,16 @@
       }
     },
     {
-      "stack": "item:wireworks:creative_electric_pole"
+      "stack": "item:wireworks:creative_pole"
     },
     {
-      "stack": "item:wireworks:medium_electric_pole"
+      "stack": "item:wireworks:large_pole"
     },
     {
-      "stack": "item:wireworks:small_electric_pole"
+      "stack": "item:wireworks:medium_pole"
     },
     {
-      "stack": "item:wireworks:substation_electric_pole"
+      "stack": "item:wireworks:small_pole"
     },
     {
       "stack": "fluid:factoryworks:steam"

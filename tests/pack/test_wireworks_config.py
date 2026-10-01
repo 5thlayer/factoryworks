@@ -18,7 +18,7 @@ CONFIG = ROOT / "config/wireworks-server.toml"
 CORPUS = ROOT / "data/factorio/machine.json"
 
 # Wireworks' tiers, by the Factorio pole each stands for. The big pole is not shipped (ADR-0036).
-TIERS = {"small": "small-electric-pole", "medium": "medium-electric-pole", "substation": "substation"}
+TIERS = {"small": "small-electric-pole", "medium": "medium-electric-pole", "large": "substation"}
 
 
 def main():
