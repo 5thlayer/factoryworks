@@ -62,6 +62,8 @@ FACES = {
     # generators where they stand, and that path is held by the listener assertion below.
     "supply_area_pole": (None, ()),
     "furnace": ("registerFurnaceCapabilities", ("Item", "Energy")),
+    # Item (#540): NeoForge wires vanilla's chest types only, so the pack's own gets its own.
+    "chest": ("registerChestCapabilities", ("Item",)),
     # Energy (#194): the electric rig's alone at run time, registered for both tiers.
     "rig": ("registerRigCapabilities", ("Item", "Energy")),
     "rig_part": ("registerRigCapabilities", ("Item", "Energy")),

@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "factoryworks:item/iron_chest",
+    "model": {
+      "type": "minecraft:chest",
+      "texture": "minecraft:normal"
+    }
+  }
+}

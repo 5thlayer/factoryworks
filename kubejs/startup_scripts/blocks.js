@@ -46,54 +46,6 @@ StartupEvents.registry('block', (event) => {
     .resistance(1.5)
     .requiresTool(false)
     .tagBlock('minecraft:mineable/pickaxe');
-
-  // Factorio's chest ladder, which no installed mod supplies: vanilla ships one chest, and the
-  // capacity progression is authored or absent (#87). `wooden-chest` borrows `minecraft:chest`;
-  // these two are the rungs above it.
-  //
-  // THE SHAPE IS #133'S, and every constraint here was found in a world rather than in the jar
-  // (ADR-0015): the width is 9 or `CustomChestMenu` lays the slots out wrong under a window
-  // `KubeJSGUI` sized from the height; six rows is the ceiling, because `CustomChestMenu.TYPES`
-  // is `GENERIC_9x1..9x6` indexed by row count; and every face is `[]` and never `null`, since
-  // Rhino coerces the argument through `Set.of(...)` and NPEs before `attach` can branch on it.
-  //
-  // 36 and 54 slots: a real progression above vanilla's 27, under the six-row ceiling, with the
-  // wreck's own 9x5 hold sitting between them.
-  //
-  // BOTH TEXTURES RENDER WRONG ON PURPOSE, and that is a placeholder rather than a bug to fix by
-  // guessing. They are 64x64 chest *entity* atlases -- lid, base and clasp laid out flat -- while
-  // these blocks are plain cubes, so KubeJS maps the whole unwrapped sheet onto every face. What
-  // they buy is the right silhouette being named: an exposed-copper chest and Railcraft's void
-  // chest are the two the ladder wants, and the GTCEu machine casings they replace both named a
-  // namespace that has never held them, so those rendered as nothing at all.
-  //
-  // The fix is a 16x16 crop of each atlas's front face, committed as a derived asset -- and so
-  // #234's question rather than this file's. It used to name `scripts/build-pick-textures.py` as
-  // the precedent for committing one; that script went with GregTech's art (#323), so the
-  // precedent is the question and not the gesture.
-  event.create('factoryworks:iron_chest')
-    .displayName('Iron Chest')
-    .texture('minecraft:entity/chest/copper_exposed')
-    .hardness(2.5)
-    .resistance(2.5)
-    .requiresTool(true)
-    .tagBlock('minecraft:mineable/pickaxe')
-    .blockEntity((be) => {
-      be.inventory('inventory', [], 9, 4);
-      be.rightClickOpensInventory('inventory');
-    });
-
-  event.create('factoryworks:steel_chest')
-    .displayName('Steel Chest')
-    .texture('railcraft:entity/chest/void_chest')
-    .hardness(3)
-    .resistance(3)
-    .requiresTool(true)
-    .tagBlock('minecraft:mineable/pickaxe')
-    .blockEntity((be) => {
-      be.inventory('inventory', [], 9, 6);
-      be.rightClickOpensInventory('inventory');
-    });
 });
 
 // Sapros's two trees, minus the two saplings: those are `factoryworks_core`'s, because

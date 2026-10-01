@@ -33,6 +33,8 @@ import com.factoryworks.core.energy.SolarPanelBlock;
 import com.factoryworks.core.energy.SolarPanelFootprint;
 import com.factoryworks.core.fluid.SteamEngineBlock;
 import com.factoryworks.core.fluid.SteamEngineFootprint;
+import com.factoryworks.core.chest.ChestTier;
+import com.factoryworks.core.chest.PackChestBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -335,6 +337,24 @@ public final class PFBlocks {
     public static Set<Block> assemblingMachineBlocks() {
         return ASSEMBLING_MACHINES.values().stream().map(DeferredHolder::get)
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    private static final Map<ChestTier, DeferredHolder<Block, PackChestBlock>> CHESTS =
+            new EnumMap<>(ChestTier.class);
+
+    static {
+        for (ChestTier tier : ChestTier.values()) {
+            CHESTS.put(tier, BLOCKS.registerBlock(tier.blockName(),
+                    props -> new PackChestBlock(tier, props)));
+        }
+    }
+
+    public static DeferredHolder<Block, PackChestBlock> chest(ChestTier tier) {
+        return CHESTS.get(tier);
+    }
+
+    public static Set<Block> chestBlocks() {
+        return CHESTS.values().stream().map(DeferredHolder::get).collect(Collectors.toUnmodifiableSet());
     }
 
     public static DeferredHolder<Block, FurnaceBlock> furnace(FurnaceTier tier) {

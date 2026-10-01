@@ -4,6 +4,7 @@ import com.factoryworks.core.energy.CreativeSupplyAreaPoleBlock;
 import com.factoryworks.core.energy.AccumulatorItem;
 import com.factoryworks.core.energy.PoleTier;
 import com.factoryworks.core.fluid.BoilerItem;
+import com.factoryworks.core.chest.ChestTier;
 import com.factoryworks.core.smelting.FurnaceItem;
 import com.factoryworks.core.smelting.FurnaceTier;
 import com.factoryworks.core.energy.SupplyAreaPoleItem;
@@ -160,6 +161,9 @@ public final class PFItems {
         // is the item's, because by the time a block exists it is too late to decline.
         FUNCTIONAL.add(ITEMS.registerItem("offshore_pump",
                 props -> new OffshorePumpItem(props)));
+        for (ChestTier tier : ChestTier.values()) {
+            FUNCTIONAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.chest(tier)));
+        }
         FUNCTIONAL.add(BARREL);
         ASSEMBLING_MACHINES.values().forEach(FUNCTIONAL::add);
         FUNCTIONAL.add(CHEMICAL_PLANT);

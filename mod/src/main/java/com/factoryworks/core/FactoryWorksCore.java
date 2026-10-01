@@ -126,6 +126,7 @@ public final class FactoryWorksCore {
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onChunkSent);
         if (FMLEnvironment.getDist() == Dist.CLIENT) {
             FurnaceClient.register(modBus);
+            com.factoryworks.core.chest.client.ChestClient.register(modBus);
             RigClient.register(modBus);
             com.factoryworks.core.machine.client.AssemblingMachineClient.register(modBus);
             com.factoryworks.core.fluid.client.SteamEngineClient.register(modBus);

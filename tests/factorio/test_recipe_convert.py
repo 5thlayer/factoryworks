@@ -47,6 +47,7 @@ POLE_TIER = MOD / "energy/PoleTier.java"
 FURNACE_TIER = MOD / "smelting/FurnaceTier.java"
 RIG_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/rig/RigTier.java"
 ASSEMBLING_TIER = MOD / "machine/AssemblingTier.java"
+CHEST_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/chest/ChestTier.java"
 
 # The pack's own smelting type (#155). Its ingredient carries a count, which vanilla's cannot,
 # and it is the only type the three furnace tiers read.
@@ -99,6 +100,8 @@ def mod_registered_blocks():
     blocks |= {f"{tier.lower()}_mining_drill" for tier in rigs}
     blocks |= set(re.findall(r'^\s{4}[A-Z]+\("([a-z0-9_]+)"',
                              ASSEMBLING_TIER.read_text(encoding="utf-8"), re.MULTILINE))
+    blocks |= set(re.findall(r'^\s{4}[A-Z]+\("([a-z0-9_]+)"',
+                             CHEST_TIER.read_text(encoding="utf-8"), re.MULTILINE))
     return {f"factoryworks:{name}" for name in blocks}
 
 
@@ -122,8 +125,7 @@ def first_party_items():
     """
     items = set(re.findall(r"event\.create\('(factoryworks:[a-z0-9_]+)'",
                            (STARTUP / "items.js").read_text()))
-    # A block registers an item too, and the chest ladder is a block (#133): its rows would
-    # otherwise read as unregistered while sitting three lines away in `blocks.js`.
+    # A block registers an item too, so its rows would otherwise read as unregistered.
     items |= set(re.findall(r"event\.create\('(factoryworks:[a-z0-9_]+)'",
                             (STARTUP / "blocks.js").read_text()))
     # Same guard as `kubejs_ids` in the flora check, and for the same reason: an empty

@@ -60,6 +60,14 @@ GECKOLIB = {
 }
 
 
+# Items drawn as vanilla's chest model in its wooden sprite, by the same `special` shape vanilla's
+# `items/chest.json` has (#540). Each is derived from the item model beside it, like GECKOLIB.
+CHEST = {
+    "factoryworks:iron_chest": "a vanilla chest, wooden until each tier has its own art (#540)",
+    "factoryworks:steel_chest": "a vanilla chest, wooden until each tier has its own art (#540)",
+}
+
+
 def definitions():
     """Every definition the asset trees imply: (path, content), by the model beside it."""
     wanted = {}
@@ -83,6 +91,15 @@ def definitions():
                             "type": "minecraft:special",
                             "base": f"{namespace}:item/{item}",
                             "model": {"type": "geckolib:geckolib"},
+                        }
+                    }
+                    continue
+                if f"{namespace}:{item}" in CHEST:
+                    wanted[path] = {
+                        "model": {
+                            "type": "minecraft:special",
+                            "base": f"{namespace}:item/{item}",
+                            "model": {"type": "minecraft:chest", "texture": "minecraft:normal"},
                         }
                     }
                     continue

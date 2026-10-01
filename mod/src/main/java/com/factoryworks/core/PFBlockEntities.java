@@ -1,5 +1,6 @@
 package com.factoryworks.core;
 
+import com.factoryworks.core.chest.PackChestBlockEntity;
 import com.factoryworks.core.energy.PoleTier;
 import com.factoryworks.core.energy.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.fluid.BoilerBlockEntity;
@@ -41,6 +42,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 
 /**
  * Block entities: the supply-area pole and the furnace ladder.
@@ -158,6 +160,11 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(OilWellBlockEntity::new,
                             java.util.Set.of(PFBlocks.OIL_WELL.get())));
 
+    /** Both chests share one type (#540); neither is a vanilla chest type, so NeoForge gives neither a face. */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PackChestBlockEntity>>
+            CHEST = BLOCK_ENTITIES.register("chest",
+                    () -> new BlockEntityType<>(PackChestBlockEntity::new, PFBlocks.chestBlocks()));
+
     private PFBlockEntities() {
     }
 
@@ -167,6 +174,7 @@ public final class PFBlockEntities {
 
     static void registerCapabilities(RegisterCapabilitiesEvent event) {
         registerFurnaceCapabilities(event);
+        registerChestCapabilities(event);
         registerRigCapabilities(event);
         registerPumpCapabilities(event);
         registerBoilerCapabilities(event);
@@ -231,6 +239,11 @@ public final class PFBlockEntities {
      * burner tiers, so a supply-area pole does not count a Stone Furnace as a machine it is
      * failing to power.
      */
+    private static void registerChestCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.Item.BLOCK, CHEST.get(),
+                (chest, side) -> VanillaContainerWrapper.of(chest));
+    }
+
     private static void registerFurnaceCapabilities(RegisterCapabilitiesEvent event) {
         for (FurnaceTier tier : FurnaceTier.values()) {
             Block block = PFBlocks.furnace(tier).get();

@@ -79,6 +79,10 @@ GECKOLIB_ITEMS = {
     "factoryworks:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
 }
 
+# Items drawn as vanilla's chest model over the item model beside it (#540). The generator holds
+# the same table.
+CHEST_ITEMS = ("factoryworks:iron_chest", "factoryworks:steel_chest")
+
 # Where an ingredient can appear in a recipe the pack emits. A value under one of these keys is a
 # 26.1 ingredient: a string, or a list of them.
 INGREDIENT_KEYS = ("ingredient", "ingredients", "key")
@@ -152,6 +156,14 @@ def check_item_definitions():
                           and model.get("base") == "%s:item/%s" % (namespace.name, name)
                           and model.get("model") == {"type": "geckolib:geckolib"},
                           "%s is recorded as GeckoLib-drawn but is not GeckoLib's special model over "
+                          "the item model beside it, so the item draws nothing" % where)
+                    continue
+                if "%s:%s" % (namespace.name, name) in CHEST_ITEMS:
+                    check(model.get("type") == "minecraft:special"
+                          and model.get("base") == "%s:item/%s" % (namespace.name, name)
+                          and model.get("model") == {"type": "minecraft:chest",
+                                                     "texture": "minecraft:normal"},
+                          "%s is recorded as a chest but is not the special chest model over "
                           "the item model beside it, so the item draws nothing" % where)
                     continue
                 check(model.get("type") == "minecraft:model",
