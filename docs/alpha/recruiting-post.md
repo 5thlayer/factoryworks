@@ -26,3 +26,28 @@ The design is inspired by Factorio and uses its numbers and recipe tree. You don
 Apply on the Discord: https://discord.gg/m3ta8fuCca
 
 No money involved anywhere: the pack earns nothing.
+
+## Showcase repost
+
+The recruiting post above was removed from r/feedthebeast as against its rules. This version shows the pack and recruits nowhere in the post; the Discord goes in one comment under it, if the rules allow links there. Ask the moderators first which rule the first post broke. Use the "I made something" flair and attach the three clips.
+
+---
+
+**Title:** FactoryWorks: a NeoForge 26.1.2 overhaul where the factory is the whole game
+
+No crafting grid, no stock recipes, no mobs, no Nether and no End. You start with a furnace, a burner drill and four ore fields, and build from there:
+
+- Belts laid block by block, with splitters, loaders and feeders
+- Machines that run at fixed rates, draw real power and stop when their output is full
+- Steam first, then electric poles carrying power over wires
+- Ore patches that run out, and oil wells that slow down
+- Research on science packs made in the factory, toward a rocket launch
+- A Personal Assembler in place of the crafting grid: ask for an item and it plans and crafts every intermediate while you play
+
+The clips: an assembly line making circuits, a steam plant powering electric furnaces, and crude oil refined into plastic. It's inspired by Factorio and uses its numbers and recipe tree. Still early work: Terra, the starting planet, is the only one so far.
+
+---
+
+**Comment, after posting:**
+
+If you want to follow it or try the Alpha when it opens: discord.gg/m3ta8fuCca
