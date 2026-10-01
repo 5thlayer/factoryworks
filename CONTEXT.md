@@ -243,8 +243,24 @@ The body of water in the hub, one block deep and flush with the ground. Since wa
 _Avoid_: pond, lake, starting water, spawn pool
 
 **Wreck**:
-The ship the player crashed in, standing in the hub, and where the player wakes on a new world and returns after dying. A sealed room no block of which can be broken, with a door, windows and one **cargo hold**. It is there for the fiction and to hold the cargo; it is not a shelter, since nothing on Terra attacks at night (ADR-0093). There is one per world.
+The ship the player crashed in, standing in the hub, and where the player wakes on a new world and returns after dying. A roofed room no block of which can be broken, with an open doorway, windows and one **cargo hold**. It is there for the fiction and to hold the cargo; it is not a shelter, since nothing on Terra attacks at night (ADR-0093). There is one per world.
 _Avoid_: crash site, ship, spaceship, debris, wreckage
+
+**Cargo hold**:
+The wreck's one container, set flush in its wall so it opens from inside and from outside, and as unbreakable as the rest of the wreck. A new world's cargo hold holds the **Hold**, once per world: a player who joins later finds whatever is left.
+_Avoid_: chest, wreck chest, ship chest
+
+**Starting kit**:
+What a new player starts with, in two halves: the **Pocket**, tools, given to each player on their first join; and the **Hold**, materials, put in the cargo hold once per world. Factorio's own split.
+_Avoid_: starter kit, spawn items, loadout
+
+**Pocket**:
+The starting kit's tools: the Quest Book, the Stone Furnace, the Burner Mining Drill and the Engineer's Iron Pick, one each, in the player's inventory on their first join.
+_Avoid_: starting inventory, kit
+
+**Hold**:
+The starting kit's materials: iron plate, copper plate and coal, single digits each, found in the cargo hold. Nothing in it is otherwise unobtainable.
+_Avoid_: loot, ship items, debris
 
 **Quest Book**:
 The book in the player's pocket, which explains what a block does and why the player wants it. It never shows a cost: prices are the research graph's, and the two are kept apart because prices move and verbs do not. It gates nothing: a quest may tick when the game sees its step done, but no progression waits on one (ADR-0034).
