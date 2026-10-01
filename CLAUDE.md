@@ -1141,16 +1141,18 @@ the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2
 holds it, and nests Groundworks; a newer version in `~/.m2` is named without failing. For a
 `curseforge` row the metafile names the pinned file and project and hashes the installed jar, and
 `index.toml` holds the metafile, not the jar; the check contacts nothing. Run it after
-the sync or any change to `mods/`. Take a new Beltworks with the sync, never by copying a jar.
+the sync or any change to `mods/`. Take a new Beltworks or Wireworks with the sync, never by copying a jar.
 Wireworks, the electric poles, is pinned the same way (#476). It has no CurseForge project yet, so
 its jar is indexed by hash and negated in `.packwizignore`. Its Bindings are the Pack's:
 `config/wireworks-server.toml` sets Factorio's supply areas and wire reaches, held to the corpus by
 `tests/pack/test_wireworks_config.py`; `kubejs/data/wireworks/tags/` puts the Picks in `wire_tools`
 and the Pack's generators and accumulator in their tags, held by `tests/pack/test_network_tags.py`;
 and `FactoryWorksCore` states the pole Replace group.
-A change that crosses Groundworks, Beltworks and the Pack goes through the `release-train` skill
-(`skillworks:release-train`, from 5thlayer/skillworks): each checkout is owned by the session working in it, and
-nothing is pushed without the user's word.
+A change that crosses Groundworks, Beltworks, Wireworks, Craftworks and the Pack goes through the
+`release-train` skill (`skillworks:release-train`, from 5thlayer/skillworks), in that order: each
+checkout is owned by the session working in it, and nothing is pushed without the user's word.
+Wireworks nests Groundworks too, so a Groundworks release moves Beltworks' and Wireworks' ranges
+together.
 
 `-PsiblingBuilds` is for trying such a change in the Pack before a library is released (#466, #475).
 It includes, as a composite, the checkout of every row of `local-jars.json` and of each jar the row
