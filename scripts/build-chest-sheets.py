@@ -46,6 +46,9 @@ def box(u, v, w, h, d):
 LID = box(0, 0, 14, 5, 14)
 BASE = box(0, 19, 14, 10, 14)
 LATCH = box(0, 0, 2, 4, 1)
+# The face a placed chest shows as its front. The model reads it mirrored against the lid's top, so
+# it is drawn mirrored to match (#543).
+FRONTS = {LID[5], BASE[5]}
 
 
 def tile(src, w, h, ox=0, oy=0):
@@ -62,6 +65,8 @@ def build(source, origin):
     border = tuple(ImageEnhance.Brightness(src).enhance(0.55).getpixel((0, 0)))
     for x, y, w, h in LID + BASE:
         face = tile(src, w, h, *origin)
+        if (x, y, w, h) in FRONTS:
+            face = face.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         ImageDraw.Draw(face).rectangle([0, 0, w - 1, h - 1], outline=border)
         sheet.paste(face, (x, y))
     latch = ImageEnhance.Brightness(src).enhance(1.35)
