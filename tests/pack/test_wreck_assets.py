@@ -7,6 +7,8 @@
     copy is held to the corpus field by field.
   - **The screen's shape.** The hold opens vanilla's hopper screen, which is five slots and
     refuses any other size. The corpus has to still say five.
+  - **The textures.** `scripts/build-wreck-textures.py` derives them from the unmodified art under
+    `data/art/` (#551). It needs Pillow, so its `--check` runs through `uv`.
   - **No item.** None of the wreck blocks has an item, an item model, an item definition or a
     loot table.
 
@@ -24,6 +26,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/wreck/containers.json"
 CORPUS = ROOT / "data/factorio/container.json"
 GENERATOR = ROOT / "scripts/build-wreck-assets.py"
+TEXTURES = ROOT / "scripts/build-wreck-textures.py"
 ASSETS = ROOT / "kubejs/assets/factoryworks"
 LOOT = ROOT / "kubejs/data/factoryworks/loot_table/blocks"
 
@@ -41,6 +44,10 @@ def main():
     run = subprocess.run([sys.executable, str(GENERATOR), "--check"], capture_output=True, text=True)
     if run.returncode != 0:
         failures.append(f"the generator's --check failed:\n{run.stdout}{run.stderr}")
+    run = subprocess.run(["uv", "run", "--with", "pillow", str(TEXTURES), "--check"],
+                         capture_output=True, text=True)
+    if run.returncode != 0:
+        failures.append(f"the texture generator's --check failed:\n{run.stdout}{run.stderr}")
 
     rows = {row["name"]: row for row in json.loads(CORPUS.read_text())["containers"]}
     row = rows.get(FACTORIO_NAME)

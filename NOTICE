@@ -122,6 +122,33 @@ Source:  https://github.com/malcolmriley/unused-textures
 Licence: Creative Commons Attribution 4.0 International
          https://creativecommons.org/licenses/by/4.0/
 
+Wreck textures (#551)
+---------------------
+
+Files:   data/art/space-plating-rivets-horizontal.png
+         data/art/space-plating-access-hatch.png
+         data/art/space-plating-stripe-black-horizontal-damaged.png
+         data/art/space-plating-stripe-gray-horizontal-damaged.png
+         data/art/steel_block_rusty.png
+         kubejs/assets/factoryworks/textures/block/wreck/hull.png
+         kubejs/assets/factoryworks/textures/block/wreck/hull_scorched.png
+         kubejs/assets/factoryworks/textures/block/wreck/window.png
+         kubejs/assets/factoryworks/textures/block/wreck/cargo_hold.png
+         kubejs/assets/factoryworks/textures/block/wreck/debris_big.png
+         kubejs/assets/factoryworks/textures/block/wreck/debris_medium.png
+         kubejs/assets/factoryworks/textures/block/wreck/debris_small.png
+Author:  Malcolm Riley
+Source:  https://github.com/malcolmriley/unused-textures
+         blocks/space-plating-rivets-horizontal.png, space-plating-access-hatch.png,
+         space-plating-stripe-black-horizontal-damaged.png,
+         space-plating-stripe-gray-horizontal-damaged.png and steel_block_rusty.png at commit
+         c89604ea49c0fc5470c5849f39cd5df1d497b0fb. The files under data/art/ are the unmodified
+         copies. scripts/build-wreck-textures.py copies them into the wreck's textures, and derives
+         the scorched hull, by darkening the plating into blotches, and the window, a dark glass
+         porthole in a frame of the plating.
+Licence: Creative Commons Attribution 4.0 International
+         https://creativecommons.org/licenses/by/4.0/
+
 Beltworks (#342, #447)
 ----------------------
 

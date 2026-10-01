@@ -4,7 +4,7 @@
       "model": "factoryworks:block/wreck_hull"
     },
     "scorched=true": {
-      "model": "factoryworks:block/wreck_hull"
+      "model": "factoryworks:block/wreck_hull_scorched"
     }
   }
 }

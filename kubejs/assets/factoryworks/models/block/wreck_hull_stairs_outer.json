@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/outer_stairs",
   "textures": {
-    "bottom": "minecraft:block/iron_block",
-    "top": "minecraft:block/iron_block",
-    "side": "minecraft:block/iron_block"
+    "bottom": "factoryworks:block/wreck/hull",
+    "top": "factoryworks:block/wreck/hull",
+    "side": "factoryworks:block/wreck/hull"
   }
 }

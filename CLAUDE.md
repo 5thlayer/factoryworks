@@ -302,7 +302,9 @@ any other, a hold with no anchor or two to answering nothing, one block entity i
 survival break of a part or the anchor to leaving it standing, and a survival break of each debris
 block to removing it with no drop. Resolving a part to itself, giving
 every block a block entity and registering the face on the anchor's type each turn tests red.
-Run them after editing `core/wreck/` or the generator. How the blocks look is a human check on delivery.
+The blocks' textures are `scripts/build-wreck-textures.py`'s, from unused-textures' art under
+`data/art/`, deriving the scorched hull and the window (#551); the same test runs its `--check`.
+Run them after editing `core/wreck/` or either generator. How the blocks look is a human check on delivery.
 
 ### Recipe name check
 

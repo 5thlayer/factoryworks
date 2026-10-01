@@ -32,15 +32,16 @@ NAMESPACE = "factoryworks"
 FACTORIO_NAME = "crash-site-spaceship"
 REQUIRED_FIELDS = ("inventory_size",)
 
-# Display choices: vanilla art until the wreck has its own.
+# The textures are scripts/build-wreck-textures.py's (#551).
 BLOCKS = {
-    "wreck_hull": ("Wreck Hull", "minecraft:block/iron_block"),
-    "wreck_window": ("Wreck Window", "minecraft:block/tinted_glass"),
-    "cargo_hold": ("Cargo Hold", "minecraft:block/chiseled_copper"),
-    "wreck_debris_big": ("Big Wreck Debris", "minecraft:block/raw_iron_block"),
-    "wreck_debris_medium": ("Medium Wreck Debris", "minecraft:block/raw_iron_block"),
-    "wreck_debris_small": ("Small Wreck Debris", "minecraft:block/raw_iron_block"),
+    "wreck_hull": ("Wreck Hull", f"{NAMESPACE}:block/wreck/hull"),
+    "wreck_window": ("Wreck Window", f"{NAMESPACE}:block/wreck/window"),
+    "cargo_hold": ("Cargo Hold", f"{NAMESPACE}:block/wreck/cargo_hold"),
+    "wreck_debris_big": ("Big Wreck Debris", f"{NAMESPACE}:block/wreck/debris_big"),
+    "wreck_debris_medium": ("Medium Wreck Debris", f"{NAMESPACE}:block/wreck/debris_medium"),
+    "wreck_debris_small": ("Small Wreck Debris", f"{NAMESPACE}:block/wreck/debris_small"),
 }
+SCORCHED_HULL = f"{NAMESPACE}:block/wreck/hull_scorched"
 DEBRIS_PREFIX = "crash-site-spaceship-wreck-"
 DEBRIS_CLASSES = ("big", "medium", "small")
 # The hull's bevel, drawn in the hull's texture.
@@ -112,13 +113,17 @@ def planned_files():
             # Same model either way; the property only says which block owns the inventory (#548).
             variants = {f"anchor={flag}": {"model": model} for flag in ("false", "true")}
         if name == "wreck_hull":
-            # One model until the hull has art of its own (#551).
-            variants = {f"scorched={flag}": {"model": model} for flag in ("false", "true")}
+            variants = {"scorched=false": {"model": model},
+                        "scorched=true": {"model": model + "_scorched"}}
         files[os.path.join(ASSETS, "blockstates", f"{name}.json")] = {"variants": variants}
         files[os.path.join(ASSETS, "models", "block", f"{name}.json")] = {
             "parent": "minecraft:block/cube_all",
             "textures": {"all": texture},
         }
+    files[os.path.join(ASSETS, "models", "block", "wreck_hull_scorched.json")] = {
+        "parent": "minecraft:block/cube_all",
+        "textures": {"all": SCORCHED_HULL},
+    }
     hull = BLOCKS["wreck_hull"][1]
     sides = {"bottom": hull, "top": hull, "side": hull}
     stairs = f"{NAMESPACE}:block/wreck_hull_stairs"
