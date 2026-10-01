@@ -7,8 +7,8 @@ derived from the hull plating:
 
   - **The scorched hull** darkens the plating where a value noise runs high, into irregular
     patches. The noise wraps at the tile's edges, so a wall of scorched blocks has no seam.
-  - **The window** is a dark glass porthole inside a frame of the plating. It is opaque, so the
-    window's render layer does not matter.
+  - **The window** is a porthole of see-through glass inside a frame of the plating. 26.1 picks a
+    block's render layer from its sprite, so the glass's alpha alone puts it on the translucent one.
 
     uv run --with pillow scripts/build-wreck-textures.py
     uv run --with pillow scripts/build-wreck-textures.py --check    # what tests/ runs
@@ -38,9 +38,9 @@ OCTAVES = ((4, 0.65), (2, 0.35))
 # The plating is near white, so a scorch needs a deep floor to read as one (#551).
 SCORCH_START, SCORCH_FULL, SCORCH_FLOOR = 0.42, 0.72, 0.2
 SOOT_GREEN, SOOT_BLUE = 0.04, 0.1
-GLASS_MIN, GLASS_MAX = 4, 11
-GLASS = (22, 28, 36, 255)
-GLINT = (70, 86, 100, 255)
+GLASS_MIN, GLASS_MAX = 3, 12
+GLASS = (120, 150, 165, 90)
+GLINT = (205, 228, 232, 190)
 RIM = 0.55
 
 

@@ -3,7 +3,7 @@ package com.factoryworks.core.wreck;
 import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
-/** The wreck's glass (ADR-0107): solid, unbreakable and lets light through, though its art is opaque (#551). */
+/** The wreck's glass (ADR-0107): translucent, solid and unbreakable. */
 public class WreckWindowBlock extends TransparentBlock {
 
     public WreckWindowBlock(BlockBehaviour.Properties props) {

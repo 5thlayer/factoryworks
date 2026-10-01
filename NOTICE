@@ -144,7 +144,7 @@ Source:  https://github.com/malcolmriley/unused-textures
          space-plating-stripe-gray-horizontal-damaged.png and steel_block_rusty.png at commit
          c89604ea49c0fc5470c5849f39cd5df1d497b0fb. The files under data/art/ are the unmodified
          copies. scripts/build-wreck-textures.py copies them into the wreck's textures, and derives
-         the scorched hull, by darkening the plating into blotches, and the window, a dark glass
+         the scorched hull, by darkening the plating into blotches, and the window, a glass
          porthole in a frame of the plating.
 Licence: Creative Commons Attribution 4.0 International
          https://creativecommons.org/licenses/by/4.0/
