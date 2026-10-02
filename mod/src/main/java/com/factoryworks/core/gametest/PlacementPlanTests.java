@@ -1,5 +1,8 @@
 package com.factoryworks.core.gametest;
 
+import com.factoryworks.core.mining.rig.RigMiningArea;
+import com.factoryworks.core.mining.rig.RigBlock;
+import com.factoryworks.core.ore.OreResource;
 import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,6 +99,14 @@ final class PlacementPlanTests {
                 PlacementPlanTests::furnaceMatchesPlacement);
         tests.test("plan_matches_placement_for_a_rig", 20, PlacementPlanTests::rigMatchesPlacement);
         tests.test("plan_refuses_a_rig_whole", 20, PlacementPlanTests::rigRefusesWhole);
+        tests.test("plan_refuses_a_burner_rig_over_no_ore", 20,
+                helper -> rigRefusesOverNoOre(helper, RigTier.BURNER));
+        tests.test("plan_refuses_an_electric_rig_over_no_ore", 20,
+                helper -> rigRefusesOverNoOre(helper, RigTier.ELECTRIC));
+        tests.test("plan_accepts_a_burner_rig_over_ore_at_its_area_edge", 20,
+                helper -> rigAcceptsOreAtAreaEdge(helper, RigTier.BURNER));
+        tests.test("plan_accepts_an_electric_rig_over_ore_outside_its_footprint", 20,
+                helper -> rigAcceptsOreAtAreaEdge(helper, RigTier.ELECTRIC));
         tests.test("plan_matches_placement_for_an_assembling_machine", 20,
                 helper -> assemblingMachineMatchesPlacement(helper, AssemblingTier.ONE));
         tests.test("plan_matches_placement_for_an_assembling_machine_2", 20,
@@ -164,6 +175,7 @@ final class PlacementPlanTests {
      * and pass every other assertion here, while the preview drew a quarter of the machine.
      */
     private static void rigMatchesPlacement(GameTestHelper helper) {
+        helper.setBlock(FLOOR, PFBlocks.ore(OreResource.IRON).get());
         PlacementPlan plan = check(helper, new ItemStack(PFItems.rig(RigTier.BURNER).get()),
                 FLOOR, Direction.UP, false);
         RigCorpus.Row row = RigCorpus.get().rowOf(RigTier.BURNER);
@@ -184,6 +196,45 @@ final class PlacementPlanTests {
         helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.rig(RigTier.BURNER).get()),
                 FLOOR, Direction.UP, true), PackRefusal.FOOTPRINT_BLOCKED, helper);
+        helper.succeed();
+    }
+
+    /** Bare ground under a drill's area refuses the plan, and the click places nothing (#589). */
+    private static void rigRefusesOverNoOre(GameTestHelper helper, RigTier tier) {
+        refusal(check(helper, new ItemStack(PFItems.rig(tier).get()),
+                FLOOR, Direction.UP, true), PackRefusal.NO_ORE_IN_AREA, helper);
+        helper.succeed();
+    }
+
+    /**
+     * One ore block on a tile of the area that lies outside the footprint is enough (#589). The
+     * facing comes from the bare-ground plan, since the mock player's look decides the area.
+     */
+    private static void rigAcceptsOreAtAreaEdge(GameTestHelper helper, RigTier tier) {
+        Player probe = helper.makeMockPlayer(GameType.SURVIVAL);
+        ItemStack stack = new ItemStack(PFItems.rig(tier).get());
+        probe.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        BlockPos floor = helper.absolutePos(FLOOR);
+        PlacementPlan bare = Placements.planFor(helper.getLevel(), probe, InteractionHand.MAIN_HAND, stack,
+                new BlockHitResult(Vec3.atCenterOf(floor).relative(Direction.UP, 0.5), Direction.UP, floor, false));
+        if (bare == null) {
+            helper.fail("no plan at all where one was expected", FLOOR);
+            throw new IllegalStateException("unreachable");
+        }
+        BlockPos anchor = bare.blocks().getFirst().pos();
+        Direction facing = bare.blocks().getFirst().state().getValue(RigBlock.FACING);
+        List<BlockPos> footprint = bare.blocks().stream().map(PlacementPlan.Placed::pos).toList();
+        BlockPos edge = RigMiningArea.positions(anchor, tier, facing).stream()
+                .filter(pos -> footprint.stream().noneMatch(
+                        part -> part.getX() == pos.getX() && part.getZ() == pos.getZ()))
+                .findFirst()
+                .orElse(null);
+        if (edge == null) {
+            // The burner area is its own footprint's 2x2, so its edge is a footprint column.
+            edge = RigMiningArea.positions(anchor, tier, facing).getLast();
+        }
+        helper.getLevel().setBlockAndUpdate(edge, PFBlocks.ore(OreResource.IRON).get().defaultBlockState());
+        check(helper, new ItemStack(PFItems.rig(tier).get()), FLOOR, Direction.UP, false);
         helper.succeed();
     }
 

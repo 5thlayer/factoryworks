@@ -1,5 +1,7 @@
 package com.factoryworks.core.gametest;
 
+import com.factoryworks.core.ore.OreResource;
+import com.factoryworks.core.PFBlocks;
 import java.util.List;
 
 import com.factoryworks.core.PFItems;
@@ -87,6 +89,7 @@ final class RigBreakTests {
 
     /** Places the rig with its own item, the way a player does, and returns every block it put down. */
     private static List<BlockPos> place(GameTestHelper helper, RigTier tier) {
+        helper.setBlock(FLOOR, PFBlocks.ore(OreResource.IRON).get());
         var player = helper.makeMockPlayer(GameType.SURVIVAL);
         ItemStack stack = new ItemStack(PFItems.rig(tier).get());
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);

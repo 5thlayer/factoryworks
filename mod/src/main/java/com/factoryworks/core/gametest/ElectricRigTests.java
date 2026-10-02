@@ -138,6 +138,7 @@ final class ElectricRigTests {
 
     /** Places the drill with its own item, the way a player does, and a pole beside a part column. */
     private static Layout place(GameTestHelper helper) {
+        helper.setBlock(FLOOR, PFBlocks.ore(OreResource.IRON).get());
         var player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(PFItems.rig(RigTier.ELECTRIC).get()));
         BlockPos absolute = helper.absolutePos(FLOOR);

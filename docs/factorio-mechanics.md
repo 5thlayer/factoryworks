@@ -309,6 +309,9 @@ Sub-rules:
   departures: crude leaves into a Pipeworks segment through **any face**, where Factorio's has one rotatable output; the model
   is Oritech's Pump scaled to 3x3, a human check on delivery; and the two module slots wait for
   modules.
+- **A drill places only where its mining area holds ore** — `shipped` (#589). Placement is refused,
+  the preview red and the click consuming nothing, unless at least one block of the area is ore; the
+  area is the one the drill mines and the overlay tints.
 - **A drill takes turns over the ore beneath it** — `shipped` (#537). Ten operations on a block, then
   the next block with ore in the area's fixed order, wrapping; a block that empties hands over at
   once, and every block gets the same share whatever its ore or amount, as Factorio's does.

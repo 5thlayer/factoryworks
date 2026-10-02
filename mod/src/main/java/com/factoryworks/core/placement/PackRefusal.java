@@ -10,6 +10,8 @@ public enum PackRefusal implements Refusal {
     NO_FLUID_SOURCE,
     /** A Pumpjack anywhere but over an oil well (ADR-0081). */
     NOT_ON_WELL,
+    /** A mining drill with no ore block in its mining area (#589). */
+    NO_ORE_IN_AREA,
     /** A Fast Replace whose player has no room for what it hands back (ADR-0082). */
     NO_ROOM_TO_RETURN,
 }

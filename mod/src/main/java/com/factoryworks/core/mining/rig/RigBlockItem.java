@@ -10,7 +10,9 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
+import com.factoryworks.core.ore.OreBlock;
 import com.factoryworks.core.placement.PackRefusal;
+import net.minecraft.server.level.ServerPlayer;
 import io.github._5thlayer.groundworks.PlacementPlan;
 import io.github._5thlayer.groundworks.Placements;
 import io.github._5thlayer.groundworks.PlansPlacement;
@@ -47,6 +49,8 @@ import java.util.ArrayList;
  * tile the player cannot see from above.
  */
 public class RigBlockItem extends BlockItem implements PlansPlacement {
+
+    private static final String NO_ORE_KEY = "message.factoryworks.rig.no_ore";
 
     private final RigTier tier;
 
@@ -97,9 +101,14 @@ public class RigBlockItem extends BlockItem implements PlansPlacement {
                 fits = false;
             }
         }
-        return fits
+        if (!fits) {
+            return PlacementPlan.refused(blocks, PackRefusal.FOOTPRINT_BLOCKED);
+        }
+        boolean ore = RigMiningArea.positions(anchorPos, tier, facing).stream()
+                .anyMatch(pos -> level.getBlockState(pos).getBlock() instanceof OreBlock);
+        return ore
                 ? PlacementPlan.accepted(blocks)
-                : PlacementPlan.refused(blocks, PackRefusal.FOOTPRINT_BLOCKED);
+                : PlacementPlan.refused(blocks, PackRefusal.NO_ORE_IN_AREA);
     }
 
     /**
@@ -110,6 +119,10 @@ public class RigBlockItem extends BlockItem implements PlansPlacement {
     public InteractionResult place(BlockPlaceContext context) {
         PlacementPlan plan = Placements.planFor(this, context);
         if (plan == null || plan.isRefused()) {
+            if (plan != null && plan.refusal() == PackRefusal.NO_ORE_IN_AREA
+                    && context.getPlayer() instanceof ServerPlayer player) {
+                player.sendSystemMessage(Component.translatable(NO_ORE_KEY), true);
+            }
             return InteractionResult.FAIL;
         }
         Level level = context.getLevel();

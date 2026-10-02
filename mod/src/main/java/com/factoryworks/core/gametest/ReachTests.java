@@ -1,5 +1,6 @@
 package com.factoryworks.core.gametest;
 
+import com.factoryworks.core.ore.OreResource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,6 +97,7 @@ final class ReachTests {
 
     private static void drillPart(GameTestHelper helper) {
         BlockPos under = FLOOR.east(10);
+        helper.setBlock(under, PFBlocks.ore(OreResource.IRON).get());
         var placer = helper.makeMockPlayer(GameType.SURVIVAL);
         placer.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(PFItems.rig(RigTier.BURNER).get()));
         BlockPos absolute = helper.absolutePos(under);
