@@ -102,6 +102,8 @@ public final class PFItems {
 
     public static final DeferredHolder<Item, RadarItem> RADAR = ITEMS.registerItem("radar", RadarItem::new);
 
+    public static final DeferredHolder<Item, BoilerItem> BOILER = ITEMS.registerItem("boiler", BoilerItem::new);
+
     public static final DeferredHolder<Item, PumpjackItem> PUMPJACK = ITEMS.registerItem("pumpjack", PumpjackItem::new);
 
     /**
@@ -142,7 +144,7 @@ public final class PFItems {
             RIGS.put(tier, item);
             FUNCTIONAL.add(item);
         }
-        FUNCTIONAL.add(ITEMS.registerItem("boiler", BoilerItem::new));
+        FUNCTIONAL.add(BOILER);
         // Not registerSimpleBlockItem: the pump refuses to place away from water, and the refusal
         // is the item's, because by the time a block exists it is too late to decline.
         FUNCTIONAL.add(ITEMS.registerItem("offshore_pump",

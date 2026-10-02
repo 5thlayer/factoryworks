@@ -75,6 +75,7 @@ FACINGS = {"north": 0, "east": 90, "south": 180, "west": 270}
 # and read as part of it.
 BOILER_LANG = {
     f"block.{NAMESPACE}.{BOILER_BLOCK}": BOILER_DISPLAY,
+    f"block.{NAMESPACE}.{BOILER_BLOCK}_part": f"{BOILER_DISPLAY} (part)",
     f"tooltip.{NAMESPACE}.boiler.fuel": "%s / %s J",
     f"tooltip.{NAMESPACE}.boiler.fuel.seconds": "%s s at %s J/t",
     f"tooltip.{NAMESPACE}.boiler.fuel.out": "Out of fuel",
@@ -178,6 +179,9 @@ def planned_files(rows):
     files = {STEAM_CHAIN_RESOURCE: rows}
     model_name = f"{NAMESPACE}:block/{BOILER_BLOCK}"
     files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}.json")] = blockstate(model_name)
+    files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}_part.json")] = {
+        "variants": {"": {"model": model_name}}
+    }
     files[os.path.join(ASSETS, "models", "block", f"{BOILER_BLOCK}.json")] = oriented_model()
     files[os.path.join(ASSETS, "models", "item", f"{BOILER_BLOCK}.json")] = {"parent": model_name}
     files[os.path.join(DATA, "loot_table", "blocks", f"{BOILER_BLOCK}.json")] = self_drop_loot_table(

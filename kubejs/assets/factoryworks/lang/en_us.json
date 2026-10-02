@@ -283,5 +283,6 @@
   "recipe.factoryworks.chemistry.sulfur": "%s",
   "recipe.factoryworks.chemistry.sulfuric_acid": "%s",
   "recipe.factoryworks.oil_processing.advanced_oil_processing": "Advanced oil processing",
-  "recipe.factoryworks.oil_processing.basic_oil_processing": "Basic oil processing"
+  "recipe.factoryworks.oil_processing.basic_oil_processing": "Basic oil processing",
+  "block.factoryworks.boiler_part": "Boiler (part)"
 }

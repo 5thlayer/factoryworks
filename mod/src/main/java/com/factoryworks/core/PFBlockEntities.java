@@ -208,7 +208,8 @@ public final class PFBlockEntities {
     }
 
     /**
-     * The Boiler's two faces (#224), both answered on every direction and on the null side.
+     * The Boiler's two faces (#224), both answered on every direction and on the null side, on
+     * every block of the footprint (#592).
      *
      * <p>Fluid: water in through tank 0, steam out of tank 1, and neither reachable the other way
      * round -- see {@link BoilerBlockEntity#fluidHandler()}. Item: fuel in and nothing out at all.
@@ -218,17 +219,12 @@ public final class PFBlockEntities {
      * answers a Create funnel on any other face with silence and no diagnosis.
      */
     private static void registerBoilerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlock(
-                Capabilities.Fluid.BLOCK,
-                (level, pos, state, blockEntity, side) ->
-                        blockEntity instanceof BoilerBlockEntity boiler ? boiler.fluidHandler() : null,
-                PFBlocks.BOILER.get());
-        event.registerBlock(
-                Capabilities.Item.BLOCK,
-                (level, pos, state, blockEntity, side) ->
-                        blockEntity instanceof BoilerBlockEntity boiler
-                                ? new BoilerItemHandler(boiler) : null,
-                PFBlocks.BOILER.get());
+        registerOnFootprint(event, Capabilities.Fluid.BLOCK, PFBlocks.BOILER_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof BoilerBlockEntity boiler
+                        ? boiler.fluidHandler() : null);
+        registerOnFootprint(event, Capabilities.Item.BLOCK, PFBlocks.BOILER_FOOTPRINT,
+                (blockEntity, side) -> blockEntity instanceof BoilerBlockEntity boiler
+                        ? new BoilerItemHandler(boiler) : null);
     }
 
     /**

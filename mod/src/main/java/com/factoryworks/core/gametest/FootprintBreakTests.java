@@ -38,17 +38,18 @@ final class FootprintBreakTests {
     }
 
     static void register(PFGameTests.Registrar tests) {
-        Map<String, FootprintMachine> machines = Map.of(
-                "assembling_machine", PFBlocks.assemblingFootprint(AssemblingTier.ONE),
-                "assembling_machine_2", PFBlocks.assemblingFootprint(AssemblingTier.TWO),
-                "assembling_machine_3", PFBlocks.assemblingFootprint(AssemblingTier.THREE),
-                "chemical_plant", PFBlocks.CHEMICAL_PLANT_FOOTPRINT,
-                "oil_refinery", PFBlocks.OIL_REFINERY_FOOTPRINT,
-                "steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT,
-                "accumulator", PFBlocks.ACCUMULATOR_FOOTPRINT,
-                "solar_panel", PFBlocks.SOLAR_PANEL_FOOTPRINT,
-                "radar", PFBlocks.RADAR_FOOTPRINT,
-                "pumpjack", PFBlocks.PUMPJACK_FOOTPRINT);
+        Map<String, FootprintMachine> machines = Map.ofEntries(
+                Map.entry("assembling_machine", PFBlocks.assemblingFootprint(AssemblingTier.ONE)),
+                Map.entry("assembling_machine_2", PFBlocks.assemblingFootprint(AssemblingTier.TWO)),
+                Map.entry("assembling_machine_3", PFBlocks.assemblingFootprint(AssemblingTier.THREE)),
+                Map.entry("chemical_plant", PFBlocks.CHEMICAL_PLANT_FOOTPRINT),
+                Map.entry("oil_refinery", PFBlocks.OIL_REFINERY_FOOTPRINT),
+                Map.entry("steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT),
+                Map.entry("accumulator", PFBlocks.ACCUMULATOR_FOOTPRINT),
+                Map.entry("solar_panel", PFBlocks.SOLAR_PANEL_FOOTPRINT),
+                Map.entry("radar", PFBlocks.RADAR_FOOTPRINT),
+                Map.entry("pumpjack", PFBlocks.PUMPJACK_FOOTPRINT),
+                Map.entry("boiler", PFBlocks.BOILER_FOOTPRINT));
         machines.forEach((name, machine) -> {
             tests.test(name + "_broken_at_its_anchor_leaves_nothing", 20,
                     helper -> breakAndCheck(helper, machine, 0));

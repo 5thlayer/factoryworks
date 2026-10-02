@@ -134,10 +134,10 @@ public final class ShowcaseScenes {
 
     /** Water and coal make steam, steam makes power, and the power smelts iron. */
     private static Product steamPower(Site site) {
-        BlockPos pump = new BlockPos(2, 1, 3);
+        BlockPos pump = new BlockPos(1, 1, 3);
         BlockPos boiler = new BlockPos(4, 1, 3);
         site.set(pump, PFBlocks.OFFSHORE_PUMP.get());
-        site.set(boiler, PFBlocks.BOILER.get());
+        PFBlocks.BOILER_FOOTPRINT.placeAll(site.level(), site.at(boiler), Direction.EAST);
         for (int i = 0; i < 2; i++) {
             PFBlocks.STEAM_ENGINE_FOOTPRINT.placeAll(site.level(), site.at(new BlockPos(6 + i, 1, 3)), Direction.WEST);
         }
@@ -145,8 +145,8 @@ public final class ShowcaseScenes {
         extractingPipe(site, boiler.east(), Direction.WEST);
 
         stockedChest(site, new BlockPos(4, 1, 9), item("minecraft:coal"));
-        unloader(site, boiler.south(), Direction.SOUTH);
-        belt(site, new BlockPos(4, 1, 7), Direction.NORTH, 3);
+        unloader(site, boiler.south(2), Direction.SOUTH);
+        belt(site, new BlockPos(4, 1, 7), Direction.NORTH, 2);
         site.set(new BlockPos(4, 1, 8), loaderState(Direction.NORTH));
 
         site.set(new BlockPos(8, 1, 6), WireworksRegistries.pole(PoleTier.SMALL).get());

@@ -24,6 +24,7 @@ import com.factoryworks.core.ore.OreResource;
 import com.factoryworks.core.smelting.FurnaceBlock;
 import com.factoryworks.core.smelting.FurnaceTier;
 import com.factoryworks.core.fluid.BoilerBlock;
+import com.factoryworks.core.fluid.BoilerFootprint;
 import com.factoryworks.core.fluid.OffshorePumpBlock;
 import com.factoryworks.core.energy.AccumulatorBlock;
 import com.factoryworks.core.energy.AccumulatorFootprint;
@@ -84,11 +85,19 @@ public final class PFBlocks {
     /**
      * Terra's Boiler (#224, ADR-0048): fuel and water in, low-temperature steam out.
      *
-     * <p>One block, not a ladder. ADR-0033 has the reactor emitting superheated steam directly
+     * <p>One machine, not a ladder, and a 3x2 footprint (ADR-0114). ADR-0033 has the reactor emitting superheated steam directly
      * with no heat layer, so Factorio's second boiler tier has nothing to be in this pack.
      */
     public static final DeferredHolder<Block, BoilerBlock> BOILER =
             BLOCKS.registerBlock("boiler", BoilerBlock::new);
+
+    public static final DeferredHolder<Block, FootprintPartBlock> BOILER_PART =
+            BLOCKS.registerBlock("boiler_part",
+                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
+                            () -> PFBlocks.BOILER_FOOTPRINT));
+
+    public static final FootprintMachine BOILER_FOOTPRINT = new FootprintMachine(
+            BoilerFootprint.FOOTPRINT, BOILER, BOILER_PART, () -> PFItems.BOILER.get());
 
     /**
      * The Assembling Machine ladder (#326, #295, ADR-0071, ADR-0075): per tier, an Oritech machine

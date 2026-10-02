@@ -1,15 +1,28 @@
 package com.factoryworks.core.gametest;
 
+import java.util.List;
+
 import com.factoryworks.core.PFBlocks;
+import com.factoryworks.core.PFItems;
 import com.factoryworks.core.fluid.BoilerBlockEntity;
 import com.factoryworks.core.fluid.BoilerSlots;
 import com.factoryworks.core.fluid.PFFluids;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -46,6 +59,9 @@ final class BoilerTests {
     /** The Boiler. Centre of the platform, clear of every edge. */
     private static final BlockPos BOILER = new BlockPos(3, 1, 3);
 
+    /** The floor the footprint tests click, with room for the 3x2 around the anchor above it. */
+    private static final BlockPos FLOOR = new BlockPos(3, 0, 3);
+
     /**
      * What a whole tick converts, in millibuckets: Factorio's 60 a second over Minecraft's twenty
      * ticks.
@@ -67,6 +83,9 @@ final class BoilerTests {
         tests.test("boiler_boils", 100, BoilerTests::boils);
         tests.test("boiler_fluid_face_is_per_tank", 100, BoilerTests::fluidFaceIsPerTank);
         tests.test("boiler_item_face_takes_fuel_only", 100, BoilerTests::itemFaceTakesFuelOnly);
+        tests.test("boiler_item_places_the_whole_footprint", 20, BoilerTests::placedWhole);
+        tests.test("boiler_item_refused_when_one_position_is_blocked", 20, BoilerTests::refusedWhenBlocked);
+        tests.test("boiler_parts_reach_the_anchors_faces", 20, BoilerTests::partsReachTheAnchor);
     }
 
     /**
@@ -179,6 +198,98 @@ final class BoilerTests {
             helper.fail("a funnel pulled " + given + " coal back out of the Boiler", BOILER);
         }
         helper.succeed();
+    }
+
+    /** The footprint stands whole from one click, one item spent (#592). */
+    private static void placedWhole(GameTestHelper helper) {
+        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(PFItems.BOILER.get()));
+        click(helper, player);
+
+        BlockState anchor = helper.getLevel().getBlockState(helper.absolutePos(FLOOR.above()));
+        if (!PFBlocks.BOILER_FOOTPRINT.isAnchor(anchor)) {
+            helper.fail("the click put no Boiler anchor on the floor", FLOOR.above());
+            return;
+        }
+        List<BlockPos> positions = PFBlocks.BOILER_FOOTPRINT.positions(helper.absolutePos(FLOOR.above()),
+                anchor.getValue(HorizontalDirectionalBlock.FACING));
+        if (positions.size() != 6 || positions.stream().map(BlockPos::getY).distinct().count() != 1) {
+            helper.fail("the footprint is " + positions.size() + " blocks on "
+                    + positions.stream().map(BlockPos::getY).distinct().count() + " layers, not 6 on 1", FLOOR.above());
+        }
+        for (int i = 1; i < positions.size(); i++) {
+            if (!helper.getLevel().getBlockState(positions.get(i)).is(PFBlocks.BOILER_PART.get())) {
+                helper.fail("position " + i + " of the footprint is not a Boiler part",
+                        helper.relativePos(positions.get(i)));
+            }
+        }
+        if (!player.getMainHandItem().isEmpty()) {
+            helper.fail("placing the Boiler did not spend its item", FLOOR.above());
+        }
+        helper.succeed();
+    }
+
+    /** One taken position refuses the whole machine and spends nothing (ADR-0069). */
+    private static void refusedWhenBlocked(GameTestHelper helper) {
+        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(PFItems.BOILER.get()));
+        BlockPos anchor = helper.absolutePos(FLOOR.above());
+        Direction facing = player.getDirection().getOpposite();
+        BlockPos corner = PFBlocks.BOILER_FOOTPRINT.positions(anchor, facing).getLast();
+        helper.getLevel().setBlockAndUpdate(corner, Blocks.STONE.defaultBlockState());
+        click(helper, player);
+
+        for (BlockPos pos : PFBlocks.BOILER_FOOTPRINT.positions(anchor, facing)) {
+            BlockState state = helper.getLevel().getBlockState(pos);
+            if (state.is(PFBlocks.BOILER.get()) || state.is(PFBlocks.BOILER_PART.get())) {
+                helper.fail("a blocked footprint still placed " + state.getBlock(), helper.relativePos(pos));
+            }
+        }
+        if (player.getMainHandItem().getCount() != 1) {
+            helper.fail("a refused Boiler spent its item", FLOOR.above());
+        }
+        helper.succeed();
+    }
+
+    /** A pipe or hopper on any part finds the anchor's tanks and fuel slot (#592). */
+    private static void partsReachTheAnchor(GameTestHelper helper) {
+        BlockPos anchor = helper.absolutePos(FLOOR.above());
+        PFBlocks.BOILER_FOOTPRINT.placeAll(helper.getLevel(), anchor, Direction.NORTH);
+        BoilerBlockEntity boiler = (BoilerBlockEntity) helper.getLevel().getBlockEntity(anchor);
+        boiler.data().set(BoilerBlockEntity.DATA_STEAM, BoilerBlockEntity.STEAM_CAPACITY / 2);
+
+        FluidResource water = FluidResource.of(Fluids.WATER);
+        FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
+        ItemResource coal = ItemResource.of(new ItemStack(Items.COAL));
+        List<BlockPos> positions = PFBlocks.BOILER_FOOTPRINT.positions(anchor, Direction.NORTH);
+        for (int i = 1; i < positions.size(); i++) {
+            BlockPos absolute = positions.get(i);
+            BlockPos part = helper.relativePos(absolute);
+            ResourceHandler<FluidResource> fluid =
+                    helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, absolute, null);
+            ResourceHandler<ItemResource> item =
+                    helper.getLevel().getCapability(Capabilities.Item.BLOCK, absolute, null);
+            if (fluid == null || item == null) {
+                helper.fail("part " + i + " has no " + (fluid == null ? "fluid" : "item") + " face", part);
+                return;
+            }
+            if (Faces.simulate(fluid, (f, tx) -> f.insert(water, 1, tx)) <= 0) {
+                helper.fail("part " + i + " did not reach the anchor's water tank", part);
+            }
+            if (Faces.simulate(fluid, (f, tx) -> f.extract(steam, 1, tx)) <= 0) {
+                helper.fail("part " + i + " did not reach the anchor's steam tank", part);
+            }
+            if (Faces.simulate(item, (f, tx) -> f.insert(coal, 1, tx)) <= 0) {
+                helper.fail("part " + i + " did not reach the anchor's fuel slot", part);
+            }
+        }
+        helper.succeed();
+    }
+
+    private static void click(GameTestHelper helper, Player player) {
+        BlockPos floor = helper.absolutePos(FLOOR);
+        helper.useBlock(FLOOR, player, new BlockHitResult(
+                Vec3.atCenterOf(floor).relative(Direction.UP, 0.5), Direction.UP, floor, false));
     }
 
     // -- the plumbing ---------------------------------------------------------------------------

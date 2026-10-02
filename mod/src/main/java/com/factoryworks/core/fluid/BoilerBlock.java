@@ -3,13 +3,14 @@ package com.factoryworks.core.fluid;
 import javax.annotation.Nullable;
 
 import com.factoryworks.core.PFBlockEntities;
+import com.factoryworks.core.PFBlocks;
+import com.factoryworks.core.machine.footprint.FootprintTurn;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.Containers;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -37,11 +38,11 @@ import net.minecraft.world.phys.BlockHitResult;
  * reactor emitting superheated steam directly with no heat layer, so there is no second rung here
  * for a ladder to climb.
  *
- * <p>Facing is cosmetic, as the pump's is. Fluid and fuel both reach the block on every face --
- * Factorio decides in-or-out by the inserter rather than by the machine -- and the orientation
- * exists so the player can see which side the firebox is on.
+ * <p>The anchor of a 3x2 footprint (ADR-0114). Fluid and fuel both reach the machine on every face --
+ * Factorio decides in-or-out by the inserter rather than by the machine -- and the facing exists so
+ * the player can see which side the firebox is on.
  */
-public class BoilerBlock extends BaseEntityBlock {
+public class BoilerBlock extends BaseEntityBlock implements FootprintTurn {
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
@@ -58,7 +59,8 @@ public class BoilerBlock extends BaseEntityBlock {
                 .mapColor(MapColor.METAL)
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()
-                .sound(SoundType.METAL));
+                .sound(SoundType.METAL)
+                .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK));
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
@@ -70,11 +72,6 @@ public class BoilerBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
@@ -112,15 +109,13 @@ public class BoilerBlock extends BaseEntityBlock {
     }
 
     /**
-     * Breaking a Boiler pays back the fuel it still holds.
-     *
-     * <p>Nothing in this pack is a resource sink <em>in items</em>. Coal is finite in the ground
-     * under ADR-0041, and voiding a stack of it on a break would make dismantling a machine cost
-     * the player ore they had already mined.
-     *
-     * <p>What does go is the water, the steam and the part-spent joules in the buffer -- none of
-     * them is an item to drop, and all three are a tick or two of a machine that is still running
-     * somewhere. That is the furnace ladder's own bargain and it is stated here rather than left
-     * to be noticed.
+     * The anchor going takes its parts with it. The fuel it still holds is dropped by
+     * {@code BlockEntity.preRemoveSideEffects}, whichever part the player broke (#592).
      */
+    @Override
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
+            boolean movedByPiston) {
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
+        PFBlocks.BOILER_FOOTPRINT.teardown(level, pos, state.getValue(FACING), pos);
+    }
 }
