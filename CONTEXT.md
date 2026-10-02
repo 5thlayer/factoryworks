@@ -614,3 +614,11 @@ _Avoid_: beta, playtest, early access
 **Alpha Tester**:
 A player accepted into the Alpha through its application, who holds the tester role on the pack's Discord. Any player may report a bug; only an Alpha Tester is counted as part of the Alpha.
 _Avoid_: playtester, beta tester
+
+**Stand-in art**:
+A shipped texture, model or animation meant to be replaced: a placeholder, a procedurally generated sprite, or an AI-generated one. Distinct from **Vendored art**, which is final but third-party. Every stand-in is listed so it can be commissioned or redrawn.
+_Avoid_: temp art, programmer art, WIP texture
+
+**Vendored art**:
+Third-party art the pack ships under its own licence, with attribution: final, though one under a non-commercial licence is the first to replace.
+_Avoid_: borrowed art (a borrowed block is another mod's block, not its art)
