@@ -222,11 +222,7 @@ hash = "e3a062f6ea434db4c3d98145eafc87823ac444299e4f4c341d2688bb70a84107"
 
 [[files]]
 file = "data/art/models/kit/status_light_working.png"
-hash = "2ba72a04a21bf74f711930d8cccd6dacc6c013d088e756cc9a4008f86f021be6"
-
-[[files]]
-file = "data/art/models/steam_engine/steam_engine.png"
-hash = "9902cd98112d069be79a07e2e4c8aa73cae71e6f408878dc6974ab25d80f1bc0"
+hash = "9c3f733fe4b7bfe192d739e45c4891b03af235e4f644bd8ae3f4b9a494ff4174"
 
 [[files]]
 file = "data/art/ore_slade_coal.png"
