@@ -309,6 +309,8 @@ Sub-rules:
   departures: crude leaves into a Pipeworks segment through **any face**, where Factorio's has one rotatable output; the model
   is Oritech's Pump scaled to 3x3, a human check on delivery; and the two module slots wait for
   modules.
+  It **stalls silently** when a foreign fluid joins its segment, with no signal to the player;
+  blocked on 5thlayer/pipeworks#1 (#587).
 - **A drill places only where its mining area holds ore** — `shipped` (#589). Placement is refused,
   the preview red and the click consuming nothing, unless at least one block of the area is ore; the
   area is the one the drill mines and the overlay tints.
@@ -415,9 +417,14 @@ Sub-rules:
 - **Underground pipes** — `excluded`. The same argument as underground belts, one level up: a
   pipe routes freely in three dimensions, so the crossing problem Factorio's pipe-to-ground exists to
   solve does not arise. `subgroup-owner.json` marks `pipe-to-ground` `not_emitted` on that reasoning.
-- **Fluid mixing is forbidden in a pipe network** — `shipped` (#557). Pipeworks refuses a placement
-  that would join two fluids, and a machine or a pipe set by something else waits outside every
-  segment (ADR-0110).
+- **Fluid mixing is forbidden in a pipe network** — `shipped` (#557), on **Pipeworks pipes only**:
+  Oritech's pipes still mix until #581. Pipeworks refuses a placement that would join two fluids,
+  and a machine or a pipe set by something else waits outside every segment (ADR-0110). Two gaps
+  on Pipeworks 0.1.1, whose `FluidPipes.wouldLink` answers on the server as placement does (no link
+  to a waiting node, none on any side for a pipe that would join two fluids) and which drag-laying
+  uses (#587): the client-side drag preview cannot see fluid segments and falls back to the
+  geometric rule, so it can draw arms the click will not lay (`planned`, cosmetic); and a run that
+  would mix two fluids only once the whole run is laid is not caught (`planned`, no ticket).
 - **Pumps and flow rate over distance** — `unargued`, no verdict.
 
 ### Oil processing
