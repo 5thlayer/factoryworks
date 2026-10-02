@@ -7,6 +7,7 @@ import com.factoryworks.core.machine.footprint.MachineTooltip;
 import java.util.List;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -40,5 +41,12 @@ public class SteamEngineBlock extends FootprintAnchorBlock {
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
                                             BlockHitResult hit) {
         return InteractionResult.PASS;
+    }
+
+    @Override
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
+                                               boolean movedByPiston) {
+        SteamEngineBlockEntity.leave(level, pos);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 }

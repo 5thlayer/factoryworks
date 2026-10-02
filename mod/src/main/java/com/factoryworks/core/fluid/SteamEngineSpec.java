@@ -28,6 +28,9 @@ public final class SteamEngineSpec {
     /** Where Oritech's efficiency curve peaks, and where the prototype's rates are met exactly. */
     public static final double PEAK_SPEED = 7.0;
 
+    /** Oritech's top speed, which an engine reaches with its tank full. */
+    public static final double MAX_SPEED = 10.0;
+
     private static final int FACTORIO_TICKS_PER_SECOND = 60;
     private static final int MINECRAFT_TICKS_PER_SECOND = 20;
 
@@ -80,6 +83,14 @@ public final class SteamEngineSpec {
     /** A row's master steam tank: Factorio's steam box per engine, not Oritech's 8,000 mB. */
     public int tankCapacity(int rowLength) {
         return fluidBoxVolume * rowLength;
+    }
+
+    /**
+     * The steam a tank of {@code tankCapacity} holds when the engine runs at its peak: speed follows
+     * the fill, so a port that keeps the tank here draws Factorio's rate (#593).
+     */
+    public static long peakFill(long tankCapacity) {
+        return Math.round(tankCapacity * PEAK_SPEED / MAX_SPEED);
     }
 
     /** A row's FE buffer: one tick of peak output per engine, so it hides no outage. */

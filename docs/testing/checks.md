@@ -80,7 +80,7 @@ classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there 
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
-`BoilerTests` (#274), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `SolarPanelTests` (#529), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
+`BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AccumulatorTests` (#283), `SolarPanelTests` (#529), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
 `PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545, #546), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). `ShowcaseSceneTests` (#538) build the `core/showcase/` scenes that `/factoryworks showcase` builds
@@ -616,8 +616,7 @@ both of the transfer API's overloads. NeoForge states `insert` and `extract` twi
 slot, once meaning "anywhere it fits" -- and `DelegatingResourceHandler` forwards the second pair
 straight to its delegate, so a subclass that refuses a slot is simply not consulted by a caller
 that does not name one. Every face here is a refusal (the furnace, the Boiler and the rig refuse
-extraction from what they are burning; the pump refuses insertion; the Boiler's fluid face refuses
-each direction on a different tank), so all five are built on
+extraction from what they are burning), so all of them are built on
 `core/transfer/GuardedResourceHandler`, which overrides both slot-less methods to loop back
 through itself. The check is the rule that `DelegatingResourceHandler` is named once, inside the
 guard. It is a source-text check because NeoForge is deliberately off the unit-test classpath.
@@ -705,18 +704,18 @@ a boiler quietly eating coal into a full tank is a leak with no symptom.
 item-map row is `authored` and names the block the mod registers rather than the LP Solid Boiler it
 replaces, and a **second, independent derivation** of the 60 mB/s straight from the corpus. Run both
 after editing `core/fluid/`, `scripts/build-steam-assets.py` or the corpus. Whether a placed Boiler
-boils water is the third check, `gametest/BoilerTests` (#274), and it is three tests: that a Boiler
-with water, fuel and room makes 3 mB a tick and spends the same water doing it — unit for unit,
-since Factorio's boiler is a temperature change and not a reaction; that the item face takes fuel
-and hands nothing back; and the one thing no static check here can reach, that the fluid face's two
-refusals are the right way round **per tank**. That third one asks all four combinations through
-the capability a pipe would find, on the *slot-less* overloads, with both tanks part full so no
-refusal passes vacuously: swapped, the Boiler accepts steam it cannot use and lets a pipe drain its
-water back out, against ADR-0050's rule that water is extracted and never created. The rate is
-typed rather than read from `BoilerSpec`, the way `EnergyFaceTests`' furnace demand is — reading it
-off the spec would make the test agree with the spec by construction. Each was checked against the
-defect it exists for: swapping the two tank indices, making `BoilerSlots.canExtract` return true,
-and making the cycle convert nothing each turn exactly one of the three red.
+boils water is the third check, `gametest/BoilerTests` (#274, #593): that a Boiler with water in
+its front row, fuel and room in its steam segment makes 3 mB a tick and spends the same water
+doing it -- unit for unit, since Factorio's boiler is a temperature change and not a reaction;
+that the item face takes fuel and hands nothing back; that the three front blocks are one 600 mB
+water segment, the back middle a separate 200 mB steam segment and the back corners in none (a
+water row sharing the steam port's segment would launder water through a machine that consumes it);
+and that no block answers a fluid capability. The rate is typed rather than read from
+`BoilerSpec`, the way `EnergyFaceTests`' furnace demand is -- reading it off the spec would make
+the test agree with the spec by construction. `gametest/SteamChainTests` (#593) is the chain on
+Pipeworks: a pump, a pipe, the Boiler, two pipes and an Engine make power; water passes through one
+Boiler's front row to a second; and a pipe that would join the steam to the water row waits outside
+both segments and moves neither.
 
 ## Fluid colour check
 
@@ -751,7 +750,9 @@ warning in the log and an uncalibrated engine, not a crash. A buffer of one tick
 floor a pole-drained row to whole 300 FE millibuckets (1,200 FE/t for three), so the burn keeps
 the millibucket that starts inside the room and carries its overshoot as energy (#292). That an
 engine chains, through a part as well, and is pulled by a pole through a slave's part is
-`SteamEngineNetworkTests`. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
+`SteamEngineNetworkTests`. Its anchor is its steam port (#593): it draws its tank up to the peak fill,
+`SteamEngineSpec.peakFill`, and only the head of a row draws into an empty tank, or every engine of
+a row would hold steam and none could chain. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
 
 ## Blockbench model check
 

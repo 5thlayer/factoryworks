@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
  *
  * <p>It has a screen for the reason the rig has one -- it has a fuel slot, and a machine a player
  * cannot hand-feed at rung 0 is a machine they cannot start. What it adds over the rig's is the
- * pair of tank readings, because a Boiler that has stopped is either out of fuel, out of water or
+ * pair of segment readings, because a Boiler that has stopped is either out of fuel, out of water or
  * backed up, and those three look identical from outside the block.
  *
  * <p>No tier travels in the opening packet: there is one Boiler (ADR-0048).
@@ -78,11 +78,11 @@ public class BoilerMenu extends AbstractContainerMenu {
     }
 
     public int waterCapacity() {
-        return BoilerBlockEntity.WATER_CAPACITY;
+        return data.get(BoilerBlockEntity.DATA_WATER_CAPACITY);
     }
 
     public int steamCapacity() {
-        return BoilerBlockEntity.STEAM_CAPACITY;
+        return data.get(BoilerBlockEntity.DATA_STEAM_CAPACITY);
     }
 
     /** What a tick of boiling costs, in joules -- 90,000 off Factorio's 1.8 MW. */

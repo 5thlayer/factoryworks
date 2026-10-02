@@ -15,8 +15,7 @@ The delegate then runs its own loop over its own slots, so a subclass override o
 `extract(int, ...)` is never consulted. A refusal written per slot therefore holds for a caller
 that names the slot and evaporates for one that does not -- and every face in this mod is a
 refusal: the furnace, the Boiler and the rig all refuse extraction from the slots they are burning
-or have not finished with, the pump refuses insertion entirely, and the Boiler's fluid face refuses
-each direction on a different tank.
+or have not finished with.
 
 That is invisible to a running game short of the exact mod that calls the slot-less overload, and
 invisible to every other check here, so it is asserted as a rule about which base class is used:
@@ -49,11 +48,8 @@ ROUTING_FACES = (
     "smelting/FurnaceItemHandler.java",
     "fluid/BoilerItemHandler.java",
     "mining/rig/RigItemHandler.java",
-    "fluid/BoilerBlockEntity.java",
-    "fluid/OffshorePumpBlockEntity.java",
     "machine/AssemblingMachineItemHandler.java",
     "machine/AssemblingMachineFluidHandler.java",
-    "fluid/SteamEngineFluidHandler.java",
 )
 
 

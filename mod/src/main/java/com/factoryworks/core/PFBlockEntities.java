@@ -6,6 +6,7 @@ import com.factoryworks.core.wreck.CargoHoldBlockEntity;
 import com.factoryworks.core.wreck.CargoHoldItemHandler;
 import com.factoryworks.core.fluid.BoilerBlockEntity;
 import com.factoryworks.core.fluid.BoilerItemHandler;
+import com.factoryworks.core.fluid.BoilerPartBlockEntity;
 import com.factoryworks.core.fluid.OffshorePumpBlockEntity;
 import com.factoryworks.core.energy.AccumulatorBlockEntity;
 import com.factoryworks.core.energy.SolarPanelBlockEntity;
@@ -97,6 +98,12 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(BoilerBlockEntity::new,
                             java.util.Set.of(PFBlocks.BOILER.get())));
 
+    /** The Boiler's parts that are Pipeworks ports; its back corners hold no block entity (ADR-0114). */
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BoilerPartBlockEntity>>
+            BOILER_PART = BLOCK_ENTITIES.register("boiler_part",
+                    () -> new BlockEntityType<>(BoilerPartBlockEntity::new,
+                            java.util.Set.of(PFBlocks.BOILER_PART.get())));
+
     /**
      * The Assembling Machine's anchor (#326, ADR-0071), one type for every tier (ADR-0075). Its own
      * type, not Oritech's {@code ASSEMBLER}: that is the reason the block entity extends Oritech's
@@ -181,7 +188,6 @@ public final class PFBlockEntities {
         registerChestCapabilities(event);
         registerCargoHoldCapabilities(event);
         registerRigCapabilities(event);
-        registerPumpCapabilities(event);
         registerBoilerCapabilities(event);
         registerAssemblingMachineCapabilities(event);
         registerChemicalPlantCapabilities(event);
@@ -194,34 +200,14 @@ public final class PFBlockEntities {
     }
 
     /**
-     * The pump's fluid face, on every side. Extract-only -- see
-     * {@link OffshorePumpBlockEntity#fluidHandler()} -- so a pipe can take water from it and
-     * nothing can push water into it.
-     */
-    private static void registerPumpCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlock(
-                Capabilities.Fluid.BLOCK,
-                (level, pos, state, blockEntity, side) ->
-                        blockEntity instanceof OffshorePumpBlockEntity pump
-                                ? pump.fluidHandler() : null,
-                PFBlocks.OFFSHORE_PUMP.get());
-    }
-
-    /**
-     * The Boiler's two faces (#224), both answered on every direction and on the null side, on
-     * every block of the footprint (#592).
-     *
-     * <p>Fluid: water in through tank 0, steam out of tank 1, and neither reachable the other way
-     * round -- see {@link BoilerBlockEntity#fluidHandler()}. Item: fuel in and nothing out at all.
+     * The Boiler's fuel face, unsided and on every block of the footprint (#592). Its water and
+     * steam are Pipeworks segments, no capability registered here (ADR-0114).
      *
      * <p>Unsided, for the reason the furnace's and the rig's are: Factorio decides in-or-out by the
      * inserter's direction rather than by the machine's face, and a nominated-face inventory
      * answers a Create funnel on any other face with silence and no diagnosis.
      */
     private static void registerBoilerCapabilities(RegisterCapabilitiesEvent event) {
-        registerOnFootprint(event, Capabilities.Fluid.BLOCK, PFBlocks.BOILER_FOOTPRINT,
-                (blockEntity, side) -> blockEntity instanceof BoilerBlockEntity boiler
-                        ? boiler.fluidHandler() : null);
         registerOnFootprint(event, Capabilities.Item.BLOCK, PFBlocks.BOILER_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof BoilerBlockEntity boiler
                         ? new BoilerItemHandler(boiler) : null);
@@ -375,16 +361,13 @@ public final class PFBlockEntities {
     }
 
     /**
-     * The Steam Engine's faces (ADR-0077), Oritech's own: the energy a pole pulls and the steam tank
-     * a pipe fills, which on a slave is its master's.
+     * The Steam Engine's energy face, the one a pole pulls. Its steam arrives through a Pipeworks
+     * segment (ADR-0110).
      */
     private static void registerSteamEngineCapabilities(RegisterCapabilitiesEvent event) {
         registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
                         ? engine.getEnergyLookup(side) : null);
-        registerOnFootprint(event, Capabilities.Fluid.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
-                (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
-                        ? engine.getFluidLookup(side) : null);
     }
 
     /** The Solar Panel's energy face (#529), on every block, so a pole reaching any of it draws it. */

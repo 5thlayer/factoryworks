@@ -130,4 +130,11 @@ class SteamEngineSpecTest {
             assertEquals(450L * n, SPEC.bufferCapacity(n));
         }
     }
+
+    @Test
+    @DisplayName("a port holds the tank at 70 %, the fill of Oritech's speed 7")
+    void thePeakFillIsSevenTenthsOfTheTank() {
+        assertEquals(140, SteamEngineSpec.peakFill(200));
+        assertEquals(420, SteamEngineSpec.peakFill(600));
+    }
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.factoryworks.core.PFBlocks;
+import com.factoryworks.core.fluid.BoilerFootprint;
 import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingTier;
@@ -134,18 +135,18 @@ public final class ShowcaseScenes {
 
     /** Water and coal make steam, steam makes power, and the power smelts iron. */
     private static Product steamPower(Site site) {
-        BlockPos pump = new BlockPos(1, 1, 3);
-        BlockPos boiler = new BlockPos(4, 1, 3);
+        BlockPos pump = new BlockPos(2, 1, 1);
+        BlockPos boiler = new BlockPos(3, 1, 3);
         site.set(pump, PFBlocks.OFFSHORE_PUMP.get());
-        PFBlocks.BOILER_FOOTPRINT.placeAll(site.level(), site.at(boiler), Direction.EAST);
+        PFBlocks.BOILER_FOOTPRINT.placeAll(site.level(), site.at(boiler), boilerFacingEast());
         for (int i = 0; i < 2; i++) {
             PFBlocks.STEAM_ENGINE_FOOTPRINT.placeAll(site.level(), site.at(new BlockPos(6 + i, 1, 3)), Direction.WEST);
         }
-        extractingPipe(site, pump.east(), Direction.WEST);
-        extractingPipe(site, boiler.east(), Direction.WEST);
+        site.set(pump.east(), PipeworksRegistries.PIPE.get());
+        site.set(new BlockPos(5, 1, 3), PipeworksRegistries.PIPE.get());
 
         stockedChest(site, new BlockPos(4, 1, 9), item("minecraft:coal"));
-        unloader(site, boiler.south(2), Direction.SOUTH);
+        unloader(site, new BlockPos(4, 1, 5), Direction.SOUTH);
         belt(site, new BlockPos(4, 1, 7), Direction.NORTH, 2);
         site.set(new BlockPos(4, 1, 8), loaderState(Direction.NORTH));
 
@@ -162,6 +163,16 @@ public final class ShowcaseScenes {
             feeder(site, furnace.north(), Direction.NORTH);
         }
         return new Product(outs, item("factoryworks:iron_plate"));
+    }
+
+    /** The facing whose Boiler steam port stands east of its anchor, so the steam leaves towards the engines. */
+    private static Direction boilerFacingEast() {
+        for (Direction facing : Direction.Plane.HORIZONTAL) {
+            if (PFBlocks.BOILER_FOOTPRINT.positions(BlockPos.ZERO, facing).get(BoilerFootprint.STEAM_PART).equals(BlockPos.ZERO.east())) {
+                return facing;
+            }
+        }
+        throw new IllegalStateException("no facing puts a Boiler's steam port to the east");
     }
 
     /** Crude from a Pumpjack is refined to gas, and gas with coal becomes plastic. */

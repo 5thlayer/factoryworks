@@ -67,8 +67,12 @@ FACES = {
     # Energy (#194): the electric rig's alone at run time, registered for both tiers.
     "rig": ("registerRigCapabilities", ("Item", "Energy")),
     "rig_part": ("registerRigCapabilities", ("Item", "Energy")),
-    "offshore_pump": ("registerPumpCapabilities", ("Fluid",)),
-    "boiler": ("registerBoilerCapabilities", ("Fluid", "Item")),
+    # No face: the pump is a Pipeworks port and its water leaves through the segment (#593).
+    "offshore_pump": (None, ()),
+    # Item only: its water and steam are Pipeworks ports (ADR-0114).
+    "boiler": ("registerBoilerCapabilities", ("Item",)),
+    # No face: a port part holds no inventory, and the fuel face is the anchor's.
+    "boiler_part": (None, ()),
     # Energy (#328): the craft cycle draws FE, and without the face no pole counts the machine.
     # Item (#329): inputs filtered to the Held recipe, on the guard.
     # Fluid (#295): tiers 2 and 3's input tank, taking only the Held recipe's fluid.
@@ -77,7 +81,8 @@ FACES = {
     "chemical_plant": ("registerChemicalPlantCapabilities", ("Energy", "Item", "Fluid")),
     # No item slot, so no item face (ADR-0096).
     "oil_refinery": ("registerOilRefineryCapabilities", ("Energy", "Fluid")),
-    "steam_engine": ("registerSteamEngineCapabilities", ("Energy", "Fluid")),
+    # Energy only: its steam arrives through a Pipeworks port (#593).
+    "steam_engine": ("registerSteamEngineCapabilities", ("Energy",)),
     # Energy (#283): a pole charges and draws it, on every block of the footprint.
     "solar_panel": ("registerSolarPanelCapabilities", ("Energy",)),
     "accumulator": ("registerAccumulatorCapabilities", ("Energy",)),

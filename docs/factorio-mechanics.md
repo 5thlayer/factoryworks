@@ -350,7 +350,7 @@ Sub-rules:
 
 - **verdict**: `adapted`
 - **where**: all bodies
-- **via**: `pack` (the Offshore Pump), vanilla water, `create` for pipes
+- **via**: `pack` (the Offshore Pump), vanilla water, `pipeworks` for pipes
 - **owner**: ADR-0050
 - **notice**: Minecraft water forms new sources and fills buckets, so source formation is off and
   there is no bucket; water enters the factory only through the Offshore Pump.
@@ -368,7 +368,8 @@ Sub-rules:
   block, no minimum body size, no power (`energy_source: void`), 1,200 mB/s — which is exactly twenty
   Boilers at their extracted 60 mB/s. Placement is refused with a message where no source adjoins;
   the rate is read from the corpus and never typed, and `tests/pack/test_pump_assets.py` is what
-  holds the copy honest.
+  holds the copy honest. Since #593 it is a Pipeworks port that fills its segment from any face, and
+  adds none of Factorio's 100-unit output box to it.
 - **Water source formation** — `excluded`. `waterSourceConversion` is off, forced by the mod on level
   load. Vanilla's 3x1x1 trench turns two buckets into unlimited water anywhere, which is water
   creation and defeats every siting constraint above it.
@@ -417,8 +418,9 @@ Sub-rules:
 - **Underground pipes** — `excluded`. The same argument as underground belts, one level up: a
   pipe routes freely in three dimensions, so the crossing problem Factorio's pipe-to-ground exists to
   solve does not arise. `subgroup-owner.json` marks `pipe-to-ground` `not_emitted` on that reasoning.
-- **Fluid mixing is forbidden in a pipe network** — `shipped` (#557), on **Pipeworks pipes only**:
-  Oritech's pipes still mix until #581. Pipeworks refuses a placement that would join two fluids,
+- **Fluid mixing is forbidden in a pipe network** — `shipped` (#557, #593), on **Pipeworks pipes
+  only**: Oritech's pipes still mix until #581. The Offshore Pump, the Boiler and the Steam Engine
+  are Pipeworks ports, so a steam pipe laid against the Boiler's water row waits outside both. Pipeworks refuses a placement that would join two fluids,
   and a machine or a pipe set by something else waits outside every segment (ADR-0110). On Pipeworks 0.1.1, whose `FluidPipes.wouldLink` answers on the server as placement does (no link
   to a waiting node, none on any side for a pipe that would join two fluids) and which drag-laying
   uses (#587), a drag whose run would connect two fluids is refused before anything is placed (`shipped`,
@@ -935,8 +937,13 @@ Sub-rules:
   its whole 2x1x2 footprint and broken as one, like the Assembling Machine; Oritech's own engine is
   swept. **ADR-0113** makes it 3 wide, 2 tall and 1 deep, not Factorio's 3x5, so it is drawn as
   one vanilla model. A mixin calibrates it to Factorio — 30 mB/s and 450 FE/t per engine at the efficiency
-  curve's peak, no water returned — and keeps Oritech's chaining and fill-driven speed. The history
-  below is superseded where it disagrees.
+  curve's peak, no water returned — and keeps Oritech's chaining and fill-driven speed. **#593 puts
+  the chain on Pipeworks** (ADR-0110, ADR-0114): the Offshore Pump is a port filling a water segment
+  at 1,200 mB/s; the Boiler's three front blocks are water ports opening along the row, 200 mB each,
+  so water passes through a row of Boilers end to end, and its back middle block is a 200 mB steam
+  port opening backwards; the Engine's anchor is a 200 mB steam port that holds its tank at the
+  efficiency peak. Water and steam leave no capability face. The history below is superseded where
+  it disagrees.
   *Before ADR-0062:* the chain was **four** steps, not two:
   the **pack's Boiler** burns solid fuel and makes low-temperature steam, the **pack's Steam Engine**
   eats that steam and emits Create rotation, Power Grid's generator assembly turns SU into watts, and
@@ -963,7 +970,7 @@ Sub-rules:
   recipe, Oritech's own panel is swept and unlisted, and Jade shows what it is making now.
   Per-body output is #7. *Before ADR-0060 both were Power Grid's (#148).*
 - **Steam as a stored, pipeable intermediate** — `shipped` for low-temperature steam, which the
-  Boiler makes and pipes carry to the Steam Engine; high-temperature steam waits on #135. **Two
+  Boiler puts into a Pipeworks segment and the Steam Engine draws from (#593); high-temperature steam waits on #135. **Two
   fluids rather than one**. ADR-0048 registers low-temperature steam, which the Boiler makes and the Steam Engine eats,
   and high-temperature steam, which ADR-0033's reactor emits and only the Steam Turbine takes — two
   registry entries rather than one fluid carrying a temperature, because Factorio has exactly two

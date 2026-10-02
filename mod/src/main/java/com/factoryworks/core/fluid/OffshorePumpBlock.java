@@ -11,6 +11,7 @@ import com.factoryworks.core.PFBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -130,5 +131,12 @@ public class OffshorePumpBlock extends BaseEntityBlock {
         }
         return createTickerHelper(type, PFBlockEntities.OFFSHORE_PUMP.get(),
                 (tickLevel, pos, tickState, entity) -> entity.serverTick());
+    }
+
+    @Override
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
+            boolean movedByPiston) {
+        OffshorePumpBlockEntity.leave(level, pos);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 }

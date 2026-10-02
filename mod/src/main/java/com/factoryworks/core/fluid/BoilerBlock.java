@@ -30,17 +30,15 @@ import net.minecraft.world.phys.BlockHitResult;
 /**
  * Terra's Boiler (#224, ADR-0048): the block that turns fuel and water into steam.
  *
- * <p>The shell. The rate is {@link BoilerSpec}'s, the stall is {@link BoilerCycle}'s and the tanks
- * are {@link BoilerBlockEntity}'s; none of the first two touches Minecraft, which is what lets both
- * be asserted without a world.
+ * <p>The shell. The rate is {@link BoilerSpec}'s and the stall is {@link BoilerCycle}'s; neither
+ * touches Minecraft, which is what lets both be asserted without a world.
  *
  * <p><b>One block, one tier.</b> Factorio has one boiler and so does this pack: ADR-0033 has the
  * reactor emitting superheated steam directly with no heat layer, so there is no second rung here
  * for a ladder to climb.
  *
- * <p>The anchor of a 3x2 footprint (ADR-0114). Fluid and fuel both reach the machine on every face --
- * Factorio decides in-or-out by the inserter rather than by the machine -- and the facing exists so
- * the player can see which side the firebox is on.
+ * <p>The anchor of a 3x2 footprint, and the middle of its water row (ADR-0114). Fuel reaches the
+ * machine on every face; the facing exists so the player can see which side the firebox is on.
  */
 public class BoilerBlock extends BaseEntityBlock implements FootprintTurn {
 
@@ -115,6 +113,7 @@ public class BoilerBlock extends BaseEntityBlock implements FootprintTurn {
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
             boolean movedByPiston) {
+        BoilerPortBlockEntity.leave(level, pos);
         super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
         PFBlocks.BOILER_FOOTPRINT.teardown(level, pos, state.getValue(FACING), pos);
     }

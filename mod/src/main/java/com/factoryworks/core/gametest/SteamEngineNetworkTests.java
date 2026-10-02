@@ -1,5 +1,6 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.pipeworks.api.FluidPorts;
 import io.github._5thlayer.wireworks.WireworksRegistries;
 import com.factoryworks.core.PFBlocks;
 import io.github._5thlayer.wireworks.NetworkReading;
@@ -10,6 +11,9 @@ import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceTier;
 
 import com.factoryworks.core.fluid.SteamEngineBlockEntity;
+import com.factoryworks.core.fluid.SteamEngineSpec;
+
+import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -34,10 +38,10 @@ import rearth.oritech.util.Geometry;
  *
  * <h2>The layout</h2>
  *
- * <p>A row of three engines A, B, C. A is fed first, so it scans the row and becomes master of B and
- * C. From then on steam goes in at both ends, A's own face and C's, which Oritech delegates to A's
- * tank. The tank is held at 70 %, which is Oritech's speed 7, the peak {@code SteamEngineSpec} is
- * calibrated at.
+ * <p>A row of three engines A, B, C, whose ports touch and so share one steam segment, which the test
+ * keeps full. A is the head of the row, so it draws first, scans the row and becomes master of B and
+ * C; from then on a slave's port draws into A's tank. Each port holds the tank at 70 %, which is
+ * Oritech's speed 7, the peak {@code SteamEngineSpec} is calibrated at.
  *
  * <p>A small pole stands beside C on its parts' side, far enough out that its 5x5 area holds C's
  * parts and nothing else of the row, not even C's anchor. An Electric Furnace beside the pole is the
@@ -71,8 +75,8 @@ final class SteamEngineNetworkTests {
                 SteamEngineNetworkTests::rowChainsAcrossAPart);
         tests.test("steam_engine_reloads_as_the_packs_engine", 20,
                 SteamEngineNetworkTests::reloadsAsThePacksEngine);
-        tests.test("steam_engine_face_is_its_steam_tank_alone", 20,
-                SteamEngineNetworkTests::faceIsItsSteamTankAlone);
+        tests.test("steam_engine_has_no_fluid_face_and_draws_steam_alone", 60,
+                SteamEngineNetworkTests::drawsSteamAlone);
     }
 
     private record Layout(Direction facing, BlockPos a, BlockPos b, BlockPos c, BlockPos pole,
@@ -89,10 +93,7 @@ final class SteamEngineNetworkTests {
 
         long[] produced = {0L};
         helper.onEachTick(() -> {
-            topUp(helper, engine(helper, at.a()));
-            if (engine(helper, at.c()).inSlaveMode()) {
-                topUp(helper, engine(helper, at.c()));
-            }
+            topUp(helper, at.a());
             furnace(helper, at.furnace()).data().set(FurnaceBlockEntity.DATA_ENERGY, 0);
         });
         helper.startSequence()
@@ -174,7 +175,7 @@ final class SteamEngineNetworkTests {
         place(helper, at.b(), at.facing());
         place(helper, cAnchor, turned);
 
-        helper.onEachTick(() -> topUp(helper, engine(helper, at.a())));
+        helper.onEachTick(() -> topUp(helper, at.a()));
         helper.succeedWhen(() -> {
             SteamEngineEntity c = engine(helper, cAnchor);
             if (!c.inSlaveMode() || c.master != engine(helper, at.a())) {
@@ -193,34 +194,68 @@ final class SteamEngineNetworkTests {
     }
 
     /**
-     * A pipe against any block finds one tank, takes steam into it and nothing else, and can drain
-     * nothing: the water tank Oritech's engine returns into stays empty for good (ADR-0062).
+     * The engine answers no fluid capability on any block; only its anchor stands in a segment. A
+     * segment of water feeds the tank nothing, and a segment of steam holds it at the peak fill
+     * and no more.
      */
-    private static void faceIsItsSteamTankAlone(GameTestHelper helper) {
+    private static void drawsSteamAlone(GameTestHelper helper) {
         BlockPos anchor = new BlockPos(3, 1, 3);
         place(helper, anchor, Direction.NORTH);
+        BlockPos absolute = helper.absolutePos(anchor);
+        List<BlockPos> blocks = PFBlocks.STEAM_ENGINE_FOOTPRINT.positions(absolute, Direction.NORTH);
         FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
-        for (BlockPos at : PFBlocks.STEAM_ENGINE_FOOTPRINT.positions(helper.absolutePos(anchor), Direction.NORTH)) {
-            ResourceHandler<FluidResource> face = helper.getLevel().getCapability(
-                    net.neoforged.neoforge.capabilities.Capabilities.Fluid.BLOCK, at, null);
-            BlockPos relative = helper.relativePos(at);
-            if (face == null || face.size() != 1) {
-                helper.fail("the engine's face is " + (face == null ? "absent" : face.size() + " tanks"), relative);
-                return;
-            }
-            try (Transaction transaction = Transaction.openRoot()) {
-                if (face.insert(FluidResource.of(net.minecraft.world.level.material.Fluids.WATER), 10, transaction) != 0) {
-                    helper.fail("the engine took water", relative);
-                }
-                if (face.insert(steam, 10, transaction) != 10) {
-                    helper.fail("the engine refused steam", relative);
-                }
-                if (face.extract(steam, 10, transaction) != 0) {
-                    helper.fail("a pipe drained steam back out of the engine", relative);
-                }
-            }
+        long peak = SteamEngineSpec.peakFill(
+                engine(helper, anchor).boilerStorage.getInputContainer().getCapacityAsLong(0, steam));
+        helper.startSequence()
+                .thenIdle(2)
+                .thenExecute(() -> {
+                    for (int i = 0; i < blocks.size(); i++) {
+                        BlockPos at = blocks.get(i);
+                        BlockPos relative = helper.relativePos(at);
+                        if (helper.getLevel().getCapability(
+                                net.neoforged.neoforge.capabilities.Capabilities.Fluid.BLOCK, at, null) != null) {
+                            helper.fail("a Steam Engine block answers a fluid capability", relative);
+                        }
+                        boolean inSegment = FluidPorts.segment(helper.getLevel(), at) != null;
+                        if (inSegment != (i == 0)) {
+                            helper.fail(i == 0 ? "the anchor is in no segment" : "a part is in a segment", relative);
+                        }
+                    }
+                })
+                .thenExecute(() -> insert(helper, anchor, FluidResource.of(net.minecraft.world.level.material.Fluids.WATER), 100))
+                .thenIdle(10)
+                .thenExecute(() -> {
+                    long held = engine(helper, anchor).boilerStorage.getInputContainer().getAmountAsLong(0);
+                    if (held != 0L) {
+                        helper.fail("the engine drew " + held + " mB from a segment of water", anchor);
+                    }
+                    drain(helper, anchor);
+                    insert(helper, anchor, steam, 200);
+                })
+                .thenIdle(10)
+                .thenExecute(() -> {
+                    long held = engine(helper, anchor).boilerStorage.getInputContainer().getAmountAsLong(0);
+                    if (held > peak || held < peak - 3) {
+                        helper.fail("the engine's tank holds " + held + " mB, not the peak fill of " + peak, anchor);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static void insert(GameTestHelper helper, BlockPos anchor, FluidResource fluid, int amount) {
+        ResourceHandler<FluidResource> segment = FluidPorts.segment(helper.getLevel(), helper.absolutePos(anchor));
+        try (Transaction transaction = Transaction.openRoot()) {
+            segment.insert(fluid, amount, transaction);
+            transaction.commit();
         }
-        helper.succeed();
+    }
+
+    private static void drain(GameTestHelper helper, BlockPos anchor) {
+        ResourceHandler<FluidResource> segment = FluidPorts.segment(helper.getLevel(), helper.absolutePos(anchor));
+        try (Transaction transaction = Transaction.openRoot()) {
+            segment.extract(segment.getResource(0), segment.getAmountAsInt(0), transaction);
+            transaction.commit();
+        }
     }
 
     /**
@@ -240,21 +275,24 @@ final class SteamEngineNetworkTests {
         helper.succeed();
     }
 
-    /** Holds the tank this face reaches at 70 % of its capacity: Oritech's speed 7. */
-    private static void topUp(GameTestHelper helper, SteamEngineEntity engine) {
-        ResourceHandler<FluidResource> face = engine.getFluidLookup(null);
+    /**
+     * Keeps the row's steam segment full, so each port holds the tank at 70 % of its capacity:
+     * Oritech's speed 7.
+     */
+    private static void topUp(GameTestHelper helper, BlockPos anchor) {
         // The Boiler's steam, not Oritech's: a test fed Oritech's own fluid passed while the pack's
         // steam made nothing in game.
         FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
-        long target = face.getCapacityAsLong(0, steam) * 7 / 10;
-        long missing = target - face.getAmountAsLong(0);
-        if (missing <= 0L) {
+        ResourceHandler<FluidResource> segment = FluidPorts.segment(helper.getLevel(), helper.absolutePos(anchor));
+        if (segment == null) {
+            return;
+        }
+        long room = segment.getCapacityAsLong(0, steam) - segment.getAmountAsLong(0);
+        if (room <= 0L) {
             return;
         }
         try (Transaction transaction = Transaction.openRoot()) {
-            if (face.insert(steam, (int) missing, transaction) != missing) {
-                helper.fail("the Steam Engine refused steam", engine.getBlockPos());
-            }
+            segment.insert(steam, (int) room, transaction);
             transaction.commit();
         }
     }
