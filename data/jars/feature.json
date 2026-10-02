@@ -1,5 +1,5 @@
 {
-  "jars": ["26.1.2.jar", "oritech-2.0.0-exp6.jar", "railcraft-reborn-26.1.2-1.4.3.jar"],
+  "jars": ["26.1.2.jar", "oritech-2.0.0-exp6.jar"],
   "placed": {
     "minecraft:acacia": {"configured":["minecraft:acacia"]},
     "minecraft:acacia_checked": {"configured":["minecraft:acacia"]},
@@ -267,21 +267,7 @@
     "oritech:resource_node_common": {"configured":["oritech:resource_node_common"]},
     "oritech:resource_node_other": {"configured":["oritech:resource_node_other"]},
     "oritech:resource_node_rare": {"configured":["oritech:resource_node_rare"]},
-    "oritech:uranium_patch": {"configured":["oritech:uranium_patch"]},
-    "railcraft:firestone": {"configured":["railcraft:firestone"]},
-    "railcraft:lead_ore": {"configured":["railcraft:lead_ore"]},
-    "railcraft:nickel_ore_middle": {"configured":["railcraft:nickel_ore"]},
-    "railcraft:nickel_ore_small": {"configured":["railcraft:nickel_ore_small"]},
-    "railcraft:nickel_ore_upper": {"configured":["railcraft:nickel_ore"]},
-    "railcraft:quarried_stone": {"configured":["railcraft:quarried_stone"]},
-    "railcraft:saltpeter": {"configured":["railcraft:saltpeter"]},
-    "railcraft:silver_ore": {"configured":["railcraft:silver_ore_buried"]},
-    "railcraft:silver_ore_lower": {"configured":["railcraft:silver_ore"]},
-    "railcraft:sulfur_ore_lower": {"configured":["railcraft:sulfur_ore_buried"]},
-    "railcraft:sulfur_ore_upper": {"configured":["railcraft:sulfur_ore"]},
-    "railcraft:tin_ore_large": {"configured":["railcraft:tin_ore_large"]},
-    "railcraft:tin_ore_small": {"configured":["railcraft:tin_ore_small"]},
-    "railcraft:zinc_ore": {"configured":["railcraft:zinc_ore"]}
+    "oritech:uranium_patch": {"configured":["oritech:uranium_patch"]}
   },
   "configured": {
     "minecraft:acacia": {"blocks":["minecraft:acacia_leaves","minecraft:acacia_log","minecraft:dirt"],"types":["minecraft:tree"]},
@@ -511,19 +497,6 @@
     "oritech:resource_node_common": {"types":["oritech:resource_node"]},
     "oritech:resource_node_other": {"types":["oritech:resource_node"]},
     "oritech:resource_node_rare": {"types":["oritech:resource_node"]},
-    "oritech:uranium_patch": {"types":["oritech:uranium_patch"]},
-    "railcraft:firestone": {"blocks":["railcraft:firestone_ore"],"types":["minecraft:disk"]},
-    "railcraft:lead_ore": {"blocks":["railcraft:deepslate_lead_ore","railcraft:lead_ore"],"types":["minecraft:ore"]},
-    "railcraft:nickel_ore": {"blocks":["railcraft:deepslate_nickel_ore","railcraft:nickel_ore"],"types":["minecraft:ore"]},
-    "railcraft:nickel_ore_small": {"blocks":["railcraft:deepslate_nickel_ore","railcraft:nickel_ore"],"types":["minecraft:ore"]},
-    "railcraft:quarried_stone": {"blocks":["railcraft:quarried_stone"],"types":["railcraft:quarried"]},
-    "railcraft:saltpeter": {"blocks":["railcraft:saltpeter_ore"],"types":["minecraft:disk"]},
-    "railcraft:silver_ore": {"blocks":["railcraft:deepslate_silver_ore","railcraft:silver_ore"],"types":["minecraft:ore"]},
-    "railcraft:silver_ore_buried": {"blocks":["railcraft:deepslate_silver_ore","railcraft:silver_ore"],"types":["minecraft:ore"]},
-    "railcraft:sulfur_ore": {"blocks":["railcraft:deepslate_sulfur_ore","railcraft:sulfur_ore"],"types":["minecraft:ore"]},
-    "railcraft:sulfur_ore_buried": {"blocks":["railcraft:deepslate_sulfur_ore","railcraft:sulfur_ore"],"types":["minecraft:ore"]},
-    "railcraft:tin_ore_large": {"blocks":["railcraft:deepslate_tin_ore","railcraft:tin_ore"],"types":["minecraft:ore"]},
-    "railcraft:tin_ore_small": {"blocks":["railcraft:deepslate_tin_ore","railcraft:tin_ore"],"types":["minecraft:ore"]},
-    "railcraft:zinc_ore": {"blocks":["railcraft:deepslate_zinc_ore","railcraft:zinc_ore"],"types":["minecraft:ore"]}
+    "oritech:uranium_patch": {"types":["oritech:uranium_patch"]}
   }
 }

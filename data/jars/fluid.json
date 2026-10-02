@@ -1,8 +1,7 @@
 {
   "jars": [
     "26.1.2.jar",
-    "oritech-2.0.0-exp6.jar",
-    "railcraft-reborn-26.1.2-1.4.3.jar"
+    "oritech-2.0.0-exp6.jar"
   ],
   "fluids": [
     "minecraft:lava",
@@ -23,8 +22,6 @@
     "oritech:still_silicon_wash",
     "oritech:still_steam",
     "oritech:still_strange_matter",
-    "oritech:still_sulfuric_acid",
-    "railcraft:creosote",
-    "railcraft:steam"
+    "oritech:still_sulfuric_acid"
   ]
 }

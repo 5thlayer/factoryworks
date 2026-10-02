@@ -135,20 +135,16 @@ dependencies {
             devRunMods jars
         }
     }
-    // FTB Materials, and the library it requires, on every dev run's classpath -- the GameTest server
-    // included. ADR-0061 gives the item layer to FTB Materials, so the pack's emitted smelts name
-    // `ftbmaterials:` items, and a server that is only vanilla plus this jar rejects all three at
-    // datapack load (`scripts/check-datapack-load.py`). It is here because the pack's data names its
-    // items, not because the mod calls it.
+    // Third-party jars on every dev run's classpath, the GameTest server included, because the
+    // pack's data names their items and a server without them rejects those recipes at datapack
+    // load (`scripts/check-datapack-load.py`). On `runtimeClasspath` only: `runtimeOnly` would put
+    // `mods/` on `test`'s classpath, an input of a task `installToPack` writes into.
     //
-    // On `runtimeClasspath` only, through its own configuration: `runtimeOnly` would also land on
-    // `test`'s classpath, making `mods/` an input of a task `installToPack` writes into.
-    //
-    // Oritech joins it for the same reason (#277): the emitted assembling
+    // Oritech (#277): the emitted assembling
     // recipes name its pipes, and a server without the jar rejects every one of
     // them, which would leave this check unable to tell a real id from a typo. Athena
     // and GeckoLib are what Oritech requires to load. FTB Filter System for the same reason: the
-    // re-authored smart filter recipe makes its item (#442).
+    // re-authored smart filter recipe makes its item (#442), with FTB Library, which it requires.
     //
     // KubeJS and Rhino because KubeJS is how the pack's data and registered items reach the game,
     // in the pack and in the harness alike (#338). Better Advanced Tooltips too: KubeJS declares it
@@ -156,7 +152,7 @@ dependencies {
     // server as well, and mod loading fails without it.
     devRunMods fileTree(
             dir: rootProject.file('mods'),
-            include: ['ftb-materials-*.jar', 'ftb-library-neoforge-*.jar',
+            include: ['ftb-library-neoforge-*.jar',
                       'oritech-*.jar', 'athena-*.jar', 'geckolib-neoforge-*.jar',
                       'ftb-filter-system-neoforge-*.jar',
                       'kubejs-neoforge-*.jar', 'rhino-*.jar',
