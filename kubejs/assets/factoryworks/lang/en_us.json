@@ -190,6 +190,7 @@
   "block.factoryworks.wreck_debris_medium": "Medium Wreck Debris",
   "block.factoryworks.wreck_debris_small": "Small Wreck Debris",
   "fluid_type.factoryworks.crude_oil": "Crude Oil",
+  "block.factoryworks.boiler_part": "Boiler (part)",
   "recipe.factoryworks.assembling.accumulator": "%s",
   "recipe.factoryworks.assembling.advanced_circuit": "%s",
   "recipe.factoryworks.assembling.assembling_machine_1": "%s",
@@ -283,6 +284,5 @@
   "recipe.factoryworks.chemistry.sulfur": "%s",
   "recipe.factoryworks.chemistry.sulfuric_acid": "%s",
   "recipe.factoryworks.oil_processing.advanced_oil_processing": "Advanced oil processing",
-  "recipe.factoryworks.oil_processing.basic_oil_processing": "Basic oil processing",
-  "block.factoryworks.boiler_part": "Boiler (part)"
+  "recipe.factoryworks.oil_processing.basic_oil_processing": "Basic oil processing"
 }
