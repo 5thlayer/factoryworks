@@ -58,6 +58,7 @@ SPDX-License-Identifier = "CC-BY-4.0"
 path = [
     "kubejs/assets/factoryworks/textures/block/ore/*.png",
     "kubejs/assets/factoryworks/textures/entity/chest/steel_chest.png",
+    "kubejs/assets/factoryworks/textures/block/steel_chest_particle.png",
     "kubejs/assets/factoryworks/textures/block/wreck/*.png",
     "data/art/ore_*.png",
     "data/art/metal_alloy_block.png",

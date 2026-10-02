@@ -21,6 +21,8 @@ from PIL import Image, ImageDraw, ImageEnhance
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "kubejs/assets/factoryworks/textures/entity/chest"
+# A block's particle is drawn from the block atlas, which the entity sheets are not in.
+PARTICLE_OUT = ROOT / "kubejs/assets/factoryworks/textures/block"
 
 # chest -> (source, origin). The iron origin is clear of its source's 2px frame, which drew a seam
 # across the chest's front, and of the dark rivet at (3, 3). The steel origin centres one of the
@@ -78,9 +80,12 @@ def build(source, origin):
 def main():
     check = "--check" in sys.argv
     failed = 0
+    outputs = []
     for chest, (source, origin) in CHESTS.items():
-        sheet = build(source, origin)
-        out = OUT / f"{chest}.png"
+        outputs.append((OUT / f"{chest}.png", build(source, origin)))
+    outputs.append((PARTICLE_OUT / "steel_chest_particle.png",
+                    Image.open(CHESTS["steel_chest"][0]).convert("RGBA")))
+    for out, sheet in outputs:
         if check:
             if not out.exists() or Image.open(out).convert("RGBA").tobytes() != sheet.tobytes():
                 print(f"FAIL: {out.relative_to(ROOT)} is missing or stale")

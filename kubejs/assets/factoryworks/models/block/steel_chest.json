@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "factoryworks:entity/chest/steel_chest"
+    "particle": "factoryworks:block/steel_chest_particle"
   }
 }
