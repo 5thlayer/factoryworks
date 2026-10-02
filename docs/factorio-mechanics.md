@@ -424,7 +424,7 @@ Sub-rules:
   to a waiting node, none on any side for a pipe that would join two fluids) and which drag-laying
   uses (#587): the client-side drag preview cannot see fluid segments and falls back to the
   geometric rule, so it can draw arms the click will not lay (`planned`, cosmetic); and a run that
-  would mix two fluids only once the whole run is laid is not caught (`planned`, no ticket).
+  would mix two fluids only once the whole run is laid is not caught (`planned`, #590).
 - **Pumps and flow rate over distance** — `unargued`, no verdict.
 
 ### Oil processing
