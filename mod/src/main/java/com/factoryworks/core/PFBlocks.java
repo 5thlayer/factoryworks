@@ -25,6 +25,7 @@ import com.factoryworks.core.smelting.FurnaceBlock;
 import com.factoryworks.core.smelting.FurnaceTier;
 import com.factoryworks.core.fluid.BoilerBlock;
 import com.factoryworks.core.fluid.BoilerFootprint;
+import com.factoryworks.core.fluid.BoilerPartBlock;
 import com.factoryworks.core.fluid.OffshorePumpBlock;
 import com.factoryworks.core.energy.AccumulatorBlock;
 import com.factoryworks.core.energy.AccumulatorFootprint;
@@ -91,9 +92,9 @@ public final class PFBlocks {
     public static final DeferredHolder<Block, BoilerBlock> BOILER =
             BLOCKS.registerBlock("boiler", BoilerBlock::new);
 
-    public static final DeferredHolder<Block, FootprintPartBlock> BOILER_PART =
+    public static final DeferredHolder<Block, BoilerPartBlock> BOILER_PART =
             BLOCKS.registerBlock("boiler_part",
-                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
+                    props -> new BoilerPartBlock(machineProperties(props).noLootTable(),
                             () -> PFBlocks.BOILER_FOOTPRINT));
 
     public static final FootprintMachine BOILER_FOOTPRINT = new FootprintMachine(

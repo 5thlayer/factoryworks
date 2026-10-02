@@ -179,8 +179,13 @@ def planned_files(rows):
     files = {STEAM_CHAIN_RESOURCE: rows}
     model_name = f"{NAMESPACE}:block/{BOILER_BLOCK}"
     files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}.json")] = blockstate(model_name)
+    # Iron until the 3x2 model replaces it (#595).
     files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}_part.json")] = {
-        "variants": {"": {"model": model_name}}
+        "variants": {"": {"model": f"{NAMESPACE}:block/{BOILER_BLOCK}_part"}}
+    }
+    files[os.path.join(ASSETS, "models", "block", f"{BOILER_BLOCK}_part.json")] = {
+        "parent": "minecraft:block/cube_all",
+        "textures": {"all": "minecraft:block/iron_block"},
     }
     files[os.path.join(ASSETS, "models", "block", f"{BOILER_BLOCK}.json")] = oriented_model()
     files[os.path.join(ASSETS, "models", "item", f"{BOILER_BLOCK}.json")] = {"parent": model_name}

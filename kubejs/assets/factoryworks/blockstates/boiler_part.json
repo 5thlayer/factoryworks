@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "factoryworks:block/boiler"
+      "model": "factoryworks:block/boiler_part"
     }
   }
 }
