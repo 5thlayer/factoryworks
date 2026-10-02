@@ -50,6 +50,9 @@ final class PipeStretchTests {
         tests.test("a_pipe_stretch_with_too_few_pipes_is_refused_whole", 20, PipeStretchTests::tooFew);
         tests.test("a_pipe_stretch_joins_a_pipe_already_beside_its_leg", 20, PipeStretchTests::besideAPipe);
         tests.test("a_pipe_stretch_plans_no_arm_to_a_pipe_that_would_mix_two_fluids", 20, PipeStretchTests::mixing);
+        tests.test("a_pipe_stretch_from_water_to_lava_is_refused", 20, helper -> endsBeside(helper, Fluids.LAVA, true));
+        tests.test("a_pipe_stretch_from_water_to_water_is_accepted", 20, helper -> endsBeside(helper, Fluids.WATER, false));
+        tests.test("a_pipe_stretch_from_water_to_an_empty_pipe_is_accepted", 20, helper -> endsBeside(helper, null, false));
         tests.test("a_pipe_s_raise_reaches_as_far_as_the_pack_s_reach", 20, PipeStretchTests::reach);
     }
 
@@ -135,6 +138,32 @@ final class PipeStretchTests {
         BlockState beside = plannedAt(helper, plan, new BlockPos(5, 1, 3));
         if (!FluidPipeBlock.isLinked(beside, Direction.NORTH)) {
             helper.fail("the plan did not open a pipe beside one fluid", new BlockPos(5, 1, 3));
+        }
+        helper.succeed();
+    }
+
+    /** Water beside the run's first pipe, {@code other} (or an empty pipe) beside its last (#590). */
+    private static void endsBeside(GameTestHelper helper, @Nullable Fluid other, boolean refused) {
+        BlockPos far = new BlockPos(6, 1, 2);
+        fill(helper, new BlockPos(1, 1, 2), Fluids.WATER);
+        if (other == null) {
+            helper.setBlock(far, PipeworksRegistries.PIPE.get().defaultBlockState());
+        } else {
+            fill(helper, far, other);
+        }
+        ListeningPlayer player = holding(helper, 16);
+        click(helper, player, START, true);
+        PlacementPlan plan = plan(helper, player, END);
+        if (plan == null || plan.isRefused() != refused) {
+            helper.fail("the plan was " + plan + ", expected refused=" + refused, END);
+        }
+        if (refused) {
+            click(helper, player, END, false);
+            for (BlockPos pos : row(1, 6, 1)) {
+                if (!helper.getBlockState(pos).isAir()) {
+                    helper.fail("a refused stretch laid " + helper.getBlockState(pos), pos);
+                }
+            }
         }
         helper.succeed();
     }

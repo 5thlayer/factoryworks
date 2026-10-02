@@ -419,12 +419,11 @@ Sub-rules:
   solve does not arise. `subgroup-owner.json` marks `pipe-to-ground` `not_emitted` on that reasoning.
 - **Fluid mixing is forbidden in a pipe network** — `shipped` (#557), on **Pipeworks pipes only**:
   Oritech's pipes still mix until #581. Pipeworks refuses a placement that would join two fluids,
-  and a machine or a pipe set by something else waits outside every segment (ADR-0110). Two gaps
-  on Pipeworks 0.1.1, whose `FluidPipes.wouldLink` answers on the server as placement does (no link
+  and a machine or a pipe set by something else waits outside every segment (ADR-0110). On Pipeworks 0.1.1, whose `FluidPipes.wouldLink` answers on the server as placement does (no link
   to a waiting node, none on any side for a pipe that would join two fluids) and which drag-laying
-  uses (#587): the client-side drag preview cannot see fluid segments and falls back to the
-  geometric rule, so it can draw arms the click will not lay (`planned`, cosmetic); and a run that
-  would mix two fluids only once the whole run is laid is not caught (`planned`, #590).
+  uses (#587), a drag whose run would connect two fluids is refused before anything is placed (`shipped`,
+  #590). One gap remains: the client-side drag preview cannot see fluid segments and falls back to the
+  geometric rule, so it can draw arms the click will not lay (`planned`, cosmetic).
 - **Pumps and flow rate over distance** — `unargued`, no verdict.
 
 ### Oil processing
