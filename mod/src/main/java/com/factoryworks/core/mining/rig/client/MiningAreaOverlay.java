@@ -117,7 +117,7 @@ public final class MiningAreaOverlay {
             {{-0.35F, -0.09F}, {-0.35F, 0.09F}, {0.05F, 0.09F}, {0.05F, -0.09F}},
             {{0.05F, -0.3F}, {0.05F, 0.3F}, {0.4F, 0.0F}, {0.4F, 0.0F}},
         };
-        collector.submitCustomGeometry(poseStack, RenderTypes.debugQuads(), (pose, buffer) -> {
+        collector.submitCustomGeometry(poseStack, OverlayRenderTypes.quadsNoDepth(), (pose, buffer) -> {
             for (float[][] quad : quads) {
                 for (float[] corner : quad) {
                     buffer.addVertex(pose,

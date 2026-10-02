@@ -19,6 +19,7 @@ public final class RigClient {
 
     public static void register(IEventBus modBus) {
         modBus.addListener(RigClient::registerScreens);
+        modBus.addListener(OverlayRenderTypes::registerPipelines);
         NeoForge.EVENT_BUS.addListener(MiningAreaOverlay::onSubmitGeometry);
     }
 
