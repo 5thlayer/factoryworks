@@ -44,4 +44,15 @@ on Pipeworks: rejected, since Groundworks is about placed blocks, not their cont
 **Consequences.** This supersedes ADR-0060's choice of Oritech as the Pack's tech mod, ADR-0061 in
 full, and ADR-0018's choice of Researchd as the Lab. The Oritech ADRs (0067, 0071, 0072, 0074, 0075,
 0077, 0096, 0098) are superseded one by one as their slices land. The release train gains Pipeworks
-after Groundworks and Labworks before the Pack.
+and Labworks (Pipeworks before Craftworks, Labworks before the Pack).
+
+## Amended by #587
+
+**Release train order.** Pipeworks sits after Wireworks, not right after Groundworks: Groundworks,
+Beltworks, Wireworks, Pipeworks, Craftworks, then Labworks and the Pack. Pipeworks depends on no
+other Library, so only Craftworks, which nests it, must come after it; CLAUDE.md states this order.
+
+**Pipe Dismantle and drag-laying stayed in the Pack.** #566 gave them to Pipeworks, but the pipe
+Dismantle Family (`core/dismantle/PipeFamily`) and drag-laying (`core/stretch/PipeworksPipeLegs`) are
+Pack Bindings, reading the arms Pipeworks' pipes report (ADR-0110). No ticket records why they were
+not moved into the Library.
