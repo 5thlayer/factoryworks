@@ -5,6 +5,9 @@ supersedes: [245]
 
 # FTB Materials owns the item layer, and unification names the item rather than the tag
 
+> **Superseded by ADR-0109.** FTB Materials goes and the Pack owns its plates; this record is kept
+> for its reasoning.
+
 This is the third time the pack has had to answer "whose plate is an iron plate". ADR-0053 answered
 "GregTech's"; ADR-0056 took GregTech out. ADR-0057 answered "Modern Industrialization's"; ADR-0060
 took Modern Industrialization out. Both answers were correct and both died with their subject,

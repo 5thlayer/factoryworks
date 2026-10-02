@@ -5,6 +5,8 @@ supersedes: [55]
 
 # Factorio science is Terra's progression spine, and Researchd is the lab
 
+> **Researchd superseded by ADR-0109.** The Lab is Labworks', a 5thlayer Library. The spine stands.
+
 Terra runs three tech mods in series plus a grid mod, and every one of them ships its own
 progression. GregTech's is a voltage ladder, Create's is a build-complexity curve, Mekanism's is a
 processing-factor ladder. Left as they are, the pack has three ladders and no spine, and a

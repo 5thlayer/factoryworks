@@ -5,6 +5,9 @@ supersedes: [28, 148, 156, 178]
 
 # The pack moves to Minecraft 26.1.2, and Oritech is its one tech mod
 
+> **Oritech superseded by ADR-0109.** The Pack depends on no third-party content mod; Oritech and
+> Railcraft go.
+
 > **Belt section moved to Beltworks.** The decision in *Why a SimpleBelts fork* now lives in
 > Beltworks (5thlayer/beltworks), as its ADR 0003. The rest of this ADR is the pack's.
 
