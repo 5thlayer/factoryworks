@@ -34,11 +34,11 @@ hash = "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
 
 [[files]]
 file = "NOTICE"
-hash = "116ad4393d1ac0552d1f4b9d1bb66c6b897a217276ac8219b02d2a4b8a674122"
+hash = "e9cb1bd8cb65cb90271d08cc9ebefa48595716f623a7316cfdee8f76ec2194d1"
 
 [[files]]
 file = "REUSE.toml"
-hash = "fd75913dce125ccf94d8359509636b78b3109bc8c3f7d2ba9224650527019a58"
+hash = "2720fb0885af01aa7fb0bb710fef6e53024e2554ee8517ec94a0230bc5bd0d4b"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -222,7 +222,11 @@ hash = "e3a062f6ea434db4c3d98145eafc87823ac444299e4f4c341d2688bb70a84107"
 
 [[files]]
 file = "data/art/models/kit/status_light_working.png"
-hash = "9c3f733fe4b7bfe192d739e45c4891b03af235e4f644bd8ae3f4b9a494ff4174"
+hash = "2ba72a04a21bf74f711930d8cccd6dacc6c013d088e756cc9a4008f86f021be6"
+
+[[files]]
+file = "data/art/models/steam_engine/steam_engine.png"
+hash = "9902cd98112d069be79a07e2e4c8aa73cae71e6f408878dc6974ab25d80f1bc0"
 
 [[files]]
 file = "data/art/ore_slade_coal.png"
@@ -322,11 +326,11 @@ hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "43a0e19985c52822dbeb0452ef6814cafe5021232cf1fd3e214a67426fa485a3"
+hash = "6b0f6b04ff4514ff6bc7d66314846eeb9ba5629e8e94e91a34332b27f472cc9a"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "762d9772bf2a8e684e1c10640f861e37cd180bf189da90ebb1e48e529e20eaef"
+hash = "d537c10217f0d479ce297eb09fa444b4b2ba83dfc21b23738e59fd0d74cee874"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -338,7 +342,7 @@ hash = "a06ddd6c447b79c7f97eda6aa668151b49867d5155b763c5f843ba8ee1cce2e1"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
-hash = "9ada3be5fd737931e603519982e97b3435f6932cc6cea751a5dbd241b44ba8ce"
+hash = "a9a87a8cd9a5b065d01a6181456496dcee4c6bed2fdd0785fc2f4e25d75b2700"
 
 [[files]]
 file = "data/pack/item-map.json"
@@ -346,7 +350,7 @@ hash = "733d1222ad61d1cab0acf706fe202a6e7195d9b808133f518dfd5c8eabbb9ce3"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "554c76d56c81dba3c1228dfb0984954d6f15292afd98040c4c64af92166ef7ce"
+hash = "a62702f8ec58be9cc0d4085a431890d4f55a388f18050224fd73e1ab84c5c67b"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -382,7 +386,7 @@ hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "556815384d6fd5602391bcfca6b0977fa9995b57231bf9db12fd36a17f8ca926"
+hash = "8b105d431c300c15c9ea8cef73d589f534f7bde2053f53b7e5c50af1471d1344"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/accumulator.json"
@@ -682,7 +686,7 @@ hash = "c4f3b3ee106426f1322240cc01e60027429b080937c9c02917d8560bdbd4fec0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "578a6be12c18fdd6199337b229e84acf061e6542882d2b7bbdc33af88f5dc4f5"
+hash = "89d748a294bdf4ec62812dd625da4ee26dfa1602a41c72ff8975699b1a43ff13"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/accumulator_part.json"
@@ -942,7 +946,7 @@ hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/steel_chest.json"
-hash = "ae9da3c7cf6cb5a2abac668ebe803d8043521efcfe34ba6f8fbd6654e0097329"
+hash = "5797efdd28622e7618974c64007a68dce864088bb7cd90783f58865e1a0320e0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/steel_furnace.json"
@@ -1359,6 +1363,10 @@ hash = "12b7b91dc06d79d9b1f784d159edf2a70cf8206c3243910d038ac16fc8e69ffd"
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage7.png"
 hash = "01ab2bc337c268c107cdc11b6c6541bce279741a21dbcf8a0594547f264f9a2c"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/steel_chest_particle.png"
+hash = "8e8bbb7d29004933dd57051dc83af8f1387639524d6753f23939d0209d6307d1"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/wreck/cargo_hold.png"
@@ -2474,7 +2482,7 @@ hash = "95706d93e205d6120e8e98a59144add769c07dcc24048f4ac17226b3a2e0af5f"
 
 [[files]]
 file = "kubejs/data/factoryworks/tags/block/buildings.json"
-hash = "ac20e5fa0395d6d6014a3900f78fce77540636b8d7f6224fc834e8d7bf4531e8"
+hash = "3cf672f0b169e9436b7b8446853b30413a3b401d70810dfcfb2ec4caf70e98e6"
 
 [[files]]
 file = "kubejs/data/factoryworks/tags/block/dismantle/pipes.json"
@@ -3155,8 +3163,8 @@ hash = "be527c1d2d73c5506efcf4d9080d655d2adca13a1a163ecddd85fa7d83dfd59c"
 metafile = true
 
 [[files]]
-file = "mods/pipeworks-0.1.0.jar"
-hash = "bcce58a2842b6d5b223a2248ded3a1bea9c81468b2817c6baccd5ec546cbfe7c"
+file = "mods/pipeworks-0.1.1.jar"
+hash = "95e4a9e79bab206bb959e242f7b834aaf85e7225d23f55bc08bddd4a10b920a7"
 
 [[files]]
 file = "mods/placebo.pw.toml"
