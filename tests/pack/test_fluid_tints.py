@@ -30,6 +30,7 @@ import importlib.util
 import json
 import math
 import pathlib
+import re
 import subprocess
 import sys
 import unittest
@@ -40,6 +41,8 @@ SCRIPT = ROOT / "scripts/build-fluid-tints.py"
 RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/fluid/tints.json"
 MIXINS = ROOT / "mod/src/main/resources/factoryworks_core.oritech.mixins.json"
 LANG = ROOT / "kubejs/assets/oritech/lang/en_us.json"
+CRUDE_CLIENT = ROOT / "mod/src/main/java/com/factoryworks/core/fluid/client/OilFluidClient.java"
+CRUDE_SPRITE = ROOT / "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png"
 MIXIN = "FluidModelContentMixin"
 MIXIN_TARGET = "rearth/oritech/client/init/FluidModelContent.class"
 
@@ -104,6 +107,18 @@ class FluidTints(unittest.TestCase):
                     wanted + suffix, overrides.get(key),
                     "%s is Oritech's %r; the pack borrows it as Factorio's %r, so %s must say so"
                     % (key, oritech[key], name, LANG.relative_to(ROOT)))
+
+    def test_crude_oil_renders_in_factorios_colour(self):
+        source = CRUDE_CLIENT.read_text(encoding="utf-8")
+        argb = int(re.search(r"CRUDE_OIL_TINT = 0xFF([0-9A-Fa-f]{6});", source).group(1), 16)
+        tint = tuple(((argb >> shift) & 0xFF) / 255 for shift in (16, 8, 0))
+        w, _, rows = self.gen.read_png(CRUDE_SPRITE.read_bytes())
+        pixels = [px for row in rows[:w] for px in row if px[3] > 0]
+        average = tuple(sum(px[i] for px in pixels) / len(pixels) / 255 for i in range(3))
+        wanted = self.gen.factorio_colours()["crude-oil"]
+        miss = math.dist(self.gen.rendered(average, tint), wanted)
+        self.assertLessEqual(miss, self.gen.TOLERANCE,
+                             "crude oil draws %.2f from Factorio's %s" % (miss, wanted))
 
     def test_the_mixin_is_wired_on_the_client(self):
         config = json.loads(MIXINS.read_text(encoding="utf-8"))

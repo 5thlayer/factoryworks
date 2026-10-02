@@ -55,6 +55,7 @@ mods/*.jar
 # which build is installed, held to data/pack/local-jars.json by scripts/sync-local-jars.py
 # --check. Beltworks and Craftworks are named by their metafiles, like any CurseForge mod (#532).
 !mods/wireworks-*.jar
+!mods/pipeworks-*.jar
 !mods/researchd-*.jar
 !mods/Porting-Dead-Libs-*.jar
 

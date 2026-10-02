@@ -43,8 +43,7 @@ OUT = os.path.join(ROOT, "mod", "src", "main", "resources", "factoryworks_core",
                    "tints.json")
 
 # How far, in RGB on [0, 1], a rendered colour may sit from Factorio's before it is retinted.
-# 0.15 keeps crude oil (0.13 off, near-black against black) and light naphtha (0.13 off, orange
-# against orange), and catches the three that read as a different fluid (0.4 and more).
+# 0.15 keeps light naphtha (0.13 off, orange against orange), and catches the three that read as a different fluid (0.4 and more).
 TOLERANCE = 0.15
 
 # A colour chosen over Factorio's `base_color`, and why. Empty is the default; an entry is a
@@ -60,7 +59,6 @@ TARGET_OVERRIDES = {
 # Oritech fluid id -> (sprite under assets/oritech/textures/, tint Oritech registers). Read off
 # `FluidModelContent.registerFluidModels` in oritech-2.0.0-exp6 with `javap -c`.
 ORITECH_MODELS = {
-    "oritech:still_oil": ("block/fluid/fluid_gas_dark", (0.478, 0.478, 0.478)),
     "oritech:still_biofuel": ("block/fluid/fluid_strange_pale_2", (0.25, 0.316, 0.086)),
     "oritech:still_heavy_oil": ("block/fluid/fluid_molten", (0.135, 0.135, 0.135)),
     "oritech:still_diesel": ("block/fluid/fluid_steam", (0.735, 0.735, 0.235)),

@@ -24,6 +24,7 @@ import com.factoryworks.core.mining.rig.RigTier;
 import com.factoryworks.core.radar.RadarBlockEntity;
 import com.factoryworks.core.oil.OilWellBlockEntity;
 import com.factoryworks.core.oil.PumpjackBlockEntity;
+import com.factoryworks.core.oil.PumpjackPartBlockEntity;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceItemHandler;
 import com.factoryworks.core.smelting.FurnaceTier;
@@ -147,6 +148,11 @@ public final class PFBlockEntities {
             PUMPJACK = BLOCK_ENTITIES.register("pumpjack",
                     () -> new BlockEntityType<>(PumpjackBlockEntity::new,
                             java.util.Set.of(PFBlocks.PUMPJACK.get())));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpjackPartBlockEntity>>
+            PUMPJACK_PART = BLOCK_ENTITIES.register("pumpjack_part",
+                    () -> new BlockEntityType<>(PumpjackPartBlockEntity::new,
+                            java.util.Set.of(PFBlocks.PUMPJACK_PART.get())));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OilWellBlockEntity>>
             OIL_WELL = BLOCK_ENTITIES.register("oil_well",
@@ -405,12 +411,10 @@ public final class PFBlockEntities {
                 (blockEntity, side) -> blockEntity instanceof RadarBlockEntity radar ? radar.energySide() : null);
     }
 
-    /** The Pumpjack's energy face and its crude, out of any face of any block (ADR-0081). */
+    /** The Pumpjack's energy face, on every block. Its crude leaves through Pipeworks' segment, not a fluid face (ADR-0110). */
     private static void registerPumpjackCapabilities(RegisterCapabilitiesEvent event) {
         registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.PUMPJACK_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof PumpjackBlockEntity pumpjack ? pumpjack.energySide() : null);
-        registerOnFootprint(event, Capabilities.Fluid.BLOCK, PFBlocks.PUMPJACK_FOOTPRINT,
-                (blockEntity, side) -> blockEntity instanceof PumpjackBlockEntity pumpjack ? pumpjack.fluidSide() : null);
     }
 
     /**

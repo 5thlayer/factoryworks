@@ -17,6 +17,8 @@ import io.github._5thlayer.groundworks.Dismantles;
 import io.github._5thlayer.groundworks.Groundworks;
 import io.github._5thlayer.groundworks.Refusal;
 import io.github._5thlayer.groundworks.ShortestPath;
+import io.github._5thlayer.pipeworks.PipeworksRegistries;
+import io.github._5thlayer.pipeworks.block.FluidPipeBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,17 +32,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import rearth.oritech.block.blocks.pipes.AbstractPipeBlock;
-import rearth.oritech.block.blocks.pipes.GenericPipeBlock;
 
 /**
- * A Dismantle of Oritech's fluid pipes as Groundworks runs it for the pipe family (#448, ADR-0086):
+ * A Dismantle of Pipeworks' pipes as Groundworks runs it for the pipe family (#448, ADR-0086):
  * each test sneak-clicks a start with the Engineer's Pick through the player's game mode, asks
  * {@link Dismantles#spanTo} for the end, clicks it, and holds the world, the inventory and the
  * stored start to the span.
@@ -49,7 +48,7 @@ final class PipeDismantleTests {
 
     private static final BlockPos START = new BlockPos(2, 1, 3);
     private static final Identifier PICK = Identifier.fromNamespaceAndPath("factoryworks", "engineers_iron_pick");
-    private static final Identifier FLUID_PIPE = Identifier.fromNamespaceAndPath("oritech", "fluid_pipe");
+    private static final Identifier FLUID_PIPE = Identifier.fromNamespaceAndPath("pipeworks", "pipe");
 
     private PipeDismantleTests() {
     }
@@ -254,27 +253,24 @@ final class PipeDismantleTests {
         helper.succeed();
     }
 
-    /** {@code count} fluid pipes running east from {@link #START}. */
+    /** {@code count} pipes running east from {@link #START}. */
     private static List<BlockPos> row(GameTestHelper helper, int count) {
         List<BlockPos> run = new ArrayList<>();
         for (int i = 0; i < count; i++) run.add(pipe(helper, START.east(i)));
         return run;
     }
 
-    /** A fluid pipe placed as its item places it, open to every pipe it touches. */
+    /** A pipe placed as its item places it, linked to every pipe it touches. */
     private static BlockPos pipe(GameTestHelper helper, BlockPos at) {
-        Block block = BuiltInRegistries.BLOCK.getValue(FLUID_PIPE);
-        BlockPos absolute = helper.absolutePos(at);
-        BlockState state = ((AbstractPipeBlock) block).addConnectionStates(block.defaultBlockState(), helper.getLevel(), absolute, true);
-        helper.getLevel().setBlockAndUpdate(absolute, state);
+        helper.setBlock(at, PipeworksRegistries.PIPE.get().defaultBlockState());
         return at;
     }
 
-    // The same block's state set in place leaves Oritech's network and its neighbours as they are.
+    // The same block's state set in place leaves the segment and the neighbour's arm as they are, so
+    // the arms, which are all the family reads, disagree with each other.
     private static void close(GameTestHelper helper, BlockPos at, Direction side) {
         BlockState state = helper.getBlockState(at);
-        GenericPipeBlock pipe = (GenericPipeBlock) state.getBlock();
-        helper.setBlock(at, state.setValue(pipe.directionToProperty(side), GenericPipeBlock.NO_CONNECTION));
+        helper.setBlock(at, PipeworksRegistries.PIPE.get().withLinks(state, linked -> linked != side && FluidPipeBlock.isLinked(state, linked)));
     }
 
     private static Item pipeItem() {

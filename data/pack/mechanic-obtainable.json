@@ -7,7 +7,7 @@
       "owner": "ADR-0050"
     },
     {
-      "id": "fluid:oritech:still_oil",
+      "id": "fluid:factoryworks:crude_oil",
       "mechanic": "pumpjack",
       "why": "A Pumpjack on an oil well yields crude each cycle (ADR-0081). The wells are placed by a Java piece, so no data file names the fluid.",
       "owner": "ADR-0081"

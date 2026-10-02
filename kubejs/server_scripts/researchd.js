@@ -146,7 +146,7 @@ fromFactorio('engine', {
 
 // The barrel fill/empty rows are `native_mechanic`, never recipes.
 fromFactorio('fluid-handling', {
-  icon: 'oritech:portable_tank',
+  icon: 'pipeworks:storage_tank',
   unlocks: [
     'factoryworks:assembling/storage_tank',
     'factoryworks:assembling/pump',

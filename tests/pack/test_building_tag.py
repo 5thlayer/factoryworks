@@ -37,7 +37,7 @@ MUST_HOLD = {
     "splitters": ("beltworks:splitter", "beltworks:improved_splitter", "beltworks:express_splitter",
                   "beltworks:turbo_splitter"),
     "chests": ("minecraft:chest", "factoryworks:iron_chest", "factoryworks:steel_chest"),
-    "pipes": ("oritech:fluid_pipe",),
+    "pipes": ("pipeworks:pipe",),
 }
 
 # Blocks a player digs up close, and which item-map rows name something that is not a Building.

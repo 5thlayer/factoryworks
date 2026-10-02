@@ -58,6 +58,14 @@ versionRange = "${groundworks_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
+# Pipeworks carries the Pumpjack's crude: its block entities are Pipeworks ports (ADR-0110).
+[[dependencies.${mod_id}]]
+modId = "pipeworks"
+type = "required"
+versionRange = "[0.1.0,)"
+ordering = "NONE"
+side = "BOTH"
+
 [[mixins]]
 config = "factoryworks_core.mixins.json"
 

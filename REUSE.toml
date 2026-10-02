@@ -53,7 +53,7 @@ SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "CC-BY-4.0"
 
 # Art from malcolmriley's unused-textures: the ore sprites, the Steel Chest's sheet, the wreck's
-# textures and the unmodified copies they are derived from (NOTICE).
+# textures, crude oil's sprite and the unmodified copies they are derived from (NOTICE).
 [[annotations]]
 path = [
     "kubejs/assets/factoryworks/textures/block/ore/*.png",
@@ -66,6 +66,8 @@ path = [
     "data/art/space-plating-stripe-black-horizontal-damaged.png",
     "data/art/space-plating-stripe-gray-horizontal-damaged.png",
     "data/art/steel_block_rusty.png",
+    "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png",
+    "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png.mcmeta",
 ]
 SPDX-FileCopyrightText = ["Malcolm Riley", "2026 5thlayer"]
 SPDX-License-Identifier = "CC-BY-4.0"

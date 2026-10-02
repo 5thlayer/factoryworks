@@ -120,7 +120,7 @@ final class AssemblingMachineTests {
         }
         BlockPos part = CHASSIS.hullBlock();
         ItemResource furnace = ItemResource.of(item("factoryworks:stone_furnace"));
-        ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
+        ItemResource fluidPipe = ItemResource.of(item("pipeworks:pipe"));
         ItemResource stone = ItemResource.of(Items.STONE);
         for (BlockPos at : List.of(ANCHOR, part)) {
             ResourceHandler<ItemResource> face = Faces.item(helper, at);
@@ -175,7 +175,7 @@ final class AssemblingMachineTests {
         machine.setHeldRecipe(HeldRecipe.of(BOILER), player(helper));
         machine.cycleInputMode();
         ResourceHandler<ItemResource> face = Faces.item(helper, ANCHOR);
-        ItemResource fluidPipe = ItemResource.of(item("oritech:fluid_pipe"));
+        ItemResource fluidPipe = ItemResource.of(item("pipeworks:pipe"));
         expectMoved(helper, ANCHOR, "fluid pipes into slot 1 after a mode cycle", 8, face,
                 (f, tx) -> f.insert(1, fluidPipe, 8, tx));
         if (machine.inventory.getAmountAsInt(1) != 8) {

@@ -6,6 +6,6 @@
     "tile_width": 3,
     "tile_height": 3,
     "output_volume": 1000,
-    "fluid": "oritech:still_oil"
+    "fluid": "factoryworks:crude_oil"
   }
 }

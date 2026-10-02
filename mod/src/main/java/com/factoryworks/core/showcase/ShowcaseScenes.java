@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import io.github._5thlayer.pipeworks.PipeworksRegistries;
 import rearth.oritech.block.blocks.pipes.AbstractPipeBlock;
 import rearth.oritech.block.blocks.pipes.ExtractablePipeConnectionBlock;
 import rearth.oritech.block.blocks.pipes.GenericPipeBlock;
@@ -176,10 +177,12 @@ public final class ShowcaseScenes {
         BlockPos plant = new BlockPos(11, 1, 3);
         placeHolding(site, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, plant, "factoryworks:chemistry/plastic_bar");
 
-        extractingPipe(site, new BlockPos(3, 1, 2), Direction.SOUTH);
-        for (int x = 4; x <= 8; x++) {
-            pipe(site, new BlockPos(x, 1, 2));
+        // Pipeworks carries the crude off the Pumpjack; Oritech's pipe takes it from the last of them to the Refinery.
+        for (int x = 3; x <= 6; x++) {
+            site.set(new BlockPos(x, 1, 2), PipeworksRegistries.PIPE.get());
         }
+        extractingPipe(site, new BlockPos(7, 1, 2), Direction.WEST);
+        pipe(site, new BlockPos(8, 1, 2));
 
         extractingPipe(site, refinery.above(4), Direction.DOWN);
         pipe(site, new BlockPos(9, 5, 3));

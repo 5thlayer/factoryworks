@@ -149,6 +149,18 @@ Source:  https://github.com/malcolmriley/unused-textures
 Licence: Creative Commons Attribution 4.0 International
          https://creativecommons.org/licenses/by/4.0/
 
+Crude oil sprite (#557)
+-----------------------
+
+Files:   kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png
+         kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png.mcmeta
+Author:  Malcolm Riley
+Source:  https://github.com/malcolmriley/unused-textures
+         fluids/fluid_gas_dark.png and its .mcmeta at commit
+         c89604ea49c0fc5470c5849f39cd5df1d497b0fb, copied unmodified and renamed. The game tints it.
+Licence: Creative Commons Attribution 4.0 International
+         https://creativecommons.org/licenses/by/4.0/
+
 Beltworks (#342, #447)
 ----------------------
 

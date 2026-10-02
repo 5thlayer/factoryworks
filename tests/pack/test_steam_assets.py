@@ -48,7 +48,7 @@ PF_FLUIDS = FLUID_JAVA_DIR / "PFFluids.java"
 BOILER_NAME = "boiler"
 STEAM_ENGINE_NAME = "steam-engine"
 
-FLUIDS = ("steam", "superheated_steam")
+FLUIDS = ("steam", "superheated_steam", "crude_oil")
 
 # The two Factorio fluid prototypes the resource carries for #224's arithmetic. Not the same list
 # as FLUIDS above: `superheated_steam` is this pack's own fluid and has no Factorio prototype,

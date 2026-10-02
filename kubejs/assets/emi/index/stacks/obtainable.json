@@ -289,13 +289,13 @@
       "stack": "item:minecraft:yellow_concrete"
     },
     {
-      "stack": "item:oritech:fluid_pipe"
-    },
-    {
       "stack": "item:oritech:industrial_light"
     },
     {
-      "stack": "item:oritech:portable_tank"
+      "stack": "item:pipeworks:pipe"
+    },
+    {
+      "stack": "item:pipeworks:storage_tank"
     },
     {
       "stack": "item:researchd:research_lab"
@@ -340,6 +340,9 @@
       "stack": "item:wireworks:small_pole"
     },
     {
+      "stack": "fluid:factoryworks:crude_oil"
+    },
+    {
       "stack": "fluid:factoryworks:steam"
     },
     {
@@ -356,9 +359,6 @@
     },
     {
       "stack": "fluid:oritech:still_naphtha"
-    },
-    {
-      "stack": "fluid:oritech:still_oil"
     },
     {
       "stack": "fluid:oritech:still_sulfuric_acid"

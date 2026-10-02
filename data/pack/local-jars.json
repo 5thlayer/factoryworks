@@ -30,6 +30,13 @@
       ]
     },
     {
+      "mod": "pipeworks",
+      "group": "io.github.5thlayer",
+      "artifact": "pipeworks",
+      "version": "0.1.0",
+      "pattern": "pipeworks-*.jar"
+    },
+    {
       "mod": "researchd",
       "group": "com.portingdeadmods.researchd",
       "artifact": "researchd",

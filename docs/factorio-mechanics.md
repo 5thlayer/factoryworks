@@ -306,7 +306,7 @@ Sub-rules:
 
 - **The pumpjack stands on an oil well** — `shipped` (#377), ADR-0081. A 3x3x3 footprint placed
   only over a well, fed by a pole at 90 kW plus a 3 kW drain, one cycle a second. Three declared
-  departures: crude leaves through **any face**, where Factorio's has one rotatable output; the model
+  departures: crude leaves into a Pipeworks segment through **any face**, where Factorio's has one rotatable output; the model
   is Oritech's Pump scaled to 3x3, a human check on delivery; and the two module slots wait for
   modules.
 - **A drill takes turns over the ore beneath it** — `shipped` (#537). Ten operations on a block, then
@@ -389,15 +389,17 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: all bodies
-- **via**: `oritech`, `factoryworks_core`
-- **owner**: ADR-0060 and ADR-0067 (Oritech's Fluid Pipe is `pipe` and its Portable Tank
+- **via**: `pipeworks`, `factoryworks_core`
+- **owner**: ADR-0109 and ADR-0110 (Pipeworks' pipe is `pipe` and its storage tank
   `storage-tank`), ADR-0037 (the barrel), ADR-0050 (the Offshore Pump)
 - **ticket**: #293 (the in-line pump); #106 (the barrel) closed
 
 Sub-rules:
 
-- **Pipes and storage tanks** — `shipped`. Oritech's Fluid Pipe, laid by Stretch (#452) and taken up
-  by Dismantle (#431), and its Portable Tank, both crafted from Factorio's recipes.
+- **Pipes and storage tanks** — `shipped` (#557). Pipeworks' pipe (100 mB) and storage tank (25,000 mB),
+  Factorio's volumes, joined into fluid segments (ADR-0110), laid by Stretch (#452) and taken up by
+  Dismantle (#431), both crafted from Factorio's recipes. Crude oil is Core's fluid, which the Pumpjack
+  puts into a segment.
 - **The in-line pump** — `planned`, #293. `pump` is `factoryworks:pump`, `blocked_by` #293,
   since Oritech's pump is a well pump.
 
@@ -410,8 +412,9 @@ Sub-rules:
 - **Underground pipes** — `excluded`. The same argument as underground belts, one level up: a
   pipe routes freely in three dimensions, so the crossing problem Factorio's pipe-to-ground exists to
   solve does not arise. `subgroup-owner.json` marks `pipe-to-ground` `not_emitted` on that reasoning.
-- **Fluid mixing is forbidden in a pipe network** — `excluded`. `by-consequence`: no mod in the stack
-  enforces single-fluid pipe networks, and adding it would be a pack mechanism nobody asked for.
+- **Fluid mixing is forbidden in a pipe network** — `shipped` (#557). Pipeworks refuses a placement
+  that would join two fluids, and a machine or a pipe set by something else waits outside every
+  segment (ADR-0110).
 - **Pumps and flow rate over distance** — `unargued`, no verdict.
 
 ### Oil processing
@@ -1481,7 +1484,7 @@ Sub-rules:
   from the inventory in survival. No work.
 - **Drop item into a machine** (`Z`) — `excluded`. It is a one-item quick transfer, and shipping both
   means two bindings differing only in magnitude.
-- **Drag-building** — `adapted`. Belts and Oritech's fluid pipes are laid by Groundworks' **Stretch**:
+- **Drag-building** — `adapted`. Belts and Pipeworks' pipes are laid by Groundworks' **Stretch**:
   a sneak-click stores the start, each further sneak-click an anchor, and a click lays the line,
   charged one item a block, with Raise and Lower setting its height and a detour round what is in
   the way (#452). Joining pipes across an interior anchor is #467.

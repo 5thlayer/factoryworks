@@ -86,6 +86,7 @@ BOILER_LANG = {
 FLUIDS = {
     "steam": "Steam",
     "superheated_steam": "Superheated Steam",
+    "crude_oil": "Crude Oil",
 }
 
 FLUID_LANG = {f"fluid_type.{NAMESPACE}.{name}": display for name, display in FLUIDS.items()}

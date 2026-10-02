@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /** A Pumpjack's buffer: a cycle per 900 FE worked, a drain paid whether or not it works (ADR-0081). */
 class PumpjackEnergyTest {
 
-    private static final PumpjackSpec SPEC = new PumpjackSpec(45, 150, 900, 1_000, "oritech:still_oil");
+    private static final PumpjackSpec SPEC = new PumpjackSpec(45, 150, 900, 1_000, "factoryworks:crude_oil");
 
     @Test
     void theBufferHoldsOneTicksWorkAndDrain() {

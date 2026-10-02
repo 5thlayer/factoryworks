@@ -28,8 +28,8 @@ import net.neoforged.neoforge.common.NeoForge;
  */
 public final class FtbMapMarkers implements ChartMarkerRenderer {
 
-    /** Oritech's crude bucket, the item Factorio's crude-oil icon maps to (ADR-0081). */
-    private static final String OIL_ICON = "oritech:still_oil_bucket";
+    /** The barrel, the item Factorio's crude-oil icon maps to (ADR-0081). */
+    private static final String OIL_ICON = "factoryworks:barrel";
 
     private FtbMapMarkers() {
     }

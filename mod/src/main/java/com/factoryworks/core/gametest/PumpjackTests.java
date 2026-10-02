@@ -1,5 +1,6 @@
 package com.factoryworks.core.gametest;
 
+import io.github._5thlayer.pipeworks.PipeworksRegistries;
 import io.github._5thlayer.wireworks.WireworksRegistries;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.PFItems;
@@ -19,12 +20,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * A pole-fed Pumpjack on a 100% well pumps 10 mB of crude a second and takes 10 off the well each
- * cycle, and a pipe at any of its faces drains it; a starved one does neither (ADR-0081). The figures
- * are typed: a cycle is 900 FE at 45 FE/t, 20 ticks.
+ * A pole-fed Pumpjack on a 100% well pumps 10 mB of crude a second into its Pipeworks segment and
+ * takes 10 off the well each cycle, and a pipe at any of its faces joins that segment, down to a
+ * storage tank; a starved one does neither (ADR-0081, ADR-0110). The figures are typed: a cycle is
+ * 900 FE at 45 FE/t, 20 ticks.
  */
 final class PumpjackTests {
 
@@ -33,6 +34,8 @@ final class PumpjackTests {
     private static final BlockPos POLE = new BlockPos(8, 1, 3);
     /** A part on the top layer's far corner, which no pole touches. */
     private static final BlockPos FAR_PART = new BlockPos(4, 3, 2);
+    /** West of the footprint's middle layer: three pipes, then the tank. */
+    private static final BlockPos TANK = new BlockPos(0, 2, 3);
 
     private static final long FULL_YIELD = 300_000;
     private static final int TICKS = 205;
@@ -44,12 +47,14 @@ final class PumpjackTests {
 
     static void register(PFGameTests.Registrar tests) {
         tests.test("fed_pumpjack_pumps_ten_a_second_and_depletes_its_well", 300, PumpjackTests::fedPumpjackPumps);
+        tests.test("pumpjack_fills_a_pipe_into_a_storage_tank", 300, PumpjackTests::fillsATank);
         tests.test("starved_pumpjack_pumps_nothing", 300, PumpjackTests::starvedPumpjackPumpsNothing);
     }
 
     private static void fedPumpjackPumps(GameTestHelper helper) {
         place(helper);
         helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
+        helper.setBlock(FAR_PART.above(), PipeworksRegistries.PIPE.get());
         helper.startSequence()
                 .thenIdle(TICKS)
                 .thenExecute(() -> {
@@ -63,21 +68,39 @@ final class PumpjackTests {
                                 + crude + " mB, not 10 a second", WELL.above());
                         return;
                     }
-                    var face = helper.getLevel().getCapability(Capabilities.Fluid.BLOCK,
-                            helper.absolutePos(FAR_PART), Direction.UP);
-                    if (face == null) {
-                        helper.fail("no fluid face on a top-layer part", FAR_PART);
-                        return;
-                    }
-                    try (Transaction tx = Transaction.openRoot()) {
-                        int drained = face.extract(FluidResource.of(BuiltInRegistries.FLUID.getValue(
-                                Identifier.parse(PumpjackBlockEntity.spec().fluid()))), crude, tx);
-                        if (drained != crude) {
-                            helper.fail("a pipe at a top-layer part took " + drained + " of " + crude + " mB", FAR_PART);
-                        }
+                    var pipe = helper.getLevel().getCapability(Capabilities.Fluid.BLOCK,
+                            helper.absolutePos(FAR_PART.above()), null);
+                    if (pipe == null || pipe.getAmountAsInt(0) != crude || !crudeResource().equals(pipe.getResource(0))) {
+                        helper.fail("a pipe on a top-layer part holds " + (pipe == null ? "no segment" : pipe.getAmountAsInt(0)
+                                + " mB of " + pipe.getResource(0)) + ", not the " + crude + " mB of crude", FAR_PART.above());
                     }
                 })
                 .thenSucceed();
+    }
+
+    private static void fillsATank(GameTestHelper helper) {
+        place(helper);
+        helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
+        for (int x = 3; x >= 1; x--) {
+            helper.setBlock(new BlockPos(x, TANK.getY(), TANK.getZ()), PipeworksRegistries.PIPE.get());
+        }
+        helper.setBlock(TANK, PipeworksRegistries.STORAGE_TANK.get());
+        helper.startSequence()
+                .thenIdle(TICKS)
+                .thenExecute(() -> {
+                    int crude = pumpjack(helper).crude();
+                    var tank = helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, helper.absolutePos(TANK), null);
+                    if (crude == 0 || tank == null || tank.getAmountAsInt(0) != crude
+                            || !crudeResource().equals(tank.getResource(0))) {
+                        helper.fail("the tank holds " + (tank == null ? "no segment" : tank.getAmountAsInt(0) + " mB of "
+                                + tank.getResource(0)) + " where the Pumpjack made " + crude + " mB of crude", TANK);
+                    }
+                })
+                .thenSucceed();
+    }
+
+    private static FluidResource crudeResource() {
+        return FluidResource.of(BuiltInRegistries.FLUID.getValue(Identifier.parse(PumpjackBlockEntity.spec().fluid())));
     }
 
     private static void starvedPumpjackPumpsNothing(GameTestHelper helper) {

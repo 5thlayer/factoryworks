@@ -6,44 +6,40 @@ import com.geckolib.animatable.manager.AnimatableManager;
 import com.geckolib.util.GeckoLibUtil;
 import com.factoryworks.core.PFBlockEntities;
 import com.factoryworks.core.energy.LongSnapshotJournal;
-import com.factoryworks.core.transfer.GuardedResourceHandler;
+
+import io.github._5thlayer.pipeworks.api.FluidPort;
+import io.github._5thlayer.pipeworks.api.FluidPorts;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 /**
  * The Pumpjack (ADR-0081): draws power from a pole, and each cycle takes the well under it down by
- * one depletion and puts the well's yield of crude into its tank, which any face drains.
+ * one depletion and puts the well's yield of crude into the Pipeworks segment it stands in, which
+ * a pipe at any face of the footprint joins (ADR-0110).
  *
- * <p>A cycle waits for room for its whole yield, so a full tank neither draws work energy nor
+ * <p>A cycle waits for room for its whole yield, so a full segment neither draws work energy nor
  * depletes the well; the drain is paid regardless.
  */
-public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity {
+public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity, FluidPort {
 
     private static final PumpjackSpec SPEC = PumpjackSpec.fromCorpus();
 
     private final PumpjackEnergy energy = new PumpjackEnergy(SPEC);
     private final LongSnapshotJournal journal =
             new LongSnapshotJournal(energy::buffered, energy::setBuffered, this::setChanged);
-    private final FluidStacksResourceHandler tank = new FluidStacksResourceHandler(1, SPEC.tankMillibuckets()) {
-        @Override
-        protected void onContentsChanged(int index, FluidStack previousContents) {
-            setChanged();
-        }
-    };
     private final AnimatableInstanceCache animations = GeckoLibUtil.createInstanceCache(this);
 
     public PumpjackBlockEntity(BlockPos pos, BlockState state) {
@@ -58,8 +54,45 @@ public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity {
         return energy.progress();
     }
 
+    /** The crude in the segment the Pumpjack stands in. */
     public int crude() {
-        return tank.getAmountAsInt(0);
+        ResourceHandler<FluidResource> segment = segment();
+        return segment == null ? 0 : segment.getAmountAsInt(0);
+    }
+
+    @Override
+    public boolean connectsOn(Direction face) {
+        return true;
+    }
+
+    /** The Pumpjack's own fluid box, a part of every segment it stands in. */
+    @Override
+    public long capacity() {
+        return SPEC.tankMillibuckets();
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        FluidPorts.join(this);
+    }
+
+    private @Nullable ResourceHandler<FluidResource> segment() {
+        return level == null ? null : FluidPorts.segment(level, worldPosition);
+    }
+
+    private FluidResource crudeResource() {
+        return FluidResource.of(BuiltInRegistries.FLUID.getValue(Identifier.parse(SPEC.fluid())));
+    }
+
+    private boolean roomFor(int amount) {
+        ResourceHandler<FluidResource> segment = segment();
+        if (segment == null) {
+            return false;
+        }
+        try (Transaction tx = Transaction.openRoot()) {
+            return segment.insert(crudeResource(), amount, tx) == amount;
+        }
     }
 
     public @Nullable OilWellBlockEntity well() {
@@ -69,14 +102,14 @@ public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     public void serverTick() {
         OilWellBlockEntity well = well();
-        boolean working = well != null && SPEC.tankMillibuckets() - crude() >= well.nextCycle();
+        boolean working = well != null && roomFor(well.nextCycle());
         long before = energy.buffered();
         if (energy.tick(working) && well != null) {
             int crude = well.cycle();
-            if (crude > 0) {
+            ResourceHandler<FluidResource> segment = segment();
+            if (crude > 0 && segment != null) {
                 try (Transaction tx = Transaction.openRoot()) {
-                    tank.insert(0, FluidResource.of(BuiltInRegistries.FLUID.getValue(Identifier.parse(SPEC.fluid()))),
-                            crude, tx);
+                    segment.insert(crudeResource(), crude, tx);
                     tx.commit();
                 }
             }
@@ -117,21 +150,6 @@ public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity {
         }
     };
 
-    /** Crude out through any face, and nothing in (ADR-0081). */
-    public ResourceHandler<FluidResource> fluidSide() {
-        return new GuardedResourceHandler<>(tank) {
-            @Override
-            public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
-                return 0;
-            }
-
-            @Override
-            public boolean isValid(int index, FluidResource resource) {
-                return false;
-            }
-        };
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
     }
@@ -146,7 +164,6 @@ public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity {
         super.loadAdditional(input);
         energy.setBuffered(input.getLongOr("Energy", 0L));
         energy.setProgress(input.getLongOr("Progress", 0L));
-        tank.deserialize(input.childOrEmpty("Tank"));
     }
 
     @Override
@@ -154,6 +171,5 @@ public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity {
         super.saveAdditional(output);
         output.putLong("Energy", energy.buffered());
         output.putLong("Progress", energy.progress());
-        tank.serialize(output.child("Tank"));
     }
 }

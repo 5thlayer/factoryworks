@@ -68,7 +68,9 @@ NAMESPACES = {"minecraft", "factoryworks",
               # Beltworks' belts, ADR-0060's logistics (#277).
               "beltworks",
               # Wireworks' electric poles, a Library carved out of the pack (#476).
-              "wireworks"}
+              "wireworks",
+              # Pipeworks' pipe and storage tank, the fluid Library (#557, ADR-0110).
+              "pipeworks"}
 
 
 def mod_registered_blocks():

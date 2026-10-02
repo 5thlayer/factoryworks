@@ -83,8 +83,11 @@ FACES = {
     "accumulator": ("registerAccumulatorCapabilities", ("Energy",)),
     # Energy (#368): the scan draws FE, on every block of the footprint.
     "radar": ("registerRadarCapabilities", ("Energy",)),
-    # Energy and Fluid (ADR-0081): a pole feeds it and a pipe drains crude, on every block.
-    "pumpjack": ("registerPumpjackCapabilities", ("Energy", "Fluid")),
+    # Energy (ADR-0081): a pole feeds it, on every block. Its crude leaves through a Pipeworks
+    # segment, which is no capability registered here (ADR-0110).
+    "pumpjack": ("registerPumpjackCapabilities", ("Energy",)),
+    # No face of its own: a part is a Pipeworks port and the Energy face is the anchor's.
+    "pumpjack_part": (None, ()),
     # No face: a well is read by the Pumpjack standing on it, never by a pipe.
     "oil_well": (None, ()),
 }

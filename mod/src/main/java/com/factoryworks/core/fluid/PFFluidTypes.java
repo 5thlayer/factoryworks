@@ -54,6 +54,17 @@ public final class PFFluidTypes {
                     .viscosity(600)
                     .rarity(Rarity.COMMON)));
 
+    /** What the Pumpjack lifts and the Oil Refinery splits. Factorio's 25 °C (ADR-0109). */
+    public static final DeferredHolder<FluidType, FluidType> CRUDE_OIL = FLUID_TYPES.register(
+            "crude_oil",
+            () -> new FluidType(FluidType.Properties.create()
+                    .descriptionId("fluid_type." + FactoryWorksCore.NAMESPACE + ".crude_oil")
+                    .lightLevel(0)
+                    .density(900)
+                    .temperature(temperature(25))
+                    .viscosity(5000)
+                    .rarity(Rarity.COMMON)));
+
     private PFFluidTypes() {
     }
 

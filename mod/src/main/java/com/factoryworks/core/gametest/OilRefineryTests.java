@@ -38,7 +38,7 @@ final class OilRefineryTests {
     private static final String PLASTIC = "factoryworks:chemistry/plastic_bar";
     private static final String CABLE = "factoryworks:assembling/copper_cable";
 
-    private static final String CRUDE = "oritech:still_oil";
+    private static final String CRUDE = "factoryworks:crude_oil";
     private static final String HEAVY_OIL = "oritech:still_heavy_oil";
     private static final String LIGHT_OIL = "oritech:still_naphtha";
     private static final String PETROLEUM_GAS = "oritech:still_diesel";

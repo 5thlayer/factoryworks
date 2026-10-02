@@ -35,6 +35,6 @@ class FluidTintCorpusTest {
     @Test
     @DisplayName("a fluid Oritech already colours right keeps Oritech's tint")
     void keptFluidHasNoTint() {
-        assertFalse(FluidTintCorpus.get().tint("oritech:still_oil").isPresent());
+        assertFalse(FluidTintCorpus.get().tint("oritech:still_naphtha").isPresent());
     }
 }

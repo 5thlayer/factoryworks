@@ -9,6 +9,9 @@ import io.github._5thlayer.groundworks.LegBuilder;
 import io.github._5thlayer.groundworks.PlacementPlan;
 import io.github._5thlayer.groundworks.Refusal;
 import io.github._5thlayer.groundworks.Stretches;
+import io.github._5thlayer.pipeworks.FluidSegments;
+import io.github._5thlayer.pipeworks.api.FluidPort;
+import io.github._5thlayer.pipeworks.block.FluidPipeBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,11 +20,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import rearth.oritech.block.blocks.pipes.GenericPipeBlock;
-import rearth.oritech.block.blocks.pipes.fluid.FluidPipeBlock;
 
-/** Oritech's fluid pipes laid by Stretch (#452): a rise climbs straight up in place, then the leg runs level. */
-public final class OritechPipeLegs implements LegBuilder {
+/** Pipeworks' pipes laid by Stretch (#452): a rise climbs straight up in place, then the leg runs level. */
+public final class PipeworksPipeLegs implements LegBuilder {
 
     private static final String BLOCKED_KEY = "message.factoryworks.stretch.pipe_blocked";
 
@@ -29,11 +30,11 @@ public final class OritechPipeLegs implements LegBuilder {
         BLOCKED
     }
 
-    private OritechPipeLegs() {
+    private PipeworksPipeLegs() {
     }
 
     public static void register() {
-        Stretches.register(new OritechPipeLegs());
+        Stretches.register(new PipeworksPipeLegs());
     }
 
     @Override
@@ -74,14 +75,16 @@ public final class OritechPipeLegs implements LegBuilder {
         return positions;
     }
 
-    // Beside a machine the pipe is planned plain: Oritech's placement swaps it for a connection pipe and
-    // rejoins its neighbours, which a planned connection pipe would skip (#452).
+    // The arms the pipe will draw once Pipeworks joins it, so the plan equals what the click lays (ADR-0110).
     private static BlockState opened(FluidPipeBlock pipe, Level level, BlockPos pos, Set<BlockPos> laid) {
-        BlockState state = pipe.addFluidState(pipe.defaultBlockState(), pos, level);
-        for (Direction side : Direction.values()) {
-            boolean open = laid.contains(pos.relative(side)) || pipe.shouldConnect(state, side, pos, level, true);
-            state = state.setValue(pipe.directionToProperty(side), open ? GenericPipeBlock.CONNECTION : GenericPipeBlock.NO_CONNECTION);
-        }
-        return pipe.addStraightState(state);
+        return pipe.withLinks(pipe.defaultBlockState(), side -> {
+            BlockPos beside = pos.relative(side);
+            return laid.contains(beside) || opensTowards(level, beside, side.getOpposite());
+        });
+    }
+
+    private static boolean opensTowards(Level level, BlockPos pos, Direction face) {
+        return level.getBlockState(pos).getBlock() instanceof FluidSegments.SegmentBlock
+                || level.getBlockEntity(pos) instanceof FluidPort port && port.connectsOn(face);
     }
 }

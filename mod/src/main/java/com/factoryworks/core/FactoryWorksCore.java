@@ -2,7 +2,7 @@ package com.factoryworks.core;
 
 import com.factoryworks.core.machine.PaintLock;
 import com.factoryworks.core.dismantle.PipeFamily;
-import com.factoryworks.core.stretch.OritechPipeLegs;
+import com.factoryworks.core.stretch.PipeworksPipeLegs;
 import com.factoryworks.core.felling.TreeFelling;
 import com.factoryworks.core.gametest.PFGameTests;
 import com.factoryworks.core.fluid.PFFluidTypes;
@@ -15,6 +15,7 @@ import com.factoryworks.core.placement.ReplaceGroups;
 import com.factoryworks.core.placement.Oriented;
 import com.factoryworks.core.placement.client.PlacementPreviewClient;
 import com.factoryworks.core.fluid.client.BoilerClient;
+import com.factoryworks.core.fluid.client.OilFluidClient;
 import com.factoryworks.core.fluid.client.SteamFluidClient;
 import com.factoryworks.core.network.PFNetwork;
 import com.factoryworks.core.recipes.PFRecipes;
@@ -119,9 +120,7 @@ public final class FactoryWorksCore {
         NeoForge.EVENT_BUS.addListener(TreeFelling::onLogout);
         NeoForge.EVENT_BUS.addListener(PaintLock::onRightClickBlock);
         PipeFamily.register();
-        if (ModList.get().isLoaded("oritech")) {
-            OritechPipeLegs.register();
-        }
+        PipeworksPipeLegs.register();
         NeoForge.EVENT_BUS.addListener(Reach::onLeftClickBlock);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onServerTick);
         NeoForge.EVENT_BUS.addListener(ChartDeliveries::onLogout);
@@ -135,6 +134,7 @@ public final class FactoryWorksCore {
             com.factoryworks.core.energy.client.SolarPanelClient.register(modBus);
             com.factoryworks.core.oil.client.PumpjackClient.register(modBus);
             SteamFluidClient.register(modBus);
+            OilFluidClient.register(modBus);
             BoilerClient.register(modBus);
             PlacementPreviewClient.register();
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,

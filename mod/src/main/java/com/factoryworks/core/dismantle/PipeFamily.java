@@ -19,7 +19,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.ModList;
 
 /** The pipes as a Dismantle Family, whose span is the shortest joined path between its ends (ADR-0086). */
 public final class PipeFamily implements DismantleFamily {
@@ -34,7 +33,7 @@ public final class PipeFamily implements DismantleFamily {
     }
 
     public static void register() {
-        Dismantles.register(new PipeFamily(ModList.get().isLoaded("oritech") ? new OritechPipeJoin() : JoinRule.TOUCHING));
+        Dismantles.register(new PipeFamily(new PipeworksPipeJoin()));
     }
 
     @Override

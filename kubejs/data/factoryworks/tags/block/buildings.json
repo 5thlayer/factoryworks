@@ -39,9 +39,9 @@
     "factoryworks:stone_furnace",
     "minecraft:chest",
     "minecraft:rail",
-    "oritech:fluid_pipe",
     "oritech:industrial_light",
-    "oritech:portable_tank",
+    "pipeworks:pipe",
+    "pipeworks:storage_tank",
     "wireworks:large_pole",
     "wireworks:medium_pole",
     "wireworks:small_pole"

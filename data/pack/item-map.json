@@ -245,9 +245,9 @@
     },
     "crude-oil": {
       "kind": "fluid",
-      "target": "oritech:still_oil",
-      "source": "borrowed",
-      "note": "Oritech's crude oil, the input of its Refinery's `oilbase` recipe (#277). Its near-black already reads as Factorio's. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
+      "target": "factoryworks:crude_oil",
+      "source": "authored",
+      "note": "Core's crude oil (#557, ADR-0109): the Pumpjack lifts it into a Pipeworks segment and the Refinery's recipes take it. Drawn from malcolmriley's unused-textures, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "crude-oil-barrel": {
       "status": "native_mechanic",
@@ -624,9 +624,9 @@
     },
     "pipe": {
       "kind": "item",
-      "target": "oritech:fluid_pipe",
+      "target": "pipeworks:pipe",
       "source": "borrowed",
-      "note": "Oritech's Fluid Pipe (#277): ADR-0060 makes Oritech the pack's tech mod, and its pipe is the plain placed pipe Factorio's is."
+      "note": "Pipeworks' pipe (#557, ADR-0110): 100 mB, Factorio's volume, joined into a fluid segment with every pipe, tank and port beside it."
     },
     "pipe-to-ground": {
       "status": "not_emitted",
@@ -686,7 +686,7 @@
       "kind": "item",
       "target": "factoryworks:pumpjack",
       "source": "authored",
-      "note": "Factorio's Pumpjack (#377, ADR-0081): a 3x3x3 footprint machine standing on an oil well, drawing 45 FE/t and a 1.5 FE/t drain, and pumping 10 mB/s of crude at 100% yield out of any face. Mechanism, so `factoryworks_core`'s (ADR-0015). Drawn by Oritech's Pump model, scaled."
+      "note": "Factorio's Pumpjack (#377, ADR-0081): a 3x3x3 footprint machine standing on an oil well, drawing 45 FE/t and a 1.5 FE/t drain, and pumping 10 mB/s of crude at 100% yield into the Pipeworks segment a pipe on any face joins (#557, ADR-0110). Mechanism, so `factoryworks_core`'s (ADR-0015). Drawn by Oritech's Pump model, scaled."
     },
     "radar": {
       "kind": "item",
@@ -877,9 +877,9 @@
     },
     "storage-tank": {
       "kind": "item",
-      "target": "oritech:portable_tank",
+      "target": "pipeworks:storage_tank",
       "source": "borrowed",
-      "note": "Oritech's Portable Tank, its one placeable fluid tank (#277). Railcraft's tanks are a coloured multiblock with no single item. FIDELITY NOTE: a Factorio storage tank is a 3x3 of a fixed size; this is one block with Oritech's capacity. Accepted: the recipe is the corpus's, the capacity Oritech's."
+      "note": "Pipeworks' storage tank (#557, ADR-0110): 25,000 mB, Factorio's volume, in one block where Factorio's is a 3x3. Accepted: the recipe is the corpus's and the capacity Factorio's."
     },
     "submachine-gun": {
       "status": "undecided",

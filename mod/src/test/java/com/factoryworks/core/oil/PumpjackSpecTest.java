@@ -27,7 +27,7 @@ class PumpjackSpecTest {
 
     @Test
     void itPumpsOritechsCrudeIntoAThousandMillibucketTank() {
-        assertEquals("oritech:still_oil", SPEC.fluid());
+        assertEquals("factoryworks:crude_oil", SPEC.fluid());
         assertEquals(1_000, SPEC.tankMillibuckets());
     }
 }

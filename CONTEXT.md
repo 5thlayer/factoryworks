@@ -167,7 +167,7 @@ The generalisation of Beltworks' belt Dismantle to any **Dismantle Family**: tak
 _Avoid_: deconstruct, mass mine, unstretch
 
 **Dismantle Family**:
-The blocks one **Dismantle** takes up together as a single span, and the rule for the span between two of them. Fluid pipes are the Pack's family: the block tag `factoryworks:dismantle/pipes`, whose span is the shortest path, joined only where Oritech's connection is open (#431, #448). Belts are Beltworks' family.
+The blocks one **Dismantle** takes up together as a single span, and the rule for the span between two of them. Fluid pipes are the Pack's family: the block tag `factoryworks:dismantle/pipes`, whose span is the shortest path, joined only where their Pipeworks segment links them, which is the arm a pipe draws (#431, #448, #557). Belts are Beltworks' family.
 _Avoid_: dismantle group, dismantle kind, replace group (a different grouping)
 
 **Launch Terminal**:

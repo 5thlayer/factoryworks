@@ -113,7 +113,7 @@ survives the stock-recipe sweep, against the pack's express belt recipe as a con
 Rotate is Groundworks' (#451): the Pack only states that every block turns in place, and its
 footprint machines refuse through the library's `TurnsInPlace`. The mechanism's tests are
 Groundworks' and Beltworks', in their own runs.
-And that the Pick takes up a span of Oritech's fluid pipes, a **Dismantle Family** Groundworks runs
+And that the Pick takes up a span of Pipeworks' pipes, a **Dismantle Family** Groundworks runs
 (`PipeDismantleTests`, #431, #448, ADR-0086): each test sneak-clicks a start through the player's
 game mode, asks `Dismantles.spanTo` for the end, clicks it plainly, and holds the world, the
 inventory and the stored start to the span. A straight run, a bend, a tee's branch between the ends
@@ -121,17 +121,17 @@ and one pipe clicked twice leave none of the span's pipes standing, keep every p
 hand over a pipe each; a full inventory drops the rest at the player's feet and creative hands over
 nothing. Opposite points of a ring, a closed connection and an end on a Boiler change no block,
 slot or stored start and name their reason, and an iron pickaxe stores no start, since the Pack
-trims `groundworks:dismantles` to the Picks. A join rule that ignores Oritech's connections turns the closed-connection
+trims `groundworks:dismantles` to the Picks. A join rule that ignores the pipes' links turns the closed-connection
 test red. The shortest path, the tie and the default join are Groundworks' `ShortestPathTest`, and
 the red outline and that the Pick's plain click with no start still toggles a connection are a
 human check on delivery.
-And that Oritech's fluid pipe is laid by Groundworks' Stretch (`PipeStretchTests`, #452,
-`stretch/OritechPipeLegs`): a flat stretch and one raised 3, which stacks 3 at the start and runs
+And that Pipeworks' pipe is laid by Groundworks' Stretch (`PipeStretchTests`, #452,
+`stretch/PipeworksPipeLegs`): a flat stretch and one raised 3, which stacks 3 at the start and runs
 level after, lay exactly the plan, each pipe open to the next and no end open to the air, for one
 pipe a block. A stone on the leg is gone round on the player's side, too few pipes refuse the stretch
 whole, a pipe already beside the leg is joined both ways, and a pipe's Raise reaches the Pack's 16.
-Dropping the leg's own pipes from the connection rule turns three red, and not asking Oritech's own
-rule for the rest turns the joining test red. The pipes at an interior anchor are not joined yet (#467), and whether a
+Dropping the leg's own pipes from the links the plan draws turns three red, and not asking Pipeworks for
+the rest turns the joining test red. The pipes at an interior anchor are not joined yet (#467), and whether a
 stretch with a rise and a detour previews as it lays is a human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
@@ -720,7 +720,9 @@ and making the cycle convert nothing each turn exactly one of the three red.
 
 ## Fluid colour check
 
-The oil fluids are Oritech's, drawn in Factorio's colours (#277, ADR-0067). A fluid's colour is its
+The oil fluids but crude are Oritech's, drawn in Factorio's colours (#277, ADR-0067). Crude is Core's, drawn from
+malcolmriley's unused-textures sprite under a tint typed in `OilFluidClient` (#557), which
+`test_fluid_tints.py` holds to Factorio's `base_color` the same way. A fluid's colour is its
 sprite times a tint, and Oritech's tint is a constructor argument that NeoForge refuses to register
 twice, so `core/mixin/oritech/FluidModelContentMixin` swaps it for the one `FluidTintCorpus` reads
 out of `factoryworks_core/fluid/tints.json`. `scripts/build-fluid-tints.py` writes that file from
@@ -826,7 +828,8 @@ are overridden with a no-op -- NeoForge 26.1 has `none` for structure modifiers 
 structure set is `build-outfield-worldgen.py`'s. `gametest/OilFieldTests` places a field 2,300 blocks
 out and holds its wells to their drawn amounts, spacing and ground, with an iron disc on the same
 centre turning away exactly the wells on its columns; `PumpjackTests` holds a fed Pumpjack to 10 mB a
-cycle a second, drained from any face, and a starved one to nothing. Disabling the ore check or the
+cycle a second into its Pipeworks segment, reached by a pipe on any face and filling a storage tank
+through three pipes (#557, ADR-0110), and a starved one to nothing. Disabling the ore check or the
 well refusal turns its test red. Whether the scaled Pump model reads well and the oil-field icons
 appear on the FTB map is a human check on delivery. Run these after editing `core/oil/`, the oil
 field's structure or piece, or either generator.

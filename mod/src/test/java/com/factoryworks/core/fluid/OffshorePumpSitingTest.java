@@ -29,7 +29,7 @@ class OffshorePumpSitingTest {
 
     private static final OffshorePumpSiting.Neighbour WATER = OffshorePumpSiting.Neighbour.source("minecraft:water");
     private static final OffshorePumpSiting.Neighbour LAVA = OffshorePumpSiting.Neighbour.source("minecraft:lava");
-    private static final OffshorePumpSiting.Neighbour OIL = OffshorePumpSiting.Neighbour.source("oritech:still_oil");
+    private static final OffshorePumpSiting.Neighbour OIL = OffshorePumpSiting.Neighbour.source("factoryworks:crude_oil");
 
     @Test
     @DisplayName("one adjacent water source is enough, whatever else surrounds the pump")

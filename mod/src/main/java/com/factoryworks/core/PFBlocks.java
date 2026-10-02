@@ -16,6 +16,7 @@ import com.factoryworks.core.ore.OreBlock;
 import com.factoryworks.core.oil.OilWellBlock;
 import com.factoryworks.core.oil.PumpjackBlock;
 import com.factoryworks.core.oil.PumpjackFootprint;
+import com.factoryworks.core.oil.PumpjackPartBlock;
 import com.factoryworks.core.radar.RadarBlock;
 import com.factoryworks.core.radar.RadarFootprint;
 import com.factoryworks.core.radar.RadarPartBlock;
@@ -191,9 +192,9 @@ public final class PFBlocks {
     public static final DeferredHolder<Block, PumpjackBlock> PUMPJACK =
             BLOCKS.registerBlock("pumpjack", props -> new PumpjackBlock(machineProperties(props)));
 
-    public static final DeferredHolder<Block, FootprintPartBlock> PUMPJACK_PART =
+    public static final DeferredHolder<Block, PumpjackPartBlock> PUMPJACK_PART =
             BLOCKS.registerBlock("pumpjack_part",
-                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
+                    props -> new PumpjackPartBlock(machineProperties(props).noLootTable(),
                             () -> PFBlocks.PUMPJACK_FOOTPRINT));
 
     public static final FootprintMachine PUMPJACK_FOOTPRINT = new FootprintMachine(

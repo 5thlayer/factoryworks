@@ -8,6 +8,8 @@ import io.github._5thlayer.groundworks.PlacementPlan;
 import io.github._5thlayer.groundworks.Placements;
 import io.github._5thlayer.groundworks.Raise;
 import io.github._5thlayer.groundworks.Refusal;
+import io.github._5thlayer.pipeworks.PipeworksRegistries;
+import io.github._5thlayer.pipeworks.block.FluidPipeBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,23 +19,21 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import rearth.oritech.block.blocks.pipes.AbstractPipeBlock;
 
 /**
- * Oritech's fluid pipes laid by Groundworks' Stretch (#452), through the player's game mode and
+ * Pipeworks' pipes laid by Groundworks' Stretch (#452), through the player's game mode and
  * {@link Raise#press}, as the key's payload presses it.
  */
 final class PipeStretchTests {
 
     private static final BlockPos START = new BlockPos(1, 0, 3);
     private static final BlockPos END = new BlockPos(6, 0, 3);
-    private static final Identifier FLUID_PIPE = Identifier.fromNamespaceAndPath("oritech", "fluid_pipe");
+    private static final Identifier FLUID_PIPE = Identifier.fromNamespaceAndPath("pipeworks", "pipe");
 
     private PipeStretchTests() {
     }
@@ -98,10 +98,8 @@ final class PipeStretchTests {
     /** A single placement opens to a pipe it touches, so a stretch does too, and the old pipe opens back. */
     private static void besideAPipe(GameTestHelper helper) {
         BlockPos beside = new BlockPos(3, 1, 2);
-        Block block = BuiltInRegistries.BLOCK.getValue(FLUID_PIPE);
         BlockPos absolute = helper.absolutePos(beside);
-        helper.getLevel().setBlockAndUpdate(absolute,
-                ((AbstractPipeBlock) block).addConnectionStates(block.defaultBlockState(), helper.getLevel(), absolute, true));
+        helper.setBlock(beside, PipeworksRegistries.PIPE.get().defaultBlockState());
         ListeningPlayer player = holding(helper, 16);
         click(helper, player, START, true);
         List<BlockPos> laid = layAsPlanned(helper, player, END);
@@ -174,7 +172,7 @@ final class PipeStretchTests {
         }
     }
 
-    /** Each pipe open to the next the way Oritech's network reads it, and each end closed to the air beyond it. */
+    /** Each pipe linked to the next the way its segment draws it, and each end closed to the air beyond it. */
     private static void expectJoined(GameTestHelper helper, List<BlockPos> laid) {
         for (int i = 0; i + 1 < laid.size(); i++) {
             BlockPos a = laid.get(i);
@@ -196,8 +194,7 @@ final class PipeStretchTests {
 
     private static boolean open(GameTestHelper helper, BlockPos pos, Direction side) {
         BlockState state = helper.getLevel().getBlockState(pos);
-        return state.getBlock() instanceof AbstractPipeBlock pipe
-                && pipe.isConnectingInDirection(state, side, pos, helper.getLevel(), false);
+        return FluidPipeBlock.isLinked(state, side);
     }
 
     private static void expectHeld(GameTestHelper helper, ListeningPlayer player, int held) {
@@ -215,7 +212,7 @@ final class PipeStretchTests {
         return row;
     }
 
-    /** A survival player standing north of the start's row, looking east, holding {@code count} fluid pipes. */
+    /** A survival player standing north of the start's row, looking east, holding {@code count} pipes. */
     private static ListeningPlayer holding(GameTestHelper helper, int count) {
         ListeningPlayer player = new ListeningPlayer(helper);
         player.setGameMode(GameType.SURVIVAL);

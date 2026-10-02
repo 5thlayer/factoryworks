@@ -75,6 +75,16 @@ public final class PFFluids {
             "superheated_steam",
             props -> new PFLiquidBlock(SUPERHEATED_STEAM_SOURCE.get(), liquidProperties(props)));
 
+    // ---- Crude Oil --------------------------------------------------------------------------
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> CRUDE_OIL_SOURCE =
+            FLUIDS.register("crude_oil", () -> new BaseFlowingFluid.Source(crudeOilProperties()));
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> CRUDE_OIL_FLOWING =
+            FLUIDS.register("flowing_crude_oil", () -> new BaseFlowingFluid.Flowing(crudeOilProperties()));
+
+    public static final DeferredHolder<Block, PFLiquidBlock> CRUDE_OIL_BLOCK =
+            BLOCKS.registerBlock("crude_oil",
+                    props -> new PFLiquidBlock(CRUDE_OIL_SOURCE.get(), liquidProperties(props)));
 
     private PFFluids() {
     }
@@ -82,6 +92,11 @@ public final class PFFluids {
     private static BaseFlowingFluid.Properties steamProperties() {
         return new BaseFlowingFluid.Properties(PFFluidTypes.STEAM, STEAM_SOURCE, STEAM_FLOWING)
                 .block(STEAM_BLOCK);
+    }
+
+    private static BaseFlowingFluid.Properties crudeOilProperties() {
+        return new BaseFlowingFluid.Properties(PFFluidTypes.CRUDE_OIL, CRUDE_OIL_SOURCE, CRUDE_OIL_FLOWING)
+                .block(CRUDE_OIL_BLOCK);
     }
 
     private static BaseFlowingFluid.Properties superheatedSteamProperties() {

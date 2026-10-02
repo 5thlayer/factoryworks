@@ -3,7 +3,7 @@
   "category": "oil-processing",
   "fluid_ingredients": [
     {
-      "ingredient": "oritech:still_oil",
+      "ingredient": "factoryworks:crude_oil",
       "amount": 100
     }
   ],

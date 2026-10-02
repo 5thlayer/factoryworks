@@ -3,7 +3,7 @@
   "category": "crafting",
   "ingredients": [
     {
-      "ingredient": "oritech:fluid_pipe",
+      "ingredient": "pipeworks:pipe",
       "count": 3
     },
     {
