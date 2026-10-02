@@ -600,7 +600,9 @@ The count is the sum of three things. Each `<ns>:` occurrence in a text file und
 (not the baseline file) and `mods/*.pw.toml`, and in `index.toml`. Each of those files whose path,
 lowercased with `-` and `_` removed, contains the namespace, so `mods/ftb-materials.pw.toml` and
 `config/oritech-common.toml` count once each. Each `index.toml` `file = "..."` line whose path matches
-the same way. `data/jars/` is an extract of the installed jars, not shipped data, and is never read.
+the same way. `data/jars/` is an extract of the installed jars, not shipped data, and is never read. Only
+tracked files count, since the game writes untracked client configs that would make the count
+differ between checkouts.
 
 A count above its baseline fails: a new reference to a mod the Pack is leaving. A count below it
 fails too, naming the number to lower the baseline to, so a slice that removes references records

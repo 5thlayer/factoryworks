@@ -10,7 +10,9 @@ COUNTING RULE. For each forbidden namespace, one count is the sum of:
   `mods/ftb-materials.pw.toml` and `config/oritech-common.toml` each count once;
 * every `index.toml` line `file = "<path>"` whose path matches the same way.
 
-`data/jars/` is an extract of the installed jars, not shipped data, and is never scanned.
+`data/jars/` is an extract of the installed jars, not shipped data, and is never scanned. Only
+tracked files count: the game writes untracked client configs, which would make the count differ
+between checkouts.
 
 A count above its baseline fails. A count below it fails too, asking for the baseline to be lowered,
 so a slice that removes references locks the gain in.
@@ -19,6 +21,7 @@ so a slice that removes references locks the gain in.
 import json
 import pathlib
 import re
+import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -35,7 +38,10 @@ def shipped_files():
     files += sorted((ROOT / "mods").glob("*.pw.toml"))
     files.append(ROOT / "index.toml")
     parked = ROOT / "kubejs/parked"
-    return sorted(p for p in files if parked not in p.parents)
+    tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True,
+                                 check=True).stdout.splitlines())
+    return sorted(p for p in files
+                  if parked not in p.parents and p.relative_to(ROOT).as_posix() in tracked)
 
 
 def normalized(path):
