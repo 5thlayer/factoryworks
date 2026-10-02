@@ -28,7 +28,7 @@ import net.neoforged.neoforge.common.NeoForge;
  */
 public final class FtbMapMarkers implements ChartMarkerRenderer {
 
-    /** The barrel, the item Factorio's crude-oil icon maps to (ADR-0081). */
+    /** The empty barrel stands in for crude on the map; crude is a fluid with no item of its own. */
     private static final String OIL_ICON = "factoryworks:barrel";
 
     private FtbMapMarkers() {

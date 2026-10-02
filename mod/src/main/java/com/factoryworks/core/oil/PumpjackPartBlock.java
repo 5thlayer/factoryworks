@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import com.factoryworks.core.machine.footprint.FootprintMachine;
 import com.factoryworks.core.machine.footprint.FootprintPartBlock;
-import io.github._5thlayer.pipeworks.api.FluidPorts;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -27,11 +26,11 @@ public class PumpjackPartBlock extends FootprintPartBlock implements EntityBlock
         return new PumpjackPartBlockEntity(pos, state);
     }
 
-    // Before the teardown guard in the super: a part removed by its own machine's teardown still leaves.
+    // Leave before the super's teardown guard, or a part its own machine tears down stays in the segment (#557).
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
                                                boolean movedByPiston) {
-        FluidPorts.leave(level, pos);
+        PumpjackPortBlockEntity.leave(level, pos);
         super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 }

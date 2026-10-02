@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.factoryworks.core.PFBlockEntities;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.machine.footprint.FootprintTurn;
-import io.github._5thlayer.pipeworks.api.FluidPorts;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -64,7 +63,7 @@ public class PumpjackBlock extends HorizontalDirectionalBlock implements EntityB
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos,
                                                boolean movedByPiston) {
-        FluidPorts.leave(level, pos);
+        PumpjackPortBlockEntity.leave(level, pos);
         super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
         PFBlocks.PUMPJACK_FOOTPRINT.teardown(level, pos, state.getValue(FACING), pos);
     }

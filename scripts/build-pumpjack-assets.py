@@ -39,6 +39,7 @@ LANG = {
     f"item.{NAMESPACE}.{BLOCK_NAME}": "Pumpjack",
     f"block.{NAMESPACE}.{WELL_NAME}": "Oil Well",
     f"message.{NAMESPACE}.{BLOCK_NAME}.no_well": "A Pumpjack must stand on an oil well.",
+    f"fluid_type.{NAMESPACE}.crude_oil": "Crude Oil",
     f"map.{NAMESPACE}.patch.crude_oil": "Crude oil",
     f"map.{NAMESPACE}.patch.yield": "%s: %s yield",
 }

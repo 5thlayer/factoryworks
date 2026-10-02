@@ -177,7 +177,7 @@ public final class ShowcaseScenes {
         BlockPos plant = new BlockPos(11, 1, 3);
         placeHolding(site, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, plant, "factoryworks:chemistry/plastic_bar");
 
-        // Pipeworks carries the crude off the Pumpjack; Oritech's pipe takes it from the last of them to the Refinery.
+        // Oritech's pipe on the last leg until the Refinery moves to Craftworks' machine (#581).
         for (int x = 3; x <= 6; x++) {
             site.set(new BlockPos(x, 1, 2), PipeworksRegistries.PIPE.get());
         }

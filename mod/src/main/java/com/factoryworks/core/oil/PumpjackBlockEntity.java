@@ -7,14 +7,11 @@ import com.geckolib.util.GeckoLibUtil;
 import com.factoryworks.core.PFBlockEntities;
 import com.factoryworks.core.energy.LongSnapshotJournal;
 
-import io.github._5thlayer.pipeworks.api.FluidPort;
 import io.github._5thlayer.pipeworks.api.FluidPorts;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -33,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  * <p>A cycle waits for room for its whole yield, so a full segment neither draws work energy nor
  * depletes the well; the drain is paid regardless.
  */
-public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity, FluidPort {
+public class PumpjackBlockEntity extends PumpjackPortBlockEntity implements GeoBlockEntity {
 
     private static final PumpjackSpec SPEC = PumpjackSpec.fromCorpus();
 
@@ -60,21 +57,10 @@ public class PumpjackBlockEntity extends BlockEntity implements GeoBlockEntity, 
         return segment == null ? 0 : segment.getAmountAsInt(0);
     }
 
-    @Override
-    public boolean connectsOn(Direction face) {
-        return true;
-    }
-
     /** The Pumpjack's own fluid box, a part of every segment it stands in. */
     @Override
     public long capacity() {
-        return SPEC.tankMillibuckets();
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        FluidPorts.join(this);
+        return SPEC.portCapacityMillibuckets();
     }
 
     private @Nullable ResourceHandler<FluidResource> segment() {
