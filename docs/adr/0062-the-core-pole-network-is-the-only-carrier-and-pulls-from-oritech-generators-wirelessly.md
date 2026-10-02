@@ -53,7 +53,7 @@ This replaces ADR-0060's "the core's accumulator" and restores that one storage 
 
 ## Divergences from the corpus (ADR-0054)
 
-- The Steam Engine's footprint is Oritech's hull, not Factorio's 3×5.
+- The Steam Engine's footprint is 3×2×1, not Factorio's 3×5 (ADR-0113).
 - The accumulator is 1×3, not Factorio's 2×2.
 - The engine holds an FE buffer and burns into it, where Factorio's burns only what the network
   draws. The buffer is one tick of output, 450 FE per engine in the row, so it hides no outage;

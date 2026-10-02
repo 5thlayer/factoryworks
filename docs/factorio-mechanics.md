@@ -921,7 +921,8 @@ Sub-rules:
   pole pulls through the `wireworks:generators` tag. **ADR-0077 (#352)** makes the engine
   `factoryworks:steam_engine`, a pack block on Oritech's engine entity, placed from one item as
   its whole 2x1x2 footprint and broken as one, like the Assembling Machine; Oritech's own engine is
-  swept. A mixin calibrates it to Factorio — 30 mB/s and 450 FE/t per engine at the efficiency
+  swept. **ADR-0113** makes it 3 wide, 2 tall and 1 deep, not Factorio's 3x5, so it is drawn as
+  one vanilla model. A mixin calibrates it to Factorio — 30 mB/s and 450 FE/t per engine at the efficiency
   curve's peak, no water returned — and keeps Oritech's chaining and fill-driven speed. The history
   below is superseded where it disagrees.
   *Before ADR-0062:* the chain was **four** steps, not two:
