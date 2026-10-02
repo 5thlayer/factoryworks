@@ -33,7 +33,7 @@
       "mod": "pipeworks",
       "group": "io.github.5thlayer",
       "artifact": "pipeworks",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "pattern": "pipeworks-*.jar"
     },
     {
