@@ -46,7 +46,7 @@ DISPLAY_NAME = "Offshore Pump"
 TEXTURES = {
     "front": "minecraft:block/dispenser_front",
     "side": "minecraft:block/furnace_side",
-    "top": "minecraft:block/cauldron_top",
+    "top": "minecraft:block/furnace_top",
 }
 
 FACINGS = {"north": 0, "east": 90, "south": 180, "west": 270}

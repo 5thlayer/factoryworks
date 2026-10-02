@@ -3,7 +3,7 @@
   "textures": {
     "front": "minecraft:block/dispenser_front",
     "side": "minecraft:block/furnace_side",
-    "top": "minecraft:block/cauldron_top",
+    "top": "minecraft:block/furnace_top",
     "particle": "minecraft:block/furnace_side"
   }
 }
