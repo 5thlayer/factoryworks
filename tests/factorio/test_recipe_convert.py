@@ -65,8 +65,8 @@ NAMESPACES = {"minecraft", "factoryworks", "ftbmaterials",
               "researchd", "factory_works",
               # Oritech is the pack's tech mod (ADR-0060): its engine (#282), pipes, tanks and fluids.
               "oritech",
-              # Railcraft Reborn's signals and Beltworks' belts, ADR-0060's logistics (#277).
-              "railcraft", "beltworks",
+              # Beltworks' belts, ADR-0060's logistics (#277).
+              "beltworks",
               # Wireworks' electric poles, a Library carved out of the pack (#476).
               "wireworks"}
 
@@ -148,7 +148,7 @@ def check_item_map(items, corpus, failures):
     registered = first_party_items()
     for name, row in sorted(items.items()):
         status = row.get("status")
-        if status in ("undecided", "native_mechanic", "not_emitted"):
+        if status in ("undecided", "native_mechanic", "not_emitted", "blocked"):
             if not row.get("note"):
                 failures.append(f"{name} is {status} with no note saying what decides it")
             # AN UNDECIDED ROW MUST NAME THE TICKET THAT DECIDES IT. Without this, a row can sit

@@ -28,7 +28,6 @@ the packwiz manifest (ADR-0024); ADR-0060 records which of them are pre-releases
   competing plate is not the pack's plate (ADR-0061).
 - **Beltworks** (5thlayer/beltworks) — belts, loaders and splitters, at Factorio's
   throughput (ADR-0060, ADR-0076, ADR-0084). Its vocabulary is its own `CONTEXT.md`.
-- **Railcraft Reborn** — trains (ADR-0060).
 - **Researchd**, forked by the pack — the research tree and the Research Lab that gates it
   (ADR-0022). The tree's shape is Factorio's, extracted rather than transcribed, and research is
   held per team; a machine locks by the team that placed it (ADR-0058's amendment). FTB Quests keeps the book and the reward surface, and gates nothing.

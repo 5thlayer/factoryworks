@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "railcraft:block/steel_block"
+    "particle": "factoryworks:entity/chest/steel_chest"
   }
 }

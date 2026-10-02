@@ -23,6 +23,7 @@ WHAT STOPS A RECIPE BEING EMITTED, in the order it is checked:
   3. its process is `native_mechanic`    -- IN scope, supported by a mod mechanic with no recipe
   4. its process has no registered type  -- blocked on the ticket that registers the machine
   5. it touches an `undecided` item-map row -- blocked on the decision that row names
+     (a `blocked` row is the same skip, waiting on a Library that does not exist yet, ADR-0109)
   6. an override says `skip`             -- a departure, with its reason
 
 An item-map row marked `outside_corpus` has no corpus recipe to stop; it is reported as a skip too.
@@ -296,7 +297,8 @@ def main():
         # supported and the recipe is not a cut, so it must never read as a blocked decision (#93).
         for status, label in (("native_mechanic", "native mechanic"),
                               ("not_emitted", "not_emitted item-map row"),
-                              ("undecided", "undecided item-map row")):
+                              ("undecided", "undecided item-map row"),
+                              ("blocked", "blocked item-map row")):
             blocked = sorted({e["name"] for e in recipe["ingredients"] + recipe["results"]
                               if items[e["name"]].get("status") == status})
             if blocked:

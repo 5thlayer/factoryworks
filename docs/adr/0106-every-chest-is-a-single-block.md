@@ -14,8 +14,9 @@ side stay two single chests, each with its own inventory, menu and lid.
 **Considered.** Letting the Iron and Steel Chests pair, since fitting chests into a layout would
 add a space puzzle. A double Iron Chest holds 72 slots and a double Steel Chest 108, and both
 exceed the 54 that vanilla's largest chest screen shows, so pairing needs a custom wide, tall or
-scrolling screen. Railcraft's void chest sprite also has no left and right halves, so a double
-Steel Chest would have no art to draw without committing a derived asset (#234). Pairing only the
+scrolling screen. Railcraft's void chest sprite also had no left and right halves, so a double
+Steel Chest would have had no art to draw without committing a derived asset (#234). Railcraft has
+left the Pack (ADR-0109); the Steel Chest's sheet is the Pack's own. Pairing only the
 Wooden Chest: then one rung of the ladder would behave differently from the other two.
 
 **Consequences.** A chest's capacity is the ladder's figure and nothing else, so the three rungs

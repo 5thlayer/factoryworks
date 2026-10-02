@@ -39,7 +39,7 @@ Factorio names them, and each section gives the pack's own name beside it.
 | [Logistic robots](#logistic-robots) | `excluded` | — |
 | [Construction robots and blueprints](#construction-robots-and-blueprints) | `excluded` | Terra |
 | [Building by hand: placement preview and fast replace](#building-by-hand-placement-preview-and-fast-replace) | `shipped` | Terra |
-| [Trains](#trains) | `adapted` | Terra |
+| [Trains](#trains) | `blocked` | Terra |
 | [Circuit network](#circuit-network) | `adapted` | Terra |
 | [Electric network and transmission](#electric-network-and-transmission) | `adapted` | Terra |
 | [Power generation](#power-generation) | `adapted` | Terra |
@@ -799,25 +799,21 @@ Sub-rules:
 
 ### Trains
 
-- **verdict**: `adapted`
-- **notice**: trains are Railcraft Reborn's on vanilla rail, and a stop is a buffer stop that ends a
-  line rather than a schedule target by name.
+- **verdict**: `blocked`
+- **notice**: no train item exists, so the Pack has no locomotive, wagon, stop or signal until a
+  train Library does; `rail` stays vanilla rail.
 - **where**: Terra
-- **via**: `railcraft`
-- **owner**: ADR-0060 (Railcraft Reborn carries trains), and #277 and #278 for which item each row names
-- **ticket**: #435 (schedules, stations and train limits)
+- **via**: `none`
+- **owner**: ADR-0109 (Railcraft left the Pack; trains wait on a train Library)
+- **ticket**: #435 (what a train Library would be)
 
-Railcraft runs on vanilla rail: `rail` is `minecraft:rail`, the locomotive is Railcraft's Steam
-Locomotive, the wagons its Cargo Minecart and Minecart with Tank, and the stop its Iron Buffer Stop
-Track.
+The six train rows of the item map read `blocked` and the converter emits nothing for them.
+`automated-rail-transportation` stays in the research tree and unlocks nothing.
 
 Sub-rules:
 
-- **Schedules and stations** — `unargued`, no verdict. A buffer stop ends a line; it is not a
-  schedule target by name.
-- **Rail signals and block-based traffic** — `adapted`. `rail-signal` is Railcraft's Block Signal and
-  `rail-chain-signal` its Distant Signal, which repeats the aspect of the signal it is linked to but
-  reserves no path through a junction.
+- **Schedules and stations** — `unargued`, no verdict.
+- **Rail signals and block-based traffic** — `blocked`, with the trains.
 - **Train limits at a station** — `unargued`, no verdict.
 
 ### Circuit network

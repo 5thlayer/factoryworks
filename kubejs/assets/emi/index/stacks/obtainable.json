@@ -298,24 +298,6 @@
       "stack": "item:oritech:portable_tank"
     },
     {
-      "stack": "item:railcraft:block_signal"
-    },
-    {
-      "stack": "item:railcraft:cargo_minecart"
-    },
-    {
-      "stack": "item:railcraft:distant_signal"
-    },
-    {
-      "stack": "item:railcraft:iron_buffer_stop_track"
-    },
-    {
-      "stack": "item:railcraft:steam_locomotive"
-    },
-    {
-      "stack": "item:railcraft:tank_minecart"
-    },
-    {
       "stack": "item:researchd:research_lab"
     },
     {

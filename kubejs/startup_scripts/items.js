@@ -28,27 +28,19 @@ StartupEvents.registry('item', event => {
 
   // Common
   //
-  // The three tiers borrow Railcraft's circuit sprites, which are one PCB silhouette in four
-  // board colours. That is what makes them right here and the GTCEu processors they replace
-  // wrong: Factorio's green, red and blue circuits are the same object three times, and
-  // `quantum_processor_assembly`, `wetware_processor_assembly` and `crystal_processor_assembly`
-  // were three unrelated designs that never read as a ladder. Railcraft's fourth, yellow
-  // `signal_circuit`, is deliberately unused -- Factorio has three tiers.
-  //
-  // A texture is referenced out of the installed jar, not copied into this repo. ADR-0026's
-  // machines already borrow this way; #234 is writing down why that differs from committing a
-  // derived sprite, and nothing here is redistributed.
+  // The circuit sprites and the engine unit's are Stand-in art written by
+  // `scripts/gen-standin-textures.py` (ADR-0109).
   event.create('factoryworks:electronic_circuit')
     .displayName('Electronic Circuit')
-    .texture('railcraft:item/receiver_circuit')
+    .texture('factoryworks:item/electronic_circuit')
 
   event.create('factoryworks:advanced_circuit')
     .displayName('Advanced Circuit')
-    .texture('railcraft:item/controller_circuit')
+    .texture('factoryworks:item/advanced_circuit')
 
   event.create('factoryworks:processing_unit')
     .displayName('Processing Unit')
-    .texture('railcraft:item/radio_circuit')
+    .texture('factoryworks:item/processing_unit')
 
   // Plastic authors for the same reason: it gates rung 2 (ADR-0025), and a rung-boundary row
   // authors rather than borrows. Its recipe is the Chemical Plant's and arrives with #107.
@@ -94,14 +86,11 @@ StartupEvents.registry('item', event => {
     .displayName('Battery')
     .texture('oritech:item/basic_battery')
 
-  // The engine units author because no installed mod ships Factorio's engine as one item, and
-  // they feed recipes the pack wants. ADR-0031's author case at its plainest: no borrow candidate
-  // for the item. The two sprites are borrowed, and from different mods on purpose -- Railcraft's
-  // `charge_motor` is plain grey steel and Oritech's `motor` is wound in copper, so the pair reads
-  // mechanical-then-electric in the order Factorio's ladder does.
+  // The engine units author because no installed mod ships Factorio's engine as one item
+  // (ADR-0031). The electric one borrows Oritech's wound-copper motor sprite.
   event.create('factoryworks:engine_unit')
     .displayName('Engine Unit')
-    .texture('railcraft:item/charge_motor')
+    .texture('factoryworks:item/engine_unit')
 
   event.create('factoryworks:electric_engine_unit')
     .displayName('Electric Engine Unit')

@@ -11,7 +11,7 @@
     "`copper-cable` borrows because it carries none. That rule makes most rows transcription.",
     "THE MATERIAL FORMS ARE FTB MATERIALS' (ADR-0061). Every plate, gear, rod, wire, dust and",
     "ingot in ADR-0021's alphabet borrows from `ftbmaterials:`; a tech mod supplies machines, not",
-    "material forms. Railcraft Reborn and Oritech each ship a competing line and AlmostUnified left",
+    "material forms. Oritech ships a competing line and AlmostUnified left",
     "with ADR-0060, so a shared `c:` tag now resolves to two or three items: a row on a material",
     "form names the ITEM, never the tag. `tests/pack/test_item_map.py` is the guard.",
     "",
@@ -35,6 +35,10 @@
     "A row may carry `outside_corpus`, the reason its name is in no corpus recipe: an item the pack",
     "ships whose Factorio recipe is outside the extracted corpus, such as Space Age's turbo tier. The",
     "converter reports each as a recorded skip, and the check fails one the corpus does name.",
+    "",
+    "A row may be `status: blocked`: a Factorio item whose host does not exist yet (trains wait on a",
+    "train Library, ADR-0109). It is terminal, so it needs a note and no ticket; the converter skips",
+    "every recipe touching it.",
     "",
     "`kind` is `item`, `tag` or `fluid`. A tag is an ingredient-side answer only; a recipe RESULT",
     "on a tag row cannot be emitted, because a result has to be one item.",
@@ -175,10 +179,8 @@
       "ticket": 340
     },
     "cargo-wagon": {
-      "kind": "item",
-      "target": "railcraft:cargo_minecart",
-      "source": "borrowed",
-      "note": "Railcraft Reborn's Cargo Minecart (#278): a train car that carries items."
+      "status": "blocked",
+      "note": "Trains are `blocked` on a future train Library (ADR-0109): Railcraft left the Pack, so no train item exists and the converter skips every recipe that touches this row."
     },
     "centrifuge": {
       "status": "undecided",
@@ -366,10 +368,8 @@
       "ticket": 230
     },
     "fluid-wagon": {
-      "kind": "item",
-      "target": "railcraft:tank_minecart",
-      "source": "borrowed",
-      "note": "Railcraft Reborn's Minecart with Tank (#278): a train car that carries a fluid."
+      "status": "blocked",
+      "note": "Trains are `blocked` on a future train Library (ADR-0109): Railcraft left the Pack, so no train item exists and the converter skips every recipe that touches this row."
     },
     "fluoroketone-cold": {
       "status": "not_emitted",
@@ -510,10 +510,8 @@
       "note": "Beltworks' tier-1 loader, crafted from Factorio's hidden loader recipe (#514, ADR-0100)."
     },
     "locomotive": {
-      "kind": "item",
-      "target": "railcraft:steam_locomotive",
-      "source": "borrowed",
-      "note": "Railcraft Reborn's Steam Locomotive (#278, ADR-0060 gives trains to Railcraft): it burns solid fuel, as Factorio's locomotive does. The Electric Locomotive stays out -- a second locomotive with no Factorio counterpart."
+      "status": "blocked",
+      "note": "Trains are `blocked` on a future train Library (ADR-0109): Railcraft left the Pack, so no train item exists and the converter skips every recipe that touches this row."
     },
     "logistic-robot": {
       "status": "undecided",
@@ -699,19 +697,15 @@
       "kind": "item",
       "target": "minecraft:rail",
       "source": "borrowed",
-      "note": "Vanilla rail (#277): Factorio's rail is the placed straight track, `minecraft:rail` is inside the closed input alphabet, and Railcraft Reborn builds on vanilla rails -- `railcraft:standard_rail` is a crafting component, not a track."
+      "note": "Vanilla rail (#277): Factorio's rail is the placed straight track, `minecraft:rail` is inside the closed input alphabet."
     },
     "rail-chain-signal": {
-      "kind": "item",
-      "target": "railcraft:distant_signal",
-      "source": "borrowed",
-      "note": "Railcraft Reborn's Distant Signal (#278). ADAPTED -- it repeats the aspect of the signal it is linked to, which is the chain signal's look-ahead, but it reserves no path through a junction."
+      "status": "blocked",
+      "note": "Trains are `blocked` on a future train Library (ADR-0109): Railcraft left the Pack, so no train item exists and the converter skips every recipe that touches this row."
     },
     "rail-signal": {
-      "kind": "item",
-      "target": "railcraft:block_signal",
-      "source": "borrowed",
-      "note": "Railcraft Reborn's Block Signal (#277): it watches a block of track for carts, which is Factorio's rail signal."
+      "status": "blocked",
+      "note": "Trains are `blocked` on a future train Library (ADR-0109): Railcraft left the Pack, so no train item exists and the converter skips every recipe that touches this row."
     },
     "refined-concrete": {
       "kind": "item",
@@ -914,10 +908,8 @@
       "note": "One container, filled by Create's Spout and drained by its Item Drain (#93). The container is `factoryworks:barrel` (ADR-0037)."
     },
     "train-stop": {
-      "kind": "item",
-      "target": "railcraft:iron_buffer_stop_track",
-      "source": "borrowed",
-      "note": "Railcraft Reborn's Iron Buffer Stop Track (#277): the end of the line a train is stopped at. ADAPTED -- Factorio's stop is also a schedule target by name, which a buffer stop is not."
+      "status": "blocked",
+      "note": "Trains are `blocked` on a future train Library (ADR-0109): Railcraft left the Pack, so no train item exists and the converter skips every recipe that touches this row."
     },
     "transport-belt": {
       "kind": "item",
