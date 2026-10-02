@@ -14,7 +14,8 @@ package com.factoryworks.core.ore;
  * arrival.
  *
  * <p><b>An id nothing registers pays air, not a throw.</b> Iron and copper pay vanilla's raw ore;
- * uranium, which vanilla has no raw item for, pays FTB Materials' (ADR-0061).
+ * uranium, which vanilla has no raw item for, pays the Pack's own {@code factoryworks:raw_uranium}
+ * (ADR-0109).
  * {@code tests/pack/test_ore_assets.py} resolves every drop against the installed jars (#321).
  *
  * <p>The amounts are not here. They are Factorio's, they are extracted, and {@link OreCorpus} is
@@ -24,7 +25,7 @@ public enum OreResource {
     IRON("iron", "minecraft:raw_iron"),
     COPPER("copper", "minecraft:raw_copper"),
     COAL("coal", "minecraft:coal"),
-    URANIUM("uranium", "ftbmaterials:uranium_raw_ore"),
+    URANIUM("uranium", "factoryworks:raw_uranium"),
     /** The fifth resource. A visually distinct ore, so a patch never reads as marked-up ground. */
     STONE("stone", "minecraft:cobblestone");
 

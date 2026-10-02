@@ -2,11 +2,11 @@
   "type": "craftworks:assembling",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:copper_plate",
+      "ingredient": "factoryworks:copper_plate",
       "count": 1
     },
     {
-      "ingredient": "ftbmaterials:iron_gear",
+      "ingredient": "factoryworks:iron_gear_wheel",
       "count": 1
     }
   ],

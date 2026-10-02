@@ -159,7 +159,7 @@ final class AssemblingMachineTests {
     private static void withNoRecipeTakesNothing(GameTestHelper helper) {
         place(helper);
         ResourceHandler<ItemResource> face = Faces.item(helper, ANCHOR);
-        ItemResource plate = ItemResource.of(item("ftbmaterials:iron_plate"));
+        ItemResource plate = ItemResource.of(item("factoryworks:iron_plate"));
         expectMoved(helper, ANCHOR, "plate, slot-less, with no recipe", 0, face, (f, tx) -> f.insert(plate, 8, tx));
         for (int slot = 0; slot < AssemblingMachineBlockEntity.INPUTS; slot++) {
             int named = slot;
@@ -191,7 +191,7 @@ final class AssemblingMachineTests {
         AssemblingMachineBlockEntity machine = place(helper, tier);
         machine.setHeldRecipe(HeldRecipe.of(CABLE), player(helper));
         ResourceHandler<ItemResource> face = Faces.item(helper, ANCHOR);
-        ItemResource plate = ItemResource.of(item("ftbmaterials:copper_plate"));
+        ItemResource plate = ItemResource.of(item("factoryworks:copper_plate"));
         expectMoved(helper, ANCHOR, "plates, slot-less, into an empty machine", limit, face,
                 (f, tx) -> f.insert(plate, 8, tx));
         expectMoved(helper, ANCHOR, "plates into slot 0 at the limit", 0, face, (f, tx) -> f.insert(0, plate, 8, tx));
@@ -206,7 +206,7 @@ final class AssemblingMachineTests {
         AssemblingMachineBlockEntity machine = place(helper);
         Player player = player(helper);
         machine.setHeldRecipe(HeldRecipe.of(CABLE), player);
-        player.getInventory().setItem(0, new ItemStack(item("ftbmaterials:copper_plate"), 64));
+        player.getInventory().setItem(0, new ItemStack(item("factoryworks:copper_plate"), 64));
         AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
         int hotbarFirst = AssemblingMachineBlockEntity.INPUTS + 1 + 27;
         menu.quickMoveStack(player, hotbarFirst);
@@ -308,7 +308,7 @@ final class AssemblingMachineTests {
         helper.startSequence()
                 .thenExecute(() -> {
                     machine.setHeldRecipe(HeldRecipe.of(CABLE), player(helper));
-                    machine.inventory.set(0, ItemResource.of(item("ftbmaterials:copper_plate")), 8);
+                    machine.inventory.set(0, ItemResource.of(item("factoryworks:copper_plate")), 8);
                     machine.energyStorage.set(CHARGE);
                 })
                 .thenIdle(1)
@@ -384,8 +384,8 @@ final class AssemblingMachineTests {
         helper.startSequence()
                 .thenExecute(() -> {
                     machine.setHeldRecipe(HeldRecipe.of(CABLE), player(helper));
-                    machine.inventory.set(0, ItemResource.of(item("ftbmaterials:copper_plate")), 4);
-                    machine.inventory.set(OUTPUT, ItemResource.of(item("ftbmaterials:copper_wire")), 63);
+                    machine.inventory.set(0, ItemResource.of(item("factoryworks:copper_plate")), 4);
+                    machine.inventory.set(OUTPUT, ItemResource.of(item("factoryworks:copper_cable")), 63);
                     machine.energyStorage.set(CHARGE);
                 })
                 .thenIdle(WINDOW)
@@ -419,7 +419,7 @@ final class AssemblingMachineTests {
                     assertStatus(helper, machine, AssemblingStatus.IDLE);
                     machine.setHeldRecipe(HeldRecipe.of(CABLE), player(helper));
                     assertStatus(helper, machine, AssemblingStatus.MISSING_INGREDIENTS);
-                    machine.inventory.set(0, ItemResource.of(item("ftbmaterials:copper_plate")), 4);
+                    machine.inventory.set(0, ItemResource.of(item("factoryworks:copper_plate")), 4);
                     assertStatus(helper, machine, AssemblingStatus.NO_POWER);
                     machine.energyStorage.set(CHARGE);
                     assertStatus(helper, machine, AssemblingStatus.PROCESSING);

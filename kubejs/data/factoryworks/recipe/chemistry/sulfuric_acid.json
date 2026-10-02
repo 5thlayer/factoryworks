@@ -3,11 +3,11 @@
   "category": "chemistry",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:sulfur_dust",
+      "ingredient": "factoryworks:sulfur",
       "count": 5
     },
     {
-      "ingredient": "ftbmaterials:iron_plate",
+      "ingredient": "factoryworks:iron_plate",
       "count": 1
     }
   ],

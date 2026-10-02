@@ -25,8 +25,8 @@ final class BurnerFurnaceTests {
     private static final int SMELT_WINDOW = 150;
     private static final int STALL_WINDOW = 40;
 
-    private static final Identifier IRON_PLATE = Identifier.parse("ftbmaterials:iron_plate");
-    private static final Identifier STEEL_PLATE = Identifier.parse("ftbmaterials:steel_plate");
+    private static final Identifier IRON_PLATE = Identifier.parse("factoryworks:iron_plate");
+    private static final Identifier STEEL_PLATE = Identifier.parse("factoryworks:steel_plate");
 
     private BurnerFurnaceTests() {
     }

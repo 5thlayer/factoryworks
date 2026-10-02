@@ -70,6 +70,12 @@
       "stack": "item:factoryworks:chemical_plant"
     },
     {
+      "stack": "item:factoryworks:copper_cable"
+    },
+    {
+      "stack": "item:factoryworks:copper_plate"
+    },
+    {
       "stack": "item:factoryworks:electric_engine_unit"
     },
     {
@@ -94,6 +100,15 @@
       "stack": "item:factoryworks:iron_chest"
     },
     {
+      "stack": "item:factoryworks:iron_gear_wheel"
+    },
+    {
+      "stack": "item:factoryworks:iron_plate"
+    },
+    {
+      "stack": "item:factoryworks:iron_stick"
+    },
+    {
       "stack": "item:factoryworks:low_density_structure"
     },
     {
@@ -115,6 +130,9 @@
       "stack": "item:factoryworks:radar"
     },
     {
+      "stack": "item:factoryworks:raw_uranium"
+    },
+    {
       "stack": "item:factoryworks:rocket_fuel"
     },
     {
@@ -133,34 +151,16 @@
       "stack": "item:factoryworks:steel_furnace"
     },
     {
+      "stack": "item:factoryworks:steel_plate"
+    },
+    {
       "stack": "item:factoryworks:stone_furnace"
     },
     {
+      "stack": "item:factoryworks:sulfur"
+    },
+    {
       "stack": "item:ftbfiltersystem:smart_filter"
-    },
-    {
-      "stack": "item:ftbmaterials:copper_plate"
-    },
-    {
-      "stack": "item:ftbmaterials:copper_wire"
-    },
-    {
-      "stack": "item:ftbmaterials:iron_gear"
-    },
-    {
-      "stack": "item:ftbmaterials:iron_plate"
-    },
-    {
-      "stack": "item:ftbmaterials:iron_rod"
-    },
-    {
-      "stack": "item:ftbmaterials:steel_plate"
-    },
-    {
-      "stack": "item:ftbmaterials:sulfur_dust"
-    },
-    {
-      "stack": "item:ftbmaterials:uranium_raw_ore"
     },
     {
       "stack": "item:ftbquests:book"

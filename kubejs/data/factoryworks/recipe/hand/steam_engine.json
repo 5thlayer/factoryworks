@@ -2,7 +2,7 @@
   "type": "craftworks:assembling",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:iron_gear",
+      "ingredient": "factoryworks:iron_gear_wheel",
       "count": 8
     },
     {
@@ -10,7 +10,7 @@
       "count": 5
     },
     {
-      "ingredient": "ftbmaterials:iron_plate",
+      "ingredient": "factoryworks:iron_plate",
       "count": 10
     }
   ],

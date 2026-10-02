@@ -3,7 +3,7 @@
   "category": "crafting",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:steel_plate",
+      "ingredient": "factoryworks:steel_plate",
       "count": 10
     },
     {

@@ -9,11 +9,12 @@
     "boundary or a mod's competing line would give a parallel escape -- then author it first-party",
     "and recipe-remove the competitor. The circuits author because they carry progression;",
     "`copper-cable` borrows because it carries none. That rule makes most rows transcription.",
-    "THE MATERIAL FORMS ARE FTB MATERIALS' (ADR-0061). Every plate, gear, rod, wire, dust and",
-    "ingot in ADR-0021's alphabet borrows from `ftbmaterials:`; a tech mod supplies machines, not",
-    "material forms. Oritech ships a competing line and AlmostUnified left",
-    "with ADR-0060, so a shared `c:` tag now resolves to two or three items: a row on a material",
-    "form names the ITEM, never the tag. `tests/pack/test_item_map.py` is the guard.",
+    "THE MATERIAL FORMS ARE THE PACK'S (ADR-0109). The eight Factorio materials the corpus names --",
+    "iron, copper and steel plate, iron gear wheel, iron stick, copper cable, sulfur, uranium ore --",
+    "are `factoryworks:` items with Stand-in art; a tech mod supplies machines, not material forms.",
+    "Oritech ships a competing line and AlmostUnified left with ADR-0060, so a shared `c:` tag",
+    "resolves to two or three items: a row on a material form names the ITEM, never the tag.",
+    "`tests/pack/test_item_map.py` is the guard.",
     "",
     "THE INPUT ALPHABET IS CLOSED (#124, amending ADR-0021). Terra's four ores -- iron, copper,",
     "coal, uranium -- plus its stone and what its surface grows are the whole input alphabet for",
@@ -226,9 +227,9 @@
     },
     "copper-cable": {
       "kind": "item",
-      "target": "ftbmaterials:copper_wire",
-      "source": "borrowed",
-      "note": "ADR-0031 names this row: cable carries no progression, so it borrows. ADR-0061 moves the borrow to FTB Materials' `copper_wire`, which is the wire form of the alphabet's copper rather than a rung on a tech mod's ladder -- the problem the old `powergrid:wire` target had, where five wires existed and this row had to pick one."
+      "target": "factoryworks:copper_cable",
+      "source": "authored",
+      "note": "A Pack item with Stand-in art (ADR-0109). Cable carries no progression (ADR-0031)."
     },
     "copper-ore": {
       "kind": "tag",
@@ -238,9 +239,9 @@
     },
     "copper-plate": {
       "kind": "item",
-      "target": "ftbmaterials:copper_plate",
-      "source": "borrowed",
-      "note": "As `iron-plate` (ADR-0061)."
+      "target": "factoryworks:copper_plate",
+      "source": "authored",
+      "note": "As `iron-plate` (ADR-0109)."
     },
     "crude-oil": {
       "kind": "fluid",
@@ -455,9 +456,9 @@
     },
     "iron-gear-wheel": {
       "kind": "item",
-      "target": "ftbmaterials:iron_gear",
-      "source": "borrowed",
-      "note": "FTB Materials' gear form (ADR-0061). A gear carries no progression and FTB Materials ships no ladder to escape onto -- it has no machines at all -- so it borrows (ADR-0031)."
+      "target": "factoryworks:iron_gear_wheel",
+      "source": "authored",
+      "note": "A Pack item with Stand-in art (ADR-0109). Factorio's gear carries no progression."
     },
     "iron-ore": {
       "kind": "tag",
@@ -467,15 +468,15 @@
     },
     "iron-plate": {
       "kind": "item",
-      "target": "ftbmaterials:iron_plate",
-      "source": "borrowed",
-      "note": "FTB Materials' plate form (ADR-0061: the intermediates are FTB Materials', not a tech mod's). ADR-0032: ore smelts 1:1 to plate, no ingot step. Was `gtceu:iron_plate` until ADR-0060 took GregTech out, at which point this row's smelt was rejected at datapack load."
+      "target": "factoryworks:iron_plate",
+      "source": "authored",
+      "note": "A Pack item with Stand-in art (ADR-0109). ADR-0032: ore smelts 1:1 to plate, no ingot step."
     },
     "iron-stick": {
       "kind": "item",
-      "target": "ftbmaterials:iron_rod",
-      "source": "borrowed",
-      "note": "FTB Materials' rod form -- Factorio's iron stick. As `iron-gear-wheel` (ADR-0061)."
+      "target": "factoryworks:iron_stick",
+      "source": "authored",
+      "note": "A Pack item with Stand-in art (ADR-0109). As `iron-gear-wheel`."
     },
     "lab": {
       "kind": "item",
@@ -842,9 +843,9 @@
     },
     "steel-plate": {
       "kind": "item",
-      "target": "ftbmaterials:steel_plate",
-      "source": "borrowed",
-      "note": "The only surviving alloy on Terra -- iron plus coal, #72. FTB Materials' plate form (ADR-0061); note that FTB Materials also ships a `steel_ingot`, and this row is deliberately the PLATE, because ADR-0032 removed the ingot step from Terra's chain entirely. Its `smelting` recipe is 5 plates to 1, which no vanilla shape can express; it rides the count-bearing `factoryworks:smelting` type, which #155 landed."
+      "target": "factoryworks:steel_plate",
+      "source": "authored",
+      "note": "The only surviving alloy on Terra -- iron plus coal, #72. The PLATE, because ADR-0032 removed the ingot step from Terra's chain. Its `smelting` recipe is 5 plates to 1, which no vanilla shape can express; it rides the count-bearing `factoryworks:smelting` type, which #155 landed."
     },
     "stone": {
       "kind": "item",
@@ -893,9 +894,9 @@
     },
     "sulfur": {
       "kind": "item",
-      "target": "ftbmaterials:sulfur_dust",
-      "source": "borrowed",
-      "note": "FTB Materials' dust form (ADR-0061). Its RECIPE is `pack:chemical_plant` and waits on #107."
+      "target": "factoryworks:sulfur",
+      "source": "authored",
+      "note": "A Pack item with Stand-in art (ADR-0109). Its RECIPE is `pack:chemical_plant` and waits on #107."
     },
     "sulfuric-acid": {
       "kind": "fluid",
@@ -959,9 +960,9 @@
     },
     "uranium-ore": {
       "kind": "item",
-      "target": "ftbmaterials:uranium_raw_ore",
-      "source": "borrowed",
-      "note": "Raw Uranium, what a pack uranium ore block pays out (#321). FTB Materials' raw form (ADR-0061); its ore blocks are not used, since a block has to carry an amount (ADR-0041)."
+      "target": "factoryworks:raw_uranium",
+      "source": "authored",
+      "note": "Raw Uranium, what a pack uranium ore block pays out (#321). A Pack item with Stand-in art (ADR-0109), named `raw_uranium` because `factoryworks:uranium_ore` is the ore block; a block has to carry an amount (ADR-0041)."
     },
     "utility-science-pack": {
       "status": "undecided",

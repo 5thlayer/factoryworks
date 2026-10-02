@@ -1061,8 +1061,8 @@ final class PlacementPlanTests {
         private static AssemblingMachineBlockEntity cableUnderWay(GameTestHelper helper, AssemblingTier tier) {
             AssemblingMachineBlockEntity machine = placeWhole(helper, tier);
             hold(helper, machine, CABLE);
-            machine.inventory.set(0, ItemResource.of(item("ftbmaterials:copper_plate")), 8);
-            machine.inventory.set(AssemblingMachineBlockEntity.OUTPUT, ItemResource.of(item("ftbmaterials:copper_wire")), 6);
+            machine.inventory.set(0, ItemResource.of(item("factoryworks:copper_plate")), 8);
+            machine.inventory.set(AssemblingMachineBlockEntity.OUTPUT, ItemResource.of(item("factoryworks:copper_cable")), 6);
             machine.progress.set(TIER_1_PROGRESS);
             machine.energyStorage.set(CHARGE);
             return machine;

@@ -262,23 +262,22 @@ class ItemMapTargetsResolve(unittest.TestCase):
             self.fail("item-map row %r names %s, whose mod ADR-0060 removed from the pack"
                       % (name, target))
 
-    def test_the_material_forms_are_ftb_materials(self):
-        """ADR-0061's rule, on the seven rows #275 rewrote.
+    def test_the_material_forms_are_the_packs(self):
+        """ADR-0109: the eight material forms are `factoryworks:` items, authored.
 
-        Stated as a namespace rather than as seven ids: the ids are the map's to change, and what
-        this asserts is that the next chassis change does not quietly take the alphabet with it
-        for a third time.
+        Stated as a namespace rather than as eight ids: the ids are the map's to change, and what
+        this asserts is that no third-party mod takes the alphabet back.
         """
         forms = ("iron-plate", "copper-plate", "steel-plate", "iron-gear-wheel", "iron-stick",
-                 "copper-cable", "sulfur")
+                 "copper-cable", "sulfur", "uranium-ore")
         for name in forms:
             row = self.rows[name]
             self.assertEqual(
-                "ftbmaterials", row["target"].split(":")[0],
-                "item-map row %r names %s. ADR-0061 gives every material form to FTB Materials: a "
-                "tech mod supplies machines, not material forms" % (name, row["target"]))
-            self.assertEqual("borrowed", row["source"],
-                             "%r is a material form, and ADR-0061 authors none of them" % name)
+                "factoryworks", row["target"].split(":")[0],
+                "item-map row %r names %s. ADR-0109 gives every material form to the Pack"
+                % (name, row["target"]))
+            self.assertEqual("authored", row["source"],
+                             "%r is a Pack item, so it is authored, not borrowed" % name)
 
 
 class NoIngredientRidesAContestedTag(unittest.TestCase):

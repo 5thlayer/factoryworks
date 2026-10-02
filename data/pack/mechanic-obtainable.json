@@ -31,7 +31,7 @@
       "owner": "ADR-0041"
     },
     {
-      "id": "item:ftbmaterials:uranium_raw_ore",
+      "id": "item:factoryworks:raw_uranium",
       "mechanic": "ore-mining",
       "why": "A uranium ore block pays its drop from `OreResource`, and its loot table is empty, so no drop derivation reaches it (ADR-0041).",
       "owner": "ADR-0041"

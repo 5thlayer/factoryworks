@@ -52,12 +52,12 @@ CHEST_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/chest/ChestTier.jav
 # and it is the only type the three furnace tiers read.
 PACK_SMELTING = "factoryworks:smelting"
 
-# The namespaces a LIVE item-map target may live in: this pack, the game, and FTB Materials, which
-# owns the material forms (ADR-0061). Whether a target actually resolves against the installed jars
-# is `tests/pack/test_item_map.py`'s question; this is the coarser one of whether the row names a mod
+# The namespaces a LIVE item-map target may live in. Whether a target actually resolves against the
+# installed jars is `tests/pack/test_item_map.py`'s question; this is the coarser one of whether the
+# row names a mod
 # the pack ships at all. A row naming a mod ADR-0060 removed passes only while it is `blocked_by`
 # the ticket that re-targets it (#277, #260), and no emitted recipe may name one.
-NAMESPACES = {"minecraft", "factoryworks", "ftbmaterials",
+NAMESPACES = {"minecraft", "factoryworks",
               # `c:` is the common tag namespace, which belongs to no mod.
               "c",
               # Researchd owns the research-pack item; `factory_works:` (an underscore) is the

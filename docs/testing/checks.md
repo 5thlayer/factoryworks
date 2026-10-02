@@ -1020,11 +1020,11 @@ delivery.
 
 ## Item map check
 
-`tests/pack/test_item_map.py` holds ADR-0061: FTB Materials owns every material form, and a tech
+`tests/pack/test_item_map.py` holds ADR-0109: the Pack owns every material form, and a tech
 mod supplies machines. It asserts every `data/pack/item-map.json` target resolves against the
 installed jars (the pack's own via its lang and KubeJS's `event.create`, vanilla via the client jar
-when present), that no row names a mod ADR-0060 removed, that the seven material-form rows are
-`ftbmaterials:`, and that no emitted recipe or item tag names a `c:` tag more than one installed jar
+when present), that no row names a mod ADR-0060 removed, that the eight material-form rows are
+authored `factoryworks:` items, and that no emitted recipe or item tag names a `c:` tag more than one installed jar
 populates -- with AlmostUnified gone, `#c:ingots/steel` accepts three items and is not a decision.
 The rows #277 (machines, blocks, oil fluids) and #251 (Researchd) own sit in `DEFERRED`, and each
 must carry `blocked_by` with that ticket so the converter emits nothing naming it; a stale entry

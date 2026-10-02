@@ -29,7 +29,7 @@ final class FurnaceOverloadTests {
     private static final int IRON_LIMIT = 2;
     private static final int STEEL_LIMIT = 10;
 
-    private static final Identifier IRON_PLATE_ID = Identifier.parse("ftbmaterials:iron_plate");
+    private static final Identifier IRON_PLATE_ID = Identifier.parse("factoryworks:iron_plate");
 
     private FurnaceOverloadTests() {
     }

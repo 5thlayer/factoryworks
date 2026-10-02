@@ -2,12 +2,12 @@
   "type": "craftworks:assembling",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:iron_plate",
+      "ingredient": "factoryworks:iron_plate",
       "count": 1
     }
   ],
   "result": {
-    "id": "ftbmaterials:iron_rod",
+    "id": "factoryworks:iron_stick",
     "count": 2
   },
   "time": 10

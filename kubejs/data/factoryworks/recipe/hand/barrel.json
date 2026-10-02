@@ -2,7 +2,7 @@
   "type": "craftworks:assembling",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:steel_plate",
+      "ingredient": "factoryworks:steel_plate",
       "count": 1
     }
   ],

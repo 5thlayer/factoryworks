@@ -107,7 +107,7 @@ public final class ShowcaseScenes {
     private static Product assemblyLine(Site site) {
         BlockPos out = new BlockPos(20, 1, 8);
 
-        stockedChest(site, new BlockPos(1, 1, 2), item("ftbmaterials:copper_plate"));
+        stockedChest(site, new BlockPos(1, 1, 2), item("factoryworks:copper_plate"));
         loadingBelt(site, new BlockPos(2, 1, 2), Direction.EAST, 10);
 
         assembling(site, new BlockPos(5, 1, 4), "factoryworks:assembling/copper_cable");
@@ -115,7 +115,7 @@ public final class ShowcaseScenes {
         belt(site, new BlockPos(6, 1, 6), Direction.EAST, 9);
         feeder(site, new BlockPos(6, 1, 5), Direction.SOUTH);
 
-        stockedChest(site, new BlockPos(1, 1, 10), item("ftbmaterials:iron_plate"));
+        stockedChest(site, new BlockPos(1, 1, 10), item("factoryworks:iron_plate"));
         loadingBelt(site, new BlockPos(2, 1, 10), Direction.EAST, 12);
 
         assembling(site, new BlockPos(12, 1, 8), "factoryworks:assembling/electronic_circuit");
@@ -160,7 +160,7 @@ public final class ShowcaseScenes {
             site.set(output, Blocks.CHEST);
             feeder(site, furnace.north(), Direction.NORTH);
         }
-        return new Product(outs, item("ftbmaterials:iron_plate"));
+        return new Product(outs, item("factoryworks:iron_plate"));
     }
 
     /** Crude from a Pumpjack is refined to gas, and gas with coal becomes plastic. */

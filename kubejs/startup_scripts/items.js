@@ -42,6 +42,41 @@ StartupEvents.registry('item', event => {
     .displayName('Processing Unit')
     .texture('factoryworks:item/processing_unit')
 
+  // The eight material forms are the Pack's own items with Stand-in art from
+  // `scripts/gen-standin-textures.py` (ADR-0109). `raw_uranium` is not `uranium_ore`, which is the
+  // ore block.
+  event.create('factoryworks:iron_plate')
+    .displayName('Iron Plate')
+    .texture('factoryworks:item/iron_plate')
+
+  event.create('factoryworks:copper_plate')
+    .displayName('Copper Plate')
+    .texture('factoryworks:item/copper_plate')
+
+  event.create('factoryworks:steel_plate')
+    .displayName('Steel Plate')
+    .texture('factoryworks:item/steel_plate')
+
+  event.create('factoryworks:iron_gear_wheel')
+    .displayName('Iron Gear Wheel')
+    .texture('factoryworks:item/iron_gear_wheel')
+
+  event.create('factoryworks:iron_stick')
+    .displayName('Iron Stick')
+    .texture('factoryworks:item/iron_stick')
+
+  event.create('factoryworks:copper_cable')
+    .displayName('Copper Cable')
+    .texture('factoryworks:item/copper_cable')
+
+  event.create('factoryworks:sulfur')
+    .displayName('Sulfur')
+    .texture('factoryworks:item/sulfur')
+
+  event.create('factoryworks:raw_uranium')
+    .displayName('Uranium Ore')
+    .texture('factoryworks:item/raw_uranium')
+
   // Plastic authors for the same reason: it gates rung 2 (ADR-0025), and a rung-boundary row
   // authors rather than borrows. Its recipe is the Chemical Plant's and arrives with #107.
   event.create('factoryworks:plastic_bar')

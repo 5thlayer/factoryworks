@@ -2,11 +2,11 @@
   "type": "craftworks:assembling",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:iron_rod",
+      "ingredient": "factoryworks:iron_stick",
       "count": 4
     },
     {
-      "ingredient": "ftbmaterials:copper_wire",
+      "ingredient": "factoryworks:copper_cable",
       "count": 4
     },
     {

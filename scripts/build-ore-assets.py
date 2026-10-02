@@ -49,7 +49,7 @@ ORES = {
     "iron": {"drop": "minecraft:raw_iron", "name": "Iron Ore Patch"},
     "copper": {"drop": "minecraft:raw_copper", "name": "Copper Ore Patch"},
     "coal": {"drop": "minecraft:coal", "name": "Coal Patch"},
-    "uranium": {"drop": "ftbmaterials:uranium_raw_ore", "name": "Uranium Ore Patch"},
+    "uranium": {"drop": "factoryworks:raw_uranium", "name": "Uranium Ore Patch"},
     "stone": {"drop": "minecraft:cobblestone", "name": "Stone Patch"},
 }
 

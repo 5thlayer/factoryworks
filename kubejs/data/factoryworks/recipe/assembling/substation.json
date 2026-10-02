@@ -3,7 +3,7 @@
   "category": "crafting",
   "ingredients": [
     {
-      "ingredient": "ftbmaterials:steel_plate",
+      "ingredient": "factoryworks:steel_plate",
       "count": 10
     },
     {
@@ -11,7 +11,7 @@
       "count": 5
     },
     {
-      "ingredient": "ftbmaterials:copper_wire",
+      "ingredient": "factoryworks:copper_cable",
       "count": 6
     }
   ],

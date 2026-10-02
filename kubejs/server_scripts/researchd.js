@@ -60,7 +60,7 @@ ResearchdEvents.registerResearchPacks(event => {
 // the coupling that makes the divergence safe.
 fromFactorio('steel-axe', {
   icon: 'factoryworks:engineers_steel_pick',
-  has: ['ftbmaterials:steel_plate', 50],
+  has: ['factoryworks:steel_plate', 50],
   unlocks: ['factoryworks:assembling/pack/engineers_steel_pick']
 });
 
@@ -81,7 +81,7 @@ fromFactorio('steel-axe', {
 // `pipe-to-ground` has no pack recipe: underground pipes are excluded.
 fromFactorio('steam-power', {
   icon: 'factoryworks:offshore_pump',
-  has: ['ftbmaterials:iron_plate', 50],
+  has: ['factoryworks:iron_plate', 50],
   unlocks: [
     'factoryworks:assembling/pipe',
     'factoryworks:assembling/offshore_pump',
@@ -95,7 +95,7 @@ fromFactorio('steam-power', {
 // without both looks exactly like a wrong id.
 fromFactorio('electronics', {
   icon: 'factoryworks:electronic_circuit',
-  has: ['ftbmaterials:copper_plate', 10],
+  has: ['factoryworks:copper_plate', 10],
   unlocks: [
     'factoryworks:assembling/copper_cable',
     'factoryworks:assembling/electronic_circuit',
@@ -114,7 +114,7 @@ fromFactorio('automation-science-pack', {
 });
 
 fromFactorio('steel-processing', {
-  icon: 'ftbmaterials:steel_plate',
+  icon: 'factoryworks:steel_plate',
   unlocks: [
     'factoryworks:steel_plate',
     'factoryworks:assembling/steel_chest'

@@ -63,8 +63,8 @@ public final class StartingKit {
      * back to hand-mining, and is deliberately not more than that.
      */
     public static final List<Entry> HOLD = List.of(
-            new Entry("ftbmaterials:iron_plate", 8),
-            new Entry("ftbmaterials:copper_plate", 8),
+            new Entry("factoryworks:iron_plate", 8),
+            new Entry("factoryworks:copper_plate", 8),
             new Entry("minecraft:coal", 8));
 
     private StartingKit() {
