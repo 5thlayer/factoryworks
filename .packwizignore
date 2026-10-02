@@ -18,6 +18,8 @@ skills-lock.json
 .vscode/
 /publish/
 *.md
+# A model's Blockbench source; the game reads its generated export (ADR-0112).
+*.bbmodel
 # `LICENSE`, `LICENSES/` and `REUSE.toml` are not listed: the upload must carry the licence
 # texts (ADR-0102).
 .gitignore

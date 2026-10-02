@@ -43,6 +43,7 @@ path = [
     "config/ftbquests/**",
     "data/pack/**",
     "data/jars/**",
+    "data/art/models/**",
     "mod/src/main/resources/assets/**",
     "mod/src/main/resources/data/**",
     "mod/src/main/resources/factoryworks_core/**",
