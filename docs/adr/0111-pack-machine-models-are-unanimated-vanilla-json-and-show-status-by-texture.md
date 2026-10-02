@@ -5,10 +5,10 @@ status: accepted
 # Pack machine models are unanimated vanilla JSON and show status by texture
 
 A model the Pack authors is a vanilla block model, made in Blockbench. Nothing in it moves: a
-machine shows what it is doing only by swapping its textures, between three looks, idle, working and
-problem. Problem covers every reason a Factorio machine stops (no power, low power, no input, output
-full), since Factorio's alert icons already say which one. A working texture may be animated with a
-`.mcmeta` frame strip.
+machine shows what it is doing only by its status light, which takes Factorio's three colours: green
+while working, yellow while blocked on input or output, red with no power or low power. Only that
+light's texture changes; Factorio's alert icons say which fault it is. A working texture may be
+animated with a `.mcmeta` frame strip.
 
 The art follows modern tech mods' practice (#568):
 
