@@ -36,6 +36,29 @@ class FurnaceSlotsTest {
         assertEquals(FurnaceSlots.NONE, FurnaceSlots.insertionSlot(false, false, true));
     }
 
+    @Test
+    void burnerTiersRouteToInputOrFuelMenuSlot() {
+        assertEquals(1, FurnaceSlots.menuSlot(false, true, true));
+        assertEquals(0, FurnaceSlots.menuSlot(true, false, true));
+        assertEquals(0, FurnaceSlots.menuSlot(true, true, true));
+        assertEquals(FurnaceSlots.NONE, FurnaceSlots.menuSlot(false, false, true));
+    }
+
+    @Test
+    void electricTierRoutesOnlyIngredientsAndNeverFuel() {
+        assertEquals(FurnaceSlots.NONE, FurnaceSlots.menuSlot(false, true, false));
+        assertEquals(0, FurnaceSlots.menuSlot(true, false, false));
+        assertEquals(0, FurnaceSlots.menuSlot(true, true, false));
+        assertEquals(FurnaceSlots.NONE, FurnaceSlots.menuSlot(false, false, false));
+    }
+
+    @Test
+    void outputMenuIndexShiftsOnTheElectricTier() {
+        assertEquals(2, FurnaceSlots.menuIndex(FurnaceSlots.OUTPUT, true));
+        assertEquals(1, FurnaceSlots.menuIndex(FurnaceSlots.OUTPUT, false));
+        assertEquals(FurnaceSlots.NONE, FurnaceSlots.menuIndex(FurnaceSlots.FUEL, false));
+    }
+
     /** So a funnel on any face cannot strip a furnace of its own fuel or its unsmelted input. */
     @Test
     void extractionTakesOnlyFromTheOutputSlot() {

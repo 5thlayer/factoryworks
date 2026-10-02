@@ -45,6 +45,22 @@ public final class FurnaceSlots {
         return NONE;
     }
 
+    /**
+     * The menu index of the slot that takes the stack, or {@link #NONE}. The Electric tier shows
+     * no fuel slot, so its output sits one index earlier (#591).
+     */
+    public static int menuSlot(boolean isIngredient, boolean isFuel, boolean burnsFuel) {
+        return menuIndex(insertionSlot(isIngredient, isFuel, burnsFuel), burnsFuel);
+    }
+
+    /** The menu index a container slot is shown at, or {@link #NONE} when the tier shows none. */
+    public static int menuIndex(int containerSlot, boolean burnsFuel) {
+        if (containerSlot == NONE || (containerSlot == FUEL && !burnsFuel)) {
+            return NONE;
+        }
+        return containerSlot == OUTPUT && !burnsFuel ? FUEL : containerSlot;
+    }
+
     /** Extraction reaches the output and nothing else, so nothing can strip fuel or input. */
     public static boolean canExtract(int slot) {
         return slot == OUTPUT;

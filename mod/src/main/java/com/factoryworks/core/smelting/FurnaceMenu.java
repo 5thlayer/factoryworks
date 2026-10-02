@@ -45,9 +45,9 @@ public class FurnaceMenu extends AbstractContainerMenu {
         checkContainerSize(container, FurnaceSlots.SIZE);
         checkContainerDataCount(data, FurnaceBlockEntity.DATA_COUNT);
 
-        addSlot(new Slot(container, FurnaceSlots.INPUT, 56, 17));
+        addSlot(new RoutedSlot(container, FurnaceSlots.INPUT, 56, 17));
         if (tier.burnsFuel()) {
-            addSlot(new Slot(container, FurnaceSlots.FUEL, 56, 53));
+            addSlot(new RoutedSlot(container, FurnaceSlots.FUEL, 56, 53));
         }
         addSlot(new OutputSlot(container, FurnaceSlots.OUTPUT, 116, 35));
 
@@ -110,6 +110,15 @@ public class FurnaceMenu extends AbstractContainerMenu {
         return tier.burnsFuel() ? 3 : 2;
     }
 
+    private int routedMenuSlot(ItemStack stack) {
+        for (int containerSlot : new int[] {FurnaceSlots.INPUT, FurnaceSlots.FUEL}) {
+            if (container.canPlaceItem(containerSlot, stack)) {
+                return FurnaceSlots.menuIndex(containerSlot, tier.burnsFuel());
+            }
+        }
+        return FurnaceSlots.NONE;
+    }
+
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         Slot slot = slots.get(index);
@@ -125,9 +134,11 @@ public class FurnaceMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
             slot.onQuickCraft(stack, original);
-        } else if (!moveItemStackTo(stack, 0, machineSlots - 1, false)) {
-            // The output slot is never a destination, which is why the range stops one short.
-            return ItemStack.EMPTY;
+        } else {
+            int target = routedMenuSlot(stack);
+            if (target == FurnaceSlots.NONE || !moveItemStackTo(stack, target, target + 1, false)) {
+                return ItemStack.EMPTY;
+            }
         }
 
         if (stack.isEmpty()) {
@@ -141,6 +152,21 @@ public class FurnaceMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         return container.stillValid(player);
+    }
+
+    /**
+     * Answers through the container's {@code canPlaceItem}. On the client the container is a stub
+     * that accepts anything, because recipes are not synced; the server refuses (#591).
+     */
+    private static final class RoutedSlot extends Slot {
+        private RoutedSlot(Container container, int slot, int x, int y) {
+            super(container, slot, x, y);
+        }
+
+        @Override
+        public boolean mayPlace(ItemStack stack) {
+            return container.canPlaceItem(getContainerSlot(), stack);
+        }
     }
 
     /** Nothing may be put into the output slot, by hand or by shift-click. */
