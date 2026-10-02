@@ -751,6 +751,32 @@ the millibucket that starts inside the room and carries its overshoot as energy 
 engine chains, through a part as well, and is pulled by a pole through a slave's part is
 `SteamEngineNetworkTests`. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
 
+## Blockbench model check
+
+`tests/pack/test_model_assets.py` runs `scripts/build-model-assets.py --check`, which regenerates every
+model and texture from `data/art/models/*/*.bbmodel` and compares byte for byte (ADR-0112). It exists
+because nobody exports from Blockbench: a hand-exported or hand-edited model is stale here. The same
+run refuses what the exporter cannot see:
+
+- a Blockbench format other than 5.2.1's "5.0", a model format other than `java_block`, or a Java
+  block version other than 1.21.11;
+- an embedded texture or a saved reference image, since whatever a `.bbmodel` saves ships
+  (ADR-0103);
+- an absolute path, a path outside `data/art/models/`, or a file or folder name the game cannot
+  load, and a model not named after its folder;
+- a cube off the 1/16 grid, inflated, beyond -16..32, or rotated off one axis's 22.5° steps up to 45°;
+- a face showing more pixels than it has units, counted from the PNG itself, one frame of an
+  `.mcmeta` strip, with the face's rotation (ADR-0111);
+- a model with no status light;
+- a model path that exists but carries no `credit` naming this generator, so a hand-made model is
+  never overwritten; a generated model whose `.bbmodel` is gone; and a stray file in a generated
+  texture folder.
+
+The test exports the committed template as a machine, asserting the three status children name the
+kit's lamps, and breaks each rule once on a copy to prove the generator names it. The template is held
+to the rules but never exported. A whole texture folder left by a deleted machine is not caught. Run it
+after editing a `.bbmodel`, anything under `data/art/models/`, or the generator.
+
 ## Radar check
 
 The Radar (#368, ADR-0079) is a 3x3x3 on the footprint seam that charts one 32-block sector per
