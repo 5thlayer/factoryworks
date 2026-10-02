@@ -587,6 +587,26 @@ and `factoryworks:` only, to the emitted index and to nothing else: they are not
 derivation reads them and `test_obtainable_index.py` fails a recipe that takes one, a row naming no
 registered item, and a row already Obtainable.
 
+## Independence guard
+
+The Pack depends on no third-party content mod (ADR-0109), and `tests/pack/test_independence_guard.py`
+is the ratchet that holds the removal slices of #566 to it. For each namespace in
+`data/pack/independence-baseline.json`'s `forbidden` list (`railcraft`, `oritech`, `ftbmaterials`,
+`researchd`, `portingdeadlibs`) it counts references across shipped data and compares the count to
+that file's `baseline`. Static; no game launch.
+
+The count is the sum of three things. Each `<ns>:` occurrence in a text file under `kubejs/` (not
+`kubejs/parked/`, which is never loaded), `mod/src/main/resources/`, `config/`, `data/pack/*.json`
+(not the baseline file) and `mods/*.pw.toml`, and in `index.toml`. Each of those files whose path,
+lowercased with `-` and `_` removed, contains the namespace, so `mods/ftb-materials.pw.toml` and
+`config/oritech-common.toml` count once each. Each `index.toml` `file = "..."` line whose path matches
+the same way. `data/jars/` is an extract of the installed jars, not shipped data, and is never read.
+
+A count above its baseline fails: a new reference to a mod the Pack is leaving. A count below it
+fails too, naming the number to lower the baseline to, so a slice that removes references records
+the gain in the same commit and nothing can later grow back into the headroom. Run it after
+removing a third-party content mod's references, or adding anything that names one.
+
 ## Transfer-face check
 
 `tests/pack/test_transfer_guards.py` asserts every item and fluid face in the mod is reachable by

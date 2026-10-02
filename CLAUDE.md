@@ -91,6 +91,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | a committed ADR with `supersedes:` | `scripts/adr-backlink-check.sh` (needs `gh`) |
 | closing a ticket, editing the item map or `docs/factorio-mechanics.md` | `scripts/item-map-ticket-check.sh` (needs `gh`) |
 | a jar update, live worldgen, the kit, the mechanic or creative lists | `tests/pack/test_obtainable_index.py` |
+| removing a third-party content mod's references | `tests/pack/test_independence_guard.py` |
 | an item or fluid face | `tests/pack/test_transfer_guards.py`, `test_capability_registration.py`, `test_energy_faces.py` |
 | `core/fluid/`, `build-pump-assets.py`, `build-steam-assets.py` | `test_pump_assets.py`, `test_boiler_assets.py`, `:factoryworks_core:test`, GameTest |
 | a fluid row, an Oritech update | `tests/pack/test_fluid_tints.py` |
