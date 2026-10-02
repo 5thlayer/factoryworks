@@ -9,12 +9,10 @@ import io.github._5thlayer.groundworks.LegBuilder;
 import io.github._5thlayer.groundworks.PlacementPlan;
 import io.github._5thlayer.groundworks.Refusal;
 import io.github._5thlayer.groundworks.Stretches;
-import io.github._5thlayer.pipeworks.FluidSegments;
-import io.github._5thlayer.pipeworks.api.FluidPort;
+import io.github._5thlayer.pipeworks.api.FluidPipes;
 import io.github._5thlayer.pipeworks.block.FluidPipeBlock;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -79,12 +77,7 @@ public final class PipeworksPipeLegs implements LegBuilder {
     private static BlockState opened(FluidPipeBlock pipe, Level level, BlockPos pos, Set<BlockPos> laid) {
         return pipe.withLinks(pipe.defaultBlockState(), side -> {
             BlockPos beside = pos.relative(side);
-            return laid.contains(beside) || opensTowards(level, beside, side.getOpposite());
+            return laid.contains(beside) || FluidPipes.wouldLink(level, pos, side);
         });
-    }
-
-    private static boolean opensTowards(Level level, BlockPos pos, Direction face) {
-        return level.getBlockState(pos).getBlock() instanceof FluidSegments.SegmentBlock
-                || level.getBlockEntity(pos) instanceof FluidPort port && port.connectsOn(face);
     }
 }
