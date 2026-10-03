@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0115
 ---
 
 # The pack is FactoryWorks, an overhaul modpack, and its mod is FactoryWorks Core

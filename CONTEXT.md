@@ -1,23 +1,34 @@
 # FactoryWorks
 
-A Minecraft 26.1.2 / NeoForge overhaul modpack that reproduces the progression, production-chain
-routing and interplanetary scope of Factorio's Space Age expansion. Its tagline is "the factory just
-works", and its first-party mod is **FactoryWorks Core** (ADR-0101).
+A suite of Minecraft 26.1.2 / NeoForge tech mods that brings Factorio's logistics into an ordinary
+world and mixes with other tech mods. Its tagline is "the factory just works". Factorio is the
+design reference for mechanics, not the authority for numbers.
 
-**Factorio is the subject; the mods are the implementation.** What the pack reproduces, adapts or
-drops is the ledger in `docs/factorio-mechanics.md`, written in Factorio's terms and privileging no
-mod. Which mod owns each capability is ADR-0017's table, amended by ADR-0060 — read it there rather
-than here, because a copy of it in this file has now gone stale twice, and this file is a glossary
-and nothing else. The pack registers its own machines where no installed mod can express Factorio's
-recipe shape. KubeJS binds them into a stationary, automation-first loop.
+Everything below the Language heading still describes the retired overhaul modpack until its cleanup
+lands.
 
-No mod is the spine. Naming one where the concept, the Factorio mechanic or another mod's capability
-is what is actually meant is the drift this file exists to prevent (`#94`).
+**Module**:
+One of the suite's mods, each owning one kind of logistics or crafting: Beltworks (items on belts),
+Pipeworks (fluids), Wireworks (energy) and Craftworks (crafting machines and the Personal Assembler).
+Each requires FactoryWorks and no other Module, and talks to the others and to other tech mods only
+through the loader's standard energy, fluid and item interfaces.
+_Avoid_: Library, Binding (terms from when a modpack was the product)
 
-How the pack is built out of our own mods -- a **Library** and the **Binding** that configures it for
-Factorio's rules -- is 5thlayer/skillworks' vocabulary, defined in its `CONTEXT.md` (ADR-0090).
-FactoryWorks Core is the pack's Binding. The capital W marks the pack; a Library is spelled with a
-lowercase w (Beltworks).
+**Groundworks**:
+The placement mod beneath the whole suite: previews, rotation, stretching and dismantling, for
+vanilla blocks and for any mod that plans through it. It needs nothing else and is useful on its own
+in vanilla, so it is not a Module. FactoryWorks requires it, which is how every Module gets it.
+
+**FactoryWorks** (the mod):
+The base every Module requires, as the Mekanism mod is for Mekanism Generators and Tools. It holds
+what the Modules share: its ore patches, oil fields and the radar, the machines that extract
+them, and the common intermediates. The suite shares its name.
+_Avoid_: FactoryWorks Core, Core
+
+**FactoryWorks Showcase**:
+A modpack of the Modules and FactoryWorks with almost no content of its own: no quests, no scripted
+start, no Factorio names. It exists to demo and integration-test the suite, not as a product.
+_Avoid_: the Pack
 
 ## Language
 

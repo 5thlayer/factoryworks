@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0115
 ---
 
 # Extracting a Library
