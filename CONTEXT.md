@@ -334,7 +334,7 @@ The pack's rung 0 generator: it burns **Steam** at Factorio's rate, 30 a second 
 _Avoid_: Create's Steam Engine, Oritech's steam engine, alternator, turbine
 
 **Steam Turbine**:
-The generator that burns **Superheated Steam** at Factorio's rate, and nothing else. A second pack block on the same Oritech engine as the **Steam Engine**, painted apart, chaining and joining an **Electric Network** as engines do; a Turbine and a Steam Engine never share a row (ADR-0098).
+The generator that burns **Superheated Steam** at Factorio's rate, and nothing else, into an **Electric Network**. Turbines whose steam connects each draw their own rate, as **Steam Engines** do, and a Turbine never takes a Steam Engine's steam (ADR-0098, ADR-0116).
 _Avoid_: Oritech's steam engine, large turbine, generator
 
 **Solar Panel**:
