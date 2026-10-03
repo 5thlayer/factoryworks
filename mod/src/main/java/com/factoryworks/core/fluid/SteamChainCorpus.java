@@ -18,8 +18,7 @@ import java.nio.charset.StandardCharsets;
  * world does.
  *
  * <p><b>Both halves of the chain read it.</b> The Boiler through {@link BoilerSpec} (#224), and
- * Oritech's Steam Engine through {@link SteamEngineSpec}, which a mixin puts in place of the
- * engine's own arithmetic (#282, ADR-0062).
+ * the Steam Engine through {@link SteamEngineSpec} (#282, ADR-0116).
  *
  * <p>The {@code fluids} rows are #224's addition and are Factorio's fluid prototypes rather than
  * this pack's: the Boiler's rate is a temperature rise paid for at <em>steam's</em> heat capacity,

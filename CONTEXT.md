@@ -330,7 +330,7 @@ Terra's rung 0 pack-authored machine that burns solid fuel to turn water into **
 _Avoid_: LP Solid Boiler, heater, steam generator
 
 **Steam Engine**:
-The pack's rung 0 generator: it burns **Steam** into its own charge, faster the fuller its steam tank, and stops when that charge is full; the steam is spent, not returned as water. Engines placed in a row chain behind one **Master Engine**. It has no wire; it joins an **Electric Network** by standing inside a **Supply Area Pole**'s area. A pack block on Oritech's engine, placed as a footprint from one item and broken as one (ADR-0077); not Oritech's own Steam Engine, which is recipe-removed; hiding it is #173's.
+The pack's rung 0 generator: it burns **Steam** at Factorio's rate, 30 a second for 900 kW, into a charge of one tick's output, and burns nothing while that charge is full; the steam is spent, not returned as water. Engines whose steam connects each draw their own rate from it, so a row of N makes N times 900 kW; nothing chains them. It has no wire; it joins an **Electric Network** by standing inside a **Supply Area Pole**'s area. Placed as a footprint from one item and broken as one (ADR-0116); not Oritech's own Steam Engine, which is recipe-removed; hiding it is #173's.
 _Avoid_: Create's Steam Engine, Oritech's steam engine, alternator, turbine
 
 **Steam Turbine**:
@@ -344,11 +344,6 @@ _Avoid_: Big Solar Panel, solar generator, photovoltaic
 **Nuclear Reactor**:
 The pack's first-party machine that burns **Uranium Fuel Cells** and turns water into **Superheated Steam**, handing back a **Depleted Uranium Fuel Cell** per cell. Placed and broken as one footprint, dressed in Oritech's reactor blocks; not Oritech's reactor, which makes power from heat and is not Obtainable (ADR-0098).
 _Avoid_: fission reactor, reactor controller, reactor multiblock
-
-
-**Master Engine**:
-A **Steam Engine** holding steam, which burns and holds the charge for itself and the empty engines beside it in its row; those only mirror its speed. It is not chosen: the first engine of a row to receive steam becomes one, and steam piped into any other engine of its row reaches its tank. A pole that reaches any engine of the row reaches its Master Engine.
-_Avoid_: master/slave, lead engine, chain head
 
 **Electric Network**:
 Every **Supply Area Pole** joined to another by a **Wire**, directly or through other poles, plus every generator, accumulator and machine standing in any of their areas. One balance of supply and demand; there is no second carrier.

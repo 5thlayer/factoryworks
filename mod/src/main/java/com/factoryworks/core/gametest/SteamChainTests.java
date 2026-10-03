@@ -63,7 +63,7 @@ final class SteamChainTests {
 
         helper.succeedWhen(() -> {
             SteamEngineBlockEntity entity = (SteamEngineBlockEntity) helper.getLevel().getBlockEntity(engine);
-            if (entity.energySide().getAmountAsLong() <= 0L) {
+            if (entity.energyHandler().getAmountAsLong() <= 0L) {
                 helper.fail("the engine made no power from a pump's water and the Boiler's steam", helper.relativePos(engine));
             }
         });

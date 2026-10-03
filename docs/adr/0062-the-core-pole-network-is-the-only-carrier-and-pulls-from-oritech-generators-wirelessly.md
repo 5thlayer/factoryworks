@@ -5,6 +5,10 @@ supersedes: [267]
 
 # The core pole network is the only carrier, and it pulls from Oritech's generators wirelessly
 
+> **Partly superseded by ADR-0116.** The Steam Engine is no longer Oritech's: it is a Core block
+> entity at Factorio's rate, with no chaining, fill-driven speed, efficiency curve or mixin. The one
+> carrier, the wireless pull by tag and Factorio's balance stand.
+
 ADR-0060 left power with two carriers: the core's supply-area poles inside an area, and Oritech's
 Energy Transmission Pole between areas. It named the Steam Engine as a thing that "makes 450" but
 not how that FE reaches a pole, and #267 answered with a core subclass that pushes FE into the grid.

@@ -40,6 +40,10 @@ import rearth.oritech.util.Geometry;
  * parts and nothing else of the row, not even C's anchor. An Electric Furnace beside the pole is the
  * one consumer, emptied every tick so it always asks for more than C makes. The pole must draw all of
  * C's 450 FE a tick through a part, and once.
+ *
+ * <p>The row tests drain each engine directly instead: fed, each makes its own 450 FE a tick; starved,
+ * they share what arrives and none passes its rate. The arithmetic is {@code SteamEngineSpecTest}'s;
+ * these hold that touching anchors really are one segment each engine draws from.
  */
 final class SteamEngineNetworkTests {
 
@@ -57,6 +61,12 @@ final class SteamEngineNetworkTests {
     /** Ticks the draw is read over once it has settled. */
     private static final int MEASURED = 20;
 
+    /** Supply to the segment each tick of a starved row: under the 4.5 mB three engines burn. */
+    private static final int STARVED_SUPPLY = 2;
+
+    /** FE a millibucket of steam is worth: 450 FE/t over 1.5 mB/t. */
+    private static final long FE_PER_MB = 300L;
+
     private SteamEngineNetworkTests() {
     }
 
@@ -67,6 +77,10 @@ final class SteamEngineNetworkTests {
                 SteamEngineNetworkTests::keepsItsCharge);
         tests.test("steam_engine_has_no_fluid_face_and_draws_steam_alone", 60,
                 SteamEngineNetworkTests::drawsSteamAlone);
+        tests.test("steam_engine_row_on_a_fed_segment_makes_its_rate_per_engine", 100,
+                SteamEngineNetworkTests::fedRow);
+        tests.test("steam_engine_row_on_a_starved_segment_splits_it", 100,
+                SteamEngineNetworkTests::starvedRow);
     }
 
     private record Layout(Direction facing, BlockPos a, BlockPos b, BlockPos c, BlockPos pole,
@@ -179,7 +193,7 @@ final class SteamEngineNetworkTests {
                 .thenExecute(() -> insert(helper, anchor, FluidResource.of(net.minecraft.world.level.material.Fluids.WATER), 100))
                 .thenIdle(10)
                 .thenExecute(() -> {
-                    long held = engine(helper, anchor).energySide().getAmountAsLong();
+                    long held = engine(helper, anchor).energyHandler().getAmountAsLong();
                     if (held != 0L) {
                         helper.fail("the engine made " + held + " FE from a segment of water", anchor);
                     }
@@ -188,7 +202,7 @@ final class SteamEngineNetworkTests {
                 })
                 .thenIdle(10)
                 .thenExecute(() -> {
-                    long held = engine(helper, anchor).energySide().getAmountAsLong();
+                    long held = engine(helper, anchor).energyHandler().getAmountAsLong();
                     if (held != ENGINE_FE_PER_TICK) {
                         helper.fail("the engine holds " + held + " FE, not a full buffer of "
                                 + ENGINE_FE_PER_TICK, anchor);
@@ -225,13 +239,129 @@ final class SteamEngineNetworkTests {
                     CompoundTag saved = engine.saveWithFullMetadata(helper.getLevel().registryAccess());
                     BlockEntity loaded = BlockEntity.loadStatic(engine.getBlockPos(), engine.getBlockState(),
                             saved, helper.getLevel().registryAccess());
-                    if (!(loaded instanceof SteamEngineBlockEntity reloaded)
-                            || reloaded.energySide().getAmountAsLong() != engine.energySide().getAmountAsLong()
-                            || reloaded.energySide().getAmountAsLong() <= 0L) {
+                    if (!(loaded instanceof SteamEngineBlockEntity reloaded)) {
                         helper.fail("the saved Steam Engine reloaded as " + loaded, anchor);
+                        return;
+                    }
+                    long held = engine.energyHandler().getAmountAsLong();
+                    long kept = reloaded.energyHandler().getAmountAsLong();
+                    if (held <= 0L) {
+                        helper.fail("the engine held no charge to save", anchor);
+                    }
+                    if (kept != held) {
+                        helper.fail("the engine saved " + held + " FE and reloaded " + kept, anchor);
+                    }
+                    CompoundTag again = reloaded.saveWithFullMetadata(helper.getLevel().registryAccess());
+                    for (String key : new String[] {"CarrySteam", "CarryEnergy"}) {
+                        if (!saved.contains(key)) {
+                            helper.fail("the engine saved no " + key, anchor);
+                        }
+                        double before = saved.getDoubleOr(key, Double.NaN);
+                        double after = again.getDoubleOr(key, Double.NaN);
+                        if (before != after) {
+                            helper.fail("the engine saved " + key + " " + before + " and reloaded " + after, anchor);
+                        }
                     }
                 })
                 .thenSucceed();
+    }
+
+    /** Each engine of a row on one fed segment makes its own 450 FE/t, drained by the test every tick. */
+    private static void fedRow(GameTestHelper helper) {
+        Layout at = layout(helper);
+        BlockPos[] row = {at.a(), at.b(), at.c()};
+        for (BlockPos engine : row) {
+            place(helper, engine, at.facing());
+        }
+        long[] drawn = drawEachTick(helper, row, () -> topUp(helper, at.a()));
+        helper.startSequence()
+                .thenIdle(SETTLE + MEASURED + 1)
+                .thenExecute(() -> {
+                    if (!sharesOneSegment(helper, row)) {
+                        helper.fail("the row's anchors are not one steam segment", at.a());
+                    }
+                    for (int i = 0; i < row.length; i++) {
+                        if (drawn[i] != ENGINE_FE_PER_TICK * MEASURED) {
+                            helper.fail("engine " + i + " made " + drawn[i] + " FE over " + MEASURED
+                                    + " ticks, not " + ENGINE_FE_PER_TICK * MEASURED, row[i]);
+                        }
+                    }
+                })
+                .thenSucceed();
+    }
+
+    /**
+     * A row on a segment fed less than it burns shares what arrives: no engine passes its rate, and
+     * together they make what the steam is worth, give or take a millibucket and a buffer each.
+     */
+    private static void starvedRow(GameTestHelper helper) {
+        Layout at = layout(helper);
+        BlockPos[] row = {at.a(), at.b(), at.c()};
+        for (BlockPos engine : row) {
+            place(helper, engine, at.facing());
+        }
+        FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
+        long[] drawn = drawEachTick(helper, row, () -> {
+            if (FluidPorts.segment(helper.getLevel(), helper.absolutePos(at.a())) != null) {
+                insert(helper, at.a(), steam, STARVED_SUPPLY);
+            }
+        });
+        helper.startSequence()
+                .thenIdle(SETTLE + MEASURED + 1)
+                .thenExecute(() -> {
+                    long total = 0L;
+                    for (int i = 0; i < row.length; i++) {
+                        if (drawn[i] > ENGINE_FE_PER_TICK * MEASURED) {
+                            helper.fail("engine " + i + " made " + drawn[i] + " FE over " + MEASURED
+                                    + " ticks, past its " + ENGINE_FE_PER_TICK * MEASURED, row[i]);
+                        }
+                        total += drawn[i];
+                    }
+                    long worth = STARVED_SUPPLY * FE_PER_MB * MEASURED;
+                    long slack = row.length * (ENGINE_FE_PER_TICK + FE_PER_MB);
+                    if (Math.abs(total - worth) > slack) {
+                        helper.fail("the row made " + total + " FE over " + MEASURED + " ticks from steam worth "
+                                + worth, at.a());
+                    }
+                })
+                .thenSucceed();
+    }
+
+    /**
+     * Runs {@code feed} and empties every engine's buffer each tick; per engine, the FE taken over the
+     * {@link #MEASURED} ticks after {@link #SETTLE}.
+     */
+    private static long[] drawEachTick(GameTestHelper helper, BlockPos[] row, Runnable feed) {
+        long[] drawn = new long[row.length];
+        int[] tick = {0};
+        helper.onEachTick(() -> {
+            feed.run();
+            boolean measured = tick[0] >= SETTLE && tick[0] < SETTLE + MEASURED;
+            for (int i = 0; i < row.length; i++) {
+                try (Transaction transaction = Transaction.openRoot()) {
+                    int taken = engine(helper, row[i]).energyHandler().extract(Integer.MAX_VALUE, transaction);
+                    transaction.commit();
+                    if (measured) {
+                        drawn[i] += taken;
+                    }
+                }
+            }
+            tick[0]++;
+        });
+        return drawn;
+    }
+
+    /** Every anchor's segment holds the whole row's ports, so the row is one segment. */
+    private static boolean sharesOneSegment(GameTestHelper helper, BlockPos[] row) {
+        FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
+        long whole = (long) row.length * SteamEngineBlockEntity.spec().portCapacity();
+        for (BlockPos engine : row) {
+            ResourceHandler<FluidResource> segment = FluidPorts.segment(helper.getLevel(), helper.absolutePos(engine));
+            if (segment == null || segment.getCapacityAsLong(0, steam) != whole) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** Keeps the row's steam segment full. */

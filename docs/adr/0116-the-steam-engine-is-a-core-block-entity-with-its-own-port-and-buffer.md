@@ -16,14 +16,22 @@ move as a package, not be rewritten.
   `SteamEngineSpec`'s 30 steam a second from the segment it stands in, and holds no tank of its own.
 - Its energy is a buffer of one tick of output (450 FE), made at 900 kW and exposed through NeoForge's
   energy capability, extract-only. A pole draws it; the footprint's parts forward to the anchor.
-- The footprint, placement, teardown and item are unchanged, and so is the model. The block is drawn
-  from the block entity by the renderer it already used, until #586 draws its own.
+- The footprint, placement, teardown and item are unchanged. The art is still Oritech's until #586
+  draws the pack's own: the block entity is drawn by Oritech's `MachineRenderer`, the item model's
+  parent is `oritech:item/steam_engine`, and the block model's textures are Oritech's. The block
+  entity declares no animation, so the model stands still.
 - `SteamEngineEntityMixin` and `FluidStacksCapacityAccessor` are removed, and `SteamEngineSpec` no
   longer takes Oritech's efficiency curve.
 
 **Rows are segments.** ADR-0062's chaining of a row of engines through one master and its tank is gone.
 Engines whose ports touch already share one steam segment, and each draws its own rate from it, so a row
 of N makes N times 900 kW with no master, slave or scan.
+
+**Considered: keep Oritech's chaining and efficiency curve** on the new block entity, as ADR-0062 kept
+them on purpose. Rejected: chaining meant a master holding a row's tank and charge, a row scan, and a
+port that had to hold the tank at the curve's peak and leave an empty engine's tank alone so the row
+could form, all to reproduce a mechanic Factorio does not have. A shared segment already gives each
+engine its steam, and Factorio's engine burns its rate or nothing.
 
 **Consequences.**
 

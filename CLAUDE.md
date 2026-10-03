@@ -95,7 +95,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | an item or fluid face | `tests/pack/test_transfer_guards.py`, `test_capability_registration.py`, `test_energy_faces.py` |
 | `core/fluid/`, `build-pump-assets.py`, `build-steam-assets.py` | `test_pump_assets.py`, `test_boiler_assets.py`, `:factoryworks_core:test`, GameTest |
 | a fluid row, an Oritech update | `tests/pack/test_fluid_tints.py` |
-| `SteamEngineSpec` or its mixin | `:factoryworks_core:test` |
+| `SteamEngineSpec` | `:factoryworks_core:test` |
 | `core/radar/` or its generator | `test_radar_assets.py`, `test_machine_extract.py`, `:factoryworks_core:test`, GameTest |
 | `core/oil/`, the oil field, its generators | `test_pumpjack_assets.py`, `test_resource_extract.py`, GameTest |
 | `scripts/factorio-enemy-extract.py` | `tests/factorio/test_enemy_extract.py` |

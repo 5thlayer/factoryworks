@@ -920,8 +920,9 @@ Sub-rules:
 ### Power generation
 
 - **verdict**: `adapted`
-- **notice**: the Steam Engine is a Core block entity at Factorio's 30 mB/s and 450 FE/t, and the solar panel is a pack block on Oritech's Big Solar Panel
-  entity at Factorio's 60 kW on Factorio's day (#508).
+- **notice**: the Steam Engine is a Core block entity at Factorio's 30 mB/s and 450 FE/t, and the
+  solar panel is a pack block on Oritech's Big Solar Panel entity at Factorio's 60 kW on Factorio's
+  day (#508).
 - **where**: all bodies
 - **via**: `pack`, `oritech`
 - **owner**: ADR-0048, ADR-0060, ADR-0062, ADR-0116
@@ -932,17 +933,17 @@ Sub-rules:
 - **Boiler and steam engine as the first power** — `adapted`. **ADR-0062 (#282) makes it two steps
   again**: the pack's Boiler makes steam and the **pack's Steam Engine** burns it into FE, which a
   pole pulls through the `wireworks:generators` tag. **ADR-0077 (#352)** makes the engine
-  `factoryworks:steam_engine`, a pack block on Oritech's engine entity, placed from one item as
-  its whole 2x1x2 footprint and broken as one, like the Assembling Machine; Oritech's own engine is
-  swept. **ADR-0113** makes it 3 wide, 2 tall and 1 deep, not Factorio's 3x5, so it is drawn as
-  one vanilla model. A mixin calibrates it to Factorio — 30 mB/s and 450 FE/t per engine at the efficiency
-  curve's peak, no water returned — and keeps Oritech's chaining and fill-driven speed. **#593 puts
-  the chain on Pipeworks** (ADR-0110, ADR-0114): the Offshore Pump is a port filling a water segment
-  at 1,200 mB/s; the Boiler's three front blocks are water ports opening along the row, 200 mB each,
-  so water passes through a row of Boilers end to end, and its back middle block is a 200 mB steam
-  port opening backwards; the Engine's anchor is a 200 mB steam port that holds its tank at the
-  efficiency peak. Water and steam leave no capability face. The history below is superseded where
-  it disagrees.
+  `factoryworks:steam_engine`, placed from one item as its whole footprint and broken as one, like
+  the Assembling Machine; Oritech's own engine is swept. **ADR-0113** makes it 3 wide, 2 tall and 1
+  deep, not Factorio's 3x5, so it is drawn as one vanilla model. **#593 puts the chain on
+  Pipeworks** (ADR-0110, ADR-0114): the Offshore Pump is a port filling a water segment at
+  1,200 mB/s; the Boiler's three front blocks are water ports opening along the row, 200 mB each, so
+  water passes through a row of Boilers end to end, and its back middle block is a 200 mB steam port
+  opening backwards. Water and steam leave no capability face. **ADR-0116 (#594)** makes the engine
+  a Core block entity: its anchor is a 200 mB steam port, and it burns Factorio's 30 mB/s into a
+  450 FE buffer, one tick of output, or nothing while that buffer is full; no water is returned.
+  Engines whose ports touch share one steam segment and each draws its own rate, so N engines make
+  N times 900 kW with no chaining. The history below is superseded where it disagrees.
   *Before ADR-0062:* the chain was **four** steps, not two:
   the **pack's Boiler** burns solid fuel and makes low-temperature steam, the **pack's Steam Engine**
   eats that steam and emits Create rotation, Power Grid's generator assembly turns SU into watts, and

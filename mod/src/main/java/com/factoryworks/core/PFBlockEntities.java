@@ -364,7 +364,7 @@ public final class PFBlockEntities {
     private static void registerSteamEngineCapabilities(RegisterCapabilitiesEvent event) {
         registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
-                        ? engine.energySide() : null);
+                        ? engine.energyHandler() : null);
     }
 
     /** The Solar Panel's energy face (#529), on every block, so a pole reaching any of it draws it. */

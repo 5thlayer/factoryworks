@@ -50,7 +50,7 @@ public class SteamEngineBlock extends HorizontalDirectionalBlock implements Enti
         builder.add(FACING);
     }
 
-    /** Drawn from the block entity, by the same renderer as before (#586 replaces the model). */
+    /** Drawn by the block entity's renderer (ADR-0116, #586). */
     @Override
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.INVISIBLE;

@@ -80,10 +80,9 @@ public final class SteamEngineSpec {
      * so a pole that drew less than that last tick leaves less room than a full burn makes, and the
      * request is cut: steam burnt into a full buffer is steam spent for nothing. The cut keeps every
      * millibucket whose energy <em>starts</em> inside the room, and {@link #burn} carries the part of
-     * the last one that overshoots. Cutting to what fits whole instead held an engine drained dry by a
-     * pole below its rate every tick: a millibucket is 300 FE and the carried half millibucket's
-     * tick never fits (#292). A cut request owes no steam forward, or an engine held back for a
-     * minute would owe a burst.
+     * the last one that overshoots, since a millibucket is 300 FE and the carried half millibucket's
+     * tick never fits whole in a drained buffer (#292). A cut request owes no steam forward, or an
+     * engine held back for a minute would owe a burst.
      */
     public Request request(Carry carry, long energyRoom) {
         double exact = steamPerTick + carry.steam();

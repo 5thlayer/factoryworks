@@ -26,7 +26,7 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 /**
- * The Steam Engine's anchor (ADR-0116): a steam port and an FE buffer, nothing of Oritech's.
+ * The Steam Engine's anchor (ADR-0116): a steam port and an FE buffer.
  *
  * <p>Each engine draws its own {@link SteamEngineSpec} rate from the segment it stands in, so engines
  * whose ports touch share a segment and need no row to chain them. A pole reaches the buffer through
@@ -81,16 +81,17 @@ public class SteamEngineBlockEntity extends BlockEntity implements FluidPort, Ge
             made = SPEC.burn(drawn, asked.carry(), room);
             transaction.commit();
         }
+        boolean changed = made.energy() > 0L || !made.carry().equals(carry);
         carry = made.carry();
         stored += made.energy();
         burning = made.steam() > 0;
-        if (made.energy() > 0L) {
+        if (changed) {
             setChanged();
         }
     }
 
-    /** The FE face a pole draws from. Extract-only, and journalled so a pole's aborted probe takes nothing. */
-    public EnergyHandler energySide() {
+    /** The FE face on every block of the engine. Journalled so a pole's aborted probe takes nothing. */
+    public EnergyHandler energyHandler() {
         return energy;
     }
 
@@ -131,6 +132,7 @@ public class SteamEngineBlockEntity extends BlockEntity implements FluidPort, Ge
                 && segment.getResource(0).equals(FluidResource.of(PFFluids.STEAM_SOURCE.get()));
     }
 
+    /** GeckoLib only so Oritech's {@code MachineRenderer} can draw the model until #586 (ADR-0116). */
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
     }

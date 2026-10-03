@@ -741,9 +741,12 @@ footprint (#352). The HUD's status precedence is `SteamEngineStatusTest`. `Steam
 floors to 1, so the spec carries the fraction -- and the port and buffer are 200 mB and 450 FE. A
 buffer of one tick's output would floor a pole-drained engine to whole 300 FE millibuckets (300 FE/t),
 so the burn keeps the millibucket that starts inside the room and carries its overshoot as energy
-(#292). `SteamEngineNetworkTests` is that a pole draws an engine through a part, once; that the
-engine stands in a segment by its anchor alone, makes nothing from water and fills its buffer from
-steam; and that its charge survives a save. Run the spec test after editing `core/fluid/SteamEngineSpec`.
+(#292). `SteamEngineSpecTest` also holds a row on one segment: fed, each engine makes 450 FE/t;
+starved, the row burns what it is fed and no engine passes its rate. `SteamEngineNetworkTests` is
+that a pole draws an engine through a part, once; that the engine stands in a segment by its anchor
+alone, makes nothing from water and fills its buffer from steam; that its charge and carried
+fractions survive a save; and that a row's touching anchors are one segment, each engine drawing its
+own 450 FE/t when fed and none passing it when starved. Run the spec test after editing `core/fluid/SteamEngineSpec`.
 
 ## Blockbench model check
 
