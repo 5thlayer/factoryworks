@@ -20,8 +20,7 @@ import snownee.jade.api.config.IPluginConfig;
 
 /**
  * The Steam Engine's HUD (#352), which is its only interface: no screen, since there is nothing on
- * an engine to set. The tank and the charge are Jade's own rows, read through the engine's faces,
- * which are its Master Engine's on a slave (ADR-0077).
+ * an engine to set. The charge is Jade's own row, read through the engine's energy face.
  */
 @WailaPlugin
 public class SteamEngineJadePlugin implements IWailaPlugin {
@@ -30,7 +29,6 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
             Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, "steam_engine");
 
     private static final String STATUS = "SteamEngineStatus";
-    private static final String CHAINED = "SteamEngineChained";
 
     private static final IServerDataProvider<BlockAccessor> DATA = new IServerDataProvider<>() {
         @Override
@@ -39,7 +37,6 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
                 return;
             }
             tag.putInt(STATUS, engine.status().map(Enum::ordinal).orElse(-1));
-            tag.putBoolean(CHAINED, engine.inSlaveMode());
         }
 
         @Override
@@ -57,10 +54,6 @@ public class SteamEngineJadePlugin implements IWailaPlugin {
             }
             SteamEngineStatus.fromOrdinal(data.getIntOr(STATUS, -1)).ifPresent(status ->
                     tooltip.add(Component.translatable(status.langKey()).withStyle(ChatFormatting.RED)));
-            if (data.getBooleanOr(CHAINED, false)) {
-                tooltip.add(Component.translatable("gui.factoryworks.steam_engine.chained")
-                        .withStyle(ChatFormatting.GRAY));
-            }
         }
 
         @Override

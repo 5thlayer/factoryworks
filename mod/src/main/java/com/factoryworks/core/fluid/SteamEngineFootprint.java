@@ -3,7 +3,7 @@ package com.factoryworks.core.fluid;
 import com.factoryworks.core.machine.footprint.Footprint;
 import com.factoryworks.core.machine.footprint.Footprint.Local;
 
-/** Oritech's Steam Engine controller and its three cores, as one footprint (ADR-0077). */
+/** The Steam Engine: the anchor and three parts, 2x1x2 until its model lands (ADR-0113, #586). */
 public final class SteamEngineFootprint {
 
     public static final Footprint FOOTPRINT =

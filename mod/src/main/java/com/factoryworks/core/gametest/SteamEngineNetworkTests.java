@@ -11,7 +11,6 @@ import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceTier;
 
 import com.factoryworks.core.fluid.SteamEngineBlockEntity;
-import com.factoryworks.core.fluid.SteamEngineSpec;
 
 import java.util.List;
 
@@ -24,43 +23,36 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import rearth.oritech.block.entity.generators.SteamEngineEntity;
 import rearth.oritech.util.Geometry;
 
 /**
- * The pack's Steam Engine on the pole network (#292, #352, ADR-0062, ADR-0077).
+ * The pack's Steam Engine on the pole network (#292, #352, ADR-0062, ADR-0116).
  *
  * <p>{@code SupplyScanTest} holds the rule -- every block stands for its energy owner, kept once.
- * What it cannot see is that the owners are the right ones: that a part's face really is its
- * anchor's, that a slave really names its master, and that the mixin answering the second is
- * applied at all. A mixin that failed to apply is a warning in the log and a scan that files by
- * position again.
+ * What it cannot see is that the owner is the right one: that a part's face really is its anchor's.
  *
  * <h2>The layout</h2>
  *
  * <p>A row of three engines A, B, C, whose ports touch and so share one steam segment, which the test
- * keeps full. A is the head of the row, so it draws first, scans the row and becomes master of B and
- * C; from then on a slave's port draws into A's tank. Each port holds the tank at 70 %, which is
- * Oritech's speed 7, the peak {@code SteamEngineSpec} is calibrated at.
+ * keeps full. Each draws its own rate from it.
  *
  * <p>A small pole stands beside C on its parts' side, far enough out that its 5x5 area holds C's
  * parts and nothing else of the row, not even C's anchor. An Electric Furnace beside the pole is the
- * one consumer, emptied every tick so it always asks for more than the row makes. The row then makes
- * 1,350 FE a tick, and the pole must draw all of it through a slave's part, from a master it cannot
- * reach, and once.
+ * one consumer, emptied every tick so it always asks for more than C makes. The pole must draw all of
+ * C's 450 FE a tick through a part, and once.
  */
 final class SteamEngineNetworkTests {
 
-    /** Three engines at 450 FE/t apiece (ADR-0060: 900 kW at 100 J per FE). */
-    private static final long ROW_FE_PER_TICK = 1_350L;
+    /** One engine's 450 FE/t (ADR-0060: 900 kW at 100 J per FE). */
+    private static final long ENGINE_FE_PER_TICK = 450L;
 
     private static final BlockPos ORIGIN = new BlockPos(0, 1, 3);
 
     /** The part at {@code (0,0,-1)}: beside the anchor, on the ground, off the row's axis. */
     private static final int LATERAL_PART = 2;
 
-    /** Past one rescan interval (40) plus the tick the network is rebuilt on. */
-    private static final int SETTLE = 45;
+    /** The tick the network is rebuilt on, and a few more for the buffers to fill. */
+    private static final int SETTLE = 10;
 
     /** Ticks the draw is read over once it has settled. */
     private static final int MEASURED = 20;
@@ -69,12 +61,10 @@ final class SteamEngineNetworkTests {
     }
 
     static void register(PFGameTests.Registrar tests) {
-        tests.test("pole_draws_steam_engine_row_through_a_slaves_part", 400,
-                SteamEngineNetworkTests::poleDrawsRowThroughASlavesPart);
-        tests.test("steam_engine_row_chains_across_a_part", 200,
-                SteamEngineNetworkTests::rowChainsAcrossAPart);
-        tests.test("steam_engine_reloads_as_the_packs_engine", 20,
-                SteamEngineNetworkTests::reloadsAsThePacksEngine);
+        tests.test("pole_draws_steam_engine_through_a_part", 400,
+                SteamEngineNetworkTests::poleDrawsEngineThroughAPart);
+        tests.test("steam_engine_keeps_its_charge_across_a_reload", 60,
+                SteamEngineNetworkTests::keepsItsCharge);
         tests.test("steam_engine_has_no_fluid_face_and_draws_steam_alone", 60,
                 SteamEngineNetworkTests::drawsSteamAlone);
     }
@@ -83,7 +73,7 @@ final class SteamEngineNetworkTests {
                           BlockPos furnace) {
     }
 
-    private static void poleDrawsRowThroughASlavesPart(GameTestHelper helper) {
+    private static void poleDrawsEngineThroughAPart(GameTestHelper helper) {
         Layout at = layout(helper);
         for (BlockPos engine : new BlockPos[] {at.a(), at.b(), at.c()}) {
             place(helper, engine, at.facing());
@@ -97,11 +87,6 @@ final class SteamEngineNetworkTests {
             furnace(helper, at.furnace()).data().set(FurnaceBlockEntity.DATA_ENERGY, 0);
         });
         helper.startSequence()
-                .thenWaitUntil(() -> {
-                    if (!engine(helper, at.b()).inSlaveMode() || !engine(helper, at.c()).inSlaveMode()) {
-                        helper.fail("A never became master of the row", at.a());
-                    }
-                })
                 .thenIdle(SETTLE)
                 .thenExecuteFor(MEASURED, () -> {
                     SupplyAreaPoleBlockEntity pole =
@@ -111,9 +96,9 @@ final class SteamEngineNetworkTests {
                         helper.fail("the pole files " + pole.machineCount() + " consumers; only the"
                                 + " furnace is one, so an engine or its part is being fed", at.pole());
                     }
-                    if (reading.produced() != ROW_FE_PER_TICK) {
-                        helper.fail("the pole drew " + reading.produced() + " FE from a row of three"
-                                + " making " + ROW_FE_PER_TICK + " a tick", at.pole());
+                    if (reading.produced() != ENGINE_FE_PER_TICK) {
+                        helper.fail("the pole drew " + reading.produced() + " FE from an engine"
+                                + " making " + ENGINE_FE_PER_TICK + " a tick", at.pole());
                     }
                     if (reading.delivered() != reading.produced()) {
                         helper.fail("the furnace received " + reading.delivered() + " of "
@@ -122,7 +107,7 @@ final class SteamEngineNetworkTests {
                     produced[0] += reading.produced();
                 })
                 .thenExecute(() -> {
-                    if (produced[0] != ROW_FE_PER_TICK * MEASURED) {
+                    if (produced[0] != ENGINE_FE_PER_TICK * MEASURED) {
                         helper.fail("drew " + produced[0] + " FE over " + MEASURED + " ticks", at.pole());
                     }
                 })
@@ -156,34 +141,6 @@ final class SteamEngineNetworkTests {
         return new Layout(facing, a, b, c, pole, pole.offset(step));
     }
 
-    /** A and B in a row, and C turned a quarter so its lateral part, not its anchor, is the block the scan meets next. */
-    private static void rowChainsAcrossAPart(GameTestHelper helper) {
-        Layout at = layout(helper);
-        BlockPos step = at.b().subtract(at.a());
-        Direction turned = null;
-        for (Direction candidate : Direction.Plane.HORIZONTAL) {
-            if (partOffset(candidate, LATERAL_PART).equals(BlockPos.ZERO.subtract(step))) {
-                turned = candidate;
-            }
-        }
-        if (turned == null) {
-            throw helper.assertionException(at.a(), "no facing puts a Steam Engine's part on the row");
-        }
-        BlockPos cPart = at.b().offset(step);
-        BlockPos cAnchor = cPart.subtract(partOffset(turned, LATERAL_PART));
-        place(helper, at.a(), at.facing());
-        place(helper, at.b(), at.facing());
-        place(helper, cAnchor, turned);
-
-        helper.onEachTick(() -> topUp(helper, at.a()));
-        helper.succeedWhen(() -> {
-            SteamEngineEntity c = engine(helper, cAnchor);
-            if (!c.inSlaveMode() || c.master != engine(helper, at.a())) {
-                helper.fail("the scan did not chain C through the part standing in the row", cPart);
-            }
-        });
-    }
-
     /** The world offset of part {@code index} of an engine facing {@code facing}. */
     private static BlockPos partOffset(Direction facing, int index) {
         return PFBlocks.STEAM_ENGINE_FOOTPRINT.positions(BlockPos.ZERO, facing).get(index);
@@ -195,8 +152,7 @@ final class SteamEngineNetworkTests {
 
     /**
      * The engine answers no fluid capability on any block; only its anchor stands in a segment. A
-     * segment of water feeds the tank nothing, and a segment of steam holds it at the peak fill
-     * and no more.
+     * segment of water makes no power, and a segment of steam does.
      */
     private static void drawsSteamAlone(GameTestHelper helper) {
         BlockPos anchor = new BlockPos(3, 1, 3);
@@ -204,8 +160,6 @@ final class SteamEngineNetworkTests {
         BlockPos absolute = helper.absolutePos(anchor);
         List<BlockPos> blocks = PFBlocks.STEAM_ENGINE_FOOTPRINT.positions(absolute, Direction.NORTH);
         FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
-        long peak = SteamEngineSpec.peakFill(
-                engine(helper, anchor).boilerStorage.getInputContainer().getCapacityAsLong(0, steam));
         helper.startSequence()
                 .thenIdle(2)
                 .thenExecute(() -> {
@@ -225,18 +179,19 @@ final class SteamEngineNetworkTests {
                 .thenExecute(() -> insert(helper, anchor, FluidResource.of(net.minecraft.world.level.material.Fluids.WATER), 100))
                 .thenIdle(10)
                 .thenExecute(() -> {
-                    long held = engine(helper, anchor).boilerStorage.getInputContainer().getAmountAsLong(0);
+                    long held = engine(helper, anchor).energySide().getAmountAsLong();
                     if (held != 0L) {
-                        helper.fail("the engine drew " + held + " mB from a segment of water", anchor);
+                        helper.fail("the engine made " + held + " FE from a segment of water", anchor);
                     }
                     drain(helper, anchor);
                     insert(helper, anchor, steam, 200);
                 })
                 .thenIdle(10)
                 .thenExecute(() -> {
-                    long held = engine(helper, anchor).boilerStorage.getInputContainer().getAmountAsLong(0);
-                    if (held > peak || held < peak - 3) {
-                        helper.fail("the engine's tank holds " + held + " mB, not the peak fill of " + peak, anchor);
+                    long held = engine(helper, anchor).energySide().getAmountAsLong();
+                    if (held != ENGINE_FE_PER_TICK) {
+                        helper.fail("the engine holds " + held + " FE, not a full buffer of "
+                                + ENGINE_FE_PER_TICK, anchor);
                     }
                 })
                 .thenSucceed();
@@ -258,30 +213,29 @@ final class SteamEngineNetworkTests {
         }
     }
 
-    /**
-     * The engine's type is answered by an override rather than Oritech's constructor (ADR-0077), so a
-     * save that wrote Oritech's id would reload the engine as Oritech's class.
-     */
-    private static void reloadsAsThePacksEngine(GameTestHelper helper) {
+    /** The charge and the owed fractions are saved, so a reload neither loses nor invents power. */
+    private static void keepsItsCharge(GameTestHelper helper) {
         BlockPos anchor = new BlockPos(3, 1, 3);
         place(helper, anchor, Direction.NORTH);
-        SteamEngineEntity engine = engine(helper, anchor);
-        CompoundTag saved = engine.saveWithFullMetadata(helper.getLevel().registryAccess());
-        BlockEntity loaded = BlockEntity.loadStatic(engine.getBlockPos(), engine.getBlockState(), saved,
-                helper.getLevel().registryAccess());
-        if (!(loaded instanceof SteamEngineBlockEntity)) {
-            helper.fail("the saved Steam Engine reloaded as " + loaded, anchor);
-        }
-        helper.succeed();
+        helper.onEachTick(() -> topUp(helper, anchor));
+        helper.startSequence()
+                .thenIdle(5)
+                .thenExecute(() -> {
+                    SteamEngineBlockEntity engine = engine(helper, anchor);
+                    CompoundTag saved = engine.saveWithFullMetadata(helper.getLevel().registryAccess());
+                    BlockEntity loaded = BlockEntity.loadStatic(engine.getBlockPos(), engine.getBlockState(),
+                            saved, helper.getLevel().registryAccess());
+                    if (!(loaded instanceof SteamEngineBlockEntity reloaded)
+                            || reloaded.energySide().getAmountAsLong() != engine.energySide().getAmountAsLong()
+                            || reloaded.energySide().getAmountAsLong() <= 0L) {
+                        helper.fail("the saved Steam Engine reloaded as " + loaded, anchor);
+                    }
+                })
+                .thenSucceed();
     }
 
-    /**
-     * Keeps the row's steam segment full, so each port holds the tank at 70 % of its capacity:
-     * Oritech's speed 7.
-     */
+    /** Keeps the row's steam segment full. */
     private static void topUp(GameTestHelper helper, BlockPos anchor) {
-        // The Boiler's steam, not Oritech's: a test fed Oritech's own fluid passed while the pack's
-        // steam made nothing in game.
         FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
         ResourceHandler<FluidResource> segment = FluidPorts.segment(helper.getLevel(), helper.absolutePos(anchor));
         if (segment == null) {
@@ -297,8 +251,8 @@ final class SteamEngineNetworkTests {
         }
     }
 
-    private static SteamEngineEntity engine(GameTestHelper helper, BlockPos relative) {
-        return helper.getBlockEntity(relative, SteamEngineEntity.class);
+    private static SteamEngineBlockEntity engine(GameTestHelper helper, BlockPos relative) {
+        return helper.getBlockEntity(relative, SteamEngineBlockEntity.class);
     }
 
     private static FurnaceBlockEntity furnace(GameTestHelper helper, BlockPos relative) {

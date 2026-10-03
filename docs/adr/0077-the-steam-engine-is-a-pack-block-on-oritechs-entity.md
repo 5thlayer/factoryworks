@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0116
 supersedes: [282]
 ---
 

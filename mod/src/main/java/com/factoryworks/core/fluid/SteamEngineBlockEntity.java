@@ -1,74 +1,53 @@
 package com.factoryworks.core.fluid;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.factoryworks.core.PFBlockEntities;
-import com.factoryworks.core.machine.footprint.FootprintPartBlock;
+import com.factoryworks.core.energy.LongSnapshotJournal;
+import com.geckolib.animatable.GeoBlockEntity;
+import com.geckolib.animatable.instance.AnimatableInstanceCache;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.util.GeckoLibUtil;
 import io.github._5thlayer.pipeworks.api.FluidPort;
 import io.github._5thlayer.pipeworks.api.FluidPorts;
 import io.github._5thlayer.wireworks.ElectricNetworks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import rearth.oritech.api.networking.NetworkedBlockEntity;
-import rearth.oritech.util.Geometry;
-import rearth.oritech.block.entity.generators.SteamEngineEntity;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 /**
- * The Steam Engine's anchor (ADR-0077): Oritech's own engine entity, so {@code SteamEngineEntityMixin}
- * reaches it through inheritance and ADR-0062's arithmetic, chaining and curve are unchanged.
+ * The Steam Engine's anchor (ADR-0116): a steam port and an FE buffer, nothing of Oritech's.
  *
- * <p><b>Its type is the pack's.</b> Oritech's one constructor hard-codes {@code STEAM_ENGINE}, whose
- * valid blocks are Oritech's, so the constructor's own block-state check would throw and a save
- * would reload the entity as Oritech's class. The type field is read only through {@link #getType}
- * and {@link #typeHolder}, so answering both is enough.
- *
- * <p><b>A footprint, not Oritech's multiblock</b>, for {@code AssemblingMachineBlockEntity}'s
- * reasons: no cores, assembled by construction, never rescanned.
+ * <p>Each engine draws its own {@link SteamEngineSpec} rate from the segment it stands in, so engines
+ * whose ports touch share a segment and need no row to chain them. A pole reaches the buffer through
+ * the energy face; the rest of the footprint forwards to this block.
  */
-public class SteamEngineBlockEntity extends SteamEngineEntity implements FluidPort {
+public class SteamEngineBlockEntity extends BlockEntity implements FluidPort, GeoBlockEntity {
+
+    private static final SteamEngineSpec SPEC = SteamEngineSpec.fromCorpus(SteamChainCorpus.get());
+
+    private long stored;
+    private SteamEngineSpec.Carry carry = SteamEngineSpec.Carry.NONE;
+    private boolean burning;
+    private final LongSnapshotJournal journal = new LongSnapshotJournal(() -> stored, v -> stored = v, this::setChanged);
+    private final AnimatableInstanceCache animations = GeckoLibUtil.createInstanceCache(this);
 
     public SteamEngineBlockEntity(BlockPos pos, BlockState state) {
-        super(pos, state);
+        super(PFBlockEntities.STEAM_ENGINE.get(), pos, state);
     }
 
-    @Override
-    public BlockEntityType<?> getType() {
-        return PFBlockEntities.STEAM_ENGINE.get();
-    }
-
-    @Override
-    public Holder<BlockEntityType<?>> typeHolder() {
-        return getType().builtInRegistryHolder();
-    }
-
-    @Override
-    public boolean isAssembled(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public boolean initMultiblock(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public void rescanMultiblock() {
-    }
-
-    @Override
-    public List<Vec3i> getCorePositions() {
-        return List.of();
+    public static SteamEngineSpec spec() {
+        return SPEC;
     }
 
     @Override
@@ -78,7 +57,7 @@ public class SteamEngineBlockEntity extends SteamEngineEntity implements FluidPo
 
     @Override
     public long capacity() {
-        return SteamChainCorpus.get().steamEngineFluidBoxVolume();
+        return SPEC.portCapacity();
     }
 
     @Override
@@ -91,66 +70,88 @@ public class SteamEngineBlockEntity extends SteamEngineEntity implements FluidPo
         FluidPorts.leave(level, pos);
     }
 
-    @Override
-    public void serverTick(ServerLevel world, BlockPos pos, BlockState state, NetworkedBlockEntity blockEntity) {
-        drawSteam();
-        super.serverTick(world, pos, state, blockEntity);
-    }
-
-    /**
-     * Tops the row's tank up to its peak fill from this port's segment. An engine with an empty tank
-     * and another engine behind it waits to be that engine's slave, or every engine of a row would
-     * hold steam and none could chain (ADR-0062).
-     */
-    private void drawSteam() {
-        SteamEngineEntity source = source();
-        if (source == this && source.boilerStorage.getInStack().isEmpty() && !isRowHead()) {
-            return;
-        }
+    public void serverTick() {
         ResourceHandler<FluidResource> segment = FluidPorts.segment(level, worldPosition);
-        if (segment == null) {
-            return;
-        }
-        ResourceHandler<FluidResource> tank = source.boilerStorage.getInputContainer();
+        long room = SPEC.bufferCapacity() - stored;
+        SteamEngineSpec.Request asked = SPEC.request(carry, room);
         FluidResource steam = FluidResource.of(PFFluids.STEAM_SOURCE.get());
-        long missing = SteamEngineSpec.peakFill(tank.getCapacityAsLong(0, steam)) - tank.getAmountAsLong(0);
-        if (missing <= 0L) {
-            return;
-        }
+        SteamEngineSpec.Tick made;
         try (Transaction transaction = Transaction.openRoot()) {
-            int drawn = segment.extract(steam, (int) missing, transaction);
-            if (drawn > 0 && tank.insert(steam, drawn, transaction) == drawn) {
-                transaction.commit();
+            int drawn = segment != null && asked.steam() > 0 ? segment.extract(steam, asked.steam(), transaction) : 0;
+            made = SPEC.burn(drawn, asked.carry(), room);
+            transaction.commit();
+        }
+        carry = made.carry();
+        stored += made.energy();
+        burning = made.steam() > 0;
+        if (made.energy() > 0L) {
+            setChanged();
+        }
+    }
+
+    /** The FE face a pole draws from. Extract-only, and journalled so a pole's aborted probe takes nothing. */
+    public EnergyHandler energySide() {
+        return energy;
+    }
+
+    private final EnergyHandler energy = new EnergyHandler() {
+        @Override
+        public long getAmountAsLong() {
+            return stored;
+        }
+
+        @Override
+        public long getCapacityAsLong() {
+            return SPEC.bufferCapacity();
+        }
+
+        @Override
+        public int insert(int amount, TransactionContext transaction) {
+            return 0;
+        }
+
+        @Override
+        public int extract(int amount, TransactionContext transaction) {
+            int taken = (int) Math.min(Math.max(amount, 0), stored);
+            if (taken > 0) {
+                journal.updateSnapshots(transaction);
+                stored -= taken;
             }
+            return taken;
         }
-    }
-
-    private boolean isRowHead() {
-        BlockPos behind = new BlockPos(Geometry.offsetToWorldPosition(getFacing(), new Vec3i(-1, 0, 0), worldPosition));
-        BlockState state = level.getBlockState(behind);
-        if (state.getBlock() instanceof FootprintPartBlock part) {
-            behind = part.machine().anchorOf(behind, state);
-        }
-        return !(level.getBlockEntity(behind) instanceof SteamEngineEntity);
-    }
-
-    @Override
-    public EnergyHandler getEnergyLookup(Direction direction) {
-        return source().energyStorage;
-    }
-
-    /** The engine whose tank and buffer this one's figures are: its master's when it is a slave. */
-    public SteamEngineEntity source() {
-        return inSlaveMode() ? master : this;
-    }
+    };
 
     public Optional<SteamEngineStatus> status() {
-        SteamEngineEntity source = source();
-        return SteamEngineStatus.of(steam(source) > 0,
-                ElectricNetworks.of(level).drawsFrom(source.getBlockPos()));
+        return SteamEngineStatus.of(burning || hasSteam(), ElectricNetworks.of(level).drawsFrom(worldPosition));
     }
 
-    private static long steam(SteamEngineEntity engine) {
-        return engine.boilerStorage.getInputContainer().getAmountAsLong(0);
+    private boolean hasSteam() {
+        ResourceHandler<FluidResource> segment = level == null ? null : FluidPorts.segment(level, worldPosition);
+        return segment != null && segment.getAmountAsLong(0) > 0
+                && segment.getResource(0).equals(FluidResource.of(PFFluids.STEAM_SOURCE.get()));
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return animations;
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        stored = input.getLongOr("Energy", 0L);
+        carry = new SteamEngineSpec.Carry(input.getDoubleOr("CarrySteam", 0.0), input.getDoubleOr("CarryEnergy", 0.0));
+    }
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putLong("Energy", stored);
+        output.putDouble("CarrySteam", carry.steam());
+        output.putDouble("CarryEnergy", carry.energy());
     }
 }

@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "oritech:block/machine_frame_block",
-    "particle": "oritech:block/machine_particle_texture"
+    "all": "minecraft:block/iron_block"
   }
 }

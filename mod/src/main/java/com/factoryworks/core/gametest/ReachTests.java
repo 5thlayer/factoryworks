@@ -161,10 +161,6 @@ final class ReachTests {
                     helper -> screen(helper, PFBlocks.assemblingFootprint(AssemblingTier.ONE), 12, true));
             tests.test("an_assembling_machine_22_blocks_off_closes", 20,
                     helper -> screen(helper, PFBlocks.assemblingFootprint(AssemblingTier.ONE), 22, false));
-            tests.test("a_steam_engine_12_blocks_off_stays_open", 20,
-                    helper -> screen(helper, PFBlocks.STEAM_ENGINE_FOOTPRINT, 12, true));
-            tests.test("a_steam_engine_22_blocks_off_closes", 20,
-                    helper -> screen(helper, PFBlocks.STEAM_ENGINE_FOOTPRINT, 22, false));
         }
 
         /** The menu is made directly: a fake player opens none. */

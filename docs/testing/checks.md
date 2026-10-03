@@ -95,12 +95,11 @@ transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 
 starved one freezes where it stood; that an Electric Mining Drill reached only through its part
 blocks is one machine, draws 45 FE/t, mines when fed and freezes when starved (making the part its
 own energy owner, returning false from `pay`, or dropping the journal each turn one red). How power crosses a wire, stops beyond
-reach and stops when the link is broken is Wireworks' own GameTests (#476). And that a pole reaching only a slave Steam Engine's
-parts draws the whole row's 1,350 FE/t from the master, once, feeding neither -- `SupplyScanTest` holds
-the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red --
-and that the row scan chains an engine whose part, not its anchor, stands in the row; skipping the
-part-to-anchor step turns it red. And that either footprint machine, the Assembling Machine or the
-Steam Engine (ADR-0077), broken at its anchor or at any part leaves none of its blocks standing and
+reach and stops when the link is broken is Wireworks' own GameTests (#476). And that a pole reaching only a Steam Engine's
+parts draws that engine's 450 FE/t, once -- `SupplyScanTest` holds
+the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red.
+And that either footprint machine, the Assembling Machine or the
+Steam Engine (ADR-0116), broken at its anchor or at any part leaves none of its blocks standing and
 drops exactly one item; dropping the part's teardown turns the six part tests red. And that an Assembling Machine's Held recipe survives its save hook and
 resolves again after it, that every assembling recipe of tier 1's categories in the server's manager is
 one Fill Recipe can set and it can hold, while a `crafting-with-fluid` one is refused (#331) -- and that changing the recipe hands the inputs back;
@@ -276,10 +275,9 @@ a break's start is refused, with vanilla's 1.0 of server lenience, so a start th
 never refused behind it. An Oritech machine core is not synced its controller, so the client refuses
 one beyond 4.5. On the client a refused start is attacked as a miss (`mixin/minecraft/MinecraftMixin`),
 swinging once the way vanilla does out of reach rather than cracking the block every tick; that is a
-human check on delivery. `ReachTests.Screens`, registered only with Oritech loaded, holds a machine's
-screen open 12 blocks off and closed 22 off, both the Assembling Machine's and Oritech's own through
-the Steam Engine; each closed at Oritech's 8 before `OritechScreenHandlerMixin` and the menu's own
-fix. Run them after re-extracting the corpus or editing the item map.
+human check on delivery. `ReachTests.Screens`, registered only with Oritech loaded, holds the
+Assembling Machine's screen open 12 blocks off and closed 22 off; it closed at Oritech's 8 before
+`OritechScreenHandlerMixin` and the menu's own fix. Run them after re-extracting the corpus or editing the item map.
 
 ## Placement plan check
 
@@ -736,23 +734,16 @@ is a human check on delivery.
 
 ## Steam Engine check
 
-Oritech's Steam Engine entity is the pack's engine (#282, ADR-0062), under the pack's own block,
-`factoryworks:steam_engine`, placed and broken as one footprint (#352, ADR-0077), and a mixin
-(`core/mixin/oritech/SteamEngineEntityMixin`) replaces its `tickMaster` and `setupMaster` whole,
-reaching the pack's subclass through inheritance. The HUD's status precedence is `SteamEngineStatusTest`.
-`SteamEngineSpecTest` under `./gradlew :factoryworks_core:test` is the arithmetic, read from
-`SteamChainCorpus`: one engine at speed 7 burns 30 mB/s and makes 450 FE/t **over whole ticks** --
-Oritech's `(long)` cast floors 1.5 mB/t to 1, so the spec carries the fraction -- rows are linear, no
-water returns, and the tank and FE buffer are 200 mB and 450 FE per engine in the row. The mixin
-targets were read off the installed 2.0.0-exp6 jar with `javap`, not the 1.21.1 source clone, and
-its config is `required: false` because Oritech is an optional dependency: a renamed target is a
-warning in the log and an uncalibrated engine, not a crash. A buffer of one tick's output would
-floor a pole-drained row to whole 300 FE millibuckets (1,200 FE/t for three), so the burn keeps
-the millibucket that starts inside the room and carries its overshoot as energy (#292). That an
-engine chains, through a part as well, and is pulled by a pole through a slave's part is
-`SteamEngineNetworkTests`. Its anchor is its steam port (#593): it draws its tank up to the peak fill,
-`SteamEngineSpec.peakFill`, and only the head of a row draws into an empty tank, or every engine of
-a row would hold steam and none could chain. Run the spec test after editing `core/fluid/SteamEngineSpec` or the mixin.
+The Steam Engine is a Core block entity (#282, #594, ADR-0062, ADR-0116), placed and broken as one
+footprint (#352). The HUD's status precedence is `SteamEngineStatusTest`. `SteamEngineSpecTest` under
+`./gradlew :factoryworks_core:test` is the arithmetic, read from `SteamChainCorpus`: one engine burns
+30 mB/s and makes 450 FE/t **over whole ticks** -- a segment moves whole millibuckets and 1.5 mB/t
+floors to 1, so the spec carries the fraction -- and the port and buffer are 200 mB and 450 FE. A
+buffer of one tick's output would floor a pole-drained engine to whole 300 FE millibuckets (300 FE/t),
+so the burn keeps the millibucket that starts inside the room and carries its overshoot as energy
+(#292). `SteamEngineNetworkTests` is that a pole draws an engine through a part, once; that the
+engine stands in a segment by its anchor alone, makes nothing from water and fills its buffer from
+steam; and that its charge survives a save. Run the spec test after editing `core/fluid/SteamEngineSpec`.
 
 ## Blockbench model check
 

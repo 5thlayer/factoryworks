@@ -920,12 +920,11 @@ Sub-rules:
 ### Power generation
 
 - **verdict**: `adapted`
-- **notice**: the Steam Engine is Oritech's engine under a pack block, calibrated by mixin to
-  Factorio's 30 mB/s and 450 FE/t, and the solar panel is a pack block on Oritech's Big Solar Panel
+- **notice**: the Steam Engine is a Core block entity at Factorio's 30 mB/s and 450 FE/t, and the solar panel is a pack block on Oritech's Big Solar Panel
   entity at Factorio's 60 kW on Factorio's day (#508).
 - **where**: all bodies
 - **via**: `pack`, `oritech`
-- **owner**: ADR-0048, ADR-0060, ADR-0062, ADR-0077
+- **owner**: ADR-0048, ADR-0060, ADR-0062, ADR-0116
 - **ticket**: #135 (the Steam Turbine), #7 (per-body solar); #104, #189, #224, #283 closed
 
 Sub-rules:

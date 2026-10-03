@@ -125,10 +125,7 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(OilRefineryBlockEntity::new,
                             java.util.Set.of(PFBlocks.OIL_REFINERY.get())));
 
-    /**
-     * The Steam Engine's anchor (ADR-0077): Oritech's engine entity under the pack's own type, which
-     * {@link SteamEngineBlockEntity#getType} answers in place of the one Oritech's constructor names.
-     */
+    /** The Steam Engine's anchor (ADR-0116). */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SteamEngineBlockEntity>>
             STEAM_ENGINE = BLOCK_ENTITIES.register("steam_engine",
                     () -> new BlockEntityType<>(SteamEngineBlockEntity::new,
@@ -367,7 +364,7 @@ public final class PFBlockEntities {
     private static void registerSteamEngineCapabilities(RegisterCapabilitiesEvent event) {
         registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
-                        ? engine.getEnergyLookup(side) : null);
+                        ? engine.energySide() : null);
     }
 
     /** The Solar Panel's energy face (#529), on every block, so a pole reaching any of it draws it. */

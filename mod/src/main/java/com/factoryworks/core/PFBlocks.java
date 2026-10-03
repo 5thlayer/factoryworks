@@ -147,7 +147,7 @@ public final class PFBlocks {
             OilRefineryFootprint.FOOTPRINT, OIL_REFINERY, OIL_REFINERY_PART,
             () -> PFItems.OIL_REFINERY.get());
 
-    /** Terra's Steam Engine (ADR-0077): Oritech's engine entity, on the Assembling Machine's footprint seam. */
+    /** Terra's Steam Engine (ADR-0116), on the footprint seam. */
     public static final DeferredHolder<Block, SteamEngineBlock> STEAM_ENGINE =
             BLOCKS.registerBlock("steam_engine", props -> new SteamEngineBlock(machineProperties(props)));
 

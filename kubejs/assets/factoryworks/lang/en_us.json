@@ -70,7 +70,6 @@
   "gui.factoryworks.assembling_machine.status.no_power": "No power: connect a powered pole",
   "gui.factoryworks.steam_engine.status.no_steam": "No steam",
   "gui.factoryworks.steam_engine.status.not_in_pole_area": "No pole",
-  "gui.factoryworks.steam_engine.chained": "Chained",
   "gui.factoryworks.solar_panel.output": "Making %s FE/t",
   "gui.factoryworks.accumulator.status.not_in_pole_area": "No pole",
   "gui.factoryworks.accumulator.status.charging": "Charging",

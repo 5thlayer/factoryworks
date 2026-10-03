@@ -356,8 +356,7 @@ final class PlacementPlanTests {
     }
 
     /**
-     * The Steam Engine's footprint (ADR-0077), for the Assembling Machine's reasons: the whole of it,
-     * and an anchor still {@code ASSEMBLED} after Oritech's next-tick rescan.
+     * The Steam Engine's footprint (ADR-0116): the whole of it, its anchor holding the engine.
      */
     private static void steamEngineMatchesPlacement(GameTestHelper helper) {
         PlacementPlan plan = check(helper, new ItemStack(PFItems.STEAM_ENGINE.get()),
@@ -371,12 +370,7 @@ final class PlacementPlanTests {
         if (!(helper.getLevel().getBlockEntity(anchor) instanceof SteamEngineBlockEntity)) {
             helper.fail("the placed anchor holds no Steam Engine block entity", helper.relativePos(anchor));
         }
-        helper.runAfterDelay(5, () -> {
-            if (!helper.getLevel().getBlockState(anchor).getValue(MultiblockMachine.ASSEMBLED)) {
-                helper.fail("the anchor lost ASSEMBLED after it was placed", helper.relativePos(anchor));
-            }
-            helper.succeed();
-        });
+        helper.succeed();
     }
 
     /** One taken position, in the engine's upper row, refuses the whole engine. */
