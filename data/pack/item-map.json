@@ -62,9 +62,8 @@
       "note": "As `electronic-circuit`. ADR-0031's three tiers, one item each."
     },
     "arithmetic-combinator": {
-      "status": "undecided",
-      "note": "A combinator decides or computes on a Redstone signal, and nothing supplies one: #148 left the row unemitted because Create's redstone line covered it, and Create left with ADR-0060 (ADR-0095). Which block it is, if any, is #484's.",
-      "ticket": 484
+      "status": "not_emitted",
+      "note": "Dropped by ADR-0115: the circuit network was kept only for Factorio fidelity (#484, ADR-0095 superseded)."
     },
     "assembling-machine-1": {
       "kind": "item",
@@ -216,9 +215,8 @@
       "note": "Vanilla concrete. Factorio's concrete is a walking-speed floor; Block Runner supplies that mechanic and the colour carries the hazard fiction the texture already has."
     },
     "constant-combinator": {
-      "status": "undecided",
-      "note": "As `arithmetic-combinator`.",
-      "ticket": 484
+      "status": "not_emitted",
+      "note": "Dropped by ADR-0115: the circuit network was kept only for Factorio fidelity (#484, ADR-0095 superseded)."
     },
     "construction-robot": {
       "status": "undecided",
@@ -259,9 +257,8 @@
       "ticket": 114
     },
     "decider-combinator": {
-      "status": "undecided",
-      "note": "As `arithmetic-combinator`.",
-      "ticket": 484
+      "status": "not_emitted",
+      "note": "Dropped by ADR-0115: the circuit network was kept only for Factorio fidelity (#484, ADR-0095 superseded)."
     },
     "depleted-uranium-fuel-cell": {
       "status": "undecided",
@@ -269,9 +266,8 @@
       "ticket": 135
     },
     "display-panel": {
-      "status": "undecided",
-      "note": "A display panel shows a Redstone signal, and nothing supplies one since Power Grid left with ADR-0060 and Create with it (ADR-0095). Which block it is, if any, is #484's.",
-      "ticket": 484
+      "status": "not_emitted",
+      "note": "Dropped by ADR-0115: the circuit network was kept only for Factorio fidelity (#484, ADR-0095 superseded)."
     },
     "electric-engine-unit": {
       "kind": "item",
@@ -671,9 +667,8 @@
       "ticket": 120
     },
     "programmable-speaker": {
-      "status": "undecided",
-      "note": "A programmable speaker raises an alert on a Redstone condition, and nothing supplies one since Power Grid left with ADR-0060 (ADR-0095). Which block it is, if any, is #484's.",
-      "ticket": 484
+      "status": "not_emitted",
+      "note": "Dropped by ADR-0115: the circuit network was kept only for Factorio fidelity (#484, ADR-0095 superseded)."
     },
     "pump": {
       "kind": "item",
@@ -748,9 +743,8 @@
       "blocked_by": 378
     },
     "selector-combinator": {
-      "status": "undecided",
-      "note": "As `arithmetic-combinator`. Its corpus recipe also takes five `decider-combinator`, so it waits on that row too.",
-      "ticket": 484
+      "status": "not_emitted",
+      "note": "Dropped by ADR-0115: the circuit network was kept only for Factorio fidelity (#484, ADR-0095 superseded)."
     },
     "shotgun": {
       "status": "undecided",
