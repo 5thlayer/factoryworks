@@ -61,6 +61,8 @@ of them.
   whose naming rule still holds. The overhaul ADRs are superseded as a set: Terra and its worldgen,
   the stock-recipe sweep, the Nether and the End, vanilla spawning, the wreck, and the corpus as the
   authority for numbers. ADR-0066's grid removal stays, as Craftworks' own.
+- Mechanics kept only for Factorio fidelity are dropped: the circuit network (ADR-0095) and the
+  small lamp.
 - The migration runs in this order: freeze the generated numbers, move the corpus out, un-nest
   Groundworks, split the FactoryWorks repository and rename the mod id, move each Core package into
   its Module, then clean up the Showcase.
