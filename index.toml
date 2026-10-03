@@ -326,11 +326,11 @@ hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "f4bc41e9bd75afac52ca161dde0cecb2eab1353b91021bb69fbefd02dfb0ea63"
+hash = "7af167cc2a020b387f6b3c87ffd1e0e5fb28c7ca85ae090757cce4a8aae4c397"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "3d58b3ca8db2b53d5b4e22f55c3bf7722ebd2dd1a356d0b3930496e60c544c52"
+hash = "a18cdc46a69dccf43c48e5af26720718b7e1a1145bcc5ebd9632577f14653621"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -342,7 +342,7 @@ hash = "a06ddd6c447b79c7f97eda6aa668151b49867d5155b763c5f843ba8ee1cce2e1"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
-hash = "a9a87a8cd9a5b065d01a6181456496dcee4c6bed2fdd0785fc2f4e25d75b2700"
+hash = "d8977dbfb584e1da7d087d50d59f7256377d3e36abff94d6b99a311343b12624"
 
 [[files]]
 file = "data/pack/item-map.json"
@@ -350,7 +350,7 @@ hash = "733d1222ad61d1cab0acf706fe202a6e7195d9b808133f518dfd5c8eabbb9ce3"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "011cbbfc8394d7a8d6739f40a55a3b0c8b17db5cac4f2b28a329b7f4b2db412c"
+hash = "0c044e0d0be0097b5f7ab4f73f352b8328a375b6d0c80bf401801092ed75e320"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -426,7 +426,7 @@ hash = "51e78bbdcf50e709d84527cff35f865f8141b8f91fda3f664677bd310fb37a54"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/boiler_part.json"
-hash = "d3fe8263022c798e0a4da31b14f6952f50bac9b51e43d0d85c76b29e83d81ec2"
+hash = "468fe72c8a3b8d0bcf91564c63a3302e36b5d3771f4c9b3302b092e9371b8957"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/burner_mining_drill.json"
@@ -690,7 +690,7 @@ hash = "c4f3b3ee106426f1322240cc01e60027429b080937c9c02917d8560bdbd4fec0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "c5ff095932430da94747ca87759a22c5cc6f252f4b771992940ee949b45b12ef"
+hash = "28328aa6e70e4080ee9a9b0fbc86525fd847f13b5243cecd831cf3dcf5e08fbd"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/accumulator_part.json"
@@ -703,6 +703,10 @@ hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/boiler.json"
 hash = "0d14823f507cacd3b533610f0f0e2addd623aa4d8a0a797a1c2dc26c3fdba17a"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/boiler_part.json"
+hash = "21e5a7cecc5afd48073ba637e06b309f291192b6b21333c76b9d16171c754369"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/burner_mining_drill.json"
@@ -946,7 +950,7 @@ hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/steam_engine.json"
-hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
+hash = "21e5a7cecc5afd48073ba637e06b309f291192b6b21333c76b9d16171c754369"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/steel_chest.json"
@@ -3083,7 +3087,7 @@ metafile = true
 
 [[files]]
 file = "mods/craftworks.pw.toml"
-hash = "08367053d143a9d7ec3715c5928d8ccba008b50aa553881963a07edd63263c64"
+hash = "905f3f4edf11d34ffa8ce105d394f882ea55578eaed9c8ad0b368006c3fcedf7"
 metafile = true
 
 [[files]]

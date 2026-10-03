@@ -15,7 +15,7 @@
       "mod": "craftworks",
       "group": "io.github.5thlayer",
       "artifact": "craftworks",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "pattern": "craftworks-*.jar",
       "curseforge": 1715876
     },
