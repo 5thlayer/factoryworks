@@ -32,8 +32,11 @@ plays in an ordinary world and mixes with other tech mods.
   `docs/research/` and `docs/spec/` move to a private repository, and nothing public reads Wube's
   data.
 - **The modpack becomes FactoryWorks Showcase**, which demos and integration-tests the suite. It
-  keeps KubeJS for small tweaks, but has no quests, no wreck and no Factorio names. Researchd, Porting
-  Dead Libs, FTB Quests and FTB Teams leave it. Labworks is dropped.
+  keeps KubeJS for small tweaks, but has no quests, no wreck and no Factorio names. FTB Quests and
+  FTB Teams leave it. Labworks is dropped. Research (Researchd, Porting Dead Libs and the tech tree)
+  stays in the Showcase until it is extracted to the private repository.
+- **Craftworks keeps the crafting grid removed**, and its `vanillaRecipes` flag turns vanilla's
+  recipes into Assembling recipes. The Showcase drops its stock-recipe sweep (ADR-0034).
 - **Repositories.** A new repository from the libworks template takes `5thlayer/factoryworks` for
   the mod, carrying `mod/`'s history, and copies this ADR as its ADR-0001. This repository becomes
   `factoryworks-showcase` and keeps the earlier ADRs as history.
@@ -56,8 +59,8 @@ of them.
 
 - This supersedes ADR-0101 and ADR-0090 and the dependency table in ADR-0109, and most of ADR-0103,
   whose naming rule still holds. The overhaul ADRs are superseded as a set: Terra and its worldgen,
-  the removal of stock recipes, the crafting grid, the Nether and the End, vanilla spawning, the
-  wreck, research, and the corpus as the authority for numbers.
+  the stock-recipe sweep, the Nether and the End, vanilla spawning, the wreck, and the corpus as the
+  authority for numbers. ADR-0066's grid removal stays, as Craftworks' own.
 - The migration runs in this order: freeze the generated numbers, move the corpus out, un-nest
   Groundworks, split the FactoryWorks repository and rename the mod id, move each Core package into
   its Module, then clean up the Showcase.
