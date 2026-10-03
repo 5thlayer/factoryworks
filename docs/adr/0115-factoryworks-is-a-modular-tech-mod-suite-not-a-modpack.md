@@ -16,6 +16,9 @@ plays in an ordinary world and mixes with other tech mods.
   `factoryworks_core`) is the base every Module requires. The four **Modules** are Beltworks, Pipeworks,
   Wireworks and Craftworks. A Module requires FactoryWorks and no other Module, so Craftworks stops
   nesting Pipeworks.
+- **Groundworks owns the footprint**, the multi-block placed and broken whole that the assemblers,
+  boiler, steam engine and pumpjack stand on. It is placement, it lets Craftworks build its machines
+  before FactoryWorks is split out, and any mod can use it in plain vanilla.
 - **Every dependency is a required CurseForge dependency**, never jar-in-jar. Beltworks and
   Wireworks stop nesting Groundworks.
 - **Mods talk only through NeoForge's energy, fluid and item capabilities**, to each other and to
