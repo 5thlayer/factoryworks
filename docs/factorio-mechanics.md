@@ -1226,7 +1226,7 @@ Sub-rules:
 - **Research consumes packs continuously while running** — `adapted`. Researchd's Lab consumes on
   completion of a pack batch rather than metering a rate; only `consumePack` reads the Lab.
 - **A lab draws power, so research competes with the factory for it** — `shipped`. Researchd's Lab
-  draws `research_lab_energy_usage` FE a tick while researching, set in `config/researchd-common.toml`
+  draws `research_lab_energy_usage` FE a tick while researching, set in `config/researchd-server.toml`
   to 30: Factorio's 60 kW at the pack's 100 J to the FE (ADR-0060).
 
 ### The technology tree

@@ -111,6 +111,8 @@ config/chunky/tasks/
 config/InventoryHUD/
 # Sodium's hash of this machine's GPU and driver, rewritten on every launch.
 config/sodium-fingerprint.json
+config/sodium-options.json
+config/sound_physics_remastered/sound_rates.properties
 config/justzoom/
 config/almostunified/debug.json
 config/emi.css
@@ -128,6 +130,8 @@ servers.dat
 usercache.json
 usernamecache.json
 minecraftinstance.json
+realms_persistence.json
+player.env
 *.log
 __pycache__/
 /.pytest_cache/

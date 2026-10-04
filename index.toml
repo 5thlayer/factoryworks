@@ -154,11 +154,11 @@ hash = "6bbc71c6dc18b1ba4952e1bc54ed2b98c3a90f04cec4257ec3f7566cdf0c0e2a"
 
 [[files]]
 file = "config/researchd-common.toml"
-hash = "328c7cc75bdc7c302ba2b21338cd6266288f810e51e7e0018446c555f206ab49"
+hash = "ff6d7ae15491acb223054ff3eb9d0ff2f0235923f98cb4686f7aab9e7a00eef7"
 
 [[files]]
 file = "config/researchd-server.toml"
-hash = "9214ba5b45925f264f200c1eae98d7b1629842c3edd4141c980861b09e8aa160"
+hash = "2a8e794b7b845cd30e450175794634aa94f67b3cafe80aba039263abdaded4da"
 
 [[files]]
 file = "config/respoiled-common.toml"
@@ -169,20 +169,12 @@ file = "config/sodium-mixins.properties"
 hash = "b627c4456e6fa0bc4b5f85e2f1cd949faedae3cb9afdaf2a5f52e6f3b6ae1f01"
 
 [[files]]
-file = "config/sodium-options.json"
-hash = "680378d5c81a30954b884ac97e652dae550619876df8fb7997e2a6e9dc3fc489"
-
-[[files]]
 file = "config/sound_physics_remastered/occlusion.properties"
 hash = "cb08fad009eefaaf888bb4324c351ac426a49fb0db7cb75c4fddbcdcf8d8f414"
 
 [[files]]
 file = "config/sound_physics_remastered/reflectivity.properties"
 hash = "bc029afc200ba2fba522a27245d65c8e5db0f20cd0eddd5873a316054d962923"
-
-[[files]]
-file = "config/sound_physics_remastered/sound_rates.properties"
-hash = "c14fc82adb1f934b8c79e6107445e34ae56dabe20c9f182edf354d63edbb651a"
 
 [[files]]
 file = "config/sound_physics_remastered/soundphysics.properties"
@@ -326,11 +318,11 @@ hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "7af167cc2a020b387f6b3c87ffd1e0e5fb28c7ca85ae090757cce4a8aae4c397"
+hash = "0e425d9a0c8c7fe03fdbff8b86a2e3a4a34f399f57df3e2476a8c58320cc3613"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "a18cdc46a69dccf43c48e5af26720718b7e1a1145bcc5ebd9632577f14653621"
+hash = "ff1d28d7e3c7a41e11f67e6eea959310766fa45ec29b3275ac720d32c6a0531e"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -342,15 +334,15 @@ hash = "a06ddd6c447b79c7f97eda6aa668151b49867d5155b763c5f843ba8ee1cce2e1"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
-hash = "d8977dbfb584e1da7d087d50d59f7256377d3e36abff94d6b99a311343b12624"
+hash = "a9a87a8cd9a5b065d01a6181456496dcee4c6bed2fdd0785fc2f4e25d75b2700"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "733d1222ad61d1cab0acf706fe202a6e7195d9b808133f518dfd5c8eabbb9ce3"
+hash = "e801a91f9c72b20f36ba75c841b711266c3abf929ad0900a51ccbf67a764f2f1"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "0c044e0d0be0097b5f7ab4f73f352b8328a375b6d0c80bf401801092ed75e320"
+hash = "6a27fe500046fe08f51b7f3859a427f69b60f22f13efdea31cde79d5b0b4d889"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -950,7 +942,7 @@ hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/steam_engine.json"
-hash = "21e5a7cecc5afd48073ba637e06b309f291192b6b21333c76b9d16171c754369"
+hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/steel_chest.json"
@@ -3185,8 +3177,8 @@ hash = "990fed4219a2279ce195ba10ed86e3ded7432b631380d3673e13e1b19c75f477"
 metafile = true
 
 [[files]]
-file = "mods/researchd-1.3.4-26.1.jar"
-hash = "fd62f78adb9311f2312880ac4bf78b817123fcc0a288f291d63d93bcea180e8b"
+file = "mods/researchd-1.2.5.jar"
+hash = "09afb46fb4125fd26d77c83255f527cd7838cdeafa50bece9bf0f235f737c6a0"
 
 [[files]]
 file = "mods/rhino.pw.toml"
@@ -3221,11 +3213,3 @@ metafile = true
 [[files]]
 file = "mods/wireworks-0.2.0.jar"
 hash = "6927352d15fad84d110fef0836914013727ea0f25fd70e2630bf301fa11f7223"
-
-[[files]]
-file = "player.env"
-hash = "64c47ffaaa82c5864238d886c4f579e7650823bea0f1870ab8d8b8411256d768"
-
-[[files]]
-file = "realms_persistence.json"
-hash = "6fcaca997cf2f0b0a907e3fab539a9b13e3e002dd1c6215a0093a820b79513df"
