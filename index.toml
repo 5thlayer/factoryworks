@@ -342,7 +342,7 @@ hash = "5299d67c1e167b6276bdc279e9dc5ed2b792ed56427c3b844c58de3e6fa0d180"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "5b76896876b1103247399bba3575572a2733e7b17e73be1adf8393424fab2026"
+hash = "695f63c4aef6a43608fe3542a1df210494e6fb93d716de70b7983f17ac94aaf6"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -3012,7 +3012,7 @@ metafile = true
 
 [[files]]
 file = "mods/beltworks.pw.toml"
-hash = "7f3f36696bd35136f67b5318faea577281b8f5b1802256dd2035fd95511961f5"
+hash = "dacf1f12891c966eb4625d9436988ae52f3f345620e1bdfdd62cfc1891e5662b"
 metafile = true
 
 [[files]]
@@ -3047,7 +3047,7 @@ metafile = true
 
 [[files]]
 file = "mods/craftworks.pw.toml"
-hash = "905f3f4edf11d34ffa8ce105d394f882ea55578eaed9c8ad0b368006c3fcedf7"
+hash = "b592f42bc5e5ca82ce6687777f2d8c6ee9fa35537907e1ea779339f1aa634c0a"
 metafile = true
 
 [[files]]
@@ -3098,6 +3098,11 @@ metafile = true
 [[files]]
 file = "mods/geckolib.pw.toml"
 hash = "3e3a9c123414630fc001e4301388a328dd2f08c1af793fc954fa07acb49f048b"
+metafile = true
+
+[[files]]
+file = "mods/groundworks.pw.toml"
+hash = "85804bfb6d7c7d6d51d81ac74717ec10451589934575906d5f83489e05b11ee2"
 metafile = true
 
 [[files]]
@@ -3184,5 +3189,5 @@ hash = "71c920bbbf7464754a2e7beb48e8dae545795cc6c36206623a45188a8072e03b"
 metafile = true
 
 [[files]]
-file = "mods/wireworks-0.2.1.jar"
-hash = "b39b3ab55ab22236d2700709cac984e1423fb20c968f0224ced990f46bfdc293"
+file = "mods/wireworks-0.2.2.jar"
+hash = "129f88697ffe90e5c30c7668aff641644c1c2ef88199fc6ab7562b67313e5fb0"

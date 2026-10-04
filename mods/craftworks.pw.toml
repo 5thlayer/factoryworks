@@ -1,13 +1,13 @@
 name = "Craftworks: Personal Assembler"
-filename = "craftworks-0.2.1.jar"
+filename = "craftworks-0.3.0.jar"
 side = "both"
 
 [download]
 hash-format = "sha1"
-hash = "3623cc23c8d1b052d42ddc643521c5687ce5e2f2"
+hash = "7213d95bf43fc2b051b4139cdb9ccb26240b1eaf"
 mode = "metadata:curseforge"
 
 [update]
 [update.curseforge]
-file-id = 9044712
+file-id = 9062167
 project-id = 1715876
