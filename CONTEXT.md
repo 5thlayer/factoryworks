@@ -370,7 +370,7 @@ What a player sees while holding a placeable block -- the pack's, or any block w
 _Avoid_: ghost (Factorio's ghost is an entity left for robots to build, a mechanic the pack excludes), hologram, blueprint preview
 
 **Fast Replace**:
-Placing a block over a placed one of the same **Replace Group** but another tier, which swaps it in place, up a tier or down. It takes one item and gives the old one back, per entity, so a whole pole column swaps for one item and keeps its height and wires. The new block keeps everything of the old one's it can hold, the Assembling Machine's recipe included where the new tier can craft it, and the rest goes to the player; if the player cannot take it, nothing is replaced. The new block keeps the old one's facing. A plain right-click with another tier of the group in hand replaces, rather than opening the block's screen, and on a multiblock any of its blocks answers; a sneak-right-click still places beside. The **Placement Preview** draws a replace in a colour of its own.
+Placing a block over a placed one of the same **Replace Group** but another tier, which swaps it in place, up a tier or down. It takes one item and gives the old one back, per entity, so a whole pole column swaps for one item and keeps its height and wires. The new block keeps everything of the old one's it can hold, the Assembler's recipe included where the new tier can craft it, and the rest goes to the player; if the player cannot take it, nothing is replaced. The new block keeps the old one's facing. A plain right-click with another tier of the group in hand replaces, rather than opening the block's screen, and on a multiblock any of its blocks answers; a sneak-right-click still places beside. The **Placement Preview** draws a replace in a colour of its own.
 _Avoid_: upgrade (it goes down a tier too), swap, overwrite
 
 **Rotate**:
@@ -382,7 +382,7 @@ _Avoid_: wrench rotate (a departed GregTech verb, #386), turn, rotate key
 _Avoid_: counter-rotate, rotate back
 
 **Replace Group**:
-The blocks that can **Fast Replace** each other, read from Factorio's `fast_replaceable_group` rather than chosen: the small and medium poles are one group and the substation is alone; the three furnaces are one; the three Assembling Machine tiers are one; belts and splitters of every tier are one; loaders of every tier are one.
+The blocks that can **Fast Replace** each other, read from Factorio's `fast_replaceable_group` rather than chosen: the small and medium poles are one group and the substation is alone; the three furnaces are one; the three Assembler tiers are one; belts and splitters of every tier are one; loaders of every tier are one.
 _Avoid_: family, tier ladder (a ladder is one kind's tiers; a group can hold two kinds, as belts and splitters do)
 
 **Supply Area Box**:
@@ -432,7 +432,7 @@ One unit of mining work against an ore block: it consumes one unit of the block'
 _Avoid_: mining tick, drill cycle, swing
 
 **Personal Assembler**:
-The player's inventory screen, as the player's only hand-crafting surface. It is Craftworks' mechanic, and Craftworks' glossary defines it (ADR-0089). The pack gives it a copy of each **Assembling Machine** recipe that Factorio marks hand-craftable — first category `crafting`, minus the eleven Factorio withholds (`#88`) — crafted at speed 1, serially (ADR-0029). It **replaces** the crafting grid, and crafts nothing by hand directly: every craft is a **Crafting Plan**. It is always present: it is taught by the opening, never granted by it (`#100`).
+The player's inventory screen, as the player's only hand-crafting surface. It is Craftworks' mechanic, and Craftworks' glossary defines it (ADR-0089). The pack gives it a copy of each **Assembler** recipe that Factorio marks hand-craftable — first category `crafting`, minus the eleven Factorio withholds (`#88`) — crafted at speed 1, serially (ADR-0029). It **replaces** the crafting grid, and crafts nothing by hand directly: every craft is a **Crafting Plan**. It is always present: it is taught by the opening, never granted by it (`#100`).
 _Avoid_: hand crafter, personal crafter, portable crafter
 
 **Crafting Plan**:
@@ -451,12 +451,12 @@ _Avoid_: shortfall, unavailable
 A recipe inside a Crafting Plan that the team has not researched: Craftworks asks Researchd about the hand copy, which unlocks with its machine recipe (ADR-0089). The resolver plans only through unlocked recipes, so a locked intermediate stops a plan exactly as a missing ingredient does, for a reason the player fixes with research rather than with mining.
 _Avoid_: unavailable recipe, gated
 
-**Assembling Machine**:
-The machine that runs Factorio's crafting recipes, on Oritech's chassis: a `factoryworks_core` subclass reusing Oritech's model, energy storage, inventory and addons, and replacing its craft cycle whole (ADR-0071). It runs `factoryworks:assembling` (ADR-0063), holds a **Held recipe** rather than matching on input, and is placed as a footprint from one item like every other pack block (ADR-0069). It comes in three tiers, one block each, at Factorio's speeds and in Factorio's colours; tiers 2 and 3 also craft with a fluid (`#295`). Oritech's addons are not the tier ladder -- what they are is #120's. Not Oritech's own Assembler, which is a rival for the same row and is recipe-removed and hidden.
-_Avoid_: assembler, Oritech assembler, GT assembler, crafter, fabricator
+**Assembler**:
+Craftworks' placed machine that runs Assembling recipes, in three tiers, and Craftworks' glossary defines it. It holds a **Held recipe** rather than matching on what it is fed, and is placed and broken whole from one item. Tiers 2 and 3 also craft with fluids.
+_Avoid_: Assembling Machine, crafter, fabricator, Oritech assembler
 
 **Held recipe**:
-The single `factoryworks:assembling` recipe a player sets on an **Assembling Machine**, which the machine then runs and nothing else. It is Factorio's own gesture: the machine is told its recipe rather than deducing one from what it is fed, so there is no lookup, no first match and no ambiguity between two recipes sharing an ingredient set. The machine's inputs are filtered to it, and it is held whether or not the machine can currently run it — an unfed, unresearched or output-blocked machine displays its Held recipe and idles, and never clears it silently. Stored as the recipe id, which is stable and is what research unlocks already key on.
+The single `factoryworks:assembling` recipe a player sets on an **Assembler**, which the machine then runs and nothing else. It is Factorio's own gesture: the machine is told its recipe rather than deducing one from what it is fed, so there is no lookup, no first match and no ambiguity between two recipes sharing an ingredient set. The machine's inputs are filtered to it, and it is held whether or not the machine can currently run it — an unfed, unresearched or output-blocked machine displays its Held recipe and idles, and never clears it silently. Stored as the recipe id, which is stable and is what research unlocks already key on.
 _Avoid_: locked recipe, recipe lock, selected recipe, machine lock
 
 **Gated recipe**:
@@ -487,11 +487,11 @@ _Avoid_: fuel type, burnable, fuel class
 ### The oil chapter
 
 **Oil Refinery**:
-The machine that splits crude: basic and advanced oil processing, two fluids in and three out, the only machine in the pack that emits three fluids at once (ADR-0025). A pack block wearing Oritech's Refinery with both of its chamber layers, placed and broken as one footprint from one item, always with three outputs. It holds a **Held recipe** of its own recipe type, not the **Assembling Machine**'s. Not Oritech's own Refinery, whose chambers add outputs one at a time and which is recipe-removed and hidden. Coal liquefaction is Space Age and arrives with Ignus or not at all (#12).
+The machine that splits crude: basic and advanced oil processing, two fluids in and three out, the only machine in the pack that emits three fluids at once (ADR-0025). A pack block wearing Oritech's Refinery with both of its chamber layers, placed and broken as one footprint from one item, always with three outputs. It holds a **Held recipe** of its own recipe type, not the **Assembler**'s. Not Oritech's own Refinery, whose chambers add outputs one at a time and which is recipe-removed and hidden. Coal liquefaction is Space Age and arrives with Ignus or not at all (#12).
 _Avoid_: distillation tower, refinery multiblock, cracker, refinery chamber
 
 **Chemical Plant**:
-The machine carrying Factorio's chemical-plant recipe list: both crackings, lubricant, plastic, sulfur, solid fuel, sulfuric acid and battery (ADR-0025). Up to two items and two fluids in, one item and one fluid out. A pack block wearing Oritech's Centrifuge, on the Centrifuge's footprint; it holds a **Held recipe** of its own recipe type, not the **Assembling Machine**'s. Not Oritech's own Centrifuge, which is recipe-removed and hidden.
+The machine carrying Factorio's chemical-plant recipe list: both crackings, lubricant, plastic, sulfur, solid fuel, sulfuric acid and battery (ADR-0025). Up to two items and two fluids in, one item and one fluid out. A pack block wearing Oritech's Centrifuge, on the Centrifuge's footprint; it holds a **Held recipe** of its own recipe type, not the **Assembler**'s. Not Oritech's own Centrifuge, which is recipe-removed and hidden.
 _Avoid_: chemical reactor, chem plant, reaction chamber, centrifuge
 
 **Oil well**:
