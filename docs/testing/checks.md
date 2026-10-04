@@ -931,6 +931,10 @@ ticket, an unlisted one fails, and a stale one fails too. The four today are mod
 departed `gcyr:` textures (#13). Other mods' namespaces
 are not scanned; they are not ours to fix.
 
+"Headless" means no player, not no window: on a desktop the client opens a real game window for
+the length of the run, so tell whoever is at the screen before running it, and leave the window
+alone. Closing it early ends the run with "exited early" and no verdict.
+
 One blind spot is **measured rather than assumed**: a missing item model definition — the
 fifteen-item failure the ticket was filed over — is logged nowhere at all. Deleting
 `assets/factoryworks/items/boiler.json` produced a log with zero occurrences of `boiler` while
