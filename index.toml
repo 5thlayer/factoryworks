@@ -342,7 +342,7 @@ hash = "e801a91f9c72b20f36ba75c841b711266c3abf929ad0900a51ccbf67a764f2f1"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "64359a2efd291dba5b7db773ca8e9d3152d3b4e5914687419a8283e212ed3d25"
+hash = "5b76896876b1103247399bba3575572a2733e7b17e73be1adf8393424fab2026"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -3029,6 +3029,10 @@ file = "kubejs/startup_scripts/main.js"
 hash = "5c4659e7bb368960801ccfce24ac3493fa14aae88a7e17b2a9cdfe1931985ffe"
 
 [[files]]
+file = "mise.toml"
+hash = "8e953181c1a7051ff1b99bed5f552206071771ab82d5c34bd37da692af9ecfad"
+
+[[files]]
 file = "mods/Porting-Dead-Libs-1.1.15.jar"
 hash = "a3e161226e9d7e16dd32d02c8b58c6d6e2aa8155cd6145b5286e6add054f9183"
 
@@ -3216,5 +3220,5 @@ hash = "71c920bbbf7464754a2e7beb48e8dae545795cc6c36206623a45188a8072e03b"
 metafile = true
 
 [[files]]
-file = "mods/wireworks-0.2.0.jar"
-hash = "6927352d15fad84d110fef0836914013727ea0f25fd70e2630bf301fa11f7223"
+file = "mods/wireworks-0.2.1.jar"
+hash = "b39b3ab55ab22236d2700709cac984e1423fb20c968f0224ced990f46bfdc293"
