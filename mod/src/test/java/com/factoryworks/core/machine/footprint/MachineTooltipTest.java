@@ -32,27 +32,11 @@ class MachineTooltipTest {
     }
 
     @Test
-    void theAccumulatorShowsWhatItHoldsAndPasses() {
-        assertEquals(List.of(
-                        new MachineTooltip.Line("tooltip.factoryworks.holds", List.of("50,000")),
-                        new MachineTooltip.Line("tooltip.factoryworks.in_and_out", List.of("150"))),
-                MachineTooltip.accumulator(50_000, 150));
-    }
-
-    @Test
     void theRadarShowsItsDrawAndReach() {
         assertEquals(List.of(
                         new MachineTooltip.Line("tooltip.factoryworks.draws", List.of("150")),
                         new MachineTooltip.Line("tooltip.factoryworks.charts", List.of("4", "14"))),
                 MachineTooltip.radar(150, 4, 14));
-    }
-
-    @Test
-    void theSolarPanelShowsItsPeakAndItsSky() {
-        assertEquals(List.of(
-                        new MachineTooltip.Line("tooltip.factoryworks.makes_up_to", List.of("30")),
-                        new MachineTooltip.Line("tooltip.factoryworks.needs_open_sky", List.of())),
-                MachineTooltip.solarPanel(30));
     }
 
     private static MachineTooltip.Line line(String key, String... args) {

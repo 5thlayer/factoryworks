@@ -1,6 +1,5 @@
 package com.factoryworks.core;
 
-import com.factoryworks.core.energy.AccumulatorItem;
 import com.factoryworks.core.fluid.BoilerItem;
 import com.factoryworks.core.chest.ChestTier;
 import com.factoryworks.core.smelting.FurnaceItem;
@@ -92,14 +91,6 @@ public final class PFItems {
             "steam_engine",
             props -> new FootprintItem(props, PFBlocks.STEAM_ENGINE_FOOTPRINT, 0.7f, "steam_engine"));
 
-    /** The Solar Panel's item (#529), on Oritech's own {@code big_solar_panel} model at its 0.7. */
-    public static final DeferredHolder<Item, FootprintItem> SOLAR_PANEL = ITEMS.registerItem(
-            "solar_panel",
-            props -> new FootprintItem(props, PFBlocks.SOLAR_PANEL_FOOTPRINT, 0.7f, "big_solar_panel"));
-
-    public static final DeferredHolder<Item, AccumulatorItem> ACCUMULATOR =
-            ITEMS.registerItem("accumulator", AccumulatorItem::new);
-
     public static final DeferredHolder<Item, RadarItem> RADAR = ITEMS.registerItem("radar", RadarItem::new);
 
     public static final DeferredHolder<Item, BoilerItem> BOILER = ITEMS.registerItem("boiler", BoilerItem::new);
@@ -157,8 +148,6 @@ public final class PFItems {
         FUNCTIONAL.add(CHEMICAL_PLANT);
         FUNCTIONAL.add(OIL_REFINERY);
         FUNCTIONAL.add(STEAM_ENGINE);
-        FUNCTIONAL.add(SOLAR_PANEL);
-        FUNCTIONAL.add(ACCUMULATOR);
         FUNCTIONAL.add(RADAR);
         FUNCTIONAL.add(PUMPJACK);
         // Tools sit with the machinery, not with the saplings: a pick is the first thing a player

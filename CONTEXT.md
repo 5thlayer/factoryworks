@@ -338,7 +338,7 @@ The generator that burns **Superheated Steam** at Factorio's rate, and nothing e
 _Avoid_: Oritech's steam engine, large turbine, generator
 
 **Solar Panel**:
-The generator that makes power from daylight alone: Factorio's 60 kW at noon, nothing at night, ramping through dusk and dawn, so a day averages 70% of its peak. It makes nothing without open sky above it, and weather does not dim it. It holds no more than one tick of its own output, so the night is the **Accumulator**'s to bridge. A pack block on Oritech's Big Solar Panel, placed and broken as one footprint; not Oritech's own panel, which is assembled from machine cores.
+The generator that makes power from daylight alone: Factorio's 60 kW at noon, nothing at night, ramping through dusk and dawn, so a day averages 70% of its peak. It makes nothing without open sky above it, and weather does not dim it. It holds no more than one tick of its own output, so the night is the **Accumulator**'s to bridge. Wireworks' `wireworks:solar_panel`, a one-block pillar under a 3x3 top layer, placed and broken as one footprint; the Pack states its peak in `config/wireworks-server.toml` and crafts it from Factorio's recipe.
 _Avoid_: Big Solar Panel, solar generator, photovoltaic
 
 **Nuclear Reactor**:

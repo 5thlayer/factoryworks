@@ -876,7 +876,7 @@ Sub-rules:
 - **notice**: power reaches a machine in all-or-nothing ticks. A machine short of power stops
   rather than slowing, and nothing carries FE between areas except a wire between two poles.
 - **where**: all bodies
-- **via**: `wireworks`, `oritech`
+- **via**: `wireworks`
 - **owner**: ADR-0017 as amended by ADR-0035, ADR-0036, ADR-0060 and ADR-0062
 
 FE is the pack's only energy currency (ADR-0060), at **1 FE = 100 J**. **One** carrier moves it: the
@@ -885,9 +885,8 @@ since ADR-0062 reaches other areas by linking to the poles within its wire reach
 balance. ADR-0062 supersedes ADR-0060's two-carrier clause, and **Oritech's Energy Transmission
 Pole** left the power path with it (#284): like Oritech's energy pipes and its Enderic Laser, it is
 swept by ADR-0034's default-deny (`recipes.js` admits no Oritech surface), so it has no recipe and
-does not appear in EMI. Oritech still supplies the things that stand *in* an area rather than carry
-between them — the Steam Engine as generator, the Large Energy Storage as accumulator (ADR-0067) —
-which is why it remains under `via`. *Before ADR-0060 this row was Create: Power Grid's, with
+does not appear in EMI. The things that stand *in* an area rather than carry between them are the
+Pack's Steam Engine as generator and Wireworks' own Solar Panel and Accumulator (#617). *Before ADR-0060 this row was Create: Power Grid's, with
 voltage drop, wire gauge and a brownout model; the mod left with Create.*
 
 Sub-rules:
@@ -921,10 +920,9 @@ Sub-rules:
 
 - **verdict**: `adapted`
 - **notice**: the Steam Engine is a Core block entity at Factorio's 30 mB/s and 450 FE/t, and the
-  solar panel is a pack block on Oritech's Big Solar Panel entity at Factorio's 60 kW on Factorio's
-  day (#508).
+  solar panel is Wireworks' at Factorio's 60 kW on Factorio's day (#508, #617).
 - **where**: all bodies
-- **via**: `pack`, `oritech`
+- **via**: `pack`, `wireworks`
 - **owner**: ADR-0048, ADR-0060, ADR-0062, ADR-0116
 - **ticket**: #135 (the Steam Turbine), #7 (per-body solar); #104, #189, #224, #283 closed
 
@@ -961,14 +959,16 @@ Sub-rules:
   from any boiler or from anything else. The pack authors that step. The engine emits rotation and
   not electricity on purpose: an engine that fed a pole directly would route around every mechanic
   ADR-0036 selected Power Grid for.
-- **Accumulators** — `shipped`, #283. `accumulator` is Oritech's Large Energy Storage, mixed in to
-  Factorio's 5 MJ and 300 kW.
-- **Solar panels** — `shipped`, #529-#531. `solar-panel` is `factoryworks:solar_panel`, a pack block on
-  Oritech's Big Solar Panel entity (ADR-0062, ADR-0077), placed and broken as one footprint with no
-  machine cores. It makes Factorio's 60 kW (30 FE/t) at noon along Factorio's day curve, nothing at
-  night or under a roof, with a one-tick buffer and no weather. It is crafted from Factorio's
-  recipe, Oritech's own panel is swept and unlisted, and Jade shows what it is making now.
-  Per-body output is #7. *Before ADR-0060 both were Power Grid's (#148).*
+- **Accumulators** — `shipped`, #283, #617. `accumulator` is `wireworks:accumulator`, Factorio's flat
+  2x2, one block tall, holding 5 MJ and moving 300 kW (50,000 FE and 150 FE/t), placed and broken
+  whole. The Pack states the figures in `config/wireworks-server.toml`, held to the corpus. It wears
+  Wireworks' stand-in art.
+- **Solar panels** — `shipped`, #529-#531, #617. `solar-panel` is `wireworks:solar_panel`, a one-block
+  pillar under a 3x3 top layer, placed and broken whole. It makes Factorio's 60 kW (30 FE/t) at full
+  Daylight along Wireworks' day curve and nothing under a roof. The Pack states the peak in
+  `config/wireworks-server.toml`. The recipe is Factorio's, emitted by the converter; Wireworks' own
+  shaped recipes are swept (ADR-0034). It wears Wireworks' stand-in art. Per-body output is #7.
+  *Before ADR-0060 both were Power Grid's (#148).*
 - **Steam as a stored, pipeable intermediate** — `shipped` for low-temperature steam, which the
   Boiler puts into a Pipeworks segment and the Steam Engine draws from (#593); high-temperature steam waits on #135. **Two
   fluids rather than one**. ADR-0048 registers low-temperature steam, which the Boiler makes and the Steam Engine eats,
@@ -1446,7 +1446,7 @@ network's player-facing half, and they go with it.
 Sub-rules:
 
 - **Solar output follows the cycle, and accumulators bridge the night on Terra** — `shipped`, #529-#531.
-  The panel follows Factorio's day curve and banks no night, so the Accumulator carries it, at
+  Wireworks' panel follows Factorio's day curve and banks no night, so the Accumulator carries it, at
   Factorio's 0.84 per panel on Terra's seven-minute day (#509).
 - **Solar output on Electro** — `planned`, #7. It is the planet's identity, a multiplier on the
   Terra panel's output; Electro's own cycle is #8's.

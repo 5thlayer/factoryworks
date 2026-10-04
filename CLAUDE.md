@@ -152,7 +152,7 @@ Wireworks, the electric poles, is pinned the same way (#476). It has no CurseFor
 its jar is indexed by hash and negated in `.packwizignore`. Its Bindings are the Pack's:
 `config/wireworks-server.toml` sets Factorio's supply areas and wire reaches, held to the corpus by
 `tests/pack/test_wireworks_config.py`; `kubejs/data/wireworks/tags/` puts the Picks in `wire_tools`
-and the Pack's generators and accumulator in their tags, held by `tests/pack/test_network_tags.py`;
+and the Pack's generators in their tag, held by `tests/pack/test_network_tags.py`;
 and `FactoryWorksCore` states the pole Replace group.
 Pipeworks, the pipes and the storage tank, is pinned the same way (#557, ADR-0110): no CurseForge
 project, so indexed by hash and negated in `.packwizignore`. Core registers crude oil, the

@@ -27,10 +27,6 @@ import com.factoryworks.core.fluid.BoilerBlock;
 import com.factoryworks.core.fluid.BoilerFootprint;
 import com.factoryworks.core.fluid.BoilerPartBlock;
 import com.factoryworks.core.fluid.OffshorePumpBlock;
-import com.factoryworks.core.energy.AccumulatorBlock;
-import com.factoryworks.core.energy.AccumulatorFootprint;
-import com.factoryworks.core.energy.SolarPanelBlock;
-import com.factoryworks.core.energy.SolarPanelFootprint;
 import com.factoryworks.core.fluid.SteamEngineBlock;
 import com.factoryworks.core.fluid.SteamEngineFootprint;
 import com.factoryworks.core.chest.ChestTier;
@@ -159,32 +155,6 @@ public final class PFBlocks {
     public static final FootprintMachine STEAM_ENGINE_FOOTPRINT = new FootprintMachine(
             SteamEngineFootprint.FOOTPRINT, STEAM_ENGINE, STEAM_ENGINE_PART,
             () -> PFItems.STEAM_ENGINE.get());
-
-    /** The Solar Panel (#529): Oritech's Big Solar Panel entity, on the footprint seam. */
-    public static final DeferredHolder<Block, SolarPanelBlock> SOLAR_PANEL =
-            BLOCKS.registerBlock("solar_panel", props -> new SolarPanelBlock(machineProperties(props)));
-
-    public static final DeferredHolder<Block, FootprintPartBlock> SOLAR_PANEL_PART =
-            BLOCKS.registerBlock("solar_panel_part",
-                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
-                            () -> PFBlocks.SOLAR_PANEL_FOOTPRINT));
-
-    public static final FootprintMachine SOLAR_PANEL_FOOTPRINT = new FootprintMachine(
-            SolarPanelFootprint.FOOTPRINT, SOLAR_PANEL, SOLAR_PANEL_PART,
-            () -> PFItems.SOLAR_PANEL.get());
-
-    /** The accumulator (#283): Oritech's Large Energy Storage entity, on the footprint seam. */
-    public static final DeferredHolder<Block, AccumulatorBlock> ACCUMULATOR =
-            BLOCKS.registerBlock("accumulator", props -> new AccumulatorBlock(machineProperties(props)));
-
-    public static final DeferredHolder<Block, FootprintPartBlock> ACCUMULATOR_PART =
-            BLOCKS.registerBlock("accumulator_part",
-                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
-                            () -> PFBlocks.ACCUMULATOR_FOOTPRINT));
-
-    public static final FootprintMachine ACCUMULATOR_FOOTPRINT = new FootprintMachine(
-            AccumulatorFootprint.FOOTPRINT, ACCUMULATOR, ACCUMULATOR_PART,
-            () -> PFItems.ACCUMULATOR.get());
 
     /** The Radar (#368): a pack anchor on the footprint seam, its parts drawn so the whole cube shows. */
     public static final DeferredHolder<Block, RadarBlock> RADAR =

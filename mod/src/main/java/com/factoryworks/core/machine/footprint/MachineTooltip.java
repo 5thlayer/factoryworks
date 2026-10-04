@@ -35,10 +35,6 @@ public final class MachineTooltip {
         return List.of(line("burns_steam", number(steamPerSecond)), line("makes_up_to", number(fePerTick)));
     }
 
-    public static List<Line> accumulator(long capacityFe, long flowFePerTick) {
-        return List.of(line("holds", number(capacityFe)), line("in_and_out", number(flowFePerTick)));
-    }
-
     public static List<Line> radar(long fePerTick, int nearReach, int reach) {
         return List.of(line("draws", number(fePerTick)), line("charts", number(nearReach), number(reach)));
     }
@@ -61,10 +57,6 @@ public final class MachineTooltip {
 
     public static List<Line> pumpjack(long fePerTick) {
         return List.of(line("pumps_crude"), line("draws", number(fePerTick)));
-    }
-
-    public static List<Line> solarPanel(long fePerTick) {
-        return List.of(line("makes_up_to", number(fePerTick)), line("needs_open_sky"));
     }
 
     private static Line energy(long joulesPerTick, long fePerTick) {

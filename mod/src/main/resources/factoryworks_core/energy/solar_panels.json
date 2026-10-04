@@ -1,7 +1,0 @@
-{
-  "solar-panel": {
-    "production": 60000.0,
-    "tile_width": 3,
-    "tile_height": 3
-  }
-}

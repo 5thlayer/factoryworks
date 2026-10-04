@@ -8,8 +8,6 @@ import com.factoryworks.core.fluid.BoilerBlockEntity;
 import com.factoryworks.core.fluid.BoilerItemHandler;
 import com.factoryworks.core.fluid.BoilerPartBlockEntity;
 import com.factoryworks.core.fluid.OffshorePumpBlockEntity;
-import com.factoryworks.core.energy.AccumulatorBlockEntity;
-import com.factoryworks.core.energy.SolarPanelBlockEntity;
 import com.factoryworks.core.fluid.SteamEngineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineFluidHandler;
@@ -131,18 +129,6 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(SteamEngineBlockEntity::new,
                             java.util.Set.of(PFBlocks.STEAM_ENGINE.get())));
 
-    /** The Solar Panel's anchor (#529): Oritech's panel entity under the pack's own type. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>
-            SOLAR_PANEL = BLOCK_ENTITIES.register("solar_panel",
-                    () -> new BlockEntityType<>(SolarPanelBlockEntity::new,
-                            java.util.Set.of(PFBlocks.SOLAR_PANEL.get())));
-
-    /** The accumulator's anchor (#283): Oritech's storage entity under the pack's own type. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AccumulatorBlockEntity>>
-            ACCUMULATOR = BLOCK_ENTITIES.register("accumulator",
-                    () -> new BlockEntityType<>(AccumulatorBlockEntity::new,
-                            java.util.Set.of(PFBlocks.ACCUMULATOR.get())));
-
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RadarBlockEntity>>
             RADAR = BLOCK_ENTITIES.register("radar",
                     () -> new BlockEntityType<>(RadarBlockEntity::new,
@@ -190,8 +176,6 @@ public final class PFBlockEntities {
         registerChemicalPlantCapabilities(event);
         registerOilRefineryCapabilities(event);
         registerSteamEngineCapabilities(event);
-        registerSolarPanelCapabilities(event);
-        registerAccumulatorCapabilities(event);
         registerRadarCapabilities(event);
         registerPumpjackCapabilities(event);
     }
@@ -365,20 +349,6 @@ public final class PFBlockEntities {
         registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.STEAM_ENGINE_FOOTPRINT,
                 (blockEntity, side) -> blockEntity instanceof SteamEngineBlockEntity engine
                         ? engine.energyHandler() : null);
-    }
-
-    /** The Solar Panel's energy face (#529), on every block, so a pole reaching any of it draws it. */
-    private static void registerSolarPanelCapabilities(RegisterCapabilitiesEvent event) {
-        registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.SOLAR_PANEL_FOOTPRINT,
-                (blockEntity, side) -> blockEntity instanceof SolarPanelBlockEntity panel
-                        ? panel.getEnergyLookup(side) : null);
-    }
-
-    /** The accumulator's energy face (#283), on every block, so a pole reaching any of it finds it. */
-    private static void registerAccumulatorCapabilities(RegisterCapabilitiesEvent event) {
-        registerOnFootprint(event, Capabilities.Energy.BLOCK, PFBlocks.ACCUMULATOR_FOOTPRINT,
-                (blockEntity, side) -> blockEntity instanceof AccumulatorBlockEntity accumulator
-                        ? accumulator.getEnergyLookup(null) : null);
     }
 
     /** The Radar's energy face (#368), on every block, so a pole reaching any of it feeds it. */

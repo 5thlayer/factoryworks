@@ -83,9 +83,6 @@ FACES = {
     "oil_refinery": ("registerOilRefineryCapabilities", ("Energy", "Fluid")),
     # Energy only: its steam arrives through a Pipeworks port (#593).
     "steam_engine": ("registerSteamEngineCapabilities", ("Energy",)),
-    # Energy (#283): a pole charges and draws it, on every block of the footprint.
-    "solar_panel": ("registerSolarPanelCapabilities", ("Energy",)),
-    "accumulator": ("registerAccumulatorCapabilities", ("Energy",)),
     # Energy (#368): the scan draws FE, on every block of the footprint.
     "radar": ("registerRadarCapabilities", ("Energy",)),
     # Energy (ADR-0081): a pole feeds it, on every block. Its crude leaves through a Pipeworks

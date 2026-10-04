@@ -27,3 +27,19 @@
 	# Default: 18.0
 	# Range: 1.0 ~ 64.0
 	wireReach = 18.0
+
+[solar_panel]
+	#The power at full daylight, in watts. 60000 is 30 FE/t.
+	# Default: 60000
+	# Range: 0 ~ 1000000000
+	peak_watts = 60000
+
+[accumulator]
+	#What the accumulator holds, in joules. 5000000 is 50000 FE.
+	# Default: 5000000
+	# Range: 100 ~ 1000000000000
+	capacity_joules = 5000000
+	#The power it charges and discharges at, in watts. 300000 is 150 FE/t.
+	# Default: 300000
+	# Range: 2000 ~ 1000000000000
+	max_watts = 300000

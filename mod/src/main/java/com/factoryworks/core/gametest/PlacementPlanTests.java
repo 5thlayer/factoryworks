@@ -31,8 +31,6 @@ import io.github._5thlayer.groundworks.PlacementPlan;
 import io.github._5thlayer.groundworks.Placements;
 import com.factoryworks.core.oil.PumpjackBlockEntity;
 import com.factoryworks.core.oil.PumpjackFootprint;
-import com.factoryworks.core.energy.SolarPanelBlockEntity;
-import com.factoryworks.core.energy.SolarPanelFootprint;
 import com.factoryworks.core.radar.RadarBlockEntity;
 import com.factoryworks.core.radar.RadarFootprint;
 import rearth.oritech.block.base.block.MultiblockMachine;
@@ -129,10 +127,6 @@ final class PlacementPlanTests {
                 PlacementPlanTests::steamEngineMatchesPlacement);
         tests.test("plan_refuses_a_steam_engine_whole", 20,
                 PlacementPlanTests::steamEngineRefusesWhole);
-        tests.test("plan_matches_placement_for_a_solar_panel", 20,
-                PlacementPlanTests::solarPanelMatchesPlacement);
-        tests.test("plan_refuses_a_solar_panel_whole", 20,
-                PlacementPlanTests::solarPanelRefusesWhole);
         tests.test("plan_matches_placement_for_a_radar", 20,
                 PlacementPlanTests::radarMatchesPlacement);
         tests.test("plan_refuses_a_radar_whole", 20,
@@ -377,29 +371,6 @@ final class PlacementPlanTests {
     private static void steamEngineRefusesWhole(GameTestHelper helper) {
         helper.setBlock(ABOVE_FLOOR.above(), Blocks.STONE);
         refusal(check(helper, new ItemStack(PFItems.STEAM_ENGINE.get()),
-                FLOOR, Direction.UP, true), PackRefusal.FOOTPRINT_BLOCKED, helper);
-        helper.succeed();
-    }
-
-    /** The Solar Panel's 3x3 over 3x3 (#529): every block of it, the anchor holding the panel's block entity. */
-    private static void solarPanelMatchesPlacement(GameTestHelper helper) {
-        PlacementPlan plan = check(helper, new ItemStack(PFItems.SOLAR_PANEL.get()), FLOOR, Direction.UP, false);
-        int expected = SolarPanelFootprint.FOOTPRINT.offsets().size();
-        if (plan.blocks().size() != expected) {
-            helper.fail("a Solar Panel's plan named " + plan.blocks().size()
-                    + " blocks where its footprint is " + expected, FLOOR);
-        }
-        BlockPos anchor = plan.blocks().getFirst().pos();
-        if (!(helper.getLevel().getBlockEntity(anchor) instanceof SolarPanelBlockEntity)) {
-            helper.fail("the placed anchor holds no Solar Panel block entity", helper.relativePos(anchor));
-        }
-        helper.succeed();
-    }
-
-    /** One taken position, in the top layer's corner, refuses the whole panel. */
-    private static void solarPanelRefusesWhole(GameTestHelper helper) {
-        helper.setBlock(ABOVE_FLOOR.offset(1, 1, 1), Blocks.STONE);
-        refusal(check(helper, new ItemStack(PFItems.SOLAR_PANEL.get()),
                 FLOOR, Direction.UP, true), PackRefusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }

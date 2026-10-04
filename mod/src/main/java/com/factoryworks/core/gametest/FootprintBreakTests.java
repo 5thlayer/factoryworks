@@ -45,8 +45,6 @@ final class FootprintBreakTests {
                 Map.entry("chemical_plant", PFBlocks.CHEMICAL_PLANT_FOOTPRINT),
                 Map.entry("oil_refinery", PFBlocks.OIL_REFINERY_FOOTPRINT),
                 Map.entry("steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT),
-                Map.entry("accumulator", PFBlocks.ACCUMULATOR_FOOTPRINT),
-                Map.entry("solar_panel", PFBlocks.SOLAR_PANEL_FOOTPRINT),
                 Map.entry("radar", PFBlocks.RADAR_FOOTPRINT),
                 Map.entry("pumpjack", PFBlocks.PUMPJACK_FOOTPRINT),
                 Map.entry("boiler", PFBlocks.BOILER_FOOTPRINT));

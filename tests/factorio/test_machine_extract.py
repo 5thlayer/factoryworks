@@ -40,8 +40,8 @@ game -- is whether the *committed* output still says what the decisions say it s
 Usage: tests/factorio/test_machine_extract.py
 """
 import json
-import re
 import sys
+import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -102,12 +102,7 @@ ACCUMULATOR_SOURCE = {
     "input_flow_limit": "300kW",
     "output_flow_limit": "300kW",
 }
-ACCUMULATOR_SPEC = ROOT / "mod/src/main/java/com/factoryworks/core/energy/AccumulatorSpec.java"
-ACCUMULATOR_CONSTANTS = {
-    "buffer_capacity": "BUFFER_JOULES",
-    "input_flow_limit": "INPUT_FLOW_WATTS",
-    "output_flow_limit": "OUTPUT_FLOW_WATTS",
-}
+WIREWORKS_CONFIG = ROOT / "config/wireworks-server.toml"
 RADAR_TILES = (3, 3)
 
 # The solar panel's prototype as the dump states it, for when the dump is not on disk (#529).
@@ -169,9 +164,9 @@ def radar_failures(radar):
 
 
 def accumulator_failures(accumulator):
-    """The row against the dump, and the mod's typed figures against the row (#283)."""
+    """The row against the dump, and the Pack's Wireworks config against the row (#283, #617)."""
     if accumulator is None:
-        return ["no accumulator -- #283's Large Energy Storage has no buffer or flow to read"]
+        return ["no accumulator -- the Wireworks config has no buffer or flow to be held to"]
     failures = []
     source = ACCUMULATOR_SOURCE
     if DUMP.is_file():
@@ -180,17 +175,22 @@ def accumulator_failures(accumulator):
         ]
     else:
         print(f"note no dump at {DUMP}; the accumulator row is compared to the transcription")
-    java = ACCUMULATOR_SPEC.read_text(encoding="utf-8")
-    for field, constant in ACCUMULATOR_CONSTANTS.items():
+    for field in ("buffer_capacity", "input_flow_limit", "output_flow_limit"):
         want = si(source[field])
         if accumulator.get(field) != want:
             failures.append(
                 f"accumulator's {field} is {accumulator.get(field)!r}, the prototype says {want!r}"
             )
-        match = re.search(rf"{constant}\s*=\s*([\d_]+)L", java)
-        typed = float(match.group(1).replace("_", "")) if match else None
-        if typed != want:
-            failures.append(f"AccumulatorSpec.{constant} is {typed!r}, the corpus says {want!r}")
+    if accumulator.get("input_flow_limit") != accumulator.get("output_flow_limit"):
+        failures.append("accumulator's flow limits differ, and Wireworks has one max_watts")
+    config = tomllib.loads(WIREWORKS_CONFIG.read_text(encoding="utf-8")).get("accumulator", {})
+    held = {
+        "capacity_joules": accumulator.get("buffer_capacity"),
+        "max_watts": accumulator.get("input_flow_limit"),
+    }
+    for key, want in held.items():
+        if config.get(key) != want:
+            failures.append(f"wireworks-server.toml [accumulator] {key} is {config.get(key)!r}, the corpus says {want!r}")
     return failures
 
 

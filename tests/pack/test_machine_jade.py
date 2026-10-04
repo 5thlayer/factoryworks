@@ -25,8 +25,6 @@ MACHINES = {
                            CORE / "machine/AssemblingStatus.java", "AssemblingStatus"),
     "Steam Engine": ((CORE / "compat/SteamEngineJadePlugin.java",),
                      CORE / "fluid/SteamEngineStatus.java", "SteamEngineStatus"),
-    "Accumulator": ((CORE / "compat/AccumulatorJadePlugin.java",),
-                    CORE / "energy/AccumulatorStatus.java", "AccumulatorStatus"),
 }
 
 # Any key-shaped literal, not only a `translatable(` argument: a helper that takes the key as a

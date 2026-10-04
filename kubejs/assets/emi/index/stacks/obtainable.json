@@ -43,9 +43,6 @@
       "stack": "item:beltworks:turbo_feeder"
     },
     {
-      "stack": "item:factoryworks:accumulator"
-    },
-    {
       "stack": "item:factoryworks:advanced_circuit"
     },
     {
@@ -134,9 +131,6 @@
     },
     {
       "stack": "item:factoryworks:rocket_fuel"
-    },
-    {
-      "stack": "item:factoryworks:solar_panel"
     },
     {
       "stack": "item:factoryworks:solid_fuel"
@@ -328,6 +322,9 @@
       }
     },
     {
+      "stack": "item:wireworks:accumulator"
+    },
+    {
       "stack": "item:wireworks:creative_pole"
     },
     {
@@ -338,6 +335,9 @@
     },
     {
       "stack": "item:wireworks:small_pole"
+    },
+    {
+      "stack": "item:wireworks:solar_panel"
     },
     {
       "stack": "fluid:factoryworks:crude_oil"

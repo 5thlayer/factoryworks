@@ -18,7 +18,6 @@
     "beltworks:turbo_feeder",
     "beltworks:turbo_loader",
     "beltworks:turbo_splitter",
-    "factoryworks:accumulator",
     "factoryworks:assembling_machine",
     "factoryworks:assembling_machine_2",
     "factoryworks:assembling_machine_3",
@@ -32,7 +31,6 @@
     "factoryworks:oil_refinery",
     "factoryworks:pumpjack",
     "factoryworks:radar",
-    "factoryworks:solar_panel",
     "factoryworks:steam_engine",
     "factoryworks:steel_chest",
     "factoryworks:steel_furnace",
@@ -42,8 +40,10 @@
     "oritech:industrial_light",
     "pipeworks:pipe",
     "pipeworks:storage_tank",
+    "wireworks:accumulator",
     "wireworks:large_pole",
     "wireworks:medium_pole",
-    "wireworks:small_pole"
+    "wireworks:small_pole",
+    "wireworks:solar_panel"
   ]
 }

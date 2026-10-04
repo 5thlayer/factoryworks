@@ -131,7 +131,6 @@ public final class FactoryWorksCore {
             RigClient.register(modBus);
             com.factoryworks.core.machine.client.AssemblingMachineClient.register(modBus);
             com.factoryworks.core.fluid.client.SteamEngineClient.register(modBus);
-            com.factoryworks.core.energy.client.SolarPanelClient.register(modBus);
             com.factoryworks.core.oil.client.PumpjackClient.register(modBus);
             SteamFluidClient.register(modBus);
             OilFluidClient.register(modBus);

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Assert the Wireworks config gives each pole tier Factorio's supply area and wire reach (#476).
+"""Assert the Wireworks config gives Factorio's figures to the poles, the solar panel and the accumulator (#476, #617).
 
-Wireworks' tiers are a server config (its ADR 0006), so the Pack's Factorio figures are a Binding:
+Wireworks' figures are a server config (its ADR 0006), so the Pack's Factorio figures are a Binding:
 `config/wireworks-server.toml`, re-derived here from `data/factorio/machine.json`. A supply area is
-`2 * supply_area_distance` blocks on a side, and a wire reach is `maximum_wire_distance`.
+`2 * supply_area_distance` blocks on a side, and a wire reach is `maximum_wire_distance`. The solar
+panel's `peak_watts` is its `production`; the accumulator's `capacity_joules` is its
+`buffer_capacity`, and its one `max_watts` needs the input and output flow limits to be equal.
 
 Usage: tests/pack/test_wireworks_config.py
 """
@@ -33,13 +35,29 @@ def main():
         for key, value in expected.items():
             if got.get(key) != value:
                 failures.append(f"{tier}.{key} is {got.get(key)}, Factorio's {name} gives {value}")
-    if set(config) != set(TIERS):
-        failures.append(f"the config names tiers {sorted(config)}, Wireworks has {sorted(TIERS)}")
+    corpus = json.loads(CORPUS.read_text())
+    panel = {p["name"]: p for p in corpus["solar_panels"]}["solar-panel"]
+    accumulator = {a["name"]: a for a in corpus["accumulators"]}["accumulator"]
+    if accumulator["input_flow_limit"] != accumulator["output_flow_limit"]:
+        failures.append("the accumulator's flow limits differ, and Wireworks has one max_watts")
+    expected = {
+        "solar_panel": {"peak_watts": round(panel["production"])},
+        "accumulator": {"capacity_joules": round(accumulator["buffer_capacity"]),
+                        "max_watts": round(accumulator["input_flow_limit"])},
+    }
+    for section, figures in expected.items():
+        got = config.get(section, {})
+        for key, value in figures.items():
+            if got.get(key) != value:
+                failures.append(f"{section}.{key} is {got.get(key)}, Factorio's corpus gives {value}")
+    sections = set(TIERS) | set(expected)
+    if set(config) != sections:
+        failures.append(f"the config names sections {sorted(config)}, Wireworks has {sorted(sections)}")
     for failure in failures:
         print("FAIL", failure)
     if failures:
         sys.exit(1)
-    print(f"ok   {CONFIG.relative_to(ROOT)} holds Factorio's figures for {len(TIERS)} tiers")
+    print(f"ok   {CONFIG.relative_to(ROOT)} holds Factorio's figures for {len(TIERS)} tiers, the solar panel and the accumulator")
 
 
 if __name__ == "__main__":
