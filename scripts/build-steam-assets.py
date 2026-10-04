@@ -36,8 +36,11 @@ Usage:
 """
 import argparse
 import json
+import math
 import os
+import struct
 import sys
+import zlib
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 MACHINE_CORPUS = os.path.join(ROOT, "data", "factorio", "machine.json")
@@ -69,6 +72,21 @@ BOILER_TEXTURES = {
 }
 
 FACINGS = {"north": 0, "east": 90, "south": 180, "west": 270}
+
+# The suite's fluid port convention (agreed 2026-10-04, shared with Craftworks' machines): a ring on
+# the machine's own casing, blue where a fluid goes in and orange where one comes out. Stand-in art.
+PORT_RINGS = {
+    "fluid_port_input": {"fill": (52, 124, 236), "edge": (20, 52, 116)},
+    "fluid_port_output": {"fill": (244, 140, 28), "edge": (124, 62, 8)},
+}
+TEXTURES = os.path.join(ASSETS, "textures", "block")
+
+# BoilerFootprint's parts, numbered as Footprint.of numbers them (the anchor is 0), and the local face
+# each port opens outward on (BoilerPorts.opens). Local x runs backward from the front.
+BOILER_PARTS = [(0, 0, -1), (0, 0, 1), (1, 0, -1), (1, 0, 0), (1, 0, 1)]
+BOILER_PORT_FACES = {1: ("water", (0, 0, -1)), 2: ("water", (0, 0, 1)), 4: ("steam", (1, 0, 0))}
+PORT_RING_OF = {"water": "fluid_port_input", "steam": "fluid_port_output"}
+MAX_PARTS = 26  # FootprintPartBlock.PART's range: every state needs a variant
 
 # The Boiler's screen, which is the furnace ladder's screen with a second gauge on it. The keys are
 # pack-side beside the block name for the reason the pump's refusal message is: they name the block
@@ -163,6 +181,95 @@ def oriented_model():
     }
 
 
+def rotate(local, facing):
+    """Oritech's Geometry.rotatePosition, which places the footprint and opens its ports."""
+    x, y, z = local
+    return {
+        "north": (z, y, x),
+        "west": (x, y, -z),
+        "south": (-z, y, -x),
+        "east": (-x, y, z),
+    }[facing]
+
+
+# The y a model facing north is turned by to face this way.
+ROTATION_TO = {(0, 0, -1): 0, (1, 0, 0): 90, (0, 0, 1): 180, (-1, 0, 0): 270}
+
+
+def part_blockstate():
+    """Casing on every part, a port model turned to the face each port opens on."""
+    casing = {"model": f"{NAMESPACE}:block/{BOILER_BLOCK}_part"}
+    variants = {}
+    for facing in FACINGS:
+        for part in range(1, MAX_PARTS + 1):
+            port = BOILER_PORT_FACES.get(part)
+            if port is None:
+                variant = casing
+            else:
+                kind, face = port
+                y = ROTATION_TO[rotate(face, facing)]
+                variant = {"model": f"{NAMESPACE}:block/{BOILER_BLOCK}_port_{kind}"}
+                if y:
+                    variant["y"] = y
+            variants[f"facing={facing},part={part}"] = variant
+    return {"variants": variants}
+
+
+def port_model(ring):
+    """The part's casing with the port's ring laid just outside its north face."""
+    casing = "minecraft:block/iron_block"
+    return {
+        "render_type": "minecraft:cutout",
+        "textures": {"casing": casing, "ring": f"{NAMESPACE}:block/{ring}", "particle": casing},
+        "elements": [
+            {
+                "from": [0, 0, 0],
+                "to": [16, 16, 16],
+                "faces": {d: {"texture": "#casing", "cullface": d}
+                          for d in ("down", "up", "north", "south", "west", "east")},
+            },
+            {
+                "from": [0, 0, -0.01],
+                "to": [16, 16, -0.01],
+                "faces": {"north": {"texture": "#ring", "cullface": "north"}},
+            },
+        ],
+    }
+
+
+def ring_pixels(fill, edge):
+    """A 16x16 ring, its outer and inner rims in the darker edge colour, transparent elsewhere."""
+    rows = []
+    for y in range(16):
+        row = []
+        for x in range(16):
+            r = math.hypot(x - 7.5, y - 7.5)
+            if 4.0 <= r <= 7.0:
+                colour = edge if r < 5.0 or r > 6.2 else fill
+                row.append((*colour, 255))
+            else:
+                row.append((0, 0, 0, 0))
+        rows.append(row)
+    return rows
+
+
+def png_bytes(rows):
+    """An RGBA PNG, written with the standard library so the generator needs nothing installed."""
+    raw = b"".join(b"\x00" + bytes(c for px in row for c in px) for row in rows)
+
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+
+    header = struct.pack(">IIBBBBB", len(rows[0]), len(rows), 8, 6, 0, 0, 0)
+    return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header)
+            + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
+
+
+def planned_textures():
+    return {os.path.join(TEXTURES, f"{name}.png"): png_bytes(ring_pixels(**colours))
+            for name, colours in PORT_RINGS.items()}
+
+
 def self_drop_loot_table(block_id):
     return {
         "type": "minecraft:block",
@@ -179,10 +286,10 @@ def planned_files(rows):
     files = {STEAM_CHAIN_RESOURCE: rows}
     model_name = f"{NAMESPACE}:block/{BOILER_BLOCK}"
     files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}.json")] = blockstate(model_name)
-    # Iron until the 3x2 model replaces it (#595).
-    files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}_part.json")] = {
-        "variants": {"": {"model": f"{NAMESPACE}:block/{BOILER_BLOCK}_part"}}
-    }
+    # Iron until the 3x2 model replaces it (#595); the ports ringed in the suite's colours.
+    files[os.path.join(ASSETS, "blockstates", f"{BOILER_BLOCK}_part.json")] = part_blockstate()
+    for kind, ring in PORT_RING_OF.items():
+        files[os.path.join(ASSETS, "models", "block", f"{BOILER_BLOCK}_port_{kind}.json")] = port_model(ring)
     files[os.path.join(ASSETS, "models", "block", f"{BOILER_BLOCK}_part.json")] = {
         "parent": "minecraft:block/cube_all",
         "textures": {"all": "minecraft:block/iron_block"},
@@ -213,6 +320,12 @@ def check():
         if actual != expected:
             problems.append(f"stale: {path}")
 
+    for path, expected in planned_textures().items():
+        if not os.path.isfile(path):
+            problems.append(f"missing: {path}")
+        elif open(path, "rb").read() != expected:
+            problems.append(f"stale: {path}")
+
     existing_lang = {}
     if os.path.isfile(lang_path()):
         with open(lang_path(), encoding="utf-8") as handle:
@@ -230,6 +343,10 @@ def build():
     files, lang = planned_files(steam_chain_from_corpus())
     for path, data in files.items():
         write(path, data)
+    for path, data in planned_textures().items():
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "wb") as handle:
+            handle.write(data)
 
     existing_lang = {}
     if os.path.isfile(lang_path()):

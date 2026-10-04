@@ -410,7 +410,7 @@ hash = "51e78bbdcf50e709d84527cff35f865f8141b8f91fda3f664677bd310fb37a54"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/boiler_part.json"
-hash = "468fe72c8a3b8d0bcf91564c63a3302e36b5d3771f4c9b3302b092e9371b8957"
+hash = "bb37b3dd6552dd21fac30d1fcf3cf64a495896649eae70c3f2871f754b3d8166"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/burner_mining_drill.json"
@@ -671,6 +671,14 @@ hash = "0d14823f507cacd3b533610f0f0e2addd623aa4d8a0a797a1c2dc26c3fdba17a"
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/boiler_part.json"
 hash = "21e5a7cecc5afd48073ba637e06b309f291192b6b21333c76b9d16171c754369"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/boiler_port_steam.json"
+hash = "f11d94019a3fd1fc3af1c7b91f45741b372b317f578827ff5a759c4cc5c02304"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/boiler_port_water.json"
+hash = "7a08094b8f10d4905df51e341aa1a5636d6f2e1da34fb6d82f30d3cf0f1aa896"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/burner_mining_drill.json"
@@ -1143,6 +1151,14 @@ hash = "3613ee2cae631758a0a86ee724db520cf0ed7c3405dd93fe14d895e87bc2d6d7"
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png.mcmeta"
 hash = "d859a74124fbfe6745e73c7bbf5af93ac70a427f40067f5dd60910aa46c10c14"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/fluid_port_input.png"
+hash = "31f6d95ec6aa96a71525ea2ffe1a8d2ca1f34109b5af836cc6015d76cb5c48c1"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/fluid_port_output.png"
+hash = "a7081228022423f858350566acd5e8d712159a091f60fb263b504d861b7dcb40"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/iron_stromatolite.png"
