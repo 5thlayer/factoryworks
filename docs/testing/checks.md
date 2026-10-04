@@ -912,6 +912,15 @@ to date, print no log, and the check would pass having loaded nothing. Like the 
 in no batch; run it after a converter change, after editing the dev runtime classpath, or after any
 edit to `kubejs/`.
 
+## Pack check restore
+
+`tests/pack/test_pack_check.py` runs `scripts/pack-check.sh` in a scratch repo with a stand-in
+`packwiz` whose refresh rewrites the manifest and adds a metafile (#625). A failed check must leave
+the manifest exactly as it was before the run: unstaged, staged and untracked edits a sync left are
+kept, the staged diff is unchanged, and the metafile the refresh wrote is gone. It exists because
+the restore once ran `git checkout` over `mods/`, wiping a sync that had not been committed.
+Run it after editing `scripts/pack-check.sh`.
+
 ## Client asset check
 
 `scripts/check-client-assets.py` is the client half of #273's in-world work (#276), and the only

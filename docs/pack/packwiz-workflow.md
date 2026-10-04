@@ -125,8 +125,8 @@ It checks three things, because none alone is enough:
 3. **STRAY** — a jar is installed that nothing accounts for. The managed jars are excluded from the
    index (see below), so `refresh` cannot see these at all.
 
-A failing run restores the tree, so a failed check never leaves the manifest half-updated — and it
-deletes only metafiles that *this run* created, never one you wrote and have not committed yet.
+A failing run puts the manifest back as it was before the run, not as HEAD has it: a failed check
+never leaves the manifest half-updated, and a sync's uncommitted edits survive it (#625).
 `--fix` rewrites the manifest but will neither conjure a missing jar nor silently adopt a stray one,
 so MISSING and STRAY fail even under `--fix`.
 

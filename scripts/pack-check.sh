@@ -19,7 +19,7 @@
 # carries `// TODO: --check flag?` — so this is the substitute.
 #
 # Usage: scripts/pack-check.sh [--fix|--prune]
-#   (default)  fail on drift, leaving the manifest as git has it
+#   (default)  fail on drift, leaving the manifest as it was before the run
 #   --fix      keep the refreshed manifest, for when the drift is intended
 #   --prune    drop the metafiles whose jar is gone, then --fix
 #
@@ -73,10 +73,26 @@ fi
 
 TRACKED=(index.toml pack.toml)
 
-# Prune runs before the snapshot below, so the metafiles it deletes are already
-# gone from every later comparison: what follows is an ordinary --fix over a
-# manifest that no longer names the removed mods. `packwiz remove` takes the
-# metafile's slug, which is its basename.
+# The manifest files as they are on disk, tracked or not; jars are gitignored.
+manifest_files() {
+    { printf '%s\0' "${TRACKED[@]}"
+      git ls-files --cached --others --exclude-standard -z -- mods/
+    } | sort -zu | while IFS= read -r -d '' f; do
+        [[ -e "$f" ]] && printf '%s\n' "$f"
+    done
+}
+
+# A failed check puts back the working tree as it was, not HEAD: a sync's unstaged
+# manifest edits must survive it (#625). Taken before --prune, which writes too.
+SNAPSHOT="$(mktemp -d)"
+trap 'rm -rf "$SNAPSHOT"' EXIT
+BEFORE="$(manifest_files)"
+while IFS= read -r f; do
+    [[ -n "$f" ]] && cp --parents -p -- "$f" "$SNAPSHOT/"
+done <<< "$BEFORE"
+
+# What follows the prune is an ordinary --fix over a manifest that no longer names
+# the removed mods. `packwiz remove` takes the metafile's slug, its basename.
 if [[ "$PRUNE" -eq 1 ]]; then
     GONE="$(python3 - <<'PRUNEPY'
 import glob, os, re
@@ -101,11 +117,6 @@ PRUNEPY
         echo
     fi
 fi
-
-# Metafiles this run creates must be distinguishable from ones the user wrote and
-# has not committed yet — `packwiz cf install <slug>` followed by this check must
-# not lose the new metafile. Snapshot the untracked set before refreshing.
-BEFORE="$(git ls-files --others --exclude-standard -z -- 'mods/*.pw.toml' | tr '\0' '\n' | sort)"
 
 echo "Refreshing manifest with packwiz $PACKWIZ_SHA ..."
 if ! "$PACKWIZ" refresh; then
@@ -155,22 +166,17 @@ PY
 MISSING="$(printf '%s\n' "$JARCHECK" | sed -n 's/^MISSING\t//p')"
 STRAY="$(printf '%s\n' "$JARCHECK" | sed -n 's/^STRAY\t//p')"
 
-# Undo only what this run wrote: restore the tracked files, and delete just those
-# metafiles that did not exist before the refresh. Anything the user had already
-# written is left alone.
 restore() {
-    if ! git checkout -- "${TRACKED[@]}" mods/; then
+    comm -13 <(printf '%s\n' "$BEFORE") <(manifest_files) | while IFS= read -r f; do
+        [[ -n "$f" ]] && rm -f -- "$f"
+    done
+    if ! cp -a -- "$SNAPSHOT/." .; then
         echo >&2
         echo "WARNING: could not restore the manifest. The refresh's changes are" >&2
         echo "still in the working tree — inspect with 'git status' before doing" >&2
         echo "anything else." >&2
         return 1
     fi
-    local after
-    after="$(git ls-files --others --exclude-standard -z -- 'mods/*.pw.toml' | tr '\0' '\n' | sort)"
-    comm -13 <(printf '%s\n' "$BEFORE") <(printf '%s\n' "$after") | while IFS= read -r f; do
-        [[ -n "$f" ]] && rm -f "$f"
-    done
     return 0
 }
 

@@ -100,6 +100,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | `core/oil/`, the oil field, its generators | `test_pumpjack_assets.py`, `test_resource_extract.py`, GameTest |
 | `scripts/factorio-enemy-extract.py` | `tests/factorio/test_enemy_extract.py` |
 | an item model | `tests/pack/test_data_formats.py` |
+| `scripts/pack-check.sh` | `tests/pack/test_pack_check.py` |
 | a `.bbmodel`, `data/art/models/`, `build-model-assets.py` | `tests/pack/test_model_assets.py` |
 | any model, blockstate, texture, definition | `scripts/check-client-assets.py`  |
 | any edit to `kubejs/`, the dev runtime classpath | `scripts/check-datapack-load.py` |
