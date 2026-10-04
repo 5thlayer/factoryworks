@@ -9,7 +9,11 @@
       "curseforge": 1714527,
       "nests": [
         "groundworks"
-      ]
+      ],
+      "source": {
+        "repo": "5thlayer/beltworks",
+        "ref": "beltworks-v{version}"
+      }
     },
     {
       "mod": "craftworks",
@@ -17,7 +21,11 @@
       "artifact": "craftworks",
       "version": "0.2.1",
       "pattern": "craftworks-*.jar",
-      "curseforge": 1715876
+      "curseforge": 1715876,
+      "source": {
+        "repo": "5thlayer/craftworks",
+        "ref": "v{version}"
+      }
     },
     {
       "mod": "wireworks",
@@ -27,21 +35,37 @@
       "pattern": "wireworks-*.jar",
       "nests": [
         "groundworks"
-      ]
+      ],
+      "source": {
+        "repo": "5thlayer/wireworks",
+        "ref": "wireworks-v{version}"
+      }
     },
     {
       "mod": "pipeworks",
       "group": "io.github.5thlayer",
       "artifact": "pipeworks",
       "version": "0.1.2",
-      "pattern": "pipeworks-*.jar"
+      "pattern": "pipeworks-*.jar",
+      "source": {
+        "repo": "5thlayer/pipeworks",
+        "ref": "pipeworks-v{version}"
+      }
     },
     {
       "mod": "researchd",
       "group": "com.portingdeadmods.researchd",
       "artifact": "researchd",
       "version": "1.2.5",
-      "pattern": "researchd-*.jar"
+      "pattern": "researchd-*.jar",
+      "source": {
+        "repo": "adamico/Researchd",
+        "ref": "1743d8bf9c0b657c42440cc3e689425e2678527f",
+        "tasks": [
+          "runData",
+          "publishToMavenLocal"
+        ]
+      }
     },
     {
       "mod": "portingdeadlibs",
@@ -49,7 +73,10 @@
       "artifact": "Porting-Dead-Libs",
       "version": "1.1.15",
       "pattern": "Porting-Dead-Libs-*.jar",
-      "sibling": false
+      "sibling": false,
+      "source": {
+        "maven": "https://jitpack.io"
+      }
     }
   ]
 }

@@ -226,7 +226,24 @@ prompts non-interactively.
 
 ## Reinstalling the jars
 
-The manifest names what should be installed but does not install it. That is
-[packwiz-installer](https://github.com/packwiz/packwiz-installer)'s job, and setting it up for this
-pack has not been done — the jars in `mods/` are currently maintained by hand and the manifest
-records them.
+The manifest names what should be installed but does not install it, and
+[packwiz-installer](https://github.com/packwiz/packwiz-installer) is not set up for this pack.
+`scripts/bootstrap.py` installs them instead, on a fresh machine or after a wipe:
+
+```sh
+scripts/bootstrap.py instance   # link $CURSEFORGE_ROOT/Instances/FactoryWorks here, adopt CurseForge's profile
+scripts/bootstrap.py jars       # each metafile's jar from CurseForge's CDN, checked against its hash
+scripts/bootstrap.py local      # each local-jars.json row into ~/.m2, from its `source`
+scripts/sync-local-jars.py      # then install the local jars
+```
+
+`local` checks each jar against the `jar sha256` its release tag records, or its hash in `index.toml`,
+and stops on a mismatch rather than move a pin. A 5thlayer jar on CurseForge is taken from `mods/`
+when it is the tagged release, since a rebuild need not reproduce it. Researchd's `source` runs
+`runData` first: its generated resources are gitignored, and a jar built without them ships no items.
+
+CurseForge's profile embeds NeoForge's version data, which only CurseForge's keyed API serves, so
+the profile is CurseForge's to create: a custom profile named `FactoryWorks` lands in
+`FactoryWorks (1)` beside the link, and `instance` adopts it. CurseForge's own instance list
+(`~/.config/CurseForge/agent/GameInstances/`) overrides the profile file, so `instance` points that
+list at the link too, and refuses while CurseForge runs, since CurseForge rewrites it.

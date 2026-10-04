@@ -91,5 +91,6 @@ Checks: `tests/pack/test_ore_assets.py`, `tests/factorio/test_resource_extract.p
 
 | Script | Does |
 |---|---|
+| `bootstrap.py` | a fresh machine: links the CurseForge instance, downloads the CurseForge jars, puts the local jars into `~/.m2` (`docs/pack/packwiz-workflow.md`) |
 | `launch.py` | assembles and runs the CLI launch command for this instance (no `--help`; unknown args pass to the game) |
 | `check-launch.sh` | greps the most recent launch log for mod-loading failures |
