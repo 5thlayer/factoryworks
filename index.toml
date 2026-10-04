@@ -318,11 +318,11 @@ hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "0e425d9a0c8c7fe03fdbff8b86a2e3a4a34f399f57df3e2476a8c58320cc3613"
+hash = "a3519888c8bfad6f601e0cf17f33dd15daa7619c75776fa2f3650e1de0697d4f"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "ff1d28d7e3c7a41e11f67e6eea959310766fa45ec29b3275ac720d32c6a0531e"
+hash = "773a38b7313720df2416931efa27f158235c5e6888b3e69cba5f29fff23827a2"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -342,7 +342,7 @@ hash = "e801a91f9c72b20f36ba75c841b711266c3abf929ad0900a51ccbf67a764f2f1"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "6a27fe500046fe08f51b7f3859a427f69b60f22f13efdea31cde79d5b0b4d889"
+hash = "64359a2efd291dba5b7db773ca8e9d3152d3b4e5914687419a8283e212ed3d25"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -3044,7 +3044,7 @@ metafile = true
 
 [[files]]
 file = "mods/beltworks.pw.toml"
-hash = "c93341c1449e5848ed8a3c6cbe4d256a67132f0bfcc9aed48de79dc75aa8b4e8"
+hash = "7f3f36696bd35136f67b5318faea577281b8f5b1802256dd2035fd95511961f5"
 metafile = true
 
 [[files]]
