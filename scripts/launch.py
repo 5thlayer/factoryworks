@@ -10,10 +10,15 @@ import contextlib, json, os, re, subprocess, sys
 from pathlib import Path
 
 INSTANCE = Path(__file__).resolve().parent.parent
-# CurseForge keeps Install/ beside Instances/ under whatever root it is pointed at.
-INSTALL = INSTANCE.parent.parent / "Install"
+# CurseForge keeps Install/ beside Instances/. An instance that is a symlink to a checkout elsewhere
+# has left that layout once resolved, so CURSEFORGE_ROOT names the root instead.
+_BESIDE = INSTANCE.parent.parent / "Install"
+INSTALL = _BESIDE if _BESIDE.is_dir() else (
+    Path(os.environ.get("CURSEFORGE_ROOT", "~/curseforge")).expanduser() / "Install")
 VERSION = "neoforge-26.1.2.109"
-JAVA = INSTALL / "java/java-runtime-epsilon/Contents/Home/bin/java"
+OS_NAME = {"darwin": "osx", "win32": "windows"}.get(sys.platform, "linux")
+_RUNTIME = INSTALL / "java/java-runtime-epsilon"
+JAVA = (_RUNTIME / "Contents/Home" if OS_NAME == "osx" else _RUNTIME) / "bin/java"
 LIBS = INSTALL / "libraries"
 FML_CONFIG = INSTANCE / "config/fml.toml"
 
@@ -98,7 +103,7 @@ def rules_pass(lib):
             return False
         os_name = rule.get("os", {}).get("name")
         allow = rule["action"] == "allow"
-        matches = os_name in (None, "osx")
+        matches = os_name in (None, OS_NAME)
         if allow and not matches:
             return False
         if not allow and matches:
@@ -166,7 +171,9 @@ def main():
     jvm = expand(nf["arguments"]["jvm"] + mc["arguments"]["jvm"])
     game = expand(mc["arguments"]["game"] + nf["arguments"]["game"])
 
-    cmd = [str(JAVA), "-Xmx6G", "-XstartOnFirstThread", *jvm, nf["mainClass"], *game]
+    # GLFW must own the main thread on macOS, and the flag is unknown elsewhere.
+    first_thread = ["-XstartOnFirstThread"] if OS_NAME == "osx" else []
+    cmd = [str(JAVA), "-Xmx6G", *first_thread, *jvm, nf["mainClass"], *game]
     if "--demo" in cmd:
         cmd.remove("--demo")
     args = sys.argv[1:]

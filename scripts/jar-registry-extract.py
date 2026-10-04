@@ -30,7 +30,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MODS = ROOT / "mods"
 VANILLA = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
-    "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
+    os.environ.get("CURSEFORGE_ROOT", "~/curseforge") + "/Install/versions/26.1.2/26.1.2.jar")))
 OUT = ROOT / "data" / "jars"
 PACK_JAR = "factoryworks_core-"
 

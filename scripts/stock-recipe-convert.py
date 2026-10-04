@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MODS = ROOT / "mods"
 CLIENT_JAR = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
-    "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
+    os.environ.get("CURSEFORGE_ROOT", "~/curseforge") + "/Install/versions/26.1.2/26.1.2.jar")))
 ADMISSIONS = ROOT / "data/pack/stock-admissions.json"
 SUBSTITUTIONS = ROOT / "data/pack/stock-substitutions.json"
 # `factorio-recipe-convert.py` lists this subtree in FOREIGN_SUBTREES and leaves it alone.

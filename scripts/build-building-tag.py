@@ -29,7 +29,7 @@ TAG = ROOT / "kubejs/data/factoryworks/tags/block/buildings.json"
 KUBEJS = ROOT / "kubejs"
 MODS = ROOT / "mods"
 VANILLA = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
-    "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
+    os.environ.get("CURSEFORGE_ROOT", "~/curseforge") + "/Install/versions/26.1.2/26.1.2.jar")))
 
 
 @functools.lru_cache(maxsize=None)
