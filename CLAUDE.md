@@ -101,6 +101,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | `scripts/factorio-enemy-extract.py` | `tests/factorio/test_enemy_extract.py` |
 | an item model | `tests/pack/test_data_formats.py` |
 | `scripts/pack-check.sh` | `tests/pack/test_pack_check.py` |
+| `scripts/sync-local-jars.py` | `tests/pack/test_sync_curseforge.py`, `tests/pack/test_local_jars.py` |
 | a `.bbmodel`, `data/art/models/`, `build-model-assets.py` | `tests/pack/test_model_assets.py` |
 | any model, blockstate, texture, definition | `scripts/check-client-assets.py`  |
 | any edit to `kubejs/`, the dev runtime classpath | `scripts/check-datapack-load.py` |
@@ -138,8 +139,10 @@ Beltworks is a **local jar**: `data/pack/local-jars.json` pins the version the P
 `scripts/sync-local-jars.py beltworks=<version>` writes the pin, copies that jar out of `~/.m2` into
 `mods/`, refreshes the manifest and rebuilds the core mod (#465, ADR-0024). A row with a `curseforge`
 project id (Beltworks, Craftworks) also gets `mods/<mod>.pw.toml` naming that version's CurseForge
-file, and the jar itself is not indexed, so an export references it rather than bundling it (#532);
-the sync fails when CurseForge lists no such file. The build reads the same
+file, and the jar itself is not indexed, so an export references it rather than bundling it (#532).
+The pin never waits on CurseForge: while CurseForge does not list the file, the sync installs the jar,
+removes the row's metafile and prints `pending <mod> <version>`, and a later plain sync fills it in.
+The build reads the same
 table and names no Library (#475, ADR-0090): every pinned jar, and every jar its row `nests`, is on
 the compile classpath and the dev runs, and each nested artifact's range is read from the jarjar
 metadata into `neoforge.mods.toml` as `<artifact>_version_range`. So the Pack names no Groundworks
@@ -147,7 +150,9 @@ version, and adding a Library is a row and a sync. `tests/pack/test_local_jars.p
 the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
 holds it, and nests Groundworks; a newer version in `~/.m2` is named without failing. For a
 `curseforge` row the metafile names the pinned file and project and hashes the installed jar, and
-`index.toml` holds the metafile, not the jar; the check contacts nothing. Run it after
+`index.toml` holds the metafile, not the jar; a row with no metafile is printed as pending and
+passes. `--check --strict` fails on a pending row, and must pass before any export. The check
+contacts nothing. Run it after
 the sync or any change to `mods/`. Take a new Beltworks, Wireworks or Pipeworks with the sync, never by copying a jar.
 Wireworks, the electric poles, is pinned the same way (#476). It has no CurseForge project yet, so
 its jar is indexed by hash and negated in `.packwizignore`. Its Bindings are the Pack's:

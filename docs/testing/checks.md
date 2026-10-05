@@ -917,7 +917,20 @@ edit to `kubejs/`.
 the manifest exactly as it was before the run: unstaged, staged and untracked edits a sync left are
 kept, the staged diff is unchanged, and the metafile the refresh wrote is gone. It exists because
 the restore once ran `git checkout` over `mods/`, wiping a sync that had not been committed.
+It also asserts that a jar `data/pack/local-jars.json` pins is not STRAY without a metafile, since
+the sync leaves a pending CurseForge reference that way, while an unpinned jar still is.
 Run it after editing `scripts/pack-check.sh`.
+
+## Sync CurseForge references
+
+`tests/pack/test_sync_curseforge.py` runs `scripts/sync-local-jars.py` over a scratch `~/.m2` and
+`mods/`, with stand-ins for CurseForge's listing, `packwiz` and Gradle. A listed file gets its
+metafile. An unlisted or unreachable one still pins and installs the jar, removes the older
+metafile and is reported pending. Plain `--check` passes on a pending row and `--check --strict`
+fails. A later plain sync fills the reference in, and a metafile that already names the pin is not
+queried again. It exists so the Pack can take and test a Library released to `~/.m2` before the
+jar is uploaded, without ever exporting an older CurseForge file than its pin. Run it after editing
+`scripts/sync-local-jars.py`.
 
 ## Client asset check
 

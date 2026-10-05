@@ -3,24 +3,28 @@
 
 A `mod=version` argument rewrites that row's pin first. Every run then copies each pinned jar out
 of `~/.m2` into `mods/`, removing any other file its row's pattern matches. A row with a
-`curseforge` project id gets `mods/<mod>.pw.toml` naming the pinned version's CurseForge file, and
-fails naming the version when CurseForge lists no such file (#532). It then refreshes the manifest
-with `scripts/pack-check.sh --fix` and rebuilds the core mod with `installToPack`. Nothing is
-written until every pinned jar is in `~/.m2` and CurseForge lists every `curseforge` row's file.
+`curseforge` project id gets `mods/<mod>.pw.toml` naming the pinned version's CurseForge file
+(#532). While CurseForge does not list that file yet, the row's CurseForge reference is pending:
+any metafile for the project is removed, so no export names an older file than the pin, and the
+sync carries on. A later run fills in what is pending. It then refreshes the manifest with
+`scripts/pack-check.sh --fix` and rebuilds the core mod with `installToPack`. Nothing is written
+until every pinned jar is in `~/.m2`.
 
 `--check` changes nothing and contacts nothing. It fails when the jar in `mods/` is not the pinned
 one, differs from `~/.m2`'s by sha256, or nests nothing its row names; it skips the sha256 when
 `~/.m2` lacks the pin, and names newer versions `~/.m2` holds without failing. For a `curseforge`
-row it also fails when the metafile names another file or project, hashes another jar, or when
-`index.toml` indexes the jar instead of the metafile.
+row with a metafile it also fails when the metafile names another file or project, hashes another
+jar, or when `index.toml` indexes the jar instead of the metafile. A row with no metafile is named
+pending and passes, unless `--strict`, which an export must pass.
 
 Don't run it while the game is running: it rewrites jars in `mods/`.
 
 Usage:
 
     scripts/sync-local-jars.py beltworks=0.2.0   # pin, install, refresh, rebuild
-    scripts/sync-local-jars.py                   # install whatever is pinned
+    scripts/sync-local-jars.py                   # install whatever is pinned, fill pending references
     scripts/sync-local-jars.py --check           # assert mods/ matches the pins; no writes
+    scripts/sync-local-jars.py --check --strict  # also fail on a pending CurseForge reference
 """
 import argparse
 import fnmatch
@@ -100,7 +104,7 @@ def newer(row):
     return sorted((v for v in versions if version_key(v) > pin), key=version_key)
 
 
-def check_row(row):
+def check_row(row, pending):
     failures = []
     present = installed(row)
     if [p.name for p in present] != [jar_name(row)]:
@@ -125,7 +129,10 @@ def check_row(row):
             print(f"ok   {row['mod']} {row['version']} nests {artifact} {inside[artifact]}")
 
     if "curseforge" in row:
-        failures += check_metafile(row, jar)
+        if metafile(row).is_file():
+            failures += check_metafile(row, jar)
+        else:
+            pending.append(row)
 
     waiting = newer(row)
     if waiting:
@@ -160,13 +167,21 @@ def check_metafile(row, jar):
     return failures
 
 
-def check(rows):
-    failures = [f for row in rows for f in check_row(row)]
+def check(rows, strict):
+    pending = []
+    failures = [f for row in rows for f in check_row(row, pending)]
+    for row in pending:
+        print(f"pending {row['mod']} {row['version']}: no CurseForge reference yet "
+              f"-- run scripts/sync-local-jars.py once CurseForge lists {jar_name(row)}")
+    if strict:
+        failures += [f"{row['mod']}: the CurseForge reference for {row['version']} is pending"
+                     for row in pending]
     for index, failure in enumerate(failures, 1):
         print(f"FAIL {index}: {failure}", file=sys.stderr)
     if failures:
         sys.exit(1)
-    print(f"OK -- {len(rows)} local jar(s) match their pin")
+    print(f"OK -- {len(rows)} local jar(s) match their pin"
+          + (f", {len(pending)} CurseForge reference(s) pending" if pending else ""))
 
 
 def pin(table, assignments):
@@ -182,15 +197,11 @@ def pin(table, assignments):
 
 def preflight(rows):
     """Every refusal the sync can meet, so that a refused sync leaves the tree as it was."""
-    file_ids = {}
     for row in rows:
         installed(row)
         if not published(row).is_file():
             sys.exit(f"{published(row)} does not exist -- publish {row['mod']} {row['version']} "
                      f"with publishToMavenLocal first")
-        if "curseforge" in row:
-            file_ids[row["mod"]] = curseforge_file(row)
-    return file_ids
 
 
 def install(row):
@@ -204,21 +215,50 @@ def install(row):
 
 
 def curseforge_file(row):
+    """The CurseForge file id of the pinned jar, or None when CurseForge does not list it."""
     url = CURSEFORGE_FILES.format(project=row["curseforge"])
     page_index, seen = 0, 0
     while True:
         query = urllib.parse.urlencode({"pageIndex": page_index, "pageSize": 50})
         request = urllib.request.Request(f"{url}?{query}", headers={"Accept": "application/json"})
-        with urllib.request.urlopen(request) as response:
-            page = json.load(response)
+        try:
+            with urllib.request.urlopen(request) as response:
+                page = json.load(response)
+        except OSError as error:
+            print(f"CurseForge project {row['curseforge']} could not be read: {error}")
+            return None
         for file in page["data"]:
             if file.get("fileName") == jar_name(row):
                 return file["id"]
         seen += len(page["data"])
         if not page["data"] or seen >= page["pagination"].get("totalCount", 0):
-            sys.exit(f"CurseForge project {row['curseforge']} lists no {jar_name(row)} -- upload "
-                     f"{row['mod']} {row['version']} first, or wait for CurseForge to approve it")
+            return None
         page_index += 1
+
+
+def referenced(row):
+    """True when the metafile already names the pinned jar in the row's project."""
+    if not metafile(row).is_file():
+        return False
+    toml = tomllib.loads(metafile(row).read_text(encoding="utf-8"))
+    return (toml.get("filename") == jar_name(row)
+            and toml.get("update", {}).get("curseforge", {}).get("project-id") == row["curseforge"])
+
+
+def reference(row):
+    """Write the row's metafile, or leave none and return False while CurseForge lacks the file."""
+    if referenced(row):
+        return True
+    file_id = curseforge_file(row)
+    if file_id is None:
+        for stale in naming_project(row["curseforge"]):
+            stale.unlink()
+            print(f"removed mods/{stale.name}, which names an older file than the pin")
+        print(f"pending {row['mod']} {row['version']}: CurseForge project {row['curseforge']} "
+              f"lists no {jar_name(row)} yet")
+        return False
+    write_metafile(row, file_id)
+    return True
 
 
 def naming_project(project):
@@ -248,27 +288,37 @@ def run(step, command):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--strict", action="store_true",
+                        help="with --check, fail on a pending CurseForge reference")
     parser.add_argument("pins", nargs="*", metavar="mod=version")
     args = parser.parse_args()
     if args.check and args.pins:
         parser.error("--check changes nothing, so it takes no pins")
+    if args.strict and not args.check:
+        parser.error("--strict qualifies --check")
 
     table = json.loads(TABLE.read_text(encoding="utf-8"))
     if args.check:
-        check(table["jars"])
+        check(table["jars"], args.strict)
         return
     if args.pins:
         pin(table, args.pins)
-    file_ids = preflight(table["jars"])
+    preflight(table["jars"])
     if args.pins:
         TABLE.write_text(json.dumps(table, indent=2) + "\n", encoding="utf-8")
+    pending = []
     for row in table["jars"]:
         install(row)
-        if "curseforge" in row:
-            write_metafile(row, file_ids[row["mod"]])
+        if "curseforge" in row and not reference(row):
+            pending.append(row)
     run("the manifest refresh", ["scripts/pack-check.sh", "--fix"])
     run("the core mod's build", ["./gradlew", ":factoryworks_core:installToPack"])
     print("\ncompiled and installed factoryworks_core against the pinned jars")
+    if pending:
+        print()
+        for row in pending:
+            print(f"pending {row['mod']} {row['version']}: run the sync again once CurseForge "
+                  f"lists {jar_name(row)}; an export waits on --check --strict")
 
 
 if __name__ == "__main__":

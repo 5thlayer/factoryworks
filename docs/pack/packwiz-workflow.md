@@ -86,21 +86,41 @@ Groundworks has no row, because the Pack compiles against the Groundworks nested
 
 ```sh
 scripts/sync-local-jars.py beltworks=0.2.0   # pin, install, refresh the manifest, rebuild the core mod
-scripts/sync-local-jars.py                   # re-install whatever is pinned
+scripts/sync-local-jars.py                   # re-install whatever is pinned, fill pending references
 scripts/sync-local-jars.py --check           # assert mods/ matches the pins; no writes
+scripts/sync-local-jars.py --check --strict  # also fail on a pending CurseForge reference
 ```
 
 A sync copies each pinned jar out of `~/.m2`, never out of a build folder, removes every other jar
 its row's pattern matches, writes `mods/<mod>.pw.toml` for a row with a `curseforge` project id
-(through `packwiz curseforge add` on the file CurseForge's listing names for the pinned version,
-failing when it lists none — the release train uploads before the Pack syncs, and a file still in
-review is not listed), runs `scripts/pack-check.sh --fix` and then `installToPack`, and says
+(through `packwiz curseforge add` on the file CurseForge's listing names for the pinned version),
+runs `scripts/pack-check.sh --fix` and then `installToPack`, and says
 whether the core mod compiled. It runs no GameTests. Review the manifest diff before committing it:
 `--fix` absorbs unrelated drift too. Don't run it while the game is running.
 
+A row's CurseForge reference is **pending** while CurseForge does not list the pinned file: it is
+not uploaded yet, still in review (a file in review is not listed), or CurseForge could not be
+reached. The sync still installs the jar and writes the pin, and so the Pack runs and tests it at
+once. It removes any metafile for that project, because a metafile left naming the older file would
+export a jar the Pack no longer runs. It also prints `pending <mod> <version>` and exits 0. A later
+plain sync asks CurseForge again for each pending row and writes its metafile. A row whose metafile
+already names the pinned jar is not asked about. `scripts/pack-check.sh` does not call a pending
+jar STRAY, because `local-jars.json` pins it.
+
+The release train relies on this order:
+
+1. The Libraries are released to `~/.m2`, and nothing is uploaded yet.
+2. The Pack syncs and runs its tests, with plain `--check` passing on the pending rows, and commits.
+   A failure here stops the train while nothing is public.
+3. The Libraries are uploaded, and the sync commit can be pushed with its rows still pending, since
+   nothing is exported from it.
+4. Once CurseForge lists the files, a plain sync fills them in as a second commit.
+5. `--check --strict` must pass before any export, so the Pack is never distributed naming an
+   older CurseForge file than its pin.
+
 `--check` fails when the jar in `mods/` is not the pinned one, differs from `~/.m2`'s by sha256
 (a version republished, or a jar copied by hand), or nests nothing its row names. For a
-`curseforge` row it also fails when the metafile names another version or project, hashes another
+`curseforge` row with a metafile it also fails when the metafile names another version or project, hashes another
 file than the installed jar (CurseForge's file is not `~/.m2`'s), or when `index.toml` indexes the
 jar rather than the metafile; it contacts nothing, so it holds the metafile to the pin and never to
 CurseForge. It skips the

@@ -152,9 +152,17 @@ missing = [f"{v} -> {k}" for k, v in sorted(named.items())
 # (the local jar), or if it is the first-party mod, which is deliberately not
 # indexed at all.
 index = open("index.toml").read() if os.path.exists("index.toml") else ""
+# A pinned jar whose CurseForge reference is pending has no metafile yet, and
+# sync-local-jars.py --check holds it to its pin.
+pinned = set()
+if os.path.exists("data/pack/local-jars.json"):
+    import json
+    pinned = {f"{r['artifact']}-{r['version']}.jar"
+              for r in json.load(open("data/pack/local-jars.json"))["jars"]}
 stray = [os.path.basename(j) for j in sorted(glob.glob("mods/*.jar"))
          if os.path.basename(j) not in named
          and os.path.basename(j) not in index
+         and os.path.basename(j) not in pinned
          and not os.path.basename(j).startswith("factoryworks_core-")]
 
 for m in missing:

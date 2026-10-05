@@ -81,3 +81,17 @@ def test_failed_check_on_a_clean_tree_leaves_it_clean(tmp_path):
 
     assert result.returncode == 1, result.stdout + result.stderr
     assert git(repo, "status", "--porcelain") == ""
+
+
+def test_pinned_jar_without_a_metafile_is_not_stray(tmp_path):
+    repo, bin_dir = make_repo(tmp_path)
+    (repo / "data" / "pack").mkdir(parents=True)
+    (repo / "data" / "pack" / "local-jars.json").write_text(
+        '{"jars": [{"artifact": "c", "version": "1.0"}]}')
+    (repo / "mods" / "c.jar").rename(repo / "mods" / "c-1.0.jar")
+    (repo / "mods" / "d.jar").write_bytes(b"jar")
+
+    result = run_check(repo, bin_dir)
+
+    assert "  d.jar" in result.stderr
+    assert "c-1.0.jar" not in result.stderr
