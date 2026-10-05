@@ -432,7 +432,7 @@ One unit of mining work against an ore block: it consumes one unit of the block'
 _Avoid_: mining tick, drill cycle, swing
 
 **Personal Assembler**:
-The player's inventory screen, as the player's only hand-crafting surface. It is Craftworks' mechanic, and Craftworks' glossary defines it (ADR-0089). The pack gives it a copy of each **Assembler** recipe that Factorio marks hand-craftable — first category `crafting`, minus the eleven Factorio withholds (`#88`) — crafted at speed 1, serially (ADR-0029). It **replaces** the crafting grid, and crafts nothing by hand directly: every craft is a **Crafting Plan**. It is always present: it is taught by the opening, never granted by it (`#100`).
+The player's inventory screen, as the player's only hand-crafting surface. It is Craftworks' mechanic, and Craftworks' glossary defines it (ADR-0089). It plans through each **Assembler** recipe that Factorio marks hand-craftable — first category `crafting`, minus the eleven Factorio withholds (`#88`), which is the recipe's `hand_craftable` flag (ADR-0118) — crafted at speed 1, serially (ADR-0029). It **replaces** the crafting grid, and crafts nothing by hand directly: every craft is a **Crafting Plan**. It is always present: it is taught by the opening, never granted by it (`#100`).
 _Avoid_: hand crafter, personal crafter, portable crafter
 
 **Crafting Plan**:
@@ -448,7 +448,7 @@ A leaf of a Crafting Plan the player does not have and the Assembler cannot make
 _Avoid_: shortfall, unavailable
 
 **Locked**:
-A recipe inside a Crafting Plan that the team has not researched: Craftworks asks Researchd about the hand copy, which unlocks with its machine recipe (ADR-0089). The resolver plans only through unlocked recipes, so a locked intermediate stops a plan exactly as a missing ingredient does, for a reason the player fixes with research rather than with mining.
+A recipe inside a Crafting Plan that the team has not researched: Craftworks asks Researchd about the recipe's id, which is the one an **Assembler** runs (ADR-0118). The resolver plans only through unlocked recipes, so a locked intermediate stops a plan exactly as a missing ingredient does, for a reason the player fixes with research rather than with mining.
 _Avoid_: unavailable recipe, gated
 
 **Assembler**:
@@ -456,7 +456,7 @@ Craftworks' placed machine that runs Assembling recipes, in three tiers, and Cra
 _Avoid_: Assembling Machine, crafter, fabricator, Oritech assembler
 
 **Held recipe**:
-The single `factoryworks:assembling` recipe a player sets on an **Assembler**, which the machine then runs and nothing else. It is Factorio's own gesture: the machine is told its recipe rather than deducing one from what it is fed, so there is no lookup, no first match and no ambiguity between two recipes sharing an ingredient set. The machine's inputs are filtered to it, and it is held whether or not the machine can currently run it — an unfed, unresearched or output-blocked machine displays its Held recipe and idles, and never clears it silently. Stored as the recipe id, which is stable and is what research unlocks already key on.
+The single `craftworks:assembling` recipe a player sets on an **Assembler**, which the machine then runs and nothing else. It is Factorio's own gesture: the machine is told its recipe rather than deducing one from what it is fed, so there is no lookup, no first match and no ambiguity between two recipes sharing an ingredient set. The machine's inputs are filtered to it, and it is held whether or not the machine can currently run it — an unfed, unresearched or output-blocked machine displays its Held recipe and idles, and never clears it silently. Stored as the recipe id, which is stable and is what research unlocks already key on.
 _Avoid_: locked recipe, recipe lock, selected recipe, machine lock
 
 **Gated recipe**:

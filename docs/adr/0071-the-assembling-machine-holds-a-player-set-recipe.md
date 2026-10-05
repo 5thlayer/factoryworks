@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0118
 ---
 
 # The Assembling Machine holds a player-set recipe, and the pack owns its craft cycle

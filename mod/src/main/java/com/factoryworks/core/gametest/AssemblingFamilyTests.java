@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.factoryworks.core.machine.AssemblingMachineRecipes;
-import com.factoryworks.core.machine.AssemblingTier;
+import com.factoryworks.core.machine.MachineSpecs;
 import com.factoryworks.core.machine.HeldRecipe;
 import com.factoryworks.core.recipes.AssemblingFamily;
 import com.factoryworks.core.recipes.AssemblingRecipe;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 /**
- * The three types on {@link AssemblingRecipe}'s shape, as the server loaded them (#488, ADR-0096).
+ * The two types on {@link AssemblingRecipe}'s shape, as the server loaded them (#488, ADR-0096).
  *
  * <p>A GameTest rather than a unit test because the codec is built from NeoForge's ingredient codecs,
  * which the unit-test classpath does not have. The family is the serializer's and not the JSON's, so
@@ -27,7 +27,7 @@ final class AssemblingFamilyTests {
 
     static void register(PFGameTests.Registrar tests) {
         tests.test("each_family_round_trips_its_recipes", 20, AssemblingFamilyTests::eachFamilyRoundTrips);
-        tests.test("an_assembling_machine_holds_no_chemistry", 20, AssemblingFamilyTests::noChemistryHeld);
+        tests.test("a_chemical_plant_holds_no_assembling_recipe", 20, AssemblingFamilyTests::noAssemblingHeld);
     }
 
     private static void eachFamilyRoundTrips(GameTestHelper helper) {
@@ -60,10 +60,12 @@ final class AssemblingFamilyTests {
         helper.succeed();
     }
 
-    private static void noChemistryHeld(GameTestHelper helper) {
-        String plastic = "factoryworks:chemistry/plastic_bar";
-        if (AssemblingMachineRecipes.resolve(helper.getLevel(), HeldRecipe.of(plastic), AssemblingTier.ONE.spec()).isPresent()) {
-            helper.fail("an Assembling Machine resolves " + plastic);
+    /** A Craftworks recipe is no recipe of the chassis's types, so a chassis machine resolves none. */
+    private static void noAssemblingHeld(GameTestHelper helper) {
+        String cable = "factoryworks:assembling/copper_cable";
+        if (AssemblingMachineRecipes.resolve(helper.getLevel(), HeldRecipe.of(cable),
+                MachineSpecs.get().spec("chemical-plant")).isPresent()) {
+            helper.fail("a Chemical Plant resolves " + cable);
             return;
         }
         helper.succeed();

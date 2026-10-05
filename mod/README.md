@@ -1,7 +1,7 @@
 # `factoryworks_core`
 
 <!-- Copied from publish/core/description.md; edit both. -->
-FactoryWorks Core holds the machines and rules of the FactoryWorks modpack: the furnaces, mining drills, Assembling Machines, Chemical Plant and Oil Refinery, the Boiler and Steam Engine, electric poles, the Radar, ore patches that hold an amount and run out, and the ore fields and oil wells laid across Terra. Each runs at the rates Factorio gives it.
+FactoryWorks Core holds the machines and rules of the FactoryWorks modpack: the furnaces, mining drills, Chemical Plant and Oil Refinery, the Boiler and Steam Engine, electric poles, the Radar, ore patches that hold an amount and run out, and the ore fields and oil wells laid across Terra. Each runs at the rates Factorio gives it.
 
 It adds no recipes and no research of its own. Those live in the modpack's scripts and data, so the mod on its own places machines nobody can craft.
 
@@ -24,9 +24,8 @@ machine is the pack's own block, several on an Oritech model or entity (ADR-0060
   colours (ADR-0067).
 - **Electricity** (`energy/`) — the poles, their wires and supply areas, the one network that
   carries power (ADR-0036, ADR-0062, ADR-0068); the Solar Panel and Accumulator are Wireworks'.
-- **Crafting machines** (`machine/`, `recipes/`) — the three Assembling Machines, the Chemical
-  Plant and the Oil Refinery on one chassis and one recipe shape (ADR-0096), and the Held recipe
-  EMI sets (ADR-0073).
+- **Crafting machines** (`machine/`, `recipes/`) — the Chemical Plant and the Oil Refinery on one
+  chassis and one recipe shape (ADR-0096), and the Held recipe EMI sets (ADR-0073).
 - **The Radar** (`radar/`) — charting through FTB Chunks and marking the patches it finds (ADR-0079).
 - **Building** — placement as a plan the preview draws (`placement/`, ADR-0069), Fast Replace
   (ADR-0082), the Pick's Dismantle and Stretch of Oritech's pipes (`dismantle/`, `stretch/`,
@@ -40,8 +39,9 @@ machine is the pack's own block, several on an Oritech model or entity (ADR-0060
   locks), `network/`, `transfer/`'s guarded item and fluid faces, and the Minecraft and Oritech
   mixins.
 - **`gametest/`** — the pack's GameTests (below).
-- **Not the Personal Assembler.** It is Craftworks, a local jar (ADR-0089). The pack ships only
-  its recipes, the `hand/` copies `scripts/build-hand-recipes.py` writes, and `config/craftworks-server.toml`.
+- **Not the Assemblers or the Personal Assembler.** They are Craftworks, a local jar (ADR-0089,
+  ADR-0118). The pack ships only their recipes, with the `hand_craftable` flag the converter sets, and
+  `config/craftworks-server.toml`.
 
 Nothing a designer would tune is compiled in. A machine's figures are read from resources under
 `factoryworks_core/` that the repo's generators write from the Factorio corpus, and models,

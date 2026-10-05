@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
 
 import net.minecraft.core.BlockPos;
@@ -39,9 +38,6 @@ final class FootprintBreakTests {
 
     static void register(PFGameTests.Registrar tests) {
         Map<String, FootprintMachine> machines = Map.ofEntries(
-                Map.entry("assembling_machine", PFBlocks.assemblingFootprint(AssemblingTier.ONE)),
-                Map.entry("assembling_machine_2", PFBlocks.assemblingFootprint(AssemblingTier.TWO)),
-                Map.entry("assembling_machine_3", PFBlocks.assemblingFootprint(AssemblingTier.THREE)),
                 Map.entry("chemical_plant", PFBlocks.CHEMICAL_PLANT_FOOTPRINT),
                 Map.entry("oil_refinery", PFBlocks.OIL_REFINERY_FOOTPRINT),
                 Map.entry("steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT),

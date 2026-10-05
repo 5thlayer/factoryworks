@@ -40,7 +40,6 @@ final class ChemicalPlantTests {
 
     private static final String PLASTIC = "factoryworks:chemistry/plastic_bar";
     private static final String CRACKING = "factoryworks:chemistry/heavy_oil_cracking";
-    private static final String CABLE = "factoryworks:assembling/copper_cable";
     private static final String BASIC_OIL = "factoryworks:oil_processing/basic_oil_processing";
 
     private static final String PETROLEUM_GAS = "factoryworks:petroleum_gas";
@@ -67,7 +66,7 @@ final class ChemicalPlantTests {
         tests.test("chemical_plant_lone_output_takes_the_unused_box", 20,
                 ChemicalPlantTests::loneOutputTakesTheUnusedBox);
         tests.test("chemical_plant_refuses_another_machines_recipe", 20,
-                helper -> CHASSIS.refusesOtherRecipes(helper, placeWhole(helper), PLASTIC, List.of(CABLE, BASIC_OIL)));
+                helper -> CHASSIS.refusesOtherRecipes(helper, placeWhole(helper), PLASTIC, List.of(BASIC_OIL)));
         tests.test("chemical_plant_keeps_its_recipe_over_a_reload", 20,
                 helper -> CHASSIS.keepsItsRecipeOverAReload(helper, placeWhole(helper), PLASTIC));
         tests.test("chemical_plant_is_fed_through_its_part", 100,

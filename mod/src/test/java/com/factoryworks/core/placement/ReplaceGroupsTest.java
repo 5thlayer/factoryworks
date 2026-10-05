@@ -14,8 +14,8 @@ class ReplaceGroupsTest {
     private static final String SMALL = "wireworks:small_pole";
     private static final String MEDIUM = "wireworks:medium_pole";
     private static final String LARGE = "wireworks:large_pole";
-    private static final String ASSEMBLER_1 = "factoryworks:assembling_machine";
-    private static final String ASSEMBLER_3 = "factoryworks:assembling_machine_3";
+    private static final String ASSEMBLER_1 = "craftworks:assembler_1";
+    private static final String ASSEMBLER_3 = "craftworks:assembler_3";
 
     private final ReplaceGroups groups = ReplaceGroups.get();
 
@@ -25,7 +25,12 @@ class ReplaceGroupsTest {
         assertTrue(groups.canReplace(STEEL, STONE));
         assertTrue(groups.canReplace(STONE, ELECTRIC));
         assertTrue(groups.canReplace(MEDIUM, SMALL));
-        assertTrue(groups.canReplace(ASSEMBLER_1, ASSEMBLER_3));
+    }
+
+    @Test
+    @DisplayName("the Assemblers' group is Craftworks', not the Pack's")
+    void assemblersAreNoPackGroup() {
+        assertFalse(groups.canReplace(ASSEMBLER_1, ASSEMBLER_3));
     }
 
     @Test

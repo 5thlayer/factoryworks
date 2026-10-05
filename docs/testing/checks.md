@@ -72,7 +72,7 @@ run (#338). KubeJS resolves `kubejs/` against the game directory with no setting
 `mod/run/` is untracked, so the link is built rather than committed. There is no second copy: the
 startup scripts register the pack's items, the server scripts run the recipe sweep, and every file
 under `kubejs/data/` loads. That is what lets a test assert against the recipe the pack ships rather
-than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml`, `config/factoryworks_core-server.toml` and `config/researchd-server.toml`, linked in by `linkServerConfigs`: loaders need power (#447), machines lock by research (#260) and labs draw power only because the pack's configs say so, and every default is off. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
+than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml`, `config/craftworks-server.toml`, `config/factoryworks_core-server.toml` and `config/researchd-server.toml`, linked in by `linkServerConfigs`: loaders need power (#447), machines lock by research (#260), Assemblers lock by it too (ADR-0118) and labs draw power only because the pack's configs say so, and every default is off. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
 vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
 five blocks above the floor; without it no test block places and the run hangs rather than fails.
 And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the
@@ -80,16 +80,17 @@ classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there 
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
-`BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#327), `AssemblingFluidTests` (#295), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
+`BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#559), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
 `PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545, #546), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). `ShowcaseSceneTests` (#538) build the `core/showcase/` scenes that `/factoryworks showcase` builds
 for filming, under `factoryworks_showcase:*` so the run never selects them; swap the run's selector
-for theirs to check each still makes its product. What is here is only what a JVM test cannot reach: that Craftworks plans every hand copy the
-server loaded, resolves a tag ingredient to its items and has no copy of a fluid recipe; that each of
-the three types on `AssemblingRecipe`'s shape (assembling, chemistry, oil processing, ADR-0096) loads
-its recipes under its own folder and survives `Recipe.CODEC`'s round trip, and that an Assembling
-Machine resolves no chemistry recipe -- a unit test cannot, since the codec is NeoForge's; that a pole's
+for theirs to check each still makes its product. What is here is only what a JVM test cannot reach: that Craftworks plans every hand-craftable
+recipe the server loaded, resolves a tag ingredient to its items and leaves out a fluid recipe and
+one that is not hand-craftable (`HandSetTests`, ADR-0118); that each of
+the two types on `AssemblingRecipe`'s shape (chemistry, oil processing, ADR-0096) loads
+its recipes under its own folder and survives `Recipe.CODEC`'s round trip, and that a Chemical
+Plant resolves no assembling recipe -- a unit test cannot, since the codec is NeoForge's; that a pole's
 scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
 transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
 starved one freezes where it stood; that an Electric Mining Drill reached only through its part
@@ -98,14 +99,20 @@ own energy owner, returning false from `pay`, or dropping the journal each turn 
 reach and stops when the link is broken is Wireworks' own GameTests (#476). And that a pole reaching only a Steam Engine's
 parts draws that engine's 450 FE/t, once -- `SupplyScanTest` holds
 the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red.
-And that either footprint machine, the Assembling Machine or the
+And that a footprint machine, such as the Chemical Plant or the
 Steam Engine (ADR-0116), broken at its anchor or at any part leaves none of its blocks standing and
-drops exactly one item; dropping the part's teardown turns the six part tests red. And that an Assembling Machine's Held recipe survives its save hook and
-resolves again after it, that every assembling recipe of tier 1's categories in the server's manager is
-one Fill Recipe can set and it can hold, while a `crafting-with-fluid` one is refused (#331) -- and that changing the recipe hands the inputs back;
-dropping the field from `saveAdditional` turns the first red. The codec itself is `HeldRecipeTest`. Every one is also held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
-(#330), and a non-assembling id is refused there with a message and leaves the Held
+drops exactly one item; dropping the part's teardown turns the part tests red. And that a chassis machine's Held recipe survives its save hook and
+resolves again after it (`ChemicalPlantTests`, `OilRefineryTests`); dropping the field from `saveAdditional` turns them red. The codec itself is `HeldRecipeTest`. Every recipe is held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
+(#330), and a recipe of another chassis type is refused there with a message and leaves the Held
 recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
+The Assemblers are Craftworks' (ADR-0118), and its GameTests hold the machine. `AssemblingMachineTests`
+holds what the Pack owns of them: an Assembler on a creative pole's area is powered and crafts copper
+cable in whole crafts of two; Fill Recipe on a recipe a research unlocks is refused as `LOCKED` for a
+Researchd team that has researched nothing, and answered `HELD` for one no research unlocks, which
+needs `craftworks-server.toml`'s `lockSources` linked in (Craftworks asks the Lock source once, of the
+player who presses it); and every `factoryworks:assembling/` recipe in the manager is one some tier can hold,
+the `crafting-with-fluid` ones excepted until Craftworks has Fluid Connections (#580). A pole counts each
+block of an Assembler's footprint as a machine, since Craftworks' parts are Groundworks', not Wireworks', so the test asks only that the pole reaches it.
 And that a small pole's demand probe leaves a Beltworks loader no FE, and that no `beltworks:` recipe
 survives the stock-recipe sweep, against the pack's express belt recipe as a control
 (`BeltworksPackTests`). The loader's face is Beltworks', so the two static FE checks cannot read it.
@@ -136,32 +143,14 @@ And that a mining drill broken at its anchor or at any part, through the player'
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
 moving it back to the block turns both part tests red.
-And that the machine crafts its Held recipe at Factorio's rate (20 ticks and exactly 750 FE for
-copper cable, typed rather than read off `AssemblingMachineSpec`) and that a full output, no
-ingredients each draw nothing, take nothing and keep the recipe (#328); drawing the tick's energy
-before the stall is asked turns both stalls red. No GameTest holds the Researchd lock: EMI offers a
-locked recipe to no machine, and the lock itself is Researchd's. And that
-the item face takes the Held recipe's ingredients each in its own slot and refuses everything else
-(#329, ADR-0074). That is asserted through the capability on the anchor and on a hull block, on both
-overloads. A machine with no recipe takes nothing, and Oritech's `FILL_EVENLY` input mode, which
-spreads a slot-0 insert past the filter, stays pinned off. Making `acceptsInput` return true turns
-two of them red, and dropping the `cycleInputMode` override turns the third red. The slot rule is
-`AssemblingInputSlotsTest`. The rate and the stall order are
-`AssemblingMachineSpecTest` and `AssemblingStallTest`; whether an Oritech addon changes the rate in
-a world is not checked -- the multipliers are, on the JVM. Tiers 2 and 3 are blocks of their own
-(#295, ADR-0075): tier 2 crafts copper cable in 14 ticks for 1,000 FE, typed, and every tier keeps
-its paint and the cartridge through a shift-click in the player's game mode (dropping `PaintLock`'s
-listener turns all three red). `AssemblingFluidTests` holds tier 2's tank: concrete crafts from 150 mB
-and leaves 50, 50 mB stalls with nothing drawn or taken, the fluid face on the anchor and a hull
-block takes water only with concrete held and never gives it back, tier 2 holds concrete where tier
-1 refuses it, tier 1 has no fluid face, a changed recipe voids the tank and the tank survives the
-save hook. The fluid face fills an input tank to four crafts' worth and no further, on either block and
-per tank on the Chemical Plant (#519); the rule is `OverloadLimitTest`. A `takeFluids` that always feeds and a change that keeps the tank turn four red. The
-per-tier figures are `AssemblingMachineSpecTest`, the fluid stall's order `AssemblingStallTest`. `ChemicalPlantTests` holds
+The chassis's rate and stall order are `AssemblingMachineSpecTest` and `AssemblingStallTest`;
+whether an Oritech addon changes the rate in a world is not checked -- the multipliers are, on the JVM.
+The fluid face fills an input tank to four crafts' worth and no further, per tank on the Chemical Plant
+(#519); the rule is `OverloadLimitTest`. `ChemicalPlantTests` holds
 the Chemical Plant on the same chassis (#490, ADR-0096): plastic in 20 ticks for 2,100 FE, typed; a full
 output and no coal stall with nothing drawn or taken; heavy oil cracking's two fluids
 each reach their own tank through the anchor and the part, while other fluids and the inputs' way back
-out are refused; an assembling or oil-processing recipe is refused at the menu setter with its message;
+out are refused; an oil-processing recipe is refused at the menu setter with its message;
 a pole reaching only the part feeds it, and one reaching both blocks counts it once; and Oritech's
 Fluid addon never attaches. Drawing before the stall, dropping the type check, routing every fluid to
 tank 0, dropping the addon filter, and making a part its own energy owner each turn their test red. `OilRefineryTests` holds
@@ -170,18 +159,14 @@ FE, typed; each output tank takes what Factorio sizes it for the Held recipe -- 
 advanced, 135 for the pinned basic, and the Chemical Plant's lone cracking product both boxes' 200 (#520,
 `OutputTankVolumeTest`); any one full output and no water
 stall with nothing drawn or taken; water and crude reach their own tanks through the anchor
-and a top chamber block, which hand back only the three outputs; a chemistry or assembling recipe is
+and a top chamber block, which hand back only the three outputs; a chemistry recipe is
 refused at the menu setter; and a pole reaching only a chamber feeds it, counted once. Its placement
 and break are `PlacementPlanTests`' and `FootprintBreakTests`'. And that the screen's status (#332) is recomputed on
 each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
 cycle stops the machine; forcing the power probe true turns it red. The precedence is
-`AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. The item face holds each input to the recipe's Overload Limit (#517): copper cable takes 3 plates
-on tier 1 and 4 on tier 3, typed from the Factorio probe, while a shift-click still places 64;
-`OverloadLimitTest` holds the rule. A product stops the craft at a full stack, as Factorio's does,
-which the full-output stall test above already holds. A pole beside a whole machine counts it
-once and fills it, and a small pole reaching only a hull block still finds it: the hull blocks have
+`AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. A pole reaching only one hull block of the Chemical Plant still finds it: the hull blocks have
 no block entity, so they resolve to the anchor through `EnergyOwnerBlock` in `SupplyAreaScan`, and
-without it one machine counts as four. Each was checked against the defect it exists for: dropping
+without it one machine counts as more than one. Each was checked against the defect it exists for: dropping
 the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
 furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red.
 `tests/pack/test_energy_faces.py` and `tests/pack/test_capability_registration.py` are the static
@@ -229,7 +214,7 @@ The corpus holds no Wube text (ADR-0103, #303), so a chassis recipe is named fro
 `data/factorio/recipe.json` holds (#490). Factorio names a recipe after its main product unless it
 is not one product under its own name -- advanced oil processing has three results, heavy oil
 cracking one that is not its id -- and then it names the recipe itself. `scripts/build-recipe-names.py`
-writes a `recipe.factoryworks.<type>.<name>` key for every emitted assembling, chemistry and oil
+writes a `recipe.factoryworks.<type>.<name>` key for every emitted chemistry and oil
 processing recipe: for such a recipe its id read as words (`heavy-oil-cracking` is "Heavy oil
 cracking"), and `%s` for every other, which `AssemblingMachineRecipes.name` fills with the product.
 `tests/pack/test_recipe_names.py` runs the `--check` and re-derives both halves from the corpus,
@@ -239,7 +224,7 @@ holding the keys to the emitted recipes both ways. Run it after any converter ru
 
 The crafting chassis reads every figure from a per-machine spec (#489, ADR-0096), never typed.
 `scripts/build-machine-specs.py` writes one row per machine whose recipes share `AssemblingRecipe`'s
-shape -- the three Assembling Machines, the Chemical Plant and the Oil Refinery -- copying speed,
+shape -- the Chemical Plant and the Oil Refinery -- copying speed,
 energy use, drain, categories, Fast Replace group and tank volumes from `data/factorio/machine.json`,
 and taking the recipe type from `category-map.json`. Slot and tank counts follow the recipes: each
 is the most any emitted recipe of the machine's type and categories needs. `MachineSpecs` reads it.
@@ -276,7 +261,7 @@ never refused behind it. An Oritech machine core is not synced its controller, s
 one beyond 4.5. On the client a refused start is attacked as a miss (`mixin/minecraft/MinecraftMixin`),
 swinging once the way vanilla does out of reach rather than cracking the block every tick; that is a
 human check on delivery. `ReachTests.Screens`, registered only with Oritech loaded, holds the
-Assembling Machine's screen open 12 blocks off and closed 22 off; it closed at Oritech's 8 before
+Chemical Plant's screen open 12 blocks off and closed 22 off; it closed at Oritech's 8 before
 `OritechScreenHandlerMixin` and the menu's own fix. Run them after re-extracting the corpus or editing the item map.
 
 ## Placement plan check
@@ -304,8 +289,8 @@ bearing -- the preview's two failure modes are promising a placement that does n
 refusing one that does. Each test was checked against the defect it exists for: forcing the rig's
 footprint to always fit turns one red, flattening the rig to a single layer turns two more, and
 dropping the pump's water question turns one. A belt piece plans itself, and
-Beltworks' GameTests hold it. The Assembling Machine's two (#326) are
-the rig's pair for its 2x1x2 footprint (ADR-0072): dropping one block from its plan turns the first
+Beltworks' GameTests hold it, and an Assembler's is Craftworks'. The Chemical Plant's two (#326) are
+the rig's pair for its 1x1x2 footprint: dropping one block from its plan turns the first
 red, and the second's obstruction sits in its upper row. The first also reads `ASSEMBLED` five ticks
 after placing, because Oritech's next-tick rescan cleared it and a tick-0 read passed with that live. Two fixtures are load-bearing rather
 than arbitrary -- the rig's size is compared against `RigGeometry`'s own footprint rather than a
@@ -324,15 +309,7 @@ Wireworks' own GameTests. The Pack states only the group (#476): `FactoryWorksCo
 builder to `FastReplace.group` with the blocks `ReplaceGroups` puts in Factorio's `electric-pole`.
 `PlacementPlanTests.PoleReplaces` holds that statement: a medium pole replaces a small column, and a
 substation does not. Dropping the statement turns the first red.
-`PlacementPlanTests.AssemblingReplaces` holds the Assembling Machine's (#390), registered only with
-Oritech loaded: tier 1 to 2 keeps copper cable Held, the items, the craft scaled to tier 2's 14 ticks
-and the FE; tier 2 to 1 with concrete clears the recipe, voids the tank, drops the fluid face and
-hands the inputs back; tier 2 to 3 keeps the tank; a hull block replaces as the anchor does; an Oritech
-speed addon stays attached and in effect; and a full inventory changes nothing and names its reason.
-One block entity type serves every tier, so the swap keeps it (`shouldChangedStateKeepBlockEntity`)
-and sets no neighbour flag, since the anchor's removal hook tears the footprint down. Not keeping the
-block entity turns five red, letting the inventory check pass turns the no-room test red, and a part
-that does not hand the click to its anchor turns the hull test red.
+An Assembler's Fast Replace is Craftworks' `AssemblerReplace` (ADR-0118), so the Pack holds none.
 
 Run it after editing anything under `core/placement/`, and re-run `scripts/check-datapack-load.py`
 too when the platform moves, since the same server reads it.
@@ -399,15 +376,15 @@ load. See `docs/testing/fuel-table-check.md`.
 ## Hand recipe check
 
 The Personal Assembler is Craftworks, a local jar (ADR-0089), and its rules are tested in its repo.
-It plans only with `craftworks:assembling`, so `scripts/build-hand-recipes.py` writes a copy of every
-`crafting` recipe under `recipe/assembling/` into `recipe/hand/`, whichever script wrote the machine
-recipe, and lists them in `kubejs/server_scripts/hand_recipes.js`. Craftworks locks by
-`lockSources = ["researchd"]` in `config/craftworks-server.toml` and asks Researchd about the copy's
-own id, so `factorio_tech_dsl.js` adds each copy to the research that unlocks its machine recipe.
-`tests/factorio/test_hand_recipes.py` runs the generator's `--check`, holds each copy to its machine
-recipe field by field and asserts the DSL adds the copies. `gametest/HandSetTests` holds that
-Craftworks plans every copy the server loaded. Re-run the generator after any converter run or an
-edit under `recipe/assembling/`.
+It plans only a `craftworks:assembling` recipe whose `hand_craftable` is true, with no fluid and one
+result, and the recipes the Assemblers hold are the same recipes (ADR-0118): the converter writes the
+flag for a first Factorio category of `crafting`, as do the stock re-authoring, and the two Pick
+recipes are written with it. Craftworks locks by `lockSources = ["researchd"]` in
+`config/craftworks-server.toml` and asks Researchd about the recipe's own id, so a research that
+unlocks `factoryworks:assembling/<name>` locks it for both. `tests/factorio/test_hand_recipes.py`
+re-derives the set from the corpus, holds every emitted recipe to it, and asserts the
+`factoryworks:hand/*` copies, their generator and `withHandCopies` are gone. `gametest/HandSetTests`
+holds that Craftworks plans every hand-craftable recipe the server loaded.
 
 `tests/factorio/test_hand_resolver.py` is the corpus half: all 113 category-`crafting` recipes
 resolve to plans bottoming out in the 21 known leaves, no item has two hand recipes (the resolver
@@ -857,8 +834,8 @@ is never evidence for `excluded` here — and it places nothing on a progression
 
 ## Recipe conversion
 
-`scripts/factorio-recipe-convert.py` turns the extracted corpus into `factoryworks:assembling`
-and `factoryworks:smelting` recipe JSON under `kubejs/data/factoryworks/recipe/` (#279), reading five committed data files: the corpus, the category
+`scripts/factorio-recipe-convert.py` turns the extracted corpus into `craftworks:assembling` (ADR-0118), `factoryworks:chemistry`,
+`factoryworks:oil_processing` and `factoryworks:smelting` recipe JSON under `kubejs/data/factoryworks/recipe/` (#279), reading five committed data files: the corpus, the category
 map, the subgroup owners, `data/pack/item-map.json` and `data/pack/recipe-overrides.json`. Nothing is
 decided in the script — a decision is a diff to a design document. Generated output is never
 hand-edited; re-run the converter. A Factorio name with no item-map row is a hard failure, while an
@@ -1015,7 +992,7 @@ removed the right things in a running game is a world load, not a static check.
 subtree and one input table, which is the right shape for "did this converter do its job" and blind
 to the question none of them can ask: whether two converters, or one converter twice, made the same
 item. Two routes to one block fails no schema, appears in no log and loads perfectly — it reaches
-the player as two EMI entries for the same thing, and if both are `category: crafting` the
+the player as two EMI entries for the same thing, and if both are `hand_craftable` the
 Personal Assembler's resolver has no cost model to choose between them. It shipped once, when
 Create's two gearbox conversions and the large cogwheel's second route were emitted alongside the
 direct recipes they duplicate and every subtree-local check passed. One item legitimately has a
@@ -1035,7 +1012,7 @@ prototype. `tests/factorio/test_pack_recipes.py` is what holds them, since every
 is checked against the corpus and these are checked against nothing otherwise — that the
 converter still lists `pack` as foreign, which its own check reads from it rather than restating (a
 run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
-`recipe_survivors.js` admits and carry `category: crafting` so the Personal Assembler
+`recipe_survivors.js` admits and carry `category: crafting` and `hand_craftable` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
 has its model, texture, lang key, `c:tools/wrench` and `groundworks:dismantles`, the two tags that
 carry its verbs, that `groundworks:dismantles` holds nothing else (#448), and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
@@ -1059,7 +1036,7 @@ nothing reads, and a recipe no jar or two jars ship each fail the line (#442). A
 carry a `rewrite` instead of being flattened: its ingredients, all `keep` rows, and its yield,
 chosen and recorded with a reason, and only the output is read from the jar (#444).
 An `author` row is a recipe no jar ships, written whole from its row on the machine it names;
-sand is ground on the Assembling Machine and smelted to glass under `recipe/smelting/stock/` (#445).
+sand is ground on an Assembler and smelted to glass under `recipe/smelting/stock/` (#445).
 `tests/factorio/test_stock_recipes.py` runs the `--check`, holds each ingredient to an item another
 pack recipe makes or a `keep` row, each output to an item a jar defines, each recipe to the
 machine's input slots, and the union of every emitted hand recipe to no cycle; a second hand route

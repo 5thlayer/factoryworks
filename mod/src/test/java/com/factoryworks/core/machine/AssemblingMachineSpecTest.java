@@ -10,22 +10,28 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
- * The Assembling Machine's rate per tier (#328, #295, ADR-0029, ADR-0075): each
- * {@code assembling-machine-N}'s {@code crafting_speed} and {@code energy_usage}, at ADR-0060's
- * 1 FE = 100 J.
+ * A crafting machine's rate from its spec (#328, ADR-0029): {@code crafting_speed} and
+ * {@code energy_usage}, at ADR-0060's 1 FE = 100 J.
  *
- * <p>Every expected figure is typed from the corpus by hand rather than read off the spec, so the
- * test cannot agree with the implementation by construction.
+ * <p>The arithmetic is what the Chemical Plant and the Oil Refinery run on, and it is exercised at
+ * the three speeds Factorio's Assembling Machines have, which are Craftworks' now (ADR-0118), so each
+ * is a local spec. Every expected figure is typed from the corpus by hand rather than read off a
+ * spec, so the test cannot agree with the implementation by construction.
  */
 class AssemblingMachineSpecTest {
 
-    private static final MachineSpec ONE = AssemblingTier.ONE.spec();
-    private static final MachineSpec TWO = AssemblingTier.TWO.spec();
-    private static final MachineSpec THREE = AssemblingTier.THREE.spec();
+    private static final MachineSpec ONE = rate("speed-0.5", 0.5, 75_000L);
+    private static final MachineSpec TWO = rate("speed-0.75", 0.75, 150_000L);
+    private static final MachineSpec THREE = rate("speed-1.25", 1.25, 375_000L);
 
-    /** copper-cable: 0.5 s in the corpus, emitted as 10 ticks, observed at 1 s on tier 1. */
+    private static MachineSpec rate(String name, double craftingSpeed, long watts) {
+        return new MachineSpec(name, "factoryworks:chemistry", Set.of("chemistry"), craftingSpeed, watts, 0L, name,
+                0, 0, List.of(), List.of(), List.of());
+    }
+
+    /** copper-cable: 0.5 s in the corpus, emitted as 10 ticks, observed at 1 s at speed 0.5. */
     @Test
-    void aHalfSecondRecipeTakesOneSecondOnTierOne() {
+    void aHalfSecondRecipeTakesOneSecondAtHalfSpeed() {
         assertEquals(20, AssemblingMachineSpec.durationTicks(ONE, 10, 1.0f));
     }
 
@@ -99,7 +105,7 @@ class AssemblingMachineSpecTest {
 
     /** 0.5 s at speed 0.75 is 13.3 ticks, run in 14; 150 kW over the unrounded 2/3 s is 1,000 FE. */
     @Test
-    void tierTwoRunsAtThreeQuartersAndOneHundredFiftyKilowatts() {
+    void aThreeQuarterSpeedMachineDrawsOneHundredFiftyKilowatts() {
         assertEquals(14, AssemblingMachineSpec.durationTicks(TWO, 10, 1.0f));
         assertEquals(1000, AssemblingMachineSpec.fePerCraft(TWO, 10, 1.0f));
         assertEquals(4000, AssemblingMachineSpec.fePerCraft(TWO, 40, 1.0f));
@@ -107,7 +113,7 @@ class AssemblingMachineSpecTest {
 
     /** 0.5 s at speed 1.25 is 8 ticks; 375 kW is 187.5 FE/t, 1,500 FE over the craft, exactly. */
     @Test
-    void tierThreeCarriesItsHalfAnFeATickExactly() {
+    void aFastMachineCarriesItsHalfAnFeATickExactly() {
         assertEquals(8, AssemblingMachineSpec.durationTicks(THREE, 10, 1.0f));
         assertEquals(1500, AssemblingMachineSpec.fePerCraft(THREE, 10, 1.0f));
         long total = 0;
@@ -118,67 +124,6 @@ class AssemblingMachineSpecTest {
         }
         assertEquals(1500, total);
         assertEquals(1875, AssemblingMachineSpec.drawTenths(1500, 8));
-    }
-
-    /** Tier 1's {@code crafting_categories}: no fluid box, so no {@code crafting-with-fluid}. */
-    @Test
-    void tierOneCraftsNoFluidRecipe() {
-        assertTrue(AssemblingTier.ONE.crafts("crafting"));
-        assertTrue(AssemblingTier.ONE.crafts("advanced-crafting"));
-        assertFalse(AssemblingTier.ONE.crafts("crafting-with-fluid"));
-    }
-
-    /** Tiers 2 and 3 add {@code crafting-with-fluid}, and neither takes a chemical plant's category. */
-    @Test
-    void tiersTwoAndThreeCraftWithAFluid() {
-        for (AssemblingTier tier : new AssemblingTier[] {AssemblingTier.TWO, AssemblingTier.THREE}) {
-            assertTrue(tier.crafts("crafting"), tier + " crafting");
-            assertTrue(tier.crafts("advanced-crafting"), tier + " advanced-crafting");
-            assertTrue(tier.crafts("crafting-with-fluid"), tier + " crafting-with-fluid");
-            assertFalse(tier.crafts("chemistry"), tier + " chemistry");
-        }
-    }
-
-    /** Only the fluid tiers have a tank, of 1,000 mB, and no tier has an output tank. */
-    @Test
-    void onlyTiersTwoAndThreeHaveATank() {
-        assertEquals(List.of(), ONE.fluidInputs());
-        assertEquals(List.of(1000), TWO.fluidInputs());
-        assertEquals(List.of(1000), THREE.fluidInputs());
-        for (MachineSpec tier : List.of(ONE, TWO, THREE)) {
-            assertEquals(List.of(), tier.fluidOutputs(), tier.name());
-        }
-    }
-
-    /** The Oil Refinery's own recipe's five ingredients, on every tier (ADR-0096). */
-    @Test
-    void everyTierHasFiveInputsAndOneOutput() {
-        for (MachineSpec tier : List.of(ONE, TWO, THREE)) {
-            assertEquals(5, tier.itemInputs(), tier.name());
-            assertEquals(1, tier.itemOutputs(), tier.name());
-        }
-    }
-
-    /** Each tier's {@code crafting_speed}, {@code energy_usage} and {@code drain}, in watts. */
-    @Test
-    void eachTierReadsItsSpeedAndPowerFromTheCorpus() {
-        assertEquals(0.5, ONE.craftingSpeed());
-        assertEquals(0.75, TWO.craftingSpeed());
-        assertEquals(1.25, THREE.craftingSpeed());
-        assertEquals(75_000L, ONE.watts());
-        assertEquals(150_000L, TWO.watts());
-        assertEquals(375_000L, THREE.watts());
-        assertEquals(2_500L, ONE.drainWatts());
-        assertEquals(5_000L, TWO.drainWatts());
-        assertEquals(12_500L, THREE.drainWatts());
-    }
-
-    @Test
-    void theThreeTiersHoldAssemblingRecipesAndReplaceEachOther() {
-        for (MachineSpec tier : List.of(ONE, TWO, THREE)) {
-            assertEquals("factoryworks:assembling", tier.recipeType(), tier.name());
-            assertEquals("assembling-machine", tier.replaceGroup(), tier.name());
-        }
     }
 
     /** 2 items and 2 fluids in, 1 of each out: the entity's second output box is one no recipe fills (ADR-0096). */
@@ -230,31 +175,22 @@ class AssemblingMachineSpecTest {
 
     @Test
     void aTankPastTheMachinesLastHasNoRoom() {
-        assertEquals(0, TWO.fluidInputVolume(1));
-        assertEquals(0, ONE.fluidInputVolume(0));
+        MachineSpec plant = MachineSpecs.get().spec("chemical-plant");
+        assertEquals(0, plant.fluidInputVolume(2));
         assertEquals(100, MachineSpecs.get().spec("oil-refinery").fluidOutputVolume(2));
-        assertEquals(0, MachineSpecs.get().spec("chemical-plant").fluidOutputVolume(1));
+        assertEquals(0, plant.fluidOutputVolume(1));
     }
 
     /** A recipe fits when the machine has a slot or tank for every input and output. */
     @Test
     void aRecipeFitsOnlyWhereEveryInputAndOutputHasASlotOrTank() {
-        assertTrue(ONE.fits(5, 1, 0, 0));
-        assertFalse(ONE.fits(1, 1, 1, 0), "concrete's water on tier 1");
-        assertTrue(TWO.fits(1, 1, 1, 0));
-        assertFalse(TWO.fits(6, 1, 0, 0));
-        assertFalse(TWO.fits(1, 0, 0, 1), "a fluid result on an assembler");
+        MachineSpec plant = MachineSpecs.get().spec("chemical-plant");
+        assertTrue(plant.fits(2, 1, 2, 1));
+        assertFalse(plant.fits(3, 1, 0, 0), "a third item ingredient");
+        assertFalse(plant.fits(1, 1, 3, 0), "a third fluid ingredient");
+        assertFalse(plant.fits(1, 1, 0, 2), "a second fluid result");
         MachineSpec refinery = MachineSpecs.get().spec("oil-refinery");
         assertTrue(refinery.fits(0, 0, 2, 3));
         assertFalse(refinery.fits(1, 0, 2, 3));
-    }
-
-    /** The ids the item map names, derived from the tier. */
-    @Test
-    void eachTierIsItsOwnBlock() {
-        assertEquals("assembling_machine", AssemblingTier.ONE.blockName());
-        assertEquals("assembling_machine_2", AssemblingTier.TWO.blockName());
-        assertEquals("assembling_machine_3", AssemblingTier.THREE.blockName());
-        assertEquals("assembling_machine_2_part", AssemblingTier.TWO.partBlockName());
     }
 }

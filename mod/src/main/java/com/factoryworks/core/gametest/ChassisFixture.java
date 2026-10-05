@@ -3,12 +3,10 @@ package com.factoryworks.core.gametest;
 import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 
-import com.factoryworks.core.PFBlocks;
 import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineMenu;
 import com.factoryworks.core.machine.AssemblingStall;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.HeldRecipe;
 import com.factoryworks.core.machine.HoldVerdict;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
@@ -31,10 +29,6 @@ record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, 
 
     /** A pole rescans at most this many ticks after a machine appears (#271). */
     static final int RESCAN_INTERVAL = 40;
-
-    static ChassisFixture assembling(AssemblingTier tier, BlockPos anchor, Direction facing) {
-        return new ChassisFixture("Assembling Machine " + tier, PFBlocks.assemblingFootprint(tier), anchor, facing);
-    }
 
     BlockPos hullBlock() {
         return footprint.positions(anchor, facing).stream().filter(pos -> !pos.equals(anchor)).findFirst()

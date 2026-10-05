@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0118
 ---
 
 # The Assembling Machine stands on its model's footprint, not Factorio's 3x3

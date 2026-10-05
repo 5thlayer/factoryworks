@@ -494,51 +494,47 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: all bodies
-- **via**: `factoryworks_core`, `oritech`
-- **owner**: ADR-0026, ADR-0029, ADR-0056, ADR-0060, ADR-0075
-- **ticket**: #120, which tier 3's recipe waits on for `speed-module`. Closed: #87 converts the
-  recipes; #326 registers
-  tier 1 as `factoryworks:assembling_machine` on Oritech's base, placed and inert (ADR-0071,
-  ADR-0072); #327 gives it a Held recipe and #328 crafts it at `assembling-machine-1`'s speed 0.5
-  and 75 kW, stalling without consuming; #331 emits the recipes naming it, and refuses it every
-  `crafting-with-fluid` one, which tier 1's `crafting_categories` does not list; #295 adds tiers 2
-  and 3 as blocks of their own (ADR-0075), which craft with a fluid
+- **via**: `craftworks`
+- **owner**: ADR-0026, ADR-0029, ADR-0060, ADR-0118
+- **ticket**: #120, which tier 3's recipe waits on for `speed-module`; #580, which the five
+  `crafting-with-fluid` recipes wait on (Fluid Connections in Craftworks). Closed: #87 converts the
+  recipes; #559 makes the three tiers Craftworks' Assemblers (ADR-0118), which replaced the Pack's own
+  from #326, #327, #328, #295 and #331
 
-Three pack-authored Assembling Machines. Recipe routing follows Factorio's own `category`
-(ADR-0021), not the owning mod. The three machines, their tiers and their recipe type are
-pack-authored on Oritech's machine base (ADR-0060, ADR-0071, ADR-0072).
+Three Assemblers, `craftworks:assembler_1` to `_3`, which are Craftworks' (ADR-0118). Recipe routing
+follows Factorio's own `category` (ADR-0021), not the owning mod: Factorio's `crafting`,
+`advanced-crafting` and `crafting-with-fluid` recipes are `craftworks:assembling` recipes carrying
+that `category`, and each tier holds the categories its server config lists.
 
 Sub-rules:
 
 - **`crafting_speed` as a machine property** — `shipped`. ADR-0029 puts it on the machine, at
   Factorio's raw values (0.5 / 0.75 / 1.25), which is what makes `energy_required x 20` produce
-  Factorio's own felt durations. `AssemblingTier` carries one per tier (#295).
+  Factorio's own felt durations. Craftworks' `craftworks-server.toml` carries one per tier.
 - **`energy_usage` as a machine property** — `shipped`. No recipe carries energy; each tier draws
   its own 75, 150 or 375 kW at 1 FE = 100 J, priced per craft so tier 1's 37.5 FE/t and tier 3's
-  187.5 FE/t sum exactly (#328, #295).
-- **Machine tiers** — `shipped` for tiers 1 and 2 (ADR-0075). Each tier is its own block, crafted
-  from Factorio's recipe, and wears Oritech's `ORANGE`, `DIAMOND` or `INDUSTRIAL` paint, which it
-  refuses to change. Oritech's addons stay live on every tier, unpriced until #120. Tier 3 is
-  registered, and its recipe is a recorded skip on `speed-module` (#120). Placing a higher tier over
-  a lower one is #299's.
-- **Fluid inputs** — `shipped` on tiers 2 and 3 (ADR-0075). One 1,000 mB input tank whose face, on
-  every block of the machine, takes only the Held recipe's fluid and gives nothing back. A tank short
-  of one craft's fluid stalls the machine as missing items do, and the status names the fluid. A
-  changed recipe voids the tank, as Factorio's does. There is no output tank until a recipe with a
-  fluid result is emitted (barrel emptying).
+  187.5 FE/t sum exactly.
+- **Machine tiers** — `shipped` for tiers 1 and 2. Each tier is its own block, crafted from
+  Factorio's recipe, and Oritech's addons do not attach to it. Tier 3 is Craftworks', and its recipe
+  is a recorded skip on `speed-module` (#120). Placing a higher tier over a lower one is
+  Craftworks' Fast Replace.
+- **Fluid inputs** — `planned`, #580. Tiers 2 and 3 take a `crafting-with-fluid` recipe once Craftworks
+  has Fluid Connections. The Pack emits those recipes now, and Craftworks refuses to hold one until
+  then.
 - **Recipe selection in a machine** — `adapted`. In Factorio a machine is *told* its recipe: the
   player picks it from a grid on the machine, the machine displays it, holds it whether or not it is
-  fed, and the setting copies to another machine. The Assembling Machine holds a **Held recipe**
-  (ADR-0071) -- one recipe id, kept whether or not the machine is fed, resolved against the recipe
-  manager when asked, so a tag ingredient stays a tag. The adaptation is **where it is picked**
+  fed, and the setting copies to another machine. An Assembler holds a **Held recipe**
+  (Craftworks' definition) -- one recipe id, kept whether or not the machine is fed, resolved against
+  the recipe manager when asked, so a tag ingredient stays a tag. The adaptation is **where it is picked**
   (ADR-0073): the recipe viewer is the only picker. EMI's Fill Recipe on the open machine sets the
-  Held recipe, lit with an empty inventory, and the server refuses one the machine cannot hold with a
-  message -- including a `crafting-with-fluid` recipe, since tier 1 has no fluid box (#331). The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
+  Held recipe, and the server refuses one the machine cannot hold with a message, or one that is
+  Locked for the player who presses it, which is asked once (Craftworks' ADR-0013). The Chemical Plant's and the
+  Oil Refinery's screens follow the rest of this entry until they move (#581, #582). The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
   missing its search and navigation, and #336 removed it. It shows the Held recipe as its result's
   icon and name, whose tooltip carries the recipe when EMI is loaded, and a progress bar between the
   inputs and the output. There is no clear: a machine without a recipe does nothing, so a recipe is
-  replaced, never removed. That the viewer can set every emitted assembling recipe of tier 1's
-  categories is `AssemblingMachineTests`' GameTest. Its inputs are filtered to the Held recipe (#329, ADR-0074): the
+  replaced, never removed. That the viewer can set every emitted assembling recipe some tier
+  holds is `AssemblingMachineTests`' GameTest. Its inputs are filtered to the Held recipe (#329, ADR-0074): the
   `n`th ingredient goes in the `n`th slot, and a slot the recipe does not use takes nothing. The
   filter applies to a belt, a loader or the player's hand, and the hand is refused on the client
   too, since the menu carries each slot's ingredient. A machine with no recipe takes nothing. The
@@ -590,7 +586,7 @@ ingredient cannot be started.
 
 **The Assembler ships in `factoryworks_core`**, not as pack scripting: KubeJS cannot register a
 menu or a screen on 1.21.1 (#96, ADR-0015). It has no recipe type of its own — the hand-craftable set
-is a predicate over Assembling Machine 1's recipes (#88), so one emitted recipe serves both surfaces.
+is the recipe's `hand_craftable` flag, which the converter sets for a first category of `crafting` (#88, ADR-0118), so one emitted recipe serves both surfaces.
 
 **The queue's slowness is serial, not a multiplier.** The character prototype sets no `crafting_speed`
 at all -- it is not a crafting machine -- so Factorio hand-crafting runs at exactly `energy_required`
@@ -631,7 +627,7 @@ Sub-rules:
   `express_belt_tile` and `turbo_belt_tile`, carry Factorio's 15, 30, 45 and 60 items/s under Factorio's names
   (#345, ADR-0076). `logistics-2` and `logistics-3` unlock the fast and express recipes on the
   Assembling surface. Express needs lubricant, so it is a `crafting-with-fluid` recipe, which
-  Assembling Machine 2 and 3 craft (#295). The turbo
+  Assemblers 2 and 3 craft, once Craftworks has Fluid Connections (#580). The turbo
   belt has no recipe, because Space Age's is outside the corpus. *This entry read `adapted`, against
   Create's one RPM-driven belt.*
 - **Throughput as a ratio budget** — `shipped`. The fork's belt carries one item per entry at
@@ -747,8 +743,8 @@ once every planet's puzzle is done — it is not a logistic-robot analogue and i
 
 - **verdict**: `shipped`
 - **notice**: a held pack block draws translucent where placing would put it and red where placing
-  would be refused (#297), and a furnace, pole column or Assembling Machine of another tier placed
-  over one swaps it in place, drawn blue (#388, #389, #390); a held pole also draws the wires it would
+  would be refused (#297), and a furnace or pole column of another tier placed
+  over one swaps it in place, drawn blue (#388, #389), as does an Assembler, which is Craftworks'; a held pole also draws the wires it would
   add and its supply area (#298, #158). Belts, splitters and loaders do not fast replace yet.
 - **where**: all bodies
 - **via**: `pack`
@@ -773,11 +769,8 @@ Sub-rules:
   in place** — `shipped`, #389. Every segment swaps for the one item a column costs, the column keeps
   its height and every wire, and a substation, alone in its Replace Group, is refused with its reason
   on the action bar.
-- **Fast replace: placing another tier over an Assembling Machine swaps it in place** — `shipped`,
-  #390. Any of its four blocks answers. The machine keeps its facing, its craft's fraction done, its
-  FE, its output and its Oritech addons, and the Held recipe when the new tier can hold it; otherwise
-  the recipe clears and its inputs go to the player. The tank empties when the new tier has none, and
-  a player with no room for what comes back is refused on the action bar.
+- **Fast replace: placing another tier over an Assembler swaps it in place** — `shipped`, and
+  Craftworks' (`AssemblerReplace`, ADR-0118). The Pack states no Replace Group for the Assemblers.
 - **Fast replace for belts, splitters and loaders** — `planned`, #384.
 
 ### Construction robots and blueprints

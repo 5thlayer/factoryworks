@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.PFItems;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
 import com.factoryworks.core.mining.rig.RigPartBlock;
 import com.factoryworks.core.mining.rig.RigTier;
@@ -157,10 +156,10 @@ final class ReachTests {
         }
 
         static void register(PFGameTests.Registrar tests) {
-            tests.test("an_assembling_machine_12_blocks_off_stays_open", 20,
-                    helper -> screen(helper, PFBlocks.assemblingFootprint(AssemblingTier.ONE), 12, true));
-            tests.test("an_assembling_machine_22_blocks_off_closes", 20,
-                    helper -> screen(helper, PFBlocks.assemblingFootprint(AssemblingTier.ONE), 22, false));
+            tests.test("a_chemical_plant_12_blocks_off_stays_open", 20,
+                    helper -> screen(helper, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, 12, true));
+            tests.test("a_chemical_plant_22_blocks_off_closes", 20,
+                    helper -> screen(helper, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, 22, false));
         }
 
         /** The menu is made directly: a fake player opens none. */

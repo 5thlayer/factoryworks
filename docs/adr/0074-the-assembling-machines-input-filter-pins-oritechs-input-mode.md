@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0118
 ---
 
 # The Assembling Machine's input filter sits on Oritech's inventory, with Oritech's input mode pinned

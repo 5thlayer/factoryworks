@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0118
 ---
 
 # Assembling Machine tiers are blocks, not Oritech's addons
