@@ -338,7 +338,7 @@ hash = "a06ddd6c447b79c7f97eda6aa668151b49867d5155b763c5f843ba8ee1cce2e1"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
-hash = "3f5153165134032ee56f8c48a59c3d454c63786d1fdfc3c9ac47336833afa6ac"
+hash = "41ce65584ab69181c8e406eca4c283b4a55194673b6d30de9bbf9a9ea62a962c"
 
 [[files]]
 file = "data/pack/item-map.json"
@@ -2786,7 +2786,7 @@ metafile = true
 
 [[files]]
 file = "mods/jade.pw.toml"
-hash = "f6966f01757d2a20fbe0284e06d9e37d89bcd8da62eacce859c985a5b3115842"
+hash = "9543270834d71a4718a34af7798a6c132e0854a95572ae5e5ea4ccf8bf1ce725"
 metafile = true
 
 [[files]]
