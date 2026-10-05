@@ -38,7 +38,7 @@ hash = "e9cb1bd8cb65cb90271d08cc9ebefa48595716f623a7316cfdee8f76ec2194d1"
 
 [[files]]
 file = "REUSE.toml"
-hash = "2720fb0885af01aa7fb0bb710fef6e53024e2554ee8517ec94a0230bc5bd0d4b"
+hash = "cb4b56f9ad4dbbde2b84c4bd400064642e1a9996448d64fb96a8f2eb7f2e4650"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -54,7 +54,7 @@ hash = "0b68a3b324f4a172d577a10446593b8f64f38e37199c928b0fc5aee152baee00"
 
 [[files]]
 file = "config/craftworks-server.toml"
-hash = "7082b80ad93ce3c9559b019915645b7ce1c6d150dd1fa6de82965fef86affc29"
+hash = "2f30579e9058087b0d0a6981bf0432cf3708ea18427126e5ee1c03ec9bde72a8"
 
 [[files]]
 file = "config/factoryworks_core-server.toml"
@@ -131,6 +131,10 @@ hash = "d38a7776e362e4de6082078d803c1c9358d9d40526edfe4bdfd29c552aef76d8"
 [[files]]
 file = "config/konkrete/locals/pt_br.local"
 hash = "dca55a2792451b31424cd5c24037141ec57cdca51955d062dd908fa9ca6a3e9c"
+
+[[files]]
+file = "config/modernfix-mixins.properties"
+hash = "ee1f0f60466392d27ff0901542935252f91e1020a5408f38a0789bd24ae5bb62"
 
 [[files]]
 file = "config/neoforge-common.toml"
@@ -318,11 +322,11 @@ hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "50c3e2f1fc4acb4948ba950696b3740248a70d842f5da1fb5158ad783ebc1603"
+hash = "abf5df0beea5f3fb09c729b7b7537c4f62ddef90a3324a67cd4fe31a184225a3"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "8fd8ba7c201370026ba846728e23bc97ea85265e1b8f39170e1aaf43b396dc18"
+hash = "aad4bd3189e0f64363e64d105613e78221757e5272557d34a042bd722dbac204"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -334,11 +338,11 @@ hash = "a06ddd6c447b79c7f97eda6aa668151b49867d5155b763c5f843ba8ee1cce2e1"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
-hash = "f733058711867b7a765d8e24b096c4f5237f93b0456033ab7da23903bf31b2ee"
+hash = "f2334da1472b46796bc5ee8b078317177db8e6fa6cb0a395de1016e05d6ffac5"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "5299d67c1e167b6276bdc279e9dc5ed2b792ed56427c3b844c58de3e6fa0d180"
+hash = "b37c2ec1b2c7d87d72a87880ff068335e8f6ed1aa583636d92e7ef4b6c0edac0"
 
 [[files]]
 file = "data/pack/local-jars.json"
@@ -918,7 +922,19 @@ hash = "da21131c0518f34db49a626349f771944d281d8c07273c01136577ffcee6db3e"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/steam_engine.json"
-hash = "e8b96edd183e6bb69e5747e2c885b066878679d225502582a72c8a67fe4b821e"
+hash = "a53f5507468e62f0ffc5c7ae77d8001928db6df31d4d4280d7989c5a82fc31c3"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/steam_engine_blocked.json"
+hash = "639907be22b3a0a615c2048990168240d5c73c144d5af8d202cc573e2a0854aa"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/steam_engine_no_power.json"
+hash = "a15f8daa27d191f41059c3e58618b4c778b263189667a11e7a2566627b76a324"
+
+[[files]]
+file = "kubejs/assets/factoryworks/models/block/steam_engine_working.json"
+hash = "0e2af13dca2ced268b6f0ceb21f248d8c3a1548918aa792932b1869966f8a2ec"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/steel_chest.json"
@@ -1177,6 +1193,18 @@ file = "kubejs/assets/factoryworks/textures/block/jellystem_stem.png"
 hash = "c4c8f5b363881e5fa2255e3983ca5e5a808eae512fe94bda4f02e25899c5474f"
 
 [[files]]
+file = "kubejs/assets/factoryworks/textures/block/kit/status_light_blocked.png"
+hash = "8a813ebd4d935cb174a604fcc25b6350edf0f91e13bee2eafc14aab3f20c5ac6"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/kit/status_light_no_power.png"
+hash = "e3a062f6ea434db4c3d98145eafc87823ac444299e4f4c341d2688bb70a84107"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/kit/status_light_working.png"
+hash = "2ba72a04a21bf74f711930d8cccd6dacc6c013d088e756cc9a4008f86f021be6"
+
+[[files]]
 file = "kubejs/assets/factoryworks/textures/block/mining_drill_port.png"
 hash = "bf738fd9e206ce18f49e4379f5ca6bbf856efeb719e137ad048a47c7c8db2bb5"
 
@@ -1339,6 +1367,10 @@ hash = "12b7b91dc06d79d9b1f784d159edf2a70cf8206c3243910d038ac16fc8e69ffd"
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage7.png"
 hash = "01ab2bc337c268c107cdc11b6c6541bce279741a21dbcf8a0594547f264f9a2c"
+
+[[files]]
+file = "kubejs/assets/factoryworks/textures/block/steam_engine/steam_engine.png"
+hash = "9902cd98112d069be79a07e2e4c8aa73cae71e6f408878dc6974ab25d80f1bc0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/steel_chest_particle.png"
