@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # Release FactoryWorks Core at <version> from HEAD (ADR-0101): publish/core/changelog.md's Unreleased
 # entries become <version>'s, the build and unit tests pass, and the jar is published to the local
-# maven repository, tagged core-v<version>, and uploaded to CurseForge and Modrinth by scripts/upload.py.
+# maven repository, tagged core-v<version>, and, with --upload, uploaded to CurseForge and Modrinth by
+# scripts/upload.py.
 #
-#   scripts/release.sh [--no-upload] <version>
+#   scripts/release.sh [--upload] <version>
+#
+# It stops after the tag and prints the upload command, since an upload is public and for good and
+# waits on the user's word; --upload uploads too. Flags may come in any position.
 #
 # It commits and tags but pushes nothing. $MAVEN_REPO_LOCAL publishes somewhere other than
 # ~/.m2/repository, to try the script out, and then the upload is only a dry run.
@@ -19,10 +23,16 @@ artifact="$(property mod_id)"
 [[ -n "$name" && -n "$group" && -n "$artifact" ]] || fail "gradle.properties must name mod_name, maven_group and mod_id."
 
 changelog=publish/core/changelog.md
-upload_now=1
-if [[ "${1:-}" == --no-upload ]]; then upload_now=; shift; fi
-version="${1:-}"
-[[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "usage: scripts/release.sh [--no-upload] <major.minor.patch>"
+usage="usage: scripts/release.sh [--upload] <major.minor.patch>"
+upload_now= version=
+for arg in "$@"; do
+    case "$arg" in
+        --upload) upload_now=1 ;;
+        -*) fail "unknown flag $arg; $usage" ;;
+        *) [[ -z "$version" ]] || fail "a second version, $arg; $usage"; version="$arg" ;;
+    esac
+done
+[[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "$usage"
 # The pack's own tags are not the core mod's.
 tag="core-v$version"
 repo="${MAVEN_REPO_LOCAL:-$HOME/.m2/repository}"
