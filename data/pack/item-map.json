@@ -672,10 +672,10 @@
     },
     "pump": {
       "kind": "item",
-      "target": "factoryworks:pump",
-      "source": "authored",
-      "note": "Factorio's in-line pump. Not `oritech:pump`, which drains fluid from the world rather than moving it along a pipe (#277). A first-party block, #293's; `offshore-pump` is already first-party (ADR-0050).",
-      "blocked_by": 293
+      "target": "pipeworks:pump",
+      "source": "borrowed",
+      "note": "Factorio's in-line pump, Pipeworks' (5thlayer/pipeworks#10), as the pipe is (ADR-0110). Not `oritech:pump`, which drains fluid from the world rather than moving it along a pipe (#277). The id is proposed until Pipeworks registers it (#626).",
+      "blocked_by": 626
     },
     "pumpjack": {
       "kind": "item",

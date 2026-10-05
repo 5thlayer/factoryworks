@@ -398,7 +398,7 @@ Sub-rules:
 - **via**: `pipeworks`, `factoryworks_core`
 - **owner**: ADR-0109 and ADR-0110 (Pipeworks' pipe is `pipe` and its storage tank
   `storage-tank`), ADR-0037 (the barrel), ADR-0050 (the Offshore Pump)
-- **ticket**: #293 (the in-line pump); #106 (the barrel) closed
+- **ticket**: #626 (the in-line pump, built in 5thlayer/pipeworks#10); #106 (the barrel) closed
 
 Sub-rules:
 
@@ -406,8 +406,8 @@ Sub-rules:
   Factorio's volumes, joined into fluid segments (ADR-0110), laid by Stretch (#452) and taken up by
   Dismantle (#431), both crafted from Factorio's recipes. Crude oil is Core's fluid, which the Pumpjack
   puts into a segment.
-- **The in-line pump** — `planned`, #293. `pump` is `factoryworks:pump`, `blocked_by` #293,
-  since Oritech's pump is a well pump.
+- **The in-line pump** — `planned`, #626. Pipeworks builds it (5thlayer/pipeworks#10); `pump` is
+  `pipeworks:pump`, `blocked_by` #626, since Oritech's pump is a well pump.
 
 - **Barrelling and unbarrelling** — `shipped` as `native_mechanic`; `subgroup-owner.json`'s barrel
   shelves emit nothing because the mechanic already works (#93). The container is
