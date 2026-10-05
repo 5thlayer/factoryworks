@@ -1,5 +1,9 @@
 package com.factoryworks.core.showcase;
 
+import io.github._5thlayer.craftworks.machine.AssemblerBlockEntity;
+import io.github._5thlayer.craftworks.machine.AssemblerTier;
+import io.github._5thlayer.craftworks.machine.Assemblers;
+import io.github._5thlayer.groundworks.Footprint;
 import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +14,6 @@ import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.fluid.BoilerFootprint;
 import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.HeldRecipe;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
 import com.factoryworks.core.oil.OilWellBlockEntity;
@@ -112,24 +115,25 @@ public final class ShowcaseScenes {
         stockedChest(site, new BlockPos(1, 1, 2), item("factoryworks:copper_plate"));
         loadingBelt(site, new BlockPos(2, 1, 2), Direction.EAST, 10);
 
-        assembling(site, new BlockPos(5, 1, 4), "factoryworks:assembling/copper_cable");
+        assembling(site, new BlockPos(5, 1, 5), "factoryworks:assembling/copper_cable");
         feeder(site, new BlockPos(5, 1, 3), Direction.SOUTH);
-        belt(site, new BlockPos(6, 1, 6), Direction.EAST, 9);
-        feeder(site, new BlockPos(6, 1, 5), Direction.SOUTH);
+        feeder(site, new BlockPos(7, 1, 5), Direction.EAST);
+        belt(site, new BlockPos(8, 1, 5), Direction.EAST, 7);
+        feeder(site, new BlockPos(13, 1, 6), Direction.SOUTH);
 
-        stockedChest(site, new BlockPos(1, 1, 10), item("factoryworks:iron_plate"));
-        loadingBelt(site, new BlockPos(2, 1, 10), Direction.EAST, 12);
+        stockedChest(site, new BlockPos(1, 1, 11), item("factoryworks:iron_plate"));
+        loadingBelt(site, new BlockPos(2, 1, 11), Direction.EAST, 12);
 
-        assembling(site, new BlockPos(12, 1, 8), "factoryworks:assembling/electronic_circuit");
-        feeder(site, new BlockPos(12, 1, 7), Direction.SOUTH);
-        feeder(site, new BlockPos(13, 1, 9), Direction.NORTH);
+        assembling(site, new BlockPos(13, 1, 8), "factoryworks:assembling/electronic_circuit");
+        feeder(site, new BlockPos(13, 1, 10), Direction.NORTH);
 
         site.set(out, Blocks.CHEST);
         unloader(site, out.west(), Direction.WEST);
-        belt(site, new BlockPos(15, 1, 8), Direction.EAST, 4);
-        feeder(site, new BlockPos(14, 1, 8), Direction.EAST);
+        belt(site, new BlockPos(16, 1, 8), Direction.EAST, 3);
+        feeder(site, new BlockPos(15, 1, 8), Direction.EAST);
 
-        site.set(new BlockPos(10, 1, 5), WireworksRegistries.CREATIVE_POLE.get());
+        site.set(new BlockPos(7, 1, 7), WireworksRegistries.CREATIVE_POLE.get());
+        site.set(new BlockPos(11, 1, 7), WireworksRegistries.CREATIVE_POLE.get());
         return new Product(List.of(out), item("factoryworks:electronic_circuit"));
     }
 
@@ -216,8 +220,17 @@ public final class ShowcaseScenes {
         return new Product(List.of(out), item("factoryworks:plastic_bar"));
     }
 
-    private static void assembling(Site site, BlockPos anchor, String recipe) {
-        placeHolding(site, PFBlocks.assemblingFootprint(AssemblingTier.ONE), anchor, recipe);
+    private static void assembling(Site site, BlockPos origin, String recipe) {
+        Footprint footprint = Assemblers.footprint(AssemblerTier.ONE);
+        List<BlockPos> blocks = footprint.positions(site.at(origin), Direction.NORTH);
+        for (int i = 0; i < blocks.size(); i++) {
+            site.level().setBlockAndUpdate(blocks.get(i), footprint.stateAt(i, Direction.NORTH));
+        }
+        AssemblerBlockEntity machine = site.blockEntity(origin, AssemblerBlockEntity.class);
+        machine.setHeldRecipe(Identifier.parse(recipe), FakePlayerFactory.getMinecraft(site.level()));
+        if (machine.heldRecipe().isEmpty()) {
+            throw new IllegalStateException(recipe + " was not held by the Assembler at " + site.at(origin));
+        }
     }
 
     private static void placeHolding(Site site, FootprintMachine footprint, BlockPos anchor, String recipe) {

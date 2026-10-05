@@ -12,7 +12,6 @@ import com.factoryworks.core.fluid.SteamEngineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineFluidHandler;
 import com.factoryworks.core.machine.AssemblingMachineItemHandler;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.ChemicalPlantBlockEntity;
 import com.factoryworks.core.machine.OilRefineryBlockEntity;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
@@ -30,7 +29,6 @@ import com.factoryworks.core.smelting.FurnaceTier;
 import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -102,16 +100,6 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(BoilerPartBlockEntity::new,
                             java.util.Set.of(PFBlocks.BOILER_PART.get())));
 
-    /**
-     * The Assembling Machine's anchor (#326, ADR-0071), one type for every tier (ADR-0075). Its own
-     * type, not Oritech's {@code ASSEMBLER}: that is the reason the block entity extends Oritech's
-     * abstract base rather than its concrete assembler. The parts have no block entity at all.
-     */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AssemblingMachineBlockEntity>>
-            ASSEMBLING_MACHINE = BLOCK_ENTITIES.register("assembling_machine",
-                    () -> new BlockEntityType<>(AssemblingMachineBlockEntity::new,
-                            PFBlocks.assemblingMachineBlocks()));
-
     /** The Chemical Plant's anchor (ADR-0096): its own type so its renderer is the Centrifuge's model. */
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChemicalPlantBlockEntity>>
             CHEMICAL_PLANT = BLOCK_ENTITIES.register("chemical_plant",
@@ -172,7 +160,6 @@ public final class PFBlockEntities {
         registerCargoHoldCapabilities(event);
         registerRigCapabilities(event);
         registerBoilerCapabilities(event);
-        registerAssemblingMachineCapabilities(event);
         registerChemicalPlantCapabilities(event);
         registerOilRefineryCapabilities(event);
         registerSteamEngineCapabilities(event);
@@ -293,28 +280,6 @@ public final class PFBlockEntities {
             return rig;
         }
         return null;
-    }
-
-    /**
-     * The Assembling Machine's energy face (#328), which the craft cycle draws from, its item face
-     * (#329), and on the tiers with a tank its fluid face (ADR-0075), each on every block of the
-     * footprint.
-     */
-    private static void registerAssemblingMachineCapabilities(RegisterCapabilitiesEvent event) {
-        for (AssemblingTier tier : AssemblingTier.values()) {
-            FootprintMachine footprint = PFBlocks.assemblingFootprint(tier);
-            registerOnFootprint(event, Capabilities.Energy.BLOCK, footprint,
-                    (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
-                            ? machine.getEnergyLookup(side) : null);
-            registerOnFootprint(event, Capabilities.Item.BLOCK, footprint,
-                    (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
-                            ? new AssemblingMachineItemHandler(machine) : null);
-            if (tier.spec().hasTanks()) {
-                registerOnFootprint(event, Capabilities.Fluid.BLOCK, footprint,
-                        (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
-                                ? new AssemblingMachineFluidHandler(machine) : null);
-            }
-        }
     }
 
     private static void registerChemicalPlantCapabilities(RegisterCapabilitiesEvent event) {

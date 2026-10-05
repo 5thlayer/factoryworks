@@ -12,8 +12,6 @@ import net.minecraft.world.item.crafting.RecipeType;
  * each has its own EMI tab (ADR-0096).
  */
 public enum AssemblingFamily {
-    ASSEMBLING(PFRecipes.ASSEMBLING, () -> PFRecipes.ASSEMBLING_TYPE.get(),
-            () -> PFRecipes.ASSEMBLING_SERIALIZER.get()),
     CHEMISTRY(PFRecipes.CHEMISTRY, () -> PFRecipes.CHEMISTRY_TYPE.get(),
             () -> PFRecipes.CHEMISTRY_SERIALIZER.get()),
     OIL_PROCESSING(PFRecipes.OIL_PROCESSING, () -> PFRecipes.OIL_PROCESSING_TYPE.get(),

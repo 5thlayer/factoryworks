@@ -10,8 +10,6 @@ import com.factoryworks.core.fluid.OffshorePumpItem;
 import com.factoryworks.core.fluid.BarrelSpec;
 import com.factoryworks.core.mining.EngineersPick;
 import com.factoryworks.core.mining.PickTier;
-import com.factoryworks.core.machine.AssemblingMachineItem;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.footprint.FootprintItem;
 import com.factoryworks.core.mining.rig.RigBlockItem;
 import com.factoryworks.core.mining.rig.RigTier;
@@ -64,17 +62,6 @@ public final class PFItems {
      */
     public static final DeferredHolder<Item, Item> BARREL = ITEMS.registerItem(
             "barrel", props -> new BarrelItem(props.stacksTo(BarrelSpec.STACK_SIZE)));
-
-    /** Each Assembling Machine tier's item (#326, #295). */
-    private static final Map<AssemblingTier, DeferredHolder<Item, AssemblingMachineItem>> ASSEMBLING_MACHINES =
-            new EnumMap<>(AssemblingTier.class);
-
-    static {
-        for (AssemblingTier tier : AssemblingTier.values()) {
-            ASSEMBLING_MACHINES.put(tier, ITEMS.registerItem(tier.blockName(),
-                    props -> new AssemblingMachineItem(props, tier)));
-        }
-    }
 
     /** The Chemical Plant's item (ADR-0096), on Oritech's own {@code centrifuge} model at its 0.7. */
     public static final DeferredHolder<Item, FootprintItem> CHEMICAL_PLANT = ITEMS.registerItem(
@@ -144,7 +131,6 @@ public final class PFItems {
             FUNCTIONAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.chest(tier)));
         }
         FUNCTIONAL.add(BARREL);
-        ASSEMBLING_MACHINES.values().forEach(FUNCTIONAL::add);
         FUNCTIONAL.add(CHEMICAL_PLANT);
         FUNCTIONAL.add(OIL_REFINERY);
         FUNCTIONAL.add(STEAM_ENGINE);
@@ -157,10 +143,6 @@ public final class PFItems {
 
 
     private PFItems() {
-    }
-
-    public static DeferredHolder<Item, AssemblingMachineItem> assemblingMachine(AssemblingTier tier) {
-        return ASSEMBLING_MACHINES.get(tier);
     }
 
     public static DeferredHolder<Item, RigBlockItem> rig(RigTier tier) {

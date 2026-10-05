@@ -1,7 +1,6 @@
 package com.factoryworks.core.compat.emi;
 
 import com.factoryworks.core.PFItems;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.client.AssemblingMachineScreen;
 import com.factoryworks.core.PFMenus;
 import com.factoryworks.core.FactoryWorksCore;
@@ -20,14 +19,11 @@ import net.minecraft.resources.Identifier;
  * For the reason {@link SmeltingEmiPlugin} exists: EMI has never heard of the types, so without a
  * category their recipes are in no viewer at all.
  *
- * <p>The Assembling Machine is its category's workstation and icon, and its screen takes Fill Recipe
- * (#330, ADR-0073), the Chemical Plant is Chemistry's and the Oil Refinery Oil Processing's (ADR-0096).
+ * <p>The Chemical Plant is Chemistry's workstation and the Oil Refinery Oil Processing's (ADR-0096),
+ * and their screens take Fill Recipe (#330, ADR-0073).
  */
 @EmiEntrypoint
 public final class AssemblingEmiPlugin implements EmiPlugin {
-
-    public static final EmiRecipeCategory ASSEMBLING = category(AssemblingFamily.ASSEMBLING,
-            EmiStack.of(PFItems.assemblingMachine(AssemblingTier.ONE).get()));
 
     public static final EmiRecipeCategory CHEMISTRY = category(AssemblingFamily.CHEMISTRY,
             EmiStack.of(PFItems.CHEMICAL_PLANT.get()));
@@ -36,7 +32,7 @@ public final class AssemblingEmiPlugin implements EmiPlugin {
             EmiStack.of(PFItems.OIL_REFINERY.get()));
 
     /** Every tab whose recipes a chassis machine holds, so Fill Recipe answers on each. */
-    static final Set<EmiRecipeCategory> HELD_CATEGORIES = Set.of(ASSEMBLING, CHEMISTRY, OIL_PROCESSING);
+    static final Set<EmiRecipeCategory> HELD_CATEGORIES = Set.of(CHEMISTRY, OIL_PROCESSING);
 
     private static EmiRecipeCategory category(AssemblingFamily family, EmiStack icon) {
         return new EmiRecipeCategory(
@@ -45,12 +41,8 @@ public final class AssemblingEmiPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
-        registry.addCategory(ASSEMBLING);
         registry.addCategory(CHEMISTRY);
         registry.addCategory(OIL_PROCESSING);
-        for (AssemblingTier tier : AssemblingTier.values()) {
-            registry.addWorkstation(ASSEMBLING, EmiStack.of(PFItems.assemblingMachine(tier).get()));
-        }
         registry.addWorkstation(CHEMISTRY, EmiStack.of(PFItems.CHEMICAL_PLANT.get()));
         registry.addWorkstation(OIL_PROCESSING, EmiStack.of(PFItems.OIL_REFINERY.get()));
         // Recipe and usage keys on a tank bar's fluid.
@@ -58,7 +50,6 @@ public final class AssemblingEmiPlugin implements EmiPlugin {
                 .map(bar -> new EmiStackInteraction(EmiStack.of(bar.fluid().orElseThrow())))
                 .orElse(EmiStackInteraction.EMPTY));
         registry.addRecipeHandler(PFMenus.ASSEMBLING_MACHINE.get(), new AssemblingMachineEmiHandler());
-        addRecipes(registry, ASSEMBLING, AssemblingFamily.ASSEMBLING);
         addRecipes(registry, CHEMISTRY, AssemblingFamily.CHEMISTRY);
         addRecipes(registry, OIL_PROCESSING, AssemblingFamily.OIL_PROCESSING);
     }

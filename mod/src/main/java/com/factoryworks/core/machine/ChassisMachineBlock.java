@@ -17,7 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * The anchor of a machine on the Assembling Machine's chassis (ADR-0071, ADR-0096): the block says
+ * The anchor of a machine on the crafting chassis (ADR-0071, ADR-0096): the block says
  * which {@link MachineSpec} its {@link AssemblingMachineBlockEntity} runs, the paint it wears and
  * where its addons go.
  */
@@ -42,9 +42,7 @@ public abstract class ChassisMachineBlock extends FootprintAnchorBlock {
 
     /** Oritech's {@code MachineBlock.newBlockEntity} constructs this class by reflection. */
     @Override
-    public Class<? extends BlockEntity> getBlockEntityType() {
-        return AssemblingMachineBlockEntity.class;
-    }
+    public abstract Class<? extends BlockEntity> getBlockEntityType();
 
     /**
      * Opens the pack's menu rather than Oritech's (#327): the opening packet carries the recipe

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.machine.ChassisMachineBlock;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.compat.emi.HeldRecipeTooltip;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineMenu;
@@ -116,7 +115,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         inventoryLabelY = menu.inventoryY() - 11;
         Block block = playerInventory.player.level().getBlockState(menu.pos()).getBlock();
         if (!(block instanceof ChassisMachineBlock)) {
-            block = PFBlocks.assemblingMachine(AssemblingTier.ONE).get();
+            block = PFBlocks.CHEMICAL_PLANT.get();
         }
         name = block.getName();
         icon = new ItemStack(block.asItem());

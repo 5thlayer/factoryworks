@@ -1,8 +1,5 @@
 package com.factoryworks.core;
 
-import com.factoryworks.core.machine.AssemblingMachineBlock;
-import com.factoryworks.core.machine.AssemblingMachineFootprint;
-import com.factoryworks.core.machine.AssemblingTier;
 import com.factoryworks.core.machine.ChemicalPlantBlock;
 import com.factoryworks.core.machine.ChemicalPlantFootprint;
 import com.factoryworks.core.machine.OilRefineryBlock;
@@ -51,7 +48,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * The blocks the mod itself registers: the two saplings, the furnace and rig
@@ -95,29 +91,6 @@ public final class PFBlocks {
 
     public static final FootprintMachine BOILER_FOOTPRINT = new FootprintMachine(
             BoilerFootprint.FOOTPRINT, BOILER, BOILER_PART, () -> PFItems.BOILER.get());
-
-    /**
-     * The Assembling Machine ladder (#326, #295, ADR-0071, ADR-0075): per tier, an Oritech machine
-     * anchor and the invisible parts its footprint is made of, one part block per tier so a part
-     * tears down its own tier's anchor.
-     */
-    private static final Map<AssemblingTier, DeferredHolder<Block, AssemblingMachineBlock>> ASSEMBLING_MACHINES =
-            new EnumMap<>(AssemblingTier.class);
-    private static final Map<AssemblingTier, FootprintMachine> ASSEMBLING_FOOTPRINTS =
-            new EnumMap<>(AssemblingTier.class);
-
-    static {
-        for (AssemblingTier tier : AssemblingTier.values()) {
-            DeferredHolder<Block, AssemblingMachineBlock> anchor = BLOCKS.registerBlock(tier.blockName(),
-                    props -> new AssemblingMachineBlock(tier, machineProperties(props)));
-            DeferredHolder<Block, FootprintPartBlock> part = BLOCKS.registerBlock(tier.partBlockName(),
-                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
-                            () -> PFBlocks.assemblingFootprint(tier)));
-            ASSEMBLING_MACHINES.put(tier, anchor);
-            ASSEMBLING_FOOTPRINTS.put(tier, new FootprintMachine(AssemblingMachineFootprint.FOOTPRINT,
-                    anchor, part, () -> PFItems.assemblingMachine(tier).get()));
-        }
-    }
 
     public static final DeferredHolder<Block, ChemicalPlantBlock> CHEMICAL_PLANT =
             BLOCKS.registerBlock("chemical_plant", props -> new ChemicalPlantBlock(machineProperties(props)));
@@ -295,20 +268,6 @@ public final class PFBlocks {
         return ORES.get(resource);
     }
 
-
-    public static DeferredHolder<Block, AssemblingMachineBlock> assemblingMachine(AssemblingTier tier) {
-        return ASSEMBLING_MACHINES.get(tier);
-    }
-
-    public static FootprintMachine assemblingFootprint(AssemblingTier tier) {
-        return ASSEMBLING_FOOTPRINTS.get(tier);
-    }
-
-    /** The three anchors, for the block entity type that serves all of them. */
-    public static Set<Block> assemblingMachineBlocks() {
-        return ASSEMBLING_MACHINES.values().stream().map(DeferredHolder::get)
-                .collect(Collectors.toUnmodifiableSet());
-    }
 
     private static final Map<ChestTier, DeferredHolder<Block, PackChestBlock>> CHESTS =
             new EnumMap<>(ChestTier.class);

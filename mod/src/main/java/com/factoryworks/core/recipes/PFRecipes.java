@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * The pack's own recipe types: {@code factoryworks:smelting} (#155), and the three on
+ * The pack's own recipe types: {@code factoryworks:smelting} (#155), and the two on
  * {@link AssemblingRecipe}'s shape, one per {@link AssemblingFamily}.
  *
  * <p>Smelting is the only type the three furnace tiers read. Vanilla's {@code minecraft:smelting} is not
@@ -36,14 +36,6 @@ public final class PFRecipes {
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SmeltingRecipe>> SMELTING_SERIALIZER =
             SERIALIZERS.register(SMELTING, SmeltingRecipe::serializer);
-
-    public static final String ASSEMBLING = "assembling";
-
-    public static final DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> ASSEMBLING_TYPE =
-            assemblingType(ASSEMBLING);
-
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AssemblingRecipe>> ASSEMBLING_SERIALIZER =
-            SERIALIZERS.register(ASSEMBLING, () -> AssemblingRecipe.serializer(AssemblingFamily.ASSEMBLING));
 
     public static final String CHEMISTRY = "chemistry";
 

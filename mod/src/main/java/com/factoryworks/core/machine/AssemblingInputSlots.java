@@ -12,7 +12,8 @@ import java.util.function.ToIntFunction;
  */
 public final class AssemblingInputSlots {
 
-    public static final int INPUTS = AssemblingTier.ONE.spec().itemInputs();
+    /** Craftworks' Assembler's five, kept so the Chemical Plant's and Oil Refinery's slots do not move (ADR-0118). */
+    public static final int INPUTS = 5;
 
     private AssemblingInputSlots() {
     }

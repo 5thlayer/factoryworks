@@ -75,9 +75,7 @@ FACES = {
     "boiler_part": (None, ()),
     # Energy (#328): the craft cycle draws FE, and without the face no pole counts the machine.
     # Item (#329): inputs filtered to the Held recipe, on the guard.
-    # Fluid (#295): tiers 2 and 3's input tank, taking only the Held recipe's fluid.
-    "assembling_machine": ("registerAssemblingMachineCapabilities", ("Energy", "Item", "Fluid")),
-    # The Assembling Machine's three faces, on the chassis (ADR-0096).
+    # Fluid (#295): the tanks, taking only the Held recipe's fluid.
     "chemical_plant": ("registerChemicalPlantCapabilities", ("Energy", "Item", "Fluid")),
     # No item slot, so no item face (ADR-0096).
     "oil_refinery": ("registerOilRefineryCapabilities", ("Energy", "Fluid")),
@@ -102,7 +100,6 @@ FACES = {
 LADDERS = {
     "registerFurnaceCapabilities": "FurnaceTier.values()",
     "registerRigCapabilities": "RigTier.values()",
-    "registerAssemblingMachineCapabilities": "AssemblingTier.values()",
 }
 
 # Blocks that get a face without being a row in any ladder enum. FACES above is keyed by block

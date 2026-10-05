@@ -1,9 +1,0 @@
-{
-  "model": {
-    "type": "minecraft:special",
-    "base": "factoryworks:item/assembling_machine_2",
-    "model": {
-      "type": "geckolib:geckolib"
-    }
-  }
-}

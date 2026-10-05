@@ -69,9 +69,6 @@ DEFERRED_ITEM_MODELS = {
 # model beside it rather than a plain model. `scripts/build-item-definitions.py` holds the same
 # table and writes the shape; this asserts it.
 GECKOLIB_ITEMS = {
-    "factoryworks:assembling_machine": "an OritechGeoItem drawing Oritech's assembler model (#326)",
-    "factoryworks:assembling_machine_2": "an OritechGeoItem drawing Oritech's assembler model (#295)",
-    "factoryworks:assembling_machine_3": "an OritechGeoItem drawing Oritech's assembler model (#295)",
     "factoryworks:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
     "factoryworks:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
     "factoryworks:steam_engine": "an OritechGeoItem drawing Oritech's steam engine model (#352)",

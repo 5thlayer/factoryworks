@@ -8,8 +8,6 @@ import com.factoryworks.core.recipes.AssemblingRecipe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.factoryworks.core.PFBlockEntities;
-
 import com.factoryworks.core.PFMenus;
 
 import net.minecraft.core.BlockPos;
@@ -48,8 +46,9 @@ import rearth.oritech.util.InventoryInputMode;
 import rearth.oritech.util.ScreenProvider;
 
 /**
- * The Assembling Machine's anchor (#326, ADR-0071): Oritech's machine base, placed as a footprint
- * and holding a {@link HeldRecipe} the player sets from its screen (#327), which it crafts (#328).
+ * The chassis the Chemical Plant and the Oil Refinery stand on (#326, ADR-0071, ADR-0096): Oritech's
+ * machine base, placed as a footprint and holding a {@link HeldRecipe} the player sets from its screen
+ * (#327), which it crafts (#328). The Assemblers are Craftworks' (ADR-0118).
  *
  * <p>Extends {@link MultiblockMachineEntity} rather than Oritech's {@code AssemblerBlockEntity},
  * whose one constructor hard-codes Oritech's own block entity type -- a subclass of it would be
@@ -82,7 +81,7 @@ import rearth.oritech.util.ScreenProvider;
  * across a stall, the way {@code FurnaceCycle} holds it: the inputs are only taken on the last tick,
  * and the energy already paid is the craft's. A change of Held recipe resets it.
  */
-public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
+public abstract class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
     /** The input slots, which a change of Held recipe hands back. */
     public static final int INPUTS = AssemblingInputSlots.INPUTS;
@@ -90,10 +89,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
     /** The one output slot, after the inputs. */
     public static final int OUTPUT = INPUTS;
 
-    /**
-     * Input tanks first, then output tanks, laid out for the widest machine: a Fast Replace changes
-     * the spec under the block entity (ADR-0082), and a tank the spec lacks has no room.
-     */
+    /** Input tanks first, then output tanks, laid out for the widest machine; a tank the spec lacks has no room. */
     private static final int FLUID_INPUTS = MachineSpecs.get().maxFluidInputs();
 
     private static final int FLUID_OUTPUTS = MachineSpecs.get().maxFluidOutputs();
@@ -108,7 +104,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
     private AssemblingStall stall = AssemblingStall.NO_RECIPE;
 
-    /** Each tank's size is asked of the spec each time, since a Fast Replace changes it (ADR-0082). */
+    /** Each tank's size is asked of the spec and the Held recipe each time. */
     private final FluidStacksResourceHandler tank = new FluidStacksResourceHandler(FLUID_INPUTS + FLUID_OUTPUTS, 0) {
         @Override
         protected int getCapacity(int index, FluidResource resource) {
@@ -121,25 +117,16 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         }
     };
 
-    public AssemblingMachineBlockEntity(BlockPos pos, BlockState state) {
-        this(PFBlockEntities.ASSEMBLING_MACHINE.get(), pos, state);
-    }
-
     protected AssemblingMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state, OritechConfig.processingMachines.assemblerData.energyPerTick.get());
     }
 
-    /** The tier is the block's: one block entity type serves all three (ADR-0075). */
-    public AssemblingTier tier() {
-        return getBlockState().getBlock() instanceof AssemblingMachineBlock block ? block.tier() : AssemblingTier.ONE;
-    }
-
     public MachineSpec spec() {
-        return chassis().map(ChassisMachineBlock::spec).orElseGet(AssemblingTier.ONE::spec);
+        return chassis().spec();
     }
 
-    private Optional<ChassisMachineBlock> chassis() {
-        return getBlockState().getBlock() instanceof ChassisMachineBlock block ? Optional.of(block) : Optional.empty();
+    private ChassisMachineBlock chassis() {
+        return (ChassisMachineBlock) getBlockState().getBlock();
     }
 
     private int capacity(MachineSpec spec, int index) {
@@ -163,13 +150,10 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
                 .orElse(spec.fluidOutputVolume(result));
     }
 
-    /**
-     * The block's paint, whatever was saved or assigned: the paint is how a player tells the tiers
-     * apart (ADR-0075). {@code PaintLock} stops a cartridge being spent on it.
-     */
+    /** The block's paint, whatever was saved or assigned. {@code PaintLock} stops a cartridge being spent on it. */
     @Override
     public ColorVariant getCurrentColor() {
-        return ColorVariant.valueOf(chassis().map(ChassisMachineBlock::paint).orElse(AssemblingTier.ONE.paint()));
+        return ColorVariant.valueOf(chassis().paint());
     }
 
     /** Ignored: see {@link #getCurrentColor}. */
@@ -519,62 +503,10 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
         setChanged();
     }
 
-    // -- fast replace ---------------------------------------------------------------------------
-
-    /**
-     * Readies this machine to become tier {@code to} and returns what the player is handed
-     * (ADR-0082). Server only; the caller swaps the block straight after.
-     */
-    public List<ItemStack> retierTo(AssemblingTier to) {
-        List<ItemStack> extras = retierExtras(to);
-        ServerLevel server = (ServerLevel) level;
-        if (!keepsHeldRecipe(to)) {
-            for (int slot = 0; slot < INPUTS; slot++) {
-                inventory.set(slot, ItemResource.EMPTY, 0);
-            }
-            voidTanks();
-            held = HeldRecipe.NONE;
-            progress.set(0);
-        } else {
-            AssemblingMachineRecipes.resolve(server, held, spec()).ifPresent(holder -> {
-                int from = durationTicks(holder.value());
-                int until = AssemblingMachineSpec.durationTicks(to.spec(), holder.value().time(), getSpeedMultiplier());
-                progress.set((int) ((long) progress.get() * until / from));
-            });
-        }
-        for (int index = 0; index < tank.size(); index++) {
-            if (capacity(to.spec(), index) == 0) {
-                tank.set(index, FluidResource.EMPTY, 0);
-            }
-        }
-        setChanged();
-        return extras;
-    }
-
     private void voidTanks() {
         for (int index = 0; index < tank.size(); index++) {
             tank.set(index, FluidResource.EMPTY, 0);
         }
-    }
-
-    /** The inputs {@link #retierTo} would hand back, or none off the server. */
-    public List<ItemStack> retierExtras(AssemblingTier to) {
-        if (keepsHeldRecipe(to)) {
-            return List.of();
-        }
-        List<ItemStack> extras = new ArrayList<>(INPUTS);
-        for (int slot = 0; slot < INPUTS; slot++) {
-            ItemStack stack = inventory.getItem(slot);
-            if (!stack.isEmpty()) {
-                extras.add(stack.copy());
-            }
-        }
-        return extras;
-    }
-
-    private boolean keepsHeldRecipe(AssemblingTier to) {
-        return !held.isSet() || !(level instanceof ServerLevel)
-                || AssemblingMachineMenu.verdict(this, to.spec(), held.id().orElseThrow()).held();
     }
 
     /**
@@ -703,7 +635,7 @@ public class AssemblingMachineBlockEntity extends MultiblockMachineEntity {
 
     @Override
     public List<Vec3i> getAddonSlots() {
-        return chassis().map(ChassisMachineBlock::addonSlots).orElseGet(AssemblingMachineFootprint::addonSlots).stream()
+        return chassis().addonSlots().stream()
                 .map(slot -> new Vec3i(slot.x(), slot.y(), slot.z()))
                 .toList();
     }

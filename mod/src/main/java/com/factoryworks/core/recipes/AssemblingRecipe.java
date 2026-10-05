@@ -23,12 +23,9 @@ import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 /**
- * One Factorio assembling recipe: {@code crafting}, {@code advanced-crafting} or
- * {@code crafting-with-fluid} (#279), or a {@code chemistry} or {@code oil-processing} one on the
- * same shape under its own type ({@link AssemblingFamily}, ADR-0096).
- *
- * <p>The Factorio category rides on the recipe, so ADR-0038's hand set stays a predicate over the
- * assembling type rather than a type of its own.
+ * One Factorio {@code chemistry} or {@code oil-processing} recipe, on the shape the chassis reads
+ * (#279, ADR-0096), under the type of its own family ({@link AssemblingFamily}). Factorio's
+ * assembling recipes are Craftworks' (ADR-0118).
  *
  * <p>Every field is a NeoForge or vanilla codec rather than one of the pack's: a sized item
  * ingredient, a sized fluid ingredient, and item and fluid <em>templates</em> for the results. A
@@ -36,11 +33,11 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
  * an item whose components are not bound yet, which they are not during the datapack load that reads
  * recipes.
  *
- * <p>{@code time} is Factorio's {@code energy_required * 20}; the machine or the Assembler applies
- * its own speed (ADR-0029).
+ * <p>{@code time} is Factorio's {@code energy_required * 20}; the machine applies its own speed
+ * (ADR-0029).
  *
- * <p>{@link #matches} is false: nothing looks one up by its inputs. The hand set plans over it, and
- * the Assembling Machine runs the one recipe it holds by id (#328, ADR-0071).
+ * <p>{@link #matches} is false: nothing looks one up by its inputs. A machine runs the one recipe it
+ * holds by id (#328, ADR-0071).
  */
 public record AssemblingRecipe(
         AssemblingFamily family,
@@ -93,7 +90,7 @@ public record AssemblingRecipe(
         return family.type();
     }
 
-    /** The family is the serializer's, never the JSON's, so all three types read one shape (ADR-0096). */
+    /** The family is the serializer's, never the JSON's, so both types read one shape (ADR-0096). */
     public static RecipeSerializer<AssemblingRecipe> serializer(AssemblingFamily family) {
         return new RecipeSerializer<>(codec(family), streamCodec(family));
     }
