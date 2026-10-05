@@ -38,7 +38,7 @@ hash = "e9cb1bd8cb65cb90271d08cc9ebefa48595716f623a7316cfdee8f76ec2194d1"
 
 [[files]]
 file = "REUSE.toml"
-hash = "cb4b56f9ad4dbbde2b84c4bd400064642e1a9996448d64fb96a8f2eb7f2e4650"
+hash = "f958fd13903b5be16032966ca3a5cf8f9af359fc8bbb3bcd2b91ddb79a5b6c46"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -338,11 +338,11 @@ hash = "a06ddd6c447b79c7f97eda6aa668151b49867d5155b763c5f843ba8ee1cce2e1"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
-hash = "f2334da1472b46796bc5ee8b078317177db8e6fa6cb0a395de1016e05d6ffac5"
+hash = "3f5153165134032ee56f8c48a59c3d454c63786d1fdfc3c9ac47336833afa6ac"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "b37c2ec1b2c7d87d72a87880ff068335e8f6ed1aa583636d92e7ef4b6c0edac0"
+hash = "ac8a1cb383ed89c9ecc54b705e2970e894b09fc1a10112fbd028255759c4dba8"
 
 [[files]]
 file = "data/pack/local-jars.json"
@@ -382,7 +382,7 @@ hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "0796f0a7e1028d93ffc0c7ac039c6dd86fddf0a3e54442f820fb5f70a62ada50"
+hash = "381e7c363c36ad359f966c958ef2c65782bb7da9ba2d74db0882a11f8ad4a973"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/assembling_machine.json"
@@ -461,6 +461,10 @@ file = "kubejs/assets/factoryworks/blockstates/electric_mining_drill_part.json"
 hash = "c8ebc6a0ae1895fcbc75149d363afaa3b26ee6a4ef52d62517eb968cb77abfed"
 
 [[files]]
+file = "kubejs/assets/factoryworks/blockstates/heavy_oil.json"
+hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
+
+[[files]]
 file = "kubejs/assets/factoryworks/blockstates/iron_chest.json"
 hash = "5e609f44643dc642f89a3d3d646e88988df6b705883fa116a8bfe8f1e9c54c2f"
 
@@ -471,6 +475,14 @@ hash = "177c43ef9b3c171972c91ea43a5393a0966425e08778a704778b5c2b78d5545c"
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/jellystem_sapling.json"
 hash = "22225f0cd06ad86ce90d5ae548bfec0f95c454faee7f471ca44322aa41950b7c"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/light_oil.json"
+hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/lubricant.json"
+hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/offshore_pump.json"
@@ -487,6 +499,10 @@ hash = "f3b0526d999e3437128747f2748a877ecb8a625430b0d1951e4a4419e24776b9"
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/oil_well.json"
 hash = "587b1aa7d3c2579dd29cb4c2622e5e6c85e76d67873fcd0f26f1656cf176d447"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/petroleum_gas.json"
+hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/pumpjack.json"
@@ -531,6 +547,10 @@ hash = "8fe26f0c0bc1698575f599272cc4df29f0fefd0f4a82a6a1e71a2da53739489a"
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/stone_ore.json"
 hash = "81aa7b90c42db2af584c3836ad94ecc5e9981c369219dc17f72c925fc2eaf109"
+
+[[files]]
+file = "kubejs/assets/factoryworks/blockstates/sulfuric_acid.json"
+hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/superheated_steam.json"
@@ -662,7 +682,7 @@ hash = "c4f3b3ee106426f1322240cc01e60027429b080937c9c02917d8560bdbd4fec0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "9af3aa7ed9172363e20de6074bc7ed070dec25f89d1f664fa645c746382aed3b"
+hash = "595d9e0f577c6e02112399d89fa269491e7d6ac7e2423ea1a2b50045e89e8946"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/assembling_machine.json"
@@ -1501,10 +1521,6 @@ file = "kubejs/assets/minecraft/lang/en_us.json"
 hash = "79b51b3ac405bf781a92fe280df946e82f99d276b8a9dee2a97384855ed8588b"
 
 [[files]]
-file = "kubejs/assets/oritech/lang/en_us.json"
-hash = "52f13802010957cef68ebd781a381dc10f59c9ead5b143cd27e82cbfc791ee1a"
-
-[[files]]
 file = "kubejs/assets/wireworks/lang/en_us.json"
 hash = "7a92013f01805e7ac670aa2398bb68772a5da9f090cd449ff1e4c082516a6c4f"
 
@@ -1778,7 +1794,7 @@ hash = "bb38afc5e494b31770a99ca48d96590b228871f4d954a4989d0aed3d906b1123"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/electric_engine_unit.json"
-hash = "7c9d72e28c32f6dd86c2d620caa35b08b7ec0bdc016461a70e02a92692e7081d"
+hash = "bfc2553c161c6363046122cbe16038b7a03f0cd5b35df7f7c5480526fbe4563f"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/electric_furnace.json"
@@ -1802,11 +1818,11 @@ hash = "4ee6d47cdcf21f2d41fdc0accad21c10e9eff51b73d7fc79ccc4e9c296d541bc"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/express_splitter.json"
-hash = "6cdb5819acf60241844f276a9efdbb3bc9fa328722301bbe0da6e8506730d79e"
+hash = "df27cf315a440b305f28131f387a069de050264574d7ecc2dc33fb7dcec15463"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/express_transport_belt.json"
-hash = "f1bb9c7d04bfa764379eb0c60106baa78ac9a9f07f961fa953e9f505ef0994f4"
+hash = "30357ce3049c9355f64d5ed5d07ab69a5d1427c393ce6d98de1027afa9c35c3f"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/fast_inserter.json"
@@ -2042,51 +2058,51 @@ hash = "fac717b507abddbbf0026531473ad2ca765b1b0bf43484008ffb358b0709b4ed"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/battery.json"
-hash = "0bd3b6f99491f32a95fc747fda377e6aed0e4945e55e7efaf640fbd0ccfc69de"
+hash = "ed42e57d21504969bdd1c28551676a0b05c603340a763add590acfdffcb9b5ba"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/heavy_oil_cracking.json"
-hash = "f107f803632f63ba40f111e19178bd4cbee840bfb8f9a39e8e2ac64894963f8e"
+hash = "870c6dd0d3d00d8b76c00d284d06d6a554d6b2138259836e3f2edbaa5d203c61"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/light_oil_cracking.json"
-hash = "ba03aafdbcf9d0ffe3eb717c56458d5f1db9dd9a6ac6760ed4bbc690f54605bf"
+hash = "7652e057d06cc3c2e4bb6c0c374a326e7246a6f29c7020b668db41796538438c"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/lubricant.json"
-hash = "78134000d100867e8f5b5fecb04d678bd1cea62e9a46e6524e0a4ee2b4b98f72"
+hash = "cf616fc131af58ad995b9e512350307d7cdf3236de99d1416641bf646f5c2abd"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/plastic_bar.json"
-hash = "04666b376dec94208436707d7318c32894677cf66e36c13144c9ca94211bbb17"
+hash = "0046ccedd1a31119ec4058a55785605a738d96463cf1857d25d31a6e7f4e22d8"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/processing_unit.json"
-hash = "74a0a2d65edb083f6f7538d3d865997182f643789e2e9040ffa8234d38e3604b"
+hash = "753fa96287f795dc883112d482604570f7975c7fe9b765ed2dcf105220084440"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/rocket_fuel.json"
-hash = "864a0c53a7b4c2f813c860271d83de80a3b50ab51a363ad50be96a8f0ef195d4"
+hash = "2ce8476621327ced25888f11395282e2a28105e3bd88df6e8cf9d00dfb784598"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/solid_fuel_from_heavy_oil.json"
-hash = "5c3bf924b699b0e3dcc29bfa657ba8c41da60767744e17cb2e0ec1d267eceeac"
+hash = "71bd1e5e9881165a04a58f65420f6b750c94fe7cc3bb22a8b950a6d17831e43e"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/solid_fuel_from_light_oil.json"
-hash = "8e607a21f883ab334bdde2ac9df5c8af43f235152582d6be4fd489d5aafe202b"
+hash = "927f208870d5a42b07ab82c67c61cfd77c5f09cd3a12ce245f4a539e8265dbc7"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/solid_fuel_from_petroleum_gas.json"
-hash = "e6c34b109acf680da8ae8b5a0eeaf603c8ed07c2ec38ff39edcb2b7ca4e5e621"
+hash = "bb25f792b879c4efa5b4f770ec7af48d24110eff01768cc4d2c604fe7972ddde"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/sulfur.json"
-hash = "4350aa31f2cf7c0a2dc3908b6a41a0737c919c37dcc9739f3a5d9596782b97f5"
+hash = "2ef4c27ef92a0245332822d810de40106e23d05847946e75def8beb13e090bfd"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/sulfuric_acid.json"
-hash = "9b890c6c1ead27554e5b6d69117306267e8b6cb6869ec156e0a53af3425b3aa6"
+hash = "3a4f937482db92cc0860ce7eeb114f36f75686c53d7de55b12e3739d461d0c17"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/copper_plate.json"
@@ -2394,11 +2410,11 @@ hash = "223b99132652cfd6e414d8f02e2393c646f7b5a11c72fcb22f0a5ed0b323e96a"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/oil_processing/advanced_oil_processing.json"
-hash = "8bb75aed805c828d1272b168bb89ad1201239434efbeedb4a77ba488ca8a87a2"
+hash = "5ec3f5bd499ec0f3e29e1ed7245b8f0f64b3c8fef395bbe4ed1d14cecf55b671"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/oil_processing/basic_oil_processing.json"
-hash = "3bf30dc3f3558ec0203c04106662701a859daa66ba9f3b16addfec43e1467bb7"
+hash = "76c9f21bdf6a1593c009ab098af0c7bd4e9a1b2b47b6a6e22ddbe080c27d2d0f"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/smelting/stock/glass.json"

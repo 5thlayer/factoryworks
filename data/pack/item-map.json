@@ -425,9 +425,9 @@
     },
     "heavy-oil": {
       "kind": "fluid",
-      "target": "oritech:still_heavy_oil",
-      "source": "borrowed",
-      "note": "The heaviest of the three fractions Oritech's Refinery splits oil into -- 1000 oil to 500 heavy oil, 250 naphtha and 250 diesel, Factorio's own three-way shape (#277). Oritech draws it near-black; Factorio's is dark orange, so it is retinted. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
+      "target": "factoryworks:heavy_oil",
+      "source": "authored",
+      "note": "Core's heavy oil (#619, ADR-0109): the heaviest of the three fractions the Oil Refinery splits crude into. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "heavy-oil-barrel": {
       "status": "native_mechanic",
@@ -492,9 +492,9 @@
     },
     "light-oil": {
       "kind": "fluid",
-      "target": "oritech:still_naphtha",
-      "source": "borrowed",
-      "note": "The middle fraction: Oritech's Light Naphtha (#277). Its orange already reads as Factorio's light oil. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
+      "target": "factoryworks:light_oil",
+      "source": "authored",
+      "note": "Core's light oil (#619, ADR-0109): the middle fraction. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "light-oil-barrel": {
       "status": "native_mechanic",
@@ -536,9 +536,9 @@
     },
     "lubricant": {
       "kind": "fluid",
-      "target": "oritech:still_biofuel",
-      "source": "borrowed",
-      "note": "Oritech ships no lubricant, so this borrows the Oritech fluid whose colour is Factorio's lubricant green: Biofuel (#277). It keeps Oritech's name and its Oritech uses -- a fuel -- which is the price of borrowing rather than authoring a fluid under ADR-0031. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
+      "target": "factoryworks:lubricant",
+      "source": "authored",
+      "note": "Core's lubricant (#619, ADR-0109), made from heavy oil in the Chemical Plant. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "lubricant-barrel": {
       "status": "native_mechanic",
@@ -605,9 +605,9 @@
     },
     "petroleum-gas": {
       "kind": "fluid",
-      "target": "oritech:still_diesel",
-      "source": "borrowed",
-      "note": "The third fraction: Oritech's Diesel (#277). NOT A GAS -- a knowing departure that keeps the three-fraction shape the oil recipes are about. Oritech draws it olive-yellow and no Oritech fluid is purple, so it is retinted to Factorio's. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
+      "target": "factoryworks:petroleum_gas",
+      "source": "authored",
+      "note": "Core's petroleum gas (#619, ADR-0109): the lightest fraction, and a gas as Factorio's is. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "petroleum-gas-barrel": {
       "status": "native_mechanic",
@@ -894,9 +894,9 @@
     },
     "sulfuric-acid": {
       "kind": "fluid",
-      "target": "oritech:still_sulfuric_acid",
-      "source": "borrowed",
-      "note": "Oritech's Sulfuric Acid (#277). Oritech draws it bright green; Factorio's is yellow, so it is retinted. Rendered in Factorio's `base_color`: `scripts/build-fluid-tints.py` retints it where Oritech's own colour is more than 0.15 away (#277)."
+      "target": "factoryworks:sulfuric_acid",
+      "source": "authored",
+      "note": "Core's sulfuric acid (#619, ADR-0109), made from sulfur, iron and water in the Chemical Plant. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "sulfuric-acid-barrel": {
       "status": "native_mechanic",

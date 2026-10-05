@@ -17,7 +17,7 @@
   ],
   "fluid_ingredients": [
     {
-      "ingredient": "oritech:still_biofuel",
+      "ingredient": "factoryworks:lubricant",
       "amount": 80
     }
   ],

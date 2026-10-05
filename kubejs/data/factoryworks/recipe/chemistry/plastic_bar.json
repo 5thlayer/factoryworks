@@ -9,7 +9,7 @@
   ],
   "fluid_ingredients": [
     {
-      "ingredient": "oritech:still_diesel",
+      "ingredient": "factoryworks:petroleum_gas",
       "amount": 20
     }
   ],

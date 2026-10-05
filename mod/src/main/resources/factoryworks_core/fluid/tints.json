@@ -1,13 +1,21 @@
 {
-  "oritech:still_diesel": {
-    "color": "#341330",
-    "factorio": "petroleum-gas"
-  },
-  "oritech:still_heavy_oil": {
+  "factoryworks:heavy_oil": {
     "color": "#BE6700",
     "factorio": "heavy-oil"
   },
-  "oritech:still_sulfuric_acid": {
+  "factoryworks:light_oil": {
+    "color": "#F2EDBE",
+    "factorio": "light-oil"
+  },
+  "factoryworks:lubricant": {
+    "color": "#405116",
+    "factorio": "lubricant"
+  },
+  "factoryworks:petroleum_gas": {
+    "color": "#341330",
+    "factorio": "petroleum-gas"
+  },
+  "factoryworks:sulfuric_acid": {
     "color": "#FFCC1E",
     "factorio": "sulfuric-acid"
   }

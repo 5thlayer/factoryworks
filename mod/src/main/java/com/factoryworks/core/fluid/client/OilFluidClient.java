@@ -1,16 +1,24 @@
 package com.factoryworks.core.fluid.client;
 
 import com.factoryworks.core.FactoryWorksCore;
+import com.factoryworks.core.fluid.FluidTintCorpus;
 import com.factoryworks.core.fluid.PFFluids;
 
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.fluid.FluidTintSources;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
-/** How crude oil draws in a tank, a pipe or Jade: malcolmriley's unused-textures sprite, tinted (ADR-0109). */
+/**
+ * How the oil and chemistry fluids draw in a tank, a pipe or Jade (ADR-0109).
+ *
+ * <p>Crude is malcolmriley's unused-textures sprite under a tint typed here. The other five draw
+ * Oritech's sprites under the tint {@code factoryworks_core/fluid/tints.json} holds for them.
+ */
 public final class OilFluidClient {
 
     private static final Material CRUDE_OIL_SPRITE =
@@ -29,5 +37,29 @@ public final class OilFluidClient {
     private static void registerFluidModels(RegisterFluidModelsEvent event) {
         event.register(new FluidModel.Unbaked(CRUDE_OIL_SPRITE, CRUDE_OIL_SPRITE, null,
                 FluidTintSources.constant(CRUDE_OIL_TINT)), PFFluids.CRUDE_OIL_SOURCE, PFFluids.CRUDE_OIL_FLOWING);
+
+        // test_fluid_tints.py reads these sprites against build-fluid-tints.py's table.
+        registerCorpusTinted(event, "heavy_oil", "block/fluid/fluid_molten",
+                PFFluids.HEAVY_OIL_SOURCE, PFFluids.HEAVY_OIL_FLOWING);
+        registerCorpusTinted(event, "light_oil", "block/fluid/fluid_molten",
+                PFFluids.LIGHT_OIL_SOURCE, PFFluids.LIGHT_OIL_FLOWING);
+        registerCorpusTinted(event, "petroleum_gas", "block/fluid/fluid_steam",
+                PFFluids.PETROLEUM_GAS_SOURCE, PFFluids.PETROLEUM_GAS_FLOWING);
+        registerCorpusTinted(event, "lubricant", "block/fluid/fluid_strange_pale_2",
+                PFFluids.LUBRICANT_SOURCE, PFFluids.LUBRICANT_FLOWING);
+        registerCorpusTinted(event, "sulfuric_acid", "block/fluid/fluid_steam",
+                PFFluids.SULFURIC_ACID_SOURCE, PFFluids.SULFURIC_ACID_FLOWING);
+    }
+
+    private static void registerCorpusTinted(
+            RegisterFluidModelsEvent event,
+            String name,
+            String oritechSprite,
+            DeferredHolder<Fluid, ? extends Fluid> still,
+            DeferredHolder<Fluid, ? extends Fluid> flowing) {
+        Material sprite = new Material(Identifier.fromNamespaceAndPath("oritech", oritechSprite));
+        int tint = FluidTintCorpus.get().tint(FactoryWorksCore.NAMESPACE + ":" + name).orElseThrow();
+        event.register(new FluidModel.Unbaked(sprite, sprite, null, FluidTintSources.constant(tint)),
+                still, flowing);
     }
 }

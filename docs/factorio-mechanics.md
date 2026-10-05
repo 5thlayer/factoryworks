@@ -434,8 +434,8 @@ Sub-rules:
 - **where**: Terra, Ignus, Gelida
 - **via**: `pack`
 - **owner**: ADR-0096 (the Chemical Plant and Oil Refinery are pack blocks on the Assembling
-  Machine's chassis, on Oritech's models) and ADR-0067 (the oil fluids are Oritech's, retinted to
-  Factorio's colours)
+  Machine's chassis, on Oritech's models) and ADR-0109 (Core registers the oil fluids, drawn in
+  Factorio's colours; #619)
 - **ticket**: #486, closed (the Chemical Plant shipped with #490 and the Oil Refinery with #491); #258 before it
 
 Sub-rules:

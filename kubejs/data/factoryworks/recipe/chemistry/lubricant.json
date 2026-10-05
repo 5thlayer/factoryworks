@@ -3,13 +3,13 @@
   "category": "chemistry",
   "fluid_ingredients": [
     {
-      "ingredient": "oritech:still_heavy_oil",
+      "ingredient": "factoryworks:heavy_oil",
       "amount": 10
     }
   ],
   "fluid_results": [
     {
-      "id": "oritech:still_biofuel",
+      "id": "factoryworks:lubricant",
       "amount": 10
     }
   ],

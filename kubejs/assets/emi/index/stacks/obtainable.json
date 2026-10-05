@@ -343,25 +343,25 @@
       "stack": "fluid:factoryworks:crude_oil"
     },
     {
+      "stack": "fluid:factoryworks:heavy_oil"
+    },
+    {
+      "stack": "fluid:factoryworks:light_oil"
+    },
+    {
+      "stack": "fluid:factoryworks:lubricant"
+    },
+    {
+      "stack": "fluid:factoryworks:petroleum_gas"
+    },
+    {
       "stack": "fluid:factoryworks:steam"
     },
     {
+      "stack": "fluid:factoryworks:sulfuric_acid"
+    },
+    {
       "stack": "fluid:minecraft:water"
-    },
-    {
-      "stack": "fluid:oritech:still_biofuel"
-    },
-    {
-      "stack": "fluid:oritech:still_diesel"
-    },
-    {
-      "stack": "fluid:oritech:still_heavy_oil"
-    },
-    {
-      "stack": "fluid:oritech:still_naphtha"
-    },
-    {
-      "stack": "fluid:oritech:still_sulfuric_acid"
     }
   ]
 }

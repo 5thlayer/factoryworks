@@ -65,6 +65,57 @@ public final class PFFluidTypes {
                     .viscosity(5000)
                     .rarity(Rarity.COMMON)));
 
+    // Heavy oil to sulfuric acid: Factorio's 25 °C (ADR-0109); density and viscosity are flavour.
+    public static final DeferredHolder<FluidType, FluidType> HEAVY_OIL = FLUID_TYPES.register(
+            "heavy_oil",
+            () -> new FluidType(FluidType.Properties.create()
+                    .descriptionId("fluid_type." + FactoryWorksCore.NAMESPACE + ".heavy_oil")
+                    .lightLevel(0)
+                    .density(950)
+                    .temperature(temperature(25))
+                    .viscosity(3000)
+                    .rarity(Rarity.COMMON)));
+
+    public static final DeferredHolder<FluidType, FluidType> LIGHT_OIL = FLUID_TYPES.register(
+            "light_oil",
+            () -> new FluidType(FluidType.Properties.create()
+                    .descriptionId("fluid_type." + FactoryWorksCore.NAMESPACE + ".light_oil")
+                    .lightLevel(0)
+                    .density(850)
+                    .temperature(temperature(25))
+                    .viscosity(1500)
+                    .rarity(Rarity.COMMON)));
+
+    public static final DeferredHolder<FluidType, FluidType> PETROLEUM_GAS = FLUID_TYPES.register(
+            "petroleum_gas",
+            () -> new FluidType(FluidType.Properties.create()
+                    .descriptionId("fluid_type." + FactoryWorksCore.NAMESPACE + ".petroleum_gas")
+                    .lightLevel(0)
+                    .density(-5)
+                    .temperature(temperature(25))
+                    .viscosity(300)
+                    .rarity(Rarity.COMMON)));
+
+    public static final DeferredHolder<FluidType, FluidType> LUBRICANT = FLUID_TYPES.register(
+            "lubricant",
+            () -> new FluidType(FluidType.Properties.create()
+                    .descriptionId("fluid_type." + FactoryWorksCore.NAMESPACE + ".lubricant")
+                    .lightLevel(0)
+                    .density(920)
+                    .temperature(temperature(25))
+                    .viscosity(4000)
+                    .rarity(Rarity.COMMON)));
+
+    public static final DeferredHolder<FluidType, FluidType> SULFURIC_ACID = FLUID_TYPES.register(
+            "sulfuric_acid",
+            () -> new FluidType(FluidType.Properties.create()
+                    .descriptionId("fluid_type." + FactoryWorksCore.NAMESPACE + ".sulfuric_acid")
+                    .lightLevel(0)
+                    .density(1800)
+                    .temperature(temperature(25))
+                    .viscosity(2000)
+                    .rarity(Rarity.COMMON)));
+
     private PFFluidTypes() {
     }
 

@@ -86,6 +86,48 @@ public final class PFFluids {
             BLOCKS.registerBlock("crude_oil",
                     props -> new PFLiquidBlock(CRUDE_OIL_SOURCE.get(), liquidProperties(props)));
 
+    // ---- The refinery's and chemical plant's fluids (ADR-0109) --------------------------------
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> HEAVY_OIL_SOURCE =
+            FLUIDS.register("heavy_oil", () -> new BaseFlowingFluid.Source(heavyOilProperties()));
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> HEAVY_OIL_FLOWING =
+            FLUIDS.register("flowing_heavy_oil", () -> new BaseFlowingFluid.Flowing(heavyOilProperties()));
+    public static final DeferredHolder<Block, PFLiquidBlock> HEAVY_OIL_BLOCK =
+            BLOCKS.registerBlock("heavy_oil",
+                    props -> new PFLiquidBlock(HEAVY_OIL_SOURCE.get(), liquidProperties(props)));
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> LIGHT_OIL_SOURCE =
+            FLUIDS.register("light_oil", () -> new BaseFlowingFluid.Source(lightOilProperties()));
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> LIGHT_OIL_FLOWING =
+            FLUIDS.register("flowing_light_oil", () -> new BaseFlowingFluid.Flowing(lightOilProperties()));
+    public static final DeferredHolder<Block, PFLiquidBlock> LIGHT_OIL_BLOCK =
+            BLOCKS.registerBlock("light_oil",
+                    props -> new PFLiquidBlock(LIGHT_OIL_SOURCE.get(), liquidProperties(props)));
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> PETROLEUM_GAS_SOURCE =
+            FLUIDS.register("petroleum_gas", () -> new BaseFlowingFluid.Source(petroleumGasProperties()));
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> PETROLEUM_GAS_FLOWING =
+            FLUIDS.register("flowing_petroleum_gas", () -> new BaseFlowingFluid.Flowing(petroleumGasProperties()));
+    public static final DeferredHolder<Block, PFLiquidBlock> PETROLEUM_GAS_BLOCK =
+            BLOCKS.registerBlock("petroleum_gas",
+                    props -> new PFLiquidBlock(PETROLEUM_GAS_SOURCE.get(), liquidProperties(props)));
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> LUBRICANT_SOURCE =
+            FLUIDS.register("lubricant", () -> new BaseFlowingFluid.Source(lubricantProperties()));
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> LUBRICANT_FLOWING =
+            FLUIDS.register("flowing_lubricant", () -> new BaseFlowingFluid.Flowing(lubricantProperties()));
+    public static final DeferredHolder<Block, PFLiquidBlock> LUBRICANT_BLOCK =
+            BLOCKS.registerBlock("lubricant",
+                    props -> new PFLiquidBlock(LUBRICANT_SOURCE.get(), liquidProperties(props)));
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> SULFURIC_ACID_SOURCE =
+            FLUIDS.register("sulfuric_acid", () -> new BaseFlowingFluid.Source(sulfuricAcidProperties()));
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> SULFURIC_ACID_FLOWING =
+            FLUIDS.register("flowing_sulfuric_acid", () -> new BaseFlowingFluid.Flowing(sulfuricAcidProperties()));
+    public static final DeferredHolder<Block, PFLiquidBlock> SULFURIC_ACID_BLOCK =
+            BLOCKS.registerBlock("sulfuric_acid",
+                    props -> new PFLiquidBlock(SULFURIC_ACID_SOURCE.get(), liquidProperties(props)));
+
     private PFFluids() {
     }
 
@@ -97,6 +139,31 @@ public final class PFFluids {
     private static BaseFlowingFluid.Properties crudeOilProperties() {
         return new BaseFlowingFluid.Properties(PFFluidTypes.CRUDE_OIL, CRUDE_OIL_SOURCE, CRUDE_OIL_FLOWING)
                 .block(CRUDE_OIL_BLOCK);
+    }
+
+    private static BaseFlowingFluid.Properties heavyOilProperties() {
+        return new BaseFlowingFluid.Properties(PFFluidTypes.HEAVY_OIL, HEAVY_OIL_SOURCE, HEAVY_OIL_FLOWING)
+                .block(HEAVY_OIL_BLOCK);
+    }
+
+    private static BaseFlowingFluid.Properties lightOilProperties() {
+        return new BaseFlowingFluid.Properties(PFFluidTypes.LIGHT_OIL, LIGHT_OIL_SOURCE, LIGHT_OIL_FLOWING)
+                .block(LIGHT_OIL_BLOCK);
+    }
+
+    private static BaseFlowingFluid.Properties petroleumGasProperties() {
+        return new BaseFlowingFluid.Properties(PFFluidTypes.PETROLEUM_GAS, PETROLEUM_GAS_SOURCE, PETROLEUM_GAS_FLOWING)
+                .block(PETROLEUM_GAS_BLOCK);
+    }
+
+    private static BaseFlowingFluid.Properties lubricantProperties() {
+        return new BaseFlowingFluid.Properties(PFFluidTypes.LUBRICANT, LUBRICANT_SOURCE, LUBRICANT_FLOWING)
+                .block(LUBRICANT_BLOCK);
+    }
+
+    private static BaseFlowingFluid.Properties sulfuricAcidProperties() {
+        return new BaseFlowingFluid.Properties(PFFluidTypes.SULFURIC_ACID, SULFURIC_ACID_SOURCE, SULFURIC_ACID_FLOWING)
+                .block(SULFURIC_ACID_BLOCK);
     }
 
     private static BaseFlowingFluid.Properties superheatedSteamProperties() {

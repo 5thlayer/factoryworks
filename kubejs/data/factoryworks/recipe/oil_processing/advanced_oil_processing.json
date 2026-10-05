@@ -13,15 +13,15 @@
   ],
   "fluid_results": [
     {
-      "id": "oritech:still_heavy_oil",
+      "id": "factoryworks:heavy_oil",
       "amount": 25
     },
     {
-      "id": "oritech:still_naphtha",
+      "id": "factoryworks:light_oil",
       "amount": 45
     },
     {
-      "id": "oritech:still_diesel",
+      "id": "factoryworks:petroleum_gas",
       "amount": 55
     }
   ],

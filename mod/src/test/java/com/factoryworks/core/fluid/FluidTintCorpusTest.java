@@ -9,19 +9,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * That the mod reads the tint resource {@code scripts/build-fluid-tints.py} writes (#277).
+ * That the mod reads the tint resource {@code scripts/build-fluid-tints.py} writes (#277, #619).
  *
- * <p>{@code tests/pack/test_fluid_tints.py} asserts the resource renders each borrowed fluid in
+ * <p>{@code tests/pack/test_fluid_tints.py} asserts the resource renders each fluid in
  * Factorio's colour, but it reads JSON. A parser reaching for the wrong key, or dropping the alpha,
- * leaves that check green and every retinted fluid invisible or in Oritech's colour.
+ * leaves that check green and every fluid invisible or the wrong colour.
  */
 class FluidTintCorpusTest {
 
     @Test
     @DisplayName("a retinted fluid answers its colour, fully opaque")
     void retintedFluidIsOpaque() {
-        OptionalInt argb = FluidTintCorpus.get().tint("oritech:still_heavy_oil");
-        assertTrue(argb.isPresent(), "heavy oil is retinted from near-black to Factorio's orange");
+        OptionalInt argb = FluidTintCorpus.get().tint("factoryworks:heavy_oil");
+        assertTrue(argb.isPresent(), "heavy oil is tinted toward Factorio's orange");
         assertEquals(0xFF, argb.getAsInt() >>> 24,
                 "a tint with no alpha draws the fluid fully transparent");
     }
@@ -29,12 +29,12 @@ class FluidTintCorpusTest {
     @Test
     @DisplayName("the colour is the resource's hex, not a default")
     void colourIsTheResources() {
-        assertEquals(0xFFFFCC1E, FluidTintCorpus.get().tint("oritech:still_sulfuric_acid").getAsInt());
+        assertEquals(0xFFFFCC1E, FluidTintCorpus.get().tint("factoryworks:sulfuric_acid").getAsInt());
     }
 
     @Test
-    @DisplayName("a fluid Oritech already colours right keeps Oritech's tint")
-    void keptFluidHasNoTint() {
-        assertFalse(FluidTintCorpus.get().tint("oritech:still_naphtha").isPresent());
+    @DisplayName("a fluid with no row has no tint")
+    void unknownFluidHasNoTint() {
+        assertFalse(FluidTintCorpus.get().tint("factoryworks:crude_oil").isPresent());
     }
 }

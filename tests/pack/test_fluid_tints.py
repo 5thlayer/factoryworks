@@ -1,27 +1,23 @@
 #!/usr/bin/env python3
-"""Assert every fluid the pack borrows from Oritech renders in Factorio's colour (#277, ADR-0067).
+"""Assert Core's five oil and chemistry fluids render in Factorio's colour and name (#277, ADR-0109).
 
 `docs/testing/what-to-check.md`'s "this looks right" claim, as far as a static check reaches it.
-A borrowed fluid keeps Oritech's id and Oritech's tint unless `scripts/build-fluid-tints.py`
-retints it, and a missing or wrong retint fails nowhere else: the fluid loads, flows and fills
-pipes, and reaches a player as sulfuric acid that looks like a green potion.
+Core draws each fluid as an Oritech sprite under a constant tint, and a missing or wrong tint fails
+nowhere else: the fluid loads, flows and fills pipes, and reaches a player as sulfuric acid that
+looks like a green potion.
 
-Three seams, none of which launches the game:
+Four seams, none of which launches the game:
 
 1. **The resource is current.** The generator's `--check`, so a re-extracted corpus or a remapped
    row that changes a tint fails until it is re-run.
-2. **The colour lands.** Recomputed here from the resource rather than trusted: each borrowed
-   fluid's sprite average, times the tint that will actually draw it -- the resource's where it has
-   one, Oritech's otherwise -- is within TOLERANCE of Factorio's `base_color`. A retint that clamps
-   short of the target fails here rather than shipping a colour nobody looked at.
-3. **Something applies it.** The mixin is listed on the client side of the Oritech mixin config
-   and its target class is still in the installed jar; without either, the resource is read by
-   nothing and every fluid keeps Oritech's colour with no error.
+2. **The colour lands.** Recomputed here from the resource rather than trusted: each fluid's sprite
+   average, times the tint that will draw it, is within TOLERANCE of Factorio's `base_color`.
+3. **Something draws it.** `OilFluidClient` names the same sprite the generator's table does, and
+   `PFFluids` registers the fluid, its flowing form and its block.
+4. **The name is Factorio's.** Each fluid's fluid-type and block lang keys say the Factorio name,
+   title-cased as the pack's other names are.
 
-4. **The name is Factorio's too.** Every lang key the Oritech jar names a borrowed fluid under -- the
-   fluid, its fluid type, its bucket and its source block -- is overridden in
-   `kubejs/assets/oritech/lang/en_us.json` to the Factorio name, title-cased as the pack's other
-   renames are. A key left out shows the player "Biofuel" in one tooltip and "Lubricant" in the next.
+And one absence: no `oritech:still_*` fluid is named by a recipe, tag, item-map row or index.
 
 Whether the colours read right in a running client is a human's on delivery.
 """
@@ -39,12 +35,13 @@ import zipfile
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts/build-fluid-tints.py"
 RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/fluid/tints.json"
-MIXINS = ROOT / "mod/src/main/resources/factoryworks_core.oritech.mixins.json"
-LANG = ROOT / "kubejs/assets/oritech/lang/en_us.json"
-CRUDE_CLIENT = ROOT / "mod/src/main/java/com/factoryworks/core/fluid/client/OilFluidClient.java"
+LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
+CLIENT = ROOT / "mod/src/main/java/com/factoryworks/core/fluid/client/OilFluidClient.java"
+PF_FLUIDS = ROOT / "mod/src/main/java/com/factoryworks/core/fluid/PFFluids.java"
 CRUDE_SPRITE = ROOT / "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png"
-MIXIN = "FluidModelContentMixin"
-MIXIN_TARGET = "rearth/oritech/client/init/FluidModelContent.class"
+# Where a recipe, tag, item-map row or index could still name a borrowed fluid.
+SHIPPED = ("kubejs/data", "kubejs/assets/emi", "data/pack", "mod/src/main/resources")
+BORROWED = re.compile(r"oritech:still_(heavy_oil|naphtha|diesel|biofuel|sulfuric_acid)")
 
 
 def generator():
@@ -65,51 +62,46 @@ class FluidTints(unittest.TestCase):
                                 capture_output=True, text=True)
         self.assertEqual(0, result.returncode, result.stdout + result.stderr)
 
-    def test_every_borrowed_fluid_renders_in_factorios_colour(self):
+    def test_every_fluid_renders_in_factorios_colour(self):
         colours = self.gen.factorio_colours()
-        borrowed = self.gen.borrowed_fluids()
-        self.assertTrue(borrowed, "the item map borrows no Oritech fluid -- nothing to check")
+        fluids = self.gen.pack_fluids()
+        self.assertEqual(set(fluids.values()), set(self.tints),
+                         "tints.json should hold exactly the five fluids Core registers")
         with zipfile.ZipFile(self.gen.oritech_jar()) as archive:
-            for name, target in borrowed.items():
-                self.assertIn(target, self.gen.ORITECH_MODELS,
-                              "%r borrows %s, whose sprite and tint nobody read" % (name, target))
-                sprite, tint = self.gen.ORITECH_MODELS[target]
-                if target in self.tints:
-                    hex_colour = self.tints[target]["color"]
-                    tint = tuple(int(hex_colour[i:i + 2], 16) / 255 for i in (1, 3, 5))
+            for name, fluid in fluids.items():
+                sprite, _ = self.gen.SPRITES[name]
+                hex_colour = self.tints[fluid]["color"]
+                tint = tuple(int(hex_colour[i:i + 2], 16) / 255 for i in (1, 3, 5))
                 drawn = self.gen.rendered(self.gen.sprite_average(archive, sprite), tint)
                 miss = math.dist(drawn, colours[name])
                 self.assertLessEqual(
                     miss, self.gen.TOLERANCE,
                     "%r (%s) draws as %s, %.2f from Factorio's %s"
-                    % (name, target, tuple(round(c, 2) for c in drawn), miss, colours[name]))
+                    % (name, fluid, tuple(round(c, 2) for c in drawn), miss, colours[name]))
 
-    def test_no_tint_names_a_fluid_the_map_does_not_borrow(self):
-        borrowed = set(self.gen.borrowed_fluids().values())
-        for target in self.tints:
-            self.assertIn(target, borrowed, "tints.json retints %s, which no row borrows" % target)
+    def test_the_client_draws_the_sprite_the_tint_was_computed_for(self):
+        source = CLIENT.read_text(encoding="utf-8")
+        drawn = dict(re.findall(r'registerCorpusTinted\(event, "(\w+)", "([\w/]+)"', source))
+        self.assertEqual({n.replace("-", "_"): s for n, (s, _) in self.gen.SPRITES.items()}, drawn)
 
-    def test_every_borrowed_fluid_is_named_as_factorio_names_it(self):
-        with zipfile.ZipFile(self.gen.oritech_jar()) as archive:
-            oritech = json.loads(archive.read("assets/oritech/lang/en_us.json"))
-        overrides = json.loads(LANG.read_text(encoding="utf-8")) if LANG.exists() else {}
-        for name, target in self.gen.borrowed_fluids().items():
-            path = target.split(":", 1)[1]
-            base = path.removeprefix("still_")
-            keys = ["fluid.oritech.%s" % path, "fluid_type.oritech.%s_fluid_type" % base,
-                    "item.oritech.%s_bucket" % path, "block.oritech.%s_block" % path]
+    def test_core_registers_each_fluid_its_block_and_its_flowing_form(self):
+        code = PF_FLUIDS.read_text(encoding="utf-8")
+        for fluid in self.gen.pack_fluids().values():
+            name = fluid.split(":", 1)[1]
+            for registered in (name, "flowing_" + name):
+                self.assertIn('FLUIDS.register("%s"' % registered, code)
+            self.assertIn('BLOCKS.registerBlock("%s"' % name, code)
+
+    def test_every_fluid_is_named_as_factorio_names_it(self):
+        lang = json.loads(LANG.read_text(encoding="utf-8"))
+        for name, fluid in self.gen.pack_fluids().items():
+            path = fluid.split(":", 1)[1]
             wanted = name.replace("-", " ").title()
-            for key in keys:
-                if key not in oritech:
-                    continue
-                suffix = " Bucket" if key.startswith("item.") else ""
-                self.assertEqual(
-                    wanted + suffix, overrides.get(key),
-                    "%s is Oritech's %r; the pack borrows it as Factorio's %r, so %s must say so"
-                    % (key, oritech[key], name, LANG.relative_to(ROOT)))
+            for key in ("fluid_type.factoryworks.%s" % path, "block.factoryworks.%s" % path):
+                self.assertEqual(wanted, lang.get(key), "%s should be %r" % (key, wanted))
 
     def test_crude_oil_renders_in_factorios_colour(self):
-        source = CRUDE_CLIENT.read_text(encoding="utf-8")
+        source = CLIENT.read_text(encoding="utf-8")
         argb = int(re.search(r"CRUDE_OIL_TINT = 0xFF([0-9A-Fa-f]{6});", source).group(1), 16)
         tint = tuple(((argb >> shift) & 0xFF) / 255 for shift in (16, 8, 0))
         w, _, rows = self.gen.read_png(CRUDE_SPRITE.read_bytes())
@@ -120,14 +112,13 @@ class FluidTints(unittest.TestCase):
         self.assertLessEqual(miss, self.gen.TOLERANCE,
                              "crude oil draws %.2f from Factorio's %s" % (miss, wanted))
 
-    def test_the_mixin_is_wired_on_the_client(self):
-        config = json.loads(MIXINS.read_text(encoding="utf-8"))
-        self.assertIn(MIXIN, config.get("client", []),
-                      "the tint mixin is not on the client side of %s, so nothing reads tints.json"
-                      % MIXINS.name)
-        with zipfile.ZipFile(self.gen.oritech_jar()) as archive:
-            self.assertIn(MIXIN_TARGET, archive.namelist(),
-                          "Oritech no longer ships %s; the mixin applies to nothing" % MIXIN_TARGET)
+    def test_nothing_shipped_names_an_oritech_fluid(self):
+        tracked = subprocess.run(["git", "ls-files", *SHIPPED], cwd=ROOT, capture_output=True,
+                                 text=True, check=True).stdout.splitlines()
+        for rel in tracked:
+            text = (ROOT / rel).read_text(encoding="utf-8", errors="replace")
+            found = BORROWED.search(text)
+            self.assertIsNone(found, "%s still names %s" % (rel, found and found.group(0)))
 
 
 if __name__ == "__main__":

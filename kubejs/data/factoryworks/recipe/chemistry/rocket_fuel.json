@@ -9,7 +9,7 @@
   ],
   "fluid_ingredients": [
     {
-      "ingredient": "oritech:still_naphtha",
+      "ingredient": "factoryworks:light_oil",
       "amount": 10
     }
   ],

@@ -13,7 +13,7 @@
   ],
   "fluid_ingredients": [
     {
-      "ingredient": "oritech:still_sulfuric_acid",
+      "ingredient": "factoryworks:sulfuric_acid",
       "amount": 20
     }
   ],

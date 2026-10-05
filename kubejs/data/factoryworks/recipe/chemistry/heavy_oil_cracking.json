@@ -7,13 +7,13 @@
       "amount": 30
     },
     {
-      "ingredient": "oritech:still_heavy_oil",
+      "ingredient": "factoryworks:heavy_oil",
       "amount": 40
     }
   ],
   "fluid_results": [
     {
-      "id": "oritech:still_naphtha",
+      "id": "factoryworks:light_oil",
       "amount": 30
     }
   ],

@@ -717,20 +717,20 @@ both segments and moves neither.
 
 ## Fluid colour check
 
-The oil fluids but crude are Oritech's, drawn in Factorio's colours (#277, ADR-0067). Crude is Core's, drawn from
-malcolmriley's unused-textures sprite under a tint typed in `OilFluidClient` (#557), which
-`test_fluid_tints.py` holds to Factorio's `base_color` the same way. A fluid's colour is its
-sprite times a tint, and Oritech's tint is a constructor argument that NeoForge refuses to register
-twice, so `core/mixin/oritech/FluidModelContentMixin` swaps it for the one `FluidTintCorpus` reads
-out of `factoryworks_core/fluid/tints.json`. `scripts/build-fluid-tints.py` writes that file from
-Factorio's `base_color` (in `data/factorio/fluid.json`) and each sprite's average, read from the
-Oritech jar. It retints only where Oritech's colour misses by more than 0.15. The sprite and tint
-per Oritech fluid were read off the jar with `javap` and are the one typed table.
-`tests/pack/test_fluid_tints.py` runs the `--check`, recomputes each borrowed fluid's drawn colour
-against Factorio's, and asserts the mixin is on the client side of the Oritech config.
-`FluidTintCorpusTest` covers the parse. Run both after editing a fluid row in the item map,
-re-extracting the corpus, or updating Oritech. Whether the colours read right in a running client
-is a human check on delivery.
+Core registers the oil and chemistry fluids (ADR-0109, #619): crude, heavy oil, light oil, petroleum gas,
+lubricant and sulfuric acid. Crude is drawn from malcolmriley's unused-textures sprite under a tint typed in
+`OilFluidClient` (#557); the other five from Oritech's sprites under the tint in
+`factoryworks_core/fluid/tints.json`. A fluid's colour is its sprite times a tint, so
+`test_fluid_tints.py` holds both to Factorio's `base_color`. `scripts/build-fluid-tints.py` writes the
+tint file from `base_color` (`data/factorio/fluid.json`) and each sprite's average, read from the Oritech jar.
+It keeps the tint Oritech draws the sprite with where that lands within 0.15 of Factorio's colour, and
+computes one where it does not. The sprite and Oritech's tint per fluid were read off the jar with `javap`
+and are the one typed table. `tests/pack/test_fluid_tints.py` runs the `--check`, recomputes each fluid's
+drawn colour against Factorio's, asserts `OilFluidClient` names the sprite the table does and that Core
+registers each fluid with its flowing form and block, and that no recipe, tag, item-map row or index
+names an `oritech:still_*` fluid. `FluidTintCorpusTest` covers the parse. Run both after editing a fluid
+row in the item map, re-extracting the corpus, or updating Oritech. Whether the colours read right in a
+running client is a human check on delivery.
 
 ## Steam Engine check
 

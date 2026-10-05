@@ -7,13 +7,13 @@
       "amount": 30
     },
     {
-      "ingredient": "oritech:still_naphtha",
+      "ingredient": "factoryworks:light_oil",
       "amount": 30
     }
   ],
   "fluid_results": [
     {
-      "id": "oritech:still_diesel",
+      "id": "factoryworks:petroleum_gas",
       "amount": 20
     }
   ],

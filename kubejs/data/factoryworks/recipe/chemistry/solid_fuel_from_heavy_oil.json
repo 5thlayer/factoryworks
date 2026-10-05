@@ -3,7 +3,7 @@
   "category": "chemistry",
   "fluid_ingredients": [
     {
-      "ingredient": "oritech:still_heavy_oil",
+      "ingredient": "factoryworks:heavy_oil",
       "amount": 20
     }
   ],
