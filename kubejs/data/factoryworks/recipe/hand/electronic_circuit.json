@@ -10,9 +10,11 @@
       "count": 3
     }
   ],
-  "result": {
-    "id": "factoryworks:electronic_circuit",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:electronic_circuit",
+      "count": 1
+    }
+  ],
   "time": 10
 }

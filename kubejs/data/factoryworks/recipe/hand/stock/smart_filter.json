@@ -14,9 +14,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "ftbfiltersystem:smart_filter",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "ftbfiltersystem:smart_filter",
+      "count": 1
+    }
+  ],
   "time": 10
 }

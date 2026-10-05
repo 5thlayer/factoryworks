@@ -14,9 +14,11 @@
       "count": 5
     }
   ],
-  "result": {
-    "id": "factoryworks:low_density_structure",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:low_density_structure",
+      "count": 1
+    }
+  ],
   "time": 300
 }

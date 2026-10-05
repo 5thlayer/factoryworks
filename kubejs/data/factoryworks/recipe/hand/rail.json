@@ -14,9 +14,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "minecraft:rail",
-    "count": 2
-  },
+  "results": [
+    {
+      "id": "minecraft:rail",
+      "count": 2
+    }
+  ],
   "time": 10
 }

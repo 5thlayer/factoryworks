@@ -10,9 +10,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "factoryworks:engineers_iron_pick",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:engineers_iron_pick",
+      "count": 1
+    }
+  ],
   "time": 10
 }

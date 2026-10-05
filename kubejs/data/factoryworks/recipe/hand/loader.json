@@ -22,9 +22,11 @@
       "count": 5
     }
   ],
-  "result": {
-    "id": "beltworks:loader",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "beltworks:loader",
+      "count": 1
+    }
+  ],
   "time": 20
 }

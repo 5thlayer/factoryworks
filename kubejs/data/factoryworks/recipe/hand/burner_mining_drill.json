@@ -14,9 +14,11 @@
       "count": 3
     }
   ],
-  "result": {
-    "id": "factoryworks:burner_mining_drill",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:burner_mining_drill",
+      "count": 1
+    }
+  ],
   "time": 40
 }

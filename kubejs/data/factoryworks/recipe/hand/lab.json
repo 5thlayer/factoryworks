@@ -14,9 +14,11 @@
       "count": 4
     }
   ],
-  "result": {
-    "id": "researchd:research_lab",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "researchd:research_lab",
+      "count": 1
+    }
+  ],
   "time": 40
 }

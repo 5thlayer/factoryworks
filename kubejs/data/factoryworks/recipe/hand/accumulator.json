@@ -10,9 +10,11 @@
       "count": 5
     }
   ],
-  "result": {
-    "id": "wireworks:accumulator",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "wireworks:accumulator",
+      "count": 1
+    }
+  ],
   "time": 200
 }

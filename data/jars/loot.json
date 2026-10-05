@@ -1,5 +1,5 @@
 {
-  "jars": ["26.1.2.jar", "beltworks-0.3.17.jar", "craftworks-0.3.0.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "pipeworks-0.1.2.jar", "researchd-1.2.5.jar", "wireworks-0.2.2.jar"],
+  "jars": ["26.1.2.jar", "beltworks-0.3.17.jar", "craftworks-0.4.0.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "pipeworks-0.1.2.jar", "researchd-1.2.5.jar", "wireworks-0.2.2.jar"],
   "tables": {
     "beltworks:blocks/belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "beltworks:blocks/express_belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:express_belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
@@ -20,6 +20,7 @@
     "craftworks:blocks/assembler_1": [{"entries":[{"type":"minecraft:item","name":"craftworks:assembler_1"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "craftworks:blocks/assembler_2": [{"entries":[{"type":"minecraft:item","name":"craftworks:assembler_2"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "craftworks:blocks/assembler_3": [{"entries":[{"type":"minecraft:item","name":"craftworks:assembler_3"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
+    "craftworks:blocks/creative_energy_source": [{"entries":[{"type":"minecraft:item","name":"craftworks:creative_energy_source"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "ftbquests:blocks/loot_crate_opener": [{"entries":[{"type":"minecraft:item","name":"ftbquests:loot_crate_opener"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "ftbquests:blocks/screen_1": [{"entries":[{"type":"minecraft:item","name":"ftbquests:screen_1"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "ftbquests:blocks/screen_3": [{"entries":[{"type":"minecraft:item","name":"ftbquests:screen_3"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],

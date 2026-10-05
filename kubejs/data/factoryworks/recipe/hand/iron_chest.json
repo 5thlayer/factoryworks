@@ -6,9 +6,11 @@
       "count": 8
     }
   ],
-  "result": {
-    "id": "factoryworks:iron_chest",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:iron_chest",
+      "count": 1
+    }
+  ],
   "time": 10
 }

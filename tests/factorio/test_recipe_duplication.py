@@ -95,6 +95,9 @@ def main():
     for path in sorted(EMITTED.rglob("*.json")):
         recipe = json.loads(path.read_text())
         where = path.relative_to(EMITTED).as_posix()
+        # A hand copy is its assembling recipe under Craftworks' type, not a second route (ADR-0089, #559).
+        if where.startswith("hand/"):
+            continue
         hand = recipe.get("category") == "crafting"
         for item in outputs_of(recipe):
             routes[item].append((where, hand))

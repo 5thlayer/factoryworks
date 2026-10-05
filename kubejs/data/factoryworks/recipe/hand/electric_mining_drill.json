@@ -14,9 +14,11 @@
       "count": 10
     }
   ],
-  "result": {
-    "id": "factoryworks:electric_mining_drill",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:electric_mining_drill",
+      "count": 1
+    }
+  ],
   "time": 40
 }

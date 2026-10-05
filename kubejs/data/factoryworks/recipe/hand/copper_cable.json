@@ -6,9 +6,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "factoryworks:copper_cable",
-    "count": 2
-  },
+  "results": [
+    {
+      "id": "factoryworks:copper_cable",
+      "count": 2
+    }
+  ],
   "time": 10
 }

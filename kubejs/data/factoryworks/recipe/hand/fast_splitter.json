@@ -14,9 +14,11 @@
       "count": 10
     }
   ],
-  "result": {
-    "id": "beltworks:improved_splitter",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "beltworks:improved_splitter",
+      "count": 1
+    }
+  ],
   "time": 40
 }

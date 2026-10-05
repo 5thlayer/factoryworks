@@ -14,9 +14,11 @@
       "count": 9
     }
   ],
-  "result": {
-    "id": "factoryworks:assembling_machine",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:assembling_machine",
+      "count": 1
+    }
+  ],
   "time": 10
 }

@@ -10,9 +10,11 @@
       "count": 10
     }
   ],
-  "result": {
-    "id": "factoryworks:steel_furnace",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:steel_furnace",
+      "count": 1
+    }
+  ],
   "time": 60
 }

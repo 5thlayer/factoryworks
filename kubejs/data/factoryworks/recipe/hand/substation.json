@@ -14,9 +14,11 @@
       "count": 6
     }
   ],
-  "result": {
-    "id": "wireworks:large_pole",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "wireworks:large_pole",
+      "count": 1
+    }
+  ],
   "time": 10
 }

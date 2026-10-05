@@ -18,9 +18,11 @@
       "count": 5
     }
   ],
-  "result": {
-    "id": "factoryworks:chemical_plant",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:chemical_plant",
+      "count": 1
+    }
+  ],
   "time": 100
 }

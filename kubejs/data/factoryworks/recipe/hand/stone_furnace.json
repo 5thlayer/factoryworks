@@ -6,9 +6,11 @@
       "count": 5
     }
   ],
-  "result": {
-    "id": "factoryworks:stone_furnace",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:stone_furnace",
+      "count": 1
+    }
+  ],
   "time": 10
 }

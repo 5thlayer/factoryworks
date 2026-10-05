@@ -6,9 +6,11 @@
       "count": 2
     }
   ],
-  "result": {
-    "id": "minecraft:chest",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "minecraft:chest",
+      "count": 1
+    }
+  ],
   "time": 10
 }

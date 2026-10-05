@@ -6,7 +6,7 @@ ADR-0063's hand set gets a second file: `recipe/assembling/<path>.json` becomes
 `recipe/hand/<path>.json`. The hand set is every `factoryworks:assembling` recipe whose
 `category` is `crafting`, whichever script wrote it (the corpus converter, the Engineer's Pick
 recipes, the stock re-authoring). A hand recipe with a fluid or with other than one result fails the
-run: Craftworks takes items only and one result.
+run: the Personal Assembler plans only through items and one result.
 
 It also writes `kubejs/server_scripts/hand_recipes.js`, the `<path>`s that have a copy. Craftworks
 asks Researchd about the copy's own id, so `factorio_tech_dsl.js` adds the copy of every machine
@@ -42,12 +42,12 @@ def copies():
             failures.append(f"{stem}: a fluid, which the Personal Assembler cannot hold")
             continue
         if len(recipe["results"]) != 1:
-            failures.append(f"{stem}: {len(recipe['results'])} results, and Craftworks takes one")
+            failures.append(f"{stem}: {len(recipe['results'])} results, and the Personal Assembler plans one")
             continue
         out[stem] = {
             "type": "craftworks:assembling",
             "ingredients": recipe["ingredients"],
-            "result": recipe["results"][0],
+            "results": recipe["results"],
             "time": recipe["time"],
         }
     if failures:

@@ -10,9 +10,11 @@
       "count": 5
     }
   ],
-  "result": {
-    "id": "pipeworks:storage_tank",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "pipeworks:storage_tank",
+      "count": 1
+    }
+  ],
   "time": 60
 }

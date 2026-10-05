@@ -6,9 +6,11 @@
       "count": 2
     }
   ],
-  "result": {
-    "id": "factoryworks:iron_gear_wheel",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:iron_gear_wheel",
+      "count": 1
+    }
+  ],
   "time": 10
 }

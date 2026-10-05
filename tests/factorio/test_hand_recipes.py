@@ -44,8 +44,8 @@ def main():
             failures.append(f"hand/{stem} is {copy.get('type')}, not craftworks:assembling")
         if copy.get("ingredients") != machine["ingredients"]:
             failures.append(f"hand/{stem}'s ingredients differ from its machine recipe's")
-        if [copy.get("result")] != machine["results"]:
-            failures.append(f"hand/{stem}'s result {copy.get('result')} is not {machine['results']}")
+        if copy.get("results") != machine["results"]:
+            failures.append(f"hand/{stem}'s results {copy.get('results')} are not {machine['results']}")
         if copy.get("time") != machine["time"]:
             failures.append(f"hand/{stem} takes {copy.get('time')} ticks, its machine recipe {machine['time']}")
 

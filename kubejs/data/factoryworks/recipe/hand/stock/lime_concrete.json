@@ -6,9 +6,11 @@
       "count": 10
     }
   ],
-  "result": {
-    "id": "minecraft:lime_concrete",
-    "count": 10
-  },
+  "results": [
+    {
+      "id": "minecraft:lime_concrete",
+      "count": 10
+    }
+  ],
   "time": 10
 }

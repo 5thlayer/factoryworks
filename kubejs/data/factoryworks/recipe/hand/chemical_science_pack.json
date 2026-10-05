@@ -14,12 +14,14 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "researchd:research_pack",
-    "count": 2,
-    "components": {
-      "researchd:research_pack": "factory_works:chemical_science_pack"
+  "results": [
+    {
+      "id": "researchd:research_pack",
+      "count": 2,
+      "components": {
+        "researchd:research_pack": "factory_works:chemical_science_pack"
+      }
     }
-  },
+  ],
   "time": 480
 }

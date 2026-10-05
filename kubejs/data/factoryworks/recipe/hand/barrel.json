@@ -6,9 +6,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "factoryworks:barrel",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:barrel",
+      "count": 1
+    }
+  ],
   "time": 20
 }

@@ -6,9 +6,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "minecraft:ladder",
-    "count": 8
-  },
+  "results": [
+    {
+      "id": "minecraft:ladder",
+      "count": 8
+    }
+  ],
   "time": 10
 }

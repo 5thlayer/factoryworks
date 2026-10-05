@@ -18,9 +18,11 @@
       "count": 10
     }
   ],
-  "result": {
-    "id": "factoryworks:pumpjack",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:pumpjack",
+      "count": 1
+    }
+  ],
   "time": 100
 }

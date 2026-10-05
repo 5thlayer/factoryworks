@@ -6,9 +6,11 @@
       "count": 10
     }
   ],
-  "result": {
-    "id": "minecraft:magenta_concrete",
-    "count": 10
-  },
+  "results": [
+    {
+      "id": "minecraft:magenta_concrete",
+      "count": 10
+    }
+  ],
   "time": 10
 }

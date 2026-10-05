@@ -10,9 +10,11 @@
       "count": 4
     }
   ],
-  "result": {
-    "id": "factoryworks:boiler",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:boiler",
+      "count": 1
+    }
+  ],
   "time": 10
 }

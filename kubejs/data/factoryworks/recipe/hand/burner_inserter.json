@@ -10,9 +10,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "beltworks:feeder",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "beltworks:feeder",
+      "count": 1
+    }
+  ],
   "time": 10
 }

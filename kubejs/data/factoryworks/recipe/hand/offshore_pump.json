@@ -10,9 +10,11 @@
       "count": 2
     }
   ],
-  "result": {
-    "id": "factoryworks:offshore_pump",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:offshore_pump",
+      "count": 1
+    }
+  ],
   "time": 10
 }

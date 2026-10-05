@@ -6,9 +6,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "minecraft:sand",
-    "count": 4
-  },
+  "results": [
+    {
+      "id": "minecraft:sand",
+      "count": 4
+    }
+  ],
   "time": 10
 }

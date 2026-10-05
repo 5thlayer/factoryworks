@@ -14,9 +14,11 @@
       "count": 10
     }
   ],
-  "result": {
-    "id": "factoryworks:steam_engine",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:steam_engine",
+      "count": 1
+    }
+  ],
   "time": 10
 }

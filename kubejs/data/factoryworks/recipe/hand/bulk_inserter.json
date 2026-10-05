@@ -18,9 +18,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "beltworks:turbo_feeder",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "beltworks:turbo_feeder",
+      "count": 1
+    }
+  ],
   "time": 10
 }

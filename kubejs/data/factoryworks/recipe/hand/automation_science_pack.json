@@ -10,12 +10,14 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "researchd:research_pack",
-    "count": 1,
-    "components": {
-      "researchd:research_pack": "factory_works:automation_science_pack"
+  "results": [
+    {
+      "id": "researchd:research_pack",
+      "count": 1,
+      "components": {
+        "researchd:research_pack": "factory_works:automation_science_pack"
+      }
     }
-  },
+  ],
   "time": 100
 }

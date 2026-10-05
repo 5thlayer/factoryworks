@@ -10,9 +10,11 @@
       "count": 2
     }
   ],
-  "result": {
-    "id": "wireworks:small_pole",
-    "count": 2
-  },
+  "results": [
+    {
+      "id": "wireworks:small_pole",
+      "count": 2
+    }
+  ],
   "time": 10
 }

@@ -6,9 +6,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "factoryworks:iron_stick",
-    "count": 2
-  },
+  "results": [
+    {
+      "id": "factoryworks:iron_stick",
+      "count": 2
+    }
+  ],
   "time": 10
 }

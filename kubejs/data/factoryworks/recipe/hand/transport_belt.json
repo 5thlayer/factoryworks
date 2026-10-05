@@ -10,9 +10,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "beltworks:belt_tile",
-    "count": 2
-  },
+  "results": [
+    {
+      "id": "beltworks:belt_tile",
+      "count": 2
+    }
+  ],
   "time": 10
 }

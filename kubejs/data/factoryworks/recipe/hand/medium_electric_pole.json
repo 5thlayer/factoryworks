@@ -14,9 +14,11 @@
       "count": 2
     }
   ],
-  "result": {
-    "id": "wireworks:medium_pole",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "wireworks:medium_pole",
+      "count": 1
+    }
+  ],
   "time": 10
 }

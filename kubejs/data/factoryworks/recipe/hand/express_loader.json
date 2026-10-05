@@ -10,9 +10,11 @@
       "count": 1
     }
   ],
-  "result": {
-    "id": "beltworks:express_loader",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "beltworks:express_loader",
+      "count": 1
+    }
+  ],
   "time": 200
 }

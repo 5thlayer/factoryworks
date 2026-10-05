@@ -22,9 +22,11 @@
       "count": 10
     }
   ],
-  "result": {
-    "id": "factoryworks:oil_refinery",
-    "count": 1
-  },
+  "results": [
+    {
+      "id": "factoryworks:oil_refinery",
+      "count": 1
+    }
+  ],
   "time": 160
 }
