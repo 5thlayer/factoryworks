@@ -13,7 +13,13 @@ textures to `textures/block/<machine>/`. Each model gets a base model whose stat
 
 The exported files are generated output, so `--check` regenerates them and compares byte for byte. It
 also refuses a `.bbmodel` whose format is not "5.0", that embeds a texture or a reference image, that
-names a path outside `data/art/models/`, or whose texture breaks 16 px per block.
+names a path outside `data/art/models/`, or whose cubes leave what a vanilla model can render.
+
+**Amended:** `--check` no longer refuses a texture above 16 px per block or a model with no status
+light. Both are ADR-0111's art rules, and art is checked by eye on delivery
+(`docs/testing/what-to-check.md`, "This looks or feels right"). Keeping the status light as a
+functional rule, since it is a machine's only state display, was considered and rejected: a refusal
+also blocks committing work-in-progress art.
 
 `.bbmodel` files are kept out of the packwiz upload, and `data/art/models/` is the Pack's own CC BY
 art in `REUSE.toml`.

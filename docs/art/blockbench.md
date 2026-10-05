@@ -30,8 +30,8 @@ image: whatever it saves ships (ADR-0103). Look at references in a separate view
 ## Units
 
 16 Blockbench units are one block, and one unit is one texture pixel. A face 4 units wide shows 4
-pixels of its texture: a texture squeezed onto a smaller face breaks the density, and the check
-refuses it. Cubes sit on whole units, and rotate only in 22.5° steps on one axis.
+pixels of its texture: a texture squeezed onto a smaller face breaks the density, which is checked
+by eye, not by the check (ADR-0112). Cubes sit on whole units, and rotate only in 22.5° steps on one axis.
 
 A model's front is its north face (−Z); the blockstate turns it to face the way it was placed.
 

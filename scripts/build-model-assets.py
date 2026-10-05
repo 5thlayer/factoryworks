@@ -16,13 +16,12 @@ Usage:
 
     scripts/build-model-assets.py            # writes the models and textures
     scripts/build-model-assets.py --check    # asserts they are current and every source obeys
-                                             # ADR-0111/0112; no writes
+                                             # ADR-0112; no writes
 """
 import argparse
 import json
 import pathlib
 import re
-import struct
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -65,20 +64,6 @@ def texture_link(png):
 
 def texture_destination(png):
     return ASSETS / "textures/block" / source_path(png)
-
-
-def frame_size(png):
-    """Pixels one frame of the PNG covers: the whole image, or one frame of an .mcmeta strip."""
-    with open(png, "rb") as handle:
-        header = handle.read(24)
-    if header[:8] != b"\x89PNG\r\n\x1a\n":
-        raise ValueError(f"{png} is not a PNG")
-    width, height = struct.unpack(">II", header[16:24])
-    mcmeta = png.with_name(png.name + ".mcmeta")
-    if mcmeta.is_file():
-        animation = json.loads(mcmeta.read_text(encoding="utf-8")).get("animation", {})
-        return animation.get("width", width), animation.get("height", width)
-    return width, height
 
 
 def turned_axes(cube):
@@ -171,7 +156,7 @@ class Source:
         if len(angles) > 1 or any(a % 22.5 or abs(a) > 45 for a in angles):
             self.refuse(f"{where} is rotated {cube['rotation']}; one axis in 22.5 degree steps")
 
-    def compile_face(self, face, cube, side, where):
+    def compile_face(self, face):
         out = {}
         if face.get("enabled", True) is not False:
             out["uv"] = [
@@ -184,24 +169,11 @@ class Source:
             out["texture"] = "#missing"
         else:
             out["texture"] = "#" + self.textures[index]["id"]
-            if self.pngs[index] and "uv" in out:
-                self.check_density(out["uv"], frame_size(self.pngs[index]), cube, side, face, where)
         if face.get("cullface"):
             out["cullface"] = face["cullface"]
         if isinstance(face.get("tint"), int) and face["tint"] >= 0:
             out["tintindex"] = face["tint"]
         return out
-
-    def check_density(self, uv, pixels, cube, side, face, where):
-        span = [abs(cube["to"][a] - cube["from"][a]) for a in FACE_AXES[side]]
-        if face.get("rotation") in (90, 270):
-            span.reverse()
-        shown = (abs(uv[2] - uv[0]) * pixels[0] / 16, abs(uv[3] - uv[1]) * pixels[1] / 16)
-        if shown[0] > span[0] or shown[1] > span[1]:
-            self.refuse(
-                f"{where} {side} shows {shown[0]:g}x{shown[1]:g} pixels on a "
-                f"{span[0]:g}x{span[1]:g} face, above 16 px per block"
-            )
 
     def compile_cube(self, cube):
         where = f"cube {cube.get('name')}"
@@ -226,7 +198,7 @@ class Source:
             if cube.get("rescale"):
                 element["rotation"]["rescale"] = True
         element["faces"] = {
-            side: self.compile_face(face, cube, side, where)
+            side: self.compile_face(face)
             for side, face in cube.get("faces", {}).items()
             if face.get("texture") is not None
         }
@@ -251,8 +223,6 @@ class Source:
             if isinstance(face.get("texture"), int) and face["texture"] < len(self.textures)
         }
         shown |= {i for i, texture in enumerate(self.textures) if texture.get("particle")}
-        if not any(self.textures[i].get("id") == STATUS_VARIABLE for i in shown):
-            self.refuse(f"has no status light: no face shows a texture whose Variable is {STATUS_VARIABLE}")
         if len(self.errors) > self.errors_before:
             return None
 

@@ -762,15 +762,13 @@ run refuses what the exporter cannot see:
 - an absolute path, a path outside `data/art/models/`, or a file or folder name the game cannot
   load, and a model not named after its folder;
 - a cube off the 1/16 grid, inflated, beyond -16..32, or rotated off one axis's 22.5° steps up to 45°;
-- a face showing more pixels than it has units, counted from the PNG itself, one frame of an
-  `.mcmeta` strip, with the face's rotation (ADR-0111);
-- a model with no status light;
 - a model path that exists but carries no `credit` naming this generator, so a hand-made model is
   never overwritten; a generated model whose `.bbmodel` is gone; and a stray file in a generated
   texture folder.
 
-The test exports the committed template as a machine, asserting the three status children name the
-kit's lamps, and breaks each rule once on a copy to prove the generator names it. The template is held
+ADR-0111's art rules, 16 px per block and a status light on every model, are checked by eye on
+delivery, not here. The test exports the committed template as a machine, asserting the three status
+children name the kit's lamps, and breaks each rule once on a copy to prove the generator names it. The template is held
 to the rules but never exported. A whole texture folder left by a deleted machine is not caught. Run it
 after editing a `.bbmodel`, anything under `data/art/models/`, or the generator.
 
