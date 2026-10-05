@@ -1,14 +1,16 @@
 {
   "jars": [
     "26.1.2.jar",
-    "beltworks-0.3.15.jar",
+    "beltworks-0.3.17.jar",
+    "craftworks-0.3.0.jar",
     "ftb-filter-system-neoforge-26.1.2.2.jar",
     "ftb-library-neoforge-26.1.2.7.jar",
     "ftb-quests-neoforge-26.1.2.7.jar",
+    "groundworks-0.5.4.jar",
     "oritech-2.0.0-exp6.jar",
     "pipeworks-0.1.2.jar",
     "researchd-1.2.5.jar",
-    "wireworks-0.2.1.jar"
+    "wireworks-0.2.2.jar"
   ],
   "items": [
     "beltworks:belt_tile",
@@ -27,6 +29,9 @@
     "beltworks:turbo_feeder",
     "beltworks:turbo_loader",
     "beltworks:turbo_splitter",
+    "craftworks:assembler_1",
+    "craftworks:assembler_2",
+    "craftworks:assembler_3",
     "ftbfiltersystem:smart_filter",
     "ftblibrary:icon_item",
     "ftbquests:barrier",
@@ -41,6 +46,8 @@
     "ftbquests:screen_7",
     "ftbquests:stage_barrier",
     "ftbquests:task_screen_configurator",
+    "groundworks:gametest_dismantles",
+    "groundworks:gametest_stretches_arrows",
     "minecraft:acacia_boat",
     "minecraft:acacia_button",
     "minecraft:acacia_chest_boat",
