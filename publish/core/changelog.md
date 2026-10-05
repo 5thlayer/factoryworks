@@ -1,5 +1,15 @@
 ## Unreleased
 
+- The game starts on the floor of a crashed ship at the centre of every hub, its cargo hold filled with the starting kit and debris scattered round it.
+- The Iron and Steel Chests, holding 36 and 54 stacks. No chest pairs into a double chest any more.
+- Iron, copper and steel plate, iron gear wheel, iron stick, copper cable, sulfur and raw uranium are FactoryWorks items.
+- Crude oil, water and steam run through Pipeworks pipes. A pipe joins the Pumpjack, Offshore Pump, Boiler and Steam Engine at their ports, and a pipe drag that would join two fluids is refused.
+- The Boiler is a 3x2 machine, placed and broken whole.
+- The Steam Engine burns 30 steam a second for 900 kW.
+- A mining drill is placed only where its area holds ore. Its front lights while it mines, and the arrow on its Drop Position shows through blocks.
+- Shift-click in a furnace sends fuel and ore to their own slots.
+- Electric poles, the Solar Panel and the Accumulator now come from Wireworks. A world made with 0.1.1 loses the ones it placed.
+
 ## 0.1.1
 
 - The Solar Panel, drawing Factorio's 60 kW through the day and nothing at night or under a roof.
