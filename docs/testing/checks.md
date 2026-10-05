@@ -928,8 +928,10 @@ Run it after editing `scripts/pack-check.sh`.
 metafile. An unlisted or unreachable one still pins and installs the jar, removes the older
 metafile and is reported pending. Plain `--check` passes on a pending row and `--check --strict`
 fails. A later plain sync fills the reference in, and a metafile that already names the pin is not
-queried again. It exists so the Pack can take and test a Library released to `~/.m2` before the
-jar is uploaded, without ever exporting an older CurseForge file than its pin. Run it after editing
+queried again. FactoryWorks Core's metafile follows `mod_version` the same way, and fails `--check`
+when it names an older Core or hashes another jar than `~/.m2`'s. It exists so the Pack can take and
+test a Library released to `~/.m2` before the jar is uploaded, without ever exporting an older
+CurseForge file than its pin, or an older Core than the last released. Run it after editing
 `scripts/sync-local-jars.py`.
 
 ## Client asset check

@@ -144,6 +144,8 @@ project id (Beltworks, Craftworks) also gets `mods/<mod>.pw.toml` naming that ve
 file, and the jar itself is not indexed, so an export references it rather than bundling it (#532).
 The pin never waits on CurseForge: while CurseForge does not list the file, the sync installs the jar,
 removes the row's metafile and prints `pending <mod> <version>`, and a later plain sync fills it in.
+FactoryWorks Core's `mods/factoryworks-core.pw.toml` follows `gradle.properties`' `mod_version`, the
+version `scripts/release.sh` last released, the same way.
 The build reads the same
 table and names no Library (#475, ADR-0090): every pinned jar, and every jar its row `nests`, is on
 the compile classpath and the dev runs, and each nested artifact's range is read from the jarjar
