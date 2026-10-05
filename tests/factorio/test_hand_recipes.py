@@ -1,62 +1,77 @@
 #!/usr/bin/env python3
-"""Assert each Personal Assembler hand copy matches its machine recipe (#291, ADR-0089).
+"""Assert the Personal Assembler's hand set is the recipes' own `hand_craftable` flag (ADR-0118).
 
-`scripts/build-hand-recipes.py` writes a `craftworks:assembling` copy of every `crafting` recipe
-under `recipe/assembling/` into `recipe/hand/`. Its `--check` proves the copies are what it would
-write. This check also compares each copy to its machine recipe independently, so a change to the
-generator can't pass by being consistent with itself. It also asserts that research unlocks reach
-the copies: Craftworks asks Researchd about the copy's id, and without `withHandCopies` in the DSL
-every hand recipe stays unlocked.
+Craftworks plans only a `craftworks:assembling` recipe whose `hand_craftable` is true, with no fluid
+and exactly one item result. The converter writes the flag for a first Factorio category of `crafting`,
+which excludes the eleven fluid-free recipes Factorio withholds from the hand. This check re-derives
+the set from the corpus rather than from the converter, so a change to the converter can't pass by
+being consistent with itself, and holds every emitted recipe, whichever script wrote it, to it.
+
+It also asserts the `factoryworks:hand/*` copies are gone for good: the generator, the id list and
+`withHandCopies` in the DSL, since Researchd now locks the recipe the Personal Assembler plans.
 
 Usage: tests/factorio/test_hand_recipes.py
 """
 import json
-import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-GENERATOR = ROOT / "scripts" / "build-hand-recipes.py"
-MACHINE = ROOT / "kubejs/data/factoryworks/recipe/assembling"
-HAND = ROOT / "kubejs/data/factoryworks/recipe/hand"
-DSL = ROOT / "kubejs/server_scripts/factorio_tech_dsl.js"
+RECIPES = ROOT / "kubejs/data/factoryworks/recipe"
+CORPUS = ROOT / "data/factorio/recipe.json"
+ASSEMBLING = "craftworks:assembling"
+HAND_CATEGORY = "crafting"
+
+GONE = (
+    ROOT / "scripts/build-hand-recipes.py",
+    ROOT / "kubejs/server_scripts/hand_recipes.js",
+    RECIPES / "hand",
+)
 
 
 def main():
     failures = []
-    generated = subprocess.run([sys.executable, str(GENERATOR), "--check"], capture_output=True, text=True)
-    if generated.returncode != 0:
-        failures.append(f"{GENERATOR.relative_to(ROOT)} --check: {(generated.stderr or generated.stdout).strip()}")
+    for path in GONE:
+        if path.exists():
+            failures.append(f"{path.relative_to(ROOT)} should be gone: the hand set is a flag on the machine recipe")
+    for script in (ROOT / "kubejs/server_scripts").glob("*.js"):
+        text = script.read_text(encoding="utf-8")
+        for stale in ("withHandCopies", "PF_HAND_RECIPES", "factoryworks:hand/"):
+            if stale in text:
+                failures.append(f"{script.name} still names {stale}")
 
-    hand_set = {p.relative_to(MACHINE).with_suffix("").as_posix(): json.loads(p.read_text(encoding="utf-8"))
-                for p in MACHINE.rglob("*.json")}
-    hand_set = {stem: r for stem, r in hand_set.items() if r.get("category") == "crafting"}
-    copies = {p.relative_to(HAND).with_suffix("").as_posix(): json.loads(p.read_text(encoding="utf-8"))
-              for p in HAND.rglob("*.json")}
+    emitted = {}
+    for path in sorted(RECIPES.rglob("*.json")):
+        recipe = json.loads(path.read_text(encoding="utf-8"))
+        if recipe.get("type") == ASSEMBLING:
+            emitted[path.relative_to(RECIPES).with_suffix("").as_posix()] = recipe
 
-    for stem in sorted(set(hand_set) - set(copies)):
-        failures.append(f"assembling/{stem} is category crafting and has no hand copy")
-    for stem in sorted(set(copies) - set(hand_set)):
-        failures.append(f"hand/{stem} copies no crafting recipe")
-    for stem in sorted(set(hand_set) & set(copies)):
-        machine, copy = hand_set[stem], copies[stem]
-        if copy.get("type") != "craftworks:assembling":
-            failures.append(f"hand/{stem} is {copy.get('type')}, not craftworks:assembling")
-        if copy.get("ingredients") != machine["ingredients"]:
-            failures.append(f"hand/{stem}'s ingredients differ from its machine recipe's")
-        if copy.get("results") != machine["results"]:
-            failures.append(f"hand/{stem}'s results {copy.get('results')} are not {machine['results']}")
-        if copy.get("time") != machine["time"]:
-            failures.append(f"hand/{stem} takes {copy.get('time')} ticks, its machine recipe {machine['time']}")
+    corpus = {row["name"].replace("-", "_"): row for row in json.loads(CORPUS.read_text(encoding="utf-8"))}
+    hand = 0
+    for stem, recipe in sorted(emitted.items()):
+        flag = recipe.get("hand_craftable", True)
+        if flag:
+            hand += 1
+            if recipe.get("fluid_ingredients") or recipe.get("fluid_results"):
+                failures.append(f"{stem} is hand-craftable and names a fluid, which the Personal Assembler cannot hold")
+            if len(recipe["results"]) != 1:
+                failures.append(f"{stem} is hand-craftable with {len(recipe['results'])} results, "
+                                "and the Personal Assembler plans one")
+        row = corpus.get(stem.removeprefix("assembling/"))
+        if row is not None and not stem.startswith(("assembling/stock/", "assembling/pack/")):
+            want = row["category"] == HAND_CATEGORY
+            if flag != want:
+                failures.append(f"{stem} has hand_craftable {flag}, but Factorio's first category "
+                                f"{row['category']!r} says {want}")
 
-    if "unlockRecipes(withHandCopies(" not in DSL.read_text(encoding="utf-8"):
-        failures.append(f"{DSL.name} does not pass unlocks through withHandCopies, so no research locks a hand recipe")
+    if not hand:
+        failures.append("no emitted recipe is hand-craftable, so the Personal Assembler plans nothing")
 
     for failure in failures:
         print(f"FAIL: {failure}")
     if failures:
         sys.exit(1)
-    print(f"ok: {len(copies)} hand copies match their machine recipes")
+    print(f"ok: {hand} of {len(emitted)} Assembling recipes are hand-craftable, as Factorio's categories say")
 
 
 if __name__ == "__main__":

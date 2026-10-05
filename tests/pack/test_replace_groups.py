@@ -22,7 +22,6 @@ BLOCKSTATES = ROOT / "kubejs/assets/factoryworks/blockstates"
 FAMILIES = (
     "stone-furnace", "steel-furnace", "electric-furnace",
     "small-electric-pole", "medium-electric-pole", "substation",
-    "assembling-machine-1", "assembling-machine-2", "assembling-machine-3",
 )
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Convert the extracted Factorio recipes into pack recipe JSON (ADR-0026, #87, #279).
 
-Reads five committed inputs and writes recipe JSON on the pack's own types. Nothing here decides anything:
+Reads five committed inputs and writes recipe JSON onto the types they route to. Nothing here decides anything:
 every judgement lives in one of the data files, so a decision is reviewed as a diff to a
 design document rather than as a diff to a script.
 
@@ -60,7 +60,7 @@ OUT_DIR = ROOT / "kubejs/data/factoryworks/recipe"
 # uppercase letter with an error that stops a world loading, so a README beside them is not
 # an option -- the documentation for that subtree lives here and in `docs/`.
 # Each is a path RELATIVE TO OUT_DIR, under the recipe type its files carry.
-FOREIGN_SUBTREES = ("assembling/pack", "assembling/stock", "smelting/stock", "hand")
+FOREIGN_SUBTREES = ("assembling/pack", "assembling/stock", "smelting/stock")
 
 
 def is_ours(path):
@@ -89,21 +89,19 @@ MACHINE_OF_PROCESS = {"pack:smelting": "smelting"}
 # cook time and get no tier scaling.
 PACK_SMELTING = "factoryworks:smelting"
 
-# Factorio's `crafting` / `advanced-crafting` / `crafting-with-fluid` all collapse to one
-# machine, and the Personal Assembler needs the distinction back: it is a filtered view of the
-# Assembling Machine's recipes, not a machine with a recipe type (#125's decision 6, CONTEXT.md).
-# So the source category rides on the emitted recipe as a field of the type's own codec -- not
-# as an item tag, and not by having the Personal Assembler read `data/factorio/recipe.json` at
-# runtime, which would make a regenerable build input into a shipped runtime asset.
 SOURCE_CATEGORY_KEY = "category"
 
-# The pack's assembling type (#279). GregTech's `gtceu:assembling` left with ADR-0060, and every
-# recipe on it was a file nothing read. Its codec is `AssemblingRecipe` in `factoryworks_core`.
-PACK_ASSEMBLING = "factoryworks:assembling"
+# Factorio's `crafting`, `advanced-crafting` and `crafting-with-fluid` are Craftworks' Assembling
+# recipes (ADR-0118). Chemistry and oil processing keep the pack's own types until their machines
+# move.
+CRAFTWORKS_ASSEMBLING = "craftworks:assembling"
 
-# The types registered on `AssemblingRecipe`'s record and codec, so one emitter shapes all three
-# (ADR-0096).
-ASSEMBLING_SHAPED = (PACK_ASSEMBLING, "factoryworks:chemistry", "factoryworks:oil_processing")
+# The types on `AssemblingRecipe`'s record and codec in `factoryworks_core` (ADR-0096).
+PACK_ASSEMBLING_SHAPED = ("factoryworks:chemistry", "factoryworks:oil_processing")
+
+# The Personal Assembler plans a recipe whose first Factorio category is `crafting`. The eleven
+# fluid-free recipes Factorio withholds from the hand all have another first category.
+HAND_CATEGORY = "crafting"
 
 
 def load(path):
@@ -171,15 +169,17 @@ def convert_smelting(recipe, items, override):
 
 
 def convert(recipe_type, recipe, items, override):
-    """One recipe on `AssemblingRecipe`'s shape (#279, ADR-0096).
+    """One recipe on `AssemblingRecipe`'s shape (#279, ADR-0096) or Craftworks' (ADR-0118).
 
-    The shape is `AssemblingRecipe`'s codec, which composes NeoForge's own codecs rather than
-    inventing any: an item ingredient is `SizedIngredient.NESTED_CODEC` (`ingredient` + `count`), a
-    fluid one `SizedFluidIngredient.CODEC` (`ingredient` + `amount`), an item result
+    Both compose NeoForge's own codecs rather than inventing any: an item ingredient is
+    `SizedIngredient.NESTED_CODEC` (`ingredient` + `count`), a fluid one
+    `SizedFluidIngredient.CODEC` (`ingredient` + `amount`), an item result
     `ItemStackTemplate.CODEC` (`id` + `count`) and a fluid result `FluidStackTemplate.CODEC` (`id` +
     `amount`). Every list is optional, so a recipe with no fluid writes no fluid key.
     """
     out = {"type": recipe_type, SOURCE_CATEGORY_KEY: recipe["category"]}
+    if recipe_type == CRAFTWORKS_ASSEMBLING:
+        out["hand_craftable"] = recipe["category"] == HAND_CATEGORY
     sides = {"ingredients": [], "fluid_ingredients": [], "results": [], "fluid_results": []}
     for entry in recipe["ingredients"]:
         row = items[entry["name"]]
@@ -333,7 +333,7 @@ def main():
         if recipe_type == PACK_SMELTING:
             emitted[name.replace("-", "_")] = convert_smelting(recipe, items, override)
         else:
-            if recipe_type not in ASSEMBLING_SHAPED:
+            if recipe_type != CRAFTWORKS_ASSEMBLING and recipe_type not in PACK_ASSEMBLING_SHAPED:
                 failures.append(f"{name}: recipe type {recipe_type} has no emitter -- "
                                 "category-map.json names a type this converter cannot shape")
                 continue

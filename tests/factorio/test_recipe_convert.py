@@ -45,8 +45,13 @@ PF_BLOCKS = MOD / "PFBlocks.java"
 PF_ITEMS = MOD / "PFItems.java"
 FURNACE_TIER = MOD / "smelting/FurnaceTier.java"
 RIG_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/rig/RigTier.java"
-ASSEMBLING_TIER = MOD / "machine/AssemblingTier.java"
 CHEST_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/chest/ChestTier.java"
+
+# Factorio's three assembling categories are Craftworks' Assembling recipes (ADR-0118).
+CRAFTWORKS_ASSEMBLING = "craftworks:assembling"
+
+# The Personal Assembler plans a recipe whose category is `crafting`.
+HAND_CATEGORY = "crafting"
 
 # The pack's own smelting type (#155). Its ingredient carries a count, which vanilla's cannot,
 # and it is the only type the three furnace tiers read.
@@ -67,6 +72,8 @@ NAMESPACES = {"minecraft", "factoryworks",
               "oritech",
               # Beltworks' belts, ADR-0060's logistics (#277).
               "beltworks",
+              # Craftworks' Assemblers and its recipe type (ADR-0118).
+              "craftworks",
               # Wireworks' electric poles, a Library carved out of the pack (#476).
               "wireworks",
               # Pipeworks' pipe and storage tank, the fluid Library (#557, ADR-0110).
@@ -82,7 +89,7 @@ def mod_registered_blocks():
     Reading only the startup scripts would now report four registered blocks as unregistered, and
     the natural "fix" for that is to weaken the check, which is the one thing it must not do.
 
-    The furnaces, the mining rigs and the Assembling Machines derive their ids from their tier enums, so they are
+    The furnaces and the mining rigs derive their ids from their tier enums, so they are
     read the same way rather than typed out: a fourth furnace or a third rung of the drill ladder is
     then registered here without this file being edited.
 
@@ -98,8 +105,6 @@ def mod_registered_blocks():
     rigs = re.findall(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]",
                       RIG_TIER.read_text(encoding="utf-8"), re.MULTILINE)
     blocks |= {f"{tier.lower()}_mining_drill" for tier in rigs}
-    blocks |= set(re.findall(r'^\s{4}[A-Z]+\("([a-z0-9_]+)"',
-                             ASSEMBLING_TIER.read_text(encoding="utf-8"), re.MULTILINE))
     blocks |= set(re.findall(r'^\s{4}[A-Z]+\("([a-z0-9_]+)"',
                              CHEST_TIER.read_text(encoding="utf-8"), re.MULTILINE))
     return {f"factoryworks:{name}" for name in blocks}
@@ -208,10 +213,14 @@ def check_overrides(overrides, corpus, failures):
             failures.append(f"override {name} names no recipe in the corpus")
 
 
+# Craftworks' Fill Recipe refuses a recipe with more distinct ingredients than its `AssemblerSlots.INPUTS`.
+CRAFTWORKS_ASSEMBLER_INPUTS = 5
+
+
 def input_slots():
-    """The most input slots any machine of each recipe type has, read from the spec the mod reads (#489)."""
+    """The most input slots any machine of each recipe type has: the chassis's from the spec the mod reads (#489), Craftworks' by its constant."""
     specs = json.loads((ROOT / "mod/src/main/resources/factoryworks_core/machine/specs.json").read_text())
-    slots = {}
+    slots = {CRAFTWORKS_ASSEMBLING: CRAFTWORKS_ASSEMBLER_INPUTS}
     for spec in specs.values():
         slots[spec["recipe_type"]] = max(slots.get(spec["recipe_type"], 0), spec["item_inputs"])
     return slots
@@ -220,8 +229,8 @@ def input_slots():
 def check_emitted(items, recipe_types, failures):
     """Every emitted recipe resolves through the item map and onto a recipe type that exists.
 
-    Two shapes reach this directory: `factoryworks:assembling` (#279) and the pack's furnace
-    type (#155).
+    Two shapes reach this directory: `AssemblingRecipe`'s, under Craftworks' type or the pack's
+    own (#279, ADR-0118), and the pack's furnace type (#155).
     """
     targets = {row["target"] for row in items.values() if "target" in row}
     # A `blocked_by` row is decided but its item is not registered yet -- it arrives with a
@@ -267,6 +276,14 @@ def check_emitted(items, recipe_types, failures):
             failures.append(f"{path.name} has time {recipe.get('time')!r}")
         if not recipe.get("category"):
             failures.append(f"{path.name} carries no Factorio category, so no hand set can read it")
+        if recipe.get("type") == CRAFTWORKS_ASSEMBLING:
+            # The Personal Assembler plans a hand-craftable recipe of one result and no fluid, so a
+            # flag that disagrees with the category either hides a hand recipe or plans a machine one.
+            if recipe.get("hand_craftable") != (recipe.get("category") == HAND_CATEGORY):
+                failures.append(f"{path.name} is category {recipe.get('category')!r} with hand_craftable "
+                                f"{recipe.get('hand_craftable')!r}")
+            if not recipe.get("results") and not recipe.get("fluid_results"):
+                failures.append(f"{path.name} makes nothing, which Craftworks refuses at load")
         # One ingredient per input slot, so one past the last could never be inserted (ADR-0074).
         slots = input_slots().get(recipe.get("type"), 0)
         if len(recipe.get("ingredients", [])) > slots:

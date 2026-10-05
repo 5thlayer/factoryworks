@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Re-author the admitted stock recipes as pack recipes on the Assembling Machine (#442, ADR-0034).
+"""Re-author the admitted stock recipes as Craftworks Assembling recipes (#442, ADR-0034, ADR-0118).
 
 Reads each recipe `data/pack/stock-admissions.json` admits out of the installed jar that ships it
 (a mod jar, or the client jar for vanilla) and writes it under
@@ -29,6 +29,11 @@ SUBSTITUTIONS = ROOT / "data/pack/stock-substitutions.json"
 # `factorio-recipe-convert.py` lists this subtree in FOREIGN_SUBTREES and leaves it alone.
 OUT_DIR = ROOT / "kubejs/data/factoryworks/recipe/assembling/stock"
 SMELT_DIR = ROOT / "kubejs/data/factoryworks/recipe/smelting/stock"
+
+CRAFTWORKS_ASSEMBLING = "craftworks:assembling"
+
+# The Personal Assembler plans a recipe whose category is `crafting`, as the corpus converter writes it.
+HAND_CATEGORY = "crafting"
 
 CATEGORY_OF_SOURCE = {
     "minecraft:crafting_shaped": "crafting",
@@ -109,8 +114,9 @@ def convert(recipes, admit, subs, problems):
         if stem in emitted:
             problems.append("two admitted recipes are both named %s" % stem)
         emitted[stem] = {
-            "type": "factoryworks:assembling",
+            "type": CRAFTWORKS_ASSEMBLING,
             "category": category,
+            "hand_craftable": category == HAND_CATEGORY,
             "ingredients": [{"ingredient": item, "count": count} for item, count in merged.items()],
             "results": [{"id": recipe["result"]["id"], "count": yields}],
             "time": admit[recipe_id]["time"],
@@ -137,8 +143,9 @@ def author(rows, keep, problems):
         stem = output.split(":", 1)[1]
         if row.get("on") == "assembling" and row.get("category"):
             emitted[(OUT_DIR, stem)] = {
-                "type": "factoryworks:assembling",
+                "type": CRAFTWORKS_ASSEMBLING,
                 "category": row["category"],
+                "hand_craftable": row["category"] == HAND_CATEGORY,
                 "ingredients": [{"ingredient": item, "count": n} for item, n in ingredients.items()],
                 "results": [{"id": output, "count": row["count"]}],
                 "time": row["time"],

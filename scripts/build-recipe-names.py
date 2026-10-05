@@ -27,7 +27,7 @@ REPO = Path(__file__).resolve().parent.parent
 CORPUS = REPO / "data/factorio/recipe.json"
 RECIPES = REPO / "kubejs/data/factoryworks/recipe"
 LANG = REPO / "kubejs/assets/factoryworks/lang/en_us.json"
-TYPES = ("assembling", "chemistry", "oil_processing")
+TYPES = ("chemistry", "oil_processing")
 PREFIX = "recipe.factoryworks."
 
 

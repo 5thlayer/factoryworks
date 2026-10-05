@@ -17,8 +17,8 @@ What fails quietly without it:
     #165 describes: nothing can be mined at all.
   - a recipe landing on a surface `recipe_survivors.js` does not name, so ADR-0034's sweep removes
     it on load with no error.
-  - dropping `category: crafting`, which is the entire definition of the Personal
-    Assembler's hand set (`scripts/build-hand-recipes.py`). The recipe survives, is craftable in a machine the
+  - dropping `category: crafting` or `hand_craftable`, which are the whole definition of the
+    Personal Assembler's hand set (ADR-0118). The recipe survives, is craftable in a machine the
     player cannot build yet, and rung 0 is a dead end.
   - a file under `kubejs/` whose name carries an uppercase letter. KubeJS validates every name it
     scans and rejects one outright -- `Invalid file name: Uppercase 'R' in
@@ -79,7 +79,7 @@ CONVERTER = ROOT / "scripts/factorio-recipe-convert.py"
 MODS = ROOT / "mods"
 NAMESPACE = "factoryworks"
 
-# The category the Personal Assembler's predicate keeps, and nothing else is hand-craftable.
+# The category a hand-craftable recipe carries, and nothing else is hand-craftable.
 HAND_CATEGORY = "crafting"
 
 # `IRON("engineers_iron_pick", 0.5f),`
@@ -124,7 +124,7 @@ def survivor_types():
 
 
 def items_of(recipe, side):
-    """`(item or #tag, count)` pairs off a `factoryworks:assembling` recipe (#279)."""
+    """`(item or #tag, count)` pairs off a `craftworks:assembling` recipe."""
     if side == "inputs":
         return [(entry["ingredient"], entry.get("count", 1))
                 for entry in recipe.get("ingredients", [])]
@@ -222,9 +222,9 @@ def main():
         check(recipe["type"] in types.values(),
               "%s is type %r, which recipe_survivors.js does not admit -- ADR-0034's sweep removes "
               "it on load with no error" % (where, recipe["type"]))
-        check(recipe.get("category") == HAND_CATEGORY,
-              "%s is not category %r, so the Personal Assembler will not plan it and rung 0 has no "
-              "route to a pick" % (where, HAND_CATEGORY))
+        check(recipe.get("category") == HAND_CATEGORY and recipe.get("hand_craftable") is True,
+              "%s is not category %r with `hand_craftable` true, so the Personal Assembler will not "
+              "plan it and rung 0 has no route to a pick" % (where, HAND_CATEGORY))
         outputs = items_of(recipe, "outputs")
         check(outputs == [("%s:%s" % (NAMESPACE, name), 1)],
               "%s outputs %s; a recipe under pack/ is named for the single item it makes"

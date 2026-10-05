@@ -1,6 +1,7 @@
 {
-  "type": "factoryworks:assembling",
+  "type": "craftworks:assembling",
   "category": "crafting",
+  "hand_craftable": true,
   "ingredients": [
     {
       "ingredient": "factoryworks:engineers_iron_pick",

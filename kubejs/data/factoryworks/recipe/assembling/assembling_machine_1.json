@@ -1,6 +1,7 @@
 {
-  "type": "factoryworks:assembling",
+  "type": "craftworks:assembling",
   "category": "crafting",
+  "hand_craftable": true,
   "ingredients": [
     {
       "ingredient": "factoryworks:electronic_circuit",
@@ -17,7 +18,7 @@
   ],
   "results": [
     {
-      "id": "factoryworks:assembling_machine",
+      "id": "craftworks:assembler_1",
       "count": 1
     }
   ],

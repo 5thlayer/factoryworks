@@ -13,9 +13,10 @@ stated exception, taken by ADR-0039: the corpus authors every recipe it contains
 mining-tool prototype, and so the two Engineer's Pick recipes cannot be extracted, converted or
 regenerated. They are written by hand, and without this file nothing checks them at all.
 
-Both recipes land on the `assembling` surface, which `recipe_survivors.js` already names, and both
-carry `category: crafting`, which is what makes them hand-craftable in the Personal
-Assembler at rung 0 with no machine built yet.
+Both recipes land on the `assembling` surface, which `recipe_survivors.js` already names, as
+`craftworks:assembling` recipes, and both carry `category: crafting` and `hand_craftable: true`,
+which is what makes them hand-craftable in the Personal Assembler at rung 0 with no machine built
+yet.
 
 `duration: 10` on both is the corpus's own convention rather than a new decision: the converter
 writes `energy x 20`, and Factorio's cheapest crafting rows — `wooden-chest` and
@@ -35,7 +36,7 @@ otherwise sit next to them.
 | --- | --- |
 | Both converters and `test_recipe_convert.py` still list `pack` as foreign | A converter run wipes the subtree. The sweep leaves no stock pickaxe behind it, so the pack returns to #165's opening state: nothing can be mined at all. |
 | Each recipe's type is one `recipe_survivors.js` admits | ADR-0034's sweep removes it on load, with no error and no log line. |
-| Each carries `category: crafting` | `scripts/build-hand-recipes.py` copies exactly those onto the Personal Assembler's type, so the recipe survives but the Personal Assembler will not plan it — and rung 0 has no machine to craft it in either. |
+| Each carries `category: crafting` and `hand_craftable: true` | Craftworks' Personal Assembler plans only a hand-craftable recipe, so the recipe survives but is never planned — and rung 0 has no machine to craft it in either. |
 | The subtree is exactly the registered tiers | The exception is narrow on purpose. A third file here is a decision ADR-0039 did not make. |
 | The steel recipe consumes the iron pick | ADR-0039 states it in one line, and nothing else in the repo would notice both tiers being holdable at once. |
 | Each tier has a model, texture and lang key | The missing-texture checkerboard and a raw translation key. Neither is an error. The texture is resolved per namespace — ours against the file, a mod's against the jar the pack ships, vanilla's against nothing — because the pack borrows art elsewhere and the next `layer0` here may not be vanilla's. Both picks wear vanilla's today (#323). |

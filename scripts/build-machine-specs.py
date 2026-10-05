@@ -2,7 +2,7 @@
 """Emit the per-machine spec the crafting chassis reads (#489, ADR-0096).
 
 Writes one row per Factorio machine whose recipes the pack emits on `AssemblingRecipe`'s shape --
-the three Assembling Machines, the Chemical Plant and the Oil Refinery -- to
+the Chemical Plant and the Oil Refinery -- to
 `mod/src/main/resources/factoryworks_core/machine/specs.json`, which `MachineSpecs` reads, and
 the Overload Limit's constants from `data/factorio/overload.json` beside it, which `OverloadLimit`
 reads (#517).
@@ -13,7 +13,7 @@ the machine's first category to.
 
 Slot and tank counts follow the recipes, not the entity (ADR-0096): each is the most any emitted
 recipe of the machine's type and categories needs. The Chemical Plant's second output box is one no
-recipe fills, and Assembling Machine 2's output box likewise. A machine whose recipes need more
+recipe fills. A machine whose recipes need more
 tanks than the entity has boxes is a hard failure.
 
 Usage:
@@ -35,7 +35,7 @@ OVERLOAD_CORPUS = ROOT / "data" / "factorio" / "overload.json"
 OVERLOAD = RESOURCE.parent / "overload.json"
 
 # The types that share AssemblingRecipe's record, and so the chassis (ADR-0096).
-CHASSIS_TYPES = ("factoryworks:assembling", "factoryworks:chemistry", "factoryworks:oil_processing")
+CHASSIS_TYPES = ("factoryworks:chemistry", "factoryworks:oil_processing")
 
 
 def recipe_type(row, category_map):

@@ -1,6 +1,7 @@
 {
-  "type": "factoryworks:assembling",
+  "type": "craftworks:assembling",
   "category": "crafting-with-fluid",
+  "hand_craftable": false,
   "ingredients": [
     {
       "ingredient": "minecraft:stone_bricks",

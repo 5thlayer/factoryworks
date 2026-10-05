@@ -2,14 +2,14 @@
 """Assert the re-authored stock recipes resolve and keep the hand graph a plan (#442, ADR-0034).
 
 `scripts/stock-recipe-convert.py` re-authors each stock recipe `data/pack/stock-admissions.json`
-admits as a `factoryworks:assembling` recipe, swapping its ingredients through
+admits as a `craftworks:assembling` recipe, swapping its ingredients through
 `data/pack/stock-substitutions.json`. What it asserts:
 
   - the generator's `--check` passes: the emitted files are what the line writes today
   - every ingredient of a re-authored recipe is made by another emitted pack recipe, or is a
     `keep` row, which records the block that drops it
   - every output is an item an installed jar defines
-  - no re-authored recipe has more item ingredients than the Assembling Machine has input slots
+  - no re-authored recipe has more item ingredients than an Assembler has input slots
   - the wooden stairs are one recipe per species Terra's biomes grow, each from its own logs
     (#444), with the species read out of Terra's biome files
   - each `author` row is emitted on the machine it names: sand on the Assembling Machine, glass
@@ -30,6 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import test_pack_recipes  # noqa: E402
+import test_recipe_convert  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
@@ -40,8 +41,7 @@ GENERATOR = ROOT / "scripts/stock-recipe-convert.py"
 MODS = ROOT / "mods"
 CLIENT_JAR = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
     os.environ.get("CURSEFORGE_ROOT", "~/curseforge") + "/Install/versions/26.1.2/26.1.2.jar")))
-MACHINE_SPECS = ROOT / "mod/src/main/resources/factoryworks_core/machine/specs.json"
-HAND = "crafting"
+ASSEMBLING = "craftworks:assembling"
 
 failures = []
 
@@ -104,15 +104,15 @@ def check_stock(recipes, keep):
     for output, row in sorted(authored.items()):
         name = "%s/stock/%s" % (row["on"], output.split(":", 1)[1])
         check(name in stock and outputs_of(stock[name]) == [output]
-              and stock[name]["type"] == "factoryworks:" + row["on"],
+              and stock[name]["type"] == (ASSEMBLING if row["on"] == "assembling" else "factoryworks:smelting"),
               "`author` row %s is not emitted as %s" % (output, name))
 
     made = {item for name, r in recipes.items() if name not in stock for item in outputs_of(r)}
     defined = defined_items()
-    slots = json.loads(MACHINE_SPECS.read_text())["assembling-machine-1"]["item_inputs"]
+    slots = test_recipe_convert.CRAFTWORKS_ASSEMBLER_INPUTS
     for name, recipe in sorted(stock.items()):
         check(len(ingredients_of(recipe)) <= slots,
-              "%s has %d item ingredients and the Assembling Machine has %d input slots (ADR-0074)"
+              "%s has %d item ingredients and an Assembler has %d input slots"
               % (name, len(ingredients_of(recipe)), slots))
         for ingredient in ingredients_of(recipe):
             check(ingredient in made or ingredient in keep,
@@ -156,11 +156,15 @@ def check_no_walls(recipes):
                       % (name, output))
 
 
+def is_hand(recipe):
+    return recipe.get("type") == ASSEMBLING and recipe.get("hand_craftable", True)
+
+
 def check_hand_graph(recipes):
     """No hand route that needs its own output."""
     makers = {}
     for name, recipe in recipes.items():
-        if recipe.get("category") != HAND:
+        if not is_hand(recipe):
             continue
         for output in outputs_of(recipe):
             makers.setdefault(output, []).append(name)
@@ -203,7 +207,7 @@ def main():
         return 1
     stock = sum(1 for name in recipes if name.startswith("assembling/stock/"))
     print("ok: %d re-authored stock recipe(s) resolve; %d hand recipe(s) in the union and no cycle" % (stock, sum(1 for r in recipes.values()
-                                                 if r.get("category") == HAND)))
+                                                 if is_hand(r))))
     return 0
 
 

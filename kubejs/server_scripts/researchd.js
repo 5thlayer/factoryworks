@@ -123,7 +123,7 @@ fromFactorio('steel-processing', {
 
 // `long-handed-inserter` has no recipe: the feeder's reach does its job (ADR-0100).
 fromFactorio('automation', {
-  icon: 'factoryworks:assembling_machine',
+  icon: 'craftworks:assembler_1',
   unlocks: ['factoryworks:assembling/assembling_machine_1']
 });
 
@@ -135,7 +135,7 @@ fromFactorio('logistic-science-pack', {
 // --- Rung 2 -------------------------------------------------------------------------------------
 
 fromFactorio('automation-2', {
-  icon: 'factoryworks:assembling_machine_2',
+  icon: 'craftworks:assembler_2',
   unlocks: ['factoryworks:assembling/assembling_machine_2']
 });
 

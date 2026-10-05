@@ -32,8 +32,8 @@
 var RECIPE_SURVIVORS = [
   {
     surface: 'assembling',
-    type: 'factoryworks:assembling',
-    why: "ADR-0026's Assembling Machine 1/2/3, one recipe type across Factorio's three assembling categories. ADR-0031: the corpus authors every recipe it contains, and the converter emits them onto the pack's own type since GregTech's left with ADR-0060 (#279)."
+    type: 'craftworks:assembling',
+    why: "ADR-0118: Craftworks' Assemblers and Personal Assembler read Factorio's three assembling categories on Craftworks' type. The sweep keeps only the pack's own ids on it, so Craftworks' built-in recipes are removed. ADR-0031: the corpus authors every recipe it contains."
   },
   {
     surface: 'chemical_plant',
@@ -44,11 +44,6 @@ var RECIPE_SURVIVORS = [
     surface: 'oil_refinery',
     type: 'factoryworks:oil_processing',
     why: "ADR-0096's Oil Refinery, on a type of its own sharing the assembling shape so it has its own EMI tab. ADR-0031: the corpus authors every recipe on it (#488)."
-  },
-  {
-    surface: 'personal_assembler',
-    type: 'craftworks:assembling',
-    why: "ADR-0089: Craftworks' Personal Assembler plans only with its own type, so each `crafting` recipe of the assembling surface has a copy here under `hand/`, written by scripts/build-hand-recipes.py."
   },
   {
     surface: 'smelting',

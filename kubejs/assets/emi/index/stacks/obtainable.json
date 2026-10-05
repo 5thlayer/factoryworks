@@ -43,13 +43,13 @@
       "stack": "item:beltworks:turbo_feeder"
     },
     {
+      "stack": "item:craftworks:assembler_1"
+    },
+    {
+      "stack": "item:craftworks:assembler_2"
+    },
+    {
       "stack": "item:factoryworks:advanced_circuit"
-    },
-    {
-      "stack": "item:factoryworks:assembling_machine"
-    },
-    {
-      "stack": "item:factoryworks:assembling_machine_2"
     },
     {
       "stack": "item:factoryworks:barrel"

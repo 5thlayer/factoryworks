@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 RECIPES = ROOT / "kubejs/data/factoryworks/recipe"
 LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
 CORPUS = ROOT / "data/factorio/recipe.json"
-TYPES = ("assembling", "chemistry", "oil_processing")
+TYPES = ("chemistry", "oil_processing")
 PREFIX = "recipe.factoryworks."
 
 

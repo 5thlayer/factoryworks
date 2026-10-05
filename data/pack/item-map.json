@@ -67,21 +67,21 @@
     },
     "assembling-machine-1": {
       "kind": "item",
-      "target": "factoryworks:assembling_machine",
-      "source": "authored",
-      "note": "A `factoryworks_core` subclass of Oritech's machine holding a player-set recipe (ADR-0060, ADR-0071), decided by #277. The block is registered by #326, which unblocks the row; it reads `factoryworks:assembling` rather than Oritech's assembler type (ADR-0063)."
+      "target": "craftworks:assembler_1",
+      "source": "borrowed",
+      "note": "Craftworks' Assembler tier 1, a 3x3 two blocks tall that holds a Held recipe and takes Factorio's `crafting` and `advanced-crafting` categories (ADR-0118). The converter emits Factorio's recipe for it onto `craftworks:assembling`."
     },
     "assembling-machine-2": {
       "kind": "item",
-      "target": "factoryworks:assembling_machine_2",
-      "source": "authored",
-      "note": "Tier 2 of the `factoryworks_core` Assembling Machine: a block of its own at Factorio's speed and draw, with a fluid input (ADR-0075, #295)."
+      "target": "craftworks:assembler_2",
+      "source": "borrowed",
+      "note": "Craftworks' Assembler tier 2, which also takes `crafting-with-fluid` once Craftworks has Fluid Connections (#580). See `assembling-machine-1`."
     },
     "assembling-machine-3": {
       "kind": "item",
-      "target": "factoryworks:assembling_machine_3",
-      "source": "authored",
-      "note": "Tier 3 of the `factoryworks_core` Assembling Machine (ADR-0075, #295). Registered; its recipe takes `speed-module`, undecided on #120, so the converter records it as a skip."
+      "target": "craftworks:assembler_3",
+      "source": "borrowed",
+      "note": "Craftworks' Assembler tier 3. Its recipe takes `speed-module`, undecided on #120, so the converter records it as a skip."
     },
     "asteroid-collector": {
       "status": "undecided",

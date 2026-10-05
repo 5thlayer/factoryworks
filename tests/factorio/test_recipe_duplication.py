@@ -95,10 +95,7 @@ def main():
     for path in sorted(EMITTED.rglob("*.json")):
         recipe = json.loads(path.read_text())
         where = path.relative_to(EMITTED).as_posix()
-        # A hand copy is its assembling recipe under Craftworks' type, not a second route (ADR-0089, #559).
-        if where.startswith("hand/"):
-            continue
-        hand = recipe.get("category") == "crafting"
+        hand = recipe.get("type") == "craftworks:assembling" and recipe.get("hand_craftable", True)
         for item in outputs_of(recipe):
             routes[item].append((where, hand))
 
@@ -119,7 +116,7 @@ def main():
         check(len(hands) <= 1,
               "`%s` has %d hand recipes (%s). The Personal Assembler's resolver picks a route "
               "with no cost model, so it cannot choose between them -- at most one route per "
-              "item may carry `category: crafting`"
+              "item may be `hand_craftable`"
               % (item, len(hands), ", ".join(hands)))
 
     for item, why in sorted(MULTI_ROUTE.items()):
