@@ -15,6 +15,7 @@ path = [
     "*.gradle",
     "gradle.properties",
     "mise.toml",
+    "player.env",
     ".gitignore",
     ".packwizignore",
     ".github/**",
