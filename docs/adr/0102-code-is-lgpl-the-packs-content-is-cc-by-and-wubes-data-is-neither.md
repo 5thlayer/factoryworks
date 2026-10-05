@@ -25,8 +25,10 @@ ADR-0103's.
   generators and the recipes, tables and resources they emit are the Pack's work and are licensed
   by their kind. `data/factorio/README.md` states this.
 - **Everything else keeps its own licence.** The Electric Furnace art is CC BY-NC-SA 4.0, the ore
-  art CC BY 4.0, Konkrete's translations Apache-2.0, the vendored skills under `.agents/` MIT and
-  the Gradle wrapper Apache-2.0. The store art's backdrop includes Minecraft's textures, which stay
+  art CC BY 4.0, Konkrete's translations Apache-2.0, the vendored skills under `.agents/` MIT,
+  Core's release tooling (`scripts/release.sh`, `scripts/upload.py` and its tests,
+  `publish/upload.env`) MIT as the 5thlayer/libworks template it is copied from, and the Gradle
+  wrapper Apache-2.0. The store art's backdrop includes Minecraft's textures, which stay
   Mojang's.
 - **The map is `REUSE.toml` and `LICENSES/`,** laid out as Beltworks has them, checked by
   `reuse lint` in CI and by `tests/pack/test_licensing.py`, which implements the same rule for a

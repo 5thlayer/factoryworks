@@ -9,13 +9,15 @@
 # It stops after the tag and prints the upload command, since an upload is public and for good and
 # waits on the user's word; --upload uploads too. Flags may come in any position.
 #
-# It commits and tags but pushes nothing. $MAVEN_REPO_LOCAL publishes somewhere other than
-# ~/.m2/repository, to try the script out, and then the upload is only a dry run.
+# It commits and tags but pushes nothing to git.
+# $MAVEN_REPO_LOCAL publishes somewhere other than ~/.m2/repository, to try the script out, and
+# then the upload is only a dry run.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 fail() { echo "release: $*" >&2; exit 1; }
 
+# Core's names come from gradle.properties, as the build's do.
 property() { sed -n "s/^$1 *= *//p" gradle.properties; }
 name="$(property mod_name)"
 group="$(property maven_group)"
@@ -42,32 +44,36 @@ published="$repo/${group//.//}/$artifact/$version"
 ! git rev-parse -q --verify "refs/tags/$tag" > /dev/null || fail "$tag already exists."
 [[ ! -e "$published" ]] || fail "$version is already in $published, and a published version never changes."
 
+# The entries between "## Unreleased" and the next heading are what this release ships.
 entries="$(awk '/^## /{on = ($0 == "## Unreleased"); next} on && NF' "$changelog")"
 [[ -n "$entries" ]] || fail "$changelog has nothing under \"## Unreleased\"; a release ships what it lists."
 
+# Until the commit, a failure puts both files back, so a failed release leaves nothing behind.
 trap 'git checkout -- gradle.properties "$changelog"' EXIT
 sed -i.bak "s/^mod_version *=.*/mod_version=$version/" gradle.properties && rm gradle.properties.bak
 awk -v v="$version" '{print} $0 == "## Unreleased" {print ""; print "## " v}' "$changelog" > "$changelog.new"
 mv "$changelog.new" "$changelog"
 
-./gradlew :factoryworks_core:build
+sh ./gradlew :factoryworks_core:build
 git commit -q -m "chore: release $name $version" -- gradle.properties "$changelog"
 trap - EXIT
 
-./gradlew "-Dmaven.repo.local=$repo" :factoryworks_core:publishToMavenLocal
+sh ./gradlew "-Dmaven.repo.local=$repo" :factoryworks_core:publishToMavenLocal
 sha="$(shasum -a 256 "$published/$artifact-$version.jar" | cut -d' ' -f1)"
 git tag -a "$tag" -m "$name $version" -m "jar sha256 $sha"
 
 echo "Published $published"
 echo "jar sha256 $sha"
 
-# Last, so a failed upload leaves the local release and its tag as they are, to retry on its own.
+# Last, so a failed upload leaves the local release and its tag as they are, to retry on their own.
+# A trial against another maven repository only shows what it would upload.
 upload=(scripts/upload.py)
 [[ -z "${MAVEN_REPO_LOCAL:-}" ]] || upload+=(--dry-run)
 if [[ -z "$upload_now" ]]; then
     echo "Upload with: scripts/upload.py $version"
 elif ! "${upload[@]}" "$version"; then
-    echo "release: $version is released and tagged, but the upload failed; retry it with" >&2
-    echo "release:   scripts/upload.py --site <site> $version, for each site named above" >&2
+    echo "release: $version is released and tagged, but an upload failed; retry it with" >&2
+    echo "release:   scripts/upload.py --site <site> $version" >&2
+    echo "release: for each site named above." >&2
 fi
 echo "Push with: git push origin HEAD $tag"

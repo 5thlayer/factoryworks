@@ -53,8 +53,9 @@ When you edit code, trim the comments you touch to this rule. Leave comments els
 run if any `test_*.py` produced no tests (#171). A single script runs directly too:
 `uv run tests/pack/test_rig_assets.py`.
 
-Three checks are in no batch and this command does not reach them: the GameTest harness,
-`scripts/check-datapack-load.py` and `scripts/check-client-assets.py`.
+Four checks are in no batch and this command does not reach them: the GameTest harness,
+`scripts/check-datapack-load.py`, `scripts/check-client-assets.py` and the upload check,
+`python3 -m unittest discover scripts/tests`.
 
 ### GameTest harness
 
@@ -101,6 +102,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | `scripts/factorio-enemy-extract.py` | `tests/factorio/test_enemy_extract.py` |
 | an item model | `tests/pack/test_data_formats.py` |
 | `scripts/pack-check.sh` | `tests/pack/test_pack_check.py` |
+| `scripts/upload.py`, `scripts/release.sh` | `python3 -m unittest discover scripts/tests` |
 | `scripts/sync-local-jars.py` | `tests/pack/test_sync_curseforge.py`, `tests/pack/test_local_jars.py` |
 | a `.bbmodel`, `data/art/models/`, `build-model-assets.py` | `tests/pack/test_model_assets.py` |
 | any model, blockstate, texture, definition | `scripts/check-client-assets.py`  |

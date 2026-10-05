@@ -1126,3 +1126,13 @@ research ends up with in `researchd.js`, which is its `name:` override or else t
 scanner that stops matching cannot pass by finding nothing. Run it after adding a lang entry, a
 display name, a quest or a research.
 
+## Upload check
+
+`python3 -m unittest discover scripts/tests` drives `scripts/upload.py` as a release does, a
+version, the environment and a maven repository holding Core's jar, against a stand-in server on
+localhost (`scripts/tests/standin.py`), and checks only what reaches it and the exit status: the jar
+byte for byte, the changelog section, the release type and `upload_release_type`, Core's projects and
+required dependencies, a missing token filled through `op run` and never printed, each site on its
+own, and a version a site already has refused. Both scripts and the tests are copies of
+5thlayer/libworks' template, kept level with it by skillworks' `template-drift`; a fix lands in the
+template too. Run it after editing either script; it is in no batch.

@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
-# Upload FactoryWorks Core's released <version> to CurseForge and Modrinth (ADR-0101): the jar the local maven
-# repository holds for it, with that version's section of publish/core/changelog.md as its notes.
+# Upload FactoryWorks Core's released <version> to Modrinth and CurseForge (ADR-0101): the jar the local
+# maven repository holds for it, with that version's section of publish/core/changelog.md as its notes.
 #
-#   scripts/upload.py [--dry-run] [--site curseforge|modrinth] <version>
+#   scripts/upload.py [--dry-run] [--site modrinth|curseforge] <version>
 #
-# Each site is uploaded on its own, and --site retries one. $CURSEFORGE_TOKEN (an upload API token)
-# and $MODRINTH_TOKEN are never printed. When one is missing, the script runs
-# itself again through `op run --env-file=publish/upload.env`. $CURSEFORGE_PROJECT_ID and
-# $MODRINTH_PROJECT_ID override the projects. $MAVEN_REPO_LOCAL reads somewhere other than ~/.m2/repository, and $CURSEFORGE_UPLOAD_URL
-# $CURSEFORGE_API_URL and $MODRINTH_API_URL send somewhere other than the sites. --dry-run contacts nothing.
+# Each site is uploaded on its own: a failure on one leaves the other, and --site retries just one.
+# Each site's token comes from the environment, and is never printed. When one is missing, the script
+# runs itself again through `op run --env-file=publish/upload.env`, which fills in the tokens that
+# file names in 1Password, for that run only. Core's projects and required dependencies are
+# PROJECTS and DEPENDENCIES below, and the environment can override the projects:
+#   Modrinth    $MODRINTH_TOKEN, $MODRINTH_PROJECT_ID
+#   CurseForge  $CURSEFORGE_TOKEN (an upload API token), $CURSEFORGE_PROJECT_ID
+# upload_release_type in gradle.properties sends every version as release, beta or alpha; left empty,
+# a version below 1.0 is a beta and one from 1.0 a release.
+# $MAVEN_REPO_LOCAL reads somewhere other than ~/.m2/repository, and $MODRINTH_API_URL,
+# $CURSEFORGE_UPLOAD_URL and $CURSEFORGE_API_URL send somewhere other than the sites, to try the
+# script out. --dry-run prints the requests it would make and contacts nothing.
 import io
 import json
 import os
@@ -23,23 +30,27 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CHANGELOG = ROOT / "publish/core/changelog.md"
-CURSEFORGE_PROJECT = "1718187"
-MODRINTH_PROJECT = "7wb8sJtC"
+CHANGELOG = "publish/core/changelog.md"
+PROJECTS = {"modrinth": "7wb8sJtC", "curseforge": "1718187"}
+# The required dependencies neoforge.mods.toml names; Groundworks arrives nested in Beltworks.
+DEPENDENCIES = {"modrinth": ["4sYI62kA", "p4zxipln"], "curseforge": ["oritech", "beltworks"]}
 MODRINTH_API = "https://api.modrinth.com/v2"
 CURSEFORGE_UPLOAD = "https://minecraft.curseforge.com"
 # The upload API can't list a project's files, so the website's own listing, which needs no key, does.
 CURSEFORGE_API = "https://www.curseforge.com"
 # What the jar task bundles for LGPL and CC BY (ADR-0102).
 LICENSING = ["LICENSE", "NOTICE", "LICENSES/LGPL-3.0-only.txt", "LICENSES/CC-BY-4.0.txt"]
-# The required dependencies neoforge.mods.toml names; Groundworks arrives nested in Beltworks.
-REQUIRED = ["oritech", "beltworks"]
-MODRINTH_REQUIRED = ["4sYI62kA", "p4zxipln"]
-SECRET_HEADERS = {"X-Api-Token", "Authorization"}
+SECRET_HEADERS = {"Authorization", "X-Api-Token"}
+# What upload_release_type may name; both sites call the three types alike.
+RELEASE_TYPES = ["release", "beta", "alpha"]
 
 
 class Refused(Exception):
     pass
+
+
+class Published(Refused):
+    """The site already has the version, so there is nothing to retry."""
 
 
 def fail(message):
@@ -48,19 +59,34 @@ def fail(message):
 
 def properties():
     text = (ROOT / "gradle.properties").read_text()
-    return dict(re.findall(r"^(\w+) *= *(.*?)\s*$", text, re.MULTILINE))
+    return dict(re.findall(r"^(\w+)[ \t]*=[ \t]*(.*?)[ \t]*$", text, re.MULTILINE))
+
+
+def project_of(site):
+    """The site's project: the environment's, else Core's."""
+    return os.environ.get(f"{site.upper()}_PROJECT_ID") or PROJECTS[site]
+
+
+def release_type(version, props):
+    """upload_release_type's type for every version, else beta below 1.0 and release from it."""
+    chosen = props.get("upload_release_type", "")
+    if chosen and chosen not in RELEASE_TYPES:
+        fail(f"gradle.properties sets upload_release_type = {chosen}; it is empty or one of "
+             f"{', '.join(RELEASE_TYPES)}.")
+    return chosen or ("beta" if version.startswith("0.") else "release")
 
 
 def changelog(version):
+    """The entries between "## <version>" and the next heading, as release.sh reads Unreleased."""
     lines, on, found = [], False, False
-    for line in CHANGELOG.read_text().splitlines():
+    for line in (ROOT / CHANGELOG).read_text().splitlines():
         if line.startswith("## "):
             on = line == f"## {version}"
             found = found or on
         elif on and line.strip():
             lines.append(line)
     if not found or not lines:
-        fail(f"{CHANGELOG.name} has no entries under \"## {version}\"; the notes are that section.")
+        fail(f"{CHANGELOG} has no entries under \"## {version}\"; the notes are that section.")
     return "\n".join(lines)
 
 
@@ -71,6 +97,7 @@ def lacking_licensing(data):
 
 
 def multipart(fields):
+    """A multipart/form-data body from (name, filename or None, content type, bytes) fields."""
     boundary = uuid.uuid4().hex
     body = io.BytesIO()
     for name, filename, content_type, content in fields:
@@ -102,16 +129,17 @@ def show(method, url, headers, **fields):
         print(f"  {name}: {value}")
 
 
-class Published(Refused):
-    pass
-
-
-TOKENS = {"curseforge": "CURSEFORGE_TOKEN", "modrinth": "MODRINTH_TOKEN"}
+def token(name):
+    if not os.environ.get(name):
+        raise Refused(f"${name} is not set, and publish/upload.env didn't fill it in through op run.")
+    return os.environ[name]
 
 
 def through_op(args, sites):
+    """Runs the script again under `op run` when a token it needs is missing, once."""
+    needed = {"modrinth": "MODRINTH_TOKEN", "curseforge": "CURSEFORGE_TOKEN"}
     env_file = ROOT / "publish/upload.env"
-    if (all(os.environ.get(TOKENS[site]) for site in sites) or os.environ.get("UPLOAD_THROUGH_OP")
+    if (all(os.environ.get(needed[site]) for site in sites) or os.environ.get("UPLOAD_THROUGH_OP")
             or not env_file.is_file() or not shutil.which("op")):
         return
     os.environ["UPLOAD_THROUGH_OP"] = "1"
@@ -125,9 +153,9 @@ class Release:
         props = properties()
         self.name = f"{props['mod_name']} {version}"
         self.minecraft = props["minecraft_version"]
-        self.release_type = "beta" if version.startswith("0.") else "release"
+        self.release_type = release_type(version, props)
+        self.agent = f"5thlayer/{props['mod_id']}/{version}"
         artifact = props["mod_id"]
-        self.agent = f"5thlayer/{artifact}/{version}"
         repo = Path(os.environ.get("MAVEN_REPO_LOCAL") or Path.home() / ".m2/repository")
         self.jar = repo / props["maven_group"].replace(".", "/") / artifact / version / f"{artifact}-{version}.jar"
         if not self.jar.is_file():
@@ -138,18 +166,22 @@ class Release:
             fail(f"{self.jar.name} lacks its licensing: {', '.join(missing)}")
         self.notes = changelog(version)
 
+    def file_part(self):
+        return "file", self.jar.name, "application/java-archive", self.data
+
     def described(self):
         return f"{self.jar.name} ({len(self.data)} bytes) from {self.jar}"
 
     def modrinth(self):
-        project = os.environ.get("MODRINTH_PROJECT_ID") or MODRINTH_PROJECT
+        secret = token("MODRINTH_TOKEN")
+        project = project_of("modrinth")
         api = os.environ.get("MODRINTH_API_URL", MODRINTH_API).rstrip("/")
-        secret = os.environ.get("MODRINTH_TOKEN", "")
         metadata = {
             "name": self.name,
             "version_number": self.version,
             "changelog": self.notes,
-            "dependencies": [{"project_id": p, "dependency_type": "required"} for p in MODRINTH_REQUIRED],
+            "dependencies": [{"project_id": d, "dependency_type": "required"}
+                             for d in DEPENDENCIES["modrinth"]],
             "game_versions": [self.minecraft],
             "version_type": self.release_type,
             "loaders": ["neoforge"],
@@ -164,20 +196,19 @@ class Release:
             show("GET", listing, headers)
             show("POST", f"{api}/version", headers, data=json.dumps(metadata, indent=2), file=self.described())
             return
-        if not secret:
-            raise Refused("$MODRINTH_TOKEN is not set, and publish/upload.env didn't fill it in through op run.")
+        # A published version is final on Modrinth too: it is never replaced.
         if any(v.get("version_number") == self.version for v in send("GET", listing, headers)):
             raise Published(f"Modrinth already has {self.version} in {project}, and a published version never changes.")
         content_type, body = multipart([("data", None, "application/json", json.dumps(metadata).encode()),
-                                        ("file", self.jar.name, "application/java-archive", self.data)])
+                                        self.file_part()])
         created = send("POST", f"{api}/version", {**headers, "Content-Type": content_type}, body)
         print(f"Uploaded {self.jar.name} to Modrinth as {self.version} ({created.get('id')})")
 
     def curseforge(self):
-        project = os.environ.get("CURSEFORGE_PROJECT_ID") or CURSEFORGE_PROJECT
+        secret = token("CURSEFORGE_TOKEN")
+        project = project_of("curseforge")
         upload = os.environ.get("CURSEFORGE_UPLOAD_URL", CURSEFORGE_UPLOAD).rstrip("/")
         api = os.environ.get("CURSEFORGE_API_URL", CURSEFORGE_API).rstrip("/")
-        secret = os.environ.get("CURSEFORGE_TOKEN", "")
         upload_headers = {"X-Api-Token": secret, "User-Agent": self.agent}
         api_headers = {"User-Agent": self.agent, "Accept": "application/json"}
         files = f"{api}/api/v1/mods/{project}/files"
@@ -186,8 +217,10 @@ class Release:
             "changelogType": "markdown",
             "displayName": self.name,
             "releaseType": self.release_type,
-            "relations": {"projects": [{"slug": s, "type": "requiredDependency"} for s in REQUIRED]},
         }
+        required = DEPENDENCIES["curseforge"]
+        if required:
+            metadata["relations"] = {"projects": [{"slug": d, "type": "requiredDependency"} for d in required]}
         if self.dry_run:
             show("GET", files, api_headers)
             show("GET", f"{upload}/api/game/version-types", upload_headers)
@@ -197,19 +230,19 @@ class Release:
                  metadata=json.dumps({**metadata, "gameVersions": f"<ids of {self.minecraft}, NeoForge, Client, Server>"}, indent=2),
                  file=self.described())
             return
-        if not secret:
-            raise Refused("$CURSEFORGE_TOKEN is not set, and publish/upload.env didn't fill it in through op run.")
+        # A published version is final on CurseForge too: it is never replaced.
         if {self.jar.name, self.name} & self.curseforge_files(files, api_headers):
             raise Published(f"CurseForge already has {self.version} in {project}, "
                           "and a published version never changes.")
         metadata["gameVersions"] = self.curseforge_game_versions(upload, upload_headers)
         content_type, body = multipart([("metadata", None, "application/json", json.dumps(metadata).encode()),
-                                        ("file", self.jar.name, "application/java-archive", self.data)])
+                                        self.file_part()])
         created = send("POST", f"{upload}/api/projects/{project}/upload-file",
                        {**upload_headers, "Content-Type": content_type}, body)
         print(f"Uploaded {self.jar.name} to CurseForge as {self.version} ({created.get('id')})")
 
     def curseforge_files(self, url, headers):
+        """The file and display names of every file the project has, across the listing's pages."""
         names, page_index, seen = set(), 0, 0
         while True:
             query = urllib.parse.urlencode({"pageIndex": page_index, "pageSize": 50})
@@ -221,6 +254,8 @@ class Release:
             page_index += 1
 
     def curseforge_game_versions(self, upload, headers):
+        """The ids of the Minecraft version, of NeoForge, and of both environments (the Mod is needed on
+        client and server alike), which the upload API names by id."""
         types = send("GET", f"{upload}/api/game/version-types", headers)
         minecraft = {t["id"] for t in types if t["slug"].startswith("minecraft-")}
         loaders = {t["id"] for t in types if t["slug"] == "modloader"}
@@ -236,23 +271,23 @@ class Release:
         return ids
 
 
-SITES = {"curseforge": ("CurseForge", Release.curseforge), "modrinth": ("Modrinth", Release.modrinth)}
+SITES = {"modrinth": ("Modrinth", Release.modrinth), "curseforge": ("CurseForge", Release.curseforge)}
 
 
 def main(args):
-    usage = "usage: scripts/upload.py [--dry-run] [--site curseforge|modrinth] <major.minor.patch>"
+    usage = "usage: scripts/upload.py [--dry-run] [--site modrinth|curseforge] <major.minor.patch>"
     dry_run = "--dry-run" in args
-    rest = [a for a in args if a != "--dry-run"]
+    args = [a for a in args if a != "--dry-run"]
     sites = list(SITES)
-    if rest[:1] == ["--site"]:
-        if len(rest) < 2 or rest[1] not in SITES:
+    if args[:1] == ["--site"]:
+        if len(args) < 2 or args[1] not in SITES:
             fail(usage)
-        sites, rest = [rest[1]], rest[2:]
-    if len(rest) != 1 or not re.fullmatch(r"\d+\.\d+\.\d+", rest[0]):
+        sites, args = [args[1]], args[2:]
+    if len(args) != 1 or not re.fullmatch(r"\d+\.\d+\.\d+", args[0]):
         fail(usage)
-    release = Release(rest[0], dry_run)
-    if not dry_run:
-        through_op(args, sites)
+
+    release = Release(args[0], dry_run)
+    through_op(sys.argv[1:], sites)
     failed, published = [], []
     for site in sites:
         name, upload = SITES[site]
@@ -264,7 +299,8 @@ def main(args):
     if published and not failed:
         sys.exit(1)
     if failed:
-        fail(f"retry with {' and '.join('--site ' + site for site in failed)} once fixed.")
+        done = "" if len(failed) == len(sites) else "; the other site is done"
+        fail(f"retry with {' and '.join('--site ' + site for site in failed)} once fixed{done}.")
 
 
 if __name__ == "__main__":
