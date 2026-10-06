@@ -1,9 +1,0 @@
-{
-  "model": {
-    "type": "minecraft:special",
-    "base": "factoryworks:item/oil_refinery",
-    "model": {
-      "type": "geckolib:geckolib"
-    }
-  }
-}

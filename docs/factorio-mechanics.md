@@ -30,7 +30,7 @@ Factorio names them, and each section gives the pack's own name beside it.
 | [Mining drills](#mining-drills) | `adapted` | Terra |
 | [Water as a resource](#water-as-a-resource) | `adapted` | Terra |
 | [Fluid handling](#fluid-handling) | `shipped` | Terra |
-| [Oil processing](#oil-processing) | `planned` | Terra; Ignus, Gelida parked |
+| [Oil processing](#oil-processing) | `shipped` | Terra; Ignus, Gelida parked |
 | [Smelting](#smelting) | `shipped` | Terra |
 | [Assembling machines and recipe categories](#assembling-machines-and-recipe-categories) | `shipped` | Terra |
 | [Handcrafting and the crafting queue](#handcrafting-and-the-crafting-queue) | `shipped` | Terra |
@@ -432,15 +432,18 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: Terra, Ignus, Gelida
-- **via**: `pack` (the Oil Refinery), `craftworks` (the Chemical Plant)
-- **owner**: ADR-0123 (the Chemical Plant is Craftworks'), ADR-0096 (the Oil Refinery is a pack
-  block on the Assembling Machine's chassis, on Oritech's model, until it moves, #581) and
-  ADR-0109 (Core registers the oil fluids, drawn in Factorio's colours; #619)
-- **ticket**: #582 (the Chemical Plant moved to Craftworks); #486, closed (the Oil Refinery shipped with #491); #258 before it
+- **via**: `craftworks` (the Oil Refinery and the Chemical Plant), `pack` (the oil fluids)
+- **owner**: ADR-0124 (the Oil Refinery is Craftworks'), ADR-0123 (the Chemical Plant is Craftworks')
+  and ADR-0109 (Core registers the oil fluids, drawn in Factorio's colours; #619)
+- **ticket**: #581 (the Oil Refinery moved to Craftworks), #582 (the Chemical Plant moved to Craftworks); #486, closed; #258 before it
 
 Sub-rules:
 
-- **Basic then advanced oil processing** — `shipped`. Advanced is not gated by research yet (#493).
+- **Basic then advanced oil processing** — `shipped`, #581, ADR-0124. `craftworks:oil_refinery`, 5x5 on
+  the ground and three blocks tall, holding Factorio's `oil-processing` recipes as `craftworks:assembling`
+  recipes under their old ids. Its five Fluid Connections pull crude and water from, and push the
+  three fractions into, any pipe or tank beside them, so the Pumpjack's crude reaches it through
+  Pipeworks pipes (`OilRefineryTests`). Advanced is gated by research (#493).
 - **Cracking to resolve the three-output imbalance** — `shipped`. The chapter's whole puzzle.
 - **The Chemical Plant** — `shipped`, #582, ADR-0123. `craftworks:chemical_plant`, 3x3 and two
   blocks tall, holding Factorio's `chemistry` recipes as `craftworks:assembling` recipes under their
@@ -534,8 +537,7 @@ Sub-rules:
   the recipe manager when asked, so a tag ingredient stays a tag. The adaptation is **where it is picked**
   (ADR-0073): the recipe viewer is the only picker. EMI's Fill Recipe on the open machine sets the
   Held recipe, and the server refuses one the machine cannot hold with a message, or one that is
-  Locked for the player who presses it, which is asked once (Craftworks' ADR-0013). The Oil Refinery's screen
-  follows the rest of this entry until it moves (#581). The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
+  Locked for the player who presses it, which is asked once (Craftworks' ADR-0013). The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
   missing its search and navigation, and #336 removed it. It shows the Held recipe as its result's
   icon and name, whose tooltip carries the recipe when EMI is loaded, and a progress bar between the
   inputs and the output. There is no clear: a machine without a recipe does nothing, so a recipe is
@@ -727,7 +729,7 @@ Sub-rules:
 - **Long-handed inserter** — `adapted` as the feeder's reach. A feeder's head and tail each reach 1 to
   3 blocks, set by key, so there is no long-handed tier; `long-handed-inserter` is `not_emitted`
   (#514, ADR-0100).
-- **Overload limit** — `shipped` on the crafting chassis (#517) and the furnaces (#518); fluids #519.
+- **Overload limit** — `shipped` on the furnaces (#518); the crafting machines are Craftworks', which keeps its own (#517, #519).
   Automated insertion stops at a recipe's Overload Limit, the crafts one inserter swing (1.166 s)
   completes plus one, between 2 and 100, measured in `data/factorio/overload.json`. Quick transfer (#208, unbuilt) will be held to it through the item handler; the hand in a screen is
   not held to it. A product stops the craft at a full stack, as Factorio's does. The bonus `allow_inserter_overload` gives of 4× the stack

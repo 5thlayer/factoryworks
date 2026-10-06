@@ -91,13 +91,9 @@ PACK_SMELTING = "factoryworks:smelting"
 
 SOURCE_CATEGORY_KEY = "category"
 
-# Factorio's `crafting`, `advanced-crafting`, `crafting-with-fluid` and `chemistry` are Craftworks'
-# Assembling recipes (ADR-0118, ADR-0123). Oil processing keeps the pack's own type until its
-# machine moves.
+# Factorio's `crafting`, `advanced-crafting`, `crafting-with-fluid`, `chemistry` and `oil-processing`
+# are Craftworks' Assembling recipes (ADR-0118, ADR-0123, ADR-0124).
 CRAFTWORKS_ASSEMBLING = "craftworks:assembling"
-
-# The types on `AssemblingRecipe`'s record and codec in `factoryworks_core` (ADR-0096).
-PACK_ASSEMBLING_SHAPED = ("factoryworks:oil_processing",)
 
 # The Personal Assembler plans a recipe whose first Factorio category is `crafting`. The eleven
 # fluid-free recipes Factorio withholds from the hand all have another first category.
@@ -169,9 +165,9 @@ def convert_smelting(recipe, items, override):
 
 
 def convert(recipe_type, recipe, items, override):
-    """One recipe on `AssemblingRecipe`'s shape (#279, ADR-0096) or Craftworks' (ADR-0118).
+    """One recipe on Craftworks' `craftworks:assembling` shape (ADR-0118).
 
-    Both compose NeoForge's own codecs rather than inventing any: an item ingredient is
+    It composes NeoForge's own codecs rather than inventing any: an item ingredient is
     `SizedIngredient.NESTED_CODEC` (`ingredient` + `count`), a fluid one
     `SizedFluidIngredient.CODEC` (`ingredient` + `amount`), an item result
     `ItemStackTemplate.CODEC` (`id` + `count`) and a fluid result `FluidStackTemplate.CODEC` (`id` +
@@ -333,7 +329,7 @@ def main():
         if recipe_type == PACK_SMELTING:
             emitted[name.replace("-", "_")] = convert_smelting(recipe, items, override)
         else:
-            if recipe_type != CRAFTWORKS_ASSEMBLING and recipe_type not in PACK_ASSEMBLING_SHAPED:
+            if recipe_type != CRAFTWORKS_ASSEMBLING:
                 failures.append(f"{name}: recipe type {recipe_type} has no emitter -- "
                                 "category-map.json names a type this converter cannot shape")
                 continue

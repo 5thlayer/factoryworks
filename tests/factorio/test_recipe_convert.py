@@ -222,14 +222,15 @@ CRAFTWORKS_PLANT_ITEM_INPUTS = 2
 CRAFTWORKS_PLANT_ITEM_OUTPUTS = 1
 CRAFTWORKS_PLANT_FLUID_BOXES = 2
 
+# What Craftworks' Oil Refinery holds (`FluidMachine.OIL_REFINERY`): no item slot, two input and
+# three output fluid boxes.
+CRAFTWORKS_REFINERY_FLUID_INPUTS = 2
+CRAFTWORKS_REFINERY_FLUID_OUTPUTS = 3
+
 
 def input_slots():
-    """The most input slots any machine of each recipe type has: the chassis's from the spec the mod reads (#489), Craftworks' by its constant."""
-    specs = json.loads((ROOT / "mod/src/main/resources/factoryworks_core/machine/specs.json").read_text())
-    slots = {CRAFTWORKS_ASSEMBLING: CRAFTWORKS_ASSEMBLER_INPUTS}
-    for spec in specs.values():
-        slots[spec["recipe_type"]] = max(slots.get(spec["recipe_type"], 0), spec["item_inputs"])
-    return slots
+    """The most input slots any machine of each recipe type has, which is Craftworks' by its constant."""
+    return {CRAFTWORKS_ASSEMBLING: CRAFTWORKS_ASSEMBLER_INPUTS}
 
 
 def check_emitted(items, recipe_types, failures):
@@ -301,6 +302,14 @@ def check_emitted(items, recipe_types, failures):
                     if len(recipe.get(key, [])) > most:
                         failures.append(f"{path.name} has {len(recipe[key])} `{key}` and Craftworks' Chemical "
                                         f"Plant holds {most}")
+            if recipe.get("category") == "oil-processing":
+                limits = (("ingredients", 0), ("results", 0),
+                          ("fluid_ingredients", CRAFTWORKS_REFINERY_FLUID_INPUTS),
+                          ("fluid_results", CRAFTWORKS_REFINERY_FLUID_OUTPUTS))
+                for key, most in limits:
+                    if len(recipe.get(key, [])) > most:
+                        failures.append(f"{path.name} has {len(recipe[key])} `{key}` and Craftworks' Oil "
+                                        f"Refinery holds {most}")
         # One ingredient per input slot, so one past the last could never be inserted (ADR-0074).
         slots = input_slots().get(recipe.get("type"), 0)
         if len(recipe.get("ingredients", [])) > slots:

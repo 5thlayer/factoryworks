@@ -1,6 +1,8 @@
 {
-  "type": "factoryworks:oil_processing",
+  "type": "craftworks:assembling",
   "category": "oil-processing",
+  "hand_craftable": false,
+  "ingredients": [],
   "fluid_ingredients": [
     {
       "ingredient": "minecraft:water",
@@ -11,6 +13,7 @@
       "amount": 100
     }
   ],
+  "results": [],
   "fluid_results": [
     {
       "id": "factoryworks:heavy_oil",

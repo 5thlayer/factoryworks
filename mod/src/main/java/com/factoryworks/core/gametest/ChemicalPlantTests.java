@@ -74,7 +74,7 @@ final class ChemicalPlantTests {
                 })
                 .thenIdle(PIPES)
                 .thenExecute(() -> fill(helper, pipes.getFirst(), FluidResource.of(fluid("factoryworks:petroleum_gas")), gas))
-                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
+                .thenIdle(LibraryBlocks.POLE_RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
                 .thenExecute(() -> {
                     int plastic = plant.inventory().getAmountAsInt(PRODUCT);
                     if (plastic < 2 || plastic % 2 != 0) {
@@ -120,7 +120,7 @@ final class ChemicalPlantTests {
                 })
                 .thenIdle(PIPES)
                 .thenExecute(() -> fill(helper, supply, FluidResource.of(Fluids.WATER), SUPPLY))
-                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
+                .thenIdle(LibraryBlocks.POLE_RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
                 .thenExecute(() -> {
                     ResourceHandler<FluidResource> stored = FluidPorts.segment(helper.getLevel(), tank);
                     if (stored == null) {

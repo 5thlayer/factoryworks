@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0124
 ---
 
 # The Chemical Plant and the Oil Refinery are pack blocks on Oritech's models
@@ -87,7 +87,7 @@ refinery bank is built by, are the same either way.
   accepted for the Assembling Machine.
 - Oritech's own Refinery and Centrifuge stay recipe-removed and hidden.
 
-## Amended by ADR-0123
+## Superseded by ADR-0123 and ADR-0124
 
-The Chemical Plant is Craftworks' Chemical Plant, not a FactoryWorks block on Oritech's model. The oil
-refinery stays as this ADR has it until #581.
+The Chemical Plant is Craftworks' Chemical Plant (ADR-0123) and the Oil Refinery is Craftworks' Oil
+Refinery (ADR-0124). The Pack registers neither, and the chassis that ran them is gone.

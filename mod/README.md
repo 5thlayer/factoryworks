@@ -1,7 +1,7 @@
 # `factoryworks_core`
 
 <!-- Copied from publish/core/description.md; edit both. -->
-FactoryWorks Core holds the machines and rules of the FactoryWorks modpack: the furnaces, mining drills, the Oil Refinery, the Boiler and Steam Engine, electric poles, the Radar, ore patches that hold an amount and run out, and the ore fields and oil wells laid across Terra. Each runs at the rates Factorio gives it.
+FactoryWorks Core holds the machines and rules of the FactoryWorks modpack: the furnaces, mining drills, the Boiler and Steam Engine, electric poles, the Radar, ore patches that hold an amount and run out, and the ore fields and oil wells laid across Terra. Each runs at the rates Factorio gives it.
 
 It adds no recipes and no research of its own. Those live in the modpack's scripts and data, so the mod on its own places machines nobody can craft.
 
@@ -24,8 +24,9 @@ machine is the pack's own block, several on an Oritech model or entity (ADR-0060
   colours (ADR-0067).
 - **Electricity** (`energy/`) — the poles, their wires and supply areas, the one network that
   carries power (ADR-0036, ADR-0062, ADR-0068); the Solar Panel and Accumulator are Wireworks'.
-- **Crafting machines** (`machine/`, `recipes/`) — the Oil Refinery on a chassis and a recipe shape
-  of its own (ADR-0096; the Chemical Plant is Craftworks', ADR-0123), and the Held recipe EMI sets (ADR-0073).
+- **Machines** (`machine/`, `recipes/`) — the footprint seam the Boiler, Steam Engine, Radar and Pumpjack
+  stand on, the Overload Limit the furnaces read, and the furnaces' recipe type. The crafting machines are
+  Craftworks' (ADR-0118, ADR-0123, ADR-0124).
 - **The Radar** (`radar/`) — charting through FTB Chunks and marking the patches it finds (ADR-0079).
 - **Building** — placement as a plan the preview draws (`placement/`, ADR-0069), Fast Replace
   (ADR-0082), the Pick's Dismantle and Stretch of Oritech's pipes (`dismantle/`, `stretch/`,
@@ -35,8 +36,7 @@ machine is the pack's own block, several on an Oritech model or entity (ADR-0060
   `factoryworks:ground` processor, the outfield and oil-field structures, and vanilla spawning
   turned off (ADR-0093).
 - **The starting kit** (`start/`) — granted once per player.
-- **Glue** — `compat/` (Jade tooltips, EMI's recipe categories and Fill Recipe, Researchd's machine
-  locks), `network/`, `transfer/`'s guarded item and fluid faces, and the Minecraft and Oritech
+- **Glue** — `compat/` (Jade tooltips and EMI's recipe categories), `network/`, `transfer/`'s guarded item and fluid faces, and the Minecraft and Oritech
   mixins.
 - **`gametest/`** — the pack's GameTests (below).
 - **Not the Assemblers or the Personal Assembler.** They are Craftworks, a local jar (ADR-0089,

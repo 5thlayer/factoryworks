@@ -79,7 +79,7 @@ And KubeJS reads a Better Advanced Tooltips class on a server as well, so that j
 classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there because the pack's
 recipes name their items.
 
-What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
+What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279),
 `BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#559), `AssemblingFluidTests` (#580), `ChemicalPlantTests` (#582), `OilRefineryTests` (#491)
 `PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545, #546), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
@@ -87,10 +87,7 @@ Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTes
 for filming, under `factoryworks_showcase:*` so the run never selects them; swap the run's selector
 for theirs to check each still makes its product. What is here is only what a JVM test cannot reach: that Craftworks plans every hand-craftable
 recipe the server loaded, resolves a tag ingredient to its items and leaves out a fluid recipe and
-one that is not hand-craftable (`HandSetTests`, ADR-0118); that the
-type on `AssemblingRecipe`'s shape (oil processing, ADR-0096) loads
-its recipes under its own folder and survives `Recipe.CODEC`'s round trip, and that an Oil
-Refinery resolves no assembling recipe -- a unit test cannot, since the codec is NeoForge's; that a pole
+one that is not hand-craftable (`HandSetTests`, ADR-0118); that a pole
 placed first feeds an Electric Furnace placed after it within one rescan interval, that the furnace's
 face, probed as a pole probes it — an insert inside a transaction it aborts — reports its whole buffer
 as room and keeps no FE, and that a fed furnace smelts at 90 FE/t while a
@@ -102,13 +99,8 @@ scans, counts and rations, and how power crosses a wire, stops beyond
 reach and stops when the link is broken, are Wireworks' own GameTests (#476). And that a furnace on a pole reaching only a Steam Engine's
 parts receives that engine's 450 FE every tick, once -- `SupplyScanTest` holds
 the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red.
-And that a footprint machine, such as the Oil Refinery or the
-Steam Engine (ADR-0116), broken at its anchor or at any part leaves none of its blocks standing and
-drops exactly one item; dropping the part's teardown turns the part tests red. And that a chassis machine's Held recipe survives its save hook and
-resolves again after it (`OilRefineryTests`); dropping the field from `saveAdditional` turns them red. The codec itself is `HeldRecipeTest`. Every recipe is held through `AssemblingMachineMenu.request`, the setter EMI's Fill Recipe lands on
-(#330), and a recipe of another chassis type is refused there with a message and leaves the Held
-recipe alone; making `HoldVerdict.of` always answer held turns that test red. The rule is `HoldVerdictTest`.
-The Assemblers are Craftworks' (ADR-0118), and its GameTests hold the machine. `AssemblingMachineTests`
+And that a footprint machine, such as the Steam Engine (ADR-0116) or the Radar, broken at its anchor or at any part leaves none of its blocks standing and
+drops exactly one item; dropping the part's teardown turns the part tests red. The Assemblers are Craftworks' (ADR-0118), and its GameTests hold the machine. `AssemblingMachineTests`
 holds what the Pack owns of them: an Assembler on a creative pole's area is powered and crafts copper
 cable in whole crafts of two; Fill Recipe on a recipe a research unlocks is refused as `LOCKED` for a
 Researchd team that has researched nothing, and answered `HELD` for one no research unlocks, which
@@ -158,26 +150,21 @@ And that a mining drill broken at its anchor or at any part, through the player'
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
 moving it back to the block turns both part tests red.
-The chassis's rate and stall order are `AssemblingMachineSpecTest` and `AssemblingStallTest`;
-whether an Oritech addon changes the rate in a world is not checked -- the multipliers are, on the JVM.
-The fluid face fills an input tank to four crafts' worth and no further, per tank (#519); the rule is
-`OverloadLimitTest`. `ChemicalPlantTests` holds what the Pack owns of Craftworks' Chemical Plant
+The Overload Limit's rule is `OverloadLimitTest`. `ChemicalPlantTests` holds what the Pack owns of Craftworks' Chemical Plant
 (#582, ADR-0123), which is how it meets Pipeworks: with a creative pole beside it, a segment of
 petroleum gas on one connection and coal in its slot make plastic, and a segment of water on one
 connection with sulfur and iron in its slots sends sulfuric acid out through a pipe on the opposite
-edge to a storage tank. Craftworks' own GameTests hold the plant, and neither asserts on art
-(ADR-0119). `OilRefineryTests` holds
-the Oil Refinery on it (#491): advanced oil processing fills all three outputs at 100 ticks for 21,000
-FE, typed; each output tank takes what Factorio sizes it for the Held recipe -- 100, 135 and 165 for
-advanced, 135 for the pinned basic, and a lone product both boxes' 200 (#520,
-`OutputTankVolumeTest`); any one full output and no water
-stall with nothing drawn or taken; water and crude reach their own tanks through the anchor
-and a top chamber block, which hand back only the three outputs; a chemistry recipe is
-refused at the menu setter; and a pole reaching only a chamber feeds it, counted once. Its placement
-and break are `PlacementPlanTests`' and `FootprintBreakTests`'. And that the screen's status (#332) is recomputed on
+edge to a storage tank. `OilRefineryTests` holds what the Pack owns of Craftworks' Oil Refinery
+(#581, ADR-0124): a Pumpjack on a full well, a line of Pipeworks pipes from it to the refinery's last
+connection, water from a tank at the one before and a creative pole between them make heavy oil, light
+oil and petroleum gas, which leave by the first three connections through pipes into three tanks, one
+fluid to a tank and in whole crafts of 25, 45 and 55 mB, with only crude ever in the crude line. The
+connections have no direction, so that order is the test's to choose and it is the order a refinery
+tries them in. Craftworks' own GameTests hold both machines, and neither asserts on art
+(ADR-0119). And that the screen's status (#332) is recomputed on
 each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
 cycle stops the machine; forcing the power probe true turns it red. The precedence is
-`AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. A pole reaching only one hull block of the Oil Refinery still finds it: the hull blocks have
+`AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. A pole reaching only one hull block of a footprint machine still finds it: the hull blocks have
 no block entity, so they resolve to the anchor through `EnergyOwnerBlock` in `SupplyAreaScan`, and
 without it one machine counts as more than one. Each was checked against the defect it exists for: dropping
 the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
@@ -223,27 +210,23 @@ Run them after editing `core/wreck/` or either generator. How the blocks look is
 
 ## Recipe name check
 
-The corpus holds no Wube text (ADR-0103, #303), so a chassis recipe is named from what
+The corpus holds no Wube text (ADR-0103, #303), so a chemistry or oil-processing recipe is named from what
 `data/factorio/recipe.json` holds (#490). Factorio names a recipe after its main product unless it
 is not one product under its own name -- advanced oil processing has three results, heavy oil
 cracking one that is not its id -- and then it names the recipe itself. `scripts/build-recipe-names.py`
 writes a `recipe.factoryworks.<type>.<name>` key for every emitted chemistry and oil
 processing recipe: for such a recipe its id read as words (`heavy-oil-cracking` is "Heavy oil
-cracking"), and `%s` for every other, which `AssemblingMachineRecipes.name` fills with the product.
+cracking"), and `%s` for every other, which is filled with the product.
 `tests/pack/test_recipe_names.py` runs the `--check` and re-derives both halves from the corpus,
 holding the keys to the emitted recipes both ways. Run it after any converter run.
 
-## Machine spec check
+## Overload Limit check
 
-The crafting chassis reads every figure from a per-machine spec (#489, ADR-0096), never typed.
-`scripts/build-machine-specs.py` writes one row per machine whose recipes share `AssemblingRecipe`'s
-shape -- the Oil Refinery -- copying speed,
-energy use, drain, categories, Fast Replace group and tank volumes from `data/factorio/machine.json`,
-and taking the recipe type from `category-map.json`. Slot and tank counts follow the recipes: each
-is the most any emitted recipe of the machine's type and categories needs. `MachineSpecs` reads it.
-`tests/pack/test_machine_specs.py` runs the `--check`, holds each row to its corpus row and every
-emitted chassis recipe to some machine with room for it; `AssemblingMachineSpecTest` holds the
-parse with typed figures. Run them after a converter run or re-extracting the corpus.
+The furnaces read the Overload Limit's constants (#517) from `data/factorio/overload.json`, never typed.
+`scripts/build-overload-limit.py` copies them to `factoryworks_core/machine/overload.json`, which
+`OverloadLimit` reads. Factorio's crafting machines are Craftworks', and carry their own figures.
+`tests/pack/test_overload_limit.py` runs the `--check`; `OverloadLimitTest` holds the rule with typed
+figures. Run them after re-extracting the corpus.
 
 ## Replace group check
 
@@ -273,9 +256,7 @@ a break's start is refused, with vanilla's 1.0 of server lenience, so a start th
 never refused behind it. An Oritech machine core is not synced its controller, so the client refuses
 one beyond 4.5. On the client a refused start is attacked as a miss (`mixin/minecraft/MinecraftMixin`),
 swinging once the way vanilla does out of reach rather than cracking the block every tick; that is a
-human check on delivery. `ReachTests.Screens`, registered only with Oritech loaded, holds the
-Oil Refinery's screen open 12 blocks off and closed 22 off; it closed at Oritech's 8 before
-`OritechScreenHandlerMixin` and the menu's own fix. Run them after re-extracting the corpus or editing the item map.
+human check on delivery. Run them after re-extracting the corpus or editing the item map.
 
 ## Placement plan check
 
@@ -854,8 +835,7 @@ is never evidence for `excluded` here — and it places nothing on a progression
 
 ## Recipe conversion
 
-`scripts/factorio-recipe-convert.py` turns the extracted corpus into `craftworks:assembling` (ADR-0118), `factoryworks:chemistry`,
-`factoryworks:oil_processing` and `factoryworks:smelting` recipe JSON under `kubejs/data/factoryworks/recipe/` (#279), reading five committed data files: the corpus, the category
+`scripts/factorio-recipe-convert.py` turns the extracted corpus into `craftworks:assembling` (ADR-0118) and `factoryworks:smelting` recipe JSON under `kubejs/data/factoryworks/recipe/` (#279), reading five committed data files: the corpus, the category
 map, the subgroup owners, `data/pack/item-map.json` and `data/pack/recipe-overrides.json`. Nothing is
 decided in the script — a decision is a diff to a design document. Generated output is never
 hand-edited; re-run the converter. A Factorio name with no item-map row is a hard failure, while an

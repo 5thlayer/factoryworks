@@ -484,7 +484,7 @@ _Avoid_: fuel type, burnable, fuel class
 ### The oil chapter
 
 **Oil Refinery**:
-The machine that splits crude: basic and advanced oil processing, two fluids in and three out, the only machine in the pack that emits three fluids at once (ADR-0025). A pack block wearing Oritech's Refinery with both of its chamber layers, placed and broken as one footprint from one item, always with three outputs. It holds a **Held recipe** of its own recipe type, not the **Assembler**'s. Not Oritech's own Refinery, whose chambers add outputs one at a time and which is recipe-removed and hidden. Coal liquefaction is Space Age and arrives with Ignus or not at all (#12).
+The machine that splits crude: basic and advanced oil processing, two fluids in and three out, the only machine in the pack that emits three fluids at once (ADR-0025). Craftworks' Oil Refinery (`craftworks:oil_refinery`, ADR-0124), a 5x5 on the ground and three blocks tall on Craftworks' own art. It holds a **Held recipe** of the `oil-processing` category of `craftworks:assembling`, and takes and gives its fluid through five connections that any pipe or tank beside one serves, so the Pumpjack's crude reaches it through Pipeworks pipes. The Pack registers no Oil Refinery. Coal liquefaction is Space Age and arrives with Ignus or not at all (#12).
 _Avoid_: distillation tower, refinery multiblock, cracker, refinery chamber
 
 **Chemical Plant**:

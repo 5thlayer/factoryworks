@@ -1,10 +1,5 @@
 {
   "dynamic_recipe_overload_factor": 1.166,
   "minimum_recipe_overload_multiplier": 2,
-  "maximum_recipe_overload_multiplier": 100,
-  "fluid_input_multiplier": 4,
-  "fluid_output_multiplier": 3,
-  "pinned_fluid_outputs": [
-    "factoryworks:oil_processing/basic_oil_processing"
-  ]
+  "maximum_recipe_overload_multiplier": 100
 }

@@ -63,11 +63,6 @@ public final class PFItems {
     public static final DeferredHolder<Item, Item> BARREL = ITEMS.registerItem(
             "barrel", props -> new BarrelItem(props.stacksTo(BarrelSpec.STACK_SIZE)));
 
-    /** The Oil Refinery's item (ADR-0096), on Oritech's own {@code refinery} model at its 0.7. */
-    public static final DeferredHolder<Item, FootprintItem> OIL_REFINERY = ITEMS.registerItem(
-            "oil_refinery",
-            props -> new FootprintItem(props, PFBlocks.OIL_REFINERY_FOOTPRINT, 0.7f, "refinery"));
-
     /** The Steam Engine's item (ADR-0077), on Oritech's own {@code steam_engine} model at its 0.7. */
     public static final DeferredHolder<Item, FootprintItem> STEAM_ENGINE = ITEMS.registerItem(
             "steam_engine",
@@ -126,7 +121,6 @@ public final class PFItems {
             FUNCTIONAL.add(ITEMS.registerSimpleBlockItem(PFBlocks.chest(tier)));
         }
         FUNCTIONAL.add(BARREL);
-        FUNCTIONAL.add(OIL_REFINERY);
         FUNCTIONAL.add(STEAM_ENGINE);
         FUNCTIONAL.add(RADAR);
         FUNCTIONAL.add(PUMPJACK);

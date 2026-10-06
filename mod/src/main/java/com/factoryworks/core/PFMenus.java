@@ -1,7 +1,6 @@
 package com.factoryworks.core;
 
 import com.factoryworks.core.fluid.BoilerMenu;
-import com.factoryworks.core.machine.AssemblingMachineMenu;
 import com.factoryworks.core.mining.rig.RigMenu;
 import com.factoryworks.core.smelting.FurnaceMenu;
 import net.minecraft.core.registries.Registries;
@@ -41,14 +40,6 @@ public final class PFMenus {
     public static final Supplier<MenuType<BoilerMenu>> BOILER =
             MENUS.register("boiler", () -> new MenuType<>(BoilerMenu::new,
                     net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
-
-    /**
-     * The Assembling Machine's: the pack's own, since Oritech's screen has no hook for the Held
-     * recipe (ADR-0073). The opening packet carries the recipe list, which the client has no
-     * recipe manager to read.
-     */
-    public static final Supplier<MenuType<AssemblingMachineMenu>> ASSEMBLING_MACHINE =
-            MENUS.register("assembling_machine", () -> IMenuTypeExtension.create(AssemblingMachineMenu::new));
 
     private PFMenus() {
     }

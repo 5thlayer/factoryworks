@@ -42,8 +42,8 @@ var RECIPE_SURVIVORS = [
   },
   {
     surface: 'oil_refinery',
-    type: 'factoryworks:oil_processing',
-    why: "ADR-0096's Oil Refinery, on a type of its own sharing the assembling shape so it has its own EMI tab. ADR-0031: the corpus authors every recipe on it (#488)."
+    type: 'craftworks:assembling',
+    why: "ADR-0124: Craftworks' Oil Refinery holds Factorio's oil-processing category on Craftworks' type, which the assembling entry already admits. ADR-0031: the corpus authors every recipe it contains."
   },
   {
     surface: 'smelting',

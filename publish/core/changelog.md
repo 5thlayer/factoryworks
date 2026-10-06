@@ -12,6 +12,7 @@
 - Electric poles, the Solar Panel and the Accumulator now come from Wireworks. A world made with 0.1.1 loses the ones it placed.
 - Assembling Machines 1–3 are now Craftworks' Assemblers 1–3, 3x3 and two blocks tall. A world made with 0.1.1 loses the ones it placed. Research is checked when Fill Recipe is pressed, not on every craft.
 - The Chemical Plant is now Craftworks' Chemical Plant, 3x3 and two blocks tall, and takes its fluid from and gives it to any pipe or tank beside its connections. A world made with 0.1.1 loses the ones it placed.
+- The Oil Refinery is now Craftworks' Oil Refinery, 5x5 and three blocks tall, and takes crude and water from and gives its three fractions to any pipe or tank beside its connections. A world made with 0.1.1 loses the ones it placed.
 
 ## 0.1.1
 

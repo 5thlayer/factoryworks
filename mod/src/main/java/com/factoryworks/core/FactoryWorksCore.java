@@ -1,6 +1,5 @@
 package com.factoryworks.core;
 
-import com.factoryworks.core.machine.PaintLock;
 import com.factoryworks.core.dismantle.PipeFamily;
 import com.factoryworks.core.stretch.PipeworksPipeLegs;
 import com.factoryworks.core.felling.TreeFelling;
@@ -35,9 +34,7 @@ import io.github._5thlayer.groundworks.Rotate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -61,8 +58,7 @@ public final class FactoryWorksCore {
     /** The shared registry namespace. Not the mod id. See ADR-0014. */
     public static final String NAMESPACE = "factoryworks";
 
-    public FactoryWorksCore(IEventBus modBus, ModContainer container) {
-        container.registerConfig(ModConfig.Type.SERVER, PFServerConfig.SPEC);
+    public FactoryWorksCore(IEventBus modBus) {
         PFBlocks.register(modBus);
         PFAttachments.register(modBus);
         PFMenus.register(modBus);
@@ -118,7 +114,6 @@ public final class FactoryWorksCore {
         NeoForge.EVENT_BUS.addListener(TreeFelling::onBreakSpeed);
         NeoForge.EVENT_BUS.addListener(TreeFelling::onBreak);
         NeoForge.EVENT_BUS.addListener(TreeFelling::onLogout);
-        NeoForge.EVENT_BUS.addListener(PaintLock::onRightClickBlock);
         PipeFamily.register();
         PipeworksPipeLegs.register();
         NeoForge.EVENT_BUS.addListener(Reach::onLeftClickBlock);
@@ -129,7 +124,6 @@ public final class FactoryWorksCore {
             FurnaceClient.register(modBus);
             com.factoryworks.core.chest.client.ChestClient.register(modBus);
             RigClient.register(modBus);
-            com.factoryworks.core.machine.client.AssemblingMachineClient.register(modBus);
             SteamFluidClient.register(modBus);
             OilFluidClient.register(modBus);
             BoilerClient.register(modBus);

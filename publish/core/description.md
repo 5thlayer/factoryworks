@@ -1,6 +1,6 @@
 > **This mod is part of the FactoryWorks modpack and is not meant to be used on its own.** Install [FactoryWorks](https://www.curseforge.com/minecraft/modpacks/factoryworks) instead; it brings this mod with it.
 
-FactoryWorks Core holds the machines and rules of the FactoryWorks modpack: the furnaces, mining drills, Assembling Machines, Chemical Plant and Oil Refinery, the Boiler and Steam Engine, electric poles, the Radar, ore patches that hold an amount and run out, and the ore fields and oil wells laid across Terra. Each runs at the rates Factorio gives it.
+FactoryWorks Core holds the machines and rules of the FactoryWorks modpack: the furnaces, mining drills, the Boiler and Steam Engine, electric poles, the Radar, ore patches that hold an amount and run out, and the ore fields and oil wells laid across Terra. Each runs at the rates Factorio gives it.
 
 It adds no recipes and no research of its own. Those live in the modpack's scripts and data, so the mod on its own places machines nobody can craft.
 

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.PFItems;
-import com.factoryworks.core.machine.footprint.FootprintMachine;
 import com.factoryworks.core.mining.rig.RigPartBlock;
 import com.factoryworks.core.mining.rig.RigTier;
 import com.factoryworks.core.smelting.FurnaceTier;
@@ -20,8 +19,6 @@ import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket.Action;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
@@ -145,34 +142,5 @@ final class ReachTests {
             stacks.add(player.getInventory().getItem(slot).copy());
         }
         return stacks;
-    }
-
-    /** A machine's screen stays open as far off as the player reaches it. */
-    static final class Screens {
-
-        private static final BlockPos ANCHOR = new BlockPos(3, 1, 3);
-
-        private Screens() {
-        }
-
-        static void register(PFGameTests.Registrar tests) {
-            tests.test("an_oil_refinery_12_blocks_off_stays_open", 20,
-                    helper -> screen(helper, PFBlocks.OIL_REFINERY_FOOTPRINT, 12, true));
-            tests.test("an_oil_refinery_22_blocks_off_closes", 20,
-                    helper -> screen(helper, PFBlocks.OIL_REFINERY_FOOTPRINT, 22, false));
-        }
-
-        /** The menu is made directly: a fake player opens none. */
-        private static void screen(GameTestHelper helper, FootprintMachine footprint, int blocksOff,
-                boolean open) {
-            footprint.placeAll(helper.getLevel(), helper.absolutePos(ANCHOR), Direction.NORTH);
-            ListeningPlayer player = new ListeningPlayer(helper);
-            Vec3 feet = helper.absoluteVec(Vec3.atBottomCenterOf(ANCHOR).add(-blocksOff, 0, 0));
-            player.setPos(feet.x, feet.y, feet.z);
-            MenuProvider machine = (MenuProvider) helper.getLevel().getBlockEntity(helper.absolutePos(ANCHOR));
-            AbstractContainerMenu menu = machine.createMenu(0, player.getInventory(), player);
-            helper.assertValueEqual(menu.stillValid(player), open, "the screen " + blocksOff + " blocks off is open");
-            helper.succeed();
-        }
     }
 }

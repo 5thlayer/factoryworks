@@ -1,12 +1,15 @@
 {
-  "type": "factoryworks:oil_processing",
+  "type": "craftworks:assembling",
   "category": "oil-processing",
+  "hand_craftable": false,
+  "ingredients": [],
   "fluid_ingredients": [
     {
       "ingredient": "factoryworks:crude_oil",
       "amount": 100
     }
   ],
+  "results": [],
   "fluid_results": [
     {
       "id": "factoryworks:petroleum_gas",

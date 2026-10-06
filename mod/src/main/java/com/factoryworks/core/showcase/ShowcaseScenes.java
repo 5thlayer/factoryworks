@@ -15,9 +15,6 @@ import java.util.function.Function;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.fluid.BoilerFootprint;
 import io.github._5thlayer.wireworks.PoleTier;
-import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
-import com.factoryworks.core.machine.HeldRecipe;
-import com.factoryworks.core.machine.footprint.FootprintMachine;
 import com.factoryworks.core.oil.OilWellBlockEntity;
 import com.factoryworks.core.smelting.FurnaceTier;
 
@@ -183,27 +180,25 @@ public final class ShowcaseScenes {
         site.blockEntity(well, OilWellBlockEntity.class).start(1_500_000);
         PFBlocks.PUMPJACK_FOOTPRINT.placeAll(site.level(), site.at(well.above()), Direction.NORTH);
 
-        BlockPos refinery = new BlockPos(8, 1, 3);
-        placeHolding(site, PFBlocks.OIL_REFINERY_FOOTPRINT, refinery,
+        BlockPos refinery = new BlockPos(9, 1, 4);
+        fluidMachine(site, FluidMachines.OIL_REFINERY, refinery, Direction.SOUTH,
                 "factoryworks:oil_processing/basic_oil_processing");
         BlockPos plant = new BlockPos(14, 1, 8);
-        chemicalPlant(site, plant, "factoryworks:chemistry/plastic_bar");
+        fluidMachine(site, FluidMachines.CHEMICAL_PLANT, plant, Direction.NORTH, "factoryworks:chemistry/plastic_bar");
 
-        for (int x = 3; x <= 8; x++) {
-            pipe(site, new BlockPos(x, 1, 2));
+        // Crude runs along the wall to the refinery's last connection, so that a pipe it has emptied
+        // is tried after the gas pipe (ADR-0124).
+        pipe(site, new BlockPos(3, 1, 2));
+        for (int x = 3; x <= 7; x++) {
+            pipe(site, new BlockPos(x, 1, 1));
         }
 
-        // The refinery's gas runs along the roof, down at x=13 and along the floor to the plant's
-        // north-west connection.
-        for (int x = 8; x <= 13; x++) {
-            pipe(site, new BlockPos(x, 5, 3));
+        // The refinery's gas leaves its first connection and runs to the plant's north-west one.
+        for (int x = 10; x <= 12; x++) {
+            pipe(site, new BlockPos(x, 1, 7));
         }
-        for (int y = 1; y <= 4; y++) {
-            pipe(site, new BlockPos(13, y, 3));
-        }
-        for (int z = 4; z <= 6; z++) {
-            pipe(site, new BlockPos(13, 1, z));
-        }
+        pipe(site, new BlockPos(12, 1, 6));
+        pipe(site, new BlockPos(13, 1, 6));
 
         stockedChest(site, new BlockPos(20, 1, 8), item("minecraft:coal"));
         loadingBelt(site, new BlockPos(19, 1, 8), Direction.WEST, 2);
@@ -215,7 +210,7 @@ public final class ShowcaseScenes {
         belt(site, plant.south(3), Direction.SOUTH, 3);
         site.set(plant.south(2), loaderState(Direction.SOUTH));
 
-        site.set(new BlockPos(11, 1, 7), WireworksRegistries.CREATIVE_POLE.get());
+        site.set(new BlockPos(12, 1, 8), WireworksRegistries.CREATIVE_POLE.get());
         site.set(new BlockPos(6, 1, 7), WireworksRegistries.CREATIVE_POLE.get());
         return new Product(List.of(out), item("factoryworks:plastic_bar"));
     }
@@ -233,25 +228,17 @@ public final class ShowcaseScenes {
         }
     }
 
-    private static void placeHolding(Site site, FootprintMachine footprint, BlockPos anchor, String recipe) {
-        footprint.placeAll(site.level(), site.at(anchor), Direction.NORTH);
-        AssemblingMachineBlockEntity machine = site.blockEntity(anchor, AssemblingMachineBlockEntity.class);
-        machine.setHeldRecipe(HeldRecipe.of(recipe), FakePlayerFactory.getMinecraft(site.level()));
-        if (!machine.heldRecipeResolves()) {
-            throw new IllegalStateException(recipe + " does not resolve on the machine at " + site.at(anchor));
-        }
-    }
-
-    private static void chemicalPlant(Site site, BlockPos origin, String recipe) {
-        Footprint footprint = FluidMachines.CHEMICAL_PLANT.footprint();
-        List<BlockPos> blocks = footprint.positions(site.at(origin), Direction.NORTH);
+    private static void fluidMachine(Site site, FluidMachines.Entry machine, BlockPos origin, Direction facing,
+            String recipe) {
+        Footprint footprint = machine.footprint();
+        List<BlockPos> blocks = footprint.positions(site.at(origin), facing);
         for (int i = 0; i < blocks.size(); i++) {
-            site.level().setBlockAndUpdate(blocks.get(i), footprint.stateAt(i, Direction.NORTH));
+            site.level().setBlockAndUpdate(blocks.get(i), footprint.stateAt(i, facing));
         }
-        FluidMachineBlockEntity machine = site.blockEntity(origin, FluidMachineBlockEntity.class);
-        machine.setHeldRecipe(Identifier.parse(recipe), FakePlayerFactory.getMinecraft(site.level()));
-        if (machine.heldRecipe().isEmpty()) {
-            throw new IllegalStateException(recipe + " was not held by the Chemical Plant at " + site.at(origin));
+        FluidMachineBlockEntity entity = site.blockEntity(origin, FluidMachineBlockEntity.class);
+        entity.setHeldRecipe(Identifier.parse(recipe), FakePlayerFactory.getMinecraft(site.level()));
+        if (entity.heldRecipe().isEmpty()) {
+            throw new IllegalStateException(recipe + " was not held by the machine at " + site.at(origin));
         }
     }
 

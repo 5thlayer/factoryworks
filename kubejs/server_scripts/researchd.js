@@ -177,7 +177,7 @@ fromFactorio('plastics', {
 });
 
 fromFactorio('advanced-oil-processing', {
-  icon: 'factoryworks:oil_refinery',
+  icon: 'craftworks:oil_refinery',
   unlocks: [
     'factoryworks:oil_processing/advanced_oil_processing',
     'factoryworks:chemistry/heavy_oil_cracking',

@@ -1,7 +1,5 @@
 package com.factoryworks.core;
 
-import com.factoryworks.core.machine.OilRefineryBlock;
-import com.factoryworks.core.machine.OilRefineryFootprint;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
 import com.factoryworks.core.machine.footprint.FootprintPartBlock;
 import com.factoryworks.core.mining.rig.RigBlock;
@@ -89,18 +87,6 @@ public final class PFBlocks {
 
     public static final FootprintMachine BOILER_FOOTPRINT = new FootprintMachine(
             BoilerFootprint.FOOTPRINT, BOILER, BOILER_PART, () -> PFItems.BOILER.get());
-
-    public static final DeferredHolder<Block, OilRefineryBlock> OIL_REFINERY =
-            BLOCKS.registerBlock("oil_refinery", props -> new OilRefineryBlock(machineProperties(props)));
-
-    public static final DeferredHolder<Block, FootprintPartBlock> OIL_REFINERY_PART =
-            BLOCKS.registerBlock("oil_refinery_part",
-                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
-                            () -> PFBlocks.OIL_REFINERY_FOOTPRINT));
-
-    public static final FootprintMachine OIL_REFINERY_FOOTPRINT = new FootprintMachine(
-            OilRefineryFootprint.FOOTPRINT, OIL_REFINERY, OIL_REFINERY_PART,
-            () -> PFItems.OIL_REFINERY.get());
 
     /** Terra's Steam Engine (ADR-0116), on the footprint seam. */
     public static final DeferredHolder<Block, SteamEngineBlock> STEAM_ENGINE =

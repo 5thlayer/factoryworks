@@ -22,14 +22,13 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 public final class PFNetwork {
 
     /** Bumped when a payload's shape changes; clients on the old shape are refused, not confused. */
-    private static final String VERSION = "10";
+    private static final String VERSION = "11";
 
     private PFNetwork() {
     }
 
     public static void register(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(VERSION);
-        registrar.playToServer(HoldRecipePacket.TYPE, HoldRecipePacket.STREAM_CODEC, HoldRecipePacket::handle);
         // A data pack is server truth, and the fuel table has to reach a client for an item to say
         // what it is worth (ADR-0047).
         registrar.playToClient(FuelTablePacket.TYPE, FuelTablePacket.STREAM_CODEC, FuelTablePacket::handle);

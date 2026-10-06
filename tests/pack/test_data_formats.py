@@ -69,8 +69,6 @@ DEFERRED_ITEM_MODELS = {
 # model beside it rather than a plain model. `scripts/build-item-definitions.py` holds the same
 # table and writes the shape; this asserts it.
 GECKOLIB_ITEMS = {
-    "factoryworks:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
-    "factoryworks:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
 }
 
 # Items drawn as vanilla's chest model over the item model beside it (#540). The generator holds

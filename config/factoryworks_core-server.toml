@@ -1,3 +1,0 @@
-#What locks a recipe in an Assembling Machine. Empty (the default) locks nothing.
-#  researchd: Locked while Researchd blocks the recipe for the team that placed the machine.
-lockSources = ["researchd"]

@@ -584,9 +584,9 @@
     },
     "oil-refinery": {
       "kind": "item",
-      "target": "factoryworks:oil_refinery",
-      "source": "authored",
-      "note": "The pack's block on the Assembling Machine's chassis, wearing Oritech's Refinery model with both chamber layers (ADR-0096, #491). Not Oritech's Refinery, whose module mechanic the pack does not use; its three fractions are the oil fluid rows."
+      "target": "craftworks:oil_refinery",
+      "source": "borrowed",
+      "note": "Craftworks' Oil Refinery, a 5x5 three blocks tall that holds a Held recipe of Factorio's `oil-processing` category (ADR-0124). The converter emits Factorio's recipes for it onto `craftworks:assembling`; its three fractions are the oil fluid rows."
     },
     "oxide-asteroid-chunk": {
       "status": "undecided",

@@ -80,8 +80,8 @@ check's section there before editing it or the code it guards. Run the matching 
 | any block, blockstate, model, texture, lang key, loot table | `tests/pack/test_block_assets.py` |
 | furnace tiers, `core/smelting/` | `test_furnace_assets.py`, `test_smelting_type.py`, `:factoryworks_core:test`, GameTest |
 | `core/wreck/`, the wreck generators | `tests/pack/test_wreck_assets.py`, GameTest |
-| a converter run | `test_recipe_names.py`, `test_machine_specs.py`, `test_recipe_convert.py`, `test_smelting_shape.py`, `test_recipe_duplication.py`, `test_hand_recipes.py`, `check-datapack-load.py` |
-| corpus re-extract or `data/pack/item-map.json` | `test_replace_groups.py`, `test_building_tag.py`, `test_item_map.py`, `test_fuel_convert.py`, `test_machine_specs.py` |
+| a converter run | `test_recipe_names.py`, `test_recipe_convert.py`, `test_smelting_shape.py`, `test_recipe_duplication.py`, `test_hand_recipes.py`, `check-datapack-load.py` |
+| corpus re-extract or `data/pack/item-map.json` | `test_replace_groups.py`, `test_building_tag.py`, `test_item_map.py`, `test_fuel_convert.py`, `test_overload_limit.py` |
 | `core/placement/` | GameTest (`PlacementPlanTests`), then `check-datapack-load.py` if the platform moved |
 | tree felling, after a dump refresh | `factorio-tree-extract.py`, then `build-tree-assets.py`; `test_tree_extract.py`, `test_pack_recipes.py` |
 | `core/start/` or the spec's Opening | `tests/pack/test_starting_kit.py`, `:factoryworks_core:test` |

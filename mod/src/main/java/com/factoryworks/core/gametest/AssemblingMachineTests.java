@@ -80,7 +80,7 @@ final class AssemblingMachineTests {
                     machine.inventory().set(0, ItemResource.of(item("factoryworks:copper_plate")), 8);
                     helper.setBlock(pole, LibraryBlocks.creativePole());
                 })
-                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
+                .thenIdle(LibraryBlocks.POLE_RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
                 .thenExecute(() -> {
                     int wire = machine.inventory().getAmountAsInt(AssemblerSlots.PRODUCT);
                     if (wire < 2 || wire % 2 != 0) {

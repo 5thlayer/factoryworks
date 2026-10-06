@@ -11,8 +11,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * The pack's own recipe types: {@code factoryworks:smelting} (#155), and the two on
- * {@link AssemblingRecipe}'s shape, one per {@link AssemblingFamily}.
+ * The pack's own recipe type: {@code factoryworks:smelting} (#155).
  *
  * <p>Smelting is the only type the three furnace tiers read. Vanilla's {@code minecraft:smelting} is not
  * read alongside it: ADR-0034's sweep removes every vanilla smelting recipe, so a dual read would
@@ -37,20 +36,7 @@ public final class PFRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SmeltingRecipe>> SMELTING_SERIALIZER =
             SERIALIZERS.register(SMELTING, SmeltingRecipe::serializer);
 
-    public static final String OIL_PROCESSING = "oil_processing";
-
-    public static final DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> OIL_PROCESSING_TYPE =
-            assemblingType(OIL_PROCESSING);
-
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AssemblingRecipe>> OIL_PROCESSING_SERIALIZER =
-            SERIALIZERS.register(OIL_PROCESSING, () -> AssemblingRecipe.serializer(AssemblingFamily.OIL_PROCESSING));
-
     private PFRecipes() {
-    }
-
-    private static DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> assemblingType(String path) {
-        return TYPES.register(path, () -> RecipeType.simple(
-                Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, path)));
     }
 
     public static void register(IEventBus modBus) {

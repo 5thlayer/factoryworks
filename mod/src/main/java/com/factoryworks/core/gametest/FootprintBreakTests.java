@@ -38,7 +38,6 @@ final class FootprintBreakTests {
 
     static void register(PFGameTests.Registrar tests) {
         Map<String, FootprintMachine> machines = Map.ofEntries(
-                Map.entry("oil_refinery", PFBlocks.OIL_REFINERY_FOOTPRINT),
                 Map.entry("steam_engine", PFBlocks.STEAM_ENGINE_FOOTPRINT),
                 Map.entry("radar", PFBlocks.RADAR_FOOTPRINT),
                 Map.entry("pumpjack", PFBlocks.PUMPJACK_FOOTPRINT),

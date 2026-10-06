@@ -20,9 +20,6 @@ LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
 
 # Each plugin with the helpers that spell its text, and the enum its status line is read from.
 MACHINES = {
-    "Assembling Machine": ((CORE / "compat/AssemblingMachineJadePlugin.java",
-                            CORE / "machine/AssemblingStatusText.java"),
-                           CORE / "machine/AssemblingStatus.java", "AssemblingStatus"),
     "Steam Engine": ((CORE / "compat/SteamEngineJadePlugin.java",),
                      CORE / "fluid/SteamEngineStatus.java", "SteamEngineStatus"),
 }

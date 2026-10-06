@@ -82,7 +82,7 @@ final class AssemblingFluidTests {
                     feed(machine, recipe);
                     helper.setBlock(POLE, LibraryBlocks.creativePole());
                 })
-                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5 + TICKS_PER_CRAFT + 20)
+                .thenIdle(LibraryBlocks.POLE_RESCAN_INTERVAL + 5 + TICKS_PER_CRAFT + 20)
                 .thenExecute(() -> {
                     ItemResource made = machine.inventory().getResource(AssemblerSlots.PRODUCT);
                     int amount = machine.inventory().getAmountAsInt(AssemblerSlots.PRODUCT);

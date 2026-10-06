@@ -15,6 +15,9 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  */
 final class LibraryBlocks {
 
+    /** A pole rescans at most this many ticks after a machine appears (#271). */
+    static final int POLE_RESCAN_INTERVAL = 40;
+
     private LibraryBlocks() {
     }
 

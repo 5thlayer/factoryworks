@@ -79,7 +79,6 @@ public final class PFGameTests {
         BurnerFurnaceTests.register(registrar);
         FurnaceOverloadTests.register(registrar);
         HandSetTests.register(registrar);
-        AssemblingFamilyTests.register(registrar);
         PlacementPlanTests.register(registrar);
         BoilerTests.register(registrar);
         RigBreakTests.register(registrar);
@@ -101,7 +100,6 @@ public final class PFGameTests {
             ChemicalPlantTests.register(registrar);
             OilRefineryTests.register(registrar);
             FootprintBreakTests.register(registrar);
-            ReachTests.Screens.register(registrar);
             RadarTests.register(registrar);
             PumpjackTests.register(registrar);
             PipeDismantleTests.register(registrar);

@@ -3,8 +3,7 @@
   "package": "com.factoryworks.core.mixin.oritech",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "MachineCoreEntityMixin",
-    "OritechScreenHandlerMixin"
+    "MachineCoreEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

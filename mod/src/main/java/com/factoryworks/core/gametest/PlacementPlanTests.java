@@ -8,8 +8,6 @@ import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.PFItems;
-import com.factoryworks.core.machine.OilRefineryBlockEntity;
-import com.factoryworks.core.machine.OilRefineryFootprint;
 import com.factoryworks.core.fluid.SteamEngineBlockEntity;
 import com.factoryworks.core.fluid.SteamEngineFootprint;
 import com.factoryworks.core.mining.rig.RigCorpus;
@@ -22,7 +20,6 @@ import com.factoryworks.core.oil.PumpjackBlockEntity;
 import com.factoryworks.core.oil.PumpjackFootprint;
 import com.factoryworks.core.radar.RadarBlockEntity;
 import com.factoryworks.core.radar.RadarFootprint;
-import rearth.oritech.block.base.block.MultiblockMachine;
 import net.minecraft.world.item.Item;
 import com.factoryworks.core.smelting.FurnaceBlock;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
@@ -87,12 +84,6 @@ final class PlacementPlanTests {
                 helper -> rigAcceptsOreAtAreaEdge(helper, RigTier.BURNER));
         tests.test("plan_accepts_an_electric_rig_over_ore_outside_its_footprint", 20,
                 helper -> rigAcceptsOreAtAreaEdge(helper, RigTier.ELECTRIC));
-        tests.test("plan_matches_placement_for_an_oil_refinery", 20,
-                PlacementPlanTests::oilRefineryMatchesPlacement);
-        tests.test("plan_refuses_an_oil_refinery_blocked_in_a_chamber", 20,
-                PlacementPlanTests::oilRefineryRefusesWhole);
-        tests.test("plan_refuses_an_oil_refinery_blocked_off_its_anchor_column", 20,
-                PlacementPlanTests::oilRefineryRefusesOffColumn);
         tests.test("plan_matches_placement_for_a_steam_engine", 20,
                 PlacementPlanTests::steamEngineMatchesPlacement);
         tests.test("plan_refuses_a_steam_engine_whole", 20,
@@ -199,52 +190,6 @@ final class PlacementPlanTests {
         }
         helper.getLevel().setBlockAndUpdate(edge, PFBlocks.ore(OreResource.IRON).get().defaultBlockState());
         check(helper, new ItemStack(PFItems.rig(tier).get()), FLOOR, Direction.UP, false);
-        helper.succeed();
-    }
-
-    /** The Oil Refinery's base and both chamber layers (ADR-0096), placed as one. */
-    private static void oilRefineryMatchesPlacement(GameTestHelper helper) {
-        PlacementPlan plan = check(helper, new ItemStack(PFItems.OIL_REFINERY.get()), FLOOR, Direction.UP, false);
-        int expected = OilRefineryFootprint.FOOTPRINT.offsets().size();
-        if (plan.blocks().size() != expected) {
-            helper.fail("an Oil Refinery's plan named " + plan.blocks().size() + " blocks, expected " + expected, FLOOR);
-        }
-        long layers = plan.blocks().stream().map(block -> block.pos().getY()).distinct().count();
-        if (layers != OilRefineryFootprint.BASE_HEIGHT + OilRefineryFootprint.CHAMBERS) {
-            helper.fail("an Oil Refinery's plan spans " + layers + " layers", FLOOR);
-        }
-        BlockPos anchor = plan.blocks().getFirst().pos();
-        if (!(helper.getLevel().getBlockEntity(anchor) instanceof OilRefineryBlockEntity)) {
-            helper.fail("the placed anchor holds no Oil Refinery", helper.relativePos(anchor));
-        }
-        helper.runAfterDelay(5, () -> {
-            if (!helper.getLevel().getBlockState(anchor).getValue(MultiblockMachine.ASSEMBLED)) {
-                helper.fail("the anchor lost ASSEMBLED after it was placed", helper.relativePos(anchor));
-            }
-            helper.succeed();
-        });
-    }
-
-    /** A stone in the top chamber layer, above the anchor where a player cannot see it, refuses the whole. */
-    private static void oilRefineryRefusesWhole(GameTestHelper helper) {
-        helper.setBlock(ABOVE_FLOOR.above(OilRefineryFootprint.BASE_HEIGHT + OilRefineryFootprint.CHAMBERS - 1),
-                Blocks.STONE);
-        refusal(check(helper, new ItemStack(PFItems.OIL_REFINERY.get()), FLOOR, Direction.UP, true),
-                PackRefusal.FOOTPRINT_BLOCKED, helper);
-        helper.succeed();
-    }
-
-    /**
-     * Stones in the lower chamber layer beside the anchor's column, one on each side, so whichever
-     * way the machine faces, one stands in a chamber and not on the anchor's column.
-     */
-    private static void oilRefineryRefusesOffColumn(GameTestHelper helper) {
-        BlockPos layer = ABOVE_FLOOR.above(OilRefineryFootprint.BASE_HEIGHT);
-        for (Direction side : Direction.Plane.HORIZONTAL) {
-            helper.setBlock(layer.relative(side), Blocks.STONE);
-        }
-        refusal(check(helper, new ItemStack(PFItems.OIL_REFINERY.get()), FLOOR, Direction.UP, true),
-                PackRefusal.FOOTPRINT_BLOCKED, helper);
         helper.succeed();
     }
 
