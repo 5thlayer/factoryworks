@@ -21,8 +21,8 @@ _Avoid_: voiding (for destroying items), void as "needs no power"
 **Void Pressure**:
 The ambient void level of a place: a base per dimension, highest in the End, then the Overworld,
 lowest in the Nether, and raised near the End's open void. It sets the grade of motes harvested
-there, the value of motes spent there, how fast a Void Crucible works there, and how fast the
-dragon weakens there. Motes stored nearby never change it.
+there, the value of motes spent there, how fast a Void Crucible works there, and how fast a Void
+Dragon weakens there. Motes stored nearby never change it.
 _Avoid_: network pressure (the motes' own, which only steers flow)
 
 **Density**:
@@ -47,9 +47,22 @@ holds motes, and void gear draws from it.
 _Avoid_: glove
 
 **Void Well**:
-A large store of motes on a Voidstone network, and the stop where the dragon loads, unloads and
-heals.
+A large store of motes on a Voidstone network, and the stop where the Void Dragon loads, unloads
+and heals.
 _Avoid_: roost, Void Displacer
+
+**Void Dragon**:
+A dragon raised on void that carries motes between Void Wells, diving through the void between
+them, across dimensions. It grows from a Dragonling.
+_Avoid_: Ender Dragon (the boss), tamed dragon
+
+**Dragonling**:
+A young Void Dragon, hatched from an egg soaked in motes. It cannot carry yet.
+
+**Drained Dragon Egg**:
+The egg every dragon kill after the first drops: a dragon egg drained of void, which hatches once
+it has soaked up enough motes.
+_Avoid_: lesser egg
 
 **Enriched ore**:
 A FactoryWorks ore block made by displacing a vanilla ore, in one of three richness tiers. Each
@@ -97,7 +110,7 @@ Nothing forces the first Displacer into the End; the End is where harvesting pay
 - So the End is the reservoir and the Nether the turbine: one mote does the most work in the
   Nether, and moving motes downhill is why void logistics exists.
 - Every spend follows this rule — Mutation, gear, zone upgrades, Displacer recipes, hatching,
-  void-only materials — except healing the dragon, which happens only at a Void Well.
+  void-only materials — except healing the Void Dragon, which happens only at a Void Well.
 - What motes buy: power for endgame gear, Mutation, and void-only materials (a void alloy and the
   like). They never create ordinary items; Mutation is the only path from motes to those.
 
@@ -155,19 +168,27 @@ far worse yield than a Displacer's and with an on/off toggle:
 
 ### The Void Well
 
-One block: a large store of motes, the dragon's stop and its healing point. Its pressure stays low
-until it is nearly full, so with no fill target it is a reservoir that soaks up surplus and gives it
-back. With a fill target, the dragon delivers to it until the target is met.
+One block: a large store of motes, the Void Dragon's stop and its healing point. Its pressure stays
+low until it is nearly full, so with no fill target it is a reservoir that soaks up surplus and
+gives it back. With a fill target, a Void Dragon delivers to it until the target is met.
 
-### The dragon
+### The Void Dragon
 
-- **Hatching.** The first dragon kill gives the vanilla egg; every later kill drops a lesser egg.
-  Hatching an egg costs motes, and each egg hatched costs more than the last. So carriers scale with
-  dragon fights won.
-- **Routing.** A dragon serves all its owner's Void Wells in every dimension, carrying from high
+Named and raised on the pattern of vanilla's Dried Ghast, Ghastling and Happy Ghast.
+
+- **Hatching.** The first dragon kill gives the vanilla egg; every later kill drops a **Drained
+  Dragon Egg**. Either egg is placed touching a Voidstone network and soaks up motes from it over
+  time, in visible stages, until it hatches; each egg needs more motes than the last. So carriers
+  scale with dragon fights won.
+- **Growing.** It hatches a **Dragonling**, which grows into a **Void Dragon**, faster when fed
+  motes. A Dragonling cannot carry.
+- **Routing.** A Void Dragon serves all its owner's Void Wells in every dimension, carrying from high
   pressure to low until each Well's fill target is met. Several dragons share the work.
 - **Travel.** It flies visibly near its Wells and dives into the void between them, emerging after
   a travel time set by distance. It is the only thing that carries motes between dimensions.
+- **Riding.** A player mounts it at a Void Well and picks another of their Wells; it dives and
+  emerges there, in any dimension. It is not free flight. A rider costs nothing and the load
+  travels as usual.
 - **Harm.** Outside the End it weakens at a rate set by how far the local Void Pressure is below the
   End's, so it suffers most in the Nether, where motes pay most. Hurt, it flies more slowly; it
   cannot die. It heals with motes at a Void Well.
@@ -199,8 +220,7 @@ ends as Voidstone. The Void Siphon alone must never close a profitable loop.
   Enriched ore multiplies ore, so ADR-0032 must be confirmed superseded before it ships.
 - **Voidstone raising Void Pressure around it** — a later layer, compounding a site's harvests.
 - **Base mod or Module** — revisit if the mechanic grows.
-- **Names** — the dragon and the lesser egg.
 - **Numbers** — the grades, the Density curve, zone sizes and upgrade costs, the richness tiers'
   amounts, upgrade chances per tier, breakdown yield against motes, mote speed, Void Well capacity
-  and the network pressure cap, the dragon's load, speed and harm rate, and the rise in hatching
+  and the network pressure cap, the Void Dragon's load, speed and harm rate, and the rise in hatching
   cost.
