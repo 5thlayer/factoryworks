@@ -9,6 +9,7 @@
 - A mining drill is placed only where its area holds ore. Its front lights while it mines, and the arrow on its Drop Position shows through blocks.
 - Shift-click in a furnace sends fuel and ore to their own slots.
 - Electric poles, the Solar Panel and the Accumulator now come from Wireworks. A world made with 0.1.1 loses the ones it placed.
+- Assembling Machines 1–3 are now Craftworks' Assemblers 1–3, 3x3 and two blocks tall. A world made with 0.1.1 loses the ones it placed. Research is checked when Fill Recipe is pressed, not on every craft.
 
 ## 0.1.1
 
