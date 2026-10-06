@@ -193,3 +193,5 @@ checkout too.
 `./gradlew :factoryworks_core:installToPack` — required after a fresh clone, since the jar
 lands in the gitignored `mods/`. It owns mechanism only; ADR-0015 has the ownership table for
 what goes in the mod, in KubeJS and in datapack JSON. See `mod/README.md`.
+A Core change a player will notice adds its line under `## Unreleased` in `publish/core/changelog.md`
+as it lands. Before releasing, tagging or uploading Core, read `docs/agents/releases.md`.
