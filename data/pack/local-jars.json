@@ -4,7 +4,7 @@
       "mod": "groundworks",
       "group": "io.github.5thlayer",
       "artifact": "groundworks",
-      "version": "0.5.4",
+      "version": "0.5.5",
       "pattern": "groundworks-*.jar",
       "curseforge": 1717892,
       "source": {
@@ -31,7 +31,7 @@
       "mod": "craftworks",
       "group": "io.github.5thlayer",
       "artifact": "craftworks",
-      "version": "0.4.2",
+      "version": "0.5.0",
       "pattern": "craftworks-*.jar",
       "curseforge": 1715876,
       "source": {
@@ -57,7 +57,7 @@
       "mod": "pipeworks",
       "group": "io.github.5thlayer",
       "artifact": "pipeworks",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "pattern": "pipeworks-*.jar",
       "source": {
         "repo": "5thlayer/pipeworks",
