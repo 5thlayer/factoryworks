@@ -102,20 +102,21 @@ def cube(name, low, high, texture):
 
 
 # The whole machine, -16..32 across and 0..32 up, inside a vanilla model's reach (ADR-0111). The beam
-# runs along x. Every block of the 3x3x2 holds at least one piece, so none draws nothing.
+# runs along x. Every block of the 3x3x2 holds at least one piece, so none draws nothing. Where two
+# cubes meet, one ends strictly inside the other, since faces sharing a plane flicker.
 CUBES = [
     cube("base", [-16, 0, -16], [32, 6, 32], "#dark"),
     cube("motor", [20, 6, 18], [28, 14, 26], "#body"),
-    cube("tower", [6, 6, 6], [10, 24, 10], "#body"),
+    cube("tower", [6.5, 6, 6.5], [9.5, 24, 9.5], "#body"),
     cube("crossbar", [6, 16, -12], [10, 20, 28], "#dark"),
     cube("post_nw", [-14, 6, -14], [-10, 30, -10], "#body"),
     cube("post_ne", [26, 6, -14], [30, 30, -10], "#body"),
     cube("post_sw", [-14, 6, 26], [-10, 30, 30], "#body"),
     cube("post_se", [26, 6, 26], [30, 30, 30], "#body"),
-    cube("beam", [-14, 22, 6], [30, 26, 10], "#dark"),
+    cube("beam", [-13, 22, 6], [30, 26, 10], "#dark"),
     cube("head", [-14, 14, 5], [-10, 28, 11], "#body"),
     cube("rod", [-13, 6, 7.5], [-11, 14, 8.5], "#body"),
-    cube("counterweight", [24, 14, 5], [28, 26, 11], "#body"),
+    cube("counterweight", [24, 14, 5], [28, 27, 11], "#body"),
 ]
 TEXTURES = {"body": BODY, "dark": DARK, "particle": BODY}
 
