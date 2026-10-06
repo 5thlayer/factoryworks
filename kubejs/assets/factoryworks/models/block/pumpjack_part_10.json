@@ -1,0 +1,69 @@
+{
+  "textures": {
+    "body": "minecraft:block/iron_block",
+    "dark": "minecraft:block/black_concrete",
+    "particle": "minecraft:block/iron_block"
+  },
+  "elements": [
+    {
+      "name": "crossbar",
+      "from": [
+        6,
+        0,
+        4
+      ],
+      "to": [
+        10,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#dark"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            0.0,
+            4.8,
+            16.0
+          ],
+          "texture": "#dark"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            0.0,
+            4.8,
+            16.0
+          ],
+          "texture": "#dark"
+        },
+        "up": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            4.8
+          ],
+          "texture": "#dark"
+        },
+        "down": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            4.8
+          ],
+          "texture": "#dark"
+        }
+      }
+    }
+  ]
+}

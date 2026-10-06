@@ -304,10 +304,10 @@ Sub-rules:
 
 Sub-rules:
 
-- **The pumpjack stands on an oil well** — `shipped` (#377), ADR-0081. A 3x3x3 footprint placed
+- **The pumpjack stands on an oil well** — `shipped` (#377), ADR-0081. A 3x3x2 footprint placed
   only over a well, fed by a pole at 90 kW plus a 3 kW drain, one cycle a second. Three declared
   departures: crude leaves into a Pipeworks segment through **any face**, where Factorio's has one rotatable output; the model
-  is stand-in art, plain cubes over the 3x3, with no GeckoLib (#621); and the two module slots wait for
+  is stand-in art, plain cubes cut into a slice per block of the 3x3x2, with no GeckoLib (#621); and the two module slots wait for
   modules.
   It **stalls silently** when a foreign fluid joins its segment, with no signal to the player;
   blocked on 5thlayer/pipeworks#1 (#587).

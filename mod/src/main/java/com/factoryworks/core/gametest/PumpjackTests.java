@@ -35,8 +35,8 @@ final class PumpjackTests {
     /** Two blocks past the footprint's edge, where a pole's area reaches its nearest parts. */
     private static final BlockPos POLE = new BlockPos(8, 1, 3);
     /** A part on the top layer's far corner, which no pole touches. */
-    private static final BlockPos FAR_PART = new BlockPos(4, 3, 2);
-    /** West of the footprint's middle layer: three pipes, then the tank. */
+    private static final BlockPos FAR_PART = new BlockPos(4, 2, 2);
+    /** West of the footprint's top layer: three pipes, then the tank. */
     private static final BlockPos TANK = new BlockPos(0, 2, 3);
 
     private static final long FULL_YIELD = 300_000;

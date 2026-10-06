@@ -681,7 +681,7 @@
       "kind": "item",
       "target": "factoryworks:pumpjack",
       "source": "authored",
-      "note": "Factorio's Pumpjack (#377, ADR-0081): a 3x3x3 footprint machine standing on an oil well, drawing 45 FE/t and a 1.5 FE/t drain, and pumping 10 mB/s of crude at 100% yield into the Pipeworks segment a pipe on any face joins (#557, ADR-0110). Mechanism, so `factoryworks_core`'s (ADR-0015). Drawn by Oritech's Pump model, scaled."
+      "note": "Factorio's Pumpjack (#377, ADR-0081): a 3x3x2 footprint machine standing on an oil well, drawing 45 FE/t and a 1.5 FE/t drain, and pumping 10 mB/s of crude at 100% yield into the Pipeworks segment a pipe on any face joins (#557, ADR-0110). Mechanism, so `factoryworks_core`'s (ADR-0015). Stand-in art of its own, one slice of a filled model per block (#621)."
     },
     "radar": {
       "kind": "item",

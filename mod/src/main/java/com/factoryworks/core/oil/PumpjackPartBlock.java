@@ -8,6 +8,7 @@ import com.factoryworks.core.machine.footprint.FootprintPartBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -19,6 +20,11 @@ public class PumpjackPartBlock extends FootprintPartBlock implements EntityBlock
 
     public PumpjackPartBlock(Properties properties, Supplier<FootprintMachine> machine) {
         super(properties, machine);
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override

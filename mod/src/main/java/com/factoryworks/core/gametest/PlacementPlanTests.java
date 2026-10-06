@@ -234,7 +234,7 @@ final class PlacementPlanTests {
         helper.succeed();
     }
 
-    /** A Pumpjack's 3x3x3 over an oil well (ADR-0081), the anchor on the well holding its block entity. */
+    /** A Pumpjack's 3x3x2 over an oil well (ADR-0081), the anchor on the well holding its block entity. */
     private static void pumpjackMatchesPlacementOnAWell(GameTestHelper helper) {
         helper.setBlock(FLOOR, PFBlocks.OIL_WELL.get());
         PlacementPlan plan = check(helper, new ItemStack(PFItems.PUMPJACK.get()), FLOOR, Direction.UP, false);

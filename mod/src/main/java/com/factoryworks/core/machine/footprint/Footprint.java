@@ -39,13 +39,18 @@ public record Footprint(List<Local> offsets) {
      * {@code z}, the height along {@code x}.
      */
     public static Footprint standing(int tileWidth, int tileHeight) {
+        return standing(tileWidth, tileHeight, tileWidth);
+    }
+
+    /** {@link #standing(int, int)} with its own number of layers, where Factorio fixes only the tile square. */
+    public static Footprint standing(int tileWidth, int tileHeight, int layers) {
         if (tileWidth % 2 == 0 || tileHeight % 2 == 0) {
             throw new IllegalStateException("a " + tileWidth + "x" + tileHeight + " machine has no centre block");
         }
         int halfX = tileHeight / 2;
         int halfZ = tileWidth / 2;
         List<Local> parts = new ArrayList<>();
-        for (int y = 0; y < tileWidth; y++) {
+        for (int y = 0; y < layers; y++) {
             for (int x = -halfX; x <= halfX; x++) {
                 for (int z = -halfZ; z <= halfZ; z++) {
                     if (x != 0 || y != 0 || z != 0) {

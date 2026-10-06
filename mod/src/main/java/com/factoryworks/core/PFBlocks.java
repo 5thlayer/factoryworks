@@ -208,9 +208,8 @@ public final class PFBlocks {
     }
 
     /**
-     * A footprint machine's anchor and parts. {@code noOcclusion}: they render nothing themselves
-     * (Oritech's renderer draws the model from the anchor), so a neighbour that culled its face
-     * against one would show a hole straight through the machine.
+     * A footprint machine's anchor and parts. {@code noOcclusion}: a stand-in slice need not fill its
+     * block, and a neighbour that culled its face against one would show a hole.
      */
     private static BlockBehaviour.Properties machineProperties(BlockBehaviour.Properties props) {
         return props

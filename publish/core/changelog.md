@@ -5,6 +5,7 @@
 - Iron, copper and steel plate, iron gear wheel, iron stick, copper cable, sulfur and raw uranium are FactoryWorks items.
 - Crude oil, water and steam run through Pipeworks pipes. A pipe joins the Pumpjack, Offshore Pump, Boiler and Steam Engine at their ports, and a pipe drag that would join two fluids is refused.
 - The Boiler is a 3x2 machine, placed and broken whole.
+- The Pumpjack stands 3x3x2, and every block of it draws its own part of the machine, so none is see-through.
 - The Steam Engine burns 30 steam a second for 900 kW, and it and steam wear FactoryWorks' own art.
 - The Small Lamp is gone; Oritech's lamp was the only block it made. Fluid sprites and the oil and pipe scenes no longer name Oritech.
 - A mining drill is placed only where its area holds ore. Its front lights while it mines, and the arrow on its Drop Position shows through blocks.
