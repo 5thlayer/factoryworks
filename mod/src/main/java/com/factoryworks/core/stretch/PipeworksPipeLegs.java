@@ -110,11 +110,11 @@ public final class PipeworksPipeLegs implements LegBuilder {
         return positions;
     }
 
-    // The arms the pipe will draw once Pipeworks joins it, so the plan equals what the click lays (ADR-0110).
+    // The arms the pipe will draw once Pipeworks joins it, toward a fluid inventory too, so the plan equals what the click lays (ADR-0110).
     private static BlockState opened(FluidPipeBlock pipe, Level level, BlockPos pos, Set<BlockPos> laid) {
-        return pipe.withLinks(pipe.defaultBlockState(), side -> {
+        return pipe.withArms(pipe.defaultBlockState(), side -> {
             BlockPos beside = pos.relative(side);
-            return laid.contains(beside) || FluidPipes.wouldLink(level, pos, side);
+            return laid.contains(beside) || FluidPipes.wouldDrawArm(level, pos, side);
         });
     }
 }
