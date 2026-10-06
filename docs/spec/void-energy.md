@@ -8,6 +8,10 @@ Factorio fidelity was not a constraint.
 
 These move to a glossary of their own once the mechanic has code.
 
+**Voidworks**:
+The Module that holds void: harvesting, Voidstone networks, the Void Dragon and Mutation. Like every
+Module it requires FactoryWorks and no other Module.
+
 **Mote**:
 The unit of void, harvested, stored and moved. A mote carries a grade: the band of Void Pressure
 where it was harvested. Motes of one grade stack; motes of different grades never merge.
@@ -91,8 +95,11 @@ _Avoid_: tier, quality
 
 ## Where it lives
 
-In the FactoryWorks base mod for now. It moves to a Module of its own if it grows into a standalone
-mechanic.
+In **Voidworks**, a Module of its own in its own repository, started from libworks' template. Nothing
+the other Modules do uses void, so it is not something the base mod holds for them, and a player can
+leave the End-centred endgame out. It requires FactoryWorks because Enriched ore is a FactoryWorks
+ore block (ADR-0041) and FactoryWorks' drills mine it; everything else goes through NeoForge's item
+and fluid faces.
 
 ## Progression
 
@@ -158,9 +165,10 @@ far worse yield than a Displacer's and with an on/off toggle:
 ### Ore patches
 
 Ore patches become a worldgen option, so that drills can be a post-End mechanic: with patches off,
-a drill has nothing to mine until Enriched ore exists. Its default follows where void lives. In the
-FactoryWorks base mod, patches are off by default; as a mod of its own, they are on, so FactoryWorks
-alone keeps its drills from the start. The option only affects chunks generated after it is set.
+a drill has nothing to mine until Enriched ore exists. The option is FactoryWorks' and defaults to
+on, so FactoryWorks alone keeps its drills from the start; installing Voidworks does not change it.
+Voidworks' documentation recommends turning it off for a post-End drill game. The option only
+affects chunks generated after it is set.
 
 Enriched ore multiplies ore; ADR-0032's cut of every multiplier is superseded by ADR-0115.
 
@@ -225,7 +233,7 @@ ends as Voidstone. The Void Siphon alone must never close a profitable loop.
 ## Open
 
 - **Voidstone raising Void Pressure around it** — a later layer, compounding a site's harvests.
-- **Base mod or Module** — revisit if the mechanic grows. It also sets the ore patch default.
+- **The Voidworks repository** — not created yet; this spec moves there with it.
 - **Numbers** — the grades, the Density curve, zone sizes and upgrade costs, the richness tiers'
   amounts, upgrade chances per tier, breakdown yield against motes, mote speed, Void Well capacity
   and the network pressure cap, the Void Dragon's load, speed and harm rate, and the rise in hatching
