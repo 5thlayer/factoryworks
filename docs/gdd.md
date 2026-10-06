@@ -5,7 +5,7 @@ interplanetary scope of Factorio's Space Age expansion, built on a curated mod s
 together by `factoryworks_core` and KubeJS into a stationary, automation-first loop.
 
 This document describes intended design. Decisions that are hard to reverse are recorded as ADRs in
-`docs/adr/`; domain vocabulary is defined in `CONTEXT.md` and used here verbatim. Where an ADR or
+`docs/adr/`; domain vocabulary is defined in `GLOSSARY.md` and used here verbatim. Where an ADR or
 the ledger owns a subject, this document points at it rather than restating it, and design prose
 has no standing against either (ADR-0054).
 

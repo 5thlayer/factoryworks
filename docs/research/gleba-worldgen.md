@@ -10,7 +10,7 @@ reached conclusions this document overturns. Cite this file, not the scratch fil
 directly: a wiki page changes under you, and an acceptance criterion needs something fixed to check
 against.
 
-Terminology below is the wiki's own. The mapping to the pack's vocabulary is in `CONTEXT.md`; the
+Terminology below is the wiki's own. The mapping to the pack's vocabulary is in `GLOSSARY.md`; the
 naming rule is ADR-0004 as extended by ADR-0015.
 
 ## Biome families

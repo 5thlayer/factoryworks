@@ -94,7 +94,7 @@ The Summary's `where` names what the first release has. A section's `where` name
 places the mechanic on, parked or not.
 
 **Row keys are Factorio's own names** (`Gleba`, not Sapros; `Vulcanus`, not Ignus). This is a declared
-exception to `CONTEXT.md`'s _Avoid_ lists, on the same footing as `data/factorio/*.json`: the ledger's
+exception to `GLOSSARY.md`'s _Avoid_ lists, on the same footing as `data/factorio/*.json`: the ledger's
 value is being diffable against Factorio, so it must speak Factorio. The pack's name for the same
 thing appears in `where`. See ADR-0028.
 
@@ -235,7 +235,7 @@ Sub-rules:
   entry named GregTech's wrench verbs, which #168 declared on the Pick as `ItemAbility` strings;
   GregTech left with ADR-0060 and #425 removed them.*
 - **Rotating a placed entity (`R`)** — `planned`, #406. Two pack actions, **Rotate** and **Reverse
-  Rotate** (`CONTEXT.md`), on `R` and `Shift+R`, for the held item's facing and the aimed block in
+  Rotate** (`GLOSSARY.md`), on `R` and `Shift+R`, for the held item's facing and the aimed block in
   place. The held half shipped with #386 (ADR-0083) and the placed half with #405 (ADR-0087), and
   both now run in Groundworks (#451); the footprint machines (#406) are refused until they turn whole, and a placed splitter is refused for good, since players break and re-place one rather than turn it (5thlayer/beltworks#28, wontfix). *This entry read "`shipped`, #168":
   #168 declared NeoForge's `wrench_rotate` ability on the Engineer's Pick, which GregTech gated the
@@ -561,7 +561,7 @@ Sub-rules:
   idle draw built in `factoryworks_core` for a lesson (*don't over-build*) that ore depletion
   (ADR-0020) and Emission already teach more cheaply. Folding it into `EUt` is worse than either: it
   looks like fidelity and behaves as a flat tax. Called **idle draw** in pack prose, never "drain",
-  which `CONTEXT.md` owns for an unrelated Sapros mechanic.
+  which `GLOSSARY.md` owns for an unrelated Sapros mechanic.
 
 ### Handcrafting and the crafting queue
 
@@ -1476,7 +1476,7 @@ the next time one came up.
 Sub-rules:
 
 - **Fast entity transfer and fast entity split** — `planned`, #208. The pack calls these **quick
-  transfer** and **quick split** (`CONTEXT.md`); Factorio's own names appear here and nowhere else,
+  transfer** and **quick split** (`GLOSSARY.md`); Factorio's own names appear here and nowhere else,
   per ADR-0028. Two `KeyMapping`s in `factoryworks_core`, defaulting to `CTRL` + left and right
   mouse and declared in Controls so a conflict with Carry On or Building Gadgets is the player's to
   resolve. Magnitude is Factorio's verbatim — the held stack in, everything the target will give up

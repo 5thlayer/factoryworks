@@ -39,7 +39,7 @@ logistics row. There is one scenario, called S2 here:
 
 SimpleBelts calls its belt-end block a **chute**. The pack would call it a **loader**, both in the
 survey and in the fork's lang file. The name is honest about what the block does (fact 1) and avoids
-two collisions: Create's Chute, and `CONTEXT.md`'s _Avoid: chute_ under **Drop Hatch**. The glossary
+two collisions: Create's Chute, and `GLOSSARY.md`'s _Avoid: chute_ under **Drop Hatch**. The glossary
 does not take the term until the block ships. The rest of this document says *loader* and keeps
 `ChuteBlockEntity` for the class.
 

@@ -28,7 +28,7 @@ FactoryWorks' rules live in its own mod, **FactoryWorks Core**, and in three mod
 - This repository is the pack's live CurseForge instance: configs, KubeJS scripts, data and the manifest sit where the game reads them.
 - After a fresh clone, `./gradlew :factoryworks_core:installToPack` builds FactoryWorks Core into `mods/`, which git does not track.
 - `uv run --with pytest pytest tests/` runs every check.
-- The pack's vocabulary is in [CONTEXT.md](https://github.com/5thlayer/factoryworks/blob/main/CONTEXT.md), its decisions in [docs/adr](https://github.com/5thlayer/factoryworks/tree/main/docs/adr), and what it does with each Factorio mechanic in [docs/factorio-mechanics.md](https://github.com/5thlayer/factoryworks/blob/main/docs/factorio-mechanics.md).
+- The pack's vocabulary is in [GLOSSARY.md](https://github.com/5thlayer/factoryworks/blob/main/GLOSSARY.md), its decisions in [docs/adr](https://github.com/5thlayer/factoryworks/tree/main/docs/adr), and what it does with each Factorio mechanic in [docs/factorio-mechanics.md](https://github.com/5thlayer/factoryworks/blob/main/docs/factorio-mechanics.md).
 - Report bugs and ideas on the [issue tracker](https://github.com/5thlayer/factoryworks/issues).
 - Beltworks, Craftworks and Groundworks are developed in their own repositories: [5thlayer/beltworks](https://github.com/5thlayer/beltworks), [5thlayer/craftworks](https://github.com/5thlayer/craftworks), [5thlayer/groundworks](https://github.com/5thlayer/groundworks).
 
