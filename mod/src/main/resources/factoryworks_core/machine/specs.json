@@ -1,27 +1,4 @@
 {
-  "chemical-plant": {
-    "recipe_type": "factoryworks:chemistry",
-    "categories": [
-      "chemistry"
-    ],
-    "crafting_speed": 1,
-    "energy_usage": 210000.0,
-    "drain": 7000.0,
-    "fast_replaceable_group": "chemical-plant",
-    "item_inputs": 2,
-    "item_outputs": 1,
-    "fluid_inputs": [
-      1000,
-      1000
-    ],
-    "fluid_outputs": [
-      100
-    ],
-    "fluid_output_boxes": [
-      100,
-      100
-    ]
-  },
   "oil-refinery": {
     "recipe_type": "factoryworks:oil_processing",
     "categories": [

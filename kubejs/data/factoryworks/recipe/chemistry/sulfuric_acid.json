@@ -1,6 +1,7 @@
 {
-  "type": "factoryworks:chemistry",
+  "type": "craftworks:assembling",
   "category": "chemistry",
+  "hand_craftable": false,
   "ingredients": [
     {
       "ingredient": "factoryworks:sulfur",
@@ -17,6 +18,7 @@
       "amount": 100
     }
   ],
+  "results": [],
   "fluid_results": [
     {
       "id": "factoryworks:sulfuric_acid",

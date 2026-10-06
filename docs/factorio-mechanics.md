@@ -432,16 +432,20 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: Terra, Ignus, Gelida
-- **via**: `pack`
-- **owner**: ADR-0096 (the Chemical Plant and Oil Refinery are pack blocks on the Assembling
-  Machine's chassis, on Oritech's models) and ADR-0109 (Core registers the oil fluids, drawn in
-  Factorio's colours; #619)
-- **ticket**: #486, closed (the Chemical Plant shipped with #490 and the Oil Refinery with #491); #258 before it
+- **via**: `pack` (the Oil Refinery), `craftworks` (the Chemical Plant)
+- **owner**: ADR-0123 (the Chemical Plant is Craftworks'), ADR-0096 (the Oil Refinery is a pack
+  block on the Assembling Machine's chassis, on Oritech's model, until it moves, #581) and
+  ADR-0109 (Core registers the oil fluids, drawn in Factorio's colours; #619)
+- **ticket**: #582 (the Chemical Plant moved to Craftworks); #486, closed (the Oil Refinery shipped with #491); #258 before it
 
 Sub-rules:
 
 - **Basic then advanced oil processing** — `shipped`. Advanced is not gated by research yet (#493).
 - **Cracking to resolve the three-output imbalance** — `shipped`. The chapter's whole puzzle.
+- **The Chemical Plant** — `shipped`, #582, ADR-0123. `craftworks:chemical_plant`, 3x3 and two
+  blocks tall, holding Factorio's `chemistry` recipes as `craftworks:assembling` recipes under their
+  old ids. Its four Fluid Connections take and give fluid through any pipe or tank beside them, so
+  Pipeworks pipes carry petroleum gas in and sulfuric acid out (`ChemicalPlantTests`). `via` is Craftworks.
 - **Coal liquefaction** — `planned`, on Ignus (`docs/planets.md`).
 
 ### Smelting
@@ -530,8 +534,8 @@ Sub-rules:
   the recipe manager when asked, so a tag ingredient stays a tag. The adaptation is **where it is picked**
   (ADR-0073): the recipe viewer is the only picker. EMI's Fill Recipe on the open machine sets the
   Held recipe, and the server refuses one the machine cannot hold with a message, or one that is
-  Locked for the player who presses it, which is asked once (Craftworks' ADR-0013). The Chemical Plant's and the
-  Oil Refinery's screens follow the rest of this entry until they move (#581, #582). The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
+  Locked for the player who presses it, which is asked once (Craftworks' ADR-0013). The Oil Refinery's screen
+  follows the rest of this entry until it moves (#581). The machine's screen has **no recipe list** -- #327's was a second browser beside EMI's,
   missing its search and navigation, and #336 removed it. It shows the Held recipe as its result's
   icon and name, whose tooltip carries the recipe when EMI is loaded, and a progress bar between the
   inputs and the output. There is no clear: a machine without a recipe does nothing, so a recipe is

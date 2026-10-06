@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
  * A crafting machine's rate from its spec (#328, ADR-0029): {@code crafting_speed} and
  * {@code energy_usage}, at ADR-0060's 1 FE = 100 J.
  *
- * <p>The arithmetic is what the Chemical Plant and the Oil Refinery run on, and it is exercised at
+ * <p>The arithmetic is what the Oil Refinery runs on, and it is exercised at
  * the three speeds Factorio's Assembling Machines have, which are Craftworks' now (ADR-0118), so each
  * is a local spec. Every expected figure is typed from the corpus by hand rather than read off a
  * spec, so the test cannot agree with the implementation by construction.
@@ -25,7 +25,7 @@ class AssemblingMachineSpecTest {
     private static final MachineSpec THREE = rate("speed-1.25", 1.25, 375_000L);
 
     private static MachineSpec rate(String name, double craftingSpeed, long watts) {
-        return new MachineSpec(name, "factoryworks:chemistry", Set.of("chemistry"), craftingSpeed, watts, 0L, name,
+        return new MachineSpec(name, "craftworks:assembling", Set.of("crafting"), craftingSpeed, watts, 0L, name,
                 0, 0, List.of(), List.of(), List.of());
     }
 
@@ -126,23 +126,6 @@ class AssemblingMachineSpecTest {
         assertEquals(1875, AssemblingMachineSpec.drawTenths(1500, 8));
     }
 
-    /** 2 items and 2 fluids in, 1 of each out: the entity's second output box is one no recipe fills (ADR-0096). */
-    @Test
-    void theChemicalPlantsTanksFollowItsRecipes() {
-        MachineSpec plant = MachineSpecs.get().spec("chemical-plant");
-        assertEquals("factoryworks:chemistry", plant.recipeType());
-        assertEquals(Set.of("chemistry"), plant.categories());
-        assertEquals(2, plant.itemInputs());
-        assertEquals(1, plant.itemOutputs());
-        assertEquals(List.of(1000, 1000), plant.fluidInputs());
-        assertEquals(List.of(100), plant.fluidOutputs());
-        assertEquals(List.of(100, 100), plant.fluidOutputBoxes());
-        assertEquals(1.0, plant.craftingSpeed());
-        assertEquals(210_000L, plant.watts());
-        assertEquals(7_000L, plant.drainWatts());
-        assertEquals("chemical-plant", plant.replaceGroup());
-    }
-
     /** 2 fluids in and always 3 out, with no item slots at all (ADR-0096). */
     @Test
     void theOilRefineryHasThreeOutputTanksAndNoSlots() {
@@ -175,22 +158,19 @@ class AssemblingMachineSpecTest {
 
     @Test
     void aTankPastTheMachinesLastHasNoRoom() {
-        MachineSpec plant = MachineSpecs.get().spec("chemical-plant");
-        assertEquals(0, plant.fluidInputVolume(2));
-        assertEquals(100, MachineSpecs.get().spec("oil-refinery").fluidOutputVolume(2));
-        assertEquals(0, plant.fluidOutputVolume(1));
+        MachineSpec refinery = MachineSpecs.get().spec("oil-refinery");
+        assertEquals(0, refinery.fluidInputVolume(2));
+        assertEquals(100, refinery.fluidOutputVolume(2));
+        assertEquals(0, refinery.fluidOutputVolume(3));
     }
 
     /** A recipe fits when the machine has a slot or tank for every input and output. */
     @Test
     void aRecipeFitsOnlyWhereEveryInputAndOutputHasASlotOrTank() {
-        MachineSpec plant = MachineSpecs.get().spec("chemical-plant");
-        assertTrue(plant.fits(2, 1, 2, 1));
-        assertFalse(plant.fits(3, 1, 0, 0), "a third item ingredient");
-        assertFalse(plant.fits(1, 1, 3, 0), "a third fluid ingredient");
-        assertFalse(plant.fits(1, 1, 0, 2), "a second fluid result");
         MachineSpec refinery = MachineSpecs.get().spec("oil-refinery");
         assertTrue(refinery.fits(0, 0, 2, 3));
-        assertFalse(refinery.fits(1, 0, 2, 3));
+        assertFalse(refinery.fits(1, 0, 2, 3), "an item ingredient");
+        assertFalse(refinery.fits(0, 0, 3, 3), "a third fluid ingredient");
+        assertFalse(refinery.fits(0, 0, 2, 4), "a fourth fluid result");
     }
 }

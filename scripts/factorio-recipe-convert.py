@@ -91,13 +91,13 @@ PACK_SMELTING = "factoryworks:smelting"
 
 SOURCE_CATEGORY_KEY = "category"
 
-# Factorio's `crafting`, `advanced-crafting` and `crafting-with-fluid` are Craftworks' Assembling
-# recipes (ADR-0118). Chemistry and oil processing keep the pack's own types until their machines
-# move.
+# Factorio's `crafting`, `advanced-crafting`, `crafting-with-fluid` and `chemistry` are Craftworks'
+# Assembling recipes (ADR-0118, ADR-0123). Oil processing keeps the pack's own type until its
+# machine moves.
 CRAFTWORKS_ASSEMBLING = "craftworks:assembling"
 
 # The types on `AssemblingRecipe`'s record and codec in `factoryworks_core` (ADR-0096).
-PACK_ASSEMBLING_SHAPED = ("factoryworks:chemistry", "factoryworks:oil_processing")
+PACK_ASSEMBLING_SHAPED = ("factoryworks:oil_processing",)
 
 # The Personal Assembler plans a recipe whose first Factorio category is `crafting`. The eleven
 # fluid-free recipes Factorio withholds from the hand all have another first category.
@@ -175,7 +175,8 @@ def convert(recipe_type, recipe, items, override):
     `SizedIngredient.NESTED_CODEC` (`ingredient` + `count`), a fluid one
     `SizedFluidIngredient.CODEC` (`ingredient` + `amount`), an item result
     `ItemStackTemplate.CODEC` (`id` + `count`) and a fluid result `FluidStackTemplate.CODEC` (`id` +
-    `amount`). Every list is optional, so a recipe with no fluid writes no fluid key.
+    `amount`). Every list is optional, so a recipe with no fluid writes no fluid key, except Craftworks'
+    `ingredients` and `results`.
     """
     out = {"type": recipe_type, SOURCE_CATEGORY_KEY: recipe["category"]}
     if recipe_type == CRAFTWORKS_ASSEMBLING:
@@ -199,22 +200,21 @@ def convert(recipe_type, recipe, items, override):
                 result["components"] = row["components"]
             sides["results"].append(result)
     for field, entries in sides.items():
-        if entries:
+        # Craftworks' codec requires `ingredients` and `results`, empty or not (ADR-0123).
+        required = recipe_type == CRAFTWORKS_ASSEMBLING and field in ("ingredients", "results")
+        if entries or required:
             out[field] = entries
     out["time"] = override.get("duration", round(recipe["energy_required"] * 20))
     return out
 
 
-def emitted_path(recipe_type, name):
-    """`<type path>/<name>`, which is also the recipe's id and therefore what research unlocks.
+def emitted_path(directory, name):
+    """`<directory>/<name>`, which is also the recipe's id and therefore what research unlocks.
 
-    #87 made this a rule rather than a habit: GregTech re-registered every GTRecipe under its type's
-    path, so a file anywhere else loaded twice. The pack's own type is not re-registered by
-    anything, so the directory is no longer load-bearing for duplication -- it is kept because
-    `researchd.js` unlocks `factoryworks:assembling/<name>` and the foreign subtrees sit inside
-    it.
+    The directory is the machine's `recipe_dir` in `category-map.json`, else its recipe type's path.
+    Chemistry keeps `chemistry/` on Craftworks' type, so its ids do not move (ADR-0123).
     """
-    return "%s/%s" % (recipe_type.split(":", 1)[1], name.replace("-", "_"))
+    return "%s/%s" % (directory, name.replace("-", "_"))
 
 
 def apply_override(recipe, override):
@@ -337,7 +337,8 @@ def main():
                 failures.append(f"{name}: recipe type {recipe_type} has no emitter -- "
                                 "category-map.json names a type this converter cannot shape")
                 continue
-            emitted[emitted_path(recipe_type, name)] = convert(recipe_type, recipe, items, override)
+            directory = machines[machine].get("recipe_dir") or recipe_type.split(":", 1)[1]
+            emitted[emitted_path(directory, name)] = convert(recipe_type, recipe, items, override)
 
     for name, row in sorted(items.items()):
         if "outside_corpus" in row:

@@ -34,7 +34,6 @@ final class OilRefineryTests {
 
     private static final String ADVANCED = "factoryworks:oil_processing/advanced_oil_processing";
     private static final String BASIC = "factoryworks:oil_processing/basic_oil_processing";
-    private static final String PLASTIC = "factoryworks:chemistry/plastic_bar";
 
     private static final String CRUDE = "factoryworks:crude_oil";
     private static final String HEAVY_OIL = "factoryworks:heavy_oil";
@@ -66,8 +65,6 @@ final class OilRefineryTests {
         tests.test("oil_refinery_stalls_without_water", 200, OilRefineryTests::stallsWithoutWater);
         tests.test("oil_refinery_fluid_face_routes_by_the_held_recipe", 20,
                 OilRefineryTests::fluidFaceRoutesByTheHeldRecipe);
-        tests.test("oil_refinery_refuses_another_machines_recipe", 20,
-                helper -> CHASSIS.refusesOtherRecipes(helper, placeWhole(helper), ADVANCED, List.of(PLASTIC)));
         tests.test("oil_refinery_keeps_its_recipe_over_a_reload", 20,
                 helper -> CHASSIS.keepsItsRecipeOverAReload(helper, placeWhole(helper), ADVANCED));
         tests.test("oil_refinery_is_fed_through_a_chamber", 100,

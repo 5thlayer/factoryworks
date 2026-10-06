@@ -189,9 +189,9 @@
     },
     "chemical-plant": {
       "kind": "item",
-      "target": "factoryworks:chemical_plant",
-      "source": "authored",
-      "note": "The pack's block on the Assembling Machine's chassis, wearing Oritech's Centrifuge model (ADR-0096, #490). Not Oritech's Centrifuge, which ADR-0060 recipe-removes as ore-doubling."
+      "target": "craftworks:chemical_plant",
+      "source": "borrowed",
+      "note": "Craftworks' Chemical Plant, a 3x3 two blocks tall that holds a Held recipe of Factorio's `chemistry` category (ADR-0123). The converter emits Factorio's recipe for it onto `craftworks:assembling`."
     },
     "chemical-science-pack": {
       "kind": "item",

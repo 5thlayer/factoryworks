@@ -49,7 +49,6 @@ DEFERRED = {
 # `builtin/entity` and draw nothing. Still derived, not decided -- the shape is the one Oritech's own
 # `items/assembler.json` has, and the base is the item model beside it.
 GECKOLIB = {
-    "factoryworks:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
     "factoryworks:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
 }
 

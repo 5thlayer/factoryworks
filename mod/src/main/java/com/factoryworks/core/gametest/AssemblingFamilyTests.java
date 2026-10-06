@@ -27,7 +27,7 @@ final class AssemblingFamilyTests {
 
     static void register(PFGameTests.Registrar tests) {
         tests.test("each_family_round_trips_its_recipes", 20, AssemblingFamilyTests::eachFamilyRoundTrips);
-        tests.test("a_chemical_plant_holds_no_assembling_recipe", 20, AssemblingFamilyTests::noAssemblingHeld);
+        tests.test("an_oil_refinery_holds_no_assembling_recipe", 20, AssemblingFamilyTests::noAssemblingHeld);
     }
 
     private static void eachFamilyRoundTrips(GameTestHelper helper) {
@@ -64,8 +64,8 @@ final class AssemblingFamilyTests {
     private static void noAssemblingHeld(GameTestHelper helper) {
         String cable = "factoryworks:assembling/copper_cable";
         if (AssemblingMachineRecipes.resolve(helper.getLevel(), HeldRecipe.of(cable),
-                MachineSpecs.get().spec("chemical-plant")).isPresent()) {
-            helper.fail("a Chemical Plant resolves " + cable);
+                MachineSpecs.get().spec("oil-refinery")).isPresent()) {
+            helper.fail("an Oil Refinery resolves " + cable);
             return;
         }
         helper.succeed();

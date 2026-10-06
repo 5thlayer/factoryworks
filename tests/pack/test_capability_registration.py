@@ -76,7 +76,6 @@ FACES = {
     # Energy (#328): the craft cycle draws FE, and without the face no pole counts the machine.
     # Item (#329): inputs filtered to the Held recipe, on the guard.
     # Fluid (#295): the tanks, taking only the Held recipe's fluid.
-    "chemical_plant": ("registerChemicalPlantCapabilities", ("Energy", "Item", "Fluid")),
     # No item slot, so no item face (ADR-0096).
     "oil_refinery": ("registerOilRefineryCapabilities", ("Energy", "Fluid")),
     # Energy only: its steam arrives through a Pipeworks port (#593).

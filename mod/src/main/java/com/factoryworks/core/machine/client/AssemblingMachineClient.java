@@ -6,7 +6,6 @@ import com.factoryworks.core.PFMenus;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import rearth.oritech.client.renderers.blocks.MachineRenderer;
 
 /**
  * The chassis machines' client half: Oritech's renderer, pointed at Oritech's centrifuge model and
@@ -27,9 +26,6 @@ public final class AssemblingMachineClient {
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        // Not Oritech's CentrifugeRenderer, which is typed to its own block entity's tanks.
-        event.registerBlockEntityRenderer(PFBlockEntities.CHEMICAL_PLANT.get(),
-                context -> new MachineRenderer<>(context, "models/centrifuge", false));
         event.registerBlockEntityRenderer(PFBlockEntities.OIL_REFINERY.get(), OilRefineryRenderer::new);
     }
 }

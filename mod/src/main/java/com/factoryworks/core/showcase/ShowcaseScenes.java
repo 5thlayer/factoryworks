@@ -3,6 +3,8 @@ package com.factoryworks.core.showcase;
 import io.github._5thlayer.craftworks.machine.AssemblerBlockEntity;
 import io.github._5thlayer.craftworks.machine.AssemblerTier;
 import io.github._5thlayer.craftworks.machine.Assemblers;
+import io.github._5thlayer.craftworks.machine.ChemicalPlantBlockEntity;
+import io.github._5thlayer.craftworks.machine.ChemicalPlants;
 import io.github._5thlayer.groundworks.Footprint;
 import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
@@ -184,30 +186,36 @@ public final class ShowcaseScenes {
         BlockPos refinery = new BlockPos(8, 1, 3);
         placeHolding(site, PFBlocks.OIL_REFINERY_FOOTPRINT, refinery,
                 "factoryworks:oil_processing/basic_oil_processing");
-        BlockPos plant = new BlockPos(11, 1, 3);
-        placeHolding(site, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, plant, "factoryworks:chemistry/plastic_bar");
+        BlockPos plant = new BlockPos(14, 1, 8);
+        chemicalPlant(site, plant, "factoryworks:chemistry/plastic_bar");
 
         for (int x = 3; x <= 8; x++) {
             pipe(site, new BlockPos(x, 1, 2));
         }
 
-        pipe(site, refinery.above(4));
-        pipe(site, new BlockPos(9, 5, 3));
-        pipe(site, new BlockPos(10, 5, 3));
-        pipe(site, new BlockPos(11, 5, 3));
-        pipe(site, new BlockPos(11, 4, 3));
-        pipe(site, new BlockPos(11, 3, 3));
+        // The refinery's gas runs along the roof, down at x=13 and along the floor to the plant's
+        // north-west connection.
+        for (int x = 8; x <= 13; x++) {
+            pipe(site, new BlockPos(x, 5, 3));
+        }
+        for (int y = 1; y <= 4; y++) {
+            pipe(site, new BlockPos(13, y, 3));
+        }
+        for (int z = 4; z <= 6; z++) {
+            pipe(site, new BlockPos(13, 1, z));
+        }
 
-        stockedChest(site, new BlockPos(16, 1, 3), item("minecraft:coal"));
-        unloader(site, plant.east(), Direction.EAST);
-        loadingBelt(site, new BlockPos(15, 1, 3), Direction.WEST, 2);
+        stockedChest(site, new BlockPos(20, 1, 8), item("minecraft:coal"));
+        loadingBelt(site, new BlockPos(19, 1, 8), Direction.WEST, 2);
+        unloader(site, plant.east(2), Direction.EAST);
 
-        BlockPos out = new BlockPos(11, 1, 9);
+        BlockPos out = new BlockPos(14, 1, 15);
         site.set(out, Blocks.CHEST);
         unloader(site, out.north(), Direction.NORTH);
-        belt(site, plant.south(2), Direction.SOUTH, 3);
-        site.set(plant.south(), loaderState(Direction.SOUTH));
+        belt(site, plant.south(3), Direction.SOUTH, 3);
+        site.set(plant.south(2), loaderState(Direction.SOUTH));
 
+        site.set(new BlockPos(11, 1, 7), WireworksRegistries.CREATIVE_POLE.get());
         site.set(new BlockPos(6, 1, 7), WireworksRegistries.CREATIVE_POLE.get());
         return new Product(List.of(out), item("factoryworks:plastic_bar"));
     }
@@ -231,6 +239,19 @@ public final class ShowcaseScenes {
         machine.setHeldRecipe(HeldRecipe.of(recipe), FakePlayerFactory.getMinecraft(site.level()));
         if (!machine.heldRecipeResolves()) {
             throw new IllegalStateException(recipe + " does not resolve on the machine at " + site.at(anchor));
+        }
+    }
+
+    private static void chemicalPlant(Site site, BlockPos origin, String recipe) {
+        Footprint footprint = ChemicalPlants.footprint();
+        List<BlockPos> blocks = footprint.positions(site.at(origin), Direction.NORTH);
+        for (int i = 0; i < blocks.size(); i++) {
+            site.level().setBlockAndUpdate(blocks.get(i), footprint.stateAt(i, Direction.NORTH));
+        }
+        ChemicalPlantBlockEntity machine = site.blockEntity(origin, ChemicalPlantBlockEntity.class);
+        machine.setHeldRecipe(Identifier.parse(recipe), FakePlayerFactory.getMinecraft(site.level()));
+        if (machine.heldRecipe().isEmpty()) {
+            throw new IllegalStateException(recipe + " was not held by the Chemical Plant at " + site.at(origin));
         }
     }
 

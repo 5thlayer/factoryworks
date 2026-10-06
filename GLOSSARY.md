@@ -488,7 +488,7 @@ The machine that splits crude: basic and advanced oil processing, two fluids in 
 _Avoid_: distillation tower, refinery multiblock, cracker, refinery chamber
 
 **Chemical Plant**:
-The machine carrying Factorio's chemical-plant recipe list: both crackings, lubricant, plastic, sulfur, solid fuel, sulfuric acid and battery (ADR-0025). Up to two items and two fluids in, one item and one fluid out. A pack block wearing Oritech's Centrifuge, on the Centrifuge's footprint; it holds a **Held recipe** of its own recipe type, not the **Assembler**'s. Not Oritech's own Centrifuge, which is recipe-removed and hidden.
+The machine carrying Factorio's chemical-plant recipe list: both crackings, lubricant, plastic, sulfur, solid fuel, sulfuric acid and battery (ADR-0025). Up to two items and two fluids in, one item and one fluid out. Craftworks' Chemical Plant (`craftworks:chemical_plant`, ADR-0123), a 3x3 two blocks tall on Craftworks' own art. It holds a **Held recipe** of the `chemistry` category of `craftworks:assembling`, and takes and gives its fluid through four connections that any pipe or tank beside one serves. The Pack registers no Chemical Plant.
 _Avoid_: chemical reactor, chem plant, reaction chamber, centrifuge
 
 **Oil well**:

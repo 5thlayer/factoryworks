@@ -32,9 +32,10 @@ Two shapes come out, both read off the codec in `factoryworks_core`:
   `results` (an item template, `{"id", "count"}`), `fluid_results` (`{"id", "amount"}`), and `time`
   in ticks.
 - **`factoryworks:smelting`** for the four smelts (#155).
-- **`factoryworks:chemistry`** and **`factoryworks:oil_processing`** for the Chemical Plant
-  and the Oil Refinery (#488, ADR-0096): the assembling shape above under a type each, so each has
-  its own EMI tab. The type is the serializer's, not a field of the JSON.
+- **`factoryworks:oil_processing`** for the Oil Refinery (#488, ADR-0096): the assembling shape above
+  under a type of its own, so it has its own EMI tab. The type is the serializer's, not a field of the
+  JSON. The `chemistry` recipes are `craftworks:assembling` recipes, kept in a `chemistry/` folder so
+  their ids do not move (ADR-0123).
 
 Factorio's source category rides on the emitted recipe as `category`, because
 `category-map.json` collapses three crafting categories into one machine and the Personal

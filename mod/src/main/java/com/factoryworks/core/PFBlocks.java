@@ -1,7 +1,5 @@
 package com.factoryworks.core;
 
-import com.factoryworks.core.machine.ChemicalPlantBlock;
-import com.factoryworks.core.machine.ChemicalPlantFootprint;
 import com.factoryworks.core.machine.OilRefineryBlock;
 import com.factoryworks.core.machine.OilRefineryFootprint;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
@@ -91,18 +89,6 @@ public final class PFBlocks {
 
     public static final FootprintMachine BOILER_FOOTPRINT = new FootprintMachine(
             BoilerFootprint.FOOTPRINT, BOILER, BOILER_PART, () -> PFItems.BOILER.get());
-
-    public static final DeferredHolder<Block, ChemicalPlantBlock> CHEMICAL_PLANT =
-            BLOCKS.registerBlock("chemical_plant", props -> new ChemicalPlantBlock(machineProperties(props)));
-
-    public static final DeferredHolder<Block, FootprintPartBlock> CHEMICAL_PLANT_PART =
-            BLOCKS.registerBlock("chemical_plant_part",
-                    props -> new FootprintPartBlock(machineProperties(props).noLootTable(),
-                            () -> PFBlocks.CHEMICAL_PLANT_FOOTPRINT));
-
-    public static final FootprintMachine CHEMICAL_PLANT_FOOTPRINT = new FootprintMachine(
-            ChemicalPlantFootprint.FOOTPRINT, CHEMICAL_PLANT, CHEMICAL_PLANT_PART,
-            () -> PFItems.CHEMICAL_PLANT.get());
 
     public static final DeferredHolder<Block, OilRefineryBlock> OIL_REFINERY =
             BLOCKS.registerBlock("oil_refinery", props -> new OilRefineryBlock(machineProperties(props)));

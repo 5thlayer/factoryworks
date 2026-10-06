@@ -171,10 +171,10 @@ public class AssemblingMachineMenu extends AbstractContainerMenu {
         return player.level().getBlockState(pos).getBlock() instanceof ChassisMachineBlock block ? block.spec() : null;
     }
 
-    /** Asked of the block each time; one gone from under the open menu reads as the Chemical Plant. */
+    /** Asked of the block each time; one gone from under the open menu reads as the Oil Refinery. */
     public MachineSpec spec(Player player) {
         MachineSpec spec = specAt(player, pos);
-        return spec == null ? MachineSpecs.get().spec("chemical-plant") : spec;
+        return spec == null ? MachineSpecs.get().spec("oil-refinery") : spec;
     }
 
     public int energyY() {

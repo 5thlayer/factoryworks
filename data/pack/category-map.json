@@ -36,8 +36,9 @@
       "note": "Factorio's Assembling Machine 1/2/3, which are Craftworks' Assemblers (ADR-0118), and the Personal Assembler. One type across the three Factorio categories, each recipe carrying its `category` and `hand_craftable`: the converter sets the flag for a first category of `crafting`, and Craftworks' Personal Assembler plans only a hand-craftable recipe. Recipe ids stay `factoryworks:assembling/<name>`."
     },
     "chemical_plant": {
-      "recipe_type": "factoryworks:chemistry",
-      "note": "ADR-0096's Chemical Plant, on `factoryworks:chemistry`: the Assembling Machine's recipe record and codec under a type of its own, named after Factorio's category (#488). Its `gtceu:chemical_plant` type left with ADR-0060."
+      "recipe_type": "craftworks:assembling",
+      "recipe_dir": "chemistry",
+      "note": "Factorio's Chemical Plant, which is Craftworks' (`craftworks:chemical_plant`, ADR-0123). It holds the `chemistry` category of `craftworks:assembling`, and its recipes stay under `chemistry/` so their ids and research unlocks do not move."
     },
     "oil_refinery": {
       "recipe_type": "factoryworks:oil_processing",

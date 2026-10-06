@@ -1,6 +1,7 @@
 {
-  "type": "factoryworks:chemistry",
+  "type": "craftworks:assembling",
   "category": "crafting-with-fluid",
+  "hand_craftable": false,
   "ingredients": [
     {
       "ingredient": "factoryworks:electronic_circuit",

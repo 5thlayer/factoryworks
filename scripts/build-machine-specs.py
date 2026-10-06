@@ -2,7 +2,7 @@
 """Emit the per-machine spec the crafting chassis reads (#489, ADR-0096).
 
 Writes one row per Factorio machine whose recipes the pack emits on `AssemblingRecipe`'s shape --
-the Chemical Plant and the Oil Refinery -- to
+the Oil Refinery (the Chemical Plant is Craftworks', ADR-0123) -- to
 `mod/src/main/resources/factoryworks_core/machine/specs.json`, which `MachineSpecs` reads, and
 the Overload Limit's constants from `data/factorio/overload.json` beside it, which `OverloadLimit`
 reads (#517).
@@ -12,8 +12,7 @@ from `data/factorio/machine.json`. The recipe type is the one `data/pack/categor
 the machine's first category to.
 
 Slot and tank counts follow the recipes, not the entity (ADR-0096): each is the most any emitted
-recipe of the machine's type and categories needs. The Chemical Plant's second output box is one no
-recipe fills. A machine whose recipes need more
+recipe of the machine's type and categories needs. A machine whose recipes need more
 tanks than the entity has boxes is a hard failure.
 
 Usage:
@@ -35,7 +34,7 @@ OVERLOAD_CORPUS = ROOT / "data" / "factorio" / "overload.json"
 OVERLOAD = RESOURCE.parent / "overload.json"
 
 # The types that share AssemblingRecipe's record, and so the chassis (ADR-0096).
-CHASSIS_TYPES = ("factoryworks:chemistry", "factoryworks:oil_processing")
+CHASSIS_TYPES = ("factoryworks:oil_processing",)
 
 
 def recipe_type(row, category_map):
@@ -76,10 +75,9 @@ def pinned():
         if not any("fluidbox_index" in r for r in recipe.get("results", [])):
             continue
         stem = recipe["name"].replace("-", "_")
-        found = [t for t in CHASSIS_TYPES if (EMITTED / t.split(":")[1] / f"{stem}.json").is_file()]
-        if len(found) != 1:
-            sys.exit(f"{recipe['name']} pins a fluid product and is emitted under {found}")
-        out.append(f"{found[0]}/{stem}")
+        for type_id in CHASSIS_TYPES:
+            if (EMITTED / type_id.split(":")[1] / f"{stem}.json").is_file():
+                out.append(f"{type_id}/{stem}")
     return sorted(out)
 
 

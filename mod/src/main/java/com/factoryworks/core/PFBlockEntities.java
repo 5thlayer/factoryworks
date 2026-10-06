@@ -11,8 +11,6 @@ import com.factoryworks.core.fluid.OffshorePumpBlockEntity;
 import com.factoryworks.core.fluid.SteamEngineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineFluidHandler;
-import com.factoryworks.core.machine.AssemblingMachineItemHandler;
-import com.factoryworks.core.machine.ChemicalPlantBlockEntity;
 import com.factoryworks.core.machine.OilRefineryBlockEntity;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
 import com.factoryworks.core.mining.rig.RigBlockEntity;
@@ -100,12 +98,6 @@ public final class PFBlockEntities {
                     () -> new BlockEntityType<>(BoilerPartBlockEntity::new,
                             java.util.Set.of(PFBlocks.BOILER_PART.get())));
 
-    /** The Chemical Plant's anchor (ADR-0096): its own type so its renderer is the Centrifuge's model. */
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChemicalPlantBlockEntity>>
-            CHEMICAL_PLANT = BLOCK_ENTITIES.register("chemical_plant",
-                    () -> new BlockEntityType<>(ChemicalPlantBlockEntity::new,
-                            java.util.Set.of(PFBlocks.CHEMICAL_PLANT.get())));
-
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<OilRefineryBlockEntity>>
             OIL_REFINERY = BLOCK_ENTITIES.register("oil_refinery",
                     () -> new BlockEntityType<>(OilRefineryBlockEntity::new,
@@ -160,7 +152,6 @@ public final class PFBlockEntities {
         registerCargoHoldCapabilities(event);
         registerRigCapabilities(event);
         registerBoilerCapabilities(event);
-        registerChemicalPlantCapabilities(event);
         registerOilRefineryCapabilities(event);
         registerSteamEngineCapabilities(event);
         registerRadarCapabilities(event);
@@ -280,19 +271,6 @@ public final class PFBlockEntities {
             return rig;
         }
         return null;
-    }
-
-    private static void registerChemicalPlantCapabilities(RegisterCapabilitiesEvent event) {
-        FootprintMachine footprint = PFBlocks.CHEMICAL_PLANT_FOOTPRINT;
-        registerOnFootprint(event, Capabilities.Energy.BLOCK, footprint,
-                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
-                        ? machine.getEnergyLookup(side) : null);
-        registerOnFootprint(event, Capabilities.Item.BLOCK, footprint,
-                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
-                        ? new AssemblingMachineItemHandler(machine) : null);
-        registerOnFootprint(event, Capabilities.Fluid.BLOCK, footprint,
-                (blockEntity, side) -> blockEntity instanceof AssemblingMachineBlockEntity machine
-                        ? new AssemblingMachineFluidHandler(machine) : null);
     }
 
     /** Energy and fluid on every block; the Refinery has no item slot, so no item face (ADR-0096). */

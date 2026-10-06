@@ -15,7 +15,7 @@
 // it once, because every survivor is by definition a recipe the pack authored.
 // `tests/factorio/test_recipe_sweep.py` asserts the two agree -- every machine with a registered
 // `recipe_type` has an entry here, and every type the converter emits is covered by one -- so a
-// machine landing later (#107's Chemical Plant, #135's Centrifuge) fails the check until its
+// machine landing later (#135's Centrifuge) fails the check until its
 // survivor is written, rather than having its recipes swept in silence.
 //
 // Four of ADR-0034's seven exception classes need no entry, and that is not an oversight:
@@ -37,8 +37,8 @@ var RECIPE_SURVIVORS = [
   },
   {
     surface: 'chemical_plant',
-    type: 'factoryworks:chemistry',
-    why: "ADR-0096's Chemical Plant, on a type of its own sharing the assembling shape so it has its own EMI tab. ADR-0031: the corpus authors every recipe on it (#488)."
+    type: 'craftworks:assembling',
+    why: "ADR-0123: Craftworks' Chemical Plant holds Factorio's chemistry category on Craftworks' type, which the assembling entry already admits. ADR-0031: the corpus authors every recipe it contains."
   },
   {
     surface: 'oil_refinery',

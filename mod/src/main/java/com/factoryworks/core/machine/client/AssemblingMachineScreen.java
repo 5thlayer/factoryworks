@@ -115,7 +115,7 @@ public class AssemblingMachineScreen extends AbstractContainerScreen<AssemblingM
         inventoryLabelY = menu.inventoryY() - 11;
         Block block = playerInventory.player.level().getBlockState(menu.pos()).getBlock();
         if (!(block instanceof ChassisMachineBlock)) {
-            block = PFBlocks.CHEMICAL_PLANT.get();
+            block = PFBlocks.OIL_REFINERY.get();
         }
         name = block.getName();
         icon = new ItemStack(block.asItem());

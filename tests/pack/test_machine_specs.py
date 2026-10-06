@@ -18,7 +18,7 @@ GENERATOR = ROOT / "scripts" / "build-machine-specs.py"
 RESOURCE = ROOT / "mod/src/main/resources/factoryworks_core/machine/specs.json"
 EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 
-MACHINES = ("chemical-plant", "oil-refinery")
+MACHINES = ("oil-refinery",)
 
 COPIED = {"crafting_speed": "crafting_speed", "energy_usage": "energy_usage", "drain": "drain",
           "fast_replaceable_group": "fast_replaceable_group", "categories": "crafting_categories"}

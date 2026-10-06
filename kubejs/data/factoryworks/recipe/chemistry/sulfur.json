@@ -1,6 +1,8 @@
 {
-  "type": "factoryworks:chemistry",
+  "type": "craftworks:assembling",
   "category": "chemistry",
+  "hand_craftable": false,
+  "ingredients": [],
   "fluid_ingredients": [
     {
       "ingredient": "minecraft:water",

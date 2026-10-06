@@ -216,6 +216,12 @@ def check_overrides(overrides, corpus, failures):
 # Craftworks' Fill Recipe refuses a recipe with more distinct ingredients than its `AssemblerSlots.INPUTS`.
 CRAFTWORKS_ASSEMBLER_INPUTS = 5
 
+# What Craftworks' Chemical Plant holds of a recipe (`ChemicalPlantRecipes.canRun`): two item inputs, one
+# item result, and two input and two output fluid boxes.
+CRAFTWORKS_PLANT_ITEM_INPUTS = 2
+CRAFTWORKS_PLANT_ITEM_OUTPUTS = 1
+CRAFTWORKS_PLANT_FLUID_BOXES = 2
+
 
 def input_slots():
     """The most input slots any machine of each recipe type has: the chassis's from the spec the mod reads (#489), Craftworks' by its constant."""
@@ -284,6 +290,17 @@ def check_emitted(items, recipe_types, failures):
                                 f"{recipe.get('hand_craftable')!r}")
             if not recipe.get("results") and not recipe.get("fluid_results"):
                 failures.append(f"{path.name} makes nothing, which Craftworks refuses at load")
+            # Both keys are required by Craftworks' codec, though either list may be empty.
+            for key in ("ingredients", "results"):
+                if key not in recipe:
+                    failures.append(f"{path.name} has no `{key}` key, so Craftworks drops it at load")
+            if recipe.get("category") == "chemistry":
+                limits = (("ingredients", CRAFTWORKS_PLANT_ITEM_INPUTS), ("results", CRAFTWORKS_PLANT_ITEM_OUTPUTS),
+                          ("fluid_ingredients", CRAFTWORKS_PLANT_FLUID_BOXES), ("fluid_results", CRAFTWORKS_PLANT_FLUID_BOXES))
+                for key, most in limits:
+                    if len(recipe.get(key, [])) > most:
+                        failures.append(f"{path.name} has {len(recipe[key])} `{key}` and Craftworks' Chemical "
+                                        f"Plant holds {most}")
         # One ingredient per input slot, so one past the last could never be inserted (ADR-0074).
         slots = input_slots().get(recipe.get("type"), 0)
         if len(recipe.get("ingredients", [])) > slots:

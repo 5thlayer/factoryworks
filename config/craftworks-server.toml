@@ -21,7 +21,7 @@ modRecipesExcluded = []
 	# Range: 0.01 ~ 1000.0
 	speed = 0.5
 	#FE a tick while crafting. A craft costs this times the ticks it takes, spread over them;
-	#a tick it can't be paid in full makes no progress, and an idle Assembler draws nothing.
+	#a tick it can't be paid in full makes no progress, and an idle machine draws nothing.
 	# Default: 37.5
 	# Range: 0.0 ~ 1000000.0
 	power = 37.5
@@ -29,7 +29,7 @@ modRecipesExcluded = []
 	# Default: 50000
 	# Range: > 1
 	buffer = 50000
-	#The categories of Assembling recipe this tier can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
+	#The categories of Assembling recipe this machine can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
 	#Fill Recipe refuses a recipe whose category is not listed.
 	categories = ["crafting", "advanced-crafting"]
 
@@ -40,7 +40,7 @@ modRecipesExcluded = []
 	# Range: 0.01 ~ 1000.0
 	speed = 0.75
 	#FE a tick while crafting. A craft costs this times the ticks it takes, spread over them;
-	#a tick it can't be paid in full makes no progress, and an idle Assembler draws nothing.
+	#a tick it can't be paid in full makes no progress, and an idle machine draws nothing.
 	# Default: 75.0
 	# Range: 0.0 ~ 1000000.0
 	power = 75.0
@@ -48,7 +48,7 @@ modRecipesExcluded = []
 	# Default: 50000
 	# Range: > 1
 	buffer = 50000
-	#The categories of Assembling recipe this tier can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
+	#The categories of Assembling recipe this machine can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
 	#Fill Recipe refuses a recipe whose category is not listed.
 	categories = ["crafting", "advanced-crafting", "crafting-with-fluid"]
 
@@ -59,7 +59,7 @@ modRecipesExcluded = []
 	# Range: 0.01 ~ 1000.0
 	speed = 1.25
 	#FE a tick while crafting. A craft costs this times the ticks it takes, spread over them;
-	#a tick it can't be paid in full makes no progress, and an idle Assembler draws nothing.
+	#a tick it can't be paid in full makes no progress, and an idle machine draws nothing.
 	# Default: 187.5
 	# Range: 0.0 ~ 1000000.0
 	power = 187.5
@@ -67,6 +67,25 @@ modRecipesExcluded = []
 	# Default: 50000
 	# Range: > 1
 	buffer = 50000
-	#The categories of Assembling recipe this tier can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
+	#The categories of Assembling recipe this machine can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
 	#Fill Recipe refuses a recipe whose category is not listed.
 	categories = ["crafting", "advanced-crafting", "crafting-with-fluid"]
+
+#The chemical_plant block.
+[chemical_plant]
+	#Crafting speed: a craft takes the recipe's time divided by this, in ticks.
+	# Default: 1.0
+	# Range: 0.01 ~ 1000.0
+	speed = 1.0
+	#FE a tick while crafting. A craft costs this times the ticks it takes, spread over them;
+	#a tick it can't be paid in full makes no progress, and an idle machine draws nothing.
+	# Default: 105.0
+	# Range: 0.0 ~ 1000000.0
+	power = 105.0
+	#FE the energy buffer holds.
+	# Default: 50000
+	# Range: > 1
+	buffer = 50000
+	#The categories of Assembling recipe this machine can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
+	#Fill Recipe refuses a recipe whose category is not listed.
+	categories = ["chemistry"]

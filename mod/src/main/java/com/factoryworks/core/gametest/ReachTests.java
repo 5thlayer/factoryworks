@@ -156,10 +156,10 @@ final class ReachTests {
         }
 
         static void register(PFGameTests.Registrar tests) {
-            tests.test("a_chemical_plant_12_blocks_off_stays_open", 20,
-                    helper -> screen(helper, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, 12, true));
-            tests.test("a_chemical_plant_22_blocks_off_closes", 20,
-                    helper -> screen(helper, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, 22, false));
+            tests.test("an_oil_refinery_12_blocks_off_stays_open", 20,
+                    helper -> screen(helper, PFBlocks.OIL_REFINERY_FOOTPRINT, 12, true));
+            tests.test("an_oil_refinery_22_blocks_off_closes", 20,
+                    helper -> screen(helper, PFBlocks.OIL_REFINERY_FOOTPRINT, 22, false));
         }
 
         /** The menu is made directly: a fake player opens none. */

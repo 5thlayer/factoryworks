@@ -1,13 +1,13 @@
 package com.factoryworks.core.gametest;
 
-import static com.factoryworks.core.gametest.Faces.expectMoved;
-import static com.factoryworks.core.gametest.ChassisFixture.fluid;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import com.factoryworks.core.PFBlocks;
-import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
-import com.factoryworks.core.machine.AssemblingStall;
+import io.github._5thlayer.craftworks.machine.ChemicalPlantBlockEntity;
+import io.github._5thlayer.craftworks.machine.ChemicalPlantSlots;
+import io.github._5thlayer.craftworks.machine.ChemicalPlants;
+import io.github._5thlayer.groundworks.Footprint;
+import io.github._5thlayer.pipeworks.api.FluidPorts;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,244 +15,209 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import rearth.oritech.block.blocks.addons.MachineAddonBlock;
-import rearth.oritech.util.Geometry;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * The Chemical Plant (#490, ADR-0096): the Assembling Machine's chassis on the Centrifuge's 1x1x2.
- * Its placement is {@code PlacementPlanTests}' and its break {@code FootprintBreakTests}'.
- *
- * <p>Plastic is the fixture: 20 mB of Petroleum Gas and 1 coal into 2 plastic bars in 1 s, which
- * speed 1 runs in 20 ticks for 210 kW's 2,100 FE. Typed, for {@code BoilerTests}' reason.
+ * What the Pack owns of the Chemical Plant, which is Craftworks' (ADR-0123): that it takes its fluid
+ * from Pipeworks pipes and puts its fluid result into a pipe that leads to a tank. The plant's own
+ * behaviour is Craftworks' GameTests, whose calls these reach into until craftworks#37 names a
+ * Consumer API. The recipes are the Pack's, typed here for {@code BoilerTests}' reason.
  */
 final class ChemicalPlantTests {
 
-    private static final BlockPos ANCHOR = new BlockPos(3, 1, 3);
-    private static final Direction FACING = Direction.NORTH;
-    private static final ChassisFixture CHASSIS =
-            new ChassisFixture("Chemical Plant", PFBlocks.CHEMICAL_PLANT_FOOTPRINT, ANCHOR, FACING);
+    private static final BlockPos ORIGIN = new BlockPos(8, 1, 3);
+    private static final Direction FACING = Direction.EAST;
+    private static final BlockPos POLE = ORIGIN.south(3);
 
-    private static final String PLASTIC = "factoryworks:chemistry/plastic_bar";
-    private static final String CRACKING = "factoryworks:chemistry/heavy_oil_cracking";
-    private static final String BASIC_OIL = "factoryworks:oil_processing/basic_oil_processing";
+    private static final Identifier PLASTIC = Identifier.parse("factoryworks:chemistry/plastic_bar");
+    private static final Identifier SULFURIC_ACID = Identifier.parse("factoryworks:chemistry/sulfuric_acid");
 
-    private static final String PETROLEUM_GAS = "factoryworks:petroleum_gas";
-    private static final String HEAVY_OIL = "factoryworks:heavy_oil";
-    private static final String LIGHT_OIL = "factoryworks:light_oil";
-
-    private static final int TICKS_PER_CRAFT = 20;
-    private static final long FE_PER_CRAFT = 2_100L;
     private static final int GAS_PER_CRAFT = 20;
-    private static final long CHARGE = 20_000L;
-    private static final int OUTPUT = AssemblingMachineBlockEntity.OUTPUT;
+    private static final int ACID_PER_CRAFT = 50;
+    /** More than the plant's input box holds, so the supply pipes stay full of water. */
+    private static final int SUPPLY = 5_000;
+    private static final int TICKS_PER_CRAFT = 20;
+
+    private static final int PIPES = 2;
 
     private ChemicalPlantTests() {
     }
 
     static void register(PFGameTests.Registrar tests) {
-        tests.test("chemical_plant_crafts_plastic_at_factorios_rate", 100, ChemicalPlantTests::craftsPlastic);
-        tests.test("chemical_plant_stalls_on_a_full_output", 100, ChemicalPlantTests::stallsOnAFullOutput);
-        tests.test("chemical_plant_stalls_unfed", 100, ChemicalPlantTests::stallsUnfed);
-        tests.test("chemical_plant_fluid_face_routes_by_the_held_recipe", 20,
-                ChemicalPlantTests::fluidFaceRoutesByTheHeldRecipe);
-        tests.test("chemical_plant_fluid_face_stops_each_tank_at_the_overload_limit", 20,
-                ChemicalPlantTests::fluidFaceStopsEachTankAtTheOverloadLimit);
-        tests.test("chemical_plant_lone_output_takes_the_unused_box", 20,
-                ChemicalPlantTests::loneOutputTakesTheUnusedBox);
-        tests.test("chemical_plant_refuses_another_machines_recipe", 20,
-                helper -> CHASSIS.refusesOtherRecipes(helper, placeWhole(helper), PLASTIC, List.of(BASIC_OIL)));
-        tests.test("chemical_plant_keeps_its_recipe_over_a_reload", 20,
-                helper -> CHASSIS.keepsItsRecipeOverAReload(helper, placeWhole(helper), PLASTIC));
-        tests.test("chemical_plant_is_fed_through_its_part", 100,
-                helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper),
-                        ANCHOR.above(ChassisFixture.POLE_VERTICAL_REACH + 1).east(), "only the part"));
-        tests.test("chemical_plant_is_counted_once_by_a_pole", 100,
-                helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.east(2), "both blocks"));
-        tests.test("chemical_plant_refuses_the_fluid_addon", 20, ChemicalPlantTests::refusesTheFluidAddon);
+        tests.test("a_chemical_plant_makes_plastic_from_petroleum_gas_in_a_pipe", 160,
+                ChemicalPlantTests::makesPlasticFromPipedGas);
+        tests.test("a_chemical_plant_sends_sulfuric_acid_through_a_pipe_to_a_tank", 160,
+                ChemicalPlantTests::sendsAcidToATank);
     }
 
-    /** Over a window of two whole crafts, so the phase the first tick lands on does not matter. */
-    private static void craftsPlastic(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        long[] energy = new long[1];
-        int[] plastic = new int[1];
-        long[] gas = new long[1];
+    /** Gas in a two-pipe segment at one connection, coal in the slot and a pole beside: plastic comes out. */
+    private static void makesPlasticFromPipedGas(GameTestHelper helper) {
+        ChemicalPlantBlockEntity plant = place(helper);
+        hold(helper, plant, PLASTIC);
+        Connection in = connections(helper).stream().filter(c -> c.side() == FACING).findFirst().orElseThrow();
+        List<BlockPos> pipes = pipesFrom(helper, in);
+        int gas = PIPES * 100;
+
         helper.startSequence()
                 .thenExecute(() -> {
-                    feedPlastic(helper, machine, 8, 80);
-                    machine.energyStorage.set(CHARGE);
+                    plant.inventory().set(0, ItemResource.of(item("minecraft:coal")), 8);
+                    helper.setBlock(POLE, LibraryBlocks.creativePole());
                 })
-                .thenIdle(1)
+                .thenIdle(PIPES)
+                .thenExecute(() -> fill(helper, pipes.getFirst(), FluidResource.of(fluid("factoryworks:petroleum_gas")), gas))
+                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
                 .thenExecute(() -> {
-                    energy[0] = machine.energyStorage.getAmountAsLong();
-                    plastic[0] = machine.inventory.getItem(OUTPUT).getCount();
-                    gas[0] = machine.tank().getAmountAsLong(0);
-                })
-                .thenIdle(2 * TICKS_PER_CRAFT)
-                .thenExecute(() -> {
-                    long spent = energy[0] - machine.energyStorage.getAmountAsLong();
-                    if (spent != 2 * FE_PER_CRAFT) {
-                        helper.fail("two crafts' window drew " + spent + " FE, expected " + 2 * FE_PER_CRAFT, ANCHOR);
+                    int plastic = plant.inventory().getAmountAsInt(ChemicalPlantSlots.PRODUCT);
+                    if (plastic < 2 || plastic % 2 != 0) {
+                        helper.fail("a Chemical Plant on piped gas made " + plastic + " plastic, expected whole crafts of 2",
+                                ORIGIN);
                     }
-                    int made = machine.inventory.getItem(OUTPUT).getCount() - plastic[0];
-                    if (made != 4) {
-                        helper.fail("two crafts' window made " + made + " plastic, expected 4", ANCHOR);
+                    if (!plant.inventory().getResource(ChemicalPlantSlots.PRODUCT).equals(
+                            ItemResource.of(item("factoryworks:plastic_bar")))) {
+                        helper.fail("a Chemical Plant's product is "
+                                + plant.inventory().getResource(ChemicalPlantSlots.PRODUCT), ORIGIN);
                     }
-                    long burned = gas[0] - machine.tank().getAmountAsLong(0);
-                    if (burned != 2 * GAS_PER_CRAFT) {
-                        helper.fail("two crafts' window took " + burned + " mB of gas, expected "
-                                + 2 * GAS_PER_CRAFT, ANCHOR);
+                    int taken = gas - segmentAmount(helper, pipes.getFirst());
+                    if (taken < plastic / 2 * GAS_PER_CRAFT) {
+                        helper.fail("the pipes gave " + taken + " mB of gas for " + plastic + " plastic", ORIGIN);
                     }
                 })
                 .thenSucceed();
     }
 
-    /** Room for one bar, and a craft makes two. */
-    private static void stallsOnAFullOutput(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        feedPlastic(helper, machine, 4, 80);
-        machine.inventory.set(OUTPUT, ItemResource.of(item("factoryworks:plastic_bar")), 63);
-        machine.energyStorage.set(CHARGE);
-        helper.runAfterDelay(2 * TICKS_PER_CRAFT, () -> {
-            assertStalled(helper, machine, AssemblingStall.OUTPUT_FULL, 4, 80);
-            helper.succeed();
-        });
+    /**
+     * Water from a tank through one connection, sulfur and iron in the slots, and the acid leaves by the
+     * opposite edge. The supply is a tank so its pipes never run dry: a connection has no direction, and
+     * an emptied pipe takes the acid.
+     */
+    private static void sendsAcidToATank(GameTestHelper helper) {
+        ChemicalPlantBlockEntity plant = place(helper);
+        hold(helper, plant, SULFURIC_ACID);
+        List<Connection> connections = connections(helper);
+        Connection in = connections.stream().filter(c -> c.side() == FACING).findFirst().orElseThrow();
+        Connection out = connections.stream().filter(c -> c.side() == FACING.getOpposite()).findFirst().orElseThrow();
+        List<BlockPos> water = pipesFrom(helper, in);
+        List<BlockPos> acid = pipesFrom(helper, out);
+        BlockPos tank = acid.getLast().relative(out.side());
+        BlockPos supply = water.getLast().relative(in.side());
+        helper.getLevel().setBlockAndUpdate(tank, LibraryBlocks.storageTank().defaultBlockState());
+        helper.getLevel().setBlockAndUpdate(supply, LibraryBlocks.storageTank().defaultBlockState());
+
+        helper.startSequence()
+                .thenExecute(() -> {
+                    plant.inventory().set(0, ItemResource.of(item("factoryworks:sulfur")), 10);
+                    plant.inventory().set(1, ItemResource.of(item("factoryworks:iron_plate")), 2);
+                    helper.setBlock(POLE, LibraryBlocks.creativePole());
+                })
+                .thenIdle(PIPES)
+                .thenExecute(() -> fill(helper, supply, FluidResource.of(Fluids.WATER), SUPPLY))
+                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
+                .thenExecute(() -> {
+                    ResourceHandler<FluidResource> stored = FluidPorts.segment(helper.getLevel(), tank);
+                    if (stored == null) {
+                        helper.fail("the tank is in no segment", relative(helper, tank));
+                        return;
+                    }
+                    int amount = stored.getAmountAsInt(0);
+                    if (amount < ACID_PER_CRAFT || amount % ACID_PER_CRAFT != 0
+                            || !stored.getResource(0).equals(FluidResource.of(fluid("factoryworks:sulfuric_acid")))) {
+                        helper.fail("the tank holds " + amount + " mB of " + stored.getResource(0)
+                                + ", expected whole crafts of " + ACID_PER_CRAFT + " mB of sulfuric acid",
+                                relative(helper, tank));
+                    }
+                })
+                .thenSucceed();
     }
 
-    /** Gas and power, and no coal. */
-    private static void stallsUnfed(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        feedPlastic(helper, machine, 0, 80);
-        machine.energyStorage.set(CHARGE);
-        helper.runAfterDelay(2 * TICKS_PER_CRAFT, () -> {
-            assertStalled(helper, machine, AssemblingStall.NO_INGREDIENTS, 0, 80);
-            helper.succeed();
-        });
+    /** A footprint block that is a Fluid Connection, and the way its face points: absolute. */
+    private record Connection(BlockPos block, Direction side) {
+
+        BlockPos beyond() {
+            return block.relative(side);
+        }
     }
 
     /**
-     * Heavy oil cracking names two fluids: through the anchor and the part, on the slot-less
-     * overloads a pipe uses, each goes to its own input tank, a fluid it does not name is refused,
-     * the inputs never come back out and the output does.
+     * The connections the held recipe gives the plant, found as a pipe finds them: by asking each side of
+     * each block for a fluid face. Four, or the recipe names no fluid.
      */
-    private static void fluidFaceRoutesByTheHeldRecipe(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        CHASSIS.hold(helper, machine, CRACKING);
-        FluidResource water = FluidResource.of(Fluids.WATER);
-        FluidResource heavy = FluidResource.of(fluid(HEAVY_OIL));
-        FluidResource light = FluidResource.of(fluid(LIGHT_OIL));
-        FluidResource lava = FluidResource.of(Fluids.LAVA);
-        int outputTank = CHASSIS.outputTank(machine, 0);
-        ((FluidStacksResourceHandler) machine.tank()).set(outputTank, light, 90);
-        int step = 0;
-        for (BlockPos at : List.of(ANCHOR, ANCHOR.above())) {
-            ResourceHandler<FluidResource> face = Faces.fluid(helper, at);
-            if (face == null) {
-                helper.fail("no fluid face at " + at, at);
-                return;
-            }
-            step++;
-            expectMoved(helper, at, "water", 10, face, (f, tx) -> f.insert(water, 10, tx));
-            expectMoved(helper, at, "heavy oil", 10, face, (f, tx) -> f.insert(heavy, 10, tx));
-            expectMoved(helper, at, "lava", 0, face, (f, tx) -> f.insert(lava, 10, tx));
-            expectMoved(helper, at, "light oil in", 0, face, (f, tx) -> f.insert(light, 10, tx));
-            expectMoved(helper, at, "water back out", 0, face, (f, tx) -> f.extract(water, 10, tx));
-            expectMoved(helper, at, "heavy oil back out", 0, face, (f, tx) -> f.extract(heavy, 10, tx));
-            expectMoved(helper, at, "light oil out", 30, face, (f, tx) -> f.extract(light, 30, tx));
-            if (!machine.tank().getResource(0).equals(water) || machine.tank().getAmountAsLong(0) != 10L * step
-                    || !machine.tank().getResource(1).equals(heavy) || machine.tank().getAmountAsLong(1) != 10L * step) {
-                helper.fail("through " + at + " the input tanks hold " + machine.tank().getAmountAsLong(0) + " mB of "
-                        + machine.tank().getResource(0) + " and " + machine.tank().getAmountAsLong(1) + " mB of "
-                        + machine.tank().getResource(1), at);
-                return;
+    private static List<Connection> connections(GameTestHelper helper) {
+        List<Connection> found = new ArrayList<>();
+        Footprint footprint = ChemicalPlants.footprint();
+        for (BlockPos block : footprint.positions(helper.absolutePos(ORIGIN), FACING)) {
+            for (Direction side : Direction.Plane.HORIZONTAL) {
+                if (helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, block, side) != null) {
+                    found.add(new Connection(block, side));
+                }
             }
         }
-        helper.succeed();
+        if (found.size() != 4) {
+            helper.fail("the plant has " + found.size() + " fluid connections, expected 4", ORIGIN);
+        }
+        return found;
     }
 
-    /** The Fluid addon stays unused where a speed addon, the control, attaches. */
-    private static void refusesTheFluidAddon(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        BlockPos fluidAddon = addonSlot(helper, machine, 0);
-        BlockPos speedAddon = addonSlot(helper, machine, 1);
-        helper.getLevel().setBlockAndUpdate(fluidAddon, BuiltInRegistries.BLOCK
-                .getValue(Identifier.parse("oritech:machine_fluid_addon")).defaultBlockState());
-        helper.getLevel().setBlockAndUpdate(speedAddon, BuiltInRegistries.BLOCK
-                .getValue(Identifier.parse("oritech:machine_speed_addon")).defaultBlockState());
-        machine.initAddons();
-        if (!machine.getConnectedAddons().contains(speedAddon)) {
-            helper.fail("the speed addon did not attach, so this proves nothing", helper.relativePos(speedAddon));
+    /** {@link #PIPES} pipes in a line out of the connection, the first against it, absolute. */
+    private static List<BlockPos> pipesFrom(GameTestHelper helper, Connection connection) {
+        List<BlockPos> pipes = new ArrayList<>();
+        BlockPos at = connection.beyond();
+        for (int i = 0; i < PIPES; i++) {
+            helper.getLevel().setBlockAndUpdate(at, LibraryBlocks.pipe().defaultBlockState());
+            pipes.add(at);
+            at = at.relative(connection.side());
+        }
+        return pipes;
+    }
+
+    private static BlockPos relative(GameTestHelper helper, BlockPos absolute) {
+        return absolute.subtract(helper.absolutePos(BlockPos.ZERO));
+    }
+
+    private static void fill(GameTestHelper helper, BlockPos pipe, FluidResource fluid, int amount) {
+        ResourceHandler<FluidResource> segment = FluidPorts.segment(helper.getLevel(), pipe);
+        if (segment == null) {
+            helper.fail("the pipe is in no segment", relative(helper, pipe));
             return;
         }
-        if (machine.getConnectedAddons().contains(fluidAddon)
-                || helper.getLevel().getBlockState(fluidAddon).getValue(MachineAddonBlock.ADDON_USED)) {
-            helper.fail("the Fluid addon attached to a machine that has its tanks", helper.relativePos(fluidAddon));
-            return;
-        }
-        helper.succeed();
-    }
-
-    private static BlockPos addonSlot(GameTestHelper helper, AssemblingMachineBlockEntity machine, int index) {
-        return new BlockPos(Geometry.offsetToWorldPosition(FACING, machine.getAddonSlots().get(index),
-                helper.absolutePos(ANCHOR)));
-    }
-
-    /** A stall also takes no coal or gas. */
-    private static void assertStalled(GameTestHelper helper, AssemblingMachineBlockEntity machine,
-            AssemblingStall expected, int coal, int gas) {
-        CHASSIS.assertStalled(helper, machine, expected, CHARGE, PLASTIC);
-        if (machine.inventory.getItem(0).getCount() != coal || machine.tank().getAmountAsLong(0) != gas) {
-            helper.fail("a machine stalled on " + expected + " took input: " + machine.inventory.getItem(0) + ", "
-                    + machine.tank().getAmountAsLong(0) + " mB", ANCHOR);
+        try (Transaction tx = Transaction.openRoot()) {
+            segment.insert(0, fluid, amount, tx);
+            tx.commit();
         }
     }
 
-    /** Heavy oil cracking's 30 water and 40 heavy oil, four crafts' worth each, typed (#519). */
-    private static void fluidFaceStopsEachTankAtTheOverloadLimit(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        CHASSIS.hold(helper, machine, CRACKING);
-        ResourceHandler<FluidResource> face = Faces.fluid(helper, ANCHOR);
-        FluidResource water = FluidResource.of(Fluids.WATER);
-        FluidResource heavy = FluidResource.of(fluid(HEAVY_OIL));
-        expectMoved(helper, ANCHOR, "water", 120, face, (f, tx) -> f.insert(water, 1000, tx));
-        expectMoved(helper, ANCHOR, "heavy oil", 160, face, (f, tx) -> f.insert(heavy, 1000, tx));
-        expectMoved(helper, ANCHOR, "water past the limit", 0, face, (f, tx) -> f.insert(water, 10, tx));
-        helper.succeed();
+    private static int segmentAmount(GameTestHelper helper, BlockPos pipe) {
+        return FluidPorts.segment(helper.getLevel(), pipe).getAmountAsInt(0);
     }
 
-    /** Cracking's one product fills both of Factorio's 100 mB output boxes, typed from the probe (#520). */
-    private static void loneOutputTakesTheUnusedBox(GameTestHelper helper) {
-        AssemblingMachineBlockEntity machine = placeWhole(helper);
-        CHASSIS.hold(helper, machine, CRACKING);
-        int took = Faces.simulate(machine.tank(),
-                (f, tx) -> f.insert(CHASSIS.outputTank(machine, 0), FluidResource.of(fluid(LIGHT_OIL)), 1000, tx));
-        if (took != 200) {
-            helper.fail("the light oil tank took " + took + " mB, expected 200", ANCHOR);
-            return;
+    private static ChemicalPlantBlockEntity place(GameTestHelper helper) {
+        Footprint footprint = ChemicalPlants.footprint();
+        List<BlockPos> positions = footprint.positions(helper.absolutePos(ORIGIN), FACING);
+        for (int i = 0; i < positions.size(); i++) {
+            helper.getLevel().setBlock(positions.get(i), footprint.stateAt(i, FACING), Block.UPDATE_ALL);
         }
-        helper.succeed();
+        return helper.getBlockEntity(ORIGIN, ChemicalPlantBlockEntity.class);
     }
 
-    /** Coal into slot 0 directly, and the gas through the face, so a face refusing it fails here. */
-    private static void feedPlastic(GameTestHelper helper, AssemblingMachineBlockEntity machine, int coal, int gas) {
-        CHASSIS.hold(helper, machine, PLASTIC);
-        if (coal > 0) {
-            machine.inventory.set(0, ItemResource.of(item("minecraft:coal")), coal);
+    private static void hold(GameTestHelper helper, ChemicalPlantBlockEntity plant, Identifier recipe) {
+        plant.setHeldRecipe(recipe, helper.makeMockPlayer(GameType.SURVIVAL));
+        if (plant.heldRecipe().isEmpty()) {
+            helper.fail(recipe + " was not held, so this proves nothing", ORIGIN);
         }
-        expectMoved(helper, ANCHOR, "petroleum gas", gas, Faces.fluid(helper, ANCHOR),
-                (f, tx) -> f.insert(FluidResource.of(fluid(PETROLEUM_GAS)), gas, tx));
-    }
-
-    private static AssemblingMachineBlockEntity placeWhole(GameTestHelper helper) {
-        return CHASSIS.placeWhole(helper, AssemblingMachineBlockEntity.class);
     }
 
     private static Item item(String id) {
         return BuiltInRegistries.ITEM.getValue(Identifier.parse(id));
+    }
+
+    private static Fluid fluid(String id) {
+        return BuiltInRegistries.FLUID.getValue(Identifier.parse(id));
     }
 }

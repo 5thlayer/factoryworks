@@ -48,7 +48,6 @@ ROUTING_FACES = (
     "smelting/FurnaceItemHandler.java",
     "fluid/BoilerItemHandler.java",
     "mining/rig/RigItemHandler.java",
-    "machine/AssemblingMachineItemHandler.java",
     "machine/AssemblingMachineFluidHandler.java",
 )
 

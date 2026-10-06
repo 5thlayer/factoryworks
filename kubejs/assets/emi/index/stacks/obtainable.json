@@ -49,6 +49,9 @@
       "stack": "item:craftworks:assembler_2"
     },
     {
+      "stack": "item:craftworks:chemical_plant"
+    },
+    {
       "stack": "item:factoryworks:advanced_circuit"
     },
     {
@@ -62,9 +65,6 @@
     },
     {
       "stack": "item:factoryworks:burner_mining_drill"
-    },
-    {
-      "stack": "item:factoryworks:chemical_plant"
     },
     {
       "stack": "item:factoryworks:copper_cable"

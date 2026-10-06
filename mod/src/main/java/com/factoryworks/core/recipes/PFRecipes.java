@@ -37,14 +37,6 @@ public final class PFRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SmeltingRecipe>> SMELTING_SERIALIZER =
             SERIALIZERS.register(SMELTING, SmeltingRecipe::serializer);
 
-    public static final String CHEMISTRY = "chemistry";
-
-    public static final DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> CHEMISTRY_TYPE =
-            assemblingType(CHEMISTRY);
-
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AssemblingRecipe>> CHEMISTRY_SERIALIZER =
-            SERIALIZERS.register(CHEMISTRY, () -> AssemblingRecipe.serializer(AssemblingFamily.CHEMISTRY));
-
     public static final String OIL_PROCESSING = "oil_processing";
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<AssemblingRecipe>> OIL_PROCESSING_TYPE =

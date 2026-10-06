@@ -1,13 +1,9 @@
 package com.factoryworks.core.gametest;
 
-import java.util.List;
-
 import io.github._5thlayer.wireworks.EnergyOwner;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
-import com.factoryworks.core.machine.AssemblingMachineMenu;
 import com.factoryworks.core.machine.AssemblingStall;
 import com.factoryworks.core.machine.HeldRecipe;
-import com.factoryworks.core.machine.HoldVerdict;
 import com.factoryworks.core.machine.footprint.FootprintMachine;
 
 import net.minecraft.core.BlockPos;
@@ -76,29 +72,6 @@ record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, 
         if (!machine.heldRecipe().equals(HeldRecipe.of(recipe))) {
             helper.fail("a machine stalled on " + expected + " let go of its recipe", anchor);
         }
-    }
-
-    /** Fill Recipe's setter holds {@code own} and refuses each of {@code others} with a message. */
-    void refusesOtherRecipes(GameTestHelper helper, AssemblingMachineBlockEntity machine, String own,
-            List<String> others) {
-        ListeningPlayer player = new ListeningPlayer(helper);
-        AssemblingMachineMenu menu = AssemblingMachineMenu.open(0, player.getInventory(), machine);
-        HoldVerdict held = menu.request(player, own);
-        if (held != HoldVerdict.HELD) {
-            helper.fail(own + " was answered " + held, anchor);
-            return;
-        }
-        for (String other : others) {
-            player.heard.clear();
-            HoldVerdict verdict = menu.request(player, other);
-            if (verdict != HoldVerdict.NOT_THIS_TYPE || !machine.heldRecipe().equals(HeldRecipe.of(own))
-                    || !player.heard.equals(List.of(HoldVerdict.NOT_THIS_TYPE.messageKey()))) {
-                helper.fail(other + " was answered " + verdict + " with " + player.heard + " and left "
-                        + machine.heldRecipe(), anchor);
-                return;
-            }
-        }
-        helper.succeed();
     }
 
     void keepsItsRecipeOverAReload(GameTestHelper helper, AssemblingMachineBlockEntity machine, String recipe) {

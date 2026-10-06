@@ -78,7 +78,7 @@ StartupEvents.registry('item', event => {
     .texture('factoryworks:item/raw_uranium')
 
   // Plastic authors for the same reason: it gates rung 2 (ADR-0025), and a rung-boundary row
-  // authors rather than borrows. Its recipe is the Chemical Plant's and arrives with #107.
+  // authors rather than borrows.
   event.create('factoryworks:plastic_bar')
     .displayName('Plastic Bar')
     .texture('factoryworks:item/plastic_bar')
