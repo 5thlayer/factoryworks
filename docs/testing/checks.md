@@ -585,7 +585,10 @@ is the ratchet that holds the removal slices of #566 to it. For each namespace i
 `researchd`, `portingdeadlibs`) it counts references across shipped data and compares the count to
 that file's `baseline`. Static; no game launch.
 
-The count is the sum of three things. Each `<ns>:` occurrence in a text file under `kubejs/` (not
+Each namespace has two counts, each with its own baseline: the data count below, and a Java count
+(`java_baseline`).
+
+The data count is the sum of three things. Each `<ns>:` occurrence in a text file under `kubejs/` (not
 `kubejs/parked/`, which is never loaded), `mod/src/main/resources/`, `config/`, `data/pack/*.json`
 (not the baseline file) and `mods/*.pw.toml`, and in `index.toml`. Each of those files whose path,
 lowercased with `-` and `_` removed, contains the namespace, so `mods/ftb-materials.pw.toml` and
@@ -594,7 +597,14 @@ the same way. `data/jars/` is an extract of the installed jars, not shipped data
 tracked files count, since the game writes untracked client configs that would make the count
 differ between checkouts.
 
-A count above its baseline fails: a new reference to a mod the Pack is leaving. A count below it
+The Java count covers `mod/src/main/java` and `mod/src/test/java`. It is the sum of every `import` or
+`import static` line of the namespace's package root (`rearth.oritech` for `oritech`,
+`com.portingdeadmods.researchd` for `researchd`, `com.portingdeadmods.portingdeadlibs` for
+`portingdeadlibs`) and every `"<ns>:` string id. `railcraft` and `ftbmaterials` have no package root,
+since the Pack has no Java against them, so they count string ids only. The roots are `JAVA_PACKAGES` in
+the guard.
+
+A count, data or Java, above its baseline fails: a new reference to a mod the Pack is leaving. A count below it
 fails too, naming the number to lower the baseline to, so a slice that removes references records
 the gain in the same commit and nothing can later grow back into the headroom. Run it after
 removing a third-party content mod's references, or adding anything that names one.

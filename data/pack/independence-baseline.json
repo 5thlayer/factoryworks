@@ -1,4 +1,5 @@
 {
   "forbidden": ["railcraft", "oritech", "ftbmaterials", "researchd", "portingdeadlibs"],
-  "baseline": {"railcraft": 0, "oritech": 32, "ftbmaterials": 0, "researchd": 46, "portingdeadlibs": 1}
+  "baseline": {"railcraft": 0, "oritech": 32, "ftbmaterials": 0, "researchd": 46, "portingdeadlibs": 1},
+  "java_baseline": {"railcraft": 0, "oritech": 39, "ftbmaterials": 0, "researchd": 4, "portingdeadlibs": 0}
 }
