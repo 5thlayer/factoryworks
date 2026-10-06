@@ -71,3 +71,8 @@ of them.
   its Module, then clean up the Showcase.
 - Open tickets that assume the overhaul are closed with this ADR as the reason. A rejected direction
   that will be asked for again (quests, a tech tree) gets a file in `.out-of-scope/`.
+
+## Amended by ADR-0121
+
+Pipeworks takes no barrel. The barrel goes, and fluid is carried in buckets or any mod's
+fluid-holding item.

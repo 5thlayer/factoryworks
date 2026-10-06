@@ -197,3 +197,8 @@ the back door), and any minimum body size (same objection as the biome test).
   loses it is rung 0 with no power and nothing in any log.
 - looks right → human: dig from the hub pool to a water wheel and confirm it turns; place a pump on
   the pool and confirm it feeds; confirm no arrangement of digging produces a new source block.
+
+## Amended by ADR-0121
+
+Water may be created again: FactoryWorks no longer forces `waterSourceConversion` off, and buckets
+are no longer excluded. The Offshore Pump stays.
