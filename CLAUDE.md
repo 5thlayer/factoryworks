@@ -53,9 +53,9 @@ When you edit code, trim the comments you touch to this rule. Leave comments els
 run if any `test_*.py` produced no tests (#171). A single script runs directly too:
 `uv run tests/pack/test_rig_assets.py`.
 
-Four checks are in no batch and this command does not reach them: the GameTest harness,
-`scripts/check-datapack-load.py`, `scripts/check-client-assets.py` and the upload check,
-`python3 -m unittest discover scripts/tests`.
+Three checks are in no batch and this command does not reach them: the GameTest harness,
+`scripts/check-datapack-load.py` and the upload check, `python3 -m unittest discover scripts/tests`.
+Whether an asset renders is a human's check in game, never an agent's (ADR-0119).
 
 ### GameTest harness
 
@@ -105,7 +105,6 @@ check's section there before editing it or the code it guards. Run the matching 
 | `scripts/upload.py`, `scripts/release.sh` | `python3 -m unittest discover scripts/tests` |
 | `scripts/sync-local-jars.py` | `tests/pack/test_sync_curseforge.py`, `tests/pack/test_local_jars.py` |
 | a `.bbmodel`, `data/art/models/`, `build-model-assets.py` | `tests/pack/test_model_assets.py` |
-| any model, blockstate, texture, definition | `scripts/check-client-assets.py`  |
 | any edit to `kubejs/`, the dev runtime classpath | `scripts/check-datapack-load.py` |
 | a reload listener, recipe serializer or item codec | `tests/pack/test_load_codecs.py` |
 | `recipes.js`, `recipe_survivors.js`, the category map | `tests/factorio/test_recipe_sweep.py` |

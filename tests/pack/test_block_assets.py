@@ -6,7 +6,7 @@ every variant names a model, every model's parent chain and textures resolving, 
 model where the block has an item, and a loot table unless the block is registered with
 `noLootTable`. Each missing hop fails quietly in a
 running game -- a black-and-magenta cube, a raw key as the block's name, a block breaking into
-nothing -- and `scripts/check-client-assets.py` cannot see a file that is simply absent.
+nothing -- and no log names a file that is simply absent.
 
 The block list is read out of every register's source, and each tier ladder's names out of its
 enum, so a new block is walked without anyone adding it here. A registration whose name this file cannot

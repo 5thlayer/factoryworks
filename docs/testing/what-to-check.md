@@ -57,8 +57,8 @@ Pump's refusal-message lang key read out of `OffshorePumpItem`, the ore blocks' 
 the Electric Furnace's credited art, a rig's visible front, each generated resource held against the
 corpus.
 
-A hop that is present but rejected by the game is `scripts/check-client-assets.py`'s (#276); a hop
-that is simply absent is logged nowhere, so it needs the static walker. The item model definition is
+A hop that is present but rejected by the game is seen only in the client, by a human (ADR-0119); a
+hop that is simply absent is logged nowhere, so it needs the static walker. The item model definition is
 `test_data_formats.py`'s.
 
 ### This is emitted into a world
@@ -74,15 +74,11 @@ with Terra's the first: its water share, the sea biome sitting on the water, the
 shelf and the bedrock-band floor, and no water within the starting area's reach of spawn.
 `scripts/worldgen-check.py`, GregTech's vein and layer check, left with GregTech (ADR-0060).
 
-**The client is a second world, and it has a harness (#276).** The paragraph above is about the
-server: a registry that loaded is not a world that contains anything. The mirror claim is that a
-registered block is not a block anybody can see, and it is read by a client that no server run
-starts. `scripts/check-client-assets.py` boots the pack's real client headless, waits for the
-resource reload, and asserts the asset manager complained about none of this pack's models,
-blockstates, textures or fluids except an allowlisted gap. It is the check kind for *this renders
-at all*; **this looks or feels right** stays human on delivery, and one failure is measured to be
-invisible to it — a missing item model definition is logged nowhere, so that half stays static in
-`tests/pack/test_data_formats.py`. See `docs/testing/client-asset-check.md`.
+**The client is a second world, and a human checks it (ADR-0119).** A registered block is not a
+block anybody can see, and it is read by a client that no server run starts. Booting that client
+boots the game instance in the repo root, so *this renders at all* is checked by a human in game on
+delivery, with *this looks or feels right*. A missing item model definition is logged nowhere, so
+that half stays static in `tests/pack/test_data_formats.py`.
 
 **A fixture row is unconditional.** Every body-level worldgen fact gets one — there is no
 judgement call about whether a given vein is important enough. The launch happens regardless and
