@@ -1,9 +1,6 @@
 package com.factoryworks.core.gametest;
 
-import io.github._5thlayer.wireworks.WireworksRegistries;
 import com.factoryworks.core.PFBlocks;
-import io.github._5thlayer.wireworks.PoleTier;
-import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceSlots;
 import com.factoryworks.core.smelting.FurnaceTier;
@@ -12,9 +9,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * What the FE faces do in a world, and nothing that can be asked without one (#271, #266).
+ * The Pack's claim: the Electric Furnace's FE face, which the Pack owns, is one a Wireworks pole
+ * finds and feeds, and gives nothing away to the pole's demand probe (#271, #266, #627). How a pole
+ * scans, counts and rations is Wireworks' own GameTests; this reads only what the furnace holds, and
+ * the face the Library documents for a machine: it journals its buffer.
+ *
+ * <p>What the FE faces do in a world, and nothing that can be asked without one.
  *
  * <h2>Why these three and no others</h2>
  *
@@ -56,13 +61,7 @@ final class EnergyFaceTests {
     /** What a running Electric Furnace draws every tick (ADR-0060: 180 kW at 100 J per FE). */
     private static final long FE_PER_TICK = 90L;
 
-    /**
-     * How long a pole may take to notice a machine, in ticks.
-     *
-     * <p>Stated here rather than read off the pole, whose own constant is private. That is the
-     * right way round: this is the promise the pole makes to a player who has just placed a
-     * machine, and a test that read the field would agree with whatever the field became.
-     */
+    /** How long a pole may take to notice a machine, in ticks: the promise it makes to a player who has just placed one. */
     private static final int RESCAN_INTERVAL = 40;
 
     private EnergyFaceTests() {
@@ -75,39 +74,28 @@ final class EnergyFaceTests {
     }
 
     /**
-     * The lookup finds it.
+     * A pole placed first feeds a furnace placed after it, within one rescan interval.
      *
      * <p>Three things have to agree for this to pass and no static check sees more than one of
-     * them: the block entity type's capability registration, the scan's geometry, and the pole's
-     * fallback from a null context to the six faces. A machine the pole cannot see is not broken,
-     * it is unpowered, with nothing thrown and nothing logged.
+     * them: the block entity type's capability registration, the pole's reach, and its fallback from
+     * a null context to the six faces. A machine the pole cannot see is not broken, it is unpowered,
+     * with nothing thrown and nothing logged.
+     *
+     * <p>The furnace is deliberately NOT placed with the pole. A pole scans on its very first tick
+     * whatever happens, so placing both together would pass for a pole whose periodic rescan never
+     * fired again. Placing the machine into a pole that has already scanned makes the rescan the
+     * thing under test.
      */
     private static void poleFindsElectricFurnace(GameTestHelper helper) {
-        // The furnace is deliberately NOT placed with the pole. A pole starts with its rescan
-        // counter already at the interval, so it scans on its very first tick whatever happens --
-        // place both together and a pole whose periodic rescan never fired again would still pass.
-        // Placing the machine into a pole that has already scanned makes the *rescan* the thing
-        // under test, which is the half that decides whether a machine placed next to a running
-        // factory is ever picked up.
-        helper.setBlock(POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
+        helper.setBlock(POLE, LibraryBlocks.creativePole());
         helper.startSequence()
                 .thenIdle(5)
+                .thenExecute(() -> helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get()))
+                .thenIdle(RESCAN_INTERVAL + 5)
                 .thenExecute(() -> {
-                    int found = pole(helper).machineCount();
-                    if (found != 0) {
-                        helper.fail("pole sees " + found + " machines before one was placed", POLE);
-                    }
-                    helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
-                })
-                // One whole interval and no more. The pole's phase is its own, so the furnace may
-                // be picked up on the next tick or on the fortieth; what the interval promises is
-                // that it cannot take longer than this.
-                .thenIdle(RESCAN_INTERVAL)
-                .thenExecute(() -> {
-                    int found = pole(helper).machineCount();
-                    if (found != 1) {
-                        helper.fail("pole sees " + found + " machines a full rescan interval after"
-                                + " one was placed, expected 1", FURNACE);
+                    if (stored(helper) <= 0L) {
+                        helper.fail("a pole left a furnace placed beside it unpowered a full rescan interval later",
+                                FURNACE);
                     }
                 })
                 .thenSucceed();
@@ -116,13 +104,15 @@ final class EnergyFaceTests {
     /**
      * The abort leaves nothing behind.
      *
-     * <p>The pole measures a machine's room with an insert inside a transaction it then aborts,
-     * because the transfer API has no "how much room is there" question. A face that takes energy
-     * without journalling its buffer keeps a probe's worth every tick -- a furnace running on
-     * power nobody spent, at a rate nothing displays.
+     * <p>A pole measures a machine's room with an insert inside a transaction it then aborts,
+     * because the transfer API has no "how much room is there" question, and Wireworks documents
+     * that a face it reaches must journal its buffer. A face that takes energy without journalling
+     * keeps a probe's worth every tick -- a furnace running on power nobody spent, at a rate nothing
+     * displays.
      *
-     * <p>So: a small pole with no generator on its network, ticked. It has nothing to give, and the
-     * probe still runs. The furnace must still hold zero, and the demand it reported must be the whole buffer.
+     * <p>So: a small pole with no generator on its network, ticked, and the same probe made by hand
+     * through the capability. The furnace must still hold zero, and the room it reports must be the
+     * whole buffer.
      */
     private static void probeLeavesNothing(GameTestHelper helper) {
         place(helper);
@@ -133,10 +123,14 @@ final class EnergyFaceTests {
                     if (stored != 0L) {
                         helper.fail("furnace kept " + stored + " FE from the demand probe", FURNACE);
                     }
-                    long demanded = pole(helper).demandedFePerTick();
-                    if (demanded != EMPTY_FURNACE_DEMAND) {
-                        helper.fail("pole read a demand of " + demanded + " FE/t, expected "
-                                + EMPTY_FURNACE_DEMAND, POLE);
+                    long room = probe(helper);
+                    if (room != EMPTY_FURNACE_DEMAND) {
+                        helper.fail("the furnace's face reported room for " + room + " FE, expected "
+                                + EMPTY_FURNACE_DEMAND, FURNACE);
+                    }
+                    stored = stored(helper);
+                    if (stored != 0L) {
+                        helper.fail("furnace kept " + stored + " FE from an aborted insert", FURNACE);
                     }
                 })
                 .thenSucceed();
@@ -148,7 +142,7 @@ final class EnergyFaceTests {
      * <p>Fed by a creative pole, then cut off by swapping it for a small pole with nothing to give.
      */
     private static void poweredFurnaceSmelts(GameTestHelper helper) {
-        helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
+        helper.setBlock(POLE, LibraryBlocks.creativePole());
         helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
         long[] window = new long[1];
         int[] progressMark = new int[1];
@@ -174,7 +168,7 @@ final class EnergyFaceTests {
                 // furnace's stored FE reads 90 higher or lower depending on which went first.
                 // Ten ticks' worth, so the buffer cannot run out inside the window.
                 .thenExecute(() -> {
-                    helper.setBlock(POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
+                    helper.setBlock(POLE, LibraryBlocks.smallPole());
                     setStored(helper, FE_PER_TICK * 10L);
                     window[0] = stored(helper);
                     progressMark[0] = progress(helper);
@@ -219,12 +213,20 @@ final class EnergyFaceTests {
     }
 
     private static void place(GameTestHelper helper) {
-        helper.setBlock(POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
+        helper.setBlock(POLE, LibraryBlocks.smallPole());
         helper.setBlock(FURNACE, PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
     }
 
-    private static SupplyAreaPoleBlockEntity pole(GameTestHelper helper) {
-        return helper.getBlockEntity(POLE, SupplyAreaPoleBlockEntity.class);
+    /** The room the furnace's face reports to an insert that is then aborted, which is what a pole's probe is. */
+    private static long probe(GameTestHelper helper) {
+        EnergyHandler face = helper.getLevel().getCapability(Capabilities.Energy.BLOCK,
+                helper.absolutePos(FURNACE), null);
+        if (face == null) {
+            throw helper.assertionException(FURNACE, "the Electric Furnace answers no energy face");
+        }
+        try (Transaction transaction = Transaction.openRoot()) {
+            return face.insert(Integer.MAX_VALUE, transaction);
+        }
     }
 
     private static FurnaceBlockEntity furnace(GameTestHelper helper) {

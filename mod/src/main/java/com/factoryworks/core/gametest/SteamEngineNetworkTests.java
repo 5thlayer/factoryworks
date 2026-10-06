@@ -1,11 +1,8 @@
 package com.factoryworks.core.gametest;
 
 import io.github._5thlayer.pipeworks.api.FluidPorts;
-import io.github._5thlayer.wireworks.WireworksRegistries;
+import io.github._5thlayer.wireworks.EnergyOwner;
 import com.factoryworks.core.PFBlocks;
-import io.github._5thlayer.wireworks.NetworkReading;
-import io.github._5thlayer.wireworks.PoleTier;
-import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 import com.factoryworks.core.fluid.PFFluids;
 import com.factoryworks.core.smelting.FurnaceBlockEntity;
 import com.factoryworks.core.smelting.FurnaceTier;
@@ -26,7 +23,10 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import rearth.oritech.util.Geometry;
 
 /**
- * The pack's Steam Engine on the pole network (#292, #352, ADR-0062, ADR-0116).
+ * The Pack's claim: its Steam Engine, which the Pack owns, is a generator a Wireworks pole draws
+ * through its parts alone, once, and a Pipeworks port that draws steam from its segment and from
+ * nothing else (#292, #352, #627, ADR-0062, ADR-0116). Both Libraries' documented API is all it
+ * reads: {@link EnergyOwner} for the parts and {@link FluidPorts} for the segment.
  *
  * <p>{@code SupplyScanTest} holds the rule -- every block stands for its energy owner, kept once.
  * What it cannot see is that the owner is the right one: that a part's face really is its anchor's.
@@ -92,37 +92,36 @@ final class SteamEngineNetworkTests {
         for (BlockPos engine : new BlockPos[] {at.a(), at.b(), at.c()}) {
             place(helper, engine, at.facing());
         }
-        helper.setBlock(at.pole(), WireworksRegistries.pole(PoleTier.SMALL).get());
+        helper.setBlock(at.pole(), LibraryBlocks.smallPole());
         helper.setBlock(at.furnace(), PFBlocks.furnace(FurnaceTier.ELECTRIC).get());
 
-        long[] produced = {0L};
+        long[] delivered = new long[MEASURED];
+        int[] tick = {0};
         helper.onEachTick(() -> {
             topUp(helper, at.a());
-            furnace(helper, at.furnace()).data().set(FurnaceBlockEntity.DATA_ENERGY, 0);
+            var data = furnace(helper, at.furnace()).data();
+            if (tick[0] >= SETTLE && tick[0] < SETTLE + MEASURED) {
+                delivered[tick[0] - SETTLE] = data.get(FurnaceBlockEntity.DATA_ENERGY);
+            }
+            data.set(FurnaceBlockEntity.DATA_ENERGY, 0);
+            tick[0]++;
         });
         helper.startSequence()
-                .thenIdle(SETTLE)
-                .thenExecuteFor(MEASURED, () -> {
-                    SupplyAreaPoleBlockEntity pole =
-                            helper.getBlockEntity(at.pole(), SupplyAreaPoleBlockEntity.class);
-                    NetworkReading reading = pole.networkReading();
-                    if (pole.machineCount() != 1) {
-                        helper.fail("the pole files " + pole.machineCount() + " consumers; only the"
-                                + " furnace is one, so an engine or its part is being fed", at.pole());
-                    }
-                    if (reading.produced() != ENGINE_FE_PER_TICK) {
-                        helper.fail("the pole drew " + reading.produced() + " FE from an engine"
-                                + " making " + ENGINE_FE_PER_TICK + " a tick", at.pole());
-                    }
-                    if (reading.delivered() != reading.produced()) {
-                        helper.fail("the furnace received " + reading.delivered() + " of "
-                                + reading.produced() + " FE drawn", at.furnace());
-                    }
-                    produced[0] += reading.produced();
-                })
+                .thenIdle(SETTLE + MEASURED + 1)
                 .thenExecute(() -> {
-                    if (produced[0] != ENGINE_FE_PER_TICK * MEASURED) {
-                        helper.fail("drew " + produced[0] + " FE over " + MEASURED + " ticks", at.pole());
+                    BlockPos anchor = helper.absolutePos(at.c());
+                    for (BlockPos block : PFBlocks.STEAM_ENGINE_FOOTPRINT.positions(anchor, at.facing())) {
+                        if (!block.equals(anchor) && !anchor.equals(EnergyOwner.of(helper.getLevel(), block))) {
+                            helper.fail("a part of the engine answers for "
+                                    + EnergyOwner.of(helper.getLevel(), block) + ", not its anchor", at.c());
+                        }
+                    }
+                    for (int i = 0; i < MEASURED; i++) {
+                        if (delivered[i] != ENGINE_FE_PER_TICK) {
+                            helper.fail("the furnace received " + delivered[i] + " FE on tick " + i
+                                    + " of the window from one engine making " + ENGINE_FE_PER_TICK
+                                    + " a tick, so the pole drew it through a part wrongly or twice", at.furnace());
+                        }
                     }
                 })
                 .thenSucceed();

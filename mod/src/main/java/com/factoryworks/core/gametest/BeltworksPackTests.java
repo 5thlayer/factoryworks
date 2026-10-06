@@ -1,32 +1,34 @@
 package com.factoryworks.core.gametest;
 
-import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.factoryworks.core.PFBlocks;
-import io.github._5thlayer.wireworks.PoleTier;
-import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
-import io.github._5thlayer.beltworks.BlockContent;
-import io.github._5thlayer.beltworks.model.BeltTier;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * Beltworks against the Pack's own content: a small pole's demand probe, and the KubeJS recipe
- * sweep. The belt mechanics are the Mod's own GameTests (#438).
+ * The Pack's claims about Beltworks: that its loader, run on the Pack's {@code beltworks-server.toml},
+ * gives a Wireworks pole's demand probe nothing (no Beltworks test holds it), and that the KubeJS
+ * recipe sweep removes every {@code beltworks:} recipe with the Pack's own belt recipe as the control
+ * (#348, #627, ADR-0034). The belt mechanics are Beltworks' own GameTests (#438).
  */
 final class BeltworksPackTests {
 
     private static final BlockPos LOADER = new BlockPos(3, 1, 3);
     private static final BlockPos POLE = new BlockPos(5, 1, 4);
     private static final int TIER_2_LOADER_BUFFER_FE = 200;
+    private static final Identifier IMPROVED_LOADER = Identifier.fromNamespaceAndPath("beltworks", "improved_loader");
     private static final String EXPRESS_BELT_RECIPE = "factoryworks:assembling/express_transport_belt";
 
     private BeltworksPackTests() {
@@ -37,20 +39,28 @@ final class BeltworksPackTests {
         tests.test("belts_own_recipes_are_swept", 20, BeltworksPackTests::ownRecipesAreSwept);
     }
 
-    // A small pole with no generator still probes: the loader must hold nothing after it (#348).
+    // A small pole with no generator still probes: the loader must hold nothing after it, and an aborted
+    // insert by hand must find the room the probe would (#348).
     private static void probeLeavesNothing(GameTestHelper helper) {
-        helper.setBlock(POLE, WireworksRegistries.pole(PoleTier.SMALL).get());
-        helper.setBlock(LOADER, BlockContent.loaderFor(BeltTier.IMPROVED).defaultBlockState()
-                .setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
+        helper.setBlock(POLE, LibraryBlocks.smallPole());
+        Block loader = BuiltInRegistries.BLOCK.getValue(IMPROVED_LOADER);
+        helper.setBlock(LOADER, loader.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, Direction.EAST));
         helper.startSequence().thenIdle(45).thenExecute(() -> {
             long stored = face(helper, LOADER).getAmountAsLong();
             if (stored != 0) {
                 helper.fail("the loader kept " + stored + " FE from the demand probe", LOADER);
             }
-            long demanded = helper.getBlockEntity(POLE, SupplyAreaPoleBlockEntity.class).demandedFePerTick();
-            if (demanded != TIER_2_LOADER_BUFFER_FE) {
-                helper.fail("the pole read a demand of " + demanded + " FE/t, expected "
-                        + TIER_2_LOADER_BUFFER_FE, POLE);
+            long room;
+            try (Transaction transaction = Transaction.openRoot()) {
+                room = face(helper, LOADER).insert(Integer.MAX_VALUE, transaction);
+            }
+            if (room != TIER_2_LOADER_BUFFER_FE) {
+                helper.fail("the loader's face reported room for " + room + " FE, expected "
+                        + TIER_2_LOADER_BUFFER_FE, LOADER);
+            }
+            stored = face(helper, LOADER).getAmountAsLong();
+            if (stored != 0) {
+                helper.fail("the loader kept " + stored + " FE from an aborted insert", LOADER);
             }
         }).thenSucceed();
     }

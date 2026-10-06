@@ -171,6 +171,17 @@ The Boiler (`#224`) now trips all three as well, and its GameTests are `#274` �
 absorbed into the harness ticket. The rest of the mod
 content satisfies (1) and fails (2), which is why declining to test it was the right call.
 
+**A Pack check asserts the Pack's claim, through what a Library offers its Consumers** (#627). The
+Pack's claim is a Binding, Pack data, a Pack machine, or the Pack's recipes and config as a Library
+reads them. What a Library's own machine does — a pole's network, a pipe's segments, a Dismantle's
+gesture, an Assembler's craft — is that Library's to test, in its own run; when its tests do not
+hold it, the gap is filed on the Library, not tested here. The check reaches a Library only through
+what it documents for Consumers: a block or item by registry id (`gametest/LibraryBlocks`), a tag, a
+capability, a config key, or its named API — Groundworks' Consumer types (its ADR 0001 and its
+changelog's Consumers sections), Pipeworks' `api` package, Wireworks' `EnergyOwner`. A Library
+release then breaks a Pack check only when it breaks what it promised. Each GameTest class that
+names a Library class says in its class doc which Pack claim it holds.
+
 ### This looks or feels right
 
 Sky colour, ground stone, whether a vein yields the intended ore variant under its intended name,

@@ -13,7 +13,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
  * <p>The flag's JSON is {@code test_hand_recipes.py}'s. What no static check reaches is whether
  * Craftworks reads them: a recipe it refuses, such as one whose tag names no item, only prints a
  * warning. The wooden chest is asserted for its tag ingredient, and concrete and the engine unit for
- * being left out, since one needs a fluid and the other is not hand-craftable.
+ * being left out, since one needs a fluid and the other is not hand-craftable. The planner is
+ * Craftworks' internals until craftworks#37 names a Consumer API.
  */
 final class HandSetTests {
 

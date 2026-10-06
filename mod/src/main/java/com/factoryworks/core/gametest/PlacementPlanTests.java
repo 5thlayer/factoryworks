@@ -3,7 +3,6 @@ package com.factoryworks.core.gametest;
 import com.factoryworks.core.mining.rig.RigMiningArea;
 import com.factoryworks.core.mining.rig.RigBlock;
 import com.factoryworks.core.ore.OreResource;
-import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import com.factoryworks.core.PFItems;
 import com.factoryworks.core.machine.ChemicalPlantBlockEntity;
 import com.factoryworks.core.machine.OilRefineryBlockEntity;
 import com.factoryworks.core.machine.OilRefineryFootprint;
-import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.fluid.SteamEngineBlockEntity;
 import com.factoryworks.core.fluid.SteamEngineFootprint;
 import com.factoryworks.core.mining.rig.RigCorpus;
@@ -42,13 +40,17 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * That a plan is what placing actually does (#297, ADR-0069).
+ * The Pack's claim: for every item the Pack owns, and for the vanilla blocks it opts into Groundworks'
+ * plan, the {@link Placements#planFor} plan is what placing does; and the Pack states the furnace and
+ * electric-pole Replace groups (#297, #388, #450, #627, ADR-0069, ADR-0082). Groundworks' own tests
+ * hold the plan, the click and Fast Replace for its own test blocks.
  *
  * <p>This is the one check ADR-0069 asks for by name, and the only one that can exist. The geometry
  * underneath a plan is Minecraft-free and already tested -- {@code RigGeometryTest} for the
@@ -760,40 +762,40 @@ final class PlacementPlanTests {
         }
 
         private static void smallWithMedium(GameTestHelper helper) {
-            column(helper, PoleTier.SMALL, 2);
-            ListeningPlayer player = clicked(helper, PoleTier.MEDIUM);
+            column(helper, LibraryBlocks.smallPole(), 2);
+            ListeningPlayer player = clicked(helper, LibraryBlocks.mediumPole());
             for (int i = 0; i < 2; i++) {
-                if (!helper.getBlockState(ABOVE_FLOOR.above(i)).is(WireworksRegistries.pole(PoleTier.MEDIUM).get())) {
+                if (!helper.getBlockState(ABOVE_FLOOR.above(i)).is(LibraryBlocks.mediumPole())) {
                     helper.fail("a medium pole did not replace the small column", ABOVE_FLOOR.above(i));
                 }
             }
-            if (player.getInventory().countItem(WireworksRegistries.poleItem(PoleTier.SMALL).get()) != 1) {
+            if (player.getInventory().countItem(LibraryBlocks.smallPole().asItem()) != 1) {
                 helper.fail("the replace did not hand back one small pole", ABOVE_FLOOR);
             }
             helper.succeed();
         }
 
         private static void substationAlone(GameTestHelper helper) {
-            column(helper, PoleTier.SMALL, 2);
-            clicked(helper, PoleTier.LARGE);
+            column(helper, LibraryBlocks.smallPole(), 2);
+            clicked(helper, LibraryBlocks.largePole());
             for (int i = 0; i < 2; i++) {
-                if (!helper.getBlockState(ABOVE_FLOOR.above(i)).is(WireworksRegistries.pole(PoleTier.SMALL).get())) {
+                if (!helper.getBlockState(ABOVE_FLOOR.above(i)).is(LibraryBlocks.smallPole())) {
                     helper.fail("a substation replaced a small column", ABOVE_FLOOR.above(i));
                 }
             }
             helper.succeed();
         }
 
-        private static void column(GameTestHelper helper, PoleTier tier, int height) {
+        private static void column(GameTestHelper helper, Block pole, int height) {
             for (int i = 0; i < height; i++) {
-                helper.setBlock(ABOVE_FLOOR.above(i), WireworksRegistries.pole(tier).get());
+                helper.setBlock(ABOVE_FLOOR.above(i), pole);
             }
         }
 
         /** A plain click through the player's game mode, where Groundworks takes a Fast Replace. */
-        private static ListeningPlayer clicked(GameTestHelper helper, PoleTier held) {
+        private static ListeningPlayer clicked(GameTestHelper helper, Block held) {
             ListeningPlayer player = new ListeningPlayer(helper);
-            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(WireworksRegistries.pole(held).get(), 2));
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(held, 2));
             BlockPos absolute = helper.absolutePos(ABOVE_FLOOR);
             player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND,
                     new BlockHitResult(Vec3.atCenterOf(absolute).relative(Direction.NORTH, 0.5), Direction.NORTH, absolute, false));

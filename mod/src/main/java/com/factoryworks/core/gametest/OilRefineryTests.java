@@ -6,7 +6,6 @@ import static com.factoryworks.core.gametest.ChassisFixture.fluid;
 import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
-import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingStall;
 import com.factoryworks.core.machine.OilRefineryBlockEntity;
@@ -73,7 +72,7 @@ final class OilRefineryTests {
                 helper -> CHASSIS.keepsItsRecipeOverAReload(helper, placeWhole(helper), ADVANCED));
         tests.test("oil_refinery_is_fed_through_a_chamber", 100,
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper),
-                        ANCHOR.above(3 + PoleTier.VERTICAL_RADIUS), "only a chamber"));
+                        ANCHOR.above(3 + ChassisFixture.POLE_VERTICAL_REACH), "only a chamber"));
         tests.test("oil_refinery_is_counted_once_by_a_pole", 100,
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.east(2), "several blocks"));
     }

@@ -32,7 +32,11 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * What a placed Boiler does in a world, and nothing that can be asked without one (#274, #224).
+ * The Pack's claim: its Boiler, which the Pack owns, boils water into steam, and its ports stand in
+ * the Pipeworks segments ADR-0114 says, through the API Pipeworks documents for a port's block entity,
+ * {@link FluidPorts} (#274, #593, #627). What a segment does with a fluid is Pipeworks' own GameTests.
+ *
+ * <p>What a placed Boiler does in a world, and nothing that can be asked without one (#274, #224).
  *
  * <p>The Boiler's arithmetic is checked on a plain JVM: {@code BoilerSpecTest} owns the rate and
  * {@code BoilerCycleTest} the stall. What is left is that a tick with everything present produces,

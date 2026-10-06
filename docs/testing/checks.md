@@ -90,14 +90,17 @@ recipe the server loaded, resolves a tag ingredient to its items and leaves out 
 one that is not hand-craftable (`HandSetTests`, ADR-0118); that each of
 the two types on `AssemblingRecipe`'s shape (chemistry, oil processing, ADR-0096) loads
 its recipes under its own folder and survives `Recipe.CODEC`'s round trip, and that a Chemical
-Plant resolves no assembling recipe -- a unit test cannot, since the codec is NeoForge's; that a pole's
-scan finds an Electric Furnace at all, that the pole's demand probe — an insert inside a
-transaction it aborts — leaves no FE behind, and that a fed furnace smelts at 90 FE/t while a
-starved one freezes where it stood; that an Electric Mining Drill reached only through its part
-blocks is one machine, draws 45 FE/t, mines when fed and freezes when starved (making the part its
-own energy owner, returning false from `pay`, or dropping the journal each turn one red). How power crosses a wire, stops beyond
-reach and stops when the link is broken is Wireworks' own GameTests (#476). And that a pole reaching only a Steam Engine's
-parts draws that engine's 450 FE/t, once -- `SupplyScanTest` holds
+Plant resolves no assembling recipe -- a unit test cannot, since the codec is NeoForge's; that a pole
+placed first feeds an Electric Furnace placed after it within one rescan interval, that the furnace's
+face, probed as a pole probes it — an insert inside a transaction it aborts — reports its whole buffer
+as room and keeps no FE, and that a fed furnace smelts at 90 FE/t while a
+starved one freezes where it stood; that an Electric Mining Drill's parts name its anchor as their
+energy owner, that a pole reaching only those parts feeds it, and that it draws 45 FE/t, mines when fed
+and freezes when starved (making the part its
+own energy owner, returning false from `pay`, or dropping the journal each turn one red). How a pole
+scans, counts and rations, and how power crosses a wire, stops beyond
+reach and stops when the link is broken, are Wireworks' own GameTests (#476). And that a furnace on a pole reaching only a Steam Engine's
+parts receives that engine's 450 FE every tick, once -- `SupplyScanTest` holds
 the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red.
 And that a footprint machine, such as the Chemical Plant or the
 Steam Engine (ADR-0116), broken at its anchor or at any part leaves none of its blocks standing and
@@ -111,9 +114,12 @@ cable in whole crafts of two; Fill Recipe on a recipe a research unlocks is refu
 Researchd team that has researched nothing, and answered `HELD` for one no research unlocks, which
 needs `craftworks-server.toml`'s `lockSources` linked in (Craftworks asks the Lock source once, of the
 player who presses it); and every `factoryworks:assembling/` recipe in the manager is one some tier can hold,
-the `crafting-with-fluid` ones excepted until Craftworks has Fluid Connections (#580). A pole counts each
-block of an Assembler's footprint as a machine, since Craftworks' parts are Groundworks', not Wireworks', so the test asks only that the pole reaches it.
-And that a small pole's demand probe leaves a Beltworks loader no FE, and that no `beltworks:` recipe
+its fluids included. How many machines a pole counts is Wireworks', so the test asks only that the
+Assembler crafts. It and `HandSetTests` call Craftworks' internals, the one exception to the
+Consumer rule (`what-to-check.md`), until Craftworks names a Consumer API (5thlayer/craftworks#37).
+Every other GameTest names a Library's blocks by registry id, through `LibraryBlocks`.
+And that a small pole's demand probe leaves a Beltworks loader no FE, that the loader's face reports
+its buffer as room to a probe made by hand and keeps nothing from it, and that no `beltworks:` recipe
 survives the stock-recipe sweep, against the pack's express belt recipe as a control
 (`BeltworksPackTests`). The loader's face is Beltworks', so the two static FE checks cannot read it.
 Rotate is Groundworks' (#451): the Pack only states that every block turns in place, and its
@@ -122,21 +128,22 @@ Groundworks' and Beltworks', in their own runs.
 And that the Pick takes up a span of Pipeworks' pipes, a **Dismantle Family** Groundworks runs
 (`PipeDismantleTests`, #431, #448, ADR-0086): each test sneak-clicks a start through the player's
 game mode, asks `Dismantles.spanTo` for the end, clicks it plainly, and holds the world, the
-inventory and the stored start to the span. A straight run, a bend, a tee's branch between the ends
-and one pipe clicked twice leave none of the span's pipes standing, keep every pipe outside it and
-hand over a pipe each; a full inventory drops the rest at the player's feet and creative hands over
-nothing. Opposite points of a ring, a closed connection and an end on a Boiler change no block,
-slot or stored start and name their reason, and an iron pickaxe stores no start, since the Pack
-trims `groundworks:dismantles` to the Picks. A join rule that ignores the pipes' links turns the closed-connection
-test red. The shortest path, the tie and the default join are Groundworks' `ShortestPathTest`, and
-the red outline and that the Pick's plain click with no start still toggles a connection are a
-human check on delivery.
+inventory and the stored start to the span. A straight run leaves none of the span's pipes standing,
+keeps every pipe outside it and hands over a pipe each. Opposite points of a ring, a closed connection
+and an end on a Boiler change no block, slot or stored start and name their reason, and an iron
+pickaxe stores no start, since the Pack trims `groundworks:dismantles` to the Picks. A join rule that
+ignores the pipes' links turns the closed-connection test red. The shortest path, a bend, a tee, one
+block and the tie are Groundworks' `ShortestPathTest`, and a stale start and a sneak-use in the air
+its `DismantlesTest` and `DismantleTests`. A full inventory dropping the rest at the player's feet and
+creative handing over nothing are Groundworks' too, kept here until its own tests hold them
+(5thlayer/groundworks#43). The red outline and that the Pick's plain click with no start still
+toggles a connection are a human check on delivery.
 And that Pipeworks' pipe is laid by Groundworks' Stretch (`PipeStretchTests`, #452,
 `stretch/PipeworksPipeLegs`): a flat stretch and one raised 3, which stacks 3 at the start and runs
 level after, lay exactly the plan, each pipe open to the next and no end open to the air, for one
-pipe a block. A stone on the leg is gone round on the player's side, too few pipes refuse the stretch
-whole, a pipe already beside the leg is joined both ways, and a pipe's Raise reaches the Pack's 16.
-Dropping the leg's own pipes from the links the plan draws turns three red, and not asking Pipeworks for
+pipe a block. A pipe already beside the leg is joined both ways, and a pipe's Raise reaches the
+Pack's 16. The detour round a block and the refusal for too few items are Groundworks' `StretchTests`.
+Dropping the leg's own pipes from the links the plan draws turns the laying tests red, and not asking Pipeworks for
 the rest turns the joining test red. The pipes at an interior anchor are not joined yet (#467), and whether a
 stretch with a rise and a detour previews as it lays is a human check on delivery.
 And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves

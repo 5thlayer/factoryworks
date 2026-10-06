@@ -17,8 +17,6 @@ import io.github._5thlayer.groundworks.Dismantles;
 import io.github._5thlayer.groundworks.Groundworks;
 import io.github._5thlayer.groundworks.Refusal;
 import io.github._5thlayer.groundworks.ShortestPath;
-import io.github._5thlayer.pipeworks.PipeworksRegistries;
-import io.github._5thlayer.pipeworks.block.FluidPipeBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,8 +37,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A Dismantle of Pipeworks' pipes as Groundworks runs it for the pipe family (#448, ADR-0086):
- * each test sneak-clicks a start with the Engineer's Pick through the player's game mode, asks
+ * The Pack's claim: its pipe Dismantle Family, which the Pack registers with Groundworks, joins
+ * Pipeworks' pipes where their arms link and no other way, claims only the pipes its tag names, and
+ * tells the player the Pack's own reasons; and the Pack trims {@code groundworks:dismantles} to the
+ * Picks (#448, #627, ADR-0086). The gesture, the queue, the stored start and the shortest path, a
+ * bend, a tee, a single pipe and a tie included, are Groundworks' own tests; the ring here holds only
+ * that the Pack's family names a tie in its own words.
+ *
+ * <p>Each test sneak-clicks a start with the Engineer's Pick through the player's game mode, asks
  * {@link Dismantles#spanTo} for the end, clicks it, and holds the world, the inventory and the
  * stored start to the span.
  */
@@ -57,20 +61,6 @@ final class PipeDismantleTests {
         tests.test("a_pipe_dismantle_takes_up_a_straight_run", 20, helper -> {
             List<BlockPos> run = row(helper, 6);
             takesUp(helper, run.get(1), run.get(4), run.subList(1, 5), List.of(run.getFirst(), run.getLast()));
-        });
-        tests.test("a_pipe_dismantle_follows_a_bend", 20, helper -> {
-            List<BlockPos> run = new ArrayList<>(row(helper, 3));
-            for (int i = 1; i <= 3; i++) run.add(pipe(helper, START.east(2).south(i)));
-            takesUp(helper, run.getFirst(), run.getLast(), run, List.of());
-        });
-        tests.test("a_pipe_dismantle_on_a_tee_takes_only_the_branch_between_its_ends", 20, helper -> {
-            List<BlockPos> run = row(helper, 5);
-            List<BlockPos> branch = List.of(pipe(helper, START.east(2).south(1)), pipe(helper, START.east(2).south(2)));
-            takesUp(helper, run.getFirst(), run.getLast(), run, branch);
-        });
-        tests.test("a_one_pipe_dismantle_takes_that_pipe", 20, helper -> {
-            List<BlockPos> run = row(helper, 3);
-            takesUp(helper, run.get(1), run.get(1), List.of(run.get(1)), List.of(run.getFirst(), run.getLast()));
         });
         tests.test("a_pipe_dismantle_between_opposite_points_of_a_ring_changes_nothing", 20, helper -> {
             for (int x = 0; x < 3; x++) pipe(helper, START.east(x));
@@ -92,11 +82,10 @@ final class PipeDismantleTests {
         });
         tests.test("a_pipe_dismantle_with_no_room_drops_the_rest_at_the_players_feet", 20, PipeDismantleTests::fullInventory);
         tests.test("a_creative_pipe_dismantle_hands_over_nothing", 20, PipeDismantleTests::creative);
-        tests.test("a_sneak_click_after_the_start_pipe_broke_is_a_new_start", 20, PipeDismantleTests::staleStart);
-        tests.test("a_sneak_use_in_the_air_clears_the_pipe_dismantle_start", 20, PipeDismantleTests::clears);
         tests.test("a_vanilla_pickaxe_stores_no_pipe_dismantle_start", 20, PipeDismantleTests::pickaxe);
     }
 
+    // Groundworks' claim, kept here until its own GameTests hold it (groundworks#43).
     private static void fullInventory(GameTestHelper helper) {
         List<BlockPos> run = row(helper, 3);
         var player = started(helper, run.getFirst());
@@ -121,6 +110,7 @@ final class PipeDismantleTests {
         helper.succeed();
     }
 
+    // Likewise Groundworks' (groundworks#43).
     private static void creative(GameTestHelper helper) {
         List<BlockPos> run = row(helper, 3);
         var player = started(helper, run.getFirst());
@@ -133,36 +123,6 @@ final class PipeDismantleTests {
         Map<Item, Integer> carried = inventory(player);
         if (!carried.isEmpty() || !helper.getEntities(EntityType.ITEM).isEmpty()) {
             helper.fail("a creative dismantle handed over " + carried, START);
-            return;
-        }
-        helper.succeed();
-    }
-
-    private static void staleStart(GameTestHelper helper) {
-        List<BlockPos> run = row(helper, 4);
-        var player = started(helper, run.getFirst());
-        helper.destroyBlock(run.getFirst());
-        sneakClick(helper, player, run.get(2));
-        if (!Objects.equals(helper.absolutePos(run.get(2)), storedStart(player))) {
-            helper.fail("a sneak-click after the start broke stored " + storedStart(player) + ", not the clicked pipe", run.get(2));
-            return;
-        }
-        for (BlockPos pos : run.subList(1, run.size())) {
-            if (!helper.getBlockState(pos).is(PipeFamily.PIPES)) {
-                helper.fail("a sneak-click after the start broke took up a pipe", pos);
-                return;
-            }
-        }
-        helper.succeed();
-    }
-
-    private static void clears(GameTestHelper helper) {
-        List<BlockPos> run = row(helper, 3);
-        var player = started(helper, run.getFirst());
-        player.setShiftKeyDown(true);
-        player.gameMode.useItem(player, helper.getLevel(), player.getMainHandItem(), InteractionHand.MAIN_HAND);
-        if (storedStart(player) != null) {
-            helper.fail("a sneak-use in the air left the dismantle's start stored", run.getFirst());
             return;
         }
         helper.succeed();
@@ -262,7 +222,7 @@ final class PipeDismantleTests {
 
     /** A pipe placed as its item places it, linked to every pipe it touches. */
     private static BlockPos pipe(GameTestHelper helper, BlockPos at) {
-        helper.setBlock(at, PipeworksRegistries.PIPE.get().defaultBlockState());
+        helper.setBlock(at, LibraryBlocks.pipe().defaultBlockState());
         return at;
     }
 
@@ -270,7 +230,7 @@ final class PipeDismantleTests {
     // the arms, which are all the family reads, disagree with each other.
     private static void close(GameTestHelper helper, BlockPos at, Direction side) {
         BlockState state = helper.getBlockState(at);
-        helper.setBlock(at, PipeworksRegistries.PIPE.get().withLinks(state, linked -> linked != side && FluidPipeBlock.isLinked(state, linked)));
+        helper.setBlock(at, LibraryBlocks.pipeShut(state, side));
     }
 
     private static Item pipeItem() {

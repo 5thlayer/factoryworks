@@ -3,13 +3,9 @@ package com.factoryworks.core.gametest;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github._5thlayer.groundworks.Groundworks;
 import io.github._5thlayer.groundworks.PlacementPlan;
 import io.github._5thlayer.groundworks.Placements;
 import io.github._5thlayer.groundworks.Raise;
-import io.github._5thlayer.groundworks.Refusal;
-import io.github._5thlayer.pipeworks.PipeworksRegistries;
-import io.github._5thlayer.pipeworks.block.FluidPipeBlock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,7 +15,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,8 +26,14 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Pipeworks' pipes laid by Groundworks' Stretch (#452), through the player's game mode and
- * {@link Raise#press}, as the key's payload presses it.
+ * The Pack's claim: its pipe Leg builder, which the Pack registers with Groundworks, lays Pipeworks'
+ * pipes each open to the next, climbs a rise straight up in place, joins a pipe already beside the
+ * leg, plans no arm into a mix of two fluids and refuses a run that would join them whole; and the
+ * Pack's Raise reach is 16 (#452, #590, #627, ADR-0110). The gesture, the charge, the detour and the
+ * refusals for too few items are Groundworks' own tests.
+ *
+ * <p>Each test goes through the player's game mode and {@link Raise#press}, as the key's payload
+ * presses it.
  */
 final class PipeStretchTests {
 
@@ -46,8 +47,6 @@ final class PipeStretchTests {
     static void register(PFGameTests.Registrar tests) {
         tests.test("a_flat_pipe_stretch_lays_its_plan_joined_for_one_pipe_a_block", 20, PipeStretchTests::flat);
         tests.test("a_pipe_stretch_raised_3_stacks_3_pipes_at_the_start_then_runs_level", 20, PipeStretchTests::raised);
-        tests.test("a_pipe_stretch_goes_round_a_block_on_its_leg", 20, PipeStretchTests::detour);
-        tests.test("a_pipe_stretch_with_too_few_pipes_is_refused_whole", 20, PipeStretchTests::tooFew);
         tests.test("a_pipe_stretch_joins_a_pipe_already_beside_its_leg", 20, PipeStretchTests::besideAPipe);
         tests.test("a_pipe_stretch_plans_no_arm_to_a_pipe_that_would_mix_two_fluids", 20, PipeStretchTests::mixing);
         tests.test("a_pipe_stretch_from_water_to_lava_is_refused", 20, helper -> endsBeside(helper, Fluids.LAVA, true));
@@ -81,34 +80,11 @@ final class PipeStretchTests {
         helper.succeed();
     }
 
-    /** The player stands north of the line, so the detour takes the north side. */
-    private static void detour(GameTestHelper helper) {
-        BlockPos stone = new BlockPos(4, 1, 3);
-        helper.setBlock(stone, Blocks.STONE);
-        ListeningPlayer player = holding(helper, 16);
-        click(helper, player, START, true);
-        List<BlockPos> laid = layAsPlanned(helper, player, END);
-        if (!helper.getBlockState(stone).is(Blocks.STONE)) {
-            helper.fail("the stretch replaced the stone with " + helper.getBlockState(stone), stone);
-        }
-        if (!laid.getFirst().equals(helper.absolutePos(START.above())) || !laid.getLast().equals(helper.absolutePos(END.above()))) {
-            helper.fail("the detour ran from " + laid.getFirst() + " to " + laid.getLast() + ", not from the start to the end");
-        }
-        for (BlockPos pos : laid) {
-            if (pos.getY() != helper.absolutePos(START).getY() + 1 || pos.getZ() > helper.absolutePos(START).getZ()) {
-                helper.fail("the detour left its height or went round the far side", pos);
-            }
-        }
-        expectJoined(helper, laid);
-        expectHeld(helper, player, 16 - laid.size());
-        helper.succeed();
-    }
-
     /** A single placement opens to a pipe it touches, so a stretch does too, and the old pipe opens back. */
     private static void besideAPipe(GameTestHelper helper) {
         BlockPos beside = new BlockPos(3, 1, 2);
         BlockPos absolute = helper.absolutePos(beside);
-        helper.setBlock(beside, PipeworksRegistries.PIPE.get().defaultBlockState());
+        helper.setBlock(beside, LibraryBlocks.pipe().defaultBlockState());
         ListeningPlayer player = holding(helper, 16);
         click(helper, player, START, true);
         List<BlockPos> laid = layAsPlanned(helper, player, END);
@@ -132,11 +108,11 @@ final class PipeStretchTests {
             helper.fail("the plan was " + plan, END);
         }
         BlockState between = plannedAt(helper, plan, new BlockPos(3, 1, 3));
-        if (FluidPipeBlock.isLinked(between, Direction.NORTH) || FluidPipeBlock.isLinked(between, Direction.SOUTH)) {
+        if (LibraryBlocks.pipeIsOpen(between, Direction.NORTH) || LibraryBlocks.pipeIsOpen(between, Direction.SOUTH)) {
             helper.fail("the plan opened a pipe between water and lava", new BlockPos(3, 1, 3));
         }
         BlockState beside = plannedAt(helper, plan, new BlockPos(5, 1, 3));
-        if (!FluidPipeBlock.isLinked(beside, Direction.NORTH)) {
+        if (!LibraryBlocks.pipeIsOpen(beside, Direction.NORTH)) {
             helper.fail("the plan did not open a pipe beside one fluid", new BlockPos(5, 1, 3));
         }
         helper.succeed();
@@ -147,7 +123,7 @@ final class PipeStretchTests {
         BlockPos far = new BlockPos(6, 1, 2);
         fill(helper, new BlockPos(1, 1, 2), Fluids.WATER);
         if (other == null) {
-            helper.setBlock(far, PipeworksRegistries.PIPE.get().defaultBlockState());
+            helper.setBlock(far, LibraryBlocks.pipe().defaultBlockState());
         } else {
             fill(helper, far, other);
         }
@@ -169,7 +145,7 @@ final class PipeStretchTests {
     }
 
     private static void fill(GameTestHelper helper, BlockPos pos, Fluid fluid) {
-        helper.setBlock(pos, PipeworksRegistries.PIPE.get().defaultBlockState());
+        helper.setBlock(pos, LibraryBlocks.pipe().defaultBlockState());
         var handler = helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, helper.absolutePos(pos), null);
         try (Transaction transaction = Transaction.openRoot()) {
             handler.insert(FluidResource.of(fluid), 50, transaction);
@@ -181,26 +157,6 @@ final class PipeStretchTests {
         BlockPos absolute = helper.absolutePos(pos);
         return plan.blocks().stream().filter(placed -> placed.pos().equals(absolute)).findFirst()
                 .orElseThrow(() -> helper.assertionException("the plan has no pipe at " + pos)).state();
-    }
-
-    private static void tooFew(GameTestHelper helper) {
-        ListeningPlayer player = holding(helper, 4);
-        click(helper, player, START, true);
-        PlacementPlan plan = plan(helper, player, END);
-        if (plan == null || plan.refusal() != Refusal.Stretch.NOT_ENOUGH_ITEMS) {
-            helper.fail("the plan was " + plan + ", not refused for too few pipes", END);
-        }
-        click(helper, player, END, false);
-        for (BlockPos pos : row(1, 6, 1)) {
-            if (!helper.getBlockState(pos).isAir()) {
-                helper.fail("a refused stretch laid " + helper.getBlockState(pos), pos);
-            }
-        }
-        expectHeld(helper, player, 4);
-        if (!player.getMainHandItem().has(Groundworks.STRETCH.get())) {
-            helper.fail("a refused stretch dropped the stretch being drawn");
-        }
-        helper.succeed();
     }
 
     // Vanilla's reach would stop the raise at 4 (#413).
@@ -266,7 +222,7 @@ final class PipeStretchTests {
 
     private static boolean open(GameTestHelper helper, BlockPos pos, Direction side) {
         BlockState state = helper.getLevel().getBlockState(pos);
-        return FluidPipeBlock.isLinked(state, side);
+        return LibraryBlocks.pipeIsOpen(state, side);
     }
 
     private static void expectHeld(GameTestHelper helper, ListeningPlayer player, int held) {

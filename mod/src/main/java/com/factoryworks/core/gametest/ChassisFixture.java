@@ -1,9 +1,8 @@
 package com.factoryworks.core.gametest;
 
-import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 
-import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.EnergyOwner;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingMachineMenu;
 import com.factoryworks.core.machine.AssemblingStall;
@@ -22,10 +21,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 
 /**
- * The helpers every machine on the crafting chassis (ADR-0096) tests the same way. Each machine's
+ * The helpers every machine on the crafting chassis (ADR-0096) tests the same way. What they hold is
+ * the Pack's: the chassis's Held recipe, its stalls and its parts' energy owner. Each machine's
  * recipes and figures stay in its own file, typed, for {@code BoilerTests}' reason.
  */
 record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, Direction facing) {
+
+    /** How far up and down a pole supplies: two blocks, as Wireworks documents it. */
+    static final int POLE_VERTICAL_REACH = 2;
 
     /** A pole rescans at most this many ticks after a machine appears (#271). */
     static final int RESCAN_INTERVAL = 40;
@@ -116,18 +119,29 @@ record ChassisFixture(String name, FootprintMachine footprint, BlockPos anchor, 
         helper.succeed();
     }
 
-    /** A pole reaching {@code reach} counts one machine and fills it. */
+    /**
+     * A creative pole reaching {@code reach} fills the machine, and every block of the footprint
+     * answers for the anchor, which Wireworks documents as what makes a pole count and feed a machine
+     * once.
+     */
     void isFedByAPole(GameTestHelper helper, AssemblingMachineBlockEntity machine, BlockPos pole, String reach) {
         helper.startSequence()
                 .thenExecute(() -> {
                     machine.energyStorage.set(0L);
-                    helper.setBlock(pole, WireworksRegistries.CREATIVE_POLE.get());
+                    helper.setBlock(pole, LibraryBlocks.creativePole());
                 })
                 .thenIdle(RESCAN_INTERVAL + 5)
                 .thenExecute(() -> {
-                    int found = helper.getBlockEntity(pole, SupplyAreaPoleBlockEntity.class).machineCount();
-                    if (found != 1) {
-                        helper.fail("a pole reaching " + reach + " counts " + found + " machines", pole);
+                    BlockPos absoluteAnchor = helper.absolutePos(anchor);
+                    for (BlockPos block : footprint.positions(absoluteAnchor, facing)) {
+                        if (block.equals(absoluteAnchor)) {
+                            continue;
+                        }
+                        BlockPos owner = EnergyOwner.of(helper.getLevel(), block);
+                        if (!absoluteAnchor.equals(owner)) {
+                            helper.fail("the block at " + helper.relativePos(block) + " answers for " + owner
+                                    + " to a pole reaching " + reach + ", not the anchor", anchor);
+                        }
                     }
                     if (machine.energyStorage.getAmountAsLong() <= 0L) {
                         helper.fail("a pole reaching " + reach + " left the machine unpowered", anchor);

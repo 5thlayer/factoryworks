@@ -1,7 +1,5 @@
 package com.factoryworks.core.gametest;
 
-import io.github._5thlayer.pipeworks.PipeworksRegistries;
-import io.github._5thlayer.wireworks.WireworksRegistries;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.PFItems;
 import com.factoryworks.core.oil.OilWellBlockEntity;
@@ -22,7 +20,11 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 /**
- * A pole-fed Pumpjack on a 100% well pumps 10 mB of crude a second into its Pipeworks segment and
+ * The Pack's claim: its Pumpjack, which the Pack owns, is a fluid port whose faces a registered
+ * Pipeworks pipe joins, and a machine a registered creative pole feeds (#627). What the segment and
+ * the pole do with it are the Libraries' own GameTests.
+ *
+ * <p>A pole-fed Pumpjack on a 100% well pumps 10 mB of crude a second into its Pipeworks segment and
  * takes 10 off the well each cycle, and a pipe at any of its faces joins that segment, down to a
  * storage tank; a starved one does neither (ADR-0081, ADR-0110). The figures are typed: a cycle is
  * 900 FE at 45 FE/t, 20 ticks.
@@ -53,8 +55,8 @@ final class PumpjackTests {
 
     private static void fedPumpjackPumps(GameTestHelper helper) {
         place(helper);
-        helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
-        helper.setBlock(FAR_PART.above(), PipeworksRegistries.PIPE.get());
+        helper.setBlock(POLE, LibraryBlocks.creativePole());
+        helper.setBlock(FAR_PART.above(), LibraryBlocks.pipe());
         helper.startSequence()
                 .thenIdle(TICKS)
                 .thenExecute(() -> {
@@ -80,11 +82,11 @@ final class PumpjackTests {
 
     private static void fillsATank(GameTestHelper helper) {
         place(helper);
-        helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
+        helper.setBlock(POLE, LibraryBlocks.creativePole());
         for (int x = 3; x >= 1; x--) {
-            helper.setBlock(new BlockPos(x, TANK.getY(), TANK.getZ()), PipeworksRegistries.PIPE.get());
+            helper.setBlock(new BlockPos(x, TANK.getY(), TANK.getZ()), LibraryBlocks.pipe());
         }
-        helper.setBlock(TANK, PipeworksRegistries.STORAGE_TANK.get());
+        helper.setBlock(TANK, LibraryBlocks.storageTank());
         helper.startSequence()
                 .thenIdle(TICKS)
                 .thenExecute(() -> {

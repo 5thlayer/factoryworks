@@ -1,6 +1,5 @@
 package com.factoryworks.core.gametest;
 
-import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -22,7 +21,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * A pole-fed Radar charts its 9x9 nearby area into its owner's chart within seconds, then its first
+ * The Pack's claim: its Radar, which the Pack owns, charts when a Wireworks pole feeds it and charts
+ * nothing when none does, over the Pack's own 10 MJ and 2,500 FE figures (#627). The pole is only the
+ * power, a registered creative pole.
+ *
+ * <p>A pole-fed Radar charts its 9x9 nearby area into its owner's chart within seconds, then its first
  * long-range sector, the top-left of the fifth ring, after 10 MJ; a starved one charts nothing
  * (#368, ADR-0079). The tick figures are typed: a pulse is 2,500 FE, 17 ticks at 150 FE/t, then one
  * sector a tick, and 100,000 FE is 667 ticks.
@@ -47,7 +50,7 @@ final class RadarTests {
 
     private static void fedRadarCharts(GameTestHelper helper) {
         UUID owner = place(helper);
-        helper.setBlock(POLE, WireworksRegistries.CREATIVE_POLE.get());
+        helper.setBlock(POLE, LibraryBlocks.creativePole());
         BlockPos anchor = helper.absolutePos(FLOOR.above());
         Sector own = Sector.ofBlock(anchor.getX(), anchor.getZ());
         Set<Sector> nearby = new HashSet<>();

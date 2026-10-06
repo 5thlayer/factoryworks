@@ -1,12 +1,10 @@
 package com.factoryworks.core.gametest;
 
-import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.PFItems;
-import io.github._5thlayer.wireworks.PoleTier;
-import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
+import io.github._5thlayer.wireworks.EnergyOwner;
 import com.factoryworks.core.mining.rig.RigBlock;
 import com.factoryworks.core.mining.rig.RigBlockEntity;
 import com.factoryworks.core.mining.rig.RigMiningArea;
@@ -26,13 +24,19 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * The Electric Mining Drill as a supply-area pole customer (#194).
+ * The Pack's claim: the Electric Mining Drill is a machine a Wireworks pole feeds through its part
+ * blocks alone (#194, #627). Its parts name the anchor as their energy owner, which Wireworks
+ * documents as what makes a pole count and feed a machine once however many of its blocks it
+ * reaches; the drill's face journals the pole's probe; fed it mines at 45 FE/t, and starved it
+ * freezes. Counting, probing and rationing are Wireworks' own GameTests.
  *
  * <p>The pole is placed beside the column of the footprint that does not hold the anchor, so it
- * reaches only part blocks: the drill is found through {@code RigPartBlockEntity}'s energy owner,
- * and counted once however many of its parts are in reach.
+ * reaches only part blocks.
  */
 final class ElectricRigTests {
 
@@ -57,27 +61,45 @@ final class ElectricRigTests {
                 ElectricRigTests::poweredRigMines);
     }
 
-    /** A pole with no generator: it finds the drill once, reads its whole buffer, and leaks nothing. */
+    /**
+     * Every part answers for the anchor, a pole with no generator leaks nothing from the drill's
+     * buffer and a creative pole reaching only the parts fills it.
+     */
     private static void poleCountsRigOnce(GameTestHelper helper) {
         Layout layout = place(helper);
-        setPole(helper, layout, WireworksRegistries.pole(PoleTier.SMALL).get());
+        for (BlockPos part : layout.footprint()) {
+            if (part.equals(layout.anchor())) {
+                continue;
+            }
+            BlockPos owner = EnergyOwner.of(helper.getLevel(), part);
+            if (!layout.anchor().equals(owner)) {
+                helper.fail("the part at " + part + " answers for " + owner + ", not the anchor "
+                        + layout.anchor(), FLOOR);
+            }
+        }
+        setPole(helper, layout, LibraryBlocks.smallPole());
         helper.startSequence()
                 .thenIdle(45)
                 .thenExecute(() -> {
-                    int found = pole(helper, layout).machineCount();
-                    if (found != 1) {
-                        helper.fail("pole sees " + found + " machines, expected the one drill",
-                                FLOOR);
-                    }
-                    long demanded = pole(helper, layout).demandedFePerTick();
-                    if (demanded != EMPTY_DRILL_DEMAND) {
-                        helper.fail("pole read a demand of " + demanded + " FE/t, expected "
-                                + EMPTY_DRILL_DEMAND, FLOOR);
-                    }
                     long stored = stored(helper, layout);
                     if (stored != 0L) {
-                        helper.fail("drill kept " + stored + " FE from the demand probe",
-                                FLOOR);
+                        helper.fail("drill kept " + stored + " FE from the demand probe", FLOOR);
+                    }
+                    long room = probe(helper, layout);
+                    if (room != EMPTY_DRILL_DEMAND) {
+                        helper.fail("the drill's face reported room for " + room + " FE, expected "
+                                + EMPTY_DRILL_DEMAND, FLOOR);
+                    }
+                    stored = stored(helper, layout);
+                    if (stored != 0L) {
+                        helper.fail("drill kept " + stored + " FE from an aborted insert", FLOOR);
+                    }
+                    setPole(helper, layout, LibraryBlocks.creativePole());
+                })
+                .thenIdle(45)
+                .thenExecute(() -> {
+                    if (stored(helper, layout) <= 0L) {
+                        helper.fail("a pole reaching only the drill's parts left it unpowered", FLOOR);
                     }
                 })
                 .thenSucceed();
@@ -87,7 +109,7 @@ final class ElectricRigTests {
     private static void poweredRigMines(GameTestHelper helper) {
         Layout layout = place(helper);
         seedIron(helper, layout);
-        setPole(helper, layout, WireworksRegistries.CREATIVE_POLE.get());
+        setPole(helper, layout, LibraryBlocks.creativePole());
         long[] window = new long[1];
         int[] mark = new int[2];
         helper.startSequence()
@@ -100,7 +122,7 @@ final class ElectricRigTests {
                     }
                 })
                 .thenExecute(() -> {
-                    setPole(helper, layout, WireworksRegistries.pole(PoleTier.SMALL).get());
+                    setPole(helper, layout, LibraryBlocks.smallPole());
                     setStored(helper, layout, FE_PER_TICK * 10L);
                     setProgress(helper, layout, 10);
                     window[0] = stored(helper, layout);
@@ -133,7 +155,7 @@ final class ElectricRigTests {
     }
 
     /** Where the drill and its pole ended up, in absolute positions. */
-    private record Layout(BlockPos anchor, BlockPos pole) {
+    private record Layout(BlockPos anchor, BlockPos pole, List<BlockPos> footprint) {
     }
 
     /** Places the drill with its own item, the way a player does, and a pole beside a part column. */
@@ -164,7 +186,7 @@ final class ElectricRigTests {
         int maxX = footprint.stream().mapToInt(BlockPos::getX).max().orElseThrow();
         // A small pole reaches two blocks either side, so two past the edge reaches one column.
         int poleX = anchor.getX() == maxX ? minX - 2 : maxX + 2;
-        return new Layout(anchor, new BlockPos(poleX, anchor.getY(), anchor.getZ()));
+        return new Layout(anchor, new BlockPos(poleX, anchor.getY(), anchor.getZ()), footprint);
     }
 
     /** Iron under the drill, in a recorded field so each block holds an amount (ADR-0041). */
@@ -185,8 +207,15 @@ final class ElectricRigTests {
         helper.getLevel().setBlockAndUpdate(layout.pole(), pole.defaultBlockState());
     }
 
-    private static SupplyAreaPoleBlockEntity pole(GameTestHelper helper, Layout layout) {
-        return (SupplyAreaPoleBlockEntity) helper.getLevel().getBlockEntity(layout.pole());
+    /** The room the drill's face reports to an insert that is then aborted, which is what a pole's probe is. */
+    private static long probe(GameTestHelper helper, Layout layout) {
+        EnergyHandler face = helper.getLevel().getCapability(Capabilities.Energy.BLOCK, layout.anchor(), null);
+        if (face == null) {
+            throw helper.assertionException(FLOOR, "the electric drill answers no energy face");
+        }
+        try (Transaction transaction = Transaction.openRoot()) {
+            return face.insert(Integer.MAX_VALUE, transaction);
+        }
     }
 
     private static RigBlockEntity rig(GameTestHelper helper, Layout layout) {

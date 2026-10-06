@@ -6,7 +6,6 @@ import static com.factoryworks.core.gametest.ChassisFixture.fluid;
 import java.util.List;
 
 import com.factoryworks.core.PFBlocks;
-import io.github._5thlayer.wireworks.PoleTier;
 import com.factoryworks.core.machine.AssemblingMachineBlockEntity;
 import com.factoryworks.core.machine.AssemblingStall;
 
@@ -71,7 +70,7 @@ final class ChemicalPlantTests {
                 helper -> CHASSIS.keepsItsRecipeOverAReload(helper, placeWhole(helper), PLASTIC));
         tests.test("chemical_plant_is_fed_through_its_part", 100,
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper),
-                        ANCHOR.above(PoleTier.VERTICAL_RADIUS + 1).east(), "only the part"));
+                        ANCHOR.above(ChassisFixture.POLE_VERTICAL_REACH + 1).east(), "only the part"));
         tests.test("chemical_plant_is_counted_once_by_a_pole", 100,
                 helper -> CHASSIS.isFedByAPole(helper, placeWhole(helper), ANCHOR.east(2), "both blocks"));
         tests.test("chemical_plant_refuses_the_fluid_addon", 20, ChemicalPlantTests::refusesTheFluidAddon);

@@ -18,8 +18,6 @@ import io.github._5thlayer.craftworks.machine.HoldVerdict;
 import io.github._5thlayer.craftworks.recipe.AssemblingRecipe;
 import io.github._5thlayer.craftworks.recipe.CraftworksRecipes;
 import io.github._5thlayer.groundworks.Footprint;
-import io.github._5thlayer.wireworks.SupplyAreaPoleBlockEntity;
-import io.github._5thlayer.wireworks.WireworksRegistries;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,7 +38,8 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
  * powers and crafts a pack recipe, that Fill Recipe is refused for a recipe the player's team has not
  * researched, and that every assembling recipe the pack ships is one some tier can hold.
  *
- * <p>The Assembler's own behaviour is Craftworks' GameTests. Copper cable is the fixture: one plate
+ * <p>The Assembler's own behaviour is Craftworks' GameTests. Craftworks names no Consumer API yet, so
+ * these calls reach its internals until craftworks#37 does. Copper cable is the fixture: one plate
  * makes two wire in 0.5 s, which tier 1's speed 0.5 runs in 20 ticks. The figures are typed, for
  * {@code BoilerTests}' reason.
  */
@@ -71,7 +70,7 @@ final class AssemblingMachineTests {
                 AssemblingMachineTests::someTierHoldsEveryRecipe);
     }
 
-    /** A creative pole reaching only the Assembler's far edge counts one machine, fills it, and the cable comes out. */
+    /** A creative pole reaching only the Assembler's far edge fills it, and the cable comes out. */
     private static void poweredByAPoleCrafts(GameTestHelper helper) {
         AssemblerBlockEntity machine = place(helper, AssemblerTier.ONE);
         BlockPos pole = ORIGIN.south(3);
@@ -79,16 +78,9 @@ final class AssemblingMachineTests {
                 .thenExecute(() -> {
                     machine.setHeldRecipe(CABLE, player(helper));
                     machine.inventory().set(0, ItemResource.of(item("factoryworks:copper_plate")), 8);
-                    helper.setBlock(pole, WireworksRegistries.CREATIVE_POLE.get());
+                    helper.setBlock(pole, LibraryBlocks.creativePole());
                 })
-                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5)
-                .thenExecute(() -> {
-                    int found = helper.getBlockEntity(pole, SupplyAreaPoleBlockEntity.class).machineCount();
-                    if (found < 1) {
-                        helper.fail("a pole reaching an Assembler counts " + found + " machines", pole);
-                    }
-                })
-                .thenIdle(3 * TICKS_PER_CRAFT)
+                .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
                 .thenExecute(() -> {
                     int wire = machine.inventory().getAmountAsInt(AssemblerSlots.PRODUCT);
                     if (wire < 2 || wire % 2 != 0) {

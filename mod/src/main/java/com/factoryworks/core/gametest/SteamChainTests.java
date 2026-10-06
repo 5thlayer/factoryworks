@@ -2,7 +2,6 @@ package com.factoryworks.core.gametest;
 
 import java.util.List;
 
-import io.github._5thlayer.pipeworks.PipeworksRegistries;
 import io.github._5thlayer.pipeworks.api.FluidPorts;
 import com.factoryworks.core.PFBlocks;
 import com.factoryworks.core.fluid.BoilerBlockEntity;
@@ -23,7 +22,11 @@ import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 /**
- * Water and steam on Pipeworks (#593, ADR-0114): an Offshore Pump through a Boiler to a Steam
+ * The Pack's claim: its Offshore Pump, Boiler and Steam Engine make power when joined by registered
+ * Pipeworks pipes, and the Boiler's water row and steam port stand in different segments (#593, #627,
+ * ADR-0114). Pipeworks' own GameTests hold how a segment fills, splits and refuses a mix.
+ *
+ * <p>Water and steam on Pipeworks (#593, ADR-0114): an Offshore Pump through a Boiler to a Steam
  * Engine, water passing through one Boiler's front row into the next, and a steam pipe refused at
  * the water row.
  *
@@ -53,10 +56,10 @@ final class SteamChainTests {
         BlockPos lateral = lateral(boiler);
         BlockPos anchor = boiler.getFirst();
 
-        put(helper, anchor.offset(lateral).offset(lateral), PipeworksRegistries.PIPE.get());
+        put(helper, anchor.offset(lateral).offset(lateral), LibraryBlocks.pipe());
         put(helper, anchor.offset(lateral).offset(lateral).offset(lateral), PFBlocks.OFFSHORE_PUMP.get());
-        put(helper, anchor.offset(back).offset(back), PipeworksRegistries.PIPE.get());
-        put(helper, anchor.offset(back).offset(back).offset(back), PipeworksRegistries.PIPE.get());
+        put(helper, anchor.offset(back).offset(back), LibraryBlocks.pipe());
+        put(helper, anchor.offset(back).offset(back).offset(back), LibraryBlocks.pipe());
         BlockPos engine = anchor.offset(back).offset(back).offset(back).offset(back);
         PFBlocks.STEAM_ENGINE_FOOTPRINT.placeAll(helper.getLevel(), engine, engineFacing());
         ((BoilerBlockEntity) helper.getLevel().getBlockEntity(anchor)).setItem(BoilerSlots.FUEL, new ItemStack(Items.COAL, 8));
@@ -74,7 +77,7 @@ final class SteamChainTests {
         Direction facing = facingWithBackAlong(Direction.Axis.Z);
         List<BlockPos> first = boilerAt(helper, facing, 7, 3);
         List<BlockPos> second = boilerAt(helper, facing, 10, 3);
-        helper.setBlock(new BlockPos(5, 1, 3), PipeworksRegistries.PIPE.get());
+        helper.setBlock(new BlockPos(5, 1, 3), LibraryBlocks.pipe());
         helper.setBlock(new BlockPos(4, 1, 3), PFBlocks.OFFSHORE_PUMP.get());
         ((BoilerBlockEntity) helper.getLevel().getBlockEntity(second.getFirst())).setItem(BoilerSlots.FUEL, new ItemStack(Items.COAL, 8));
 
@@ -110,7 +113,7 @@ final class SteamChainTests {
                 steamPipe, steamPipe.offset(lateral), steamPipe.offset(lateral).offset(lateral),
                 anchor.offset(back).offset(lateral).offset(lateral)};
         for (BlockPos pipe : around) {
-            put(helper, pipe, PipeworksRegistries.PIPE.get());
+            put(helper, pipe, LibraryBlocks.pipe());
         }
         BlockPos joint = anchor.offset(lateral).offset(lateral);
 
@@ -122,7 +125,7 @@ final class SteamChainTests {
                     if (FluidPorts.canJoin(helper.getLevel(), joint, face -> true)) {
                         helper.fail("a pipe between the water row and the steam would be placed", helper.relativePos(joint));
                     }
-                    put(helper, joint, PipeworksRegistries.PIPE.get());
+                    put(helper, joint, LibraryBlocks.pipe());
                 })
                 .thenIdle(PORTS_JOIN)
                 .thenExecute(() -> {
