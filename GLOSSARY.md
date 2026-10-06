@@ -9,25 +9,22 @@ lands.
 
 **Module**:
 One of the suite's mods, each owning one kind of logistics or crafting: Beltworks (items on belts),
-Pipeworks (fluids), Wireworks (energy) and Craftworks (crafting machines and the Personal Assembler).
-Each requires FactoryWorks and no other Module, and talks to the others and to other tech mods only
-through the loader's standard energy, fluid and item interfaces.
-_Avoid_: Library, Binding (terms from when a modpack was the product)
+Pipeworks (fluids), Wireworks (energy) and Craftworks (crafting machines). Each requires
+FactoryWorks and no other Module.
+_Avoid_: Library, Binding
 
 **Groundworks**:
-The placement mod beneath the whole suite: previews, rotation, stretching and dismantling, for
-vanilla blocks and for any mod that plans through it. It needs nothing else and is useful on its own
-in vanilla, so it is not a Module. FactoryWorks requires it, which is how every Module gets it.
+The placement mod beneath the suite: previews, rotation, stretching and dismantling, for vanilla
+blocks and any mod that plans through it. It needs nothing else, so it is not a Module.
 
 **FactoryWorks** (the mod):
-The base every Module requires, as the Mekanism mod is for Mekanism Generators and Tools. It holds
-what the Modules share: its ore patches, oil fields and the radar, the machines that extract
-them, and the common intermediates. The suite shares its name.
+The base every Module requires, holding what they share: ore patches, oil fields, the radar, the
+machines that extract them, and the common intermediates. The suite shares its name.
 _Avoid_: FactoryWorks Core, Core
 
 **FactoryWorks Showcase**:
-A modpack of the Modules and FactoryWorks with almost no content of its own: no quests, no scripted
-start, no Factorio names. It exists to demo and integration-test the suite, not as a product.
+A modpack of FactoryWorks and its Modules with almost no content of its own, made to demo and
+integration-test the suite rather than as a product.
 _Avoid_: the Pack
 
 ## Language
@@ -284,7 +281,7 @@ _Avoid_: guide, tutorial, questline, FTB book
 ### Terra's ore
 
 **Ore patch**:
-The only shape ore takes on Terra: a filled disc of a single ore block, one block deep, lying flush with the terrain surface. There are no buried veins — the whole planet deals the same shape, and a patch is one resource rather than a mix, so a patch answers "what is this a patch of" with one word (ADR-0045).
+The shape FactoryWorks' ore takes: a filled disc of a single ore, one block deep, flush with the surface.
 _Avoid_: vein, deposit, ore blob, ore body, ore field
 
 **Starting field**:
@@ -292,27 +289,27 @@ One of the patches the starting area deals at spawn, whose total is Factorio's s
 _Avoid_: starting patch, spawn patch, tutorial patch
 
 **Outfield patch**:
-Every ore patch beyond the starting area. Placed by ordinary worldgen at Factorio's own spacing, excluded from the first 150 blocks around the origin, land-only, and reached by rail rather than by belt — a patch is roughly forty chunks from its neighbours of the same resource, and a uranium patch nearly a hundred (ADR-0045).
+Every ore patch beyond the starting area, placed by ordinary worldgen.
 _Avoid_: regular patch, wild patch, remote patch
 
 **Amplitude**:
-How much one block of a patch holds. It rises with distance from the world origin up to a cap, after which further quantity widens the patch instead.
+How much one block of a patch holds. It rises with distance from the world origin up to a cap, beyond which a patch grows wider instead.
 _Avoid_: richness, density, per-tile amount
 
 **Radius**:
-How wide a patch is. Fixed until the **amplitude** cap is reached and growing with distance beyond it, which is why a far patch is bigger as well as richer. Amplitude and radius split a patch's quantity between them; they never multiply it.
+How wide a patch is. Amplitude and Radius split a patch's quantity between them: the radius stays fixed until the amplitude reaches its cap, then grows with distance.
 _Avoid_: size, footprint, patch size
 
 **Radar**:
-The building that charts map at range for its team: the chunks it scans appear on the map as if walked, and each **outfield patch** it charts gets a marker showing what the patch had left when last charted or walked past, gone once the patch is mined out. It detects nothing hidden — ore is visible where it lies, so finding a patch is exploration rather than prospecting, and the marker only labels what the chart already shows (ADR-0045, ADR-0079).
+The building that charts the map around it and labels each ore patch it charts with what the patch had left when last seen. It finds nothing hidden: a patch is found by exploring, and the label only names what the chart shows.
 _Avoid_: prospector, scanner, ore detector
 
 **Sector**:
-What a **Radar** charts in one scan: a 32×32-block square, which is Factorio's chunk and four Minecraft chunks. A Radar charts the sectors around it at once, then one sector at range at a time, unexplored ones first, and re-scans its reach in turn once all are charted.
+What a **Radar** charts in one scan: a 32×32-block square, four Minecraft chunks.
 _Avoid_: chunk (a Minecraft chunk is a quarter of a sector), scan area
 
 **Chart**:
-What a team has seen through its Radars: every sector a Radar of theirs has charted. It belongs to the team, so a player who joins later or was offline receives it too.
+Every Sector a team's Radars have charted. It belongs to the team, so a player who joins later has it too.
 _Avoid_: explored area, revealed map, fog
 
 ### Powering things
@@ -407,28 +404,28 @@ _Avoid_: tier, age, era, stage
 A Factorio technology that opens a chapter of Terra's arc: a **Rung**'s science pack, or a trigger technology researched by doing something rather than by packs, such as crafting a Lab or mining crude. Every chapter boundary is one, read off the corpus; the pack invents none (ADR-0097). Unrelated to a **Gated recipe**, which is about where a recipe is crafted.
 _Avoid_: milestone, checkpoint, unlock
 
-**Plate**:
-The pack's one item per material — FTB Materials', for every metal. It is what a furnace yields, since ore smelts 1:1 to a plate with no ingot step, and it is the form every recipe consumes. There is exactly one per material and never a second: where another mod ships a rival form for the same material, the rival's recipes are removed and it becomes unobtainable. The metal-derived intermediates — gear, rod, wire — come from the same supplier. Ingots, nuggets, dusts and raw forms exist in the jars but the pack does not use them.
-_Avoid_: sheet, ingot, GT plate, unified plate
+**Ingot**:
+The form a metal takes in FactoryWorks' recipes. Any mod's ingot of that metal serves, vanilla's included.
+_Avoid_: plate, sheet, unified plate
 
 **Engineer's Pick**:
-The player's only mining tool, in two tiers — **Engineer's Iron Pick** and **Engineer's Steel Pick** — both indestructible, the steel one unlocked by the `steel-axe` research and crafted from the iron one, which it consumes. It mines every block class, so the pack has no axe, shovel or shears, and it is what **dismantles** a pipe run and a belt line, the only tool that does in the Pack. The tiers differ only in mining speed: Terra's ores, coal and stone take a flat second by hand and half a second after the research, while everything else keeps vanilla hardness. Factorio's two mining speeds and the ratio between the tiers are kept, but the mining time itself is the pack's — half of Factorio's, after 2.0s failed ADR-0039's human-on-delivery check.
+FactoryWorks' tool, in two tiers, the Engineer's Iron Pick and the Engineer's Steel Pick, both indestructible. It mines any block, takes up a span with a **Dismantle**, and wires poles.
 _Avoid_: pickaxe, the pick, mining tool, wrench
 
 **Burner Mining Drill**:
-Terra's rung 0 drill and the pack's own block: it burns solid fuel, stands as one machine two blocks wide, deep and tall, and breaks the ore blocks in an area beneath it. It exists because Factorio's opening machine is a fuel-burning drill and GregTech ships none — its extraction line starts at a steam miner fed by a boiler — so ADR-0040 authors it first-party and removes the LP Steam Miner. It is in the opening pocket rather than crafted, because a drill covering four tiles beats hand-mining from the first minute.
-_Avoid_: burner drill, steam miner, LP Steam Miner, mining rig
+The fuel-burning drill, two blocks on each side, that mines the ore beneath it.
+_Avoid_: burner drill, steam miner, mining rig
 
 **Electric Mining Drill**:
-Terra's rung 1 drill and the pack's own block, the ladder's second and last rung: one machine three blocks wide, deep and tall, run on electricity from a pole, mining a wider area than the **Burner Mining Drill**. It arrives with the electricity that runs it and is what makes the **outfield patches** worth reaching.
-_Avoid_: Basic Miner, Basic Ore Drilling Rig, electric drill, LV miner
+The electric drill, three blocks on each side, that mines a wider area than the **Burner Mining Drill**.
+_Avoid_: electric drill, Basic Miner, LV miner
 
 **Drop Position**:
-The one tile a drill pushes its ore into, just past its front edge: the left column of a **Burner Mining Drill** as seen from behind, and the middle column of an **Electric Mining Drill**. It is Factorio's, never the pack's choice. The drill hands ore only to a machine or container standing there, and stops when there is none or it is full; nothing is dropped on the ground. The player sees it before placing and on a built drill.
+The one tile just past a drill's front edge that the drill pushes its ore into. With nothing there to take the ore, the drill stops.
 _Avoid_: export block, output block, output face, output tile, eject tile
 
 **Operation**:
-One unit of mining work against an ore block: it consumes one unit of the block's amount and pays out `yield` items. Drills and hands both perform them, which is what makes "seconds per ore" literal rather than aspirational. Terra's two drills differ in operations per second, footprint and reach, never in yield, which stays 1.0 until a productivity bonus raises it on another body.
+One unit of mining work against an ore block: it consumes one unit of the block's amount and pays out its yield. Drills and hands both perform them.
 _Avoid_: mining tick, drill cycle, swing
 
 **Personal Assembler**:
@@ -495,23 +492,23 @@ The machine carrying Factorio's chemical-plant recipe list: both crackings, lubr
 _Avoid_: chemical reactor, chem plant, reaction chamber, centrifuge
 
 **Oil well**:
-One block, flush with the terrain, that holds an amount of **Crude Oil** and never runs dry: each draw lowers its amount toward a floor — a fifth of what it started with, or 20% yield, whichever is higher — and its yield, the fraction of full output a Pumpjack gets from it, falls with it. A far well can start well above 100%. A crude-oil field is a scattering of wells, not a filled patch. It is the only crude source anywhere in the pack (#377).
+One block that holds an amount of **Crude Oil** and never runs dry: each draw lowers its yield toward a floor, where it stays. A crude-oil field is a scattering of wells, not a filled patch.
 _Avoid_: oil spring, oil deposit, bedrock fluid deposit
 
 **Pumpjack**:
-The machine that draws **Crude Oil** from one **oil well**. It stands on the well and nowhere else, runs on electricity, and its output is its full rate times the well's yield. Crude leaves it through any face (#377).
+The machine that draws **Crude Oil** from the one **oil well** it stands on, at its full rate times the well's yield.
 _Avoid_: pump, fluid drilling rig, oil derrick
 
 **Crude Oil**:
-The unprocessed fluid a **Pumpjack** draws from an **oil well**, and the sole input to oil processing. It never runs out: a well's yield falls toward a floor and stops there, as in Factorio (#377).
+The unprocessed fluid a **Pumpjack** draws from an **oil well**, and the input to oil processing.
 _Avoid_: raw oil, oil, petroleum, oil spring
 
 **Petroleum Gas**:
-The lightest fraction, and the one that feeds sulfur and plastic. `factoryworks:petroleum_gas`, registered by Core and drawn in Factorio's colour (ADR-0109).
+The lightest fraction of oil processing.
 _Avoid_: refinery gas, natural gas, naphtha
 
 **Heavy Oil** / **Light Oil**:
-The two heavier fractions. `factoryworks:heavy_oil` and `factoryworks:light_oil`, registered by Core (ADR-0109). Heavy Oil is also what Electro's oceans are made of (ADR-0009).
+The two heavier fractions of oil processing.
 _Avoid_: heavy fuel, light fuel, fuel oil, kerosene
 
 **The oil chapter**:
