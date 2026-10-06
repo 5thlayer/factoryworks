@@ -2,7 +2,7 @@
   "jars": [
     "26.1.2.jar",
     "beltworks-0.3.17.jar",
-    "craftworks-0.4.1.jar",
+    "craftworks-0.4.2.jar",
     "ftb-filter-system-neoforge-26.1.2.2.jar",
     "ftb-library-neoforge-26.1.2.7.jar",
     "ftb-quests-neoforge-26.1.2.7.jar",
@@ -32,6 +32,7 @@
     "craftworks:assembler_1",
     "craftworks:assembler_2",
     "craftworks:assembler_3",
+    "craftworks:chemical_plant",
     "craftworks:creative_energy_source",
     "craftworks:creative_fluid_source",
     "ftbfiltersystem:smart_filter",

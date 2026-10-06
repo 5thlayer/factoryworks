@@ -194,7 +194,7 @@ hash = "e206fb54c03e7d6c3c4661cf2e01b7c704b3265f9200cb382e5ed6aba2c18fb3"
 
 [[files]]
 file = "config/wireworks-server.toml"
-hash = "f25e8022e0b7b8f5d0bc55e232a57ecfe4f76fcce2f67b0a3753f5b7f6ef05f4"
+hash = "97b7bb43519bdded5ddcd8904caa04419cc0505a0591442e61e589e7160458ed"
 
 [[files]]
 file = "config/yacl.json5"
@@ -322,11 +322,11 @@ hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "2b020420d5bb889cdff7411961771ef9c2e3ec2dd6ca2852ff0fd647c0f77bbd"
+hash = "fa1e102a570b23162a710ad360fcc4ea9a15cacd0ac69d5cf6b1b858b2f1984f"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "037dc74f7c19ef5aeb17309289e94d2f7c4646d5c4881f8cbcbc89fee76049a6"
+hash = "3c32f071e4a9b80cc1312872cb27f9fc09f03184fc91c2ed40e75a5a0c66c2e1"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -346,7 +346,7 @@ hash = "9d68afa4849b0dfe7e85e59deea4aa5d631354886aaa85dfc8d99274455d6832"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "998637e97fa6b166b7b56caefd93eb9e8b07bde9f672b10d216061edd149141d"
+hash = "1d5ac53a8c9a03ef78234e5c5fe1be7bd03ed7e83b7832466b9981d8db0469a7"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
