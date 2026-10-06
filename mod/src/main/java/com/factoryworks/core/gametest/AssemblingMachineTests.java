@@ -138,8 +138,7 @@ final class AssemblingMachineTests {
 
     /**
      * Against the manager, not the emitted files: a recipe the game rejected at load is
-     * {@code check-datapack-load.py}'s. Craftworks refuses a recipe that names a fluid until it has
-     * Fluid Connections (#580), so those are held to being {@code crafting-with-fluid} ones.
+     * {@code check-datapack-load.py}'s.
      */
     private static void someTierHoldsEveryRecipe(GameTestHelper helper) {
         List<String> unheld = new ArrayList<>();
@@ -152,17 +151,11 @@ final class AssemblingMachineTests {
             }
             pack++;
             AssemblingRecipe recipe = holder.value();
-            if (HeldRecipes.namesFluid(recipe)) {
-                if (!recipe.category().id().equals("crafting-with-fluid")) {
-                    unheld.add(id + " names a fluid and is " + recipe.category().id());
-                }
-                continue;
-            }
             if (!HeldRecipes.canRun(recipe)) {
                 unheld.add(id + " cannot run on an Assembler");
-            } else if (Arrays.stream(AssemblerTier.values())
-                    .noneMatch(tier -> HeldRecipes.takesCategory(tier, recipe))) {
-                unheld.add(id + " is category " + recipe.category().id() + ", which no tier holds");
+            } else if (Arrays.stream(AssemblerTier.values()).noneMatch(
+                    tier -> HeldRecipes.takesCategory(tier, recipe) && HeldRecipes.takesFluids(tier, recipe))) {
+                unheld.add(id + " is category " + recipe.category().id() + " with its fluids, which no tier holds");
             }
         }
         if (pack == 0) {

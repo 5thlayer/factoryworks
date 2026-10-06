@@ -346,7 +346,7 @@ hash = "9d68afa4849b0dfe7e85e59deea4aa5d631354886aaa85dfc8d99274455d6832"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "4e5e8ccb34032b78a1c25a6e45a52da0d4c70c737353cbcf09cf07f9880b6ad1"
+hash = "998637e97fa6b166b7b56caefd93eb9e8b07bde9f672b10d216061edd149141d"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -2864,5 +2864,5 @@ hash = "71c920bbbf7464754a2e7beb48e8dae545795cc6c36206623a45188a8072e03b"
 metafile = true
 
 [[files]]
-file = "mods/wireworks-0.2.2.jar"
-hash = "129f88697ffe90e5c30c7668aff641644c1c2ef88199fc6ab7562b67313e5fb0"
+file = "mods/wireworks-0.4.0.jar"
+hash = "f3438624dcc210d85c35280e19bbf084393c091c973f53fec98747649b75cc26"

@@ -31,7 +31,7 @@
       "mod": "craftworks",
       "group": "io.github.5thlayer",
       "artifact": "craftworks",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "pattern": "craftworks-*.jar",
       "curseforge": 1715876,
       "source": {
@@ -43,7 +43,7 @@
       "mod": "wireworks",
       "group": "io.github.5thlayer",
       "artifact": "wireworks",
-      "version": "0.2.2",
+      "version": "0.4.0",
       "pattern": "wireworks-*.jar",
       "nests": [
         "groundworks"

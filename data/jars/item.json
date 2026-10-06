@@ -2,7 +2,7 @@
   "jars": [
     "26.1.2.jar",
     "beltworks-0.3.17.jar",
-    "craftworks-0.4.0.jar",
+    "craftworks-0.4.1.jar",
     "ftb-filter-system-neoforge-26.1.2.2.jar",
     "ftb-library-neoforge-26.1.2.7.jar",
     "ftb-quests-neoforge-26.1.2.7.jar",
@@ -10,7 +10,7 @@
     "oritech-2.0.0-exp6.jar",
     "pipeworks-0.1.2.jar",
     "researchd-1.2.5.jar",
-    "wireworks-0.2.2.jar"
+    "wireworks-0.4.0.jar"
   ],
   "items": [
     "beltworks:belt_tile",
@@ -33,6 +33,7 @@
     "craftworks:assembler_2",
     "craftworks:assembler_3",
     "craftworks:creative_energy_source",
+    "craftworks:creative_fluid_source",
     "ftbfiltersystem:smart_filter",
     "ftblibrary:icon_item",
     "ftbquests:barrier",
@@ -1856,6 +1857,8 @@
     "wireworks:large_pole",
     "wireworks:medium_pole",
     "wireworks:small_pole",
-    "wireworks:solar_panel"
+    "wireworks:solar_panel",
+    "wireworks:transformer",
+    "wireworks:transmission_pole"
   ]
 }

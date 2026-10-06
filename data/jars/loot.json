@@ -1,5 +1,5 @@
 {
-  "jars": ["26.1.2.jar", "beltworks-0.3.17.jar", "craftworks-0.4.0.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "pipeworks-0.1.2.jar", "researchd-1.2.5.jar", "wireworks-0.2.2.jar"],
+  "jars": ["26.1.2.jar", "beltworks-0.3.17.jar", "craftworks-0.4.1.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "pipeworks-0.1.2.jar", "researchd-1.2.5.jar", "wireworks-0.4.0.jar"],
   "tables": {
     "beltworks:blocks/belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "beltworks:blocks/express_belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:express_belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
@@ -21,6 +21,7 @@
     "craftworks:blocks/assembler_2": [{"entries":[{"type":"minecraft:item","name":"craftworks:assembler_2"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "craftworks:blocks/assembler_3": [{"entries":[{"type":"minecraft:item","name":"craftworks:assembler_3"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "craftworks:blocks/creative_energy_source": [{"entries":[{"type":"minecraft:item","name":"craftworks:creative_energy_source"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
+    "craftworks:blocks/creative_fluid_source": [{"entries":[{"type":"minecraft:item","name":"craftworks:creative_fluid_source"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "ftbquests:blocks/loot_crate_opener": [{"entries":[{"type":"minecraft:item","name":"ftbquests:loot_crate_opener"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "ftbquests:blocks/screen_1": [{"entries":[{"type":"minecraft:item","name":"ftbquests:screen_1"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "ftbquests:blocks/screen_3": [{"entries":[{"type":"minecraft:item","name":"ftbquests:screen_3"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
@@ -1281,6 +1282,8 @@
     "wireworks:blocks/large_pole": [{"entries":[{"type":"minecraft:item","name":"wireworks:large_pole"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "wireworks:blocks/medium_pole": [{"entries":[{"type":"minecraft:item","name":"wireworks:medium_pole"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "wireworks:blocks/small_pole": [{"entries":[{"type":"minecraft:item","name":"wireworks:small_pole"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
-    "wireworks:blocks/solar_panel": [{"entries":[{"type":"minecraft:item","name":"wireworks:solar_panel"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]
+    "wireworks:blocks/solar_panel": [{"entries":[{"type":"minecraft:item","name":"wireworks:solar_panel"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
+    "wireworks:blocks/transformer": [{"entries":[{"type":"minecraft:item","name":"wireworks:transformer"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
+    "wireworks:blocks/transmission_pole": [{"entries":[{"type":"minecraft:item","name":"wireworks:transmission_pole"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]
   }
 }
