@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "factoryworks:block/steam_engine"
+      "model": "factoryworks:block/steam_engine_part"
     }
   }
 }
