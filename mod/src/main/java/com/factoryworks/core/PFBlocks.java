@@ -141,7 +141,7 @@ public final class PFBlocks {
     public static final FootprintMachine RADAR_FOOTPRINT = new FootprintMachine(
             RadarFootprint.FOOTPRINT, RADAR, RADAR_PART, () -> PFItems.RADAR.get());
 
-    /** The Pumpjack (ADR-0081): a pack anchor on the footprint seam, drawn whole by Oritech's Pump model. */
+    /** The Pumpjack (ADR-0081): a pack anchor on the footprint seam. */
     public static final DeferredHolder<Block, PumpjackBlock> PUMPJACK =
             BLOCKS.registerBlock("pumpjack", props -> new PumpjackBlock(machineProperties(props)));
 

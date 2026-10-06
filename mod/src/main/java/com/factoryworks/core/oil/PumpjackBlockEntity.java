@@ -1,9 +1,5 @@
 package com.factoryworks.core.oil;
 
-import com.geckolib.animatable.GeoBlockEntity;
-import com.geckolib.animatable.instance.AnimatableInstanceCache;
-import com.geckolib.animatable.manager.AnimatableManager;
-import com.geckolib.util.GeckoLibUtil;
 import com.factoryworks.core.PFBlockEntities;
 import com.factoryworks.core.energy.LongSnapshotJournal;
 
@@ -30,14 +26,13 @@ import org.jspecify.annotations.Nullable;
  * <p>A cycle waits for room for its whole yield, so a full segment neither draws work energy nor
  * depletes the well; the drain is paid regardless.
  */
-public class PumpjackBlockEntity extends PumpjackPortBlockEntity implements GeoBlockEntity {
+public class PumpjackBlockEntity extends PumpjackPortBlockEntity {
 
     private static final PumpjackSpec SPEC = PumpjackSpec.fromCorpus();
 
     private final PumpjackEnergy energy = new PumpjackEnergy(SPEC);
     private final LongSnapshotJournal journal =
             new LongSnapshotJournal(energy::buffered, energy::setBuffered, this::setChanged);
-    private final AnimatableInstanceCache animations = GeckoLibUtil.createInstanceCache(this);
 
     public PumpjackBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.PUMPJACK.get(), pos, state);
@@ -135,15 +130,6 @@ public class PumpjackBlockEntity extends PumpjackPortBlockEntity implements GeoB
             return 0;
         }
     };
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return animations;
-    }
 
     @Override
     protected void loadAdditional(ValueInput input) {

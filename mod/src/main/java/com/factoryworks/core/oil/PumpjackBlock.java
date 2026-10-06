@@ -12,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -38,12 +37,6 @@ public class PumpjackBlock extends HorizontalDirectionalBlock implements EntityB
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
-    }
-
-    /** Oritech's Pump model is drawn from the block entity. */
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
     }
 
     @Override

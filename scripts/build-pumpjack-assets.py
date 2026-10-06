@@ -6,8 +6,8 @@
 class-init, beside the fluid it pumps: the `crude-oil` row of `data/pack/item-map.json`. Turning
 watts into FE is `PumpjackSpec`'s, where a unit test holds it.
 
-The Pumpjack is drawn by Oritech's Pump model, scaled to its footprint (ADR-0081), so its block
-models name a particle texture only. The well's texture is a placeholder until it has art.
+The Pumpjack is stand-in art: plain cubes of vanilla textures over its footprint (#621), which a
+block model draws from its anchor, turned by facing. The well's texture is a placeholder too.
 
 Usage:
 
@@ -79,21 +79,51 @@ def write(path, data):
         handle.write("\n")
 
 
+FACINGS = {"north": 0, "east": 90, "south": 180, "west": 270}
+BODY = "minecraft:block/iron_block"
+DARK = "minecraft:block/black_concrete"
+
+
+def cube(name, low, high, texture):
+    return {
+        "name": name,
+        "from": low,
+        "to": high,
+        "faces": {face: {"uv": [0, 0, 16, 16], "texture": texture}
+                  for face in ("north", "east", "south", "west", "up", "down")},
+    }
+
+
+# The footprint is 3x3 wide and the anchor is its middle column, so the model spans -16..32 across
+# and a vanilla model cannot rise past 32 (ADR-0111). The beam runs along x.
+def pumpjack_model():
+    return {
+        "textures": {"body": BODY, "dark": DARK, "particle": BODY},
+        "elements": [
+            cube("base", [-12, 0, -12], [28, 3, 28], "#dark"),
+            cube("tower", [6, 3, 6], [10, 24, 10], "#body"),
+            cube("beam", [-12, 22, 6], [28, 26, 10], "#dark"),
+            cube("head", [-14, 14, 5], [-10, 28, 11], "#body"),
+            cube("rod", [-13, 3, 7.5], [-11, 14, 8.5], "#body"),
+            cube("counterweight", [24, 14, 5], [28, 26, 11], "#body"),
+        ],
+    }
+
+
+def anchor_blockstate(model):
+    return {"variants": {f"facing={facing}": ({"model": model} | ({"y": y} if y else {}))
+                         for facing, y in FACINGS.items()}}
+
+
 def planned_files(rows):
     machine = f"{NAMESPACE}:block/{BLOCK_NAME}"
     well = f"{NAMESPACE}:block/{WELL_NAME}"
     return {
         RESOURCE: rows,
-        os.path.join(ASSETS, "blockstates", f"{BLOCK_NAME}.json"): {"variants": {"": {"model": machine}}},
+        os.path.join(ASSETS, "blockstates", f"{BLOCK_NAME}.json"): anchor_blockstate(machine),
         os.path.join(ASSETS, "blockstates", f"{PART_NAME}.json"): {"variants": {"": {"model": machine}}},
-        os.path.join(ASSETS, "models", "block", f"{BLOCK_NAME}.json"): {
-            "parent": "minecraft:block/cube_all",
-            "textures": {
-                "all": "oritech:block/machine_frame_block",
-                "particle": "oritech:block/machine_particle_texture",
-            },
-        },
-        os.path.join(ASSETS, "models", "item", f"{BLOCK_NAME}.json"): {"parent": "oritech:item/pump"},
+        os.path.join(ASSETS, "models", "block", f"{BLOCK_NAME}.json"): pumpjack_model(),
+        os.path.join(ASSETS, "models", "item", f"{BLOCK_NAME}.json"): {"parent": machine},
         os.path.join(ASSETS, "blockstates", f"{WELL_NAME}.json"): {"variants": {"": {"model": well}}},
         os.path.join(ASSETS, "models", "block", f"{WELL_NAME}.json"): {
             "parent": "minecraft:block/cube_bottom_top",

@@ -496,7 +496,7 @@ One block that holds an amount of **Crude Oil** and never runs dry: each draw lo
 _Avoid_: oil spring, oil deposit, bedrock fluid deposit
 
 **Pumpjack**:
-The machine that draws **Crude Oil** from the one **oil well** it stands on, at its full rate times the well's yield.
+The machine that draws **Crude Oil** from the one **oil well** it stands on, at its full rate times the well's yield. Drawn in stand-in art of the Pack's own, not Oritech's Pump.
 _Avoid_: pump, fluid drilling rig, oil derrick
 
 **Crude Oil**:

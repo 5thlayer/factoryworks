@@ -51,7 +51,6 @@ DEFERRED = {
 GECKOLIB = {
     "factoryworks:chemical_plant": "an OritechGeoItem drawing Oritech's centrifuge model (#490)",
     "factoryworks:oil_refinery": "an OritechGeoItem drawing Oritech's refinery model (#491)",
-    "factoryworks:pumpjack": "an OritechGeoItem drawing Oritech's pump model (ADR-0081)",
 }
 
 
