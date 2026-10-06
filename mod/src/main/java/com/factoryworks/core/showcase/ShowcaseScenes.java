@@ -3,8 +3,8 @@ package com.factoryworks.core.showcase;
 import io.github._5thlayer.craftworks.machine.AssemblerBlockEntity;
 import io.github._5thlayer.craftworks.machine.AssemblerTier;
 import io.github._5thlayer.craftworks.machine.Assemblers;
-import io.github._5thlayer.craftworks.machine.ChemicalPlantBlockEntity;
-import io.github._5thlayer.craftworks.machine.ChemicalPlants;
+import io.github._5thlayer.craftworks.machine.FluidMachineBlockEntity;
+import io.github._5thlayer.craftworks.machine.FluidMachines;
 import io.github._5thlayer.groundworks.Footprint;
 import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
@@ -243,12 +243,12 @@ public final class ShowcaseScenes {
     }
 
     private static void chemicalPlant(Site site, BlockPos origin, String recipe) {
-        Footprint footprint = ChemicalPlants.footprint();
+        Footprint footprint = FluidMachines.CHEMICAL_PLANT.footprint();
         List<BlockPos> blocks = footprint.positions(site.at(origin), Direction.NORTH);
         for (int i = 0; i < blocks.size(); i++) {
             site.level().setBlockAndUpdate(blocks.get(i), footprint.stateAt(i, Direction.NORTH));
         }
-        ChemicalPlantBlockEntity machine = site.blockEntity(origin, ChemicalPlantBlockEntity.class);
+        FluidMachineBlockEntity machine = site.blockEntity(origin, FluidMachineBlockEntity.class);
         machine.setHeldRecipe(Identifier.parse(recipe), FakePlayerFactory.getMinecraft(site.level()));
         if (machine.heldRecipe().isEmpty()) {
             throw new IllegalStateException(recipe + " was not held by the Chemical Plant at " + site.at(origin));

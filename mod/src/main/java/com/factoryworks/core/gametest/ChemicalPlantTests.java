@@ -3,9 +3,9 @@ package com.factoryworks.core.gametest;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github._5thlayer.craftworks.machine.ChemicalPlantBlockEntity;
-import io.github._5thlayer.craftworks.machine.ChemicalPlantSlots;
-import io.github._5thlayer.craftworks.machine.ChemicalPlants;
+import io.github._5thlayer.craftworks.machine.FluidMachine;
+import io.github._5thlayer.craftworks.machine.FluidMachineBlockEntity;
+import io.github._5thlayer.craftworks.machine.FluidMachines;
 import io.github._5thlayer.groundworks.Footprint;
 import io.github._5thlayer.pipeworks.api.FluidPorts;
 
@@ -47,6 +47,7 @@ final class ChemicalPlantTests {
     private static final int TICKS_PER_CRAFT = 20;
 
     private static final int PIPES = 2;
+    private static final int PRODUCT = FluidMachine.CHEMICAL_PLANT.productSlot();
 
     private ChemicalPlantTests() {
     }
@@ -60,7 +61,7 @@ final class ChemicalPlantTests {
 
     /** Gas in a two-pipe segment at one connection, coal in the slot and a pole beside: plastic comes out. */
     private static void makesPlasticFromPipedGas(GameTestHelper helper) {
-        ChemicalPlantBlockEntity plant = place(helper);
+        FluidMachineBlockEntity plant = place(helper);
         hold(helper, plant, PLASTIC);
         Connection in = connections(helper).stream().filter(c -> c.side() == FACING).findFirst().orElseThrow();
         List<BlockPos> pipes = pipesFrom(helper, in);
@@ -75,15 +76,15 @@ final class ChemicalPlantTests {
                 .thenExecute(() -> fill(helper, pipes.getFirst(), FluidResource.of(fluid("factoryworks:petroleum_gas")), gas))
                 .thenIdle(ChassisFixture.RESCAN_INTERVAL + 5 + 3 * TICKS_PER_CRAFT)
                 .thenExecute(() -> {
-                    int plastic = plant.inventory().getAmountAsInt(ChemicalPlantSlots.PRODUCT);
+                    int plastic = plant.inventory().getAmountAsInt(PRODUCT);
                     if (plastic < 2 || plastic % 2 != 0) {
                         helper.fail("a Chemical Plant on piped gas made " + plastic + " plastic, expected whole crafts of 2",
                                 ORIGIN);
                     }
-                    if (!plant.inventory().getResource(ChemicalPlantSlots.PRODUCT).equals(
+                    if (!plant.inventory().getResource(PRODUCT).equals(
                             ItemResource.of(item("factoryworks:plastic_bar")))) {
                         helper.fail("a Chemical Plant's product is "
-                                + plant.inventory().getResource(ChemicalPlantSlots.PRODUCT), ORIGIN);
+                                + plant.inventory().getResource(PRODUCT), ORIGIN);
                     }
                     int taken = gas - segmentAmount(helper, pipes.getFirst());
                     if (taken < plastic / 2 * GAS_PER_CRAFT) {
@@ -99,7 +100,7 @@ final class ChemicalPlantTests {
      * an emptied pipe takes the acid.
      */
     private static void sendsAcidToATank(GameTestHelper helper) {
-        ChemicalPlantBlockEntity plant = place(helper);
+        FluidMachineBlockEntity plant = place(helper);
         hold(helper, plant, SULFURIC_ACID);
         List<Connection> connections = connections(helper);
         Connection in = connections.stream().filter(c -> c.side() == FACING).findFirst().orElseThrow();
@@ -151,7 +152,7 @@ final class ChemicalPlantTests {
      */
     private static List<Connection> connections(GameTestHelper helper) {
         List<Connection> found = new ArrayList<>();
-        Footprint footprint = ChemicalPlants.footprint();
+        Footprint footprint = FluidMachines.CHEMICAL_PLANT.footprint();
         for (BlockPos block : footprint.positions(helper.absolutePos(ORIGIN), FACING)) {
             for (Direction side : Direction.Plane.HORIZONTAL) {
                 if (helper.getLevel().getCapability(Capabilities.Fluid.BLOCK, block, side) != null) {
@@ -197,16 +198,16 @@ final class ChemicalPlantTests {
         return FluidPorts.segment(helper.getLevel(), pipe).getAmountAsInt(0);
     }
 
-    private static ChemicalPlantBlockEntity place(GameTestHelper helper) {
-        Footprint footprint = ChemicalPlants.footprint();
+    private static FluidMachineBlockEntity place(GameTestHelper helper) {
+        Footprint footprint = FluidMachines.CHEMICAL_PLANT.footprint();
         List<BlockPos> positions = footprint.positions(helper.absolutePos(ORIGIN), FACING);
         for (int i = 0; i < positions.size(); i++) {
             helper.getLevel().setBlock(positions.get(i), footprint.stateAt(i, FACING), Block.UPDATE_ALL);
         }
-        return helper.getBlockEntity(ORIGIN, ChemicalPlantBlockEntity.class);
+        return helper.getBlockEntity(ORIGIN, FluidMachineBlockEntity.class);
     }
 
-    private static void hold(GameTestHelper helper, ChemicalPlantBlockEntity plant, Identifier recipe) {
+    private static void hold(GameTestHelper helper, FluidMachineBlockEntity plant, Identifier recipe) {
         plant.setHeldRecipe(recipe, helper.makeMockPlayer(GameType.SURVIVAL));
         if (plant.heldRecipe().isEmpty()) {
             helper.fail(recipe + " was not held, so this proves nothing", ORIGIN);
