@@ -205,8 +205,8 @@ _Avoid_: abstraction, going virtual
 ### Handling things
 
 **Obtainable**:
-An item or fluid a player can come to hold on a live body without creative mode: a pack recipe makes it, the starting kit grants it, a block the live worldgen places drops it, a mob the live biomes spawn drops it, or a mechanic produces it (a filled bucket, a Pumpjack's crude, a Boiler's steam). A parked body's worldgen does not count until it is live. Only an Obtainable item is listed in the recipe viewer's index (#173), and not every one: an item that is no part of the factory, such as the quest book, is hidden even though the starting kit grants it (#458).
-_Avoid_: reachable (that is **Reach**), available, craftable (a mob drop is Obtainable and not craftable)
+An item or fluid a player can come to hold without creative mode: a recipe makes it, a block the world generates drops it, a mob drops it, or a mechanic produces it. Only an Obtainable item is listed in the recipe viewer.
+_Avoid_: reachable, available, craftable (a mob drop is Obtainable and not craftable)
 
 **Stock interaction**:
 Vanilla behaviour outside any recipe that turns an item or block into a different one: stripping a log, tilling dirt, water meeting lava, concrete powder hardening, waxing copper, a leaf's drop. None ships unless a decision names it, as a stock recipe does not (#440); a sapling growing into a tree is the one named (ADR-0051). A mechanic the pack builds, such as felling or the Offshore Pump, is not a stock interaction, and what a denied one would make is not Obtainable.
@@ -619,9 +619,9 @@ A player accepted into the Alpha through its application, who holds the tester r
 _Avoid_: playtester, beta tester
 
 **Stand-in art**:
-A shipped texture, model or animation meant to be replaced: a placeholder, a procedurally generated sprite, or an AI-generated one. Distinct from **Vendored art**, which is final but third-party. Every stand-in is listed so it can be commissioned or redrawn.
+A shipped texture, model or animation meant to be replaced: a placeholder, a generated sprite or an AI-generated one. Every stand-in is listed so it can be commissioned or redrawn.
 _Avoid_: temp art, programmer art, WIP texture
 
 **Vendored art**:
-Third-party art the pack ships under its own licence, with attribution: final, though one under a non-commercial licence is the first to replace.
+Third-party art shipped under its own licence, with attribution. It is final, though art under a non-commercial licence is the first to replace.
 _Avoid_: borrowed art (a borrowed block is another mod's block, not its art)
