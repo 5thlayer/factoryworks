@@ -1,30 +1,31 @@
 #!/usr/bin/env python3
-"""Tint Core's five oil and chemistry fluids in Factorio's colours (#277, ADR-0067, ADR-0109).
+"""Tint Core's five oil and chemistry fluids in Factorio's colours, and generate their sprites
+(#277, ADR-0067, ADR-0109).
 
 Core registers heavy oil, light oil, petroleum gas, lubricant and sulfuric acid, and draws each
-from a sprite copied from Oritech under a constant tint (`core/fluid/client/OilFluidClient`). Oritech draws
-those sprites in colours of its own -- near-black heavy oil, olive-yellow petroleum gas, bright
-green acid -- where Factorio's are dark orange, purple and yellow, and a player reading a pipe by
-its colour is reading Factorio's palette.
+from a sprite under a constant tint (`core/fluid/client/OilFluidClient`). Factorio's colours are
+dark orange, purple and yellow, and a player reading a pipe by its colour is reading Factorio's
+palette.
+
+**The sprites.** Two animated liquid sprites are generated here, stand-in art, `procgen`: drifting
+sine bands over a flat base colour, nothing drawn and nothing taken from another mod. `liquid_amber`
+draws the two oils and `liquid_pale` draws lubricant and sulfuric acid. Petroleum gas draws #620's
+steam sprite, which `build-steam-assets.py` generates.
 
 **What "the colour" is.** Minecraft draws a fluid as its sprite multiplied by a tint, so the colour
-a player sees is roughly the sprite's average times the tint. This script reads each sprite from
-the pack's copy of it, averages its first frame's opaque pixels, and compares `average x tint`
-for the tint Oritech draws the sprite with against Factorio's `base_color` from
-`data/factorio/fluid.json`. Within TOLERANCE, Oritech's tint is emitted unchanged, so the fluid
-looks as it did. Beyond it, the emitted tint is `base_color / average`, clamped to [0, 1], which
-lands the rendered average on Factorio's colour as nearly as the sprite allows.
+a player sees is roughly the sprite's average times the tint. This script averages each sprite's
+first frame's opaque pixels and compares `average x tint` for the tint in `SPRITES` against
+Factorio's `base_color` from `data/factorio/fluid.json`. Within TOLERANCE, the tint is emitted
+unchanged. Beyond it, the emitted tint is `base_color / average`, clamped to [0, 1], which lands the
+rendered average on Factorio's colour as nearly as the sprite allows.
 
-**What is typed here.** `SPRITES`: which Oritech sprite each fluid is drawn from, and the tint
-Oritech draws it with. Oritech states them as constructor arguments in
-`rearth.oritech.client.init.FluidModelContent`, not in any data file, so they were read off the
-installed 2.0.0-exp6 jar with `javap -c`. `OilFluidClient` names the same sprites, which
-`tests/pack/test_fluid_tints.py` holds to this table.
+**What is typed here.** `SPRITES`: which sprite each fluid is drawn from, and its tint.
+`OilFluidClient` names the same sprites, which `tests/pack/test_fluid_tints.py` holds to this table.
 
 Usage:
 
-    scripts/build-fluid-tints.py            # writes the tint resource `FluidTintCorpus` reads
-    scripts/build-fluid-tints.py --check    # asserts it is up to date; no writes
+    scripts/build-fluid-tints.py            # writes the tint resource and the two sprites
+    scripts/build-fluid-tints.py --check    # asserts they are up to date; no writes
 """
 import argparse
 import json
@@ -40,6 +41,8 @@ FLUID_CORPUS = os.path.join(ROOT, "data", "factorio", "fluid.json")
 OUT = os.path.join(ROOT, "mod", "src", "main", "resources", "factoryworks_core", "fluid",
                    "tints.json")
 
+SPRITE_DIR = os.path.join(ROOT, "kubejs", "assets", "factoryworks", "textures", "block", "fluid")
+
 # How far, in RGB on [0, 1], a rendered colour may sit from Factorio's before it is retinted.
 # 0.15 keeps light oil (0.13 off, orange against orange), and catches the three that read as a different fluid (0.4 and more).
 TOLERANCE = 0.15
@@ -47,22 +50,72 @@ TOLERANCE = 0.15
 # A colour chosen over Factorio's `base_color`, and why. Empty is the default; an entry is a
 # decision somebody looked at in game, not a correction to the corpus.
 #
-# petroleum-gas: Factorio's (0.3, 0.1, 0.3) drawn over Oritech's steam sprite, whose highlights are
-# near-white, reads as a bright purple Factorio's pipes never show. Darkened to a near-black purple
-# that still sits apart from crude oil's near-black brown (#277, on review in game).
+# petroleum-gas: Factorio's (0.3, 0.1, 0.3) drawn over a near-white sprite reads as a bright purple
+# Factorio's pipes never show. Darkened to a near-black purple that still sits apart from crude
+# oil's near-black brown (#277, on review in game).
 TARGET_OVERRIDES = {
     "petroleum-gas": (0.15, 0.06, 0.16),
 }
 
-# Factorio fluid -> (sprite under the pack's textures/, tint Oritech draws it with). Read off
-# `FluidModelContent.registerFluidModels` in oritech-2.0.0-exp6 with `javap -c`.
+
+def hex_tint(code):
+    return tuple(int(code[i:i + 2], 16) / 255 for i in (1, 3, 5))
+
+
+# Factorio fluid -> (sprite under the pack's textures/, tint).
 SPRITES = {
-    "heavy-oil": ("block/fluid/fluid_molten", (0.135, 0.135, 0.135)),
-    "light-oil": ("block/fluid/fluid_molten", (0.949, 0.929, 0.745)),
-    "petroleum-gas": ("block/fluid/fluid_steam", (0.735, 0.735, 0.235)),
-    "lubricant": ("block/fluid/fluid_strange_pale_2", (0.25, 0.316, 0.086)),
-    "sulfuric-acid": ("block/fluid/fluid_steam", (0.398, 1.0, 0.3)),
+    "heavy-oil": ("block/fluid/liquid_amber", hex_tint("#BE6700")),
+    "light-oil": ("block/fluid/liquid_amber", hex_tint("#F2EDBE")),
+    "petroleum-gas": ("block/fluid/steam", hex_tint("#341330")),
+    "lubricant": ("block/fluid/liquid_pale", hex_tint("#405116")),
+    "sulfuric-acid": ("block/fluid/liquid_pale", hex_tint("#FFCC1E")),
 }
+
+FRAMES = 8
+# Mean colour of each generated sprite's first frame, which the tints above were made against.
+LIQUIDS = {
+    "liquid_amber": (171, 82, 35),
+    "liquid_pale": (189, 207, 219),
+}
+MCMETA = b'{\n\t"animation": {\n\t\t"frametime": 6\n\t}\n}\n'
+
+
+def liquid_pixels(base):
+    """FRAMES stacked 16x16 frames: base colour modulated by sine bands that drift and tile.
+
+    Whole cycles per tile make each frame's modulation average zero, so the mean stays `base`.
+    """
+    rows = []
+    for frame in range(FRAMES):
+        phase = 2 * math.pi * frame / FRAMES
+        for y in range(16):
+            row = []
+            for x in range(16):
+                wave = (math.sin(2 * math.pi * (x + 2 * y) / 16 + phase)
+                        + math.sin(2 * math.pi * (2 * x - y) / 16 - phase)) / 2
+                row.append(tuple(round(c * (1 + 0.15 * wave)) for c in base) + (255,))
+            rows.append(row)
+    return rows
+
+
+def png_bytes(rows):
+    raw = b"".join(b"\x00" + bytes(c for px in row for c in px) for row in rows)
+
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+
+    header = struct.pack(">IIBBBBB", len(rows[0]), len(rows), 8, 6, 0, 0, 0)
+    return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header)
+            + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
+
+
+def planned_sprites():
+    files = {}
+    for name, base in LIQUIDS.items():
+        path = os.path.join(SPRITE_DIR, name + ".png")
+        files[path] = png_bytes(liquid_pixels(base))
+        files[path + ".mcmeta"] = MCMETA
+    return files
 
 
 def core_id(name):
@@ -197,13 +250,23 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
+    sprites = planned_sprites()
+    if args.check:
+        stale = [os.path.relpath(p, ROOT) for p, data in sprites.items()
+                 if not os.path.isfile(p) or open(p, "rb").read() != data]
+        if stale:
+            sys.exit("stale or missing: %s -- re-run scripts/build-fluid-tints.py" % ", ".join(stale))
+    else:
+        os.makedirs(SPRITE_DIR, exist_ok=True)
+        for path, data in sprites.items():
+            open(path, "wb").write(data)
     tints, report = plan()
     text = render(tints)
     if args.check:
         current = open(OUT, encoding="utf-8").read() if os.path.exists(OUT) else None
         if current != text:
             sys.exit("%s is stale -- re-run scripts/build-fluid-tints.py" % os.path.relpath(OUT, ROOT))
-        print("ok   %d fluids tinted" % len(tints))
+        print("ok   %d fluids tinted, %d sprite files" % (len(tints), len(sprites)))
         return
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     open(OUT, "w", encoding="utf-8").write(text)

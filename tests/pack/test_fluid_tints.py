@@ -2,7 +2,7 @@
 """Assert Core's five oil and chemistry fluids render in Factorio's colour and name (#277, ADR-0109).
 
 `docs/testing/what-to-check.md`'s "this looks right" claim, as far as a static check reaches it.
-Core draws each fluid as an Oritech sprite under a constant tint, and a missing or wrong tint fails
+Core draws each fluid as a generated sprite under a constant tint, and a missing or wrong tint fails
 nowhere else: the fluid loads, flows and fills pipes, and reaches a player as sulfuric acid that
 looks like a green potion.
 
