@@ -65,7 +65,8 @@ of them.
   the stock-recipe sweep, the Nether and the End, vanilla spawning, the wreck, and the corpus as the
   authority for numbers. ADR-0066's grid removal stays, as Craftworks' own.
 - Mechanics kept only for Factorio fidelity are dropped: the circuit network (ADR-0095) and the
-  small lamp.
+  small lamp. So is ADR-0032's cut of every ore multiplier: in a pack of several tech mods,
+  multiplying ore is theirs to offer, and the suite's own Enriched ore multiplies it too.
 - The migration runs in this order: freeze the generated numbers, move the corpus out, un-nest
   Groundworks, split the FactoryWorks repository and rename the mod id, move each Core package into
   its Module, then clean up the Showcase.

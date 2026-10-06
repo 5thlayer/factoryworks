@@ -155,6 +155,15 @@ far worse yield than a Displacer's and with an on/off toggle:
 - Silk touch returns the highest tier whose starting amount does not exceed what is left; below the
   lowest tier it mines one unit as usual. It is never a way to gain ore.
 
+### Ore patches
+
+Ore patches become a worldgen option, so that drills can be a post-End mechanic: with patches off,
+a drill has nothing to mine until Enriched ore exists. Its default follows where void lives. In the
+FactoryWorks base mod, patches are off by default; as a mod of its own, they are on, so FactoryWorks
+alone keeps its drills from the start. The option only affects chunks generated after it is set.
+
+Enriched ore multiplies ore; ADR-0032's cut of every multiplier is superseded by ADR-0115.
+
 ## Moving motes
 
 - **Voidstone conducts.** Motes crawl through face-touching Voidstone as a visible glint, at a
@@ -215,11 +224,8 @@ ends as Voidstone. The Void Siphon alone must never close a profitable loop.
 
 ## Open
 
-- **Ore patches** — whether they go or grow rarer now that Enriched ore exists:
-  [#635](https://github.com/5thlayer/factoryworks/issues/635). This spec assumes they stay.
-  Enriched ore multiplies ore, so ADR-0032 must be confirmed superseded before it ships.
 - **Voidstone raising Void Pressure around it** — a later layer, compounding a site's harvests.
-- **Base mod or Module** — revisit if the mechanic grows.
+- **Base mod or Module** — revisit if the mechanic grows. It also sets the ore patch default.
 - **Numbers** — the grades, the Density curve, zone sizes and upgrade costs, the richness tiers'
   amounts, upgrade chances per tier, breakdown yield against motes, mote speed, Void Well capacity
   and the network pressure cap, the Void Dragon's load, speed and harm rate, and the rise in hatching

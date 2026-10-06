@@ -485,8 +485,9 @@ Sub-rules:
   ADR-0034's default-deny applied to burning. `nuclear-fuel` has no `item-map.json` row, so it is a
   recorded skip in the join rather than a table row — the table names four items today: coal, wood
   (through `minecraft:logs`), solid fuel and rocket fuel.
-- **No ore multiplication** — `planned`, settled by ADR-0032: cut pack-wide, Mekanism's ladder and
-  Create's rung-0 Crushing Wheels alike. Yield gain by research or module is `blocked`, not
+- **No ore multiplication** — `excluded`: ADR-0032 cut it pack-wide, and ADR-0115 supersedes that,
+  since in a pack of several tech mods multiplying ore is theirs to offer, and void's Enriched ore
+  (`docs/spec/void-energy.md`) multiplies it too. Yield gain by research or module is `blocked`, not
   `excluded` — the lab cannot express levelled research (ADR-0022 prunes 106 such technologies) and
   Terra is deliberately not compensated for its scarcity (ADR-0020). See #120.
 
