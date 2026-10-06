@@ -496,8 +496,8 @@ Sub-rules:
 - **where**: all bodies
 - **via**: `craftworks`
 - **owner**: ADR-0026, ADR-0029, ADR-0060, ADR-0118
-- **ticket**: #120, which tier 3's recipe waits on for `speed-module`; #580, which the five
-  `crafting-with-fluid` recipes wait on (Fluid Connections in Craftworks). Closed: #87 converts the
+- **ticket**: #120, which tier 3's recipe waits on for `speed-module`. Closed: #580 feeds the five
+  `crafting-with-fluid` recipes through Fluid Connections; #87 converts the
   recipes; #559 makes the three tiers Craftworks' Assemblers (ADR-0118), which replaced the Pack's own
   from #326, #327, #328, #295 and #331
 
@@ -518,9 +518,10 @@ Sub-rules:
   Factorio's recipe, and Oritech's addons do not attach to it. Tier 3 is Craftworks', and its recipe
   is a recorded skip on `speed-module` (#120). Placing a higher tier over a lower one is
   Craftworks' Fast Replace.
-- **Fluid inputs** — `planned`, #580. Tiers 2 and 3 take a `crafting-with-fluid` recipe once Craftworks
-  has Fluid Connections. The Pack emits those recipes now, and Craftworks refuses to hold one until
-  then.
+- **Fluid inputs** — `shipped`, #580. Tiers 2 and 3 take a `crafting-with-fluid` recipe through their
+  Fluid Connections, which pull from any neighbouring fluid handler, so a Pipeworks pipe from a tank
+  feeds one. Tier 1 refuses the recipe. The Pack adds no code that moves the fluid
+  (`AssemblingFluidTests`).
 - **Recipe selection in a machine** — `adapted`. In Factorio a machine is *told* its recipe: the
   player picks it from a grid on the machine, the machine displays it, holds it whether or not it is
   fed, and the setting copies to another machine. An Assembler holds a **Held recipe**
@@ -627,7 +628,7 @@ Sub-rules:
   `express_belt_tile` and `turbo_belt_tile`, carry Factorio's 15, 30, 45 and 60 items/s under Factorio's names
   (#345, ADR-0076). `logistics-2` and `logistics-3` unlock the fast and express recipes on the
   Assembling surface. Express needs lubricant, so it is a `crafting-with-fluid` recipe, which
-  Assemblers 2 and 3 craft, once Craftworks has Fluid Connections (#580). The turbo
+  Assemblers 2 and 3 craft through their Fluid Connections (#580). The turbo
   belt has no recipe, because Space Age's is outside the corpus. *This entry read `adapted`, against
   Create's one RPM-driven belt.*
 - **Throughput as a ratio budget** — `shipped`. The fork's belt carries one item per entry at

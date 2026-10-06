@@ -80,7 +80,7 @@ classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there 
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279), `AssemblingFamilyTests` (#488),
-`BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#559), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
+`BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#559), `AssemblingFluidTests` (#580), `ChemicalPlantTests` (#490), `OilRefineryTests` (#491)
 `PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545, #546), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). `ShowcaseSceneTests` (#538) build the `core/showcase/` scenes that `/factoryworks showcase` builds
@@ -118,6 +118,14 @@ its fluids included. How many machines a pole counts is Wireworks', so the test 
 Assembler crafts. It and `HandSetTests` call Craftworks' internals, the one exception to the
 Consumer rule (`what-to-check.md`), until Craftworks names a Consumer API (5thlayer/craftworks#37).
 Every other GameTest names a Library's blocks by registry id, through `LibraryBlocks`.
+`AssemblingFluidTests` holds the Pack's claim over a Craftworks Fluid Connection and a Pipeworks pipe
+(#580): a tier 2 Assembler holding `electric_engine_unit` (lubricant) or `concrete` (water), with a
+pipe from its connection to a `LibraryBlocks.storageTank()` filled through the tank's own capability,
+crafts the recipe on a creative pole's power, and tier 1 answers both recipes with anything but `HELD`
+and holds nothing. The recipe is held before the pipe is placed, since a connection exists only while
+the Held recipe has a fluid. The pull is Craftworks' and the segment Pipeworks', so the Pack moves no
+fluid and the test asks only that the product comes out; a Pack-side fluid mover is the thing it must
+never need.
 And that a small pole's demand probe leaves a Beltworks loader no FE, that the loader's face reports
 its buffer as room to a probe made by hand and keeps nothing from it, and that no `beltworks:` recipe
 survives the stock-recipe sweep, against the pack's express belt recipe as a control
