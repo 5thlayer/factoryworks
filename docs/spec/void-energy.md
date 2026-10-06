@@ -9,8 +9,8 @@ Factorio fidelity was not a constraint.
 These move to a glossary of their own once the mechanic has code.
 
 **Voidworks**:
-The Module that holds void: harvesting, Voidstone networks, the Void Dragon and Mutation. Like every
-Module it requires FactoryWorks and no other Module.
+The suite mod that holds void: harvesting, Voidstone networks, the Void Dragon and Mutation. Like
+Groundworks it requires nothing else, so it is not a Module.
 
 **Mote**:
 The unit of void, harvested, stored and moved. A mote carries a grade: the band of Void Pressure
@@ -68,11 +68,6 @@ The egg every dragon kill after the first drops: a dragon egg drained of void, w
 it has soaked up enough motes.
 _Avoid_: lesser egg
 
-**Enriched ore**:
-A FactoryWorks ore block made by displacing a vanilla ore, in one of three richness tiers. Each
-tier is its own item and starts at its own amount.
-_Avoid_: ore patch (worldgen's)
-
 **Mutation**:
 Turning an item into another: upgrading it to the next tier of its Family, or breaking it down into
 its ingredients. A Mutation Chamber does it quickly for motes; a Void Crucible upgrades items
@@ -95,11 +90,12 @@ _Avoid_: tier, quality
 
 ## Where it lives
 
-In **Voidworks**, a Module of its own in its own repository, started from libworks' template. Nothing
-the other Modules do uses void, so it is not something the base mod holds for them, and a player can
-leave the End-centred endgame out. It requires FactoryWorks because Enriched ore is a FactoryWorks
-ore block (ADR-0041) and FactoryWorks' drills mine it; everything else goes through NeoForge's item
-and fluid faces.
+In **Voidworks**, a mod of its own in its own repository, started from libworks' template. Nothing
+the Modules do uses void, so it is not something the base mod holds for them, and a player can
+leave the End-centred endgame out. It requires nothing but Minecraft and NeoForge: its inputs are
+vanilla, Mutation reads the recipe manager, and its outputs go through NeoForge's item and fluid
+faces. If the Displacer or the Void Well become multiblocks, it may require Groundworks, as Beltworks
+and Wireworks do.
 
 ## Progression
 
@@ -130,8 +126,10 @@ each harvested position into Voidstone.
 - **End**: places fed blocks into the empty air of its zone.
 - **Overworld**: swaps fed blocks with natural terrain in its zone — the blocks in a natural-block
   tag (stone, deepslate, dirt, ores…), which placed stone also matches. The terrain block goes to
-  the Displacer's output. A vanilla ore with a FactoryWorks counterpart comes out as an **Enriched
-  ore** instead, stone excepted for now.
+  the Displacer's output, through a data table keyed by the terrain block and the fed block's
+  Density, which by default gives the terrain block itself. Another mod or a pack fills the table
+  to make displacing pay out its own items (FactoryWorks' Enriched ore,
+  [enriched-ore.md](enriched-ore.md)).
 - **Nether**: displaces lava sources in its zone into an internal tank with a fluid output face, so
   any mod's pipe or tank, or a bucket, drains it (ADR-0121).
 
@@ -152,25 +150,6 @@ far worse yield than a Displacer's and with an on/off toggle:
 - **Overworld**: the block swaps with a natural block, which comes back to the player.
 - **Nether**: the block displaces a lava source, which fills an empty bucket or another mod's fluid
   item from the inventory. With none, it refuses.
-
-### Enriched ore
-
-- Three richness tiers, each its own registered item (the precedent is ADR-0010), set by the fed
-  block's Density and starting at the tier's amount (ADR-0041).
-- Placed anywhere and mined by hand or by drill, drawing the amount down.
-- Never natural-tagged, so it is never displaced again.
-- Silk touch returns the highest tier whose starting amount does not exceed what is left; below the
-  lowest tier it mines one unit as usual. It is never a way to gain ore.
-
-### Ore patches
-
-Ore patches become a worldgen option, so that drills can be a post-End mechanic: with patches off,
-a drill has nothing to mine until Enriched ore exists. The option is FactoryWorks' and defaults to
-on, so FactoryWorks alone keeps its drills from the start; installing Voidworks does not change it.
-Voidworks' documentation recommends turning it off for a post-End drill game. The option only
-affects chunks generated after it is set.
-
-Enriched ore multiplies ore; ADR-0032's cut of every multiplier is superseded by ADR-0115.
 
 ## Moving motes
 
@@ -226,15 +205,13 @@ Named and raised on the pattern of vanilla's Dried Ghast, Ghastling and Happy Gh
 
 ## Loops
 
-Loops that come out ahead are allowed and are meant to be the endgame puzzle, enriched ore
-included. What bounds them is that every harvest permanently consumes the world and every Displacer
+Loops that come out ahead are allowed and are meant to be the endgame puzzle. What bounds them is that every harvest permanently consumes the world and every Displacer
 ends as Voidstone. The Void Siphon alone must never close a profitable loop.
 
 ## Open
 
 - **Voidstone raising Void Pressure around it** — a later layer, compounding a site's harvests.
 - **The Voidworks repository** — not created yet; this spec moves there with it.
-- **Numbers** — the grades, the Density curve, zone sizes and upgrade costs, the richness tiers'
-  amounts, upgrade chances per tier, breakdown yield against motes, mote speed, Void Well capacity
+- **Numbers** — the grades, the Density curve, zone sizes and upgrade costs, upgrade chances per tier, breakdown yield against motes, mote speed, Void Well capacity
   and the network pressure cap, the Void Dragon's load, speed and harm rate, and the rise in hatching
   cost.
