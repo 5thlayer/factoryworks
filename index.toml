@@ -2677,10 +2677,6 @@ file = "kubejs/startup_scripts/main.js"
 hash = "5c4659e7bb368960801ccfce24ac3493fa14aae88a7e17b2a9cdfe1931985ffe"
 
 [[files]]
-file = "mise.toml"
-hash = "8e953181c1a7051ff1b99bed5f552206071771ab82d5c34bd37da692af9ecfad"
-
-[[files]]
 file = "mods/Porting-Dead-Libs-1.1.15.jar"
 hash = "a3e161226e9d7e16dd32d02c8b58c6d6e2aa8155cd6145b5286e6add054f9183"
 

@@ -142,3 +142,6 @@ kubejs/config/probe-settings.json
 .claude/worktrees/
 .rtk/
 debug-profile.json
+
+# Machine-local tool settings, such as CURSEFORGE_ROOT.
+mise.local.toml
