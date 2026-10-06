@@ -327,7 +327,7 @@ Terra's rung 0 pack-authored machine that burns solid fuel to turn water into **
 _Avoid_: LP Solid Boiler, heater, steam generator
 
 **Steam Engine**:
-The pack's rung 0 generator: it burns **Steam** at Factorio's rate, 30 a second for 900 kW, into a charge of one tick's output, and burns nothing while that charge is full; the steam is spent, not returned as water. Engines whose steam connects each draw their own rate from it, so a row of N makes N times 900 kW; nothing chains them. It has no wire; it joins an **Electric Network** by standing inside a **Supply Area Pole**'s area. Placed as a footprint from one item and broken as one (ADR-0116); not Oritech's own Steam Engine, which is recipe-removed; hiding it is #173's.
+The pack's rung 0 generator: it burns **Steam** at Factorio's rate, 30 a second for 900 kW, into a charge of one tick's output, and burns nothing while that charge is full; the steam is spent, not returned as water. Engines whose steam connects each draw their own rate from it, so a row of N makes N times 900 kW; nothing chains them. It has no wire; it joins an **Electric Network** by standing inside a **Supply Area Pole**'s area. Placed as a footprint from one item and broken as one (ADR-0116), in the Pack's own stand-in art; not Oritech's own Steam Engine, which is recipe-removed; hiding it is #173's.
 _Avoid_: Create's Steam Engine, Oritech's steam engine, alternator, turbine
 
 **Steam Turbine**:

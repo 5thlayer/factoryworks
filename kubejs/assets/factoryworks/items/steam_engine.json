@@ -1,9 +1,6 @@
 {
   "model": {
-    "type": "minecraft:special",
-    "base": "factoryworks:item/steam_engine",
-    "model": {
-      "type": "geckolib:geckolib"
-    }
+    "type": "minecraft:model",
+    "model": "factoryworks:item/steam_engine"
   }
 }

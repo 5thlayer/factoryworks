@@ -4,10 +4,6 @@ import java.util.Optional;
 
 import com.factoryworks.core.PFBlockEntities;
 import com.factoryworks.core.energy.LongSnapshotJournal;
-import com.geckolib.animatable.GeoBlockEntity;
-import com.geckolib.animatable.instance.AnimatableInstanceCache;
-import com.geckolib.animatable.manager.AnimatableManager;
-import com.geckolib.util.GeckoLibUtil;
 import io.github._5thlayer.pipeworks.api.FluidPort;
 import io.github._5thlayer.pipeworks.api.FluidPorts;
 import io.github._5thlayer.wireworks.ElectricNetworks;
@@ -32,7 +28,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
  * whose ports touch share a segment and need no row to chain them. A pole reaches the buffer through
  * the energy face; the rest of the footprint forwards to this block.
  */
-public class SteamEngineBlockEntity extends BlockEntity implements FluidPort, GeoBlockEntity {
+public class SteamEngineBlockEntity extends BlockEntity implements FluidPort {
 
     private static final SteamEngineSpec SPEC = SteamEngineSpec.fromCorpus(SteamChainCorpus.get());
 
@@ -40,7 +36,6 @@ public class SteamEngineBlockEntity extends BlockEntity implements FluidPort, Ge
     private SteamEngineSpec.Carry carry = SteamEngineSpec.Carry.NONE;
     private boolean burning;
     private final LongSnapshotJournal journal = new LongSnapshotJournal(() -> stored, v -> stored = v, this::setChanged);
-    private final AnimatableInstanceCache animations = GeckoLibUtil.createInstanceCache(this);
 
     public SteamEngineBlockEntity(BlockPos pos, BlockState state) {
         super(PFBlockEntities.STEAM_ENGINE.get(), pos, state);
@@ -130,16 +125,6 @@ public class SteamEngineBlockEntity extends BlockEntity implements FluidPort, Ge
         ResourceHandler<FluidResource> segment = level == null ? null : FluidPorts.segment(level, worldPosition);
         return segment != null && segment.getAmountAsLong(0) > 0
                 && segment.getResource(0).equals(FluidResource.of(PFFluids.STEAM_SOURCE.get()));
-    }
-
-    /** GeckoLib only so Oritech's {@code MachineRenderer} can draw the model until #586 (ADR-0116). */
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return animations;
     }
 
     @Override

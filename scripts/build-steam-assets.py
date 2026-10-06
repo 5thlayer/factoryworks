@@ -265,9 +265,33 @@ def png_bytes(rows):
             + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
 
 
+STEAM_FRAMES = 4
+
+
+def steam_pixels():
+    """A 16-wide strip of STEAM_FRAMES animated frames, white wisps the fluid tint colours.
+
+    Stand-in art, `procgen` (#620): a few drifting sine bands, nothing drawn.
+    """
+    rows = []
+    for frame in range(STEAM_FRAMES):
+        for y in range(16):
+            row = []
+            for x in range(16):
+                phase = 2 * math.pi * frame / STEAM_FRAMES
+                wisp = (math.sin(x * 0.7 + y * 0.4 + phase) + math.sin(y * 0.9 - x * 0.3 + 2 * phase)) / 4 + 0.5
+                row.append((236, 240, 244, int(150 + 90 * wisp)))
+            rows.append(row)
+    return rows
+
+
 def planned_textures():
-    return {os.path.join(TEXTURES, f"{name}.png"): png_bytes(ring_pixels(**colours))
-            for name, colours in PORT_RINGS.items()}
+    textures = {os.path.join(TEXTURES, f"{name}.png"): png_bytes(ring_pixels(**colours))
+                for name, colours in PORT_RINGS.items()}
+    steam = os.path.join(TEXTURES, "fluid", "steam.png")
+    textures[steam] = png_bytes(steam_pixels())
+    textures[steam + ".mcmeta"] = b'{\n\t"animation": {\n\t\t"frametime": 6\n\t}\n}\n'
+    return textures
 
 
 def self_drop_loot_table(block_id):

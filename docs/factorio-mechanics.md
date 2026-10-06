@@ -913,7 +913,8 @@ Sub-rules:
 ### Power generation
 
 - **verdict**: `adapted`
-- **notice**: the Steam Engine is a Core block entity at Factorio's 30 mB/s and 450 FE/t, and the
+- **notice**: the Steam Engine is a Core block entity at Factorio's 30 mB/s and 450 FE/t in stand-in
+  art with no GeckoLib (#620), and the
   solar panel is Wireworks' at Factorio's 60 kW on Factorio's day (#508, #617).
 - **where**: all bodies
 - **via**: `pack`, `wireworks`

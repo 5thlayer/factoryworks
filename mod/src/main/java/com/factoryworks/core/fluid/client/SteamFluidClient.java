@@ -1,5 +1,6 @@
 package com.factoryworks.core.fluid.client;
 
+import com.factoryworks.core.FactoryWorksCore;
 import com.factoryworks.core.fluid.PFFluids;
 
 import net.minecraft.client.renderer.block.FluidModel;
@@ -9,14 +10,11 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.fluid.FluidTintSources;
 
-/**
- * How Terra's two steam fluids draw in a tank, a pipe or Jade (#189, ADR-0048): Oritech's animated
- * steam sprite, untinted as Oritech draws its own, still and flowing alike.
- */
+/** How the two steam fluids draw in a tank, a pipe or Jade: one stand-in sprite, still and flowing (#620). */
 public final class SteamFluidClient {
 
     private static final Material STEAM_SPRITE =
-            new Material(Identifier.fromNamespaceAndPath("oritech", "block/fluid/fluid_steam"));
+            new Material(Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, "block/fluid/steam"));
 
     private static final int STEAM_TINT = 0xFFFFFFFF;
 
