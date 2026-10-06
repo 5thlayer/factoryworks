@@ -86,3 +86,8 @@ refinery bank is built by, are the same either way.
 - A Factorio player reads both machines as smaller than Factorio's, the cost ADR-0072 already
   accepted for the Assembling Machine.
 - Oritech's own Refinery and Centrifuge stay recipe-removed and hidden.
+
+## Amended by ADR-0123
+
+The Chemical Plant is Craftworks' Chemical Plant, not a FactoryWorks block on Oritech's model. The oil
+refinery stays as this ADR has it until #581.
