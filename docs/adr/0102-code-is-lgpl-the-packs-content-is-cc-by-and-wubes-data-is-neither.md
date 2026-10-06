@@ -74,3 +74,8 @@ keeps it apart; whether to keep it in the upload is for #70.
 - The copyright holder in `REUSE.toml` is 5thlayer, as in the Libraries.
 - Third-party art added to the repository takes a `NOTICE` entry and a `REUSE.toml` exception, the
   test holding the two to each other.
+
+## Amended by ADR-0122
+
+No third-party art is added. Each `NOTICE` art entry and `REUSE.toml` exception goes when its
+asset is replaced with FactoryWorks' own.

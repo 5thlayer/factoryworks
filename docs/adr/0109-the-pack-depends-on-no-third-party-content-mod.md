@@ -56,3 +56,8 @@ other Library, so only Craftworks, which nests it, must come after it; CLAUDE.md
 Dismantle Family (`core/dismantle/PipeFamily`) and drag-laying (`core/stretch/PipeworksPipeLegs`) are
 Pack Bindings, reading the arms Pipeworks' pipes report (ADR-0110). No ticket records why they were
 not moved into the Library.
+
+## Amended by ADR-0122
+
+The **Art** paragraph is superseded: nothing is vendored, from Oritech or anyone else, and every
+borrowed asset becomes Stand-in art until FactoryWorks has its own.
