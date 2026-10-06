@@ -43,3 +43,19 @@
 	# Default: 300000
 	# Range: 2000 ~ 1000000000000
 	max_watts = 300000
+
+[transmission]
+	#How far a wire reaches from a Transmission Pole, in blocks.
+	# Default: 32.0
+	# Range: 1.0 ~ 256.0
+	wireReach = 32.0
+
+[transformer]
+	#How far a Transformer's wire reaches toward a Transmission Pole, in blocks.
+	# Default: 32.0
+	# Range: 1.0 ~ 256.0
+	lineReach = 32.0
+	#How far a Transformer's wire reaches toward a Distribution Pole, in blocks.
+	# Default: 9.0
+	# Range: 1.0 ~ 64.0
+	districtReach = 9.0
