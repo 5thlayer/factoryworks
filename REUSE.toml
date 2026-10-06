@@ -75,6 +75,16 @@ path = [
 SPDX-FileCopyrightText = ["Malcolm Riley", "2026 5thlayer"]
 SPDX-License-Identifier = "CC-BY-4.0"
 
+# Oritech's fluid sprites, copied unmodified (#622, NOTICE).
+[[annotations]]
+path = [
+    "kubejs/assets/factoryworks/textures/block/fluid/fluid_molten.png*",
+    "kubejs/assets/factoryworks/textures/block/fluid/fluid_steam.png*",
+    "kubejs/assets/factoryworks/textures/block/fluid/fluid_strange_pale_2.png*",
+]
+SPDX-FileCopyrightText = ["Rearth", "2026 5thlayer"]
+SPDX-License-Identifier = "CC0-1.0"
+
 # The store art's backdrop is Beltworks' belt art, which is Rearth's and malcolmriley's, and
 # Minecraft's own textures, which stay Mojang's (LICENSES/LicenseRef-Mojang.txt).
 [[annotations]]

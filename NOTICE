@@ -162,6 +162,17 @@ Source:  https://github.com/malcolmriley/unused-textures
 Licence: Creative Commons Attribution 4.0 International
          https://creativecommons.org/licenses/by/4.0/
 
+Fluid sprites from Oritech (#622)
+---------------------------------
+
+Files:   kubejs/assets/factoryworks/textures/block/fluid/fluid_molten.png
+         kubejs/assets/factoryworks/textures/block/fluid/fluid_steam.png
+         kubejs/assets/factoryworks/textures/block/fluid/fluid_strange_pale_2.png
+         and the .mcmeta beside each
+Author:  Rearth, Oritech's author
+Source:  assets/oritech/textures/block/fluid/ in Oritech's jar, copied unmodified. The game tints them.
+Licence: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
+
 Beltworks (#342, #447)
 ----------------------
 

@@ -81,7 +81,7 @@ StartupEvents.registry('item', event => {
   // authors rather than borrows. Its recipe is the Chemical Plant's and arrives with #107.
   event.create('factoryworks:plastic_bar')
     .displayName('Plastic Bar')
-    .texture('oritech:item/plastic_sheet')
+    .texture('factoryworks:item/plastic_bar')
 
   // The oil chapter's two solids and the rocket's two intermediates.
   //
@@ -100,36 +100,25 @@ StartupEvents.registry('item', event => {
     .displayName('Rocket Fuel')
     .texture('minecraft:item/blaze_powder')
 
-  // Paired with the Plastic Bar above on purpose: Oritech's `plastic_sheet` and
-  // `reinforced_carbon_sheet` are one isometric silhouette in off-white and black, so the two
-  // read as the same kind of thing. `carbon_fibre_strands` is the raw bundle and would not --
-  // a Structure is a panel. Note Oritech's spelling is `fibre`; the `carbon_fiber_plate` this
-  // replaces was a GTCEu name and never existed here under either spelling.
   event.create('factoryworks:low_density_structure')
     .displayName('Low Density Structure')
-    .texture('oritech:item/reinforced_carbon_sheet')
+    .texture('factoryworks:item/low_density_structure')
 
-  // Factorio's battery is a crafting INTERMEDIATE, not a placed power store: GregTech's batteries
-  // are tiered chargeable hulls and Electro's capacitor is a different thing, so borrowing either
-  // would put an EU container inside a recipe that wants lead and acid. No tier suffix -- there is
-  // one battery, and a ladder that never arrives costs nothing to leave unnamed. The sprite is
-  // still Oritech's, which is the distinction throughout this file: borrowing an item would put
-  // that mod's behaviour in the recipe, borrowing its texture puts only the picture there.
-  // `basic_battery` rather than `advanced_battery` because the two are a colour pair and this
-  // item has no second tier to spend the purple one on.
+  // A crafting intermediate, not a placed power store: borrowing a mod's battery would put an
+  // energy container inside a recipe that wants lead and acid.
   event.create('factoryworks:battery')
     .displayName('Battery')
-    .texture('oritech:item/basic_battery')
+    .texture('factoryworks:item/battery')
 
   // The engine units author because no installed mod ships Factorio's engine as one item
-  // (ADR-0031). The electric one borrows Oritech's wound-copper motor sprite.
+  // (ADR-0031).
   event.create('factoryworks:engine_unit')
     .displayName('Engine Unit')
     .texture('factoryworks:item/engine_unit')
 
   event.create('factoryworks:electric_engine_unit')
     .displayName('Electric Engine Unit')
-    .texture('oritech:item/motor')
+    .texture('factoryworks:item/electric_engine_unit')
 
   // Sapros
   event.create('factoryworks:yumako_fresh')

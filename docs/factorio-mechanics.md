@@ -855,8 +855,8 @@ Sub-rules:
   `undecided` on it.
 - **Wireless signal over distance** — `planned`, #485. Create's Redstone Link, which covered it, left
   with ADR-0060.
-- **Lamps and display panels as readouts** — `planned`, #484. `small-lamp` is Oritech's Industrial
-  Light and `display-panel` is `undecided`; `power-switch` is a core block joining two pole networks,
+- **Lamps and display panels as readouts** — `planned`, #484. `small-lamp` is `excluded`, as
+  fidelity-only (ADR-0115, #622), and `display-panel` is `undecided`; `power-switch` is a core block joining two pole networks,
   #294's.
 - **An alert that fires on a condition** — `planned`, #484. `programmable-speaker` is `undecided`.
 - **Two independent networks on one wire (red and green)** — `planned`, #485. Redstone has one

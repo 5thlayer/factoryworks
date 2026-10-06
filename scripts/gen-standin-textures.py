@@ -1,5 +1,5 @@
 # Stand-in art for the items whose sprites came from All Rights Reserved mods (ADR-0109): the three
-# circuit tiers, the engine unit and the eight material forms. 16x16 RGBA PNGs, pure stdlib, drawn here rather than copied.
+# circuit tiers, the engine units, the battery, the two sheets and the eight material forms (#622). 16x16 RGBA PNGs, pure stdlib, drawn here rather than copied.
 # They are placeholders, meant to be replaced by commissioned art.
 import os
 import struct
@@ -46,9 +46,8 @@ def board(base, pins):
     return rows
 
 
-def engine():
+def engine(steel=(150, 154, 160, 255), coil=None):
     rows = [[CLEAR] * 16 for _ in range(16)]
-    steel = (150, 154, 160, 255)
     for y in range(5, 12):
         for x in range(3, 13):
             rows[y][x] = dark(steel, -40 if y in (5, 11) or x in (3, 12) else 0)
@@ -57,6 +56,19 @@ def engine():
             rows[y][x] = dark(steel, -20)
     for y in range(7, 10):
         rows[y][13] = rows[y][14] = dark(steel, -60)
+    if coil:
+        for y in (6, 8, 10):
+            for x in range(4, 12):
+                rows[y][x] = dark(coil, -20 if x in (4, 11) else 10)
+    return rows
+
+
+def battery(base):
+    rows = blank()
+    fill(rows, 4, 4, 11, 14, base)
+    fill(rows, 6, 2, 9, 3, (178, 184, 192, 255))
+    for x in range(5, 11):
+        rows[8][x] = dark(base, 40)
     return rows
 
 
@@ -134,6 +146,10 @@ png(f"{BASE}/electronic_circuit.png", board((70, 150, 78, 255), 1))
 png(f"{BASE}/advanced_circuit.png", board((176, 70, 62, 255), 2))
 png(f"{BASE}/processing_unit.png", board((72, 108, 176, 255), 3))
 png(f"{BASE}/engine_unit.png", engine())
+png(f"{BASE}/electric_engine_unit.png", engine((150, 154, 160, 255), (204, 124, 78, 255)))
+png(f"{BASE}/battery.png", battery((70, 110, 190, 255)))
+png(f"{BASE}/plastic_bar.png", plate((236, 232, 220, 255)))
+png(f"{BASE}/low_density_structure.png", plate((48, 50, 56, 255)))
 png(f"{BASE}/iron_plate.png", plate((178, 184, 192, 255)))
 png(f"{BASE}/copper_plate.png", plate((204, 124, 78, 255)))
 png(f"{BASE}/steel_plate.png", plate((104, 112, 130, 255)))

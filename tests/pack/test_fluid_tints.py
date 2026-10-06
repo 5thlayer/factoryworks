@@ -30,7 +30,6 @@ import re
 import subprocess
 import sys
 import unittest
-import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "scripts/build-fluid-tints.py"
@@ -67,17 +66,16 @@ class FluidTints(unittest.TestCase):
         fluids = self.gen.pack_fluids()
         self.assertEqual(set(fluids.values()), set(self.tints),
                          "tints.json should hold exactly the five fluids Core registers")
-        with zipfile.ZipFile(self.gen.oritech_jar()) as archive:
-            for name, fluid in fluids.items():
-                sprite, _ = self.gen.SPRITES[name]
-                hex_colour = self.tints[fluid]["color"]
-                tint = tuple(int(hex_colour[i:i + 2], 16) / 255 for i in (1, 3, 5))
-                drawn = self.gen.rendered(self.gen.sprite_average(archive, sprite), tint)
-                miss = math.dist(drawn, colours[name])
-                self.assertLessEqual(
-                    miss, self.gen.TOLERANCE,
-                    "%r (%s) draws as %s, %.2f from Factorio's %s"
-                    % (name, fluid, tuple(round(c, 2) for c in drawn), miss, colours[name]))
+        for name, fluid in fluids.items():
+            sprite, _ = self.gen.SPRITES[name]
+            hex_colour = self.tints[fluid]["color"]
+            tint = tuple(int(hex_colour[i:i + 2], 16) / 255 for i in (1, 3, 5))
+            drawn = self.gen.rendered(self.gen.sprite_average(sprite), tint)
+            miss = math.dist(drawn, colours[name])
+            self.assertLessEqual(
+                miss, self.gen.TOLERANCE,
+                "%r (%s) draws as %s, %.2f from Factorio's %s"
+                % (name, fluid, tuple(round(c, 2) for c in drawn), miss, colours[name]))
 
     def test_the_client_draws_the_sprite_the_tint_was_computed_for(self):
         source = CLIENT.read_text(encoding="utf-8")

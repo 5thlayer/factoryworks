@@ -35,9 +35,6 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import io.github._5thlayer.pipeworks.PipeworksRegistries;
-import rearth.oritech.block.blocks.pipes.AbstractPipeBlock;
-import rearth.oritech.block.blocks.pipes.ExtractablePipeConnectionBlock;
-import rearth.oritech.block.blocks.pipes.GenericPipeBlock;
 
 /**
  * Factories built for filming the Alpha's recruiting clips (#538), each on a smooth-stone floor
@@ -68,8 +65,6 @@ public final class ShowcaseScenes {
             "assembly_line", ShowcaseScenes::assemblyLine,
             "steam_power", ShowcaseScenes::steamPower,
             "oil", ShowcaseScenes::oil);
-
-    private static final Identifier FLUID_PIPE = Identifier.fromNamespaceAndPath("oritech", "fluid_pipe");
 
     private ShowcaseScenes() {
     }
@@ -146,8 +141,8 @@ public final class ShowcaseScenes {
         for (int i = 0; i < 2; i++) {
             PFBlocks.STEAM_ENGINE_FOOTPRINT.placeAll(site.level(), site.at(new BlockPos(6 + i, 1, 3)), Direction.WEST);
         }
-        site.set(pump.east(), PipeworksRegistries.PIPE.get());
-        site.set(new BlockPos(5, 1, 3), PipeworksRegistries.PIPE.get());
+        pipe(site, pump.east());
+        pipe(site, new BlockPos(5, 1, 3));
 
         stockedChest(site, new BlockPos(4, 1, 9), item("minecraft:coal"));
         unloader(site, new BlockPos(4, 1, 5), Direction.SOUTH);
@@ -192,14 +187,11 @@ public final class ShowcaseScenes {
         BlockPos plant = new BlockPos(11, 1, 3);
         placeHolding(site, PFBlocks.CHEMICAL_PLANT_FOOTPRINT, plant, "factoryworks:chemistry/plastic_bar");
 
-        // Oritech's pipe on the last leg until the Refinery moves to Craftworks' machine (#581).
-        for (int x = 3; x <= 6; x++) {
-            site.set(new BlockPos(x, 1, 2), PipeworksRegistries.PIPE.get());
+        for (int x = 3; x <= 8; x++) {
+            pipe(site, new BlockPos(x, 1, 2));
         }
-        extractingPipe(site, new BlockPos(7, 1, 2), Direction.WEST);
-        pipe(site, new BlockPos(8, 1, 2));
 
-        extractingPipe(site, refinery.above(4), Direction.DOWN);
+        pipe(site, refinery.above(4));
         pipe(site, new BlockPos(9, 5, 3));
         pipe(site, new BlockPos(10, 5, 3));
         pipe(site, new BlockPos(11, 5, 3));
@@ -285,16 +277,6 @@ public final class ShowcaseScenes {
     }
 
     private static void pipe(Site site, BlockPos at) {
-        Block block = BuiltInRegistries.BLOCK.getValue(FLUID_PIPE);
-        site.level().setBlockAndUpdate(site.at(at), ((AbstractPipeBlock) block)
-                .addConnectionStates(block.defaultBlockState(), site.level(), site.at(at), true));
-    }
-
-    /** A pipe that pulls from its {@code from} side, the side a player's click sets to extract. */
-    private static void extractingPipe(Site site, BlockPos at, Direction from) {
-        pipe(site, at);
-        BlockState state = site.level().getBlockState(site.at(at));
-        GenericPipeBlock pipe = (GenericPipeBlock) state.getBlock();
-        site.set(at, state.setValue(pipe.directionToProperty(from), ExtractablePipeConnectionBlock.EXTRACT));
+        site.set(at, PipeworksRegistries.PIPE.get());
     }
 }

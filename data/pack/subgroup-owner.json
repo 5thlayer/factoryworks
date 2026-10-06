@@ -445,7 +445,7 @@
       "adr_row": "The circuit network -- ADR-0095; its components -- #484",
       "cross_owner": "The four emitted rows are Power Grid's blocks crafted on the pack's Assembling Machine, which is the normal case this file records rather than a confession: the corpus files them under `crafting`, ADR-0031 has the corpus authoring every recipe it contains, and ADR-0017 gives the pack the assembly surface. The grid mod owns the BLOCK; the pack owns the SURFACE it is made on. Power Grid registers two recipe types of its own and the pack routes nothing onto them.",
       "per_recipe": {
-        "small-lamp": "powergrid / pack:assembling",
+        "small-lamp": "not_emitted",
         "display-panel": "powergrid / pack:assembling",
         "power-switch": "powergrid / pack:assembling",
         "programmable-speaker": "powergrid / pack:assembling",

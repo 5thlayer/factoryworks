@@ -763,10 +763,8 @@
       "note": "ADR-0036's supply-area pole, registered by Wireworks since #476. A tier is a footprint and nothing else -- it grants no voltage and changes nothing a machine receives -- so the four sit on one shelf with one process. The supply areas are Factorio's own, big pole included, which covers LESS ground than the medium one because in Factorio it buys wire reach the pack has no use for."
     },
     "small-lamp": {
-      "kind": "item",
-      "target": "oritech:industrial_light",
-      "source": "borrowed",
-      "note": "Oritech's Industrial Light, the plain placed light (#277)."
+      "status": "not_emitted",
+      "note": "Dropped as fidelity-only (ADR-0115, #622); its only block was Oritech's Industrial Light."
     },
     "solar-panel": {
       "kind": "item",

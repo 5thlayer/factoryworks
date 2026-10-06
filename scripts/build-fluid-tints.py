@@ -2,14 +2,14 @@
 """Tint Core's five oil and chemistry fluids in Factorio's colours (#277, ADR-0067, ADR-0109).
 
 Core registers heavy oil, light oil, petroleum gas, lubricant and sulfuric acid, and draws each
-from an Oritech sprite under a constant tint (`core/fluid/client/OilFluidClient`). Oritech draws
+from a sprite copied from Oritech under a constant tint (`core/fluid/client/OilFluidClient`). Oritech draws
 those sprites in colours of its own -- near-black heavy oil, olive-yellow petroleum gas, bright
 green acid -- where Factorio's are dark orange, purple and yellow, and a player reading a pipe by
 its colour is reading Factorio's palette.
 
 **What "the colour" is.** Minecraft draws a fluid as its sprite multiplied by a tint, so the colour
-a player sees is roughly the sprite's average times the tint. This script reads each sprite out of
-the installed Oritech jar, averages its first frame's opaque pixels, and compares `average x tint`
+a player sees is roughly the sprite's average times the tint. This script reads each sprite from
+the pack's copy of it, averages its first frame's opaque pixels, and compares `average x tint`
 for the tint Oritech draws the sprite with against Factorio's `base_color` from
 `data/factorio/fluid.json`. Within TOLERANCE, Oritech's tint is emitted unchanged, so the fluid
 looks as it did. Beyond it, the emitted tint is `base_color / average`, clamped to [0, 1], which
@@ -27,13 +27,11 @@ Usage:
     scripts/build-fluid-tints.py --check    # asserts it is up to date; no writes
 """
 import argparse
-import glob
 import json
 import math
 import os
 import struct
 import sys
-import zipfile
 import zlib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -56,7 +54,7 @@ TARGET_OVERRIDES = {
     "petroleum-gas": (0.15, 0.06, 0.16),
 }
 
-# Factorio fluid -> (sprite under assets/oritech/textures/, tint Oritech draws it with). Read off
+# Factorio fluid -> (sprite under the pack's textures/, tint Oritech draws it with). Read off
 # `FluidModelContent.registerFluidModels` in oritech-2.0.0-exp6 with `javap -c`.
 SPRITES = {
     "heavy-oil": ("block/fluid/fluid_molten", (0.135, 0.135, 0.135)),
@@ -131,16 +129,11 @@ def read_png(blob):
     return w, h, rows
 
 
-def oritech_jar():
-    jars = sorted(glob.glob(os.path.join(ROOT, "mods", "oritech-*.jar")))
-    if not jars:
-        sys.exit("no Oritech jar in mods/ -- run packwiz first")
-    return jars[-1]
-
-
-def sprite_average(archive, sprite):
+def sprite_average(sprite):
     """The mean colour of a sprite's first frame, over its opaque pixels, on [0, 1]."""
-    w, _, rows = read_png(archive.read("assets/oritech/textures/%s.png" % sprite))
+    path = os.path.join(ROOT, "kubejs", "assets", "factoryworks", "textures", "%s.png" % sprite)
+    with open(path, "rb") as handle:
+        w, _, rows = read_png(handle.read())
     pixels = [px for row in rows[:w] for px in row if px[3] > 0]
     return tuple(sum(px[i] for px in pixels) / len(pixels) / 255 for i in range(3))
 
@@ -175,25 +168,24 @@ def plan():
     """(the tint resource, a report line per fluid)."""
     colours = factorio_colours()
     tints, report = {}, []
-    with zipfile.ZipFile(oritech_jar()) as archive:
-        for name, fluid in pack_fluids().items():
-            if name not in colours:
-                sys.exit("data/factorio/fluid.json has no base_color for %r -- re-run "
-                         "scripts/factorio-fluid-extract.py" % name)
-            sprite, oritech_tint = SPRITES[name]
-            average = sprite_average(archive, sprite)
-            miss = math.dist(rendered(average, oritech_tint), colours[name])
-            if miss <= TOLERANCE:
-                tint, verb = oritech_tint, "keep"
-            else:
-                tint = tuple(min(1.0, c / a) if a > 0 else 0.0 for c, a in zip(colours[name], average))
-                verb = "retint"
-            tints[fluid] = {
-                "factorio": name,
-                "color": "#%02X%02X%02X" % tuple(round(t * 255) for t in tint),
-            }
-            report.append("  %-6s %-14s %-28s %.2f off -> %s" % (verb, name, fluid, miss,
-                                                                 tints[fluid]["color"]))
+    for name, fluid in pack_fluids().items():
+        if name not in colours:
+            sys.exit("data/factorio/fluid.json has no base_color for %r -- re-run "
+                     "scripts/factorio-fluid-extract.py" % name)
+        sprite, oritech_tint = SPRITES[name]
+        average = sprite_average(sprite)
+        miss = math.dist(rendered(average, oritech_tint), colours[name])
+        if miss <= TOLERANCE:
+            tint, verb = oritech_tint, "keep"
+        else:
+            tint = tuple(min(1.0, c / a) if a > 0 else 0.0 for c, a in zip(colours[name], average))
+            verb = "retint"
+        tints[fluid] = {
+            "factorio": name,
+            "color": "#%02X%02X%02X" % tuple(round(t * 255) for t in tint),
+        }
+        report.append("  %-6s %-14s %-28s %.2f off -> %s" % (verb, name, fluid, miss,
+                                                             tints[fluid]["color"]))
     return tints, report
 
 

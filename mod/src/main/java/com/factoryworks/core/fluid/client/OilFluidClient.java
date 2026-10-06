@@ -17,7 +17,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
  * How the oil and chemistry fluids draw in a tank, a pipe or Jade (ADR-0109).
  *
  * <p>Crude is malcolmriley's unused-textures sprite under a tint typed here. The other five draw
- * Oritech's sprites under the tint {@code factoryworks_core/fluid/tints.json} holds for them.
+ * three CC0 sprites under the tint {@code factoryworks_core/fluid/tints.json} holds for them.
  */
 public final class OilFluidClient {
 
@@ -54,12 +54,12 @@ public final class OilFluidClient {
     private static void registerCorpusTinted(
             RegisterFluidModelsEvent event,
             String name,
-            String oritechSprite,
+            String sprite,
             DeferredHolder<Fluid, ? extends Fluid> still,
             DeferredHolder<Fluid, ? extends Fluid> flowing) {
-        Material sprite = new Material(Identifier.fromNamespaceAndPath("oritech", oritechSprite));
+        Material material = new Material(Identifier.fromNamespaceAndPath(FactoryWorksCore.NAMESPACE, sprite));
         int tint = FluidTintCorpus.get().tint(FactoryWorksCore.NAMESPACE + ":" + name).orElseThrow();
-        event.register(new FluidModel.Unbaked(sprite, sprite, null, FluidTintSources.constant(tint)),
+        event.register(new FluidModel.Unbaked(material, material, null, FluidTintSources.constant(tint)),
                 still, flowing);
     }
 }
