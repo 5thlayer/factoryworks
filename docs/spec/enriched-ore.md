@@ -3,7 +3,7 @@
 Enriched ore joins Voidworks to FactoryWorks, so it belongs to neither alone: FactoryWorks
 registers the blocks, and the FactoryWorks Showcase fills Voidworks' displacement table with them.
 Without both mods it does not exist. Resolved in the void grilling sessions of 2026-10-06; the void
-design is [void-energy.md](void-energy.md).
+design is [void-energy.md](https://github.com/5thlayer/voidworks/blob/main/docs/spec/void-energy.md).
 
 ## Terms
 
