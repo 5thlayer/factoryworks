@@ -77,3 +77,8 @@ of them.
 
 Pipeworks takes no barrel. The barrel goes, and fluid is carried in buckets or any mod's
 fluid-holding item.
+
+## Amended by ADR-0126
+
+Research leaves the Showcase now rather than when it is extracted: Researchd, Porting Dead Libs and the
+tech tree go, and every recipe is unlocked from the start.
