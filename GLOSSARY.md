@@ -623,8 +623,8 @@ A shipped texture, model or animation meant to be replaced: a placeholder, a gen
 _Avoid_: temp art, programmer art, WIP texture
 
 **Vendored art**:
-Third-party art shipped under its own licence, with attribution. It is final, though art under a non-commercial licence is the first to replace.
-_Avoid_: borrowed art (a borrowed block is another mod's block, not its art)
+Third-party art still shipped under its own licence, with attribution, until **Stand-in art** or art of our own replaces it (ADR-0122). Art under a non-commercial licence is the first to replace.
+_Avoid_: final art
 
 **Art provenance manifest**:
 The checked-in `data/pack/art-provenance.json`, one row per shipped texture, model and animation, marking it drawn, Vendored art, Stand-in art or unknown. `scripts/art-worklist.py` prints what is left to replace.
