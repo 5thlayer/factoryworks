@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.3.0
+
 - The Chemical Plant and the Oil Refinery are gone: chemistry and oil processing run on Craftworks' Assemblers 2 and 3. A world made with 0.2.0 loses the ones it placed. Basic oil processing is gone too, and advanced oil processing is researched with oil gathering.
 - The showcase oil scene's pipes follow Craftworks 0.7.0's spaced Fluid Connections: five separate pipes, none with a side closed.
 
