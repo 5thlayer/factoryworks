@@ -7,6 +7,13 @@ tag. Upstream nests them by category, and Claude Code reads only `.claude/skills
 or the links dangle. Take a new release by checking out its tag in the submodule; a skill moved
 upstream breaks its link, so check that `.claude/skills/*/SKILL.md` all resolve.
 
+### Code review
+
+Review code only with the mattpocock `code-review` skill (`.claude/skills/code-review/`), which
+checks a diff against this repo's standards and the originating ticket. Never use Claude Code's
+built-in `/code-review`, `/review`, `/security-review` or `/simplify` in its place, even though the
+built-in `/code-review` shares its name.
+
 ### Issue tracker
 
 Issues live in this repo's GitHub Issues, managed with the `gh` CLI. See `docs/agents/issue-tracker.md`.
