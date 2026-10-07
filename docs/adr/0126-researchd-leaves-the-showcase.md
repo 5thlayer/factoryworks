@@ -13,6 +13,8 @@ by commit, and the port and a sync fix offered upstream
 **Decision.** Researchd and Porting Dead Libs leave the Showcase, and the tech tree with them: the Researchd
 scripts, the extracted tree they read, the `researchd` lock source and the research checks. Every recipe is
 unlocked from the start. The tree is not frozen or extracted first, since nothing would read it.
+The science packs and the Lab go too, since nothing in the suite consumes a science pack without
+research (#645).
 
 **Considered: keep the fork until upstream answers.** The Showcase would carry a dependency built from a
 commit, which no pack author can install from CurseForge, to demo a tree that is not the suite's.
