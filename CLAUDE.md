@@ -184,7 +184,7 @@ Pipeworks, the pipes and the storage tank, is pinned the same way (#557, ADR-011
 project, so indexed by hash and negated in `.packwizignore`. Core registers crude oil, the
 Pumpjack's anchor and parts are its `FluidPort`s, and the pipe Dismantle Family and drag-laying
 (`core/dismantle/PipeFamily`, `core/stretch/PipeworksPipeLegs`) are Pack Bindings over what its
-pipes' arms report.
+pipes' arms report, and `kubejs/data/pipeworks/tags/` lets the Picks close a pipe's side (ADR-0125).
 A change that crosses Groundworks, Beltworks, Wireworks, Pipeworks, Craftworks and the Pack goes through the
 `release-train` skill (`skillworks:release-train`, from 5thlayer/skillworks), in that order: each
 checkout is owned by the session working in it, and nothing is pushed without the user's word.

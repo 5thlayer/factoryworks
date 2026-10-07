@@ -33,8 +33,8 @@ crude is simpler to show.
 
 - ADR-0123 and ADR-0124 are superseded.
 - Five fluids on one Assembler need five pipe networks, and the Assembler's connections stand side by side,
-  so neighbouring pipes join unless a side is closed. The Pack's game test and oil scene close them in code;
-  a player has no tool for it until the Pack fills Pipeworks' `closes_sides` tag.
+  so neighbouring pipes join unless a side is closed. The Pack puts the Engineer's Picks in Pipeworks'
+  `closes_sides` tag, so a right-click with a Pick closes a pipe's side.
 - A Fluid Connection pushes into any neighbour that takes the fluid, and the Assembler tries the three
   connections it faces first, so a supply line that runs dry takes a product. The oil scene and its game
   test put the products on the connections the Assembler faces and keep the supplies full.

@@ -2437,6 +2437,10 @@ file = "kubejs/data/oritech/neoforge/biome_modifier/oil_spring_desert.json"
 hash = "003a38d109ac87f9da363fc7d62a00daaa83f83509fa0518e3ca0f15b12b115b"
 
 [[files]]
+file = "kubejs/data/pipeworks/tags/item/closes_sides.json"
+hash = "8dbb56d65f95d6d46e3674b15449efce192a613e9e6908db722aedaa92876e4a"
+
+[[files]]
 file = "kubejs/data/wireworks/tags/block/generators.json"
 hash = "e6ac3db131a0b5bb99a52e7e3c1f9ee8843c7fd902f4835317e12ef88e462b11"
 
