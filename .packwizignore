@@ -13,7 +13,7 @@ tests/
 scripts/
 .claude/
 .agents/
-skills-lock.json
+.gitmodules
 mise.toml
 mise.local.toml
 .github/

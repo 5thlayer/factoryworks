@@ -1,8 +1,11 @@
 ## Agent skills
 
-The vendored skills live in `.agents/skills/`, pinned by `skills-lock.json`. `.claude/skills` is a
-symlink to that directory, because Claude Code reads only `.claude/skills/`; cloud sessions get the
-skills from it.
+The skills are mattpocock/skills, a git submodule at `.agents/mattpocock-skills` pinned to a release
+tag. Upstream nests them by category, and Claude Code reads only `.claude/skills/<name>/SKILL.md`, so
+`.agents/skills/<name>` is a symlink into the submodule for each skill the repo uses, and
+`.claude/skills` is a symlink to `.agents/skills`. A fresh clone needs `git submodule update --init`
+or the links dangle. Take a new release by checking out its tag in the submodule; a skill moved
+upstream breaks its link, so check that `.claude/skills/*/SKILL.md` all resolve.
 
 ### Issue tracker
 
