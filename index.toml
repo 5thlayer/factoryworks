@@ -286,7 +286,7 @@ hash = "98c53ac7b20e3386cb9290ce952be0261e8e4b6806a7622cc7c777e43dcf40b7"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "f5f310ceba2dd918675df9c1e7feee56bc1f750aa3540329f773ca404c394242"
+hash = "8f682e8bd98860a14954ab69d630c64e65d3893a1d4fba71449e7f6c1f918707"
 
 [[files]]
 file = "data/pack/local-jars.json"

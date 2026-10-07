@@ -70,10 +70,10 @@ Factorio names them, and each section gives the pack's own name beside it.
 
 | mechanic | verdict | where |
 | --- | --- | --- |
-| [Interplanetary travel](#interplanetary-travel) | `blocked` | between planets, parked |
-| [Space platforms](#space-platforms) | `blocked` | orbits, parked |
+| [Interplanetary travel](#interplanetary-travel) | `excluded` | — |
+| [Space platforms](#space-platforms) | `excluded` | — |
 | [Asteroid mining and reprocessing](#asteroid-mining-and-reprocessing) | `blocked` | orbits, parked |
-| [Interplanetary logistics](#interplanetary-logistics) | `blocked` | between planets, parked |
+| [Interplanetary logistics](#interplanetary-logistics) | `excluded` | — |
 | [Spoilage](#spoilage) | `adapted` | Sapros parked |
 | [Quality](#quality) | `blocked` | — |
 | [Recycling](#recycling) | `planned` | Electro parked |
@@ -1527,11 +1527,13 @@ Sub-rules:
 
 ### Interplanetary travel
 
-- **verdict**: `blocked`
+- **verdict**: `excluded`
 - **where**: pack-wide
 - **candidates**: Oritech: Space Age, or `factoryworks_core` (#340)
 - **owner**: ADR-0060, ADR-0006, `docs/gdd.md` §2
-- **ticket**: #340 (the wait); #112, #54 closed
+- **ticket**: #340, #112, #54 closed
+
+The Showcase plays in one ordinary world, with no planets to travel between (ADR-0115).
 
 Six bodies, seven destinations. **`blocked` by ADR-0060**: GCyR left, and travel waits for a
 first-party Oritech space addon. This row and the three orbital rows below it are blocked together,
@@ -1554,11 +1556,13 @@ Sub-rules:
 
 ### Space platforms
 
-- **verdict**: `blocked`
+- **verdict**: `excluded`
 - **where**: Terra Orbit, and every body's orbit
 - **candidates**: `factoryworks_core`. Oritech: Space Age has no stations (#340)
 - **owner**: ADR-0006
-- **ticket**: #340
+- **ticket**: #340 closed
+
+The Showcase plays in one ordinary world and has no orbit (ADR-0115).
 
 A Platform is a static orbital factory, not a ship — no thrusters, no navigation, no interplanetary
 transit, and therefore no asteroid defence and no hull mass to manage. That is an argued divergence
@@ -1598,23 +1602,13 @@ replace them, since it reproduces neither the chunk loop nor reprocessing.
 
 ### Interplanetary logistics
 
-- **verdict**: `blocked`
-- **where**: pack-wide
-- **candidates**: Oritech: Space Age, or `factoryworks_core` (#340)
-- **owner**: `docs/gdd.md` §4
-- **ticket**: #340 (the wait on interplanetary travel); #111 closed
+- **verdict**: `excluded`
+- **where**: —
+- **owner**: ADR-0115, ADR-0126
+- **ticket**: #340, #111 closed
 
-Launch Terminals, Receiving Terminals and Drop Hatches, with unattended cargo held as a Flight with a
-travel timer rather than as a moving entity. What the terminals are built on waits on #340.
-
-Sub-rules:
-
-- **Requesting from another planet, and cargo arriving unattended** — `planned`.
-- **Orbit-to-surface drops are cheap and immediate** — `adapted`. Free and instant here; Factorio
-  still pays a pod.
-- **A drop with no receiver leaves a container to collect** — `planned`. Drop Pods.
-- **Localized assembly forces on-site factories** — `planned`. Factorio's planet-locked buildings,
-  generalised to components.
+The Showcase plays in one ordinary world, with no planets and no science packs to send between them
+(ADR-0115, ADR-0126), so there is nothing to carry between planets.
 
 ### Spoilage
 

@@ -164,14 +164,12 @@
       "ticket": 114
     },
     "cargo-bay": {
-      "status": "undecided",
-      "note": "Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age.",
-      "ticket": 340
+      "status": "not_emitted",
+      "note": "The Showcase plays in one ordinary world and has no space chapter (ADR-0115)."
     },
     "cargo-landing-pad": {
-      "status": "undecided",
-      "note": "Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age. Its post-launch arc is the Rocket silo row's sub-rule.",
-      "ticket": 340
+      "status": "not_emitted",
+      "note": "The Showcase plays in one ordinary world and has no space chapter (ADR-0115)."
     },
     "cargo-wagon": {
       "status": "blocked",
@@ -756,14 +754,12 @@
       "note": "GregTech ships no solid fuel item and borrowing `minecraft:coal` would have the oil chapter print an ore the pack mines, which ADR-0032's 1:1 stance forbids. Burnable, made from the oil fractions. Feeds `rocket-fuel`."
     },
     "space-platform-foundation": {
-      "status": "undecided",
-      "note": "Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age.",
-      "ticket": 340
+      "status": "not_emitted",
+      "note": "The Showcase plays in one ordinary world and has no space chapter (ADR-0115)."
     },
     "space-platform-starter-pack": {
-      "status": "undecided",
-      "note": "Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age.",
-      "ticket": 340
+      "status": "not_emitted",
+      "note": "The Showcase plays in one ordinary world and has no space chapter (ADR-0115)."
     },
     "space-science-pack": {
       "status": "not_emitted",
