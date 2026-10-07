@@ -89,3 +89,22 @@ modRecipesExcluded = []
 	#The categories of Assembling recipe this machine can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
 	#Fill Recipe refuses a recipe whose category is not listed.
 	categories = ["chemistry"]
+
+#The oil_refinery block.
+[oil_refinery]
+	#Crafting speed: a craft takes the recipe's time divided by this, in ticks.
+	# Default: 1.0
+	# Range: 0.01 ~ 1000.0
+	speed = 1.0
+	#FE a tick while crafting. A craft costs this times the ticks it takes, spread over them;
+	#a tick it can't be paid in full makes no progress, and an idle machine draws nothing.
+	# Default: 210.0
+	# Range: 0.0 ~ 1000000.0
+	power = 210.0
+	#FE the energy buffer holds.
+	# Default: 50000
+	# Range: > 1
+	buffer = 50000
+	#The categories of Assembling recipe this machine can hold, by Factorio's names: crafting, advanced-crafting, crafting-with-fluid, chemistry, oil-processing.
+	#Fill Recipe refuses a recipe whose category is not listed.
+	categories = ["oil-processing"]
