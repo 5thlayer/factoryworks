@@ -280,5 +280,11 @@ if (siblingBuilds) {
         dependsOn tasks.named('jar')
         from tasks.named('jar')
         into rootProject.file('mods')
+        // The jar's name carries mod_version, so a release leaves the old one behind and the game
+        // then finds the mod twice; the Libraries' stale jars are sync-local-jars.py's to remove.
+        def installed = tasks.named('jar').flatMap { it.archiveFileName }
+        def stale = { fileTree(rootProject.file('mods')) { include "${mod_id}-*.jar"; exclude installed.get() } }
+        outputs.upToDateWhen { stale().isEmpty() }
+        doFirst { delete stale() }
     }
 }
