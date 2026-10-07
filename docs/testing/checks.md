@@ -1059,6 +1059,39 @@ credit in `NOTICE` resolving to the licence `NOTICE` names, the mod declaring wh
 gives it, and `.packwizignore` leaving the licence texts in the upload. The core jar bundles them too. Run it after adding a file of a new kind, any third-party art, or an edit to
 `REUSE.toml`.
 
+## Art provenance check
+
+`data/pack/art-provenance.json` has one row per shipped texture, model and animation, saying whose it
+is (#564, ADR-0122): `drawn`; `vendored`, with its `source` and `licence`; `stand-in`, with a
+`subkind` of `placeholder`, `procgen` or `ai` and its `generator`; or `unknown`, for what no
+`REUSE.toml` entry, `NOTICE` credit or generator has yet classified. `tests/pack/test_art_provenance.py`
+holds the manifest to the files. What counts as shipped is `scripts/art_provenance.py`'s `SHIPPED`: every
+file under a `textures/`, `models/` or `sounds/` folder of `kubejs/assets/*/` and the mod's
+`assets/*/` (so each `.png.mcmeta` animation and each model JSON), the images and `.bbmodel`
+sources under `data/art/`, and the images and clips under `publish/`. Blockstates, item
+definitions and lang only point at art and have no row. The check fails on:
+
+- a shipped asset with no row, including one not yet `git add`ed;
+- a row whose file is missing, or is not a shipped asset;
+- a malformed row: a kind outside the four, a field the kind does not take, a `vendored` row without
+  `source` and `licence`, a `stand-in` row without a `subkind` and `generator`, a `procgen` or
+  `placeholder` generator that is not a file in the repo (an `ai` one names the model), a path that is
+  duplicated or out of order.
+
+It also runs those rules on made-up rows, so a rule that stopped firing fails here instead of passing
+vacuously. It does not compare a row to `REUSE.toml` or `NOTICE`: a `vendored` row's `licence` is the
+row's own claim, and `test_licensing.py` still holds the credits.
+
+The manifest is kept by hand, one row per line, sorted by path, and its `note` is free text. A row's
+kind is the decision, so changing it is a diff a reviewer reads. Add the row in the commit that adds the
+file; a file nobody has looked at is `unknown`. When a vendored asset is replaced, its row goes with
+it (ADR-0122: `vendored` stays only to list what is left to replace).
+
+`scripts/art-worklist.py` prints what is left: the stand-ins by subkind and generator, every vendored
+row by licence with the non-commercial ones first, and the `unknown` rows, after a count line for all
+four kinds. It exits 1 after printing if the manifest and the files disagree. Run the check after
+adding, renaming or deleting any texture, model, animation, store image or clip, or a `.bbmodel`.
+
 ## Coined-name check
 
 No string a player reads names a coined Factorio term (#304, ADR-0103). `COINED_TERMS` in
