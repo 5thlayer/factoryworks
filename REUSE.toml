@@ -111,7 +111,7 @@ SPDX-License-Identifier = "Apache-2.0"
 
 # The vendored agent skills, from mattpocock/skills.
 [[annotations]]
-path = [".agents/**", "skills-lock.json"]
+path = [".agents/**", ".claude/skills", "skills-lock.json"]
 SPDX-FileCopyrightText = "Matt Pocock"
 SPDX-License-Identifier = "MIT"
 
