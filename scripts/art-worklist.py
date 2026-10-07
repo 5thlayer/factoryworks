@@ -29,7 +29,7 @@ def group(rows, key):
 
 
 def show(groups, heading):
-    for key in sorted(groups, key=lambda k: (k[0], k)):
+    for key in sorted(groups):
         paths = groups[key]
         print(f"\n  {heading(key)} -- {len(paths)}")
         for p in paths:
@@ -56,7 +56,7 @@ def main():
     for r in by_kind["unknown"]:
         print(f"    {r['path']}")
 
-    found = ap.problems(rows, ap.shipped_assets(), lambda p: (ap.ROOT / p).is_file())
+    found = ap.checkout_problems(rows, ap.shipped_assets())
     if found:
         print(f"\n{len(found)} manifest problems; run tests/pack/test_art_provenance.py",
               file=sys.stderr)

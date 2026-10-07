@@ -1,8 +1,6 @@
 """Which art the Pack ships, and the manifest that says where each piece came from (#564, ADR-0122).
 
-`data/pack/art-provenance.json` has one row per shipped texture, model and animation. This module
-is the one place that lists what is shipped and what a row may say, so that
-`tests/pack/test_art_provenance.py` and `scripts/art-worklist.py` cannot disagree about either.
+Shared by `tests/pack/test_art_provenance.py` and `scripts/art-worklist.py`.
 """
 
 import json
@@ -34,20 +32,20 @@ _COMMON = {"path", "kind", "note"}
 _NON_COMMERCIAL = re.compile(r"(?:^|[-\s(])NC(?:[-\s)]|\Z)")
 
 
-def shipped_assets(root=ROOT):
+def shipped_assets():
     """Every texture, model, animation and store medium present in the checkout, repo-relative.
 
     Untracked files count, so a new asset fails before it is staged.
     """
     out = subprocess.run(
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
-        cwd=root, check=True, capture_output=True, text=True).stdout
+        cwd=ROOT, check=True, capture_output=True, text=True).stdout
     return sorted(p for p in out.split("\0")
-                  if p and (root / p).is_file() and any(s.match(p) for s in SHIPPED))
+                  if p and (ROOT / p).is_file() and any(s.match(p) for s in SHIPPED))
 
 
-def load_rows(path=MANIFEST):
-    return json.loads(path.read_text(encoding="utf-8"))["rows"]
+def load_rows():
+    return json.loads(MANIFEST.read_text(encoding="utf-8"))["rows"]
 
 
 def is_non_commercial(row):
@@ -115,3 +113,7 @@ def problems(rows, assets, exists):
         out.append(f"{p} has a row but is not a shipped asset" if exists(p)
                    else f"{p} has a row but the file is missing")
     return out
+
+
+def checkout_problems(rows, assets):
+    return problems(rows, assets, lambda p: (ROOT / p).is_file())

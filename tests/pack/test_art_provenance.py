@@ -11,9 +11,6 @@ lists what is shipped and what a row may say. This check fails on:
   - a malformed row: an unknown kind, a vendored row without source and licence, a stand-in row
     without a subkind and generator, an unsorted or duplicated path.
 
-The rules are also run on made-up rows, so a rule that stopped firing would fail here rather than
-pass vacuously.
-
 Usage: tests/pack/test_art_provenance.py
 """
 
@@ -97,7 +94,7 @@ def main():
         if not any(tree in a for a in assets):
             failures.append(f"the scan found no shipped asset under {tree}; the enumeration is broken")
 
-    failures += ap.problems(ap.load_rows(), assets, lambda p: (ROOT / p).is_file())
+    failures += ap.checkout_problems(ap.load_rows(), assets)
 
     if failures:
         print("art provenance:")
