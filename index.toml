@@ -306,7 +306,7 @@ hash = "4a67fdecf860e44db21d80dea7812fac34a36a598fcfc3b904e363ecabbb24b9"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
-hash = "54b7e8c19b879af068516a456032d1cc3e49f60605ae87708674004e9037c1ba"
+hash = "75e782cb9d101e3103ba81e39fbdfa406d697f7a5f4825a64b9a7396f4aad09b"
 
 [[files]]
 file = "data/pack/stock-admissions.json"
@@ -2650,7 +2650,7 @@ hash = "3f860157dc1487e58977c1b938c61a86aeb00d74a10a60b1def48cb5b2367e4c"
 
 [[files]]
 file = "kubejs/server_scripts/researchd.js"
-hash = "859cbf0e92793fe54daab57f1cca07e5bdab50a79359b3ee8eeaaa748b1d105d"
+hash = "a4b592dc507827d6e919a5713c08b455d4dda15a5798fb609c1199806aa35bb6"
 
 [[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"

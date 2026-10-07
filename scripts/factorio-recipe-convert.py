@@ -334,8 +334,8 @@ def main():
                                 "category-map.json names a type this converter cannot shape")
                 continue
             directory = machines[machine].get("recipe_dir") or recipe_type.split(":", 1)[1]
-            emitted[emitted_path(directory, name)] = convert(
-                recipe_type, recipe, items, override, machines[machine].get("category", recipe["category"]))
+            category = machines[machine].get("category", recipe["category"])
+            emitted[emitted_path(directory, name)] = convert(recipe_type, recipe, items, override, category)
 
     for name, row in sorted(items.items()):
         if "outside_corpus" in row:

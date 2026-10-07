@@ -157,7 +157,7 @@ fromFactorio('fluid-handling', {
 // Also grants `oil-processing`'s unlock. That node's trigger is mining crude oil, a fluid, and no
 // Researchd method reads a fluid, so declared on its own it would be a dead gate (#206, #138).
 // Advanced oil processing is the only petroleum source, and chemical science needs petroleum, so
-// it unlocks here rather than behind chemical science (#644).
+// it unlocks here (ADR-0125).
 fromFactorio('oil-gathering', {
   icon: 'factoryworks:pumpjack',
   unlocks: [

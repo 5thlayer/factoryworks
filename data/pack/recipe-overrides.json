@@ -25,13 +25,12 @@
     "  - a `not_emitted` shelf, or an `undecided` item-map row -- both are recorded where the",
     "    decision lives, and both already report themselves in the converter's summary.",
     "",
-    "An entry here would be the pack overruling Factorio on a recipe's actual contents.",
-    ""
+    "An entry here would be the pack overruling Factorio on a recipe's actual contents."
   ],
   "recipes": {
     "basic-oil-processing": {
       "skip": true,
-      "reason": "Removed by #644: advanced oil processing is the Pack's one source of petroleum gas, so crude splits one way on Assembler 2 and 3 (ADR-0125)."
+      "reason": "Advanced oil processing is the Pack's one way to split crude, so crude splits one way on Assembler 2 and 3 (ADR-0125, #644)."
     }
   }
 }

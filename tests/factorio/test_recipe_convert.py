@@ -326,8 +326,7 @@ def main():
     check_item_map(items, corpus, failures)
     check_overrides(overrides, corpus, failures)
     machines = json.loads((ROOT / "data/pack/category-map.json").read_text())["machines"]
-    # The types that exist today, read from the map rather than listed here: registering the
-    # Centrifuge should be one edit to one design document (#135), not three.
+    # Read from the map rather than listed here, so registering a machine is one edit.
     recipe_types = {m["recipe_type"] for m in machines.values() if m["recipe_type"]}
     check_emitted(items, recipe_types, failures)
 
