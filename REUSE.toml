@@ -19,6 +19,8 @@ path = [
     ".gitignore",
     ".packwizignore",
     ".github/**",
+    ".claude/hooks/**",
+    ".claude/settings.json",
     "kubejs/**/*.js",
     "kubejs/**/jsconfig.json",
     "kubejs/config/**",
