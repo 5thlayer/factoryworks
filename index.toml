@@ -2681,13 +2681,18 @@ hash = "8cd3a3e3f55d69d8fbb6aab75a721aaf7a8c1ec9d1bc64065380dcc9fdc39530"
 metafile = true
 
 [[files]]
+file = "mods/craftworks.pw.toml"
+hash = "a07d5e5d2087d162665826ae4fb33192c92cf9a90b13f0ea4fe13cdf6acb2e60"
+metafile = true
+
+[[files]]
 file = "mods/emi-unofficial-port-unstable.pw.toml"
 hash = "4f2b02a68a2cb7f91d22790bb64cfaed7e9f226a1c61080a860af2abef703c1e"
 metafile = true
 
 [[files]]
 file = "mods/factoryworks-core.pw.toml"
-hash = "5bb71721a56f44022d10a3bb8282fcff769713a5f9c25cd7d21103f751e09156"
+hash = "4d6aff9b0106550104d2dbfcfb0c30b6d79b5adf811c518cb36c14a985da6405"
 metafile = true
 
 [[files]]
