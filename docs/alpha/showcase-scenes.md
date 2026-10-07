@@ -4,7 +4,7 @@
 
 - `assembly_line`: copper plates to cable, cable and iron plates to circuits, on belts and feeders.
 - `steam_power`: Offshore Pump, Boiler fed coal from a belt, two Steam Engines, and poles powering two Electric Furnaces smelting iron.
-- `oil`: Pumpjack, Craftworks' Oil Refinery on basic oil processing, and its Chemical Plant making plastic, joined by Pipeworks pipes.
+- `oil`: Pumpjack and Offshore Pump feeding an Assembler 3 on advanced oil processing through five Pipeworks pipes, and an Assembler 2 making plastic from its gas.
 
 The assembly line and the oil scene are powered by a creative pole; the steam scene powers itself.
 
