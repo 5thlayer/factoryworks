@@ -323,7 +323,7 @@ The pack's own high-temperature fluid, accepted only by the **Steam Turbine**; t
 _Avoid_: high-pressure steam, hot steam, 500-degree steam
 
 **Boiler**:
-Terra's rung 0 pack-authored machine that burns solid fuel to turn water into **Steam**. One tier; joules in a buffer drained at its own rate (ADR-0047). It replaces the mod boiler the ledger used to name. Its water draw is Factorio's own 60 mB/s, which makes one **Offshore Pump** exactly twenty Boilers (ADR-0050). Stands as a 3x2 footprint, three wide and two deep, placed and broken whole (ADR-0114).
+The Wireworks machine that burns solid fuel to turn water into **Steam**, sitting with the pole network it powers (ADR-0115). One tier; joules in a buffer drained at its own rate (ADR-0047). Its water draw is Factorio's own 60 mB/s, which makes one **Offshore Pump** exactly twenty Boilers (ADR-0050). Stands as a 3x2 footprint, three wide and two deep, placed and broken whole (ADR-0114).
 _Avoid_: LP Solid Boiler, heater, steam generator
 
 **Steam Engine**:
