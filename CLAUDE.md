@@ -1,5 +1,9 @@
 ## Agent skills
 
+The vendored skills live in `.agents/skills/`, pinned by `skills-lock.json`. `.claude/skills` is a
+symlink to that directory, because Claude Code reads only `.claude/skills/`; cloud sessions get the
+skills from it.
+
 ### Issue tracker
 
 Issues live in this repo's GitHub Issues, managed with the `gh` CLI. See `docs/agents/issue-tracker.md`.
