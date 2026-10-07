@@ -4,9 +4,11 @@ The skills are mattpocock/skills, a git submodule at `.agents/mattpocock-skills`
 tag. Upstream nests them by category, and Claude Code reads only `.claude/skills/<name>/SKILL.md`, so
 `.agents/skills/<name>` is a symlink into the submodule for each skill the repo uses, and
 `.claude/skills` is a symlink to `.agents/skills`. A fresh clone needs `git submodule update --init`
-or the links dangle; a cloud session runs it from `.claude/hooks/session-start.sh`. Take a new
-release by checking out its tag in the submodule; a skill moved upstream breaks its link, so check
-that `.claude/skills/*/SKILL.md` all resolve.
+or the links dangle; every session runs it from `.claude/hooks/session-start.sh`, which also resets
+the submodule to the commit the checkout records. Take a new release by checking out its tag in the
+submodule and committing it before the session restarts, clears or compacts, or the hook undoes the
+checkout; a skill moved upstream breaks its link, so check that `.claude/skills/*/SKILL.md` all
+resolve.
 
 ### Code review
 
