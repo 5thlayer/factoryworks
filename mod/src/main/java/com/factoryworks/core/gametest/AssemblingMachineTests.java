@@ -146,8 +146,8 @@ final class AssemblingMachineTests {
             if (!HeldRecipes.canRun(recipe)) {
                 unheld.add(id + " cannot run on an Assembler");
             } else if (Arrays.stream(AssemblerTier.values()).noneMatch(
-                    tier -> HeldRecipes.takesCategory(tier, recipe) && HeldRecipes.takesFluids(tier, recipe))) {
-                unheld.add(id + " is category " + recipe.category().id() + " with its fluids, which no tier holds");
+                    tier -> HeldRecipes.takesCategory(tier, recipe))) {
+                unheld.add(id + " is category " + recipe.category().id() + ", which no tier holds");
             }
         }
         if (pack == 0) {

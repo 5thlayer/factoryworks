@@ -432,23 +432,24 @@ Sub-rules:
 
 - **verdict**: `shipped`
 - **where**: Terra, Ignus, Gelida
-- **via**: `craftworks` (the Oil Refinery and the Chemical Plant), `pack` (the oil fluids)
-- **owner**: ADR-0124 (the Oil Refinery is Craftworks'), ADR-0123 (the Chemical Plant is Craftworks')
-  and ADR-0109 (Core registers the oil fluids, drawn in Factorio's colours; #619)
-- **ticket**: #581 (the Oil Refinery moved to Craftworks), #582 (the Chemical Plant moved to Craftworks); #486, closed; #258 before it
+- **via**: `craftworks` (Assembler 2 and 3), `pack` (the oil fluids and the recipes)
+- **owner**: ADR-0125 (the oil and chemistry recipes run on Craftworks' Assembler) and ADR-0109 (Core
+  registers the oil fluids, drawn in Factorio's colours; #619)
+- **ticket**: #644 (Craftworks dropped the Chemical Plant and the Oil Refinery); #581, #582, #486, closed; #258 before it
 
 Sub-rules:
 
-- **Basic then advanced oil processing** — `shipped`, #581, ADR-0124. `craftworks:oil_refinery`, 5x5 on
-  the ground and three blocks tall, holding Factorio's `oil-processing` recipes as `craftworks:assembling`
-  recipes under their old ids. Its five Fluid Connections pull crude and water from, and push the
-  three fractions into, any pipe or tank beside them, so the Pumpjack's crude reaches it through
-  Pipeworks pipes (`OilRefineryTests`). Advanced is gated by research (#493).
+- **Basic oil processing** — `excluded`, #644, ADR-0125. Advanced oil processing is the only way to
+  split crude, and it is researched with oil gathering, since chemical science needs petroleum gas.
+- **Advanced oil processing** — `shipped`, #644, ADR-0125. A `crafting-with-fluid` recipe under its old
+  id on Assembler 2 and 3, whose Fluid Connections pull crude and water from, and push the three
+  fractions into, any pipe or tank beside them, so the Pumpjack's crude reaches it through Pipeworks
+  pipes (`AssemblerOilChainTests`).
 - **Cracking to resolve the three-output imbalance** — `shipped`. The chapter's whole puzzle.
-- **The Chemical Plant** — `shipped`, #582, ADR-0123. `craftworks:chemical_plant`, 3x3 and two
-  blocks tall, holding Factorio's `chemistry` recipes as `craftworks:assembling` recipes under their
-  old ids. Its four Fluid Connections take and give fluid through any pipe or tank beside them, so
-  Pipeworks pipes carry petroleum gas in and sulfuric acid out (`ChemicalPlantTests`). `via` is Craftworks.
+- **The Chemical Plant** — `adapted`, #644, ADR-0125. Factorio's `chemistry` recipes are
+  `crafting-with-fluid` recipes under their old ids on Assembler 2 and 3. *Notice*: there is no Chemical
+  Plant or Oil Refinery; an Assembler makes their recipes, and Pipeworks pipes carry petroleum gas in and
+  sulfuric acid out (`AssemblerOilChainTests`).
 - **Coal liquefaction** — `planned`, on Ignus (`docs/planets.md`).
 
 ### Smelting

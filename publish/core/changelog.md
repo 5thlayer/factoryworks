@@ -1,5 +1,7 @@
 ## Unreleased
 
+- The Chemical Plant and the Oil Refinery are gone: chemistry and oil processing run on Craftworks' Assemblers 2 and 3. A world made with 0.2.0 loses the ones it placed. Basic oil processing is gone too, and advanced oil processing is researched with oil gathering.
+
 ## 0.2.0
 
 - The game starts on the floor of a crashed ship at the centre of every hub, its cargo hold filled with the starting kit and debris scattered round it.

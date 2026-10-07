@@ -92,7 +92,7 @@ PACK_SMELTING = "factoryworks:smelting"
 SOURCE_CATEGORY_KEY = "category"
 
 # Factorio's `crafting`, `advanced-crafting`, `crafting-with-fluid`, `chemistry` and `oil-processing`
-# are Craftworks' Assembling recipes (ADR-0118, ADR-0123, ADR-0124).
+# are Craftworks' Assembling recipes (ADR-0118, ADR-0125).
 CRAFTWORKS_ASSEMBLING = "craftworks:assembling"
 
 # The Personal Assembler plans a recipe whose first Factorio category is `crafting`. The eleven
@@ -164,7 +164,7 @@ def convert_smelting(recipe, items, override):
     }
 
 
-def convert(recipe_type, recipe, items, override):
+def convert(recipe_type, recipe, items, override, category):
     """One recipe on Craftworks' `craftworks:assembling` shape (ADR-0118).
 
     It composes NeoForge's own codecs rather than inventing any: an item ingredient is
@@ -174,7 +174,7 @@ def convert(recipe_type, recipe, items, override):
     `amount`). Every list is optional, so a recipe with no fluid writes no fluid key, except Craftworks'
     `ingredients` and `results`.
     """
-    out = {"type": recipe_type, SOURCE_CATEGORY_KEY: recipe["category"]}
+    out = {"type": recipe_type, SOURCE_CATEGORY_KEY: category}
     if recipe_type == CRAFTWORKS_ASSEMBLING:
         out["hand_craftable"] = recipe["category"] == HAND_CATEGORY
     sides = {"ingredients": [], "fluid_ingredients": [], "results": [], "fluid_results": []}
@@ -196,7 +196,7 @@ def convert(recipe_type, recipe, items, override):
                 result["components"] = row["components"]
             sides["results"].append(result)
     for field, entries in sides.items():
-        # Craftworks' codec requires `ingredients` and `results`, empty or not (ADR-0123).
+        # Craftworks' codec requires `ingredients` and `results`, empty or not.
         required = recipe_type == CRAFTWORKS_ASSEMBLING and field in ("ingredients", "results")
         if entries or required:
             out[field] = entries
@@ -208,7 +208,7 @@ def emitted_path(directory, name):
     """`<directory>/<name>`, which is also the recipe's id and therefore what research unlocks.
 
     The directory is the machine's `recipe_dir` in `category-map.json`, else its recipe type's path.
-    Chemistry keeps `chemistry/` on Craftworks' type, so its ids do not move (ADR-0123).
+    Chemistry keeps `chemistry/` on the Assembler, so its ids do not move (ADR-0125).
     """
     return "%s/%s" % (directory, name.replace("-", "_"))
 
@@ -334,7 +334,8 @@ def main():
                                 "category-map.json names a type this converter cannot shape")
                 continue
             directory = machines[machine].get("recipe_dir") or recipe_type.split(":", 1)[1]
-            emitted[emitted_path(directory, name)] = convert(recipe_type, recipe, items, override)
+            emitted[emitted_path(directory, name)] = convert(
+                recipe_type, recipe, items, override, machines[machine].get("category", recipe["category"]))
 
     for name, row in sorted(items.items()):
         if "outside_corpus" in row:

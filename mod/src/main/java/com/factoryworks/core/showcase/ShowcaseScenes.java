@@ -3,8 +3,6 @@ package com.factoryworks.core.showcase;
 import io.github._5thlayer.craftworks.machine.AssemblerBlockEntity;
 import io.github._5thlayer.craftworks.machine.AssemblerTier;
 import io.github._5thlayer.craftworks.machine.Assemblers;
-import io.github._5thlayer.craftworks.machine.FluidMachineBlockEntity;
-import io.github._5thlayer.craftworks.machine.FluidMachines;
 import io.github._5thlayer.groundworks.Footprint;
 import io.github._5thlayer.wireworks.WireworksRegistries;
 import java.util.List;
@@ -34,6 +32,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import io.github._5thlayer.pipeworks.PipeworksRegistries;
+import io.github._5thlayer.pipeworks.api.FluidPipes;
 
 /**
  * Factories built for filming the Alpha's recruiting clips (#538), each on a smooth-stone floor
@@ -173,72 +172,79 @@ public final class ShowcaseScenes {
         throw new IllegalStateException("no facing puts a Boiler's steam port to the east");
     }
 
-    /** Crude from a Pumpjack is refined to gas, and gas with coal becomes plastic. */
+    /**
+     * Crude from a Pumpjack and water from an Offshore Pump are refined on an Assembler 3, and its gas with
+     * coal becomes plastic on an Assembler 2 (ADR-0125). The Assembler pushes through the three connections
+     * it faces in order, so heavy oil, light oil and gas leave by the north, middle and south one; the
+     * middle pipe touches the other two, so its sides toward them are closed.
+     */
     private static Product oil(Site site) {
-        BlockPos well = new BlockPos(3, 0, 4);
+        BlockPos well = new BlockPos(3, 0, 12);
         site.set(well, PFBlocks.OIL_WELL.get());
         site.blockEntity(well, OilWellBlockEntity.class).start(1_500_000);
         PFBlocks.PUMPJACK_FOOTPRINT.placeAll(site.level(), site.at(well.above()), Direction.NORTH);
+        BlockPos pump = new BlockPos(4, 1, 6);
+        site.set(pump, PFBlocks.OFFSHORE_PUMP.get());
 
-        BlockPos refinery = new BlockPos(9, 1, 4);
-        fluidMachine(site, FluidMachines.OIL_REFINERY, refinery, Direction.SOUTH,
-                "factoryworks:oil_processing/basic_oil_processing");
-        BlockPos plant = new BlockPos(14, 1, 8);
-        fluidMachine(site, FluidMachines.CHEMICAL_PLANT, plant, Direction.NORTH, "factoryworks:chemistry/plastic_bar");
+        BlockPos refinery = new BlockPos(8, 1, 8);
+        assembling(site, refinery, AssemblerTier.THREE, Direction.EAST,
+                "factoryworks:oil_processing/advanced_oil_processing");
+        BlockPos plant = new BlockPos(15, 1, 10);
+        assembling(site, plant, AssemblerTier.TWO, Direction.WEST, "factoryworks:chemistry/plastic_bar");
 
-        // Crude runs along the wall to the refinery's last connection, so that a pipe it has emptied
-        // is tried after the gas pipe (ADR-0124).
-        pipe(site, new BlockPos(3, 1, 2));
-        for (int x = 3; x <= 7; x++) {
-            pipe(site, new BlockPos(x, 1, 1));
+        for (BlockPos at : List.of(new BlockPos(3, 1, 10), new BlockPos(4, 1, 10), new BlockPos(5, 1, 10),
+                new BlockPos(6, 1, 10), new BlockPos(6, 1, 9))) {
+            pipe(site, at);
+        }
+        for (BlockPos at : List.of(pump.east(), new BlockPos(6, 1, 6), new BlockPos(6, 1, 7))) {
+            pipe(site, at);
         }
 
-        // The refinery's gas leaves its first connection and runs to the plant's north-west one.
-        for (int x = 10; x <= 12; x++) {
-            pipe(site, new BlockPos(x, 1, 7));
+        for (BlockPos at : List.of(new BlockPos(10, 1, 7), new BlockPos(10, 1, 6), new BlockPos(10, 1, 5))) {
+            pipe(site, at);
         }
-        pipe(site, new BlockPos(12, 1, 6));
-        pipe(site, new BlockPos(13, 1, 6));
+        site.set(new BlockPos(10, 1, 4), PipeworksRegistries.STORAGE_TANK.get());
+        BlockPos light = new BlockPos(10, 1, 8);
+        pipe(site, light);
+        pipe(site, light.above());
+        site.set(light.above(2), PipeworksRegistries.STORAGE_TANK.get());
+        for (BlockPos at : List.of(new BlockPos(10, 1, 9), new BlockPos(10, 1, 10), new BlockPos(11, 1, 10),
+                new BlockPos(12, 1, 10), new BlockPos(13, 1, 10))) {
+            pipe(site, at);
+        }
+        FluidPipes.close(site.level(), site.at(light), Direction.NORTH);
+        FluidPipes.close(site.level(), site.at(light), Direction.SOUTH);
 
-        stockedChest(site, new BlockPos(20, 1, 8), item("minecraft:coal"));
-        loadingBelt(site, new BlockPos(19, 1, 8), Direction.WEST, 2);
-        unloader(site, plant.east(2), Direction.EAST);
+        stockedChest(site, new BlockPos(15, 1, 4), item("minecraft:coal"));
+        loadingBelt(site, new BlockPos(15, 1, 5), Direction.SOUTH, 2);
+        unloader(site, plant.north(2), Direction.NORTH);
 
-        BlockPos out = new BlockPos(14, 1, 15);
+        BlockPos out = new BlockPos(15, 1, 15);
         site.set(out, Blocks.CHEST);
         unloader(site, out.north(), Direction.NORTH);
-        belt(site, plant.south(3), Direction.SOUTH, 3);
+        belt(site, plant.south(3), Direction.SOUTH, 1);
         site.set(plant.south(2), loaderState(Direction.SOUTH));
 
-        site.set(new BlockPos(12, 1, 8), WireworksRegistries.CREATIVE_POLE.get());
-        site.set(new BlockPos(6, 1, 7), WireworksRegistries.CREATIVE_POLE.get());
+        site.set(new BlockPos(6, 1, 13), WireworksRegistries.CREATIVE_POLE.get());
+        site.set(refinery.north(3), WireworksRegistries.CREATIVE_POLE.get());
+        site.set(plant.east(3), WireworksRegistries.CREATIVE_POLE.get());
         return new Product(List.of(out), item("factoryworks:plastic_bar"));
     }
 
     private static void assembling(Site site, BlockPos origin, String recipe) {
-        Footprint footprint = Assemblers.footprint(AssemblerTier.ONE);
-        List<BlockPos> blocks = footprint.positions(site.at(origin), Direction.NORTH);
+        assembling(site, origin, AssemblerTier.ONE, Direction.NORTH, recipe);
+    }
+
+    private static void assembling(Site site, BlockPos origin, AssemblerTier tier, Direction facing, String recipe) {
+        Footprint footprint = Assemblers.footprint(tier);
+        List<BlockPos> blocks = footprint.positions(site.at(origin), facing);
         for (int i = 0; i < blocks.size(); i++) {
-            site.level().setBlockAndUpdate(blocks.get(i), footprint.stateAt(i, Direction.NORTH));
+            site.level().setBlockAndUpdate(blocks.get(i), footprint.stateAt(i, facing));
         }
         AssemblerBlockEntity machine = site.blockEntity(origin, AssemblerBlockEntity.class);
         machine.setHeldRecipe(Identifier.parse(recipe), FakePlayerFactory.getMinecraft(site.level()));
         if (machine.heldRecipe().isEmpty()) {
             throw new IllegalStateException(recipe + " was not held by the Assembler at " + site.at(origin));
-        }
-    }
-
-    private static void fluidMachine(Site site, FluidMachines.Entry machine, BlockPos origin, Direction facing,
-            String recipe) {
-        Footprint footprint = machine.footprint();
-        List<BlockPos> blocks = footprint.positions(site.at(origin), facing);
-        for (int i = 0; i < blocks.size(); i++) {
-            site.level().setBlockAndUpdate(blocks.get(i), footprint.stateAt(i, facing));
-        }
-        FluidMachineBlockEntity entity = site.blockEntity(origin, FluidMachineBlockEntity.class);
-        entity.setHeldRecipe(Identifier.parse(recipe), FakePlayerFactory.getMinecraft(site.level()));
-        if (entity.heldRecipe().isEmpty()) {
-            throw new IllegalStateException(recipe + " was not held by the machine at " + site.at(origin));
         }
     }
 

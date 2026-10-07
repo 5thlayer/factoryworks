@@ -69,7 +69,7 @@
     "middle. A shelf is the wrong granularity for it, which is why it is not stored at all.",
     "",
     "`owner` values: `gregtech`, `create`, `powergrid`, `pack` (a machine this pack registers",
-    "on a GT chassis -- ADR-0025's Oil Refinery and Chemical Plant, ADR-0026's Assembling Machines),",
+    "on a GT chassis -- ADR-0026's Assembling Machines, whose `pack:chemistry` and `pack:oil_processing` recipes keep their own directories, ADR-0125),",
     "`split` (the shelf straddles a seam; see `per_recipe`, written `owner / process` where the two",
     "differ), `undecided` (ADR-0017 has no row for this capability -- a decision, not an oversight),",
     "`deferred` (carved out to its own ticket; see `ticket`), `not_emitted` (out of the corpus's emit",
@@ -166,8 +166,8 @@
         "assembling-machine-1": "pack:assembling",
         "assembling-machine-2": "pack:assembling",
         "assembling-machine-3": "pack:assembling",
-        "chemical-plant": "pack:assembling",
-        "oil-refinery": "pack:assembling",
+        "chemical-plant": "not_emitted",
+        "oil-refinery": "not_emitted",
         "lab": "pack:assembling",
         "centrifuge": "pack:assembling"
       },
@@ -188,18 +188,18 @@
     },
     "intermediate-products/fluid-recipes": {
       "owner": "split",
-      "reason": "Two oil-processing rows and seven chemistry rows; both are already one-to-one by category, so the qualifier is read off `category-map.json` rather than decided.",
+      "reason": "Two oil-processing rows and seven chemistry rows; both are already one-to-one by category, so the qualifier is read off `category-map.json` rather than decided. Both run on Assembler 2 and 3 (ADR-0125).",
       "adr_row": "Oil processing / Chemistry / Refining -- the pack (ADR-0025)",
       "per_recipe": {
-        "advanced-oil-processing": "pack:oil_refinery",
-        "basic-oil-processing": "pack:oil_refinery",
-        "heavy-oil-cracking": "pack:chemical_plant",
-        "light-oil-cracking": "pack:chemical_plant",
-        "lubricant": "pack:chemical_plant",
-        "solid-fuel-from-heavy-oil": "pack:chemical_plant",
-        "solid-fuel-from-light-oil": "pack:chemical_plant",
-        "solid-fuel-from-petroleum-gas": "pack:chemical_plant",
-        "sulfuric-acid": "pack:chemical_plant"
+        "advanced-oil-processing": "pack:oil_processing",
+        "basic-oil-processing": "pack:oil_processing",
+        "heavy-oil-cracking": "pack:chemistry",
+        "light-oil-cracking": "pack:chemistry",
+        "lubricant": "pack:chemistry",
+        "solid-fuel-from-heavy-oil": "pack:chemistry",
+        "solid-fuel-from-light-oil": "pack:chemistry",
+        "solid-fuel-from-petroleum-gas": "pack:chemistry",
+        "sulfuric-acid": "pack:chemistry"
       },
       "count": 9
     },
@@ -330,10 +330,10 @@
       "owner": "split",
       "reason": "Four chemistry recipes and three smelting recipes on one shelf; the categories route them to different destinations.",
       "per_recipe": {
-        "battery": "pack:chemical_plant",
-        "explosives": "pack:chemical_plant",
-        "plastic-bar": "pack:chemical_plant",
-        "sulfur": "pack:chemical_plant",
+        "battery": "pack:chemistry",
+        "explosives": "pack:chemistry",
+        "plastic-bar": "pack:chemistry",
+        "sulfur": "pack:chemistry",
         "iron-plate": "pack:smelting",
         "copper-plate": "pack:smelting",
         "steel-plate": "pack:smelting"
@@ -364,7 +364,7 @@
     },
     "intermediate-products/intermediate-product": {
       "owner": "pack",
-      "reason": "The shelf that proves a subgroup is not a machine: twelve recipes, one owner, two machines. No longer an OWNERSHIP seam -- #93 moved its four Create rows off -- but still a shelf a single process cannot cover.",
+      "reason": "Twelve recipes, one owner, two recipe directories. No longer an OWNERSHIP seam -- #93 moved its four Create rows off -- but still a shelf a single process cannot cover.",
       "per_recipe": {
         "iron-gear-wheel": "pack:assembling",
         "iron-stick": "pack:assembling",
@@ -376,8 +376,8 @@
         "electric-engine-unit": "pack:assembling",
         "flying-robot-frame": "pack:assembling",
         "low-density-structure": "pack:assembling",
-        "processing-unit": "pack:chemical_plant",
-        "rocket-fuel": "pack:chemical_plant"
+        "processing-unit": "pack:chemistry",
+        "rocket-fuel": "pack:chemistry"
       },
       "note": [
         "The four forming rows -- `iron-gear-wheel`, `iron-stick`, `copper-cable`, `barrel` -- were",
@@ -392,9 +392,9 @@
         "loses no capability by it -- ADR-0017's Item logistics row is satisfied by the belts, the Spout and",
         "the Item Drain, none of which needs a recipe authored here.",
         "",
-        "`processing-unit` takes 5x sulfuric acid and `rocket-fuel` takes 10x light oil, so both are Chemical",
-        "Plant rather than Assembling Machine even though the owner reads `pack` either way -- which is why",
-        "the qualifier exists. The circuit rows are #55's authored three-tier ladder, not Factorio's items.",
+        "`processing-unit` takes 5x sulfuric acid and `rocket-fuel` takes 10x light oil, so both are",
+        "`pack:chemistry` and keep their `chemistry/` ids, though every row runs on the Assembler (ADR-0125).",
+        "The circuit rows are #55's authored three-tier ladder, not Factorio's items.",
         "",
         "HAND-OFF TO #87: `barrel` now emits a `pack:assembling` recipe for the container item. This",
         "warned that pointing the item map at Mekanism's portable tank would give the pack two ways to",

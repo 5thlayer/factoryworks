@@ -216,16 +216,11 @@ def check_overrides(overrides, corpus, failures):
 # Craftworks' Fill Recipe refuses a recipe with more distinct ingredients than its `AssemblerSlots.INPUTS`.
 CRAFTWORKS_ASSEMBLER_INPUTS = 5
 
-# What Craftworks' Chemical Plant holds of a recipe (`ChemicalPlantRecipes.canRun`): two item inputs, one
-# item result, and two input and two output fluid boxes.
-CRAFTWORKS_PLANT_ITEM_INPUTS = 2
-CRAFTWORKS_PLANT_ITEM_OUTPUTS = 1
-CRAFTWORKS_PLANT_FLUID_BOXES = 2
-
-# What Craftworks' Oil Refinery holds (`FluidMachine.OIL_REFINERY`): no item slot, two input and
-# three output fluid boxes.
-CRAFTWORKS_REFINERY_FLUID_INPUTS = 2
-CRAFTWORKS_REFINERY_FLUID_OUTPUTS = 3
+# What Craftworks' Assembler holds of a recipe besides its inputs: one product slot, and two input and
+# three output fluid boxes (`FluidLayout.ASSEMBLER`).
+CRAFTWORKS_ASSEMBLER_ITEM_OUTPUTS = 1
+CRAFTWORKS_ASSEMBLER_FLUID_INPUTS = 2
+CRAFTWORKS_ASSEMBLER_FLUID_OUTPUTS = 3
 
 
 def input_slots():
@@ -295,21 +290,13 @@ def check_emitted(items, recipe_types, failures):
             for key in ("ingredients", "results"):
                 if key not in recipe:
                     failures.append(f"{path.name} has no `{key}` key, so Craftworks drops it at load")
-            if recipe.get("category") == "chemistry":
-                limits = (("ingredients", CRAFTWORKS_PLANT_ITEM_INPUTS), ("results", CRAFTWORKS_PLANT_ITEM_OUTPUTS),
-                          ("fluid_ingredients", CRAFTWORKS_PLANT_FLUID_BOXES), ("fluid_results", CRAFTWORKS_PLANT_FLUID_BOXES))
-                for key, most in limits:
-                    if len(recipe.get(key, [])) > most:
-                        failures.append(f"{path.name} has {len(recipe[key])} `{key}` and Craftworks' Chemical "
-                                        f"Plant holds {most}")
-            if recipe.get("category") == "oil-processing":
-                limits = (("ingredients", 0), ("results", 0),
-                          ("fluid_ingredients", CRAFTWORKS_REFINERY_FLUID_INPUTS),
-                          ("fluid_results", CRAFTWORKS_REFINERY_FLUID_OUTPUTS))
-                for key, most in limits:
-                    if len(recipe.get(key, [])) > most:
-                        failures.append(f"{path.name} has {len(recipe[key])} `{key}` and Craftworks' Oil "
-                                        f"Refinery holds {most}")
+            limits = (("results", CRAFTWORKS_ASSEMBLER_ITEM_OUTPUTS),
+                      ("fluid_ingredients", CRAFTWORKS_ASSEMBLER_FLUID_INPUTS),
+                      ("fluid_results", CRAFTWORKS_ASSEMBLER_FLUID_OUTPUTS))
+            for key, most in limits:
+                if len(recipe.get(key, [])) > most:
+                    failures.append(f"{path.name} has {len(recipe[key])} `{key}` and Craftworks' Assembler "
+                                    f"holds {most}")
         # One ingredient per input slot, so one past the last could never be inserted (ADR-0074).
         slots = input_slots().get(recipe.get("type"), 0)
         if len(recipe.get("ingredients", [])) > slots:
@@ -340,7 +327,7 @@ def main():
     check_overrides(overrides, corpus, failures)
     machines = json.loads((ROOT / "data/pack/category-map.json").read_text())["machines"]
     # The types that exist today, read from the map rather than listed here: registering the
-    # Chemical Plant should be one edit to one design document (#107), not three.
+    # Centrifuge should be one edit to one design document (#135), not three.
     recipe_types = {m["recipe_type"] for m in machines.values() if m["recipe_type"]}
     check_emitted(items, recipe_types, failures)
 

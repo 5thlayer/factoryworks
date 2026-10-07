@@ -97,8 +97,7 @@ public final class PFGameTests {
             SteamChainTests.register(registrar);
             AssemblingMachineTests.register(registrar);
             AssemblingFluidTests.register(registrar);
-            ChemicalPlantTests.register(registrar);
-            OilRefineryTests.register(registrar);
+            AssemblerOilChainTests.register(registrar);
             FootprintBreakTests.register(registrar);
             RadarTests.register(registrar);
             PumpjackTests.register(registrar);

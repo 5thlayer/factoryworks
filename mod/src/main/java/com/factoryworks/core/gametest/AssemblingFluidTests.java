@@ -94,7 +94,7 @@ final class AssemblingFluidTests {
                 .thenSucceed();
     }
 
-    /** Concrete is the water recipe and tier 1 takes no fluid at all, so either fluid recipe is refused. */
+    /** The Pack gives tier 1 no `crafting-with-fluid` (ADR-0125), so either fluid recipe is refused. */
     private static void tierOneRefuses(GameTestHelper helper) {
         AssemblerBlockEntity machine = place(helper, AssemblerTier.ONE);
         ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());

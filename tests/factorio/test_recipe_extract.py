@@ -29,8 +29,8 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 # change here is a change to a registered machine's GUI, so it fails rather than drifts.
 EXPECTED_IO = {
     "assembling": (5, 1, 1, 1),
-    "chemical_plant": (2, 1, 2, 1),
-    "oil_refinery": (0, 0, 2, 3),
+    "chemistry": (2, 1, 2, 1),
+    "oil_processing": (0, 0, 2, 3),
     "rocket_silo": (3, 1, 0, 0),
     "smelting": (1, 1, 0, 0),
     "centrifuge": (1, 2, 0, 0),

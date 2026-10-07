@@ -36,14 +36,14 @@ var RECIPE_SURVIVORS = [
     why: "ADR-0118: Craftworks' Assemblers and Personal Assembler read Factorio's three assembling categories on Craftworks' type. The sweep keeps only the pack's own ids on it, so Craftworks' built-in recipes are removed. ADR-0031: the corpus authors every recipe it contains."
   },
   {
-    surface: 'chemical_plant',
+    surface: 'chemistry',
     type: 'craftworks:assembling',
-    why: "ADR-0123: Craftworks' Chemical Plant holds Factorio's chemistry category on Craftworks' type, which the assembling entry already admits. ADR-0031: the corpus authors every recipe it contains."
+    why: "ADR-0125: Factorio's chemistry recipes run on Craftworks' Assembler 2 and 3 as `crafting-with-fluid`, on Craftworks' type, which the assembling entry already admits. ADR-0031: the corpus authors every recipe it contains."
   },
   {
-    surface: 'oil_refinery',
+    surface: 'oil_processing',
     type: 'craftworks:assembling',
-    why: "ADR-0124: Craftworks' Oil Refinery holds Factorio's oil-processing category on Craftworks' type, which the assembling entry already admits. ADR-0031: the corpus authors every recipe it contains."
+    why: "ADR-0125: Factorio's oil-processing recipes run on Craftworks' Assembler 2 and 3 as `crafting-with-fluid`, on Craftworks' type, which the assembling entry already admits. ADR-0031: the corpus authors every recipe it contains."
   },
   {
     surface: 'smelting',

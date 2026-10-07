@@ -80,7 +80,7 @@ classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there 
 recipes name their items.
 
 What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279),
-`BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#559), `AssemblingFluidTests` (#580), `ChemicalPlantTests` (#582), `OilRefineryTests` (#491)
+`BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#559), `AssemblingFluidTests` (#580), `AssemblerOilChainTests` (#644)
 `PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545, #546), and `BeltworksPackTests`, registered only when
 Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
 (#438). `ShowcaseSceneTests` (#538) build the `core/showcase/` scenes that `/factoryworks showcase` builds
@@ -150,17 +150,16 @@ And that a mining drill broken at its anchor or at any part, through the player'
 none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
 `affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
 moving it back to the block turns both part tests red.
-The Overload Limit's rule is `OverloadLimitTest`. `ChemicalPlantTests` holds what the Pack owns of Craftworks' Chemical Plant
-(#582, ADR-0123), which is how it meets Pipeworks: with a creative pole beside it, a segment of
-petroleum gas on one connection and coal in its slot make plastic, and a segment of water on one
-connection with sulfur and iron in its slots sends sulfuric acid out through a pipe on the opposite
-edge to a storage tank. `OilRefineryTests` holds what the Pack owns of Craftworks' Oil Refinery
-(#581, ADR-0124): a Pumpjack on a full well, a line of Pipeworks pipes from it to the refinery's last
-connection, water from a tank at the one before and a creative pole between them make heavy oil, light
-oil and petroleum gas, which leave by the first three connections through pipes into three tanks, one
-fluid to a tank and in whole crafts of 25, 45 and 55 mB, with only crude ever in the crude line. The
-connections have no direction, so that order is the test's to choose and it is the order a refinery
-tries them in. Craftworks' own GameTests hold both machines, and neither asserts on art
+The Overload Limit's rule is `OverloadLimitTest`. `AssemblerOilChainTests` holds what the Pack owns of its chemistry
+and oil recipes on Craftworks' Assembler (#644, ADR-0125), which is how they meet Pipeworks: with a creative
+pole beside it, an Assembler 2 with a segment of petroleum gas on one connection and coal in its slot makes
+plastic, and one with a segment of water on the connection it faces and sulfur and iron in its slots sends
+sulfuric acid out of the opposite edge through a pipe to a storage tank. An Assembler 3 on advanced oil
+processing, with water and crude from two tanks behind it, sends heavy oil, light oil and petroleum gas out
+of the three connections it faces through pipes into three tanks, one fluid to a tank and in whole crafts of
+25, 45 and 55 mB. The middle output pipe touches the other two, so the test closes its sides toward them.
+The connections have no direction and the Assembler pushes through the three it faces first, so the products
+leave there and the supplies stay full. Craftworks' own GameTests hold the Assembler, and none asserts on art
 (ADR-0119). And that the screen's status (#332) is recomputed on
 each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
 cycle stops the machine; forcing the power probe true turns it red. The precedence is

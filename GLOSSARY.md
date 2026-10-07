@@ -479,14 +479,6 @@ _Avoid_: fuel type, burnable, fuel class
 
 ### The oil chapter
 
-**Oil Refinery**:
-The machine that splits crude: basic and advanced oil processing, two fluids in and three out, the only machine in the pack that emits three fluids at once (ADR-0025). Craftworks' Oil Refinery (`craftworks:oil_refinery`, ADR-0124), a 5x5 on the ground and three blocks tall on Craftworks' own art. It holds a **Held recipe** of the `oil-processing` category of `craftworks:assembling`, and takes and gives its fluid through five connections that any pipe or tank beside one serves, so the Pumpjack's crude reaches it through Pipeworks pipes. The Pack registers no Oil Refinery. Coal liquefaction is Space Age and arrives with Ignus or not at all (#12).
-_Avoid_: distillation tower, refinery multiblock, cracker, refinery chamber
-
-**Chemical Plant**:
-The machine carrying Factorio's chemical-plant recipe list: both crackings, lubricant, plastic, sulfur, solid fuel, sulfuric acid and battery (ADR-0025). Up to two items and two fluids in, one item and one fluid out. Craftworks' Chemical Plant (`craftworks:chemical_plant`, ADR-0123), a 3x3 two blocks tall on Craftworks' own art. It holds a **Held recipe** of the `chemistry` category of `craftworks:assembling`, and takes and gives its fluid through four connections that any pipe or tank beside one serves. The Pack registers no Chemical Plant.
-_Avoid_: chemical reactor, chem plant, reaction chamber, centrifuge
-
 **Oil well**:
 One block that holds an amount of **Crude Oil** and never runs dry: each draw lowers its yield toward a floor, where it stays. A crude-oil field is a scattering of wells, not a filled patch.
 _Avoid_: oil spring, oil deposit, bedrock fluid deposit
@@ -514,7 +506,7 @@ _Avoid_: the oil rung, rung 4, the petroleum tier
 ### The nuclear chapter
 
 **Centrifuge**:
-The machine carrying Factorio's `centrifuging` recipes: uranium processing, and fuel reprocessing at rung 4. A pack block on the crafting chassis wearing Oritech's Foundry, on the Foundry's footprint, holding a **Held recipe** of its own type (ADR-0098). Not Oritech's Centrifuge, whose model the **Chemical Plant** wears.
+The machine carrying Factorio's `centrifuging` recipes: uranium processing, and fuel reprocessing at rung 4. A pack block on the crafting chassis wearing Oritech's Foundry, on the Foundry's footprint, holding a **Held recipe** of its own type (ADR-0098).
 _Avoid_: isotopic centrifuge, enrichment plant, foundry
 
 **U-235**:

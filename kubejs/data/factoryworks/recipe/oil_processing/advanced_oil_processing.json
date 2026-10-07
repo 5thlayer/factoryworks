@@ -1,6 +1,6 @@
 {
   "type": "craftworks:assembling",
-  "category": "oil-processing",
+  "category": "crafting-with-fluid",
   "hand_craftable": false,
   "ingredients": [],
   "fluid_ingredients": [

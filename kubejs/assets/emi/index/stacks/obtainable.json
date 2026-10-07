@@ -49,12 +49,6 @@
       "stack": "item:craftworks:assembler_2"
     },
     {
-      "stack": "item:craftworks:chemical_plant"
-    },
-    {
-      "stack": "item:craftworks:oil_refinery"
-    },
-    {
       "stack": "item:factoryworks:advanced_circuit"
     },
     {

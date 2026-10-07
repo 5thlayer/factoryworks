@@ -188,10 +188,8 @@
       "ticket": 135
     },
     "chemical-plant": {
-      "kind": "item",
-      "target": "craftworks:chemical_plant",
-      "source": "borrowed",
-      "note": "Craftworks' Chemical Plant, a 3x3 two blocks tall that holds a Held recipe of Factorio's `chemistry` category (ADR-0123). The converter emits Factorio's recipe for it onto `craftworks:assembling`."
+      "status": "not_emitted",
+      "note": "Dropped by #644: Craftworks has no Chemical Plant (Craftworks ADR-0018), and Factorio's Chemical Plant recipes run on Assembler 2 and 3 (ADR-0125)."
     },
     "chemical-science-pack": {
       "kind": "item",
@@ -427,7 +425,7 @@
       "kind": "fluid",
       "target": "factoryworks:heavy_oil",
       "source": "authored",
-      "note": "Core's heavy oil (#619, ADR-0109): the heaviest of the three fractions the Oil Refinery splits crude into. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
+      "note": "Core's heavy oil (#619, ADR-0109): the heaviest of the three fractions advanced oil processing splits crude into. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "heavy-oil-barrel": {
       "status": "native_mechanic",
@@ -538,7 +536,7 @@
       "kind": "fluid",
       "target": "factoryworks:lubricant",
       "source": "authored",
-      "note": "Core's lubricant (#619, ADR-0109), made from heavy oil in the Chemical Plant. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
+      "note": "Core's lubricant (#619, ADR-0109), made from heavy oil. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "lubricant-barrel": {
       "status": "native_mechanic",
@@ -583,10 +581,8 @@
       "ticket": 213
     },
     "oil-refinery": {
-      "kind": "item",
-      "target": "craftworks:oil_refinery",
-      "source": "borrowed",
-      "note": "Craftworks' Oil Refinery, a 5x5 three blocks tall that holds a Held recipe of Factorio's `oil-processing` category (ADR-0124). The converter emits Factorio's recipes for it onto `craftworks:assembling`; its three fractions are the oil fluid rows."
+      "status": "not_emitted",
+      "note": "Dropped by #644: Craftworks has no Oil Refinery (Craftworks ADR-0018), and Factorio's Oil Refinery recipes run on Assembler 2 and 3 (ADR-0125)."
     },
     "oxide-asteroid-chunk": {
       "status": "undecided",
@@ -632,7 +628,7 @@
       "kind": "item",
       "target": "factoryworks:plastic_bar",
       "source": "authored",
-      "note": "Plastic gates rung 2 (ADR-0025) and a rung-boundary row authors rather than borrows (ADR-0031). Its recipe is `pack:chemical_plant` and waits on #107; the ITEM exists now, so the recipes that consume it are not blocked on a machine they do not use."
+      "note": "Plastic gates rung 2 (ADR-0025) and a rung-boundary row authors rather than borrows (ADR-0031). Its recipe runs on Assembler 2 and 3 (ADR-0125)."
     },
     "power-armor": {
       "status": "undecided",
@@ -781,7 +777,7 @@
       "kind": "item",
       "target": "factoryworks:solid_fuel",
       "source": "authored",
-      "note": "GregTech ships no solid fuel item and borrowing `minecraft:coal` would have the oil chapter print an ore the pack mines, which ADR-0032's 1:1 stance forbids. Burnable, made from the oil fractions in the Chemical Plant. Feeds `rocket-fuel`."
+      "note": "GregTech ships no solid fuel item and borrowing `minecraft:coal` would have the oil chapter print an ore the pack mines, which ADR-0032's 1:1 stance forbids. Burnable, made from the oil fractions. Feeds `rocket-fuel`."
     },
     "space-platform-foundation": {
       "status": "undecided",
@@ -888,13 +884,13 @@
       "kind": "item",
       "target": "factoryworks:sulfur",
       "source": "authored",
-      "note": "A Pack item with Stand-in art (ADR-0109). Its RECIPE is `pack:chemical_plant` and waits on #107."
+      "note": "A Pack item with Stand-in art (ADR-0109). Its recipe runs on Assembler 2 and 3 (ADR-0125)."
     },
     "sulfuric-acid": {
       "kind": "fluid",
       "target": "factoryworks:sulfuric_acid",
       "source": "authored",
-      "note": "Core's sulfuric acid (#619, ADR-0109), made from sulfur, iron and water in the Chemical Plant. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
+      "note": "Core's sulfuric acid (#619, ADR-0109), made from sulfur, iron and water. Drawn from an Oritech sprite, tinted toward Factorio's `base_color`; `tests/pack/test_fluid_tints.py` holds the tint."
     },
     "sulfuric-acid-barrel": {
       "status": "native_mechanic",

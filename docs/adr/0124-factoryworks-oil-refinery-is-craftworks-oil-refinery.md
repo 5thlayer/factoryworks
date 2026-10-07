@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0125
 ---
 
 # FactoryWorks' Oil Refinery is Craftworks' Oil Refinery

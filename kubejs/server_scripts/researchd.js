@@ -154,16 +154,15 @@ fromFactorio('fluid-handling', {
   ]
 });
 
-// Also grants `oil-processing`'s four unlocks. That node's trigger is mining crude oil, a fluid, and
-// no Researchd method reads a fluid, so declared on its own it would be a dead gate on the Chemical
-// Plant. It costs nothing in Factorio, so the pair's pack cost is unchanged (#206, #138).
+// Also grants `oil-processing`'s unlock. That node's trigger is mining crude oil, a fluid, and no
+// Researchd method reads a fluid, so declared on its own it would be a dead gate (#206, #138).
+// Advanced oil processing is the only petroleum source, and chemical science needs petroleum, so
+// it unlocks here rather than behind chemical science (#644).
 fromFactorio('oil-gathering', {
   icon: 'factoryworks:pumpjack',
   unlocks: [
     'factoryworks:assembling/pumpjack',
-    'factoryworks:assembling/oil_refinery',
-    'factoryworks:assembling/chemical_plant',
-    'factoryworks:oil_processing/basic_oil_processing',
+    'factoryworks:oil_processing/advanced_oil_processing',
     'factoryworks:chemistry/solid_fuel_from_petroleum_gas'
   ]
 });
@@ -177,9 +176,8 @@ fromFactorio('plastics', {
 });
 
 fromFactorio('advanced-oil-processing', {
-  icon: 'craftworks:oil_refinery',
+  icon: 'factoryworks:solid_fuel',
   unlocks: [
-    'factoryworks:oil_processing/advanced_oil_processing',
     'factoryworks:chemistry/heavy_oil_cracking',
     'factoryworks:chemistry/light_oil_cracking',
     'factoryworks:chemistry/solid_fuel_from_heavy_oil',

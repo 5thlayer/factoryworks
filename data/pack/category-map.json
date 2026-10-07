@@ -9,14 +9,15 @@
     "A `!` prefix means the category is deliberately not routed: the converter emits nothing",
     "and says why. It is not the same as a category missing from this file, which is a hard",
     "failure -- a new Factorio version adding a category must not silently drop its recipes.",
-    "A `recipe_type` of null is a machine that is not registered yet, and `blocked_by` names the ticket that registers it. `scripts/factorio-recipe-convert.py` reads both, so the converter holds no table of its own. A null with no `blocked_by` is a machine nobody has ticketed."
+    "A `recipe_type` of null is a machine that is not registered yet, and `blocked_by` names the ticket that registers it. `scripts/factorio-recipe-convert.py` reads both, so the converter holds no table of its own. A null with no `blocked_by` is a machine nobody has ticketed.",
+    "A machine's `category` replaces the Factorio category its recipes carry, for a Factorio category Craftworks does not have; `recipe_dir` replaces its recipe type's path in the recipe id."
   ],
   "routes": {
     "crafting": "assembling",
     "advanced-crafting": "assembling",
     "crafting-with-fluid": "assembling",
-    "chemistry": "chemical_plant",
-    "oil-processing": "oil_refinery",
+    "chemistry": "chemistry",
+    "oil-processing": "oil_processing",
     "smelting": "smelting",
     "rocket-building": "rocket_silo",
     "centrifuging": "centrifuge",
@@ -33,17 +34,19 @@
   "machines": {
     "assembling": {
       "recipe_type": "craftworks:assembling",
-      "note": "Factorio's Assembling Machine 1/2/3, which are Craftworks' Assemblers (ADR-0118), and the Personal Assembler. One type across the three Factorio categories, each recipe carrying its `category` and `hand_craftable`: the converter sets the flag for a first category of `crafting`, and Craftworks' Personal Assembler plans only a hand-craftable recipe. Recipe ids stay `factoryworks:assembling/<name>`."
+      "note": "Factorio's Assembling Machine 1/2/3, which are Craftworks' Assemblers (ADR-0118), and the Personal Assembler. Factorio's Chemical Plant and Oil Refinery have no machine of their own: their recipes run on Assembler 2 and 3 (ADR-0125). One type across the five Factorio categories, each recipe carrying its `category` and `hand_craftable`: the converter sets the flag for a first category of `crafting`, and Craftworks' Personal Assembler plans only a hand-craftable recipe. Recipe ids stay `factoryworks:assembling/<name>`."
     },
-    "chemical_plant": {
+    "chemistry": {
       "recipe_type": "craftworks:assembling",
       "recipe_dir": "chemistry",
-      "note": "Factorio's Chemical Plant, which is Craftworks' (`craftworks:chemical_plant`, ADR-0123). It holds the `chemistry` category of `craftworks:assembling`, and its recipes stay under `chemistry/` so their ids and research unlocks do not move."
+      "category": "crafting-with-fluid",
+      "note": "Factorio's Chemical Plant recipes, on Craftworks' Assembler 2 and 3: Craftworks has no Chemical Plant and no `chemistry` category (Craftworks ADR-0018), so they load as `crafting-with-fluid` (ADR-0125). They stay under `chemistry/` so their ids and research unlocks do not move."
     },
-    "oil_refinery": {
+    "oil_processing": {
       "recipe_type": "craftworks:assembling",
       "recipe_dir": "oil_processing",
-      "note": "Factorio's Oil Refinery, which is Craftworks' (`craftworks:oil_refinery`, ADR-0124). It holds the `oil-processing` category of `craftworks:assembling`, and its recipes stay under `oil_processing/` so their ids and research unlocks do not move."
+      "category": "crafting-with-fluid",
+      "note": "Factorio's Oil Refinery recipes, on Craftworks' Assembler 2 and 3: Craftworks has no Oil Refinery and no `oil-processing` category (Craftworks ADR-0018), so they load as `crafting-with-fluid` (ADR-0125). They stay under `oil_processing/` so their ids and research unlocks do not move."
     },
     "smelting": {
       "recipe_type": "factoryworks:smelting",
