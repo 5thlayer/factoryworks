@@ -86,6 +86,7 @@ Checks: `tests/pack/test_ore_assets.py`, `tests/factorio/test_resource_extract.p
 | `pack-check.sh` | installed jars match the packwiz manifest (ADR-0024) |
 | `config-orphans.py` | no `config/` entry belongs to an uninstalled mod |
 | `adr-backlink-check.sh` | every ticket an ADR `supersedes:` carries an `ADR-00NN` comment (needs authenticated `gh`) |
+| `art-worklist.py` | prints the stand-in, vendored and unknown art in `data/pack/art-provenance.json` (ADR-0122), and exits 1 if that manifest and the shipped art disagree; `art_provenance.py` is its library, shared with `tests/pack/test_art_provenance.py` |
 
 ## Launch + diagnostics
 

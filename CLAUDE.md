@@ -95,6 +95,7 @@ check's section there before editing it or the code it guards. Run the matching 
 |---|---|
 | Sapros trees, stromatolites, its five biomes | `tests/flora/test_flora_data.py` |
 | any block, blockstate, model, texture, lang key, loot table | `tests/pack/test_block_assets.py` |
+| any texture, model, animation, `.bbmodel` or store image or clip | `tests/pack/test_art_provenance.py` |
 | furnace tiers, `core/smelting/` | `test_furnace_assets.py`, `test_smelting_type.py`, `:factoryworks_core:test`, GameTest |
 | `core/wreck/`, the wreck generators | `tests/pack/test_wreck_assets.py`, GameTest |
 | a converter run | `test_recipe_names.py`, `test_recipe_convert.py`, `test_smelting_shape.py`, `test_recipe_duplication.py`, `test_hand_recipes.py`, `check-datapack-load.py` |
