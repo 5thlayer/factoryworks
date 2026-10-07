@@ -153,13 +153,13 @@ moving it back to the block turns both part tests red.
 The Overload Limit's rule is `OverloadLimitTest`. `AssemblerOilChainTests` holds what the Pack owns of its chemistry
 and oil recipes on Craftworks' Assembler (#644, ADR-0125), which is how they meet Pipeworks: with a creative
 pole beside it, an Assembler 2 with a segment of petroleum gas on one connection and coal in its slot makes
-plastic, and one with a segment of water on the connection it faces and sulfur and iron in its slots sends
-sulfuric acid out of the opposite edge through a pipe to a storage tank. An Assembler 3 on advanced oil
-processing, with water and crude from two tanks behind it, sends heavy oil, light oil and petroleum gas out
-of the three connections it faces through pipes into three tanks, one fluid to a tank and in whole crafts of
-25, 45 and 55 mB. The middle output pipe touches the other two, so the test closes its sides toward them.
-The connections have no direction and the Assembler pushes through the three it faces first, so the products
-leave there and the supplies stay full. Craftworks' own GameTests hold the Assembler, and none asserts on art
+plastic, and one with a segment of water on a connection of the edge it faces and sulfur and iron in its slots sends
+sulfuric acid out of a connection of the opposite edge through a pipe to a storage tank. An Assembler 3 on advanced oil
+processing, with water and crude from two tanks on its fourth and sixth connections, sends heavy oil, light
+oil and petroleum gas out of the first three through pipes into three tanks, one fluid to a tank and in
+whole crafts of 25, 45 and 55 mB. Craftworks 0.7.0 spaces the six connections, so no two pipes touch and the
+test closes no pipe side. The connections have no direction and the Assembler pushes through them in
+`FluidLayout.ASSEMBLER`'s order, so the products leave by the first three and the supplies stay full. Craftworks' own GameTests hold the Assembler, and none asserts on art
 (ADR-0119). And that the screen's status (#332) is recomputed on
 each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
 cycle stops the machine; forcing the power probe true turns it red. The precedence is

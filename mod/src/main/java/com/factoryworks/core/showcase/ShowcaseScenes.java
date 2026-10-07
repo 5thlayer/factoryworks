@@ -5,6 +5,7 @@ import io.github._5thlayer.craftworks.machine.AssemblerTier;
 import io.github._5thlayer.craftworks.machine.Assemblers;
 import io.github._5thlayer.groundworks.Footprint;
 import io.github._5thlayer.wireworks.WireworksRegistries;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +33,6 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import io.github._5thlayer.pipeworks.PipeworksRegistries;
-import io.github._5thlayer.pipeworks.api.FluidPipes;
 
 /**
  * Factories built for filming the Alpha's recruiting clips (#538), each on a smooth-stone floor
@@ -174,16 +174,17 @@ public final class ShowcaseScenes {
 
     /**
      * Crude from a Pumpjack and water from an Offshore Pump are refined on an Assembler 3, and its gas with
-     * coal becomes plastic on an Assembler 2 (ADR-0125). The Assembler pushes through the three connections
-     * it faces in order, so heavy oil, light oil and gas leave by the north, middle and south one; the
-     * middle pipe touches the other two, so its sides toward them are closed.
+     * coal becomes plastic on an Assembler 2 (ADR-0125). The Assembler pushes through its connections in order,
+     * so heavy oil and light oil leave by the two it faces and gas by the one behind it at the north; crude and
+     * water enter by the other behind it and the one at its south. The connections are spaced, so each of the
+     * five pipes is a network of its own and none has a side closed.
      */
     private static Product oil(Site site) {
         BlockPos well = new BlockPos(3, 0, 12);
         site.set(well, PFBlocks.OIL_WELL.get());
         site.blockEntity(well, OilWellBlockEntity.class).start(1_500_000);
         PFBlocks.PUMPJACK_FOOTPRINT.placeAll(site.level(), site.at(well.above()), Direction.NORTH);
-        BlockPos pump = new BlockPos(4, 1, 6);
+        BlockPos pump = new BlockPos(8, 1, 12);
         site.set(pump, PFBlocks.OFFSHORE_PUMP.get());
 
         BlockPos refinery = new BlockPos(8, 1, 8);
@@ -192,28 +193,26 @@ public final class ShowcaseScenes {
         BlockPos plant = new BlockPos(15, 1, 10);
         assembling(site, plant, AssemblerTier.TWO, Direction.WEST, "factoryworks:chemistry/plastic_bar");
 
-        for (BlockPos at : List.of(new BlockPos(3, 1, 10), new BlockPos(4, 1, 10), new BlockPos(5, 1, 10),
-                new BlockPos(6, 1, 10), new BlockPos(6, 1, 9))) {
-            pipe(site, at);
-        }
-        for (BlockPos at : List.of(pump.east(), new BlockPos(6, 1, 6), new BlockPos(6, 1, 7))) {
-            pipe(site, at);
-        }
+        pipes(site, new BlockPos(3, 1, 10), new BlockPos(4, 1, 10), new BlockPos(5, 1, 10), new BlockPos(5, 1, 9),
+                new BlockPos(6, 1, 9));
+        pipes(site, pump.north(), pump.north(2));
 
-        for (BlockPos at : List.of(new BlockPos(10, 1, 7), new BlockPos(10, 1, 6), new BlockPos(10, 1, 5))) {
-            pipe(site, at);
-        }
+        pipes(site, new BlockPos(10, 1, 7), new BlockPos(10, 1, 6), new BlockPos(10, 1, 5));
         site.set(new BlockPos(10, 1, 4), PipeworksRegistries.STORAGE_TANK.get());
-        BlockPos light = new BlockPos(10, 1, 8);
-        pipe(site, light);
-        pipe(site, light.above());
-        site.set(light.above(2), PipeworksRegistries.STORAGE_TANK.get());
-        for (BlockPos at : List.of(new BlockPos(10, 1, 9), new BlockPos(10, 1, 10), new BlockPos(11, 1, 10),
-                new BlockPos(12, 1, 10), new BlockPos(13, 1, 10))) {
-            pipe(site, at);
+        pipes(site, new BlockPos(10, 1, 9), new BlockPos(10, 2, 9));
+        site.set(new BlockPos(10, 3, 9), PipeworksRegistries.STORAGE_TANK.get());
+
+        List<BlockPos> gas = new ArrayList<>();
+        for (int z = 7; z >= 2; z--) {
+            gas.add(new BlockPos(6, 1, z));
         }
-        FluidPipes.close(site.level(), site.at(light), Direction.NORTH);
-        FluidPipes.close(site.level(), site.at(light), Direction.SOUTH);
+        for (int x = 7; x <= 13; x++) {
+            gas.add(new BlockPos(x, 1, 2));
+        }
+        for (int z = 3; z <= 9; z++) {
+            gas.add(new BlockPos(13, 1, z));
+        }
+        pipes(site, gas.toArray(BlockPos[]::new));
 
         stockedChest(site, new BlockPos(15, 1, 4), item("minecraft:coal"));
         loadingBelt(site, new BlockPos(15, 1, 5), Direction.SOUTH, 2);
@@ -229,6 +228,12 @@ public final class ShowcaseScenes {
         site.set(refinery.north(3), WireworksRegistries.CREATIVE_POLE.get());
         site.set(plant.east(3), WireworksRegistries.CREATIVE_POLE.get());
         return new Product(List.of(out), item("factoryworks:plastic_bar"));
+    }
+
+    private static void pipes(Site site, BlockPos... at) {
+        for (BlockPos pos : at) {
+            pipe(site, pos);
+        }
     }
 
     private static void assembling(Site site, BlockPos origin, String recipe) {

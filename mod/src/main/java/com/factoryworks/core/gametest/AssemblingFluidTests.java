@@ -41,8 +41,8 @@ final class AssemblingFluidTests {
 
     private static final BlockPos ORIGIN = new BlockPos(4, 1, 4);
     private static final Direction FACING = Direction.NORTH;
-    /** The block the north Fluid Connection pulls from, two from the origin. */
-    private static final BlockPos PIPE = ORIGIN.relative(FACING, 2);
+    /** The block the first Fluid Connection pulls from: two ahead of the origin and one to its left. */
+    private static final BlockPos PIPE = ORIGIN.relative(FACING, 2).relative(FACING.getCounterClockWise());
     private static final BlockPos TANK = PIPE.relative(FACING);
     private static final BlockPos POLE = ORIGIN.south(3);
 

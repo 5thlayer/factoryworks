@@ -32,9 +32,11 @@ crude is simpler to show.
 **Consequences.**
 
 - ADR-0123 and ADR-0124 are superseded.
-- Five fluids on one Assembler need five pipe networks, and the Assembler's connections stand side by side,
-  so neighbouring pipes join unless a side is closed. The Pack puts the Engineer's Picks in Pipeworks'
-  `closes_sides` tag, so a right-click with a Pick closes a pipe's side.
-- A Fluid Connection pushes into any neighbour that takes the fluid, and the Assembler tries the three
-  connections it faces first, so a supply line that runs dry takes a product. The oil scene and its game
-  test put the products on the connections the Assembler faces and keep the supplies full.
+- Five fluids on one Assembler need five pipe networks. Craftworks 0.7.0 spaces the six Fluid Connections so
+  that no two pipes beside them touch: the two ends of the edge it faces, the two ends of the opposite edge
+  and the centre of each side. Each fluid gets a pipe of its own with no side closed. The Pack still puts the
+  Engineer's Picks in Pipeworks' `closes_sides` tag, so a right-click with a Pick closes a pipe's side for a
+  player who wants to.
+- A Fluid Connection pushes into any neighbour that takes the fluid, and the Assembler tries its
+  connections in `FluidLayout.ASSEMBLER`'s order, so a supply line that runs dry takes a product. The oil
+  scene and its game test put the products on the first three connections and keep the supplies full.

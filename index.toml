@@ -298,7 +298,7 @@ hash = "0fdd81ea9ea08925755bb63465b761d527045caf67f2d654493a0b4b96fe4867"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "e7d0ff05b639226c9974640c34a70e9a73cc09f7691550c15d01baa60c0436a3"
+hash = "9d12be1f4f503a0182ab8aaeabb3162d6f21196ca595c0ca5e99ae6bf46295b0"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -2718,11 +2718,6 @@ metafile = true
 [[files]]
 file = "mods/controlling.pw.toml"
 hash = "8cd3a3e3f55d69d8fbb6aab75a721aaf7a8c1ec9d1bc64065380dcc9fdc39530"
-metafile = true
-
-[[files]]
-file = "mods/craftworks.pw.toml"
-hash = "0b08f699c71f1727061852e5a03a5ebbddeb4a9288463a4e3683528fe300d09f"
 metafile = true
 
 [[files]]

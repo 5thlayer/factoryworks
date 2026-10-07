@@ -9,7 +9,6 @@ import io.github._5thlayer.craftworks.machine.AssemblerTier;
 import io.github._5thlayer.craftworks.machine.Assemblers;
 import io.github._5thlayer.craftworks.machine.FluidLayout;
 import io.github._5thlayer.groundworks.Footprint;
-import io.github._5thlayer.pipeworks.api.FluidPipes;
 import io.github._5thlayer.pipeworks.api.FluidPorts;
 
 import net.minecraft.core.BlockPos;
@@ -35,7 +34,8 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
  *
  * <p>A Fluid Connection has no direction and pushes into any neighbour that takes the fluid, so a supply
  * stays full and an output pipe starts empty: an emptied supply pipe would take a product. The Assembler
- * pushes through its connections in {@link FluidLayout#ASSEMBLER}'s order, the three it faces first.
+ * pushes through its connections in {@link FluidLayout#ASSEMBLER}'s order, so the products leave by the first
+ * three and the supplies enter by the others. The sites are spaced, so no pipe touches another network (ADR-0125).
  */
 final class AssemblerOilChainTests {
 
@@ -76,7 +76,7 @@ final class AssemblerOilChainTests {
     private static void makesPlasticFromPipedGas(GameTestHelper helper) {
         AssemblerBlockEntity machine = place(helper, AssemblerTier.TWO, CHEMISTRY, CHEMISTRY_FACING);
         hold(helper, machine, PLASTIC, CHEMISTRY);
-        Connection in = connections(helper, CHEMISTRY, CHEMISTRY_FACING).get(1);
+        Connection in = connections(helper, CHEMISTRY, CHEMISTRY_FACING).get(0);
         List<BlockPos> pipes = line(helper, in, 2);
         int gas = 2 * 100;
 
@@ -105,13 +105,13 @@ final class AssemblerOilChainTests {
                 .thenSucceed();
     }
 
-    /** Water from a tank through the connection it faces, sulfur and iron in the slots; the acid leaves behind. */
+    /** Water from a tank through a connection on the edge it faces, sulfur and iron in the slots; the acid leaves by the edge behind. */
     private static void sendsAcidToATank(GameTestHelper helper) {
         AssemblerBlockEntity machine = place(helper, AssemblerTier.TWO, CHEMISTRY, CHEMISTRY_FACING);
         hold(helper, machine, SULFURIC_ACID, CHEMISTRY);
         List<Connection> connections = connections(helper, CHEMISTRY, CHEMISTRY_FACING);
-        BlockPos supply = tankAfter(helper, line(helper, connections.get(1), 2), connections.get(1).side());
-        BlockPos tank = tankAfter(helper, line(helper, connections.get(4), 2), connections.get(4).side());
+        BlockPos supply = tankAfter(helper, line(helper, connections.get(0), 2), connections.get(0).side());
+        BlockPos tank = tankAfter(helper, line(helper, connections.get(2), 2), connections.get(2).side());
 
         helper.startSequence()
                 .thenExecute(() -> {
@@ -136,29 +136,20 @@ final class AssemblerOilChainTests {
     }
 
     /**
-     * Crude and water from two tanks behind, and the three products out of the three connections it faces,
-     * each down its own pipe into its own tank. The middle output pipe touches the other two, so its sides
-     * toward them are closed, as a player closes them, and it rises to its tank.
+     * The three products out of the first three connections, each down its own pipe into its own tank, and water and
+     * crude into the fourth and sixth from tanks of their own. No two pipes touch, so none has a side closed.
      */
     private static void refinesPipedCrude(GameTestHelper helper) {
         AssemblerBlockEntity machine = place(helper, AssemblerTier.THREE, REFINING, REFINING_FACING);
         hold(helper, machine, ADVANCED, REFINING);
         List<Connection> connections = connections(helper, REFINING, REFINING_FACING);
-        Direction east = Direction.EAST;
 
-        List<BlockPos> first = line(helper, connections.get(0), 1);
-        first.add(pipe(helper, first.getLast().relative(east)));
-        List<BlockPos> middle = line(helper, connections.get(1), 1);
-        middle.add(pipe(helper, middle.getLast().above()));
-        List<BlockPos> last = line(helper, connections.get(2), 1);
-        last.add(pipe(helper, last.getLast().relative(east.getOpposite())));
-        FluidPipes.close(helper.getLevel(), middle.getFirst(), east);
-        FluidPipes.close(helper.getLevel(), middle.getFirst(), east.getOpposite());
-        List<BlockPos> outputs = List.of(tankAfter(helper, first, east), tankAfter(helper, middle, Direction.UP),
-                tankAfter(helper, last, east.getOpposite()));
-
-        BlockPos water = tankAfter(helper, line(helper, connections.get(3), 1), east);
-        BlockPos crude = tankAfter(helper, line(helper, connections.get(5), 1), east.getOpposite());
+        List<BlockPos> outputs = new ArrayList<>();
+        for (int i = 0; i < PRODUCTS.size(); i++) {
+            outputs.add(tankAfter(helper, line(helper, connections.get(i), 1), connections.get(i).side()));
+        }
+        BlockPos water = tankAfter(helper, line(helper, connections.get(3), 1), connections.get(3).side());
+        BlockPos crude = tankAfter(helper, line(helper, connections.get(5), 1), connections.get(5).side());
 
         helper.startSequence()
                 .thenExecute(() -> helper.setBlock(REFINING.east(3), LibraryBlocks.creativePole()))
@@ -207,7 +198,12 @@ final class AssemblerOilChainTests {
         List<Connection> found = new ArrayList<>();
         for (FluidLayout.Site site : FluidLayout.ASSEMBLER.connections()) {
             BlockPos block = at.relative(facing, site.ahead()).relative(facing.getClockWise(), site.right());
-            Direction side = site.face() == FluidLayout.Face.AHEAD ? facing : facing.getOpposite();
+            Direction side = switch (site.face()) {
+                case AHEAD -> facing;
+                case BEHIND -> facing.getOpposite();
+                case RIGHT -> facing.getClockWise();
+                case LEFT -> facing.getCounterClockWise();
+            };
             found.add(new Connection(block, side));
         }
         return found;
