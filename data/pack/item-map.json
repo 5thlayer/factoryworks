@@ -45,7 +45,7 @@
     "on a tag row cannot be emitted, because a result has to be one item.",
     "",
     "Quantities are NOT here. Nothing is scaled: item counts transfer 1:1 and 1 mB is one Factorio",
-    "A row may carry `components`, a data-component patch on the target item -- the science packs are one `researchd:research_pack` item told apart by a component, not four items. The converter emits those as a `neoforge:components` ingredient.",
+    "A row may carry `components`, a data-component patch on the target item, for an item told apart by a component rather than by its id. The converter emits those as a `neoforge:components` ingredient.",
     "fluid unit (#126, rewriting ADR-0025's table)."
   ],
   "items": {
@@ -89,13 +89,8 @@
       "ticket": 114
     },
     "automation-science-pack": {
-      "kind": "item",
-      "target": "researchd:research_pack",
-      "source": "borrowed",
-      "components": {
-        "researchd:research_pack": "factory_works:automation_science_pack"
-      },
-      "note": "ADR-0018's rung 1. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `factory_works:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
+      "status": "not_emitted",
+      "note": "Dropped by #645: the Showcase has no research, and nothing else consumes a science pack (ADR-0126)."
     },
     "barrel": {
       "kind": "item",
@@ -192,13 +187,8 @@
       "note": "Dropped by #644: Craftworks has no Chemical Plant (Craftworks ADR-0018), and Factorio's Chemical Plant recipes run on Assembler 2 and 3 (ADR-0125)."
     },
     "chemical-science-pack": {
-      "kind": "item",
-      "target": "researchd:research_pack",
-      "source": "borrowed",
-      "components": {
-        "researchd:research_pack": "factory_works:chemical_science_pack"
-      },
-      "note": "ADR-0018's rung 3. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `factory_works:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
+      "status": "not_emitted",
+      "note": "Dropped by #645: the Showcase has no research, and nothing else consumes a science pack (ADR-0126)."
     },
     "coal": {
       "kind": "item",
@@ -473,11 +463,8 @@
       "note": "A Pack item with Stand-in art (ADR-0109). As `iron-gear-wheel`."
     },
     "lab": {
-      "kind": "item",
-      "target": "researchd:research_lab",
-      "source": "borrowed",
-      "note": "Researchd's Lab, and #103 has it running running free without energy consumption. We will use this item but we need to either fork the mod to add energy capability or wait for an upstream update.",
-      "ticket": 103
+      "status": "not_emitted",
+      "note": "Dropped by #645: the Showcase has no research, so it has no Lab (ADR-0126)."
     },
     "landfill": {
       "status": "not_emitted",
@@ -514,13 +501,8 @@
       "ticket": 145
     },
     "logistic-science-pack": {
-      "kind": "item",
-      "target": "researchd:research_pack",
-      "source": "borrowed",
-      "components": {
-        "researchd:research_pack": "factory_works:logistic_science_pack"
-      },
-      "note": "ADR-0018's rung 2. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `factory_works:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
+      "status": "not_emitted",
+      "note": "Dropped by #645: the Showcase has no research, and nothing else consumes a science pack (ADR-0126)."
     },
     "long-handed-inserter": {
       "status": "not_emitted",
@@ -554,9 +536,8 @@
       "ticket": 114
     },
     "military-science-pack": {
-      "status": "undecided",
-      "note": "#118 answered that the pack has combat (ADR-0054, ADR-0055), and the pack authors it; Military science returns with it, and #228 owns what a sixth pack does to the ladder.",
-      "ticket": 228
+      "status": "not_emitted",
+      "note": "Dropped by #645: the Showcase has no research, and nothing else consumes a science pack (ADR-0126)."
     },
     "modular-armor": {
       "status": "undecided",
@@ -649,13 +630,8 @@
       "note": "As `electronic-circuit`."
     },
     "production-science-pack": {
-      "kind": "item",
-      "target": "researchd:research_pack",
-      "source": "borrowed",
-      "components": {
-        "researchd:research_pack": "factory_works:production_science_pack"
-      },
-      "note": "ADR-0018's rung 4. A Researchd RESEARCH PACK, not an item of this pack's own: `kubejs/server_scripts/researchd.js` declares it with `registerResearchPacks` and the player holds `researchd:research_pack` carrying a `researchd:research_pack` data component. The declared id is `factory_works:` -- an underscore, and not this pack's item namespace. Registering a plain item of the same name would ship a second, inert pack the Lab cannot read."
+      "status": "not_emitted",
+      "note": "Dropped by #645: the Showcase has no research, and nothing else consumes a science pack (ADR-0126)."
     },
     "productivity-module": {
       "status": "undecided",
@@ -790,9 +766,8 @@
       "ticket": 340
     },
     "space-science-pack": {
-      "status": "undecided",
-      "note": "Made in orbit in Space Age, so it waits on the platform: Post-launch orbit. GCyR left with ADR-0060, so the space chapter has no host mod; #340 holds the wait on Oritech: Space Age.",
-      "ticket": 340
+      "status": "not_emitted",
+      "note": "Dropped by #645: the Showcase has no research, and nothing else consumes a science pack (ADR-0126)."
     },
     "speed-module": {
       "status": "undecided",
@@ -953,9 +928,8 @@
       "note": "Raw Uranium, what a pack uranium ore block pays out (#321). A Pack item with Stand-in art (ADR-0109), named `raw_uranium` because `factoryworks:uranium_ore` is the ore block; a block has to carry an amount (ADR-0041)."
     },
     "utility-science-pack": {
-      "status": "undecided",
-      "note": "Not a space item: ADR-0018 reserves it for after the first launch, and #139 owns the post-launch production rung.",
-      "ticket": 139
+      "status": "not_emitted",
+      "note": "Dropped by #645: the Showcase has no research, and nothing else consumes a science pack (ADR-0126)."
     },
     "water": {
       "kind": "fluid",

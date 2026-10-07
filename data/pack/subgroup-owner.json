@@ -168,7 +168,7 @@
         "assembling-machine-3": "pack:assembling",
         "chemical-plant": "not_emitted",
         "oil-refinery": "not_emitted",
-        "lab": "pack:assembling",
+        "lab": "not_emitted",
         "centrifuge": "pack:assembling"
       },
       "note": [
@@ -181,8 +181,7 @@
         "`centrifuge` is the machine that runs `centrifuging`. #89 shipped the chapter (ADR-0033), so the",
         "Centrifuge is a pack machine on the GT chassis and its own build recipe is ordinary `pack:assembling`.",
         "",
-        "Researchd's Research Lab replaces Factorio's `lab` (#45); the row stays so the item map has",
-        "something to point at."
+        "The Showcase has no research, so `lab` emits nothing (ADR-0126)."
       ],
       "count": 7
     },
@@ -205,13 +204,13 @@
     },
     "intermediate-products/science-pack": {
       "owner": "pack",
-      "reason": "#26 keeps four rungs and drops the rest; the four that survive are Assembling Machine recipes.",
+      "reason": "The Showcase has no research, so no science pack is made (ADR-0126, #645).",
       "adr_row": "Assembly -- the pack (ADR-0026)",
       "per_recipe": {
-        "automation-science-pack": "pack:assembling",
-        "logistic-science-pack": "pack:assembling",
-        "chemical-science-pack": "pack:assembling",
-        "production-science-pack": "pack:assembling",
+        "automation-science-pack": "not_emitted",
+        "logistic-science-pack": "not_emitted",
+        "chemical-science-pack": "not_emitted",
+        "production-science-pack": "not_emitted",
         "military-science-pack": "not_emitted",
         "utility-science-pack": "not_emitted",
         "space-science-pack": "not_emitted"
@@ -424,10 +423,6 @@
         "uranium-fuel-cell": "pack:assembling"
       },
       "note": [
-        "`uranium-processing` is a TRIGGER technology in Factorio 2.x -- `cost_kind: trigger`, no packs at",
-        "all -- so it ships as packless research at rung 3 on Researchd's `CheckItemPresenceResearchMethod`,",
-        "which #42 already sanctioned at any rung.",
-        "",
         "`uranium-fuel-cell` is `crafting` and fluid-free, so #88's rule makes it Personal-Assembler",
         "craftable with no judgement call: nothing here carves an exception.",
         "",

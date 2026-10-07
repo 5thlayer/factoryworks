@@ -8,7 +8,7 @@ the set from the corpus rather than from the converter, so a change to the conve
 being consistent with itself, and holds every emitted recipe, whichever script wrote it, to it.
 
 It also asserts the `factoryworks:hand/*` copies are gone for good: the generator, the id list and
-`withHandCopies` in the DSL, since Researchd now locks the recipe the Personal Assembler plans.
+`withHandCopies`, since the hand set is a flag on the machine recipe.
 
 Usage: tests/factorio/test_hand_recipes.py
 """

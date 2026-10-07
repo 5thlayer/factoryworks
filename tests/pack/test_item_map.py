@@ -143,7 +143,7 @@ def resolves(target):
     elif namespace == "minecraft":
         keys = vanilla_lang()
     else:
-        # An item a jar names by some other key, such as Researchd's Lab, is still in the registry.
+        # An item a jar names by some other key is still in the registry.
         if target in jar_registry():
             return True
         keys = jar_lang().get(namespace, set())

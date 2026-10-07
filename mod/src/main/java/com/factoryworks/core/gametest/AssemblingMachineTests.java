@@ -5,9 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import com.portingdeadmods.researchd.api.ResearchdApi;
-import com.portingdeadmods.researchd.api.team.ResearchTeam;
-import com.portingdeadmods.researchd.api.team.ResearchTeamManager;
 import io.github._5thlayer.craftworks.machine.AssemblerBlockEntity;
 import io.github._5thlayer.craftworks.machine.AssemblerMenu;
 import io.github._5thlayer.craftworks.machine.AssemblerSlots;
@@ -35,8 +32,8 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 
 /**
  * What the pack still owns of the Assemblers, which are Craftworks' (ADR-0118): that one on a pole
- * powers and crafts a pack recipe, that Fill Recipe is refused for a recipe the player's team has not
- * researched, and that every assembling recipe the pack ships is one some tier can hold.
+ * powers and crafts a pack recipe, that Fill Recipe holds a recipe for a player who has unlocked
+ * nothing, and that every assembling recipe the pack ships is one some tier can hold.
  *
  * <p>The Assembler's own behaviour is Craftworks' GameTests. Craftworks names no Consumer API yet, so
  * these calls reach its internals until craftworks#37 does. Copper cable is the fixture: one plate
@@ -50,12 +47,6 @@ final class AssemblingMachineTests {
     private static final String PREFIX = "factoryworks:assembling/";
     private static final Identifier CABLE = Identifier.parse(PREFIX + "copper_cable");
 
-    /** A research unlocks it, so a team that has researched nothing has it blocked. */
-    private static final Identifier LOCKED_RECIPE = CABLE;
-
-    /** Under no research's unlocks, so nothing locks it. */
-    private static final Identifier FREE_RECIPE = Identifier.parse(PREFIX + "iron_gear_wheel");
-
     private static final int TICKS_PER_CRAFT = 20;
 
     private AssemblingMachineTests() {
@@ -64,8 +55,8 @@ final class AssemblingMachineTests {
     static void register(PFGameTests.Registrar tests) {
         tests.test("an_assembler_on_a_pole_powers_and_crafts_a_pack_recipe", 160,
                 AssemblingMachineTests::poweredByAPoleCrafts);
-        tests.test("fill_recipe_is_refused_for_a_recipe_the_team_has_not_researched", 20,
-                AssemblingMachineTests::refusesAnUnresearchedRecipe);
+        tests.test("fill_recipe_holds_a_recipe_for_a_player_who_has_unlocked_nothing", 20,
+                AssemblingMachineTests::holdsWithNothingUnlocked);
         tests.test("every_pack_assembling_recipe_can_be_held_by_some_tier", 20,
                 AssemblingMachineTests::someTierHoldsEveryRecipe);
     }
@@ -96,34 +87,16 @@ final class AssemblingMachineTests {
                 .thenSucceed();
     }
 
-    /** The Lock source is asked once, of the player who presses (Craftworks ADR-0013): a recipe a research unlocks is refused, one no research unlocks is held. */
-    private static void refusesAnUnresearchedRecipe(GameTestHelper helper) {
+    /** The Showcase has no research, so the Pack's config names no Lock source (ADR-0126). */
+    private static void holdsWithNothingUnlocked(GameTestHelper helper) {
         AssemblerBlockEntity machine = place(helper, AssemblerTier.ONE);
         ServerPlayer player = FakePlayerFactory.getMinecraft(helper.getLevel());
-        ResearchTeamManager teams = ResearchdApi.getTeamManager(helper.getLevel());
-        if (teams == null) {
-            helper.fail("Researchd has no team manager in this world, so nothing can lock a recipe", ORIGIN);
+        AssemblerMenu menu = (AssemblerMenu) machine.createMenu(0, player.getInventory(), player);
+        HoldVerdict verdict = menu.request(player, CABLE);
+        if (verdict != HoldVerdict.HELD || !machine.heldRecipe().equals(Optional.of(CABLE))) {
+            helper.fail("Fill Recipe on " + CABLE + " was answered " + verdict + " and left " + machine.heldRecipe(),
+                    ORIGIN);
             return;
-        }
-        ResearchTeam team = teams.createDefaultTeam(player);
-        teams.addTeam(team);
-        try {
-            AssemblerMenu menu = (AssemblerMenu) machine.createMenu(0, player.getInventory(), player);
-            HoldVerdict locked = menu.request(player, LOCKED_RECIPE);
-            if (locked != HoldVerdict.LOCKED || machine.heldRecipe().isPresent()) {
-                helper.fail("Fill Recipe on an unresearched " + LOCKED_RECIPE + " was answered " + locked
-                        + " and left " + machine.heldRecipe(), ORIGIN);
-                return;
-            }
-            HoldVerdict free = menu.request(player, FREE_RECIPE);
-            if (free != HoldVerdict.HELD || !machine.heldRecipe().equals(Optional.of(FREE_RECIPE))) {
-                helper.fail("Fill Recipe on " + FREE_RECIPE + ", which no research unlocks, was answered " + free
-                        + " and left " + machine.heldRecipe(), ORIGIN);
-                return;
-            }
-        } finally {
-            teams.removeTeam(team.getId());
-            ResearchdApi.getResearchEffectManager(helper.getLevel()).clearTeam(team.getId());
         }
         helper.succeed();
     }

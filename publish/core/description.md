@@ -2,7 +2,7 @@
 
 FactoryWorks Core holds the machines and rules of the FactoryWorks modpack: the furnaces, mining drills, the Boiler and Steam Engine, electric poles, the Radar, ore patches that hold an amount and run out, and the ore fields and oil wells laid across Terra. Each runs at the rates Factorio gives it.
 
-It adds no recipes and no research of its own. Those live in the modpack's scripts and data, so the mod on its own places machines nobody can craft.
+It adds no recipes of its own. Those live in the modpack's scripts and data, so the mod on its own places machines nobody can craft.
 
 **NeoForge, Minecraft 26.1.2 only.**
 

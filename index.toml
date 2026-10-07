@@ -38,7 +38,7 @@ hash = "e9cb1bd8cb65cb90271d08cc9ebefa48595716f623a7316cfdee8f76ec2194d1"
 
 [[files]]
 file = "REUSE.toml"
-hash = "021462a7dd537f872432018c38471c04b283d6219a45e35eaef0844bd61c9faf"
+hash = "e9ef4427cdd0ae13dcea79ea67b097cb6dbbfc9cf0b7584ec139a8edddefd1e0"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -54,7 +54,7 @@ hash = "0b68a3b324f4a172d577a10446593b8f64f38e37199c928b0fc5aee152baee00"
 
 [[files]]
 file = "config/craftworks-server.toml"
-hash = "c6c9a98411d6af98e7f5935c230380979e36d4eab5ba651320af50cc63f8cc70"
+hash = "5fbc58d914531208d13a862258d300e78b7de1c960ec660169bf155a1a03a16c"
 
 [[files]]
 file = "config/ferritecore-mixin.toml"
@@ -123,14 +123,6 @@ hash = "36258f1e7559079306b0e3d9e05ed49cf40d6f9e90bfba4ced8dfb75bb840649"
 [[files]]
 file = "config/placebo.cfg"
 hash = "6bbc71c6dc18b1ba4952e1bc54ed2b98c3a90f04cec4257ec3f7566cdf0c0e2a"
-
-[[files]]
-file = "config/researchd-common.toml"
-hash = "ff6d7ae15491acb223054ff3eb9d0ff2f0235923f98cb4686f7aab9e7a00eef7"
-
-[[files]]
-file = "config/researchd-server.toml"
-hash = "2a8e794b7b845cd30e450175794634aa94f67b3cafe80aba039263abdaded4da"
 
 [[files]]
 file = "config/sodium-mixins.properties"
@@ -270,11 +262,11 @@ hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "83f21d459a4a8f4e139ed9486250723b8e69150fce5d3fdfdf24600300bb3f2b"
+hash = "a31c16d89bd072b459a712ac96a7945217dddd023b28d8f39a9dfa2443099f1a"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "6c2655bf7b6b1a37fa53c94c7344b2b3e3204ad352d7a0244898dae257f7ffa7"
+hash = "5480207deb713e411eea04bc4126967d8fd6069d3ca3e237eedde110a37d6bfc"
 
 [[files]]
 file = "data/pack/art-provenance.json"
@@ -290,15 +282,15 @@ hash = "a06ddd6c447b79c7f97eda6aa668151b49867d5155b763c5f843ba8ee1cce2e1"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
-hash = "55a23833f6e3ecc1a784f02b4bfdf176c0d44951f18bdbb227235195e13d4ba8"
+hash = "98c53ac7b20e3386cb9290ce952be0261e8e4b6806a7622cc7c777e43dcf40b7"
 
 [[files]]
 file = "data/pack/item-map.json"
-hash = "0fdd81ea9ea08925755bb63465b761d527045caf67f2d654493a0b4b96fe4867"
+hash = "f5f310ceba2dd918675df9c1e7feee56bc1f750aa3540329f773ca404c394242"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "9d12be1f4f503a0182ab8aaeabb3162d6f21196ca595c0ca5e99ae6bf46295b0"
+hash = "2bfd5b176dd0c3df871545b90b6e388184300a7a93e490c555677b3b92b7e6a8"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -318,7 +310,7 @@ hash = "77e0adedfba2cc0093af3fff709800d67e96e3a295ad559b19b5c7b354d56e2f"
 
 [[files]]
 file = "data/pack/subgroup-owner.json"
-hash = "d6be47729b4b5054f5059831be14f3d5abf0fcff2c3610061b5be178cad22396"
+hash = "e51ea55305ecaa5b7d5deea37103ea476c6698e6e9c76e393bcb3d2c93da0129"
 
 [[files]]
 file = "defaultconfigs/ftbessentials-server.snbt"
@@ -334,7 +326,7 @@ hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
 
 [[files]]
 file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "2da07a0b587a06c61e64a1effb5dd43c706fd88a0fd9ec13a0b6e25289b68c0e"
+hash = "503ea3f904dd95a969381a6a4406ccaf54871af564f30b77e6abefe19843f3b7"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/boiler.json"
@@ -1701,10 +1693,6 @@ file = "kubejs/data/factoryworks/recipe/assembling/assembling_machine_2.json"
 hash = "6106c5014075411771d66f5bcc039a6304180c1ecbba376b659e2b34dd2b6c22"
 
 [[files]]
-file = "kubejs/data/factoryworks/recipe/assembling/automation_science_pack.json"
-hash = "c059aab51031bf10abda31637b4fd9c6f246e416e01fd50173683bdc837b9625"
-
-[[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/barrel.json"
 hash = "b16955d338f078d1ef9df8265fc314862110b51c62def7d6f2cc449f388aaa39"
 
@@ -1723,10 +1711,6 @@ hash = "4ba4d7c63f36036765032f6c804d3b6268cca519dc23cc3e8f934d417e0f741e"
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/burner_mining_drill.json"
 hash = "81cebd22bb02b74bb7fbe67694a7712963889ceaecdb2f72ef500b983a43af83"
-
-[[files]]
-file = "kubejs/data/factoryworks/recipe/assembling/chemical_science_pack.json"
-hash = "e5b4e29671dfe6581fc3d244fab583f1d5047f1685767be23422312173cadff5"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/concrete.json"
@@ -1801,16 +1785,8 @@ file = "kubejs/data/factoryworks/recipe/assembling/iron_stick.json"
 hash = "668c603715562ce7703dda3bd2d093742ca1cc95a9a90b38e391dacd539b1958"
 
 [[files]]
-file = "kubejs/data/factoryworks/recipe/assembling/lab.json"
-hash = "3a44c7f52baeef951289530431fec51085137ac5bcda7ef49d70e001286f9ce5"
-
-[[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/loader.json"
 hash = "166f91dd4bbffdca9953afb2cecb44dc2dd97410a009dee002d51b673d823fe2"
-
-[[files]]
-file = "kubejs/data/factoryworks/recipe/assembling/logistic_science_pack.json"
-hash = "09490249326b0b770f8c563529242731ae95a351fd544e2d6f2750a18e89c2f3"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/assembling/low_density_structure.json"
@@ -2629,14 +2605,6 @@ file = "kubejs/parked/data/factoryworks/worldgen/template_pool/electro_ruin.json
 hash = "86617f3214fa891dbf9c4009aab509f759da6a12dc09d4f8f0669cdd428ca979"
 
 [[files]]
-file = "kubejs/server_scripts/factorio_tech_data.js"
-hash = "30f321f08ef37e940df3d8f62b2c065b43fbe886d636a71fb6c233f88fa8005d"
-
-[[files]]
-file = "kubejs/server_scripts/factorio_tech_dsl.js"
-hash = "48808d4a3d868e7925cd891132bc70937cd38a7636a7f0290d1cf22bb5328020"
-
-[[files]]
 file = "kubejs/server_scripts/jsconfig.json"
 hash = "f15c97d8f27ee4fd7b51c3a5843723da5cc1d241b1d21d1a1de4baeea6c1bc90"
 
@@ -2653,10 +2621,6 @@ file = "kubejs/server_scripts/recipes.js"
 hash = "3f860157dc1487e58977c1b938c61a86aeb00d74a10a60b1def48cb5b2367e4c"
 
 [[files]]
-file = "kubejs/server_scripts/researchd.js"
-hash = "a4b592dc507827d6e919a5713c08b455d4dda15a5798fb609c1199806aa35bb6"
-
-[[files]]
 file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
 hash = "028aea8ceb339a87e48067837b5493228673d808596407345d3efdd09562c3ce"
 
@@ -2666,7 +2630,7 @@ hash = "f3ac4d11e187529c8fdbff5ed1be87ba9bcec92ec3d5e475803e0b9db9467f1b"
 
 [[files]]
 file = "kubejs/startup_scripts/items.js"
-hash = "f3ac16ee3485aeac7e347bdc7fea5a9ae62e5edd068148c48041c81bbbfd6712"
+hash = "95f8cfa6b76c91ed565c6eba5227e856636ad07437038cbc39c5e22adaba3118"
 
 [[files]]
 file = "kubejs/startup_scripts/jsconfig.json"
@@ -2675,10 +2639,6 @@ hash = "f6b498b9b5e4999f7113aecbf35a6afa62a1f657816d9504bdc4869a39ba0a4f"
 [[files]]
 file = "kubejs/startup_scripts/main.js"
 hash = "5c4659e7bb368960801ccfce24ac3493fa14aae88a7e17b2a9cdfe1931985ffe"
-
-[[files]]
-file = "mods/Porting-Dead-Libs-1.1.15.jar"
-hash = "a3e161226e9d7e16dd32d02c8b58c6d6e2aa8155cd6145b5286e6add054f9183"
 
 [[files]]
 file = "mods/athena.pw.toml"
@@ -2803,10 +2763,6 @@ metafile = true
 file = "mods/puzzles-lib.pw.toml"
 hash = "990fed4219a2279ce195ba10ed86e3ded7432b631380d3673e13e1b19c75f477"
 metafile = true
-
-[[files]]
-file = "mods/researchd-1.2.5.jar"
-hash = "09afb46fb4125fd26d77c83255f527cd7838cdeafa50bece9bf0f235f737c6a0"
 
 [[files]]
 file = "mods/rhino.pw.toml"

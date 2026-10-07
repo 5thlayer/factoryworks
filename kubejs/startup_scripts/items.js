@@ -7,12 +7,6 @@ StartupEvents.registry('item', event => {
   // (ADR-0025). `copper-cable` is the counter-example and borrows
   // (`powergrid:wire`) -- see `data/pack/item-map.json`.
   //
-  // THE SCIENCE PACKS ARE NOT HERE. They are Researchd research packs, not plain items:
-  // `kubejs/server_scripts/researchd.js` declares them with `registerResearchPacks` under
-  // `factory_works:` (an underscore, and not this pack's item namespace), and they are held
-  // as `researchd:research_pack` carrying a `researchd:research_pack` data component. Registering
-  // an item of the same name here would have shipped a second, inert pack the Lab cannot read.
-  //
   // EVERY TEXTURE MUST BE A FILE THAT EXISTS. GregTech generates its MATERIAL items (plates,
   // gears, dusts, most batteries) at runtime from a material set, so `gtceu:item/<material>_plate`
   // and `gtceu:item/max_battery` name no PNG in the jar and render as the missing-texture checker

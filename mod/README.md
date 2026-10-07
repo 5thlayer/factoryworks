@@ -3,7 +3,7 @@
 <!-- Copied from publish/core/description.md; edit both. -->
 FactoryWorks Core holds the machines and rules of the FactoryWorks modpack: the furnaces, mining drills, the Boiler and Steam Engine, electric poles, the Radar, ore patches that hold an amount and run out, and the ore fields and oil wells laid across Terra. Each runs at the rates Factorio gives it.
 
-It adds no recipes and no research of its own. Those live in the modpack's scripts and data, so the mod on its own places machines nobody can craft.
+It adds no recipes of its own. Those live in the modpack's scripts and data, so the mod on its own places machines nobody can craft.
 
 The pack's first-party NeoForge mod, built as a Gradle subproject of this repo (ADR-0014).
 
@@ -46,8 +46,7 @@ machine is the pack's own block, several on an Oritech model or entity (ADR-0060
 Nothing a designer would tune is compiled in. A machine's figures are read from resources under
 `factoryworks_core/` that the repo's generators write from the Factorio corpus, and models,
 textures, display names and recipes are pack data. The jar's own lang file holds only the strings a
-Java class passes to `Component.translatable` with no pack-side author to own them. Which research
-locks which recipe is `kubejs/server_scripts/researchd.js`; this mod only asks Researchd.
+Java class passes to `Component.translatable` with no pack-side author to own them.
 
 Note the two names, which are deliberately different:
 

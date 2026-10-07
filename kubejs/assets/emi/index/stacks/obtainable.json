@@ -280,36 +280,6 @@
       "stack": "item:pipeworks:storage_tank"
     },
     {
-      "stack": "item:researchd:research_lab"
-    },
-    {
-      "stack": {
-        "type": "item",
-        "id": "researchd:research_pack",
-        "componentChanges": {
-          "researchd:research_pack": "factory_works:automation_science_pack"
-        }
-      }
-    },
-    {
-      "stack": {
-        "type": "item",
-        "id": "researchd:research_pack",
-        "componentChanges": {
-          "researchd:research_pack": "factory_works:chemical_science_pack"
-        }
-      }
-    },
-    {
-      "stack": {
-        "type": "item",
-        "id": "researchd:research_pack",
-        "componentChanges": {
-          "researchd:research_pack": "factory_works:logistic_science_pack"
-        }
-      }
-    },
-    {
       "stack": "item:wireworks:accumulator"
     },
     {

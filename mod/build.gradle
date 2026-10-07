@@ -111,7 +111,7 @@ dependencies {
     // implements GeckoLib's `GeoBlockEntity`; javac needs the supertype to resolve the hierarchy.
     compileOnly fileTree(
             dir: rootProject.file('mods'),
-            include: ['oritech-*.jar', 'researchd-*.jar', 'emi-*.jar',
+            include: ['oritech-*.jar', 'emi-*.jar',
                       'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar',
                       'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar',
                       'ftb-chunks-neoforge-26.1.2.8.jar'])
@@ -204,13 +204,11 @@ tasks.register('linkKubeJS') {
 }
 
 // A dev run reads its server configs from `mod/run/config/`, so the harness would test the defaults
-// rather than the pack's: loaders need power (#447) and machines lock by research (#260) only because
-// the pack's configs say so.
+// rather than the pack's: loaders need power (#447) only because the pack's configs say so.
 // A run writes a missing config out with its defaults, so a real file here is one of those.
 tasks.register('linkServerConfigs') {
     description = 'Links the dev runs\' server configs to the pack\'s.'
-    def names = ['beltworks-server.toml', 'craftworks-server.toml',
-                 'researchd-server.toml', 'wireworks-server.toml']
+    def names = ['beltworks-server.toml', 'craftworks-server.toml', 'wireworks-server.toml']
     doLast {
         names.each { name ->
             def link = file("run/config/${name}").toPath()

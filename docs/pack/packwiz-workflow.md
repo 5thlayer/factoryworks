@@ -48,8 +48,8 @@ index, whose hash records which build is installed:
 
 ```
 mods/*.jar
-!mods/researchd-*.jar
-!mods/Porting-Dead-Libs-*.jar
+!mods/wireworks-*.jar
+!mods/pipeworks-*.jar
 ```
 
 A consequence worth knowing: because `refresh` cannot see the managed jars, it cannot notice one
@@ -65,13 +65,13 @@ whether it has a CurseForge file:
 | Jar | How it is tracked |
 | --- | --- |
 | Beltworks, Craftworks | row carries a `curseforge` project id; `mods/<mod>.pw.toml` names the pinned version's CurseForge file, and the jar beside it is not indexed (#532) |
-| Researchd, Porting Dead Libs | unmanaged entry in `index.toml` — path plus sha256, no metafile — until upstream publishes their 26.1 builds (#524) |
+| Wireworks, Pipeworks | unmanaged entry in `index.toml`, path plus sha256 and no metafile, since neither has a CurseForge project yet |
 | FactoryWorks Core | `mods/factoryworks-core.pw.toml` names the CurseForge file of `gradle.properties`' `mod_version`, the version `scripts/release.sh` last released (ADR-0101), and the sync moves it as it does a row's; the jar `installToPack` builds is not indexed |
 
 `packwiz update --all` prints this for the two unmanaged jars:
 
 ```
-A supported update system for "researchd-1.3.4-26.1.jar" cannot be found.
+A supported update system for "wireworks-0.4.0.jar" cannot be found.
 ```
 
 **That is expected, non-fatal and non-mutating.** Don't take Beltworks or Craftworks through
@@ -259,8 +259,7 @@ scripts/sync-local-jars.py      # then install the local jars
 
 `local` checks each jar against the `jar sha256` its release tag records, or its hash in `index.toml`,
 and stops on a mismatch rather than move a pin. A 5thlayer jar on CurseForge is taken from `mods/`
-when it is the tagged release, since a rebuild need not reproduce it. Researchd's `source` runs
-`runData` first: its generated resources are gitignored, and a jar built without them ships no items.
+when it is the tagged release, since a rebuild need not reproduce it.
 
 CurseForge's profile embeds NeoForge's version data, which only CurseForge's keyed API serves, so
 the profile is CurseForge's to create: a custom profile named `FactoryWorks` lands in

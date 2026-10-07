@@ -63,32 +63,6 @@
         "repo": "5thlayer/pipeworks",
         "ref": "pipeworks-v{version}"
       }
-    },
-    {
-      "mod": "researchd",
-      "group": "com.portingdeadmods.researchd",
-      "artifact": "researchd",
-      "version": "1.2.5",
-      "pattern": "researchd-*.jar",
-      "source": {
-        "repo": "adamico/Researchd",
-        "ref": "1743d8bf9c0b657c42440cc3e689425e2678527f",
-        "tasks": [
-          "runData",
-          "publishToMavenLocal"
-        ]
-      }
-    },
-    {
-      "mod": "portingdeadlibs",
-      "group": "com.github.Porting-Dead-Mods",
-      "artifact": "Porting-Dead-Libs",
-      "version": "1.1.15",
-      "pattern": "Porting-Dead-Libs-*.jar",
-      "sibling": false,
-      "source": {
-        "maven": "https://jitpack.io"
-      }
     }
   ]
 }

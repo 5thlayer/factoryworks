@@ -1,5 +1,7 @@
 ## Unreleased
 
+- There is no research: every recipe is unlocked from the start, and the science packs and the Lab are gone. A world made with 0.3.0 loses its research progress and the Labs it placed.
+
 ## 0.3.0
 
 - The Chemical Plant and the Oil Refinery are gone: chemistry and oil processing run on Craftworks' Assemblers 2 and 3. A world made with 0.2.0 loses the ones it placed. Basic oil processing is gone too, and advanced oil processing is researched with oil gathering.

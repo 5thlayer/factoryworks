@@ -128,12 +128,10 @@ path = [
 SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "MIT"
 
-# Wube's Factorio data: the corpus, and the script the tech extractor rewrites from it. Under
-# neither of the Pack's licences (data/factorio/README.md).
+# Wube's Factorio data, the corpus. Under neither of the Pack's licences (data/factorio/README.md).
 [[annotations]]
 path = [
     "data/factorio/*.json",
-    "kubejs/server_scripts/factorio_tech_data.js",
 ]
 SPDX-FileCopyrightText = "Wube Software Ltd."
 SPDX-License-Identifier = "LicenseRef-Wube-Factorio-Data"

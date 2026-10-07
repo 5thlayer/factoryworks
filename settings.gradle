@@ -33,7 +33,7 @@ if (requested.present) {
         throw new GradleException("-PsiblingBuilds: ${unknown.join(', ')} has no row in "
                 + "data/pack/local-jars.json (rows: ${byMod.keySet().join(', ')})")
     }
-    // A row with `"sibling": false` pins a binary no checkout reproduces (Researchd#20).
+    // A row with `"sibling": false` pins a binary no checkout reproduces.
     def pinnedOnly = names.findAll { byMod[it].sibling == false }
     if (pinnedOnly) {
         throw new GradleException("-PsiblingBuilds: ${pinnedOnly.join(', ')} is pinned with \"sibling\": false "

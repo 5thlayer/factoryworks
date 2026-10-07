@@ -12,8 +12,7 @@ covers its own content, and `REUSE.toml` records them as `LicenseRef-Wube-Factor
 (`LICENSES/LicenseRef-Wube-Factorio-Data.txt`). This repository grants no right to them and they
 are not offered for reuse (ADR-0102).
 
-That is every `*.json` here and `kubejs/server_scripts/factorio_tech_data.js`, which the tech
-extractor rewrites from them. This README, the extractors and everything the Pack generates from
+That is every `*.json` here. This README, the extractors and everything the Pack generates from
 these figures are the Pack's own work and are licensed by what kind of file they are: the
 extractors and generators are code, the emitted recipes, tables and resources are content.
 
@@ -89,9 +88,6 @@ for a flag rather than for a scope -- see below.
 The dump lands in `~/Library/Application Support/factorio/script-output/data-raw-dump.json`. The
 extractor finds it and the Steam install by default; both are overridable with `--dump` and
 `--factorio-data`.
-
-Rerunning rewrites `kubejs/server_scripts/factorio_tech_data.js` too — the check fails if that file
-is stale.
 
 ## Files
 

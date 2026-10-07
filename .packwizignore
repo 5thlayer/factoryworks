@@ -58,8 +58,6 @@ mods/*.jar
 # --check. Beltworks and Craftworks are named by their metafiles, like any CurseForge mod (#532).
 !mods/wireworks-*.jar
 !mods/pipeworks-*.jar
-!mods/researchd-*.jar
-!mods/Porting-Dead-Libs-*.jar
 
 # `factoryworks_core` is indexed by its metafile, mods/factoryworks-core.pw.toml, naming the
 # released CurseForge file (ADR-0101). The jar `installToPack` builds into mods/ for dev runs is

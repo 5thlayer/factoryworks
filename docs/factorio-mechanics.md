@@ -51,8 +51,8 @@ Factorio names them, and each section gives the pack's own name beside it.
 | [Armor and the equipment grid](#armor-and-the-equipment-grid) | `planned` | Terra |
 | [Capsules](#capsules) | `planned` | Terra |
 | [Modules and beacons](#modules-and-beacons) | `blocked` | — |
-| [Research and science packs](#research-and-science-packs) | `planned` | Terra |
-| [The technology tree](#the-technology-tree) | `shipped` | Terra |
+| [Research and science packs](#research-and-science-packs) | `excluded` | — |
+| [The technology tree](#the-technology-tree) | `excluded` | — |
 | [Rocket silo and rocket launch](#rocket-silo-and-rocket-launch) | `planned` | Terra |
 | [Character movement on foot](#character-movement-on-foot) | `adapted` | Terra |
 | [Character reach](#character-reach) | `adapted` | Terra |
@@ -223,10 +223,8 @@ Sub-rules:
 
 Sub-rules:
 
-- **Mining speed is doubled by research** — `shipped` at the design level, ADR-0039. Factorio's
-  `steel-axe` is a trigger technology costing no packs; the pack declares it as `CheckItemPresence`
-  on 50 steel plates, because Researchd has no craft-triggered research method, and swaps its
-  `character-mining-speed` effect for an `unlock-recipe` granting the Engineer's Steel Pick.
+- **Mining speed is doubled by research** — `adapted`, ADR-0039, ADR-0126. *Notice*: the Showcase
+  has no research, so Factorio's `steel-axe` is the Engineer's Steel Pick, craftable from the start.
 - **Picking up a placed entity is the same gesture as mining** — `adapted`. The Engineer's Pick is
   the correct tool for every block, so a placed entity is taken by breaking it (ADR-0039), and a
   belt line's tiles or a pipe run are taken up many at once by a **Dismantle**, a sneak-click then a
@@ -694,8 +692,8 @@ Sub-rules:
   nothing (#393). Breaking a tile returns it and the items on it (#346, ADR-0084). *Upstream
   SimpleBelts charged one item whatever the length.*
 
-`logistics`, `logistics-2` and `logistics-3` are declared in `researchd.js`; each unlocks its
-splitter, and the last two their belt tier (#345, #349). Their underground belts are excluded above.
+The splitters and every belt tier are unlocked from the start, as every recipe is (ADR-0126). Their
+underground belts are excluded above.
 
 ### Inserters
 
@@ -1210,46 +1208,40 @@ argument has not been had.
 
 ### Research and science packs
 
-- **verdict**: `planned`
-- **where**: all bodies
-- **via**: `pack`, `kubejs`
-- **owner**: ADR-0018, ADR-0022
-- **ticket**: #217 (the Lab on the grid), #228 (Military science); #66, #82, #103, #260 closed
+- **verdict**: `excluded`
+- **where**: —
+- **owner**: ADR-0126
+- **ticket**: #645
 
-Four packs plus an unscienced rung 0, gated by Researchd's Research Lab, fed by pipe and consumed
-unattended.
+The Showcase has no research: every recipe is unlocked from the start, and the science packs and the
+Lab are dropped (ADR-0126, #645).
 
 Sub-rules:
 
-- **Each pack rung grants a capability the next rung physically requires** — `planned`. ADR-0018.
-- **Military science** — `planned`. #26 dropped it because its ingredients fed nothing downstream;
-  #118 makes them feed the combat line, so the pruning is reversed on its own reason. See
-  [Combat](#combat-guns-ammo-turrets-walls). Reopens #26 and touches ADR-0018.
-- **Sapros's science pack spoils** — `planned`. The buffer-as-liability puzzle.
-- **Research consumes packs continuously while running** — `adapted`. Researchd's Lab consumes on
-  completion of a pack batch rather than metering a rate; only `consumePack` reads the Lab.
-- **A lab draws power, so research competes with the factory for it** — `shipped`. Researchd's Lab
-  draws `research_lab_energy_usage` FE a tick while researching, set in `config/researchd-server.toml`
-  to 30: Factorio's 60 kW at the pack's 100 J to the FE (ADR-0060).
+- **Each pack rung grants a capability the next rung physically requires** — `excluded`. ADR-0126:
+  there are no packs to rung. Terra's arc keeps its rungs as chapters (ADR-0097).
+- **Military science** — `excluded`. ADR-0126.
+- **Sapros's science pack spoils** — `excluded`. ADR-0126.
+- **Research consumes packs continuously while running** — `excluded`. ADR-0126.
+- **A lab draws power, so research competes with the factory for it** — `excluded`. ADR-0126.
 
 ### The technology tree
 
-- **verdict**: `shipped`
-- **where**: pack-wide
-- **via**: `kubejs`
-- **owner**: ADR-0022
+- **verdict**: `excluded`
+- **where**: —
+- **owner**: ADR-0126
 
-The tree's topology is extracted from Factorio rather than transcribed —
-`data/factorio/technology.json` is committed, `researchd.js` declares each node with
-`fromFactorio(...)`, and `tests/factorio/test_tech_extract.py` asserts the pruned tree is still a
-valid tree and that every declared name exists. Registered, and the check its claim warrants passes.
+The Showcase has no research, so it has no tree to navigate (ADR-0126). Factorio's tree is still
+extracted to `data/factorio/technology.json` (ADR-0022), because Terra's arc is measured against it:
+`tests/factorio/test_tech_extract.py` holds the pruned tree valid and the spec's gate table to its
+costs (ADR-0097).
 
 Sub-rules:
 
-- **Prerequisites form a DAG the player navigates** — `shipped`.
-- **Infinite research tiers with escalating cost** — `excluded`. `by-consequence`: the extraction
-  prunes them, and nothing downstream wants them.
-- **Research triggers (SA: unlock by doing, not by paying)** — `unargued`, no verdict.
+- **Prerequisites form a DAG the player navigates** — `excluded`. ADR-0126.
+- **Infinite research tiers with escalating cost** — `excluded`. ADR-0126; the extraction prunes them
+  too.
+- **Research triggers (SA: unlock by doing, not by paying)** — `excluded`. ADR-0126.
 
 ### Rocket silo and rocket launch
 

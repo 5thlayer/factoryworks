@@ -65,9 +65,6 @@ PACK_SMELTING = "factoryworks:smelting"
 NAMESPACES = {"minecraft", "factoryworks",
               # `c:` is the common tag namespace, which belongs to no mod.
               "c",
-              # Researchd owns the research-pack item; `factory_works:` (an underscore) is the
-              # id space its packs are declared in, and is not this pack's item namespace.
-              "researchd", "factory_works",
               # Oritech is the pack's tech mod (ADR-0060): its engine (#282), pipes, tanks and fluids.
               "oritech",
               # Beltworks' belts, ADR-0060's logistics (#277).

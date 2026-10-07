@@ -69,7 +69,7 @@ The orbit-only endgame destination, reachable only once a Platform is establishe
 _Avoid_: the shattered planet, Fragmenta
 
 **Display name**:
-The Latin or Greek name a player sees for a **celestial body**, supplied by lang files only. Every body has one, and it is never the identifier. The convention is a body-naming rule and stops there (ADR-0004) — science packs and everything else keep their own names.
+The Latin or Greek name a player sees for a **celestial body**, supplied by lang files only. Every body has one, and it is never the identifier. The convention is a body-naming rule and stops there (ADR-0004) — everything else keeps its own name.
 _Avoid_: label, alias
 
 **Internal ID**:
@@ -347,7 +347,7 @@ A connection between two **Supply Area Pole**s that makes them one **Electric Ne
 _Avoid_: link, cable, connection
 
 **Redstone**:
-The pack's circuit network: vanilla redstone dust, laid free by a right-click with the **Engineer's Pick** wherever a dust item could go, once the `circuit-network` research is done. It is never an item: nothing crafts it, and it drops nothing when broken, washed away or left unsupported. A click the Pick already answers — a **Dismantle**'s end, a **Wire**, a pipe connection — lays none. Distinct from a **Wire**, which carries power between poles, never a signal.
+The pack's circuit network: vanilla redstone dust, laid free by a right-click with the **Engineer's Pick** wherever a dust item could go. It is never an item: nothing crafts it, and it drops nothing when broken, washed away or left unsupported. A click the Pick already answers — a **Dismantle**'s end, a **Wire**, a pipe connection — lays none. Distinct from a **Wire**, which carries power between poles, never a signal.
 _Avoid_: wire, circuit wire, redstone dust item
 
 **Placement Plan**:
@@ -393,11 +393,11 @@ _Avoid_: real water, unplaced water, virgin water, source water
 ### Making things
 
 **Rung**:
-A science pack's tier of Terra's research ladder: rung 0 has no pack, then `automation`, `logistic` and `chemical`. The launch is on rung 3; `production` is the first rung after it (ADR-0097). Each rung opens on a **Gate**, but most gates open a chapter inside a rung.
+A tier of Terra's arc, named for the Factorio science pack its technologies cost: rung 0 has no pack, then `automation`, `logistic` and `chemical`. The launch is on rung 3; `production` is the first rung after it (ADR-0097). Each rung opens on a **Gate**, but most gates open a chapter inside a rung.
 _Avoid_: tier, age, era, stage
 
 **Gate**:
-A Factorio technology that opens a chapter of Terra's arc: a **Rung**'s science pack, or a trigger technology researched by doing something rather than by packs, such as crafting a Lab or mining crude. Every chapter boundary is one, read off the corpus; the pack invents none (ADR-0097). Unrelated to a **Gated recipe**, which is about where a recipe is crafted.
+A Factorio technology that opens a chapter of Terra's arc: a **Rung**'s science pack, or a trigger technology Factorio unlocks by doing something rather than by packs, such as mining crude. Every chapter boundary is one, read off the corpus; the pack invents none (ADR-0097). The Showcase has no research, so a gate marks a point in the arc and unlocks nothing (ADR-0126). Unrelated to a **Gated recipe**, which is about where a recipe is crafted.
 _Avoid_: milestone, checkpoint, unlock
 
 **Ingot**:
@@ -429,7 +429,7 @@ The player's inventory screen, as the player's only hand-crafting surface. It is
 _Avoid_: hand crafter, personal crafter, portable crafter
 
 **Crafting Plan**:
-The resolved, flattened tree of crafts the Personal Assembler produces when an amount is chosen, and the unit in which the player commits and is refunded. It names every intermediate it will make, every ingredient the player lacks and every recipe the team has not researched; it is paid for in full when it starts and is never re-resolved. Craftworks' term (ADR-0089).
+The resolved, flattened tree of crafts the Personal Assembler produces when an amount is chosen, and the unit in which the player commits and is refunded. It names every intermediate it will make, and every ingredient the player lacks; it is paid for in full when it starts and is never re-resolved. Craftworks' term (ADR-0089).
 _Avoid_: crafting job, batch, order
 
 **Assembler queue**:
@@ -437,36 +437,20 @@ The serial list of Crafting Plans awaiting execution. One plan runs at a time, a
 _Avoid_: crafting queue, backlog
 
 **Missing ingredient**:
-A leaf of a Crafting Plan the player does not have and the Assembler cannot make — it is mined, smelted or machine-made. Distinct from **Locked**, which the player cannot make *yet*: the two demand different actions, so the plan names them separately.
+A leaf of a Crafting Plan the player does not have and the Assembler cannot make — it is mined, smelted or machine-made.
 _Avoid_: shortfall, unavailable
-
-**Locked**:
-A recipe inside a Crafting Plan that the team has not researched: Craftworks asks Researchd about the recipe's id, which is the one an **Assembler** runs (ADR-0118). The resolver plans only through unlocked recipes, so a locked intermediate stops a plan exactly as a missing ingredient does, for a reason the player fixes with research rather than with mining.
-_Avoid_: unavailable recipe, gated
 
 **Assembler**:
 Craftworks' placed machine that runs Assembling recipes, in three tiers, and Craftworks' glossary defines it. It holds a **Held recipe** rather than matching on what it is fed, and is placed and broken whole from one item. Tiers 2 and 3 also craft with fluids.
 _Avoid_: Assembling Machine, crafter, fabricator, Oritech assembler
 
 **Held recipe**:
-The single `craftworks:assembling` recipe a player sets on an **Assembler**, which the machine then runs and nothing else. It is Factorio's own gesture: the machine is told its recipe rather than deducing one from what it is fed, so there is no lookup, no first match and no ambiguity between two recipes sharing an ingredient set. The machine's inputs are filtered to it, and it is held whether or not the machine can currently run it — an unfed, unresearched or output-blocked machine displays its Held recipe and idles, and never clears it silently. Stored as the recipe id, which is stable and is what research unlocks already key on.
+The single `craftworks:assembling` recipe a player sets on an **Assembler**, which the machine then runs and nothing else. It is Factorio's own gesture: the machine is told its recipe rather than deducing one from what it is fed, so there is no lookup, no first match and no ambiguity between two recipes sharing an ingredient set. The machine's inputs are filtered to it, and it is held whether or not the machine can currently run it — an unfed or output-blocked machine displays its Held recipe and idles, and never clears it silently. Stored as the recipe id, which is stable.
 _Avoid_: locked recipe, recipe lock, selected recipe, machine lock
 
 **Gated recipe**:
 A recipe whose type routes it away from the crafting grid to a machine or the Personal Assembler. Gating is a recipe-authoring choice, not a scripted restriction.
 _Avoid_: locked recipe, blocked recipe
-
-**Research lock**:
-A Researchd `unlock_recipe` effect withholding a recipe from a team until they research it. Distinct from a **Gated recipe** in both mechanism and meaning: gating is where a recipe is crafted and is permanent, a research lock is whether a team may craft it yet and is lifted by play. A lock is held per team, so the same recipe can be locked for one team and not another.
-_Avoid_: recipe unlock, tech lock, gated recipe
-
-**Lock annotation**:
-The badge and tooltip a recipe viewer draws on a recipe under a **Research lock** the viewing player's team has not lifted, naming the research that would lift it. The pack annotates rather than hides, in both EMI and JEI and for every recipe source alike: hiding is vanilla's habit and tells the player nothing, and applying either policy to one viewer or one recipe source only relocates the incoherence (issue #75).
-_Avoid_: hidden recipe, greyed-out recipe, locked overlay
-
-**Unowned machine**:
-A machine carrying no Researchd placed-by attachment, so it belongs to no team and no **Research lock** applies to it — it runs every recipe. Ordinary placement always stamps an owner; this is what `/setblock`, `/clone` and worldgen leave behind. Failing open is deliberate (issue #74, ADR-0058's amendment).
-_Avoid_: ownerless machine, orphan machine, teamless machine
 
 **Fuel buffer**:
 The joules a burner furnace holds. Lighting a fuel item consumes it whole and adds its `fuel_value` to the buffer; a tick of work subtracts the machine's own `energy_usage / 20`, which is 4,500 J on both burner tiers. Nothing is measured in burn ticks and there is no conversion constant — burn time is a quotient, as it is in Factorio, and a buffer that still holds joules keeps them while the furnace is idle. It is the same quantity the Electric tier's buffer holds and is shown with the same gauge; only the way it is refilled differs (ADR-0047).
@@ -500,7 +484,7 @@ The two heavier fractions of oil processing.
 _Avoid_: heavy fuel, light fuel, fuel oil, kerosene
 
 **The oil chapter**:
-Everything from crude to plastic, lubricant and launch fuel. It opens on the `oil-processing` **Gate**, which mining crude researches, and spans rungs 2 and 3 rather than sitting in one, because sulfur is petroleum-derived and sulfur gates chemical science (ADR-0097).
+Everything from crude to plastic, lubricant and launch fuel. It opens on the `oil-processing` **Gate**, which mining crude triggers, and spans rungs 2 and 3 rather than sitting in one, because sulfur is petroleum-derived and sulfur gates chemical science (ADR-0097).
 _Avoid_: the oil rung, rung 4, the petroleum tier
 
 ### The nuclear chapter

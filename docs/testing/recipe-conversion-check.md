@@ -44,9 +44,7 @@ not a machine of its own (#125).
 
 An item-map row may carry `components`, and the converter emits NeoForge's custom ingredient
 (`"neoforge:ingredient_type": "neoforge:components"`) for it, and a `components` patch on a result.
-The science packs are the case: they are Researchd research packs, so the player holds one
-`researchd:research_pack` item told apart by a data component, not four items. Both rows are
-`blocked_by: 251` until Researchd is on 26.1.2.
+No row carries one now.
 
 ## What stops a recipe being emitted
 

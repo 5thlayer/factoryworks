@@ -153,69 +153,16 @@ def _display_names():
     return out
 
 
-def _declared_researches():
-    """(id, name) of each research the DSL registers: declared, not `skip`, and in the corpus."""
-    code = _js_code((ROOT / "kubejs/server_scripts/researchd.js").read_text(encoding="utf-8"))
-    corpus = {t["name"] for t in json.loads(
-        (ROOT / "data/factorio/technology.json").read_text(encoding="utf-8"))}
-    out = []
-    for m in re.finditer(r"\bfromFactorio\(\s*'([^']+)'\s*(?:,\s*(\{))?", code):
-        name, i = m.group(1), m.end()
-        top = []
-        if m.group(2):
-            depth, quote = 0, None
-            for j in range(m.end() - 1, len(code)):
-                c = code[j]
-                if quote:
-                    if depth == 1:
-                        top.append(c)
-                    if c == "\\":
-                        pass
-                    elif c == quote and code[j - 1] != "\\":
-                        quote = None
-                    continue
-                if c in "'\"`":
-                    quote = c
-                elif c == "{":
-                    depth += 1
-                elif c == "}":
-                    depth -= 1
-                    if depth == 0:
-                        break
-                if depth == 1:
-                    top.append(c)
-        body = "".join(top)
-        if name not in corpus or re.search(r"\bskip\s*:\s*true\b", body):
-            continue
-        given = re.search(r"\bname\s*:\s*(?:" + _JS_STRING + ")", body)
-        if given:
-            out.append((name, _unescape(given.group(1) or given.group(2))))
-        else:
-            words = name.replace("-", " ")
-            words = re.sub(r"\bmk(\d)", r"MK\1", words)
-            out.append((name, words[:1].upper() + words[1:]))
-    return out
-
-
-def _pack_names():
-    code = _js_code((ROOT / "kubejs/server_scripts/researchd.js").read_text(encoding="utf-8"))
-    return [_unescape(a or b) for a, b in re.findall(r"\.literalName\(\s*(?:" + _JS_STRING + r")\s*\)", code)]
-
-
 def _player_text():
     """source -> the strings a player reads from it."""
-    out = {**_lang_sources(), **_display_names()}
-    out["kubejs/server_scripts/researchd.js (researches)"] = [n for _, n in _declared_researches()]
-    out["kubejs/server_scripts/researchd.js (research packs)"] = _pack_names()
-    return out
+    return {**_lang_sources(), **_display_names()}
 
 
 class LicensingTest(unittest.TestCase):
     def test_no_coined_factorio_name_in_a_string_a_player_reads(self):
         text = _player_text()
         for source in ("kubejs/assets/factoryworks/lang/en_us.json",
-                       "kubejs/startup_scripts/blocks.js", "kubejs/startup_scripts/items.js",
-                       "kubejs/server_scripts/researchd.js (researches)"):
+                       "kubejs/startup_scripts/blocks.js", "kubejs/startup_scripts/items.js"):
             self.assertTrue(text[source], f"{source} yielded no strings; the scan has rotted")
         hits = {f"{src}: {s!r}": m.group(0) for src, strings in text.items() for s in strings
                 if (m := COINED.search(s))}
@@ -237,7 +184,6 @@ class LicensingTest(unittest.TestCase):
     def test_the_corpus_is_under_neither_of_the_packs_licences(self):
         corpus = [p for p in _tracked() if p.startswith("data/factorio/")
                   and p != "data/factorio/README.md"]
-        corpus.append("kubejs/server_scripts/factorio_tech_data.js")
         self.assertGreater(len(corpus), 10)
         wrong = [p for p in corpus if _licence_of(p)["SPDX-License-Identifier"] != CORPUS_LICENCE]
         self.assertEqual([], wrong)
@@ -259,8 +205,6 @@ class LicensingTest(unittest.TestCase):
                            if k.startswith("localised_")}) for p in json_files}
         self.assertEqual({}, {p: k for p, k in held.items() if k})
         self.assertFalse((ROOT / "data/factorio/recipe_name.json").exists())
-        tech = (ROOT / "kubejs/server_scripts/factorio_tech_data.js").read_text(encoding="utf-8")
-        self.assertNotIn("localised_", tech)
 
     def test_the_packs_own_work_is_under_the_packs_licences(self):
         expect = {
@@ -318,8 +262,7 @@ class LicensingTest(unittest.TestCase):
         prose = " ".join(section.group(1).split())
         self.assertIn("Wube Software's", prose)
         self.assertIn("under neither of the Pack's licences", prose)
-        for name in ("LGPL-3.0-only", "CC BY 4.0", CORPUS_LICENCE,
-                     "kubejs/server_scripts/factorio_tech_data.js"):
+        for name in ("LGPL-3.0-only", "CC BY 4.0", CORPUS_LICENCE):
             self.assertIn(name, prose)
 
     def test_the_upload_carries_the_licence_texts(self):

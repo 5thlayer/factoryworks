@@ -72,7 +72,7 @@ run (#338). KubeJS resolves `kubejs/` against the game directory with no setting
 `mod/run/` is untracked, so the link is built rather than committed. There is no second copy: the
 startup scripts register the pack's items, the server scripts run the recipe sweep, and every file
 under `kubejs/data/` loads. That is what lets a test assert against the recipe the pack ships rather
-than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml`, `config/craftworks-server.toml`, `config/factoryworks_core-server.toml` and `config/researchd-server.toml`, linked in by `linkServerConfigs`: loaders need power (#447), machines lock by research (#260), Assemblers lock by it too (ADR-0118) and labs draw power only because the pack's configs say so, and every default is off. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
+than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml`, `config/craftworks-server.toml`, and `config/factoryworks_core-server.toml`, linked in by `linkServerConfigs`: loaders need power (#447) only because the pack's configs say so, and every default is off. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
 vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
 five blocks above the floor; without it no test block places and the run hangs rather than fails.
 And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the
@@ -102,10 +102,8 @@ the resolve-then-classify rule, and forcing every block to be its own owner turn
 And that a footprint machine, such as the Steam Engine (ADR-0116) or the Radar, broken at its anchor or at any part leaves none of its blocks standing and
 drops exactly one item; dropping the part's teardown turns the part tests red. The Assemblers are Craftworks' (ADR-0118), and its GameTests hold the machine. `AssemblingMachineTests`
 holds what the Pack owns of them: an Assembler on a creative pole's area is powered and crafts copper
-cable in whole crafts of two; Fill Recipe on a recipe a research unlocks is refused as `LOCKED` for a
-Researchd team that has researched nothing, and answered `HELD` for one no research unlocks, which
-needs `craftworks-server.toml`'s `lockSources` linked in (Craftworks asks the Lock source once, of the
-player who presses it); and every `factoryworks:assembling/` recipe in the manager is one some tier can hold,
+cable in whole crafts of two; Fill Recipe answers `HELD` for a player who has unlocked nothing, since
+the linked-in `craftworks-server.toml` names no Lock source (ADR-0126); and every `factoryworks:assembling/` recipe in the manager is one some tier can hold,
 its fluids included. How many machines a pole counts is Wireworks', so the test asks only that the
 Assembler crafts. It and `HandSetTests` call Craftworks' internals, the one exception to the
 Consumer rule (`what-to-check.md`), until Craftworks names a Consumer API (5thlayer/craftworks#37).
@@ -318,7 +316,7 @@ none of which launches the game. `mod/src/test/java/com/factoryworks/core/fellin
 each of its three bounds, refuses a mid-trunk block, refuses a log cabin (no naturally-grown leaf),
 never descends below the base, and does not cross into a touching canopy, which is vanilla's leaf
 `distance` doing the work. `FellingCostTest` is the arithmetic: `amount × 0.1375s`, halved by
-research, and a four-log tree costing Factorio's own 0.55s exactly — the rate is asked of
+the Steel Pick, and a four-log tree costing Factorio's own 0.55s exactly — the rate is asked of
 `TreeCorpus` rather than typed, because `0.5/4 = 0.125` is the *dead* trees' and the plants' rate and
 #205 was written against it. `tests/factorio/test_tree_extract.py` re-derives the rate from the
 corpus and names the three prototypes the discriminant must exclude, each of which yields a
@@ -369,9 +367,8 @@ The Personal Assembler is Craftworks, a local jar (ADR-0089), and its rules are 
 It plans only a `craftworks:assembling` recipe whose `hand_craftable` is true, with no fluid and one
 result, and the recipes the Assemblers hold are the same recipes (ADR-0118): the converter writes the
 flag for a first Factorio category of `crafting`, as do the stock re-authoring, and the two Pick
-recipes are written with it. Craftworks locks by `lockSources = ["researchd"]` in
-`config/craftworks-server.toml` and asks Researchd about the recipe's own id, so a research that
-unlocks `factoryworks:assembling/<name>` locks it for both. `tests/factorio/test_hand_recipes.py`
+recipes are written with it. `config/craftworks-server.toml` names no Lock source, so every recipe
+is unlocked from the start (ADR-0126). `tests/factorio/test_hand_recipes.py`
 re-derives the set from the corpus, holds every emitted recipe to it, and asserts the
 `factoryworks:hand/*` copies, their generator and `withHandCopies` are gone. `gametest/HandSetTests`
 holds that Craftworks plans every hand-craftable recipe the server loaded.
@@ -379,10 +376,7 @@ holds that Craftworks plans every hand-craftable recipe the server loaded.
 `tests/factorio/test_hand_resolver.py` is the corpus half: all 113 category-`crafting` recipes
 resolve to plans bottoming out in the 21 known leaves, no item has two hand recipes (the resolver
 picks a route with no cost model), and there are no cycles. It reads `data/factorio/recipe.json` and
-fails the day a regeneration adds a recipe nothing hand-makes. `tests/factorio/test_science_packs.py`
-holds that both science pack recipes are in the hand set and that every component-bearing output
-there is one an item key can name. Whether a locked recipe shows Locked on Fill Recipe is a human
-check on delivery.
+fails the day a regeneration adds a recipe nothing hand-makes.
 
 ## Terra water fixture
 
@@ -522,8 +516,8 @@ files and writes `kubejs/assets/emi/index/stacks/obtainable.json`: a `filters` e
 id, then `added` naming every emitted recipe's output, every starting-kit item, every row of
 `data/pack/mechanic-obtainable.json` and every drop of a block the live worldgen places. EMI reads
 the file only under the `emi` namespace, applies `filters` before `added`, and skips an `added`
-entry that is a bare string, so each is a `{"stack": ...}` object. A stack with components, such as
-a Researchd science pack, is listed by its `componentChanges`, since EMI hides a variant not listed. A mechanic row is
+entry that is a bare string, so each is a `{"stack": ...}` object. A stack with components is
+listed by its `componentChanges`, since EMI hides a variant not listed. A mechanic row is
 `{id, mechanic, why, owner}`, for what a mechanic produces with no recipe and no data source, and
 its `owner` is the ADR that makes it permanent.
 
@@ -558,7 +552,10 @@ The Pack depends on no third-party content mod (ADR-0109), and `tests/pack/test_
 is the ratchet that holds the removal slices of #566 to it. For each namespace in
 `data/pack/independence-baseline.json`'s `forbidden` list (`railcraft`, `oritech`, `ftbmaterials`,
 `researchd`, `portingdeadlibs`) it counts references across shipped data and compares the count to
-that file's `baseline`. Static; no game launch.
+that file's `baseline`. Static; no game launch. Researchd and Porting Dead Libs left with ADR-0126,
+and both namespaces stay forbidden so neither grows back. Their data baselines are 1 and 0: the one
+`researchd` reference is Craftworks' generated comment in `config/craftworks-server.toml` listing
+its Lock sources. Both Java baselines are 0.
 
 Each namespace has two counts, each with its own baseline: the data count below, and a Java count
 (`java_baseline`).
@@ -839,10 +836,10 @@ map, the subgroup owners, `data/pack/item-map.json` and `data/pack/recipe-overri
 decided in the script — a decision is a diff to a design document. Generated output is never
 hand-edited; re-run the converter. A Factorio name with no item-map row is a hard failure, while an
 `undecided` row is a recorded skip. So is a row carrying `blocked_by`, the ticket that makes its
-target loadable — a machine #277 has not chosen, a Researchd item #251 has not ported — and a machine
+target loadable, such as a machine #277 has not chosen, and a machine
 whose `recipe_type` is still null (the Centrifuge and the Rocket Silo). `--awaited` prints
-those deferred recipes by the id they will load under, which is how the research-unlock,
-science-pack and duplication checks tell a deferral from a typo.
+those deferred recipes by the id they will load under, which is how the duplication check tells a
+deferral from a typo.
 `tests/factorio/test_recipe_convert.py` is the static check and runs the converter's `--check`; the
 recipe *shape* is `scripts/check-datapack-load.py`'s. See
 `docs/testing/recipe-conversion-check.md`.
@@ -1021,31 +1018,23 @@ installed jars (the pack's own via its lang and KubeJS's `event.create`, vanilla
 when present), that no row names a mod ADR-0060 removed, that the eight material-form rows are
 authored `factoryworks:` items, and that no emitted recipe or item tag names a `c:` tag more than one installed jar
 populates -- with AlmostUnified gone, `#c:ingots/steel` accepts three items and is not a decision.
-The rows #277 (machines, blocks, oil fluids) and #251 (Researchd) own sit in `DEFERRED`, and each
-must carry `blocked_by` with that ticket so the converter emits nothing naming it; a stale entry
+A row whose target cannot resolve yet sits in `DEFERRED` with the ticket that owns it, and must
+carry `blocked_by` with that ticket so the converter emits nothing naming it; a stale entry
 fails, so delete one as its row resolves. Run it after editing the item map or re-running a converter.
-
-## Research unlock check
-
-`tests/factorio/test_research_unlocks.py` asserts every recipe id a research grants is a recipe the
-pack emits, or one the converter's `--awaited` holds back on a ticket. Researchd gates by recipe id and a recipe's id follows its type, so re-surfacing a
-recipe leaves the research locked to an id nothing emits — with no error, no failed recipe and no
-log line, reaching the player as a research that unlocks nothing. Run it after editing
-`researchd.js` or after re-running the converter. It is the second half of #97; the first half —
-nothing emitted or admitted is a vanilla grid recipe — lives in the sweep check. See
-`docs/testing/research-unlock-check.md`.
 
 ## Factorio tech tree
 
-The pack's research tree takes its shape from Factorio's, extracted rather than transcribed
-(ADR-0022). `data/factorio/technology.json` is the committed reference; `researchd.js` declares
-each research with `fromFactorio(name, {icon, unlocks, ...})` and supplies only the
-Minecraft-specific parts. Regeneration and provenance are in `data/factorio/README.md`.
-`tests/factorio/test_tech_extract.py` asserts the pruned tree is still a valid tree and that every
-declared name exists — run it after re-extracting or after editing `researchd.js`. It also reads the
-gate table in `docs/spec/terra-progression.md` and holds each gate to its cost in the corpus, the
-launch to no production pack and the reactor to a branch the silo does not require (ADR-0097), so
-run it after editing that table too.
+The Showcase has no research (ADR-0126), but Terra's arc is measured against Factorio's tech tree,
+extracted rather than transcribed (ADR-0022). `data/factorio/technology.json` and
+`science_packs.json` are the committed reference. Regeneration and provenance are in
+`data/factorio/README.md`. `tests/factorio/test_tech_extract.py` asserts the pruned tree is still a
+valid tree: the extractor drops the infinite, formula-costed and upgrade technologies, re-points a
+dropped node's children to its nearest surviving ancestors, and collapses generated reverse-crafts,
+and the committed tree has no duplicate, dangling or self-referential prerequisite and every
+technology is reachable from a root. It also reads the gate table in
+`docs/spec/terra-progression.md` and holds each gate to its cost in the corpus, the launch to no
+production pack and the reactor to a branch the silo does not require (ADR-0097). Run it after
+re-extracting or after editing that table.
 
 ## Licence check
 
@@ -1098,12 +1087,10 @@ No string a player reads names a coined Factorio term (#304, ADR-0103). `COINED_
 case-insensitive, plural included; a term that matches nothing is the passing state, so nothing
 there goes stale. It scans every value of every shipped lang file (`kubejs/assets/*/lang/` and the
 mod's), skipping keys that start with `_`; the literal argument of each `.displayName(...)` in
-`kubejs/startup_scripts/`, with comments ignored; and the name each declared, non-`skip`
-research ends up with in `researchd.js`, which is its `name:` override or else the id-derived name
-`idName()` builds, plus the research packs' `literalName`. Registry ids and lang keys are exempt, and
+`kubejs/startup_scripts/`, with comments ignored. Registry ids and lang keys are exempt, and
 `kubejs/parked/` and `publish/` are out of scope. A source that yields no strings fails, so a
 scanner that stops matching cannot pass by finding nothing. Run it after adding a lang entry, a
-display name, a quest or a research.
+display name or a quest.
 
 ## Upload check
 

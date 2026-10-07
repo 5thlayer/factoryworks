@@ -132,7 +132,6 @@ def ingredient_of(row):
     """
     if row.get("components"):
         # NeoForge's DataComponentIngredient: one item told apart by the components it carries.
-        # The science packs are the case -- one `researchd:research_pack` item, four variants.
         return {"neoforge:ingredient_type": "neoforge:components", "items": row["target"],
                 "components": row["components"]}
     if row["kind"] == "tag":

@@ -128,10 +128,9 @@ check's section there before editing it or the code it guards. Run the matching 
 | `recipes.js`, `recipe_survivors.js`, the category map | `tests/factorio/test_recipe_sweep.py` |
 | the hand-written Pick recipes | `tests/factorio/test_pack_recipes.py` |
 | `stock-admissions.json`, `stock-substitutions.json`, a jar update | `tests/factorio/test_stock_recipes.py` |
-| `researchd.js` | `test_research_unlocks.py`, `test_tech_extract.py` |
 | the gate table in `docs/spec/terra-progression.md` | `tests/factorio/test_tech_extract.py` |
 | a new kind of file, third-party art, `REUSE.toml` | `tests/pack/test_licensing.py` |
-| a lang entry, display name, quest or research | `tests/pack/test_licensing.py` (coined names) |
+| a lang entry, display name or quest | `tests/pack/test_licensing.py` (coined names) |
 
 Generated output is never hand-edited: re-run its generator, whose `--check` its test runs.
 
@@ -193,8 +192,8 @@ together.
 
 `-PsiblingBuilds` is for trying such a change in the Pack before a library is released (#466, #475).
 It includes, as a composite, the checkout of every row of `local-jars.json` and of each jar the row
-nests, except a row marked `"sibling": false` (Porting Dead Libs, whose tested jitpack binary no
-checkout reproduces), or of only the rows named (`-PsiblingBuilds=craftworks`), each at `-P<name>Dir`, default
+nests, except a row marked `"sibling": false` (a row whose tested binary no checkout reproduces;
+none is now), or of only the rows named (`-PsiblingBuilds=craftworks`), each at `-P<name>Dir`, default
 `~/minecraft_mods/<name>`. The compile and every dev run, `runGameTestServer` included, use those
 checkouts and never their `mods/` jars. The build prints one `siblingBuilds:` line per checkout,
 naming its version and HEAD.

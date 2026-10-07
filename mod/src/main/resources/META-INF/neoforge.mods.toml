@@ -26,9 +26,6 @@ versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
 
-# Researchd is not here at all, because the 26.1.2 port removed every class that touched it -- see
-# `docs/port/blocked-removals-26.1.2.md`.
-#
 # Oritech is **required** (ADR-0071). It was optional while nothing but `mixin/oritech/` and one
 # GameTest class named it, and every Oritech mixin is still `required: false` for the reason it
 # always was: a renamed target is a warning and an uncalibrated engine. The Assembling Machine

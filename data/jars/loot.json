@@ -1,5 +1,5 @@
 {
-  "jars": ["26.1.2.jar", "beltworks-0.3.17.jar", "craftworks-0.7.0.jar", "oritech-2.0.0-exp6.jar", "pipeworks-0.2.0.jar", "researchd-1.2.5.jar", "wireworks-0.4.0.jar"],
+  "jars": ["26.1.2.jar", "beltworks-0.3.17.jar", "craftworks-0.7.0.jar", "oritech-2.0.0-exp6.jar", "pipeworks-0.2.0.jar", "wireworks-0.4.0.jar"],
   "tables": {
     "beltworks:blocks/belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "beltworks:blocks/express_belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:express_belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
@@ -1271,7 +1271,6 @@
     "pipeworks:blocks/creative_pipe": [{"entries":[{"type":"minecraft:item","name":"pipeworks:creative_pipe"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "pipeworks:blocks/pipe": [{"entries":[{"type":"minecraft:item","name":"pipeworks:pipe"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "pipeworks:blocks/storage_tank": [{"entries":[{"type":"minecraft:item","name":"pipeworks:storage_tank"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
-    "researchd:blocks/research_lab_controller": [{"entries":[{"type":"minecraft:item","name":"researchd:research_lab"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "wireworks:blocks/accumulator": [{"entries":[{"type":"minecraft:item","name":"wireworks:accumulator"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "wireworks:blocks/creative_pole": [{"entries":[{"type":"minecraft:item","name":"wireworks:creative_pole"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "wireworks:blocks/large_pole": [{"entries":[{"type":"minecraft:item","name":"wireworks:large_pole"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],

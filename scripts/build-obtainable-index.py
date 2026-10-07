@@ -86,8 +86,8 @@ def recipe_outputs():
 
 
 def stack_key(result):
-    """A result's stack as a string, its components appended as JSON when it carries any: a Researchd
-    science pack is one item told apart by a component (ADR-0052), and EMI hides the ones not listed."""
+    """A result's stack as a string, its components appended as JSON when it carries any: an item told
+    apart by a component (ADR-0052) is hidden by EMI unless listed."""
     components = result.get("components")
     suffix = json.dumps(components, sort_keys=True, separators=(",", ":")) if components else ""
     return "item:" + result["id"] + suffix
