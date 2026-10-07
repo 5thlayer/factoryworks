@@ -2721,6 +2721,11 @@ hash = "8cd3a3e3f55d69d8fbb6aab75a721aaf7a8c1ec9d1bc64065380dcc9fdc39530"
 metafile = true
 
 [[files]]
+file = "mods/craftworks.pw.toml"
+hash = "0b08f699c71f1727061852e5a03a5ebbddeb4a9288463a4e3683528fe300d09f"
+metafile = true
+
+[[files]]
 file = "mods/emi-unofficial-port-unstable.pw.toml"
 hash = "4f2b02a68a2cb7f91d22790bb64cfaed7e9f226a1c61080a860af2abef703c1e"
 metafile = true
