@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.2.0
+
 - The game starts on the floor of a crashed ship at the centre of every hub, its cargo hold filled with the starting kit and debris scattered round it.
 - The Iron and Steel Chests, holding 36 and 54 stacks. No chest pairs into a double chest any more.
 - Iron, copper and steel plate, iron gear wheel, iron stick, copper cable, sulfur and raw uranium are FactoryWorks items.
