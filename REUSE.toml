@@ -44,7 +44,6 @@ path = [
     "kubejs/assets/**",
     "kubejs/data/**",
     "kubejs/parked/**",
-    "config/ftbquests/**",
     "data/pack/**",
     "data/jars/**",
     "data/art/models/**",

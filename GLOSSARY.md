@@ -267,16 +267,12 @@ What a new player starts with, in two halves: the **Pocket**, tools, given to ea
 _Avoid_: starter kit, spawn items, loadout
 
 **Pocket**:
-The starting kit's tools: the Quest Book, the Stone Furnace, the Burner Mining Drill and the Engineer's Iron Pick, one each, in the player's inventory on their first join.
+The starting kit's tools: the Stone Furnace, the Burner Mining Drill and the Engineer's Iron Pick, one each, in the player's inventory on their first join.
 _Avoid_: starting inventory, kit
 
 **Hold**:
 The starting kit's materials: iron plate, copper plate and coal, single digits each, found in the cargo hold. Nothing in it is otherwise unobtainable.
 _Avoid_: loot, ship items, debris
-
-**Quest Book**:
-The book in the player's pocket, which explains what a block does and why the player wants it. It never shows a cost: prices are the research graph's, and the two are kept apart because prices move and verbs do not. It gates nothing: a quest may tick when the game sees its step done, but no progression waits on one (ADR-0034).
-_Avoid_: guide, tutorial, questline, FTB book
 
 ### Terra's ore
 

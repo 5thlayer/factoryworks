@@ -338,7 +338,7 @@ level's spawn and holds it to exactly `StartingKit.HOLD`; removing the stamp's f
 A grant that re-fires on login is an unlimited iron supply and would invalidate every pace reading
 after the first relog (#203). Two static checks, neither of which launches the game. `tests/pack/test_starting_kit.py` asserts every granted id resolves — ours
 against the tier enums that produce the registry paths, every foreign one against the installed jars
-(the quest book is the only one today, since the prospector went with #323), the hold against
+(none today), the hold against
 `data/pack/item-map.json` — and that the pocket is the spec's pocket and the hold exactly the spec's
 three items: an id that names nothing is a silent empty slot, and the moment the hold holds a green
 circuit rung 0 has stopped being taught. The foreign loop filters by namespace rather than by id, so
@@ -1099,8 +1099,7 @@ No string a player reads names a coined Factorio term (#304, ADR-0103). `COINED_
 case-insensitive, plural included; a term that matches nothing is the passing state, so nothing
 there goes stale. It scans every value of every shipped lang file (`kubejs/assets/*/lang/` and the
 mod's), skipping keys that start with `_`; the literal argument of each `.displayName(...)` in
-`kubejs/startup_scripts/`, with comments ignored; the text in `config/ftbquests/quests/` (the lang
-file, and any inline `title`, `subtitle` or `description`); and the name each declared, non-`skip`
+`kubejs/startup_scripts/`, with comments ignored; and the name each declared, non-`skip`
 research ends up with in `researchd.js`, which is its `name:` override or else the id-derived name
 `idName()` builds, plus the research packs' `literalName`. Registry ids and lang keys are exempt, and
 `kubejs/parked/` and `publish/` are out of scope. A source that yields no strings fails, so a

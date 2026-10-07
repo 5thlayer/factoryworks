@@ -30,7 +30,6 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
 KIT = MOD / "start/StartingKit.java"
 GRANT = MOD / "start/StartingKitGrant.java"
-BOOK_TOOLTIP = MOD / "start/client/QuestBookTooltip.java"
 LANG = ROOT / "kubejs/assets/factoryworks/lang/en_us.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 SPEC = ROOT / "docs/spec/terra-progression.md"
@@ -39,13 +38,11 @@ MODS = ROOT / "mods"
 NAMESPACE = "factoryworks"
 
 
-# What each pocket entry has to be recognisable as in the spec's "What you start with" bullet. The
-# book is beat 1's own sentence rather than the bullet's, so it is matched against the beat table.
+# What each pocket entry has to be recognisable as in the spec's "What you start with" bullet.
 POCKET_IN_SPEC = {
     "factoryworks:stone_furnace": "Stone Furnace",
     "factoryworks:burner_mining_drill": "Burner Mining Drill",
     "factoryworks:engineers_iron_pick": "Engineer's Iron Pick",
-    "ftbquests:book": None,
 }
 
 ENTRY = re.compile(r'new Entry\("([^"]+)",\s*(\d+)\)')
@@ -123,14 +120,7 @@ class StartingKitIds(unittest.TestCase):
                           "player starts with an empty slot and nothing is logged" % item)
 
     def test_the_foreign_pocket_items_exist_in_the_installed_jars(self):
-        """The quest book, against the jar rather than against our own belief.
-
-        The prospector used to be the other one. It was `gtceu:prospector.lv` and it is gone: ADR-0056
-        ruled it was never canon, ADR-0045 put every ore patch on the surface so nothing is buried to
-        prospect, and GregTech left with ADR-0060 (#323). This loop is not narrowed to the book --
-        it is the assertion that a foreign id resolves at all, and the next pocket entry borrowed
-        from a jar has to pass it too.
-        """
+        """A pocket entry borrowed from another mod resolves in its installed jar."""
         for item, _ in self.pocket:
             namespace, _, path = item.partition(":")
             if namespace == NAMESPACE:
@@ -175,8 +165,7 @@ class StartingKitIds(unittest.TestCase):
 
 
 class WelcomeKeys(unittest.TestCase):
-    """The first join and the book's tooltip name lang keys (#494, #496); a missing one prints the
-    raw key."""
+    """The first join names a lang key (#494); a missing one prints the raw key."""
 
     def setUp(self):
         self.lang = json.loads(LANG.read_text(encoding="utf-8"))
@@ -186,18 +175,6 @@ class WelcomeKeys(unittest.TestCase):
         self.assertIsNotNone(key, "StartingKitGrant.WELCOME_KEY has moved or changed shape")
         self.assertIn(key.group(1), self.lang,
                       "the first-join message names %s, which the pack's lang lacks" % key.group(1))
-
-    def test_the_book_tooltip_key_is_in_the_pack_lang(self):
-        key = re.search(r'KEY = "([^"]+)"', BOOK_TOOLTIP.read_text(encoding="utf-8"))
-        self.assertIsNotNone(key, "QuestBookTooltip.KEY has moved or changed shape")
-        self.assertIn(key.group(1), self.lang,
-                      "the book's tooltip names %s, which the pack's lang lacks" % key.group(1))
-
-    def test_the_tooltip_is_on_the_book_the_pocket_grants(self):
-        book = re.search(r'BOOK = "([^"]+)"', BOOK_TOOLTIP.read_text(encoding="utf-8"))
-        self.assertIsNotNone(book, "QuestBookTooltip.BOOK has moved or changed shape")
-        self.assertIn(book.group(1), [item for item, _ in entries("POCKET")],
-                      "the tooltip is on %s, which is not the book the pocket grants" % book.group(1))
 
 
 class StartingKitAgainstTheSpec(unittest.TestCase):
@@ -214,15 +191,9 @@ class StartingKitAgainstTheSpec(unittest.TestCase):
         self.assertIsNotNone(bullet, "the spec's Pocket bullet has moved")
         text = bullet.group(1)
         for item, phrase in POCKET_IN_SPEC.items():
-            if phrase is None:
-                continue
             self.assertIn(phrase, text,
                           "the kit grants %s and the spec's Pocket bullet does not name it" % item)
 
-    def test_the_book_is_in_the_kit_because_beat_one_needs_it(self):
-        """Beat 1 says the book is in the inventory, and beat 1 is before anything can grant it."""
-        self.assertIn("The book is in your inventory", self.spec)
-        self.assertIn("ftbquests:book", self.pocket)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 {
-  "jars": ["26.1.2.jar", "beltworks-0.3.17.jar", "craftworks-0.5.0.jar", "ftb-quests-neoforge-26.1.2.7.jar", "oritech-2.0.0-exp6.jar", "pipeworks-0.2.0.jar", "researchd-1.2.5.jar", "wireworks-0.4.0.jar"],
+  "jars": ["26.1.2.jar", "beltworks-0.3.17.jar", "craftworks-0.5.0.jar", "oritech-2.0.0-exp6.jar", "pipeworks-0.2.0.jar", "researchd-1.2.5.jar", "wireworks-0.4.0.jar"],
   "tables": {
     "beltworks:blocks/belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "beltworks:blocks/express_belt_tile": [{"entries":[{"type":"minecraft:item","name":"beltworks:express_belt_tile"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
@@ -24,11 +24,6 @@
     "craftworks:blocks/creative_energy_source": [{"entries":[{"type":"minecraft:item","name":"craftworks:creative_energy_source"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "craftworks:blocks/creative_fluid_source": [{"entries":[{"type":"minecraft:item","name":"craftworks:creative_fluid_source"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "craftworks:blocks/oil_refinery": [{"entries":[{"type":"minecraft:item","name":"craftworks:oil_refinery"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
-    "ftbquests:blocks/loot_crate_opener": [{"entries":[{"type":"minecraft:item","name":"ftbquests:loot_crate_opener"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
-    "ftbquests:blocks/screen_1": [{"entries":[{"type":"minecraft:item","name":"ftbquests:screen_1"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
-    "ftbquests:blocks/screen_3": [{"entries":[{"type":"minecraft:item","name":"ftbquests:screen_3"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
-    "ftbquests:blocks/screen_5": [{"entries":[{"type":"minecraft:item","name":"ftbquests:screen_5"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
-    "ftbquests:blocks/screen_7": [{"entries":[{"type":"minecraft:item","name":"ftbquests:screen_7"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "minecraft:blocks/acacia_button": [{"entries":[{"type":"minecraft:item","name":"minecraft:acacia_button"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "minecraft:blocks/acacia_door": [{"entries":[{"type":"minecraft:item","name":"minecraft:acacia_door","conditions":[{"condition":"minecraft:block_state_property"}]}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],
     "minecraft:blocks/acacia_fence": [{"entries":[{"type":"minecraft:item","name":"minecraft:acacia_fence"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}],

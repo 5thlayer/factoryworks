@@ -144,21 +144,6 @@ def _lang_sources():
     return {str(p.relative_to(ROOT)): _lang_values(p) for p in files}
 
 
-def _quest_sources():
-    quests = ROOT / "config/ftbquests/quests"
-    out = {}
-    for p in sorted(quests.glob("lang/*/*.json5")):
-        out[str(p.relative_to(ROOT))] = _lang_values(p)
-    # A chapter or quest may carry its text inline instead of in the lang file.
-    for p in sorted(quests.glob("chapters/*.json5")) + [quests / "data.json5"]:
-        text = p.read_text(encoding="utf-8")
-        out[str(p.relative_to(ROOT))] = [
-            s for m in re.finditer(
-                r"\b(?:title|subtitle|description)\s*:\s*(\[[^\]]*\]|" + _JS_STRING + ")", text)
-            for s in _strings(m.group(1))]
-    return out
-
-
 def _display_names():
     out = {}
     for p in sorted((ROOT / "kubejs/startup_scripts").glob("*.js")):
@@ -219,7 +204,7 @@ def _pack_names():
 
 def _player_text():
     """source -> the strings a player reads from it."""
-    out = {**_lang_sources(), **_quest_sources(), **_display_names()}
+    out = {**_lang_sources(), **_display_names()}
     out["kubejs/server_scripts/researchd.js (researches)"] = [n for _, n in _declared_researches()]
     out["kubejs/server_scripts/researchd.js (research packs)"] = _pack_names()
     return out
@@ -229,7 +214,6 @@ class LicensingTest(unittest.TestCase):
     def test_no_coined_factorio_name_in_a_string_a_player_reads(self):
         text = _player_text()
         for source in ("kubejs/assets/factoryworks/lang/en_us.json",
-                       "config/ftbquests/quests/lang/en_us/quests.json5",
                        "kubejs/startup_scripts/blocks.js", "kubejs/startup_scripts/items.js",
                        "kubejs/server_scripts/researchd.js (researches)"):
             self.assertTrue(text[source], f"{source} yielded no strings; the scan has rotted")

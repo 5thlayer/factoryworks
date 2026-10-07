@@ -56,7 +56,7 @@ The wreck is ADR-0107: indestructible, roofed, open by a doorway, one cargo hold
 
 | # | Beat | Surface |
 | --- | --- | --- |
-| 1 | Wake up inside the wreck. The book is in your inventory; its tooltip points at the inventory. | — |
+| 1 | Wake up inside the wreck. | — |
 | 2 | Open the inventory. The Personal Assembler is already there. Craft one thing, badly, slowly. | Personal Assembler |
 | 3 | Leave. Four ore fields are visible from the doorway. | — |
 | 4 | Place the Stone Furnace and the Burner Mining Drill from your pocket, the drill facing the furnace. First plates. | hand |

@@ -131,7 +131,6 @@ public final class FactoryWorksCore {
             // What an item is worth as fuel, on its own tooltip: the fuel table is default-deny,
             // so vanilla's intuitions about what burns are wrong in both directions.
             FuelTooltip.register();
-            com.factoryworks.core.start.client.QuestBookTooltip.register();
             com.factoryworks.core.radar.client.RadarMapClient.register();
         }
     }

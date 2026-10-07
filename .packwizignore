@@ -82,7 +82,6 @@ mods/*.jar
 /assets/
 /datapacks/
 /gtceu/
-TrashSlotSaveState.json
 command_history.txt
 emi.json
 observable_announce
@@ -103,9 +102,7 @@ local/
 dumps/
 profilekeys/
 observable_profiles/
-spark-modernfix/
 ldlib2/
-ESM/
 gtceu/prospection_cache/
 config/spark/
 config/jei/
@@ -114,8 +111,6 @@ config/InventoryHUD/
 # Sodium's hash of this machine's GPU and driver, rewritten on every launch.
 config/sodium-fingerprint.json
 config/sodium-options.json
-config/sound_physics_remastered/sound_rates.properties
-config/justzoom/
 config/almostunified/debug.json
 config/emi.css
 config/observable.json
