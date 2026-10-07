@@ -552,10 +552,9 @@ The Pack depends on no third-party content mod (ADR-0109), and `tests/pack/test_
 is the ratchet that holds the removal slices of #566 to it. For each namespace in
 `data/pack/independence-baseline.json`'s `forbidden` list (`railcraft`, `oritech`, `ftbmaterials`,
 `researchd`, `portingdeadlibs`) it counts references across shipped data and compares the count to
-that file's `baseline`. Static; no game launch. Researchd and Porting Dead Libs left with ADR-0126,
-and both namespaces stay forbidden so neither grows back. Their data baselines are 1 and 0: the one
-`researchd` reference is Craftworks' generated comment in `config/craftworks-server.toml` listing
-its Lock sources. Both Java baselines are 0.
+that file's `baseline`. Static; no game launch. `researchd` and `portingdeadlibs` stay forbidden
+though both mods are gone (ADR-0126), so neither grows back; Craftworks' generated comment in
+`config/craftworks-server.toml` still names its `researchd` Lock source.
 
 Each namespace has two counts, each with its own baseline: the data count below, and a Java count
 (`java_baseline`).

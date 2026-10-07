@@ -272,8 +272,8 @@ Sub-rules:
   rather than by name.
 - **Leaves are removed with the tree** — `adapted`, ADR-0051. No drops, no decay ticks. Factorio has
   no leaves at all.
-- **Felling time is halved by research** — `adapted`, ADR-0051. It rides ADR-0039's `steel-axe`
-  ladder rather than declaring a second speed rule.
+- **Felling time is halved by research** — `adapted`, ADR-0051, ADR-0126. *Notice*: the Showcase has
+  no research, so the Engineer's Steel Pick, craftable from the start, fells faster.
 - **No sapling, dropped or crafted** — `excluded`, ADR-0051. Base Factorio has no replanting: a
   wild tree yields only wood, and `tree-seed` is Space Age's. Trees are finite like an ore patch.
 - **Trees are not a fuel or a science input beyond Factorio's own use** — `shipped`. The fuel table
@@ -438,7 +438,7 @@ Sub-rules:
 Sub-rules:
 
 - **Basic oil processing** — `excluded`, #644, ADR-0125. Advanced oil processing is the only way to
-  split crude, and it is researched with oil gathering, since chemical science needs petroleum gas.
+  split crude.
 - **Advanced oil processing** — `shipped`, #644, ADR-0125. A `crafting-with-fluid` recipe under its old
   id on Assembler 2 and 3, whose Fluid Connections pull crude and water from, and push the three
   fractions into, any pipe or tank beside them, so the Pumpjack's crude reaches it through Pipeworks
@@ -733,8 +733,8 @@ Sub-rules:
   completes plus one, between 2 and 100, measured in `data/factorio/overload.json`. Quick transfer (#208, unbuilt) will be held to it through the item handler; the hand in a screen is
   not held to it. A product stops the craft at a full stack, as Factorio's does. The bonus `allow_inserter_overload` gives of 4× the stack
   inserter's stack size is not reproduced, since no feeder or loader carries a stack.
-- **Stack-size bonus research** — `planned`. A loader moves one item per belt entry, and a feeder one item a swing, until #25 picks
-  the technologies (#341).
+- **Stack-size bonus research** — `excluded`, ADR-0126. The Showcase has no research, so a loader
+  moves one item per belt entry and a feeder one item a swing.
 
 ### Logistic robots
 
@@ -822,7 +822,6 @@ Sub-rules:
 - **ticket**: #435 (what a train Library would be)
 
 The six train rows of the item map read `blocked` and the converter emits nothing for them.
-`automated-rail-transportation` stays in the research tree and unlocks nothing.
 
 Sub-rules:
 
@@ -1140,10 +1139,7 @@ Sub-rules:
 - **Walls** — `planned`. Factorio's wall and gate, and the designated member of the
   `factoryworks:destructible` tag — without one, every player picks a different block and the
   mechanic has no shape.
-- **Military science returns** — `planned`. #26's pruning is reversed on its own stated reason; the
-  Factorio tech tree gates `military-2/3/4`, the laser/rocket turrets, `railgun`, `uranium-ammo`,
-  the shields and the power-armor rungs behind it, and ADR-0022 imports that tree as data precisely
-  so its prerequisites are not retyped. Reopens #26 and touches ADR-0018.
+- **Military science returns** — `excluded`, ADR-0126. The Showcase has no research or science packs.
 - **Mechanism is first-party; art and possibly logic are delegated** — `unargued`. A research ticket
   specifies which third-party mods supply models, textures and any borrowed behaviour, and what
   their licenses permit. The Steel Pick's deleted `build-pick-textures.py` was the precedent for

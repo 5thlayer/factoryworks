@@ -29,6 +29,8 @@ fails the *load*, not the build, which is the one failure mode a green compile w
 
 ## Removed because Researchd is not ported yet (#260)
 
+None of these comes back: Researchd left the Showcase with ADR-0126 (#645).
+
 When these went, the pack's Researchd fork was still on 1.21.1, so every file importing
 `com.portingdeadmods.researchd` had to go. The fork is now on 26.1, and #260 decided none of these
 comes back: the Assembling Machine asks Researchd directly (ADR-0058's amendment), and the recipe
@@ -47,9 +49,6 @@ The Minecraft-free rules these files used (`RecipeLockLookup`, `MachineLockStatu
 
 ## What a player loses meanwhile
 
-- **No research annotations.** Researchd loads the tree, and Craftworks' Personal Assembler
-  (ADR-0089) and the Assembling Machine ask it what is Locked for the placing team, but no recipe is
-  annotated in EMI or JEI and no machine names the research it waits on.
 - **No machine chassis**, so none of Terra's Assembling Machines or its Chemical Plant is registered.
 
 ## The order to put it back in

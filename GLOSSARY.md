@@ -392,14 +392,6 @@ _Avoid_: real water, unplaced water, virgin water, source water
 
 ### Making things
 
-**Rung**:
-A tier of Terra's arc, named for the Factorio science pack its technologies cost: rung 0 has no pack, then `automation`, `logistic` and `chemical`. The launch is on rung 3; `production` is the first rung after it (ADR-0097). Each rung opens on a **Gate**, but most gates open a chapter inside a rung.
-_Avoid_: tier, age, era, stage
-
-**Gate**:
-A Factorio technology that opens a chapter of Terra's arc: a **Rung**'s science pack, or a trigger technology Factorio unlocks by doing something rather than by packs, such as mining crude. Every chapter boundary is one, read off the corpus; the pack invents none (ADR-0097). The Showcase has no research, so a gate marks a point in the arc and unlocks nothing (ADR-0126). Unrelated to a **Gated recipe**, which is about where a recipe is crafted.
-_Avoid_: milestone, checkpoint, unlock
-
 **Ingot**:
 The form a metal takes in FactoryWorks' recipes. Any mod's ingot of that metal serves, vanilla's included.
 _Avoid_: plate, sheet, unified plate
@@ -484,13 +476,13 @@ The two heavier fractions of oil processing.
 _Avoid_: heavy fuel, light fuel, fuel oil, kerosene
 
 **The oil chapter**:
-Everything from crude to plastic, lubricant and launch fuel. It opens on the `oil-processing` **Gate**, which mining crude triggers, and spans rungs 2 and 3 rather than sitting in one, because sulfur is petroleum-derived and sulfur gates chemical science (ADR-0097).
-_Avoid_: the oil rung, rung 4, the petroleum tier
+Everything from crude to plastic, lubricant and launch fuel.
+_Avoid_: the oil rung, the petroleum tier
 
 ### The nuclear chapter
 
 **Centrifuge**:
-The machine carrying Factorio's `centrifuging` recipes: uranium processing, and fuel reprocessing at rung 4. A pack block on the crafting chassis wearing Oritech's Foundry, on the Foundry's footprint, holding a **Held recipe** of its own type (ADR-0098).
+The machine carrying Factorio's `centrifuging` recipes: uranium processing, and fuel reprocessing. A pack block on the crafting chassis wearing Oritech's Foundry, on the Foundry's footprint, holding a **Held recipe** of its own type (ADR-0098).
 _Avoid_: isotopic centrifuge, enrichment plant, foundry
 
 **U-235**:
