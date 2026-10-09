@@ -1,90 +1,28 @@
 #!/usr/bin/env python3
-"""Assert the extracted resource corpus still says what ADR-0041 reads off it.
+"""Assert the committed corpus still says what the Pick, the opening and the pump read off it.
 
-`scripts/factorio-resource-extract.py` reads a 28MB Factorio dump that is not in the repo,
-so nothing here re-runs it -- the same arrangement the tech, recipe and machine checks
-work under. What is checkable offline is whether the *committed* output still carries the
-numbers the decision was made on:
+Resource amounts, the outfield law and crude's figures are hand-owned data in
+`factoryworks_core/ore/amounts.json` now, so nothing here compares them to the corpus (#600).
+What stays is the corpus-backed half that belongs to other tickets:
 
-  - **The starting totals re-derive.** Each resource's `starting_amount` is recomputed here
-    from the committed formula and its own `base_density`, so a hand-edit to the total is a
-    failure rather than a new fact. ADR-0041's per-block amount is this number divided by
-    the blocks in a field, so a drifted total is a drifted patch.
-  - **The alphabet is present and placed.** Iron, copper, coal and stone must each carry a
-    starting patch; uranium must not, because Factorio gives it none and that is why Terra's
-    starting area never had one. Terra's fifth field would otherwise be argued from an
-    absence nobody checked.
-  - **One distance law, shared.** Every resource carries the same `max((1000 + distance) /
-    2600, 1)` term and the same flat-within radius. ADR-0041 quotes it as the arithmetic
-    saying Factorio does not reward leaving early; if a resource ever carried its own, that
-    sentence would be about the average of several laws rather than about the law.
-  - **`PickTier` is no longer transcribed.** ADR-0039 labelled its two speeds as read off
-    the wiki because the corpus held no resource dump; it holds one now, so the two tiers
-    are asserted against the character's own `mining_speed` and `steel-axe`'s modifier,
-    parsed out of `PickTier.java`. The pack's own `MINING_TIME` is *half* Factorio's, which
-    is ADR-0039's amendment and stated here as a ratio rather than as a second number to
-    keep in step. `steel-axe`'s modifier is a *fraction* -- `base * (1 + modifier)`, so +100%
-    and not +1 -- which is what makes `PickTier.STEEL`'s 1.0 the researched speed.
-  - **The character walks, and the opening is still crossable in Factorio's time.**
-    `running_speed` is read off the same `character` prototype `mining_speed` comes from, and
-    a regenerated corpus that drops it fails here rather than silently emitting nothing. The
-    row it decides is #207's, which is `adapted, no change` on one arithmetic claim: Terra's
-    furthest starting field, walked at Minecraft's speed, is no further in *time* than
-    Factorio's `starting_resource_placement_radius` at the engineer's. Both halves are read
-    -- the speeds from the corpus, `DISTANCES` out of `scripts/build-terra-start.py` -- so
-    moving the fields out or the radius in fails the check that the ledger row rests on.
-  - **The stage ratios are material-independent, to rounding.** Iron, copper, coal and
-    stone share one `stage_counts` list outright. Uranium's is that list scaled by about
-    2/3 and then *rounded to two or three figures* -- its last rung is 50 where an exact
-    scaling gives 53.3 -- so the fraction sets agree to a stated tolerance and not exactly.
-    The tolerance is asserted here rather than smoothed away in the extractor, because the
-    stages ADR-0041 renders are computed from a resource's own ratios.
-  - **The offshore pump feeds exactly twenty boilers (ADR-0050/#210).** Not two numbers
-    asserted separately -- the *ratio*. The boiler's water draw is re-derived from
-    `data/factorio/machine.json`'s boiler (`energy_consumption`, `target_temperature`) and
-    `data/factorio/fluid.json`'s two fluids (`steam.heat_capacity`, `water.default_temperature`),
-    never read as a trusted 60 mB/s. Two traps live in this arithmetic and both are named
-    inline rather than only in the ADR: `pumping_speed` is per *Factorio tick*, and its `20`
-    coincidentally equals Minecraft's own 20-ticks-per-second, which tempts a reader into
-    treating it as already-per-second and skipping the ×60 that converts Factorio's own tick
-    rate; and `water.heat_capacity` (2 kJ) is a red herring that looks like the obvious term
-    and is six times too large -- the conversion is governed by *steam's* 0.2 kJ, and using
-    water's gives a plausible-looking ~10 units/s instead of 60.
-  - **The outfield spot re-derives (#317).** Each resource's spot -- quantity, radius, peak
-    height and blob amplitude against distance, and the mean spacing -- is recomputed here from
-    a closed form of Factorio's published expressions, spelled independently of the evaluator
-    the extractor runs over the dump, so the two routes agree or one of them is wrong. The
-    spacing's two figures ADR-0045 quotes, ~671 and ~1549 blocks, must fall out of
-    `base_spots_per_km2` and the mean spot size. The edge's octaves and offset must be the ones
-    its expression spells, since the pack's port of the ragged edge reads them (ADR-0045).
-
-  - **Crude's wells re-derive (ADR-0081).** Crude is infinite, its autoplace's tile draw passes
-    1/48 of a field and its richness divides by the same figure, and each cycle yields 10 crude
-    and takes 10 off the well. The wells a field deals and the amount of its centre well are
-    re-derived per distance from the law table: a field's `π·R²/96` columns carry a well, and
-    its centre holds `(48·H + 220000) · max((1000 + d) / 2600, 1)`, which passes 100% yield
-    beyond the flat radius. The mod's slice must carry the same figures.
+  - **`PickTier` is not transcribed.** Its two speeds are asserted against the character's own
+    `mining_speed` and `steel-axe`'s modifier, and the pack's `MINING_TIME` is half Factorio's
+    flat mining time (ADR-0039). `steel-axe`'s modifier is a fraction, so +100% is 1.0.
+  - **The opening is crossable in Factorio's time.** Terra's furthest starting field, walked at
+    Minecraft's speed, is no further in seconds than `starting_resource_placement_radius` at the
+    engineer's running speed. `character_movement` dropped from a regenerated corpus fails here.
+  - **The offshore pump feeds exactly twenty boilers (ADR-0050/#210).** The boiler's water draw
+    is re-derived from `machine.json` and `fluid.json`, never read as a trusted 60 mB/s. Two
+    traps are named inline.
 
 Usage: tests/factorio/test_resource_extract.py
 """
 import json
-import math
 import re
 import sys
-from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-
-# The resources ADR-0041 places on Terra, and whether Factorio deals each a starting patch.
-# Uranium is the false one and is the point of the row: it has none, so Terra has none.
-STARTING_PATCH = {
-    "iron-ore": True,
-    "copper-ore": True,
-    "coal": True,
-    "stone": True,
-    "uranium-ore": False,
-}
 
 # Minecraft's own walking speed, in blocks per second. It is a game constant with no dump to
 # read it from, which is why it is stated here and is the only number in the movement
@@ -113,33 +51,6 @@ FACTORIO_TICKS_PER_SECOND = 60
 # ADR-0050's claim: one Offshore Pump feeds exactly this many Boilers.
 PUMP_TO_BOILER_RATIO = 20
 
-# ADR-0041's table, which is quoted in prose and so must not drift silently.
-STARTING_TOTALS = {
-    "iron-ore": 400_000,
-    "copper-ore": 320_000,
-    "coal": 320_000,
-    "stone": 160_000,
-}
-
-# How far apart two resources' stage ratios may sit and still be one fraction set.
-# Uranium's rounding is the whole reason there is a tolerance; see the module docstring.
-RATIO_TOLERANCE = 0.001
-
-# ADR-0045's quoted mean spacing, keyed by `base_spots_per_km2`: what the derivation must give.
-ADR_SPACING = {2.5: 671, 1.25: 1549}
-
-OUTFIELD_ARGUMENTS = (
-    "random_spot_size_minimum",
-    "random_spot_size_maximum",
-    "regular_rq_factor",
-    "regular_blob_amplitude_multiplier",
-)
-
-RADIUS_CAP = re.compile(r"^min\(\s*([0-9.]+)\s*,")
-
-CRUDE = "crude-oil"
-AMOUNTS = "mod/src/main/resources/factoryworks_core/ore/amounts.json"
-
 PICK_TIER = "mod/src/main/java/com/factoryworks/core/mining/PickTier.java"
 
 # The four resources ADR-0039's flat mining time speaks for. Uranium is excluded on
@@ -161,254 +72,10 @@ def pick_tiers(source):
     return speeds, float(time.group(1)) if time else None
 
 
-def clamp(value, low, high):
-    return min(max(value, low), high)
-
-
-def edge_failures(edge):
-    """The edge's octaves and offset, read back out of the expression they were extracted from."""
-    spelled = edge["blobs0"] + " + " + edge["expression"]
-    scales = re.findall(r"input_scale = ([0-9/.]+), output_scale = ([0-9/.]+)", spelled)
-    want = [{"input_scale": float(Fraction(a)), "output_scale": float(Fraction(b))} for a, b in scales]
-    failures = []
-    if edge["octaves"] != want:
-        failures.append(f"the edge's octaves are {edge['octaves']}, and its expression spells {want}")
-    offset = re.search(r"- ([0-9/.]+)\) \* regular_blob_amplitude_at\(distance\)$", edge["expression"])
-    if not offset or not math.isclose(edge["offset"], float(Fraction(offset.group(1)))):
-        failures.append(f"the edge's offset is {edge['offset']}, and its expression is {edge['expression']!r}")
-    return failures
-
-
-def outfield_failures(data, resources):
-    """Re-derive each resource's outfield spot from a closed form of Factorio's expressions.
-
-    The expressions are `regular_density_at`, `regular_spot_quantity_base_at`,
-    `regular_spot_height_typical_at` and `regular_blob_amplitude_at` in the corpus's
-    `outfield_law`, the spot's radius in `outfield_expressions`, and
-    `regular_blob_amplitude_maximum_distance` there too. None of the resources here has
-    `has_starting_area_placement == -1`, the branch those expressions special-case, so the
-    closed form spells the other branch only.
-    """
-    failures = []
-    constants = data["constants"]
-    controls = data["controls"]
-    frequency, size = controls["frequency_multiplier"], controls["size_multiplier"]
-    starting_radius = constants["starting_resource_placement_radius"]
-    fade_in = constants["regular_patch_fade_in_distance"]
-    doubling = constants["double_density_distance"]
-    reach = doubling + fade_in
-    radius_expression = data["outfield_expressions"]["regular_spot_radius_expression"]
-    cap = RADIUS_CAP.match(radius_expression)
-    if not cap:
-        return [f"the spot radius {radius_expression!r} is no longer min(cap, ...) -- re-derive it"]
-    radius_cap = float(cap.group(1))
-
-    for name in sorted(set(STARTING_PATCH) | set(resources)):
-        spot = (resources.get(name) or {}).get("outfield")
-        if not spot:
-            failures.append(f"{name} carries no outfield spot -- the outfield law cannot be computed")
-            continue
-        missing = [key for key in OUTFIELD_ARGUMENTS if not isinstance(spot.get(key), (int, float))]
-        if missing:
-            failures.append(f"{name}'s outfield spot is missing {', '.join(missing)}")
-            continue
-        resource = resources[name]
-        rq = spot["regular_rq_factor"]
-        typical = (spot["random_spot_size_minimum"] + spot["random_spot_size_maximum"]) / 2
-        per_spot = 1_000_000 / resource["base_spots_per_km2"] / frequency
-
-        def density(distance):
-            fade = clamp((distance - starting_radius) / fade_in, 0, 1)
-            doubled = 1 + clamp((distance - fade_in) / doubling, 0, 1)
-            return resource["base_density"] * frequency * size * fade * doubled
-
-        def height(distance):
-            return (typical * per_spot * density(distance)) ** (1 / 3) / (math.pi / 3 * rq ** 2)
-
-        if spot["regular_blob_amplitude_maximum_distance"] != reach:
-            failures.append(
-                f"{name}'s regular_blob_amplitude_maximum_distance is "
-                f"{spot['regular_blob_amplitude_maximum_distance']}, and "
-                f"double_density_distance + regular_patch_fade_in_distance is {reach}"
-            )
-
-        for row in spot["law"]:
-            distance = row["distance"]
-            quantity = typical * per_spot * density(distance)
-            want = {
-                "density": density(distance),
-                "spot_quantity": quantity,
-                "spot_radius": min(radius_cap, rq * quantity ** (1 / 3)),
-                "spot_height": height(distance),
-                "blob_amplitude": spot["regular_blob_amplitude_multiplier"]
-                * min(height(reach), height(distance)),
-            }
-            for key, value in want.items():
-                if not math.isclose(row[key], value, rel_tol=1e-9, abs_tol=1e-9):
-                    failures.append(
-                        f"{name}'s {key} at {distance} blocks is {row[key]}, and the closed form "
-                        f"of Factorio's expression gives {value}"
-                    )
-
-        spacing = math.sqrt(per_spot * typical)
-        if not math.isclose(spot["mean_spacing"], spacing, rel_tol=1e-9):
-            failures.append(
-                f"{name}'s mean spacing is {spot['mean_spacing']}, and one spot of mean size per "
-                f"{per_spot * typical:.0f} blocks² gives {spacing}"
-            )
-        if name not in STARTING_PATCH:
-            continue
-        quoted = ADR_SPACING.get(resource["base_spots_per_km2"])
-        if quoted is None:
-            failures.append(
-                f"{name} places {resource['base_spots_per_km2']} spots/km², which ADR-0045 quotes no "
-                "spacing for"
-            )
-        elif round(spacing) != quoted:
-            failures.append(f"{name}'s mean spacing is {spacing:.0f} blocks, and ADR-0045 quotes ~{quoted}")
-
-    return failures
-
-
-def crude_failures(resources, amounts):
-    """Crude's well and the fields its law deals, re-derived from the committed corpus (ADR-0081)."""
-    crude = resources.get(CRUDE)
-    if crude is None:
-        return [f"{CRUDE} is not in the corpus -- Terra has no crude source"]
-    well = crude.get("infinite_yield")
-    if not crude["infinite"] or not well:
-        return [f"{CRUDE} carries no infinite yield -- ADR-0081's well has no figures"]
-    failures = []
-    if [r for r in resources.values() if r.get("infinite_yield") and r["name"] != CRUDE]:
-        failures.append("a resource other than crude carries an infinite yield")
-    if not math.isclose(1 / well["random_probability"], 48, rel_tol=1e-9):
-        failures.append(f"crude's tile draw passes 1/{1 / well['random_probability']:.3f}, not 1/48")
-    if well["richness_divisor"] != well["random_probability"]:
-        failures.append("crude's richness no longer divides by its random_probability -- the ×48 is gone")
-    if well["results"] != [{"type": "fluid", "name": CRUDE, "amount": 10}]:
-        failures.append(f"a crude cycle yields {well['results']}, not 10 crude-oil")
-    if well["infinite_depletion_amount"] != 10:
-        failures.append(f"a cycle takes {well['infinite_depletion_amount']} off a well, not 10")
-    if well["normal"] != 300_000 or well["minimum"] * 5 != well["normal"]:
-        failures.append(f"crude's normal {well['normal']} and minimum {well['minimum']} are not 300,000 and 20% of it")
-    if math.ceil(well["collision_width"]) != 3:
-        failures.append(f"crude's collision box is {well['collision_width']} wide, which spaces wells "
-                        f"{math.ceil(well['collision_width'])} apart, not 3")
-    if well["additional_richness"] != 220_000:
-        failures.append(f"crude's flat richness is {well['additional_richness']}, not 220,000")
-
-    law = crude["distance_law"]
-    far = []
-    for row in crude["outfield"]["law"]:
-        if not row["spot_radius"]:
-            if row["distance"] > 150:
-                failures.append(f"crude deals no field {row['distance']} blocks out")
-            continue
-        if row["distance"] <= 150:
-            failures.append(f"crude deals a field within 150 blocks, at {row['distance']}")
-        wells = math.pi * row["spot_radius"] ** 2 * well["random_probability"] / 2
-        richness = max((law["offset"] + row["distance"]) / law["divisor"], 1)
-        centre = (row["spot_height"] / well["richness_divisor"] + well["additional_richness"]) * richness
-        if not 1 <= wells <= 30:
-            failures.append(f"a crude field {row['distance']} blocks out deals {wells:.1f} wells")
-        if row["distance"] >= 3000:
-            far.append(centre)
-    if not far or min(far) <= well["normal"]:
-        failures.append("no far crude well starts above 100% yield")
-
-    sliced = amounts.get("crude_oil") or {}
-    for key, value in (("normal", well["normal"]), ("minimum", well["minimum"]),
-                       ("infinite_depletion_amount", well["infinite_depletion_amount"]),
-                       ("random_probability", well["random_probability"]),
-                       ("additional_richness", well["additional_richness"]),
-                       ("amount_per_cycle", 10), ("mining_time", crude["mining_time"])):
-        if sliced.get(key) != value:
-            failures.append(f"the mod's crude slice has {key} {sliced.get(key)}, the corpus {value}")
-    return failures
-
-
 def main():
     data = json.loads((ROOT / "data/factorio/resource.json").read_text())
     resources = {r["name"]: r for r in data["resources"]}
-    formula = data["starting_amount_formula"]
-    controls = data["controls"]
     failures = []
-
-    for name, wants_patch in sorted(STARTING_PATCH.items()):
-        resource = resources.get(name)
-        if resource is None:
-            failures.append(f"{name} is not in the corpus -- Terra's alphabet has a hole")
-            continue
-        if resource["has_starting_area_placement"] != wants_patch:
-            failures.append(
-                f"{name} has_starting_area_placement is {resource['has_starting_area_placement']}, "
-                f"expected {wants_patch}"
-            )
-        if wants_patch and not resource["base_density"]:
-            failures.append(f"{name} carries no base_density -- its total has no source")
-
-    for name, resource in sorted(resources.items()):
-        total = resource["starting_amount"]
-        if not resource["has_starting_area_placement"]:
-            if total is not None:
-                failures.append(f"{name} has no starting patch but states a total of {total}")
-            continue
-        want = eval(  # noqa: S307 -- the formula is the dump's and the names are bound here
-            formula,
-            {"__builtins__": {}},
-            {
-                "base_density": resource["base_density"],
-                "frequency_multiplier": controls["frequency_multiplier"],
-                "size_multiplier": controls["size_multiplier"],
-            },
-        )
-        if total is None or abs(total - want) > 1e-6:
-            failures.append(
-                f"{name} states a starting total of {total}, but {formula} on "
-                f"base_density {resource['base_density']} gives {want}"
-            )
-
-    for name, want in sorted(STARTING_TOTALS.items()):
-        resource = resources.get(name)
-        if resource and resource["starting_amount"] != want:
-            failures.append(
-                f"{name} starting total is {resource['starting_amount']}, and ADR-0041 quotes {want}"
-            )
-
-    laws = {
-        (r["distance_law"] or {}).get("term") for r in resources.values()
-    }
-    if len(laws) != 1 or None in laws:
-        failures.append(f"resources carry {len(laws)} distance laws, not one: {sorted(map(str, laws))}")
-    else:
-        flat = {(r["distance_law"] or {})["flat_within"] for r in resources.values()}
-        if flat != {1600}:
-            failures.append(f"the distance law is flat within {sorted(flat)} tiles, and ADR-0041 quotes 1600")
-
-    staged = {n: r for n, r in resources.items() if len(r["stage_counts"]) > 1}
-    if len(staged) < len(STARTING_PATCH):
-        failures.append(
-            f"only {len(staged)} resources carry sprite stages; every ore in the alphabet needs them"
-        )
-    reference = staged.get("iron-ore", {}).get("stage_ratios")
-    if not reference:
-        failures.append("iron-ore carries no stage ratios -- there is nothing to render a stage from")
-    else:
-        if abs(reference[0] - 1.0) > 1e-9:
-            failures.append(f"iron-ore's first stage ratio is {reference[0]}, not a full block")
-        for name, resource in sorted(staged.items()):
-            ratios = resource["stage_ratios"]
-            if len(ratios) != len(reference):
-                failures.append(
-                    f"{name} has {len(ratios)} stages against iron-ore's {len(reference)}"
-                )
-                continue
-            drift = max(abs(a - b) for a, b in zip(ratios, reference))
-            if drift > RATIO_TOLERANCE:
-                failures.append(
-                    f"{name}'s stage ratios differ from iron-ore's by {drift:.4f}, over the "
-                    f"{RATIO_TOLERANCE} rounding tolerance -- the fraction set is no longer shared"
-                )
 
     hand = data.get("hand_mining") or {}
     source = (ROOT / PICK_TIER).read_text()
@@ -441,13 +108,6 @@ def main():
                 f"PickTier.MINING_TIME is {mining_time}, and half Factorio's is {want} "
                 "-- ADR-0039 halves it and does not choose it"
             )
-
-    for key in ("starting_resource_placement_radius", "regular_patch_fade_in_distance",
-                "double_density_distance"):
-        if not data["constants"].get(key):
-            failures.append(f"the outfield law is missing {key}")
-    if "regular_density_at" not in data["outfield_law"]:
-        failures.append("no regular_density_at -- the outfield law did not come across")
 
     movement = data.get("character_movement") or {}
     running = movement.get("running_speed")
@@ -560,20 +220,15 @@ def main():
                         "no longer holds against the extracted corpus"
                     )
 
-    failures += outfield_failures(data, resources)
-    failures += edge_failures(data["outfield_edge"])
-    failures += crude_failures(resources, json.loads((ROOT / AMOUNTS).read_text()))
-
     for index, failure in enumerate(failures, 1):
         print(f"FAIL {index}: {failure}")
     if failures:
         return 1
     print(
-        f"ok   {len(resources)} resources, {len(staged)} with stages, one distance law "
-        f"flat within 1600 tiles; totals re-derive from {formula}; PickTier {bare}/{researched} "
-        f"matches the character; every outfield spot and its edge re-derive; the opening crosses in "
+        f"ok   PickTier {bare}/{researched} matches the character; the opening crosses in "
         f"{max(float(part) for part in DISTANCES_PATTERN.search((ROOT / TERRA_START).read_text()).group(1).split(',')) / MINECRAFT_WALK_SPEED:.1f}s "
-        f"against Factorio's {data['constants']['starting_resource_placement_radius'] / per_second:.1f}s"
+        f"against Factorio's {data['constants']['starting_resource_placement_radius'] / per_second:.1f}s; "
+        "one pump feeds twenty boilers"
     )
     return 0
 

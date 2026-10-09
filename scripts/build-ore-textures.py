@@ -3,7 +3,7 @@
 
 ADR-0041 renders a block's remaining amount as one of Factorio's eight sprite stages. Factorio's
 own thresholds are amounts -- 15000 down to 80 -- which do not port to blocks holding about a
-thousand; what ports is the *ratio set*, and `data/factorio/resource.json` carries it per resource
+thousand; what ports is the *ratio set*, and `amounts.json` carries it per resource
 as `stage_ratios`. Those ratios are where a block changes stage. **What each stage draws is an even
 step**: stage `i` of `n` keeps `(n - i) / n` of the full sprite's ore, because the late ratios
 (8.7% down to 0.5%) are too small to see and Jade shows the exact amount (#321). The ore goes
@@ -16,8 +16,6 @@ the ore, and a removed pixel takes the colour of a nearby stone pixel in the sou
 
 **Stone is generated** (#363) as Factorio's stone reads: tan boulders standing on the ground. They
 are placed from a fixed seed and go whole.
-
-Run after re-extracting the corpus, in case Factorio changed its stage counts:
 
     scripts/build-ore-textures.py
     scripts/build-ore-textures.py --check    # what tests/ runs: regenerate and diff
@@ -34,18 +32,10 @@ import sys
 import zlib
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-CORPUS = os.path.join(ROOT, "data", "factorio", "resource.json")
+AMOUNTS = os.path.join(ROOT, "mod", "src", "main", "resources", "factoryworks_core", "ore", "amounts.json")
 OUT = os.path.join(ROOT, "kubejs", "assets", "factoryworks", "textures", "block", "ore")
 
-# Terra's alphabet, and the Factorio resource each block's amounts are read from. The block ids
-# are the pack's; the keys are Factorio's, because that is what the corpus is keyed by (ADR-0028).
-RESOURCES = {
-    "iron": "iron-ore",
-    "copper": "copper-ore",
-    "coal": "coal",
-    "uranium": "uranium-ore",
-    "stone": "stone",
-}
+RESOURCES = ("coal", "copper", "iron", "stone", "uranium")
 
 STONE = (122, 122, 122)
 
@@ -213,16 +203,16 @@ def boulder_sprites(resource, ratios):
 
 
 def build():
-    corpus = json.load(open(CORPUS, encoding="utf-8"))
-    by_name = {entry["name"]: entry for entry in corpus["resources"]}
+    with open(AMOUNTS, encoding="utf-8") as handle:
+        by_key = json.load(handle)["resources"]
     files = {}
-    for resource, factorio in sorted(RESOURCES.items()):
-        entry = by_name.get(factorio)
+    for resource in sorted(RESOURCES):
+        entry = by_key.get(resource)
         if entry is None:
-            sys.exit(f"{factorio} is not in the corpus -- re-run scripts/factorio-resource-extract.py")
+            sys.exit(f"{resource} is not in {AMOUNTS}")
         ratios = entry["stage_ratios"]
         if len(ratios) < 2:
-            sys.exit(f"{factorio} carries {len(ratios)} stage ratios; there is nothing to render")
+            sys.exit(f"{resource} carries {len(ratios)} stage ratios; there is nothing to render")
         images = (sourced_sprites(resource, ratios) if resource in SOURCED
                   else boulder_sprites(resource, ratios))
         for stage, image in enumerate(images):
@@ -246,7 +236,7 @@ def main():
             print(f"FAIL: {os.path.relpath(path, ROOT)} is missing or stale")
         if stale:
             return 1
-        print(f"ok   {len(files)} ore stage sprites match the corpus's stage count")
+        print(f"ok   {len(files)} ore stage sprites match amounts.json's stage ratios")
         return 0
 
     os.makedirs(OUT, exist_ok=True)
