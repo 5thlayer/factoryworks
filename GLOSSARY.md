@@ -68,7 +68,7 @@ Reactor are built from.
 
 **Sink**:
 A consumer whose demand grows with the factory and never runs out, so a bigger factory always has
-somewhere for its output to go. The suite's endgame is built from Sinks.
+somewhere for its output to go.
 _Avoid_: endgame (for the consumer itself), resource drain, money sink
 
 **Gear**:

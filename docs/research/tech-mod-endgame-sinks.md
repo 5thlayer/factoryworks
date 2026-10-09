@@ -1,6 +1,6 @@
 # How do tech mods handle endgame content and resource sinks?
 
-**Answer: almost no tech mod ships a real *never-ending* sink. Most mods end in a one-off milestone
+**Answer (rests mostly on unverified [U] claims; see below): almost no tech mod ships a real *never-ending* sink. Most mods end in a one-off milestone
 (a creative or "infinity" item, a fusion reactor, a capstone multiblock) plus player gear. The sinks
 that keep demand alive are either packs' quest and recipe glue, or a small set of mechanisms with
 running costs: fuel-burning reactors, energy-hungry player gear, upkeep storage and
@@ -197,6 +197,8 @@ be read. So:
 - GregTech is the counterexample: a code API that only KubeJS packs can bend.
 
 **Lessons for the -works suite.**
+
+_These are proposals for the grilling session, not decisions, and they rest on the [U] claims above. A decision lands in an ADR._
 
 - **Ship a default endgame** made of three pieces, each a datapack value with a sensible default:
   (a) a milestone (a launch- or rocket-like capstone); (b) an infinite sink that is rate-based or
