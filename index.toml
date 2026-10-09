@@ -270,7 +270,7 @@ hash = "5480207deb713e411eea04bc4126967d8fd6069d3ca3e237eedde110a37d6bfc"
 
 [[files]]
 file = "data/pack/art-provenance.json"
-hash = "9bd9e564f1c9b0f7fde90dd9374807c30c95024ebb572e748bcc9c142681dee5"
+hash = "2df116576481c5b7cc2d349a9b33ca3ef4c6f3821f9d3202bd128125c77dd7fc"
 
 [[files]]
 file = "data/pack/category-map.json"
@@ -290,7 +290,7 @@ hash = "8f682e8bd98860a14954ab69d630c64e65d3893a1d4fba71449e7f6c1f918707"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "2bfd5b176dd0c3df871545b90b6e388184300a7a93e490c555677b3b92b7e6a8"
+hash = "9856ae2612268dee5c5a850c655ae043962fcc86ea482a44da036d201db04c7c"
 
 [[files]]
 file = "data/pack/mechanic-obtainable.json"
@@ -2110,7 +2110,7 @@ hash = "95706d93e205d6120e8e98a59144add769c07dcc24048f4ac17226b3a2e0af5f"
 
 [[files]]
 file = "kubejs/data/factoryworks/tags/block/buildings.json"
-hash = "6f07a51cc024ba8123938b94c9c3d3d8ee2804232d968b39be7f1cca6e2f5bdd"
+hash = "965d5ab8fdb54a61fad8563f314842e314e0e70ebabd267ceb37ef2f4d85fe6d"
 
 [[files]]
 file = "kubejs/data/factoryworks/tags/block/dismantle/pipes.json"
@@ -2651,11 +2651,6 @@ hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
 metafile = true
 
 [[files]]
-file = "mods/beltworks.pw.toml"
-hash = "dacf1f12891c966eb4625d9436988ae52f3f345620e1bdfdd62cfc1891e5662b"
-metafile = true
-
-[[files]]
 file = "mods/better-advanced-tooltips.pw.toml"
 hash = "7a529047843ae51f3068a44d279ce807e48acd8fff268516c0c9fb2715ddd9aa"
 metafile = true
@@ -2785,5 +2780,5 @@ hash = "b0b4551c028dd97fa9adea1c4fad8a4d893e44bd56ebe9ff0cf8da216fc80741"
 metafile = true
 
 [[files]]
-file = "mods/wireworks-0.4.0.jar"
-hash = "f3438624dcc210d85c35280e19bbf084393c091c973f53fec98747649b75cc26"
+file = "mods/wireworks-0.5.0.jar"
+hash = "966cbf80ce58aa0e516d102e9d8fe6d8b72724860c6992a4ac695b68b92cb16d"

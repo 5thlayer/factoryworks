@@ -82,11 +82,22 @@ def requiredRange = { String modId ->
             }
         }
     }.unique()
-    if (ranges.size() != 1) {
-        throw new GradleException("the pinned jars require ${modId} under ${ranges ?: 'no range'}, not one -- "
+    // Core needs what every jar needs, so the ranges are intersected; only `[a,b)` is understood.
+    def bounds = ranges.collect { range ->
+        def m = range =~ /^\[([\d.]+),([\d.]+)\)$/
+        if (!m) {
+            throw new GradleException("${modId} is required under ${range}, which is not of the form [a,b)")
+        }
+        [m[0][1], m[0][2]]
+    }
+    if (bounds.isEmpty()) {
+        throw new GradleException("no pinned jar requires ${modId} -- "
                 + (siblingBuilds ? 'check the checkouts' : 'run scripts/sync-local-jars.py'))
     }
-    ranges[0]
+    def key = { String v -> v.split(/\./).collect { it.padLeft(6, '0') }.join('.') }
+    def low = bounds*.get(0).max { key(it) }
+    def high = bounds*.get(1).min { key(it) }
+    "[${low},${high})".toString()
 }
 def requiredArtifacts = ['groundworks']
 

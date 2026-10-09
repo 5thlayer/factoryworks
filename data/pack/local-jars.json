@@ -16,7 +16,7 @@
       "mod": "beltworks",
       "group": "io.github.5thlayer",
       "artifact": "beltworks",
-      "version": "0.3.17",
+      "version": "0.4.0",
       "pattern": "beltworks-*.jar",
       "curseforge": 1714527,
       "source": {
@@ -40,7 +40,7 @@
       "mod": "wireworks",
       "group": "io.github.5thlayer",
       "artifact": "wireworks",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "pattern": "wireworks-*.jar",
       "source": {
         "repo": "5thlayer/wireworks",

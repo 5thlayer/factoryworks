@@ -165,7 +165,7 @@ version `scripts/release.sh` last released, the same way.
 The build reads the same
 table and names no Library (#475, ADR-0090): every pinned jar is on the compile classpath and the dev
 runs, and the range the pinned jars require Groundworks under is read from their `neoforge.mods.toml`
-into Core's as `groundworks_version_range`, failing the build if they disagree. So the Pack names no
+into Core's as `groundworks_version_range`, intersected across them. So the Pack names no
 Groundworks version, and adding a Library is a row and a sync. `tests/pack/test_local_jars.py` runs
 the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
 holds it; a newer version in `~/.m2` is named without failing. For a
