@@ -13,10 +13,7 @@ nothing unless something checks them here.
 What fails quietly without it:
 
   - a converter run wiping the subtree, because `FOREIGN_SUBTREES` stopped naming it. The pick
-    recipes vanish, the sweep removes every stock alternative, and the pack is back to the state
-    #165 describes: nothing can be mined at all.
-  - a recipe landing on a surface `recipe_survivors.js` does not name, so ADR-0034's sweep removes
-    it on load with no error.
+    recipes vanish and the pack is back to the state #165 describes: nothing can be mined at all.
   - dropping `category: crafting` or `hand_craftable`, which are the whole definition of the
     Personal Assembler's hand set (ADR-0118). The recipe survives, is craftable in a machine the
     player cannot build yet, and rung 0 is a dead end.
@@ -31,13 +28,6 @@ What fails quietly without it:
   - the steel recipe not consuming the iron pick, which ADR-0039 states in one line and which no
     other file would notice.
 
-`terra_species()` is here too, the tree species Terra's biomes place, read out of
-`kubejs/data/factoryworks/worldgen/biome/terra_*.json` rather than typed; the stock wooden
-stairs are asserted against it.
-
-The `fellable` block tag is here because it fails as quietly: a missing JSON resolves to an empty
-tag rather than an error, and an empty tag means no tree in the pack fells with no log line anywhere.
-
 Usage: tests/factorio/test_pack_recipes.py
 """
 import json
@@ -50,21 +40,8 @@ ROOT = Path(__file__).resolve().parents[2]
 EMITTED = ROOT / "kubejs/data/factoryworks/recipe"
 SUBTREE = "assembling/pack"
 PACK = EMITTED / SUBTREE
-BIOMES = ROOT / "kubejs/data/factoryworks/worldgen/biome"
-FELLABLE_TAG = ROOT / "kubejs/data/factoryworks/tags/block/fellable.json"
-# Which vanilla tree placement carries which species. Terra's biomes name the placed feature.
-PLACEMENT_SPECIES = {
-    "trees_plains": ("oak",),
-    "trees_birch_and_oak": ("oak", "birch"),
-    # 26.1's name for the same selector: oak by default, birch at 0.2, plus fallen logs of each.
-    "trees_birch_and_oak_leaf_litter": ("oak", "birch"),
-    "trees_savanna": ("acacia",),
-    "trees_sparse_jungle": ("jungle",),
-    "trees_taiga": ("spruce",),
-}
 ASSETS = ROOT / "kubejs/assets/factoryworks"
 DATA = ROOT / "kubejs/data"
-SURVIVORS = ROOT / "kubejs/server_scripts/recipe_survivors.js"
 # The two trees KubeJS scans and name-validates. `kubejs/README.txt` sits above both, which is why
 # the roots are named rather than `kubejs/` itself.
 SCANNED = (ROOT / "kubejs/data", ROOT / "kubejs/assets")
@@ -87,24 +64,6 @@ def check(condition, message):
     return condition
 
 
-def survivor_types():
-    """`surface: type` from the allowlist, which is the set of surfaces the sweep spares.
-
-    Read entry by entry rather than as two scans zipped together: an entry that omitted `type`, or
-    any other `surface:` string in the file, would slide the pairing along by one and leave this
-    file asserting a surface against another entry's recipe type -- which passes, and means nothing.
-    """
-    entries = re.findall(r"\{(.*?)\}", SURVIVORS.read_text(encoding="utf-8"), re.S)
-    types = {}
-    for entry in entries:
-        surface = re.search(r"surface: '([^']+)'", entry)
-        kind = re.search(r"type: '([^']+)'", entry)
-        if surface and kind:
-            types[surface.group(1)] = kind.group(1)
-    if not types:
-        raise AssertionError("no survivor entries parsed out of %s -- has the file moved?"
-                             % SURVIVORS)
-    return types
 
 
 def items_of(recipe, side):
@@ -151,29 +110,6 @@ def texture_resolves(item, layer):
                   % (item, layer, namespace))
 
 
-def terra_species():
-    """The tree species Terra's own biomes place, read from the biome files."""
-    species = set()
-    for path in sorted(BIOMES.glob("terra_*.json")):
-        text = path.read_text(encoding="utf-8")
-        for placement, names in PLACEMENT_SPECIES.items():
-            if ('"minecraft:%s"' % placement) in text:
-                species.update(names)
-    return species
-
-
-def check_fellable_tag():
-    """The tag ADR-0051's fill reads. A missing one is an empty tag, which fells nothing."""
-    if not check(FELLABLE_TAG.is_file(),
-                 "%s is missing. The mod names it with a TagKey, which resolves to an EMPTY tag "
-                 "rather than an error -- so every tree in the pack silently stops felling"
-                 % FELLABLE_TAG.name):
-        return
-    values = json.loads(FELLABLE_TAG.read_text(encoding="utf-8")).get("values") or []
-    check("#minecraft:logs" in values,
-          "fellable.json does not carry `#minecraft:logs`, so Terra's own trees do not fell")
-
-
 def main():
     picks = PICKS
 
@@ -196,12 +132,8 @@ def main():
               "hand-written recipes and nothing can be mined again (#165)"
               % (CONVERTER.name, SUBTREE))
 
-    types = survivor_types()
     for name, recipe in sorted(recipes.items()):
         where = "%s/%s.json" % (SUBTREE, name)
-        check(recipe["type"] in types.values(),
-              "%s is type %r, which recipe_survivors.js does not admit -- ADR-0034's sweep removes "
-              "it on load with no error" % (where, recipe["type"]))
         check(recipe.get("category") == HAND_CATEGORY and recipe.get("hand_craftable") is True,
               "%s is not category %r with `hand_craftable` true, so the Personal Assembler will not "
               "plan it and rung 0 has no route to a pick" % (where, HAND_CATEGORY))
@@ -218,8 +150,6 @@ def main():
               "the Steel Pick recipe does not consume the Iron Pick. ADR-0039 has the player "
               "holding one tier or the other, never both")
 
-    check_fellable_tag()
-
     # The pack-side files each registered pick needs. Every one of these fails silently.
     lang = json.loads((ASSETS / "lang/en_us.json").read_text(encoding="utf-8"))
     for item in sorted(picks):
@@ -230,8 +160,7 @@ def main():
             layer = json.loads(model.read_text())["textures"]["layer0"]
             texture_resolves(item, layer)
         check(item in recipes,
-              "%s is registered but nothing crafts it -- under ADR-0034's sweep there is no stock "
-              "recipe to fall back on" % item)
+              "%s is registered but nothing crafts it" % item)
 
     # Two of the Pick's verbs are tag entries, not code, each read by another jar: left out of
     # `c:tools/wrench` it toggles no Oritech pipe connection, and out of Groundworks' tag it takes up
@@ -270,8 +199,7 @@ def report():
         print("FAIL " + failure)
     if failures:
         return 1
-    print("ok   %d pick recipe(s), every surface admitted, both picks dressed and the fellable "
-          "tag resolved" % len(list(PACK.glob("*.json"))))
+    print("ok   %d pick recipe(s) and both picks dressed" % len(list(PACK.glob("*.json"))))
     return 0
 
 

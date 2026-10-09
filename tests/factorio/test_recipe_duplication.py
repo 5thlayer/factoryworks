@@ -2,7 +2,7 @@
 """Assert no item is made by two recipes unless a decision says it is.
 
 Every other recipe check in this directory owns ONE subtree and reads ONE input table: the Factorio
-converter's, the hand-written pack subtree's, the stock re-authoring's. That is
+converter's and the hand-written pack subtree's. That is
 the right shape for asking "did this converter do its job", and it is blind to the one question
 none of them can ask -- whether two converters, or one converter twice, made the same item.
 

@@ -58,7 +58,7 @@ def main():
                 failures.append(f"{stem} is hand-craftable with {len(recipe['results'])} results, "
                                 "and the Personal Assembler plans one")
         row = corpus.get(stem.removeprefix("assembling/"))
-        if row is not None and not stem.startswith(("assembling/stock/", "assembling/pack/")):
+        if row is not None and not stem.startswith("assembling/pack/"):
             want = row["category"] == HAND_CATEGORY
             if flag != want:
                 failures.append(f"{stem} has hand_craftable {flag}, but Factorio's first category "
