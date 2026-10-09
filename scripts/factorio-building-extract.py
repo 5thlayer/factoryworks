@@ -9,8 +9,6 @@ Three kinds of placed entity are not Buildings, and are marked rather than dropp
 which a seed places; a vehicle, which moves; and a robot, which flies off. They are named by
 Factorio entity type in `MOBILE` below.
 
-This script does not join anything onto the pack: the `factoryworks:buildings` tag is hand-owned (#599).
-
 Usage:
 
     scripts/factorio-building-extract.py            # finds the dump, writes data/factorio/building.json
