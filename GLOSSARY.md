@@ -66,6 +66,23 @@ _Avoid_: plastic bar
 Wireworks' part made of one cathode, one anode and one electrolyte, which the accumulator and the
 Reactor are built from.
 
+**Sink**:
+A consumer whose demand grows with the factory and never runs out, so a bigger factory always has
+somewhere for its output to go. The suite's endgame is built from Sinks.
+_Avoid_: endgame (for the consumer itself), resource drain, money sink
+
+**Gear**:
+What the player wears or carries that the suite's materials make, raising how fast they build and
+move through the factory.
+_Avoid_: equipment (that is belt equipment), armor, tools
+
+**Gear Grid**:
+The slots in a piece of Gear that hold its upgrades.
+_Avoid_: equipment grid, module grid
+
+**Gearworks**:
+The Module that owns Gear.
+
 ## Language
 
 ### Naming exceptions
