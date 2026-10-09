@@ -1377,8 +1377,28 @@ file = "kubejs/data/c/tags/block/ores.json"
 hash = "d3526ad16836dcc0ccf5459d3b91dbe89449e2c1579876d70be0ddb367ca3441"
 
 [[files]]
+file = "kubejs/data/c/tags/block/ores/coal.json"
+hash = "81113c95d12430ab282fdc6a545a730c4e576faa8b5a1728cf73b5e195ff078b"
+
+[[files]]
+file = "kubejs/data/c/tags/block/ores/copper.json"
+hash = "ddc3d6117ad1396ef53d798bbfe71e1810ff60477c0107ecf456530264cc60c6"
+
+[[files]]
+file = "kubejs/data/c/tags/block/ores/iron.json"
+hash = "558cd265fbedce3864749d412ef560602584477f69d4902e12721e5ffa85563b"
+
+[[files]]
+file = "kubejs/data/c/tags/block/ores/uranium.json"
+hash = "2a6fae088e72a53285acc33cf5de5740d27bd175431eb60bab2ae356050d111b"
+
+[[files]]
 file = "kubejs/data/c/tags/fluid/steam.json"
 hash = "340b02aa5a8209f65e1cc9c99388477b4511ff4d948745cf5294a51ed21cf16b"
+
+[[files]]
+file = "kubejs/data/c/tags/item/raw_materials/uranium.json"
+hash = "6c93fd0d8f6e316fa54bc3197be70f748e455feb40446878f9d059355743f64c"
 
 [[files]]
 file = "kubejs/data/c/tags/item/tools/wrench.json"
@@ -1993,6 +2013,10 @@ file = "kubejs/data/factoryworks/tags/block/fellable.json"
 hash = "c60b14abc03d117f0183d09cd271a8b4c263dcbf07ddf92befe9f5266ec36fe4"
 
 [[files]]
+file = "kubejs/data/factoryworks/tags/worldgen/biome/patch_land.json"
+hash = "986d1dadd8fda78cc0fc9617a34ec47df6c7a2a2bb2fe6363a77069679032d94"
+
+[[files]]
 file = "kubejs/data/factoryworks/tags/worldgen/biome/terra_land.json"
 hash = "5f74b733ad52023250782eb258c9a0cc14f160391449f683574c5cd41c394676"
 
@@ -2042,27 +2066,27 @@ hash = "e0daaf27e9d4e8ac5cbca5ecd5a49f2a3bbbbef8fa5897d0cb9d21971ee1fe54"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/oil_field.json"
-hash = "70765e3af5155cefbaf6e2b674c369de82118b42290ac903a80258eca764920c"
+hash = "12dc8c85a413176a476e8397d564be3549c1d1d7441683ff41f23f9a46220b89"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/outfield_coal.json"
-hash = "acda280e8cedd215f975d162fc8b50036397fc1246087f9c203db1ad889c4fcb"
+hash = "22d72c8abfe2d435c70749a70cea80922b9ae990157b49e48b858661e6dae7d9"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/outfield_copper.json"
-hash = "3850c771fa3bc5087d81623a8db9c2ecfeebaf74b40725efdfba89837faca16f"
+hash = "3f2618b8fa548ec11191832e508d85bce5faecf745eb34204c55d6666d15dda3"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/outfield_iron.json"
-hash = "0f1a950b453038a1b981d8d5a870a2df2be74a91d169a765611228bdb5f01793"
+hash = "9ac9f4bf965a3bcec55334a44e5da681d3d9b43ff543546de2b235ab155b3d32"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/outfield_stone.json"
-hash = "288a87c7cadc9f9c8d514cb914900d1ac999ef169368688610c6bb0f09c2afdf"
+hash = "a54fb0fe0df15c410125bdedd51712b28818ac183425fa8ec77132edb95066e9"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/outfield_uranium.json"
-hash = "6115671f540efcdfbfa279fb04a2e63e084511718290073231c1f5fdc901e379"
+hash = "724c6cd0475eecc369fdfe20a54fd37e2a03db703480ecb877db65e57753d713"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure_set/oil_field.json"
