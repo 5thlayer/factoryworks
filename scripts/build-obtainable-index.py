@@ -35,6 +35,7 @@ import argparse
 import functools
 import importlib.util
 import json
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -44,10 +45,7 @@ import nbt  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 RECIPES = ROOT / "kubejs/data/factoryworks/recipe"
-# The kit the deleted Core mod granted, as of fb05f50, until the Showcase moves out (#663, ADR-0128).
-KIT = ("factoryworks:stone_furnace", "factoryworks:burner_mining_drill",
-       "factoryworks:engineers_iron_pick", "factoryworks:iron_plate", "factoryworks:copper_plate",
-       "minecraft:coal")
+KIT = ROOT / "kubejs/server_scripts/starting_kit.js"
 MECHANICS = ROOT / "data/pack/mechanic-obtainable.json"
 CREATIVE = ROOT / "data/pack/creative-listed.json"
 INDEX = ROOT / "kubejs/assets/emi/index/stacks/obtainable.json"
@@ -104,7 +102,11 @@ def emi_stack(key):
 
 
 def kit_items():
-    return {"item:" + item for item in KIT}
+    items = {"item:" + item for item in re.findall(
+        r"\['([a-z0-9_.-]+:[a-z0-9_./-]+)',\s*\d+\]", KIT.read_text(encoding="utf-8"))}
+    if not items:
+        sys.exit(f"{KIT.relative_to(ROOT)} has no `['id', count]` row -- the kit has changed shape")
+    return items
 
 
 def mechanic_rows():
