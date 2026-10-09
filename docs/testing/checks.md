@@ -438,9 +438,8 @@ symptom is a new world.
 
 ## Ore amount checks
 
-An ore block carries an amount and a break draws one unit (ADR-0041). That is five checks, none of
-which launches the game: `tests/factorio/test_resource_extract.py` re-derives every starting total
-from Factorio's own committed formula rather than trusting the number;
+An ore block carries an amount and a break draws one unit (ADR-0041). That is four checks, none of
+which launches the game: `amounts.json` is hand-owned data (#600), so no check compares it to a corpus;
 `mod/src/test/java/com/factoryworks/core/ore/` asserts a block pays out exactly what it holds
 and that an exhausted position retires its delta, since a delta left behind is inherited by the next
 block placed there; `tests/pack/test_ore_assets.py` asserts a blockstate variant per stage,
@@ -448,18 +447,16 @@ that every ore block is in `c:ores`, and resolves every drop against the install
 id nothing registers pays air rather than throwing (#321);
 `MiningSpeedTest` asserts a field costs its *amount* times the tier's seconds rather than its
 block count; and `OutfieldAmountTest` asserts an outfield disc's uniform amount, read at its centre's
-distance from origin with no cap, against every row of the corpus's `outfield.law` table. Run
-them after editing anything under `core/ore/`, the two ore generators or the extractor. See `docs/testing/ore-amount-check.md`.
+distance from origin with no cap. Run
+them after editing anything under `core/ore/` or the two ore generators. See `docs/testing/ore-amount-check.md`.
 
 ## Outfield disc check
 
 Every patch beyond the starting area is a surface disc placed by worldgen (#320, ADR-0045): one
 `factoryworks:outfield_disc` structure and one `random_spread` structure set per resource,
-uranium included (#321). `scripts/build-outfield-worldgen.py` writes them from
-`data/factorio/resource.json`, and `tests/worldgen/test_outfield_worldgen.py` runs its `--check`
-and re-derives the spacing from each resource's `mean_spacing` and the separation from
-`spot_noise`'s minimum candidate spacing. It also asserts the type is the one `PFWorldgen`
-registers and the biomes are the land tag. The footprint is `OutfieldShapeTest`, Minecraft-free:
+uranium included (#321). The structure and structure-set JSON under `kubejs/data/factoryworks/worldgen/`
+is hand-owned (#600) and no static check holds it; `OutfieldDiscTests` resolves each set from a
+running server. The footprint is `OutfieldShapeTest`, Minecraft-free:
 each column is asked for its own biome, because vanilla asks only at the centre and a coastal disc
 would run onto the seabed, and the column mask is saved with the piece so placement never
 recomputes it.
@@ -781,9 +778,7 @@ Run these after editing `core/radar/` or the generator.
 
 Crude is infinite (#377, ADR-0081): an **oil well** holds an amount, a Pumpjack on it yields
 `10 × amount / normal` a cycle and takes 10 off it, down to the higher of 20% yield and 20% of the
-well's start. `scripts/factorio-resource-extract.py` slices crude's figures into `amounts.json`
-beside the ores, and `tests/factorio/test_resource_extract.py` asserts them and re-derives each
-field's wells and centre amount per distance. The derivations are Minecraft-free under
+well's start. Crude's figures sit in `amounts.json` beside the ores, as hand-owned data (#600). The derivations are Minecraft-free under
 `mod/src/test/java/com/factoryworks/core/oil/`: `WellYieldTest` (yield, the 1,000 cap, the floor,
 the carried fraction), `OilFieldTest` (1/96 of the mask, 3 apart, ore columns turned away, the
 amount), and `PumpjackEnergyTest` and `PumpjackSpecTest` (45 FE/t, a 1.5 FE/t drain paid idle, a
@@ -791,14 +786,14 @@ cycle per 900 FE). `scripts/build-pumpjack-assets.py` copies the `pumpjack` dril
 map's crude fluid into the mod's resource, and `tests/pack/test_pumpjack_assets.py` runs its
 `--check`, holds the resource against both, and asserts Oritech's two `oil_spring` biome modifiers
 are overridden with a no-op -- NeoForge 26.1 has `none` for structure modifiers only. The field's
-structure set is `build-outfield-worldgen.py`'s. `gametest/OilFieldTests` places a field 2,300 blocks
+structure set is hand-owned under `kubejs/data/factoryworks/worldgen/`. `gametest/OilFieldTests` places a field 2,300 blocks
 out and holds its wells to their drawn amounts, spacing and ground, with an iron disc on the same
 centre turning away exactly the wells on its columns; `PumpjackTests` holds a fed Pumpjack to 10 mB a
 cycle a second into its Pipeworks segment, reached by a pipe on any face and filling a storage tank
 through three pipes (#557, ADR-0110), and a starved one to nothing. Disabling the ore check or the
 well refusal turns its test red. Whether the scaled Pump model reads well and the oil-field icons
 appear on the FTB map is a human check on delivery. Run these after editing `core/oil/`, the oil
-field's structure or piece, or either generator.
+field's structure or piece, or the pumpjack generator.
 
 ## Enemy corpus check
 

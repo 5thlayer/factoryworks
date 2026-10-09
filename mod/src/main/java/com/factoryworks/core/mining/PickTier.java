@@ -19,13 +19,9 @@ package com.factoryworks.core.mining;
  * amendment halves the time and keeps everything else: still flat across the four resources, still
  * halved by {@code steel-axe}, still checkable as one number rather than vanilla's hardness spread.
  *
- * <p>The speeds were <em>transcribed from the wiki</em> when ADR-0039 shipped, because
- * {@code data/factorio/} held no resource dump. ADR-0041's extractor is the follow-on that ADR
- * named, and the corpus holds one now: {@code data/factorio/resource.json} carries the character's
- * own {@code mining_speed}, {@code steel-axe}'s modifier and each resource's {@code mining_time},
- * and {@code tests/factorio/test_resource_extract.py} asserts the three numbers in this file
- * against them. The extraction is what caught the sentence above: the modifier is a fraction, and
- * the prose had been calling it an addend against a value that was right anyway.
+ * <p>{@code tests/factorio/test_resource_extract.py} asserts the speeds and the mining time in this
+ * file against the character's {@code mining_speed}, {@code steel-axe}'s modifier (a fraction, not
+ * an addend) and the resources' {@code mining_time}.
  */
 public enum PickTier {
     /** Factorio's bare character: {@code mining_speed 0.5}, so one second an ore. */

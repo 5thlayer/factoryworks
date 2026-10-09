@@ -4,23 +4,13 @@ ADR-0041 makes an ore block carry an **amount** and a break gesture draw one uni
 claim is four separate things that can each be wrong on their own, so it is four checks rather than
 one, and none of them launches the game.
 
-## The numbers are Factorio's
+## The numbers are hand-owned
 
-`tests/factorio/test_resource_extract.py` — the corpus half.
+`amounts.json` — the patch totals, stage ratios, distance and density laws, the outfield edge and
+crude's figures — is hand-owned data (#600). Nothing re-derives it from a corpus, so a rebalance
+edits the file and the Java and asset checks below follow.
 
-`scripts/factorio-resource-extract.py` reads the dump's own `resource_autoplace_all_patches` noise
-function, because Factorio's starting amounts are closed-form in the prototypes rather than a
-property of a generated map: `starting_amount = 20000 * base_density * (frequency_multiplier + 1) *
-size_multiplier`, with a default map's controls at 1. The formula is carried across as a **string**
-and the check re-derives every total from it, so a hand-edited number in `resource.json` fails
-rather than being believed. It also asserts the totals ADR-0041 quotes (iron 400 000; copper and
-coal 320 000; stone 160 000), that uranium has no starting patch, and that there is exactly one
-distance law and it is flat within 1600 tiles — the reason leaving the starting area early buys
-nothing.
-
-`stage_ratios` is asserted per resource to a stated `RATIO_TOLERANCE`, not exactly. Uranium's
-`stage_counts` is the shared list scaled by about 2/3 and *then rounded* — its last rung is 50 where
-the scaling gives 53.3 — so an exact-fraction assertion would encode a claim the game does not make.
+`tests/factorio/test_resource_extract.py` keeps the half that still reads the corpus.
 
 The same check reads `PickTier.java` and asserts the pack's `MINING_TIME` is half Factorio's
 `mining_time` and that the two tier speeds are the extracted ones. That is what caught the pack
@@ -53,20 +43,16 @@ asks it, because by then the block is stone.
 `OreStageTest` the eight sprite rungs against a remaining fraction. `OreCodecsTest` is the
 attachment's round trip, which ADR-0038 asks for by name: a codec that drops the map does not crash,
 it hands back a chunk whose every ore block silently refilled. `OreCorpusTest` asserts the classpath
-slice the mod loads at class-init is the one the extractor writes — it has to be a resource rather
+slice the mod loads at class-init is the one in the repository — it has to be a resource rather
 than a datapack file, because the stage count sizes a blockstate property before any world exists.
 
 `OutfieldAmountTest` is the outfield's own arithmetic (#319, ADR-0045): a disc's blocks share one
 amount, its total over the block count its structure piece recorded, read at the disc **centre's**
 distance from world origin. It asserts the spot stops growing at 1600 blocks while richness rises
 with no cap, that uranium derives from its own `base_density` rather than borrowing another field's
-amount, and it re-derives every row of each resource's `outfield.law` table in
-`data/factorio/resource.json` from the mod's law, so the Java and the corpus cannot drift. It reads
-that file through the `pf.repo` system property the Gradle test task sets. The starting fields
-keep the census; two arithmetics is Factorio's own shape.
+amount. The starting fields keep the census; two arithmetics is Factorio's own shape.
 
-`OutfieldShapeTest` is the disc's footprint (#320): the law's radius, cone height and blob amplitude
-re-derive every row of the corpus table, the radius caps at 32, and a disc covers the columns where
+`OutfieldShapeTest` is the disc's footprint (#320): the radius caps at 32, and a disc covers the columns where
 the cone plus `(octaves - 1/3) × amplitude` is above zero, each octave read at its own scale and
 weighted by its own weight, and never off the land. Its saved mask reads back the same columns. Its
 block count is the columns it covers, and a disc inside 150 blocks,

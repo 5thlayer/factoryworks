@@ -12,8 +12,8 @@ import java.util.List;
  *
  * <p><b>The thresholds are fractions of a block's own initial amount</b>, not unit counts. Factorio
  * renders its stages against tiles holding fifteen thousand; Terra's blocks hold about a thousand,
- * so the counts do not port and the ratios do. They come from the corpus --
- * {@code data/factorio/resource.json}, {@code stage_ratios} -- and are passed in rather than
+ * so the counts do not port and the ratios do. They come from
+ * {@code amounts.json}'s {@code stage_ratios} and are passed in rather than
  * tabulated here, so no number in this file needs to agree with a document.
  */
 public final class OreStage {

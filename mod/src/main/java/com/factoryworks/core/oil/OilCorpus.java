@@ -9,10 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Crude oil as {@code scripts/factorio-resource-extract.py} slices it into the ores' own resource,
- * beside the outfield law it shares with them (ADR-0081).
- */
+/** Crude oil as {@code amounts.json} holds it, beside the outfield law it shares with the ores (ADR-0081). */
 public final class OilCorpus {
 
     private static final String PATH = "/factoryworks_core/ore/amounts.json";
@@ -53,13 +50,13 @@ public final class OilCorpus {
         try (InputStream stream = OilCorpus.class.getResourceAsStream(path)) {
             if (stream == null) {
                 throw new IllegalStateException(
-                        "no " + path + " on the classpath -- run scripts/factorio-resource-extract.py");
+                        "no " + path + " on the classpath -- it is hand-owned data");
             }
             JsonObject root = new Gson().fromJson(
                     new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class);
             JsonObject crude = root.getAsJsonObject("crude_oil");
             if (crude == null) {
-                throw new IllegalStateException(path + " carries no crude_oil -- re-run scripts/factorio-resource-extract.py");
+                throw new IllegalStateException(path + " carries no crude_oil -- it is hand-owned data");
             }
             JsonObject spot = crude.getAsJsonObject("outfield");
             OreCorpus ores = OreCorpus.get();

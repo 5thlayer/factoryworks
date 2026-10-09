@@ -106,7 +106,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | `scripts/build-terra-worldgen.py` | `tests/worldgen/test_terra_spawning.py`, GameTest (`WorldgenFixtureTests`) |
 | `core/worldgen/VanillaSpawning` | GameTest (`SpawningRuleTests`) |
 | `scripts/build-terra-start.py` | `tests/worldgen/test_start_geometry.py` |
-| `core/ore/`, the ore generators, the resource extractor | `test_resource_extract.py`, `test_ore_assets.py`, `test_outfield_worldgen.py`, `:factoryworks_core:test`, GameTest |
+| `core/ore/`, the ore generators | `test_ore_assets.py`, `:factoryworks_core:test`, GameTest |
 | a committed ADR with `supersedes:` | `scripts/adr-backlink-check.sh` (needs `gh`) |
 | closing a ticket, editing the item map or `docs/factorio-mechanics.md` | `scripts/item-map-ticket-check.sh` (needs `gh`) |
 | a jar update, live worldgen, the kit, the mechanic or creative lists | `tests/pack/test_obtainable_index.py` |

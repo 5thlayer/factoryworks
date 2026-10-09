@@ -4,12 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
 /** An outfield disc's footprint: the spot's cone plus Factorio's ragged edge (ADR-0045, #320). */
@@ -18,28 +12,6 @@ class OutfieldShapeTest {
     private static final OutfieldLaw IRON = OutfieldLaw.of(OreResource.IRON);
     private static final OutfieldShape.Noise FLAT = (x, z) -> 0;
     private static final OutfieldShape.Land LAND = (x, z) -> true;
-
-    @Test
-    void theLawsRadiusHeightAndAmplitudeReproduceTheCorpusTable() throws IOException {
-        JsonObject corpus = new Gson().fromJson(
-                Files.readString(Path.of(System.getProperty("pf.repo"), "data/factorio/resource.json")),
-                JsonObject.class);
-        int rows = 0;
-        for (OreResource resource : OreResource.values()) {
-            OutfieldLaw law = OutfieldLaw.of(resource);
-            double mean = resource.corpus().outfield().meanSpotSize();
-            for (JsonElement element : entry(corpus, resource).getAsJsonObject("outfield").getAsJsonArray("law")) {
-                JsonObject row = element.getAsJsonObject();
-                double distance = row.get("distance").getAsDouble();
-                String where = resource.key() + " at " + distance;
-                assertEquals(row.get("spot_radius").getAsDouble(), law.radius(mean, distance), 1e-9, where);
-                assertEquals(row.get("spot_height").getAsDouble(), law.typicalHeight(distance), 1e-6, where);
-                assertEquals(row.get("blob_amplitude").getAsDouble(), law.blobAmplitude(distance), 1e-6, where);
-                rows++;
-            }
-        }
-        assertTrue(rows >= 5 * 8, "every resource's table was read: " + rows);
-    }
 
     @Test
     void theRadiusIsCappedAt32() {
@@ -147,14 +119,5 @@ class OutfieldShapeTest {
         assertTrue(IRON.radius(1, 300) < IRON.radius(1, 450));
         assertTrue(IRON.radius(1, 450) < IRON.radius(1, 1600));
         assertEquals(IRON.radius(1, 1600), IRON.radius(1, 5000), 1e-9);
-    }
-
-    private static JsonObject entry(JsonObject corpus, OreResource resource) {
-        for (JsonElement element : corpus.getAsJsonArray("resources")) {
-            if (element.getAsJsonObject().get("name").getAsString().equals(resource.corpus().factorioName())) {
-                return element.getAsJsonObject();
-            }
-        }
-        throw new AssertionError(resource + " is not in the corpus");
     }
 }

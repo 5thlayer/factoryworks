@@ -6,14 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**
- * That the generated slice the mod loads still carries what ADR-0041 reads off it.
- *
- * <p>The file is written by `scripts/factorio-resource-extract.py` from Factorio's dump, and the
- * static check in `tests/factorio/` asserts the corpus it is cut from. What this adds is the other
- * end: the mod can actually parse it, and the numbers survive the trip. A slice that failed to load
- * would take the blockstate property's size with it, which is a crash at registration -- but one
- * that has drifted a total is silent, and it is what a patch paying out the wrong amount looks
- * like from here.
+ * That the slice the mod loads parses and carries the totals ADR-0041 quotes. A slice that failed
+ * to load would crash registration, and a drifted total is silent.
  */
 class OreCorpusTest {
 

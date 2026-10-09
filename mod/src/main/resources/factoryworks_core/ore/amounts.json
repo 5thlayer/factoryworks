@@ -1,5 +1,4 @@
 {
-  "__generated_by": "scripts/factorio-resource-extract.py",
   "distance_law": {
     "term": "max((1000+distance)/2600,1)",
     "offset": 1000,

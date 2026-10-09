@@ -1275,9 +1275,8 @@ change that. The traversal budget has two halves, and both are extracted rather 
 | two fields, perpendicular | 212 / 9.0 = **23.6 s** | 88 / 4.317 = **20.3 s** |
 | two fields, opposite | 300 / 9.0 = **33.3 s** | 124 / 4.317 = **28.7 s** |
 
-A tile and a block are both one metre, so nothing is converted but the tick rate. The speed is read
-in `scripts/factorio-resource-extract.py`'s `character_movement()` into
-`data/factorio/resource.json` and asserted by `tests/factorio/test_resource_extract.py`; the radius
+A tile and a block are both one metre, so nothing is converted but the tick rate. The speed is
+in `data/factorio/resource.json` and asserted by `tests/factorio/test_resource_extract.py`; the radius
 is the corpus constant the same file already carried.
 
 **Both halves drifted, in opposite directions, and they cancel.** Terra's player walks at 48% of the

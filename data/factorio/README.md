@@ -48,7 +48,6 @@ scripts/factorio-tech-extract.py
 scripts/factorio-recipe-extract.py
 scripts/factorio-machine-extract.py
 scripts/factorio-fluid-extract.py
-scripts/factorio-resource-extract.py
 scripts/factorio-fuel-extract.py
 scripts/factorio-tree-extract.py
 scripts/factorio-enemy-extract.py

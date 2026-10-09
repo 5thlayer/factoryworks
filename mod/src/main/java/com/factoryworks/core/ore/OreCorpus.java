@@ -14,11 +14,8 @@ import java.util.Map;
 /**
  * Factorio's resource amounts, as the mod sees them.
  *
- * <p>ADR-0022's rule is that Factorio's numbers are extracted and never transcribed, and ADR-0041
- * puts patch totals under it. So this class holds no number: it reads
- * {@code factoryworks_core/ore/amounts.json}, which
- * {@code scripts/factorio-resource-extract.py} writes out of the same dump the rest of the corpus
- * comes from.
+ * <p>This class holds no number: it reads {@code factoryworks_core/ore/amounts.json}, which is
+ * hand-owned data.
  *
  * <p><b>A classpath resource, not a datapack file.</b> The stage count sizes a blockstate property,
  * which is fixed at registration -- before any world, any datapack and any reload exists. Loading
@@ -53,7 +50,7 @@ public final class OreCorpus {
         try (InputStream stream = OreCorpus.class.getResourceAsStream(path)) {
             if (stream == null) {
                 throw new IllegalStateException(
-                        "no " + path + " on the classpath -- run scripts/factorio-resource-extract.py");
+                        "no " + path + " on the classpath -- it is hand-owned data");
             }
             JsonObject root = new Gson().fromJson(
                     new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class);

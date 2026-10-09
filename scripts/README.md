@@ -22,7 +22,6 @@ Provenance and regeneration notes are in `data/factorio/README.md`.
 | `factorio-recipe-extract.py` | `data/factorio/recipe.json` | The recipe corpus every emitted pack recipe is generated from. |
 | `factorio-machine-extract.py` | crafting-machine + fluid-container prototypes | Speeds and IO sizes. |
 | `factorio-tech-extract.py` | `data/factorio/technology.json` | Space Age tech tree, the reference for the spec's gate table (ADR-0022). |
-| `factorio-resource-extract.py` | resource patch amounts | How much ore a patch holds; feeds the starting-total derivation (ADR-0041). |
 
 ## Recipe conversion (corpus → `kubejs/data/factoryworks/recipe/`)
 
