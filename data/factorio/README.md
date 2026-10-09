@@ -69,8 +69,6 @@ python3 tests/factorio/test_container_extract.py
 scripts/factorio-fuel-convert.py
 python3 tests/factorio/test_fuel_convert.py
 scripts/build-tree-assets.py
-scripts/build-building-tag.py
-python3 tests/pack/test_building_tag.py
 ```
 
 The last pair is downstream of the extraction rather than part of it: `fuel.json` is joined
@@ -188,8 +186,8 @@ extractor finds it and the Steam install by default; both are overridable with `
 
   `poles`, one object per electric pole: `supply_area_distance`, `maximum_wire_distance`,
   `fast_replaceable_group` and the footprint. The pack types its own pole areas (ADR-0036);
-  the rows are here for the group, which `scripts/build-replace-groups.py` copies into the
-  mod (ADR-0082). The small and medium poles share `electric-pole`, and the big pole and the
+  the rows are here for the group, which the mod's hand-owned Replace Groups were first
+  taken from (ADR-0082, #599). The small and medium poles share `electric-pole`, and the big pole and the
   substation each have their own.
 
   `categories`, every recipe category in the game and every entity declaring it — the
@@ -250,7 +248,7 @@ effect recording the rule that produced them.
   scope with it instead of this file drifting from it. It is not a general fluid corpus —
   widening to the dump's other fluids would carry rows nothing reads. #277 widened it once, to
   the fluids `data/pack/item-map.json` maps, read off its `kind: fluid` rows, so
-  `scripts/build-fluid-tints.py` can draw each borrowed fluid in Factorio's colour.
+  each borrowed fluid could be drawn in Factorio's colour (the tints are hand-owned since #599).
 
   Per fluid: `name`, `heat_capacity` in joules, `heat_capacity_raw` (Factorio's own
   `0.2kJ`/`2kJ` string, kept the way `fuel.json` keeps `fuel_value_raw` so the check can
@@ -360,10 +358,8 @@ effect recording the rule that produced them.
 - **`building.json`** — which Factorio items place a **Building** (#413): every item with a
   `place_result`, and a rail planner's `rails`, with the entity type each places. An item laid with
   `place_as_tile` is carried as not a Building, and so are a seed's plant, a vehicle and a robot,
-  each with its reason. `scripts/build-building-tag.py` joins the Buildings onto
-  `data/pack/item-map.json` into the `factoryworks:buildings` block tag, which decides what the
-  player breaks at full Reach rather than vanilla's 4.5; `tests/pack/test_building_tag.py` runs its
-  `--check` and re-extracts this file when the dump is on disk.
+  each with its reason. The `factoryworks:buildings` block tag, which decides what the
+  player breaks at full Reach rather than vanilla's 4.5, is hand-owned since #599.
 
 - **`container.json`** — the container prototypes the pack sizes an inventory from (ADR-0107).
   `crash-site-spaceship`'s `inventory_size` and `inventory_type`, unchanged. The wreck's cargo hold

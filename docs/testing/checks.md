@@ -219,33 +219,23 @@ holding the keys to the emitted recipes both ways. Run it after any converter ru
 
 ## Overload Limit check
 
-The furnaces read the Overload Limit's constants (#517) from `data/factorio/overload.json`, never typed.
-`scripts/build-overload-limit.py` copies them to `factoryworks_core/machine/overload.json`, which
-`OverloadLimit` reads. Factorio's crafting machines are Craftworks', and carry their own figures.
-`tests/pack/test_overload_limit.py` runs the `--check`; `OverloadLimitTest` holds the rule with typed
-figures. Run them after re-extracting the corpus.
+The furnaces read the Overload Limit's constants (#517) from `factoryworks_core/machine/overload.json`,
+hand-owned data since #599. Factorio's crafting machines are Craftworks', and carry their own figures.
+`OverloadLimitTest` holds the rule with typed figures.
 
 ## Replace group check
 
-Which blocks may Fast Replace which is Factorio's `fast_replaceable_group` (ADR-0082), never typed.
-`scripts/factorio-machine-extract.py` writes it onto the machine and pole rows, and
-`scripts/build-replace-groups.py` joins it onto `data/pack/item-map.json` into the resource
-`ReplaceGroups` reads. A row that is `undecided`, `not_emitted` or `blocked_by`, or whose target is neither the pack's block nor Wireworks', is a recorded skip.
-`tests/factorio/test_machine_extract.py` holds the groups against the dump when it is on disk.
-`tests/pack/test_replace_groups.py` runs the generator's `--check` and holds the resource to its
-own join of the two inputs. `ReplaceGroupsTest` covers the parse and the same-group rule. Run them
-after re-extracting the corpus or editing the item map.
+Which blocks may Fast Replace which (ADR-0082) is `factoryworks_core/placement/replace_groups.json`,
+hand-owned data since #599. `tests/pack/test_replace_groups.py` holds each key to a block the pack
+has a blockstate for or a jar registers, and names #299's three families. `ReplaceGroupsTest` covers
+the parse and the same-group rule.
 
 ## Building tag check
 
 What the player breaks at full Reach (16) rather than vanilla's 4.5 is the
-`factoryworks:buildings` block tag (#413), never typed. `scripts/factorio-building-extract.py`
-writes `data/factorio/building.json`, every Factorio item that places an entity, and
-`scripts/build-building-tag.py` joins its Buildings onto `data/pack/item-map.json` by the block of
-the target's own id. A missing, `undecided`, `not_emitted`, `native_mechanic` or `blocked_by` row,
-and a target that places no block of its id, is a recorded skip. `tests/pack/test_building_tag.py` runs the `--check`,
-traces each entry to a Building row, names the families the rule exists for and re-extracts when the
-dump is on disk. `ReachTests` holds the rule in a world: through `handleBlockBreakAction`, stone 6
+`factoryworks:buildings` block tag (#413), hand-owned data since #599. `tests/pack/test_building_tag.py`
+names the families the rule exists for and refuses anything a player digs up close.
+`ReachTests` holds the rule in a world: through `handleBlockBreakAction`, stone 6
 blocks off is refused with the block and inventory unchanged, a Stone Furnace 6 off and stone 4 off
 break, and so does a burner drill's part 7 off, since a footprint's or a rig's part answers as its
 anchor. Dropping the listener turns the first red, and dropping the part's resolution the last. Only
@@ -640,12 +630,8 @@ placed beside an Electric Furnace lights it is a world load.
 ## Offshore Pump check
 
 `tests/pack/test_pump_assets.py` asserts the one block water enters the factory through (#213,
-ADR-0050). `scripts/build-pump-assets.py` copies `data/factorio/machine.json`'s `pumps` row into a
-resource the mod reads at class-init, the way `build-rig-assets.py` feeds `RigCorpus`, and the check
-asserts that copy **field by field against the corpus** rather than against literals — a
-hand-edited resource would run the pump at a rate somebody chose with nothing else failing. It also
-holds the seam neither the corpus check nor the asset hops can see: that `pumping_speed` is still
-Factorio's 20, so ADR-0050's "one pump feeds twenty boilers" has not quietly changed meaning; that
+ADR-0050). `fluid/pumps.json` is hand-owned data (#599). The check holds the seam the asset hops
+cannot see: that `pumping_speed` is still 20 and the energy source `void`, so ADR-0050's "one pump feeds twenty boilers" has not quietly changed meaning; that
 the item-map row names the block now that it exists; and that the **refusal message** has a lang key,
 read out of `OffshorePumpItem` rather than typed, because a missing one renders the raw key on the
 very gesture the message exists to explain.
@@ -654,7 +640,7 @@ The rule itself is Minecraft-free and lives under `mod/src/test/java/com/factory
 `OffshorePumpSitingTest` is the predicate — one adjacent source, flowing refused, no minimum size —
 and `OffshorePumpSpecTest` the two tick rates, which are the easiest thing here to get wrong, since
 `pumping_speed` is stated per *Factorio* tick and its value happens to be Minecraft's tick rate.
-`PumpCorpusTest` closes the loop by parsing the generated resource. Whether a pump placed against
+`PumpCorpusTest` closes the loop by parsing the resource. Whether a pump placed against
 the hub pool actually feeds a pipe is a world load.
 
 ## Boiler check
@@ -670,8 +656,8 @@ no fuel and, because water and room are asked *before* the fuel buffer is, light
 a boiler quietly eating coal into a full tank is a leak with no symptom.
 `tests/pack/test_boiler_assets.py` is the pack side: every `facing` and the gauge's lang keys, that `boiler`'s
 item-map row is `authored` and names the block the mod registers rather than the LP Solid Boiler it
-replaces, and a **second, independent derivation** of the 60 mB/s straight from the corpus. Run both
-after editing `core/fluid/`, `scripts/build-steam-assets.py` or the corpus. Whether a placed Boiler
+replaces, and a **second, independent derivation** of the 60 mB/s from `fluid/steam_chain.json`, hand-owned
+data since #599. Run both after editing `core/fluid/` or that file. Whether a placed Boiler
 boils water is the third check, `gametest/BoilerTests` (#274, #593): that a Boiler with water in
 its front row, fuel and room in its steam segment makes 3 mB a tick and spends the same water
 doing it -- unit for unit, since Factorio's boiler is a temperature change and not a reaction;
@@ -690,16 +676,12 @@ both segments and moves neither.
 Core registers the oil and chemistry fluids (ADR-0109, #619): crude, heavy oil, light oil, petroleum gas,
 lubricant and sulfuric acid. Crude is drawn from malcolmriley's unused-textures sprite under a tint typed in
 `OilFluidClient` (#557); the other five from Oritech's sprites under the tint in
-`factoryworks_core/fluid/tints.json`. A fluid's colour is its sprite times a tint, so
-`test_fluid_tints.py` holds both to Factorio's `base_color`. `scripts/build-fluid-tints.py` writes the
-tint file from `base_color` (`data/factorio/fluid.json`) and each sprite's average, read from the Oritech jar.
-It keeps the tint Oritech draws the sprite with where that lands within 0.15 of Factorio's colour, and
-computes one where it does not. The sprite and Oritech's tint per fluid were read off the jar with `javap`
-and are the one typed table. `tests/pack/test_fluid_tints.py` runs the `--check`, recomputes each fluid's
-drawn colour against Factorio's, asserts `OilFluidClient` names the sprite the table does and that Core
-registers each fluid with its flowing form and block, and that no recipe, tag, item-map row or index
-names an `oritech:still_*` fluid. `FluidTintCorpusTest` covers the parse. Run both after editing a fluid
-row in the item map, re-extracting the corpus, or updating Oritech. Whether the colours read right in a
+`factoryworks_core/fluid/tints.json`. The tint file and the sprites are hand-owned data (#599).
+`tests/pack/test_fluid_tints.py` asserts the resource names the five fluids, that `OilFluidClient`
+draws each, that Core registers each with its flowing form and block, that each is named as Factorio
+names it, and that no recipe, tag, item-map row or index names an `oritech:still_*` fluid.
+`FluidTintCorpusTest` covers the parse. Run both after editing a fluid row in the item map or the
+tint file. Whether the colours read right in a
 running client is a human check on delivery.
 
 ## Steam Engine check
@@ -782,9 +764,8 @@ well's start. Crude's figures sit in `amounts.json` beside the ores, as hand-own
 `mod/src/test/java/com/factoryworks/core/oil/`: `WellYieldTest` (yield, the 1,000 cap, the floor,
 the carried fraction), `OilFieldTest` (1/96 of the mask, 3 apart, ore columns turned away, the
 amount), and `PumpjackEnergyTest` and `PumpjackSpecTest` (45 FE/t, a 1.5 FE/t drain paid idle, a
-cycle per 900 FE). `scripts/build-pumpjack-assets.py` copies the `pumpjack` drill row and the item
-map's crude fluid into the mod's resource, and `tests/pack/test_pumpjack_assets.py` runs its
-`--check`, holds the resource against both, and asserts Oritech's two `oil_spring` biome modifiers
+cycle per 900 FE). `oil/pumpjack.json` is hand-owned data (#599). `tests/pack/test_pumpjack_assets.py` holds the
+registered block names, the lang keys, and asserts Oritech's two `oil_spring` biome modifiers
 are overridden with a no-op -- NeoForge 26.1 has `none` for structure modifiers only. The field's
 structure set is hand-owned under `kubejs/data/factoryworks/worldgen/`. `gametest/OilFieldTests` places a field 2,300 blocks
 out and holds its wells to their drawn amounts, spacing and ground, with an iron disc on the same

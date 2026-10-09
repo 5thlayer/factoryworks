@@ -99,7 +99,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | furnace tiers, `core/smelting/` | `test_furnace_assets.py`, `test_smelting_type.py`, `:factoryworks_core:test`, GameTest |
 | `core/wreck/`, the wreck generators | `tests/pack/test_wreck_assets.py`, GameTest |
 | a converter run | `test_recipe_names.py`, `test_recipe_convert.py`, `test_smelting_shape.py`, `test_recipe_duplication.py`, `test_hand_recipes.py`, `check-datapack-load.py` |
-| corpus re-extract or `data/pack/item-map.json` | `test_replace_groups.py`, `test_building_tag.py`, `test_item_map.py`, `test_fuel_convert.py`, `test_overload_limit.py` |
+| corpus re-extract or `data/pack/item-map.json` | `test_item_map.py`, `test_fuel_convert.py` |
 | `core/placement/` | GameTest (`PlacementPlanTests`), then `check-datapack-load.py` if the platform moved |
 | tree felling, after a dump refresh | `factorio-tree-extract.py`, then `build-tree-assets.py`; `test_tree_extract.py`, `test_pack_recipes.py` |
 | `core/start/` or the spec's Opening | `tests/pack/test_starting_kit.py`, `:factoryworks_core:test` |
@@ -112,7 +112,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | a jar update, live worldgen, the kit, the mechanic or creative lists | `tests/pack/test_obtainable_index.py` |
 | removing a third-party content mod's references | `tests/pack/test_independence_guard.py` |
 | an item or fluid face | `tests/pack/test_transfer_guards.py`, `test_capability_registration.py`, `test_energy_faces.py` |
-| `core/fluid/`, `build-pump-assets.py`, `build-steam-assets.py` | `test_pump_assets.py`, `test_boiler_assets.py`, `:factoryworks_core:test`, GameTest |
+| `core/fluid/` | `test_pump_assets.py`, `test_boiler_assets.py`, `:factoryworks_core:test`, GameTest |
 | a fluid row, an Oritech update | `tests/pack/test_fluid_tints.py` |
 | `SteamEngineSpec` | `:factoryworks_core:test` |
 | `core/radar/` or its generator | `test_radar_assets.py`, `test_machine_extract.py`, `:factoryworks_core:test`, GameTest |
