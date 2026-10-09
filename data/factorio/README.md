@@ -54,7 +54,6 @@ scripts/factorio-enemy-extract.py
 scripts/factorio-logistics-extract.py
 scripts/factorio-building-extract.py
 scripts/factorio-overload-extract.py
-scripts/factorio-container-extract.py
 python3 tests/factorio/test_tech_extract.py
 python3 tests/factorio/test_recipe_extract.py
 python3 tests/factorio/test_machine_extract.py
@@ -64,7 +63,6 @@ python3 tests/factorio/test_tree_extract.py
 python3 tests/factorio/test_enemy_extract.py
 python3 tests/factorio/test_logistics_extract.py
 python3 tests/factorio/test_overload_extract.py
-python3 tests/factorio/test_container_extract.py
 
 scripts/factorio-fuel-convert.py
 python3 tests/factorio/test_fuel_convert.py
@@ -361,7 +359,3 @@ effect recording the rule that produced them.
   each with its reason. The `factoryworks:buildings` block tag, which decides what the
   player breaks at full Reach rather than vanilla's 4.5, is hand-owned since #599.
 
-- **`container.json`** — the container prototypes the pack sizes an inventory from (ADR-0107).
-  `crash-site-spaceship`'s `inventory_size` and `inventory_type`, unchanged. The wreck's cargo hold
-  has that many slots: `scripts/build-wreck-assets.py` copies the row into the mod's resource, and
-  `tests/pack/test_wreck_assets.py` holds the copy to this file.

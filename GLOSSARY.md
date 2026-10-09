@@ -308,36 +308,16 @@ The structure stamped onto world spawn once per world, and the only place a **st
 _Avoid_: spawn structure, starting hub, tutorial area, start island
 
 **Hub**:
-The starting area's centre piece. It places no terrain of its own: it is what holds the four fields apart and carries the water pool and the **wreck**.
+The starting area's centre piece. It places no terrain of its own: it is what holds the four fields apart and carries the water pool.
 _Avoid_: spawn platform, base, hub structure
 
 **Water pool**:
 The body of water in the hub, one block deep and flush with the ground. Since water is never created (ADR-0050), it is what makes water somewhere rung 0 already stands rather than somewhere it has to go.
 _Avoid_: pond, lake, starting water, spawn pool
 
-**Wreck**:
-The ship the player crashed in, standing in the hub, and where the player wakes on a new world and returns after dying. A roofed room no block of which can be broken, with an open doorway, windows and one **cargo hold**. It is there for the fiction and to hold the cargo; it is not a shelter, since nothing on Terra attacks at night (ADR-0093). There is one per world.
-_Avoid_: crash site, ship, spaceship, wreckage
-
-**Debris**:
-The breakable pieces of the **wreck** scattered on the hub's ground around it, as many as Factorio's crash site scatters. Breaking one yields nothing, and none holds anything.
-_Avoid_: wreckage, scrap, wreck pieces
-
-**Cargo hold**:
-The wreck's one container, set flush in its wall so it opens from inside and from outside, and as unbreakable as the rest of the wreck. A new world's cargo hold holds the **Hold**, once per world: a player who joins later finds whatever is left.
-_Avoid_: chest, wreck chest, ship chest
-
 **Starting kit**:
-What a new player starts with, in two halves: the **Pocket**, tools, given to each player on their first join; and the **Hold**, materials, put in the cargo hold once per world. Factorio's own split.
+What the Showcase hands a new player: a few of the suite's own items, given once per player on their first join by a KubeJS script (ADR-0127). A new world has no wreck and no cargo hold.
 _Avoid_: starter kit, spawn items, loadout
-
-**Pocket**:
-The starting kit's tools: the Stone Furnace, the Burner Mining Drill and the Engineer's Iron Pick, one each, in the player's inventory on their first join.
-_Avoid_: starting inventory, kit
-
-**Hold**:
-The starting kit's materials: iron plate, copper plate and coal, single digits each, found in the cargo hold. Nothing in it is otherwise unobtainable.
-_Avoid_: loot, ship items, debris
 
 ### Terra's ore
 

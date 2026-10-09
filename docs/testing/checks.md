@@ -39,6 +39,15 @@ missing resolves to an empty tag rather than an error, and every tree silently s
 Re-run `scripts/factorio-tree-extract.py` after a dump refresh. Whether a tree falls in a running
 game is a world load.
 
+## Starting kit check
+
+The Showcase's starting kit is a KubeJS script, `kubejs/server_scripts/starting_kit.js`, that gives
+each player a few of the suite's items once, on first join, marked by a stage that survives death
+(ADR-0127). `tests/pack/test_starting_kit.py` is a static data check, no game launch: every id the
+script grants is vanilla's or resolves to an item definition in the installed jar of a suite mod,
+and a count is positive. An id that names nothing is a silent empty slot. Run it after editing the
+script. Whether the kit arrives, and arrives once, is a world load.
+
 ## Fuel table check
 
 What a burner furnace burns is generated datapack JSON, not Forge's burn table (ADR-0047).
@@ -84,18 +93,8 @@ an overlapping jigsaw child silently, so this failure ships as "three patches in
 some seeds and nothing in a log. Run it after any edit to `scripts/build-terra-start.py`; it runs
 the generator's `--check` and reads the generated `.nbt` files.
 
-It also holds the wreck (ADR-0107, #545) at every hub's centre: hull floor and roof, the one
-doorway on the template's +z long wall, windows on the -z and -x walls, the cargo hold in the +x
-wall as a 5x2 centred along z with exactly one `anchor=true` block, the bottom middle one (#548),
-and the pool beside the doorway and off its line. The sealed room is held on the generator's
-undamaged hull, and the damage on the template is held to the -z half, the nose and the roof, never
-the engine end, the +z wall, the doorway or the spawn; Factorio's debris is held to its count per
-size class and kept off the wreck, the pool, the doorway's line, the hold's face and the connectors
-(#550). `TerraStartingArea` reads none of that: it
-puts the spawn point on the floor at the hub's centre facing template +z turned by the hub's
-rotation, and the hub's processor list lays the wreck's box on one height. A doorway moved or a
-level box that misses the wreck fails here; the stamp itself is a world. Waking inside, respawning inside and seeing
-the fields from the doorway are a human check on delivery.
+It also holds the water pool at every hub: a few blocks from the centre, where the spawn point is,
+one block deep, its columns cleared above, and clear of every connector and every field (ADR-0050).
 
 It is the only check standing behind the opening, and it cannot see the opening being *absent*:
 the pools, the processor list and the hub's jigsaw names are referenced from

@@ -62,7 +62,7 @@ Factorio names them, and each section gives the pack's own name beside it.
 | [Radar and map exploration](#radar-and-map-exploration) | `adapted` | Terra |
 | [The logistic request and trash system](#the-logistic-request-and-trash-system) | `excluded` | — |
 | [Day and night cycle](#day-and-night-cycle) | `shipped` | Terra; Sapros parked |
-| [Crash site](#crash-site) | `planned` | Terra |
+| [Crash site](#crash-site) | `adapted` | Showcase |
 | [Controls](#controls) | `planned` | Terra |
 | [Factoriopedia](#factoriopedia) | `planned` | Terra |
 
@@ -1443,18 +1443,18 @@ Sub-rules:
 
 ### Crash site
 
-- **verdict**: `planned`
-- **where**: Terra
+- **verdict**: `adapted`
+- **notice**: There is no ship: a new world starts as vanilla does, and the Showcase's KubeJS script
+  hands each player a small kit once, on first join.
+- **where**: Showcase
 - **via**: `pack`
-- **owner**: ADR-0107
-- **ticket**: #498
+- **owner**: ADR-0127
+- **ticket**: #604
 
 Factorio's freeplay starts the engineer beside the ship they crashed in, once per world, for the
 first player: the hull and its debris are minable for nothing, and its containers hold the starting
-plates. Terra's **wreck** is one indestructible room at the hub's centre that the player wakes in and
-returns to after dying, with one five-slot cargo hold (the `crash-site-spaceship`'s inventory) filled
-with the Hold once per world. The debris, the scattered segments and the opening cutscene are not
-reproduced.
+plates. The wreck, its cargo hold and its debris are not reproduced (#604); the starting kit is the
+part that stays, as items the suite's mods register.
 
 ### Controls
 

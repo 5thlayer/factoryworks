@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "bottom": "factoryworks:block/wreck/hull",
-    "top": "factoryworks:block/wreck/hull",
-    "side": "factoryworks:block/wreck/hull"
-  }
-}

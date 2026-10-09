@@ -52,11 +52,11 @@ them and the player reads neither.
 
 ## Opening — the first twenty minutes
 
-The wreck is ADR-0107: indestructible, roofed, open by a doorway, one cargo hold, and you wake inside it.
+The wreck (ADR-0107) is gone (#604, ADR-0127): a new world starts as vanilla does, and the Showcase's starting-kit script hands each player the kit once.
 
 | # | Beat | Surface |
 | --- | --- | --- |
-| 1 | Wake up inside the wreck. | — |
+| 1 | Join the world. | — |
 | 2 | Open the inventory. The Personal Assembler is already there. Craft one thing, badly, slowly. | Personal Assembler |
 | 3 | Leave. Four ore fields are visible from the doorway. | — |
 | 4 | Place the Stone Furnace and the Burner Mining Drill from your pocket, the drill facing the furnace. First plates. | hand |
@@ -77,7 +77,7 @@ Beat 6 is the twenty-minute mark and the first machine-fed beat in the pack.
   and beats hands even at 0.25 items/s, which is what earns it a slot in a pocket Factorio is
   famously stingy about.
 - **Hold**: iron plate, copper plate, coal. Single digits, matching freeplay's eight-plate debris
-  chest. They are in the wreck's cargo hold, put there once per world (ADR-0107).
+  chest. The wreck's cargo hold that held them is gone (#604).
 - **No weapon.** Factorio hands you a pistol; here nothing attacks (ADR-0093).
 
 **The Pick is the one tool, and it is craftable.** `wood ×1` plus `iron plate ×1`, both of which the
