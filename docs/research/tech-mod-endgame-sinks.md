@@ -67,7 +67,7 @@ Modern Industrialization goal, every cell is [U]: unverified, from prior knowled
   https://raw.githubusercontent.com/AppliedEnergistics/Applied-Energistics-2/main/src/main/java/appeng/core/AEConfig.java
 - **Upkeep.** Every network device draws AE idle power. The Spatial IO cost grows with the cube's
   volume through the exponent above. [V for the config keys; U for the idle draw]
-- **Note.** AE2 is used as a *sink enabler* in packs, because autocrafting makes the exponential
+- **Note.** [U] AE2 is used as a *sink enabler* in packs, because autocrafting makes the exponential
   pack recipes (E2E-style) feasible. It is not a sink in its own right.
 
 ### Create and addons
@@ -77,7 +77,7 @@ Modern Industrialization goal, every cell is [U]: unverified, from prior knowled
 - **Addons.** Create: New Age and Create Crafts & Additions add power conversion. Some packs add
   "Create: Above and Beyond"-style progression made of quest and recipe chains. ("Above and Beyond"
   is a modpack, not a mod.) [U]
-- **Criticism.** "Nothing to build towards" outside a pack. Packs supply the goals.
+- **Criticism.** [U] "Nothing to build towards" outside a pack. Packs supply the goals.
 
 ### GregTech CEu / Modern
 
@@ -88,7 +88,7 @@ Modern Industrialization goal, every cell is [U]: unverified, from prior knowled
   maintenance hatch). Fusion needs plasma inputs. [U]
 - **Tunable.** Materials and recipes are registered through a KubeJS/Java API. Packs such as
   GregTech: New Horizons and Monifactory rebuild the whole ladder. [U]
-- **Criticism.** "Endgame is bigger numbers": each tier repeats the previous one at ×4 voltage.
+- **Criticism.** [U] "Endgame is bigger numbers": each tier repeats the previous one at ×4 voltage.
   The tedium is a deliberate feature.
 
 ### Draconic Evolution
@@ -108,7 +108,7 @@ Modern Industrialization goal, every cell is [U]: unverified, from prior knowled
   are defined as data or config, so packs choose the materials. [U]
   https://github.com/BlakeBr0/ExtendedCrafting (the 1.x wiki and blakesmods.com docs could not be
   read: one was empty, the other blocked)
-- **Criticism.** "Throw everything into a compressor": volume, not challenge.
+- **Criticism.** [U] "Throw everything into a compressor": volume, not challenge.
 
 ### Immersive Engineering
 
@@ -153,7 +153,7 @@ Modern Industrialization goal, every cell is [U]: unverified, from prior knowled
 
 - **Goal.** Crop tiers up to Insanium, Supremium gear and Awakened Supremium. No upkeep. [U]
   https://github.com/BlakeBr0/MysticalAgriculture
-- **Note.** It works as an infinite *source*, which in packs often kills other sinks.
+- **Note.** [U] It works as an infinite *source*, which in packs often kills other sinks.
 
 ### Ad Astra and space mods
 
