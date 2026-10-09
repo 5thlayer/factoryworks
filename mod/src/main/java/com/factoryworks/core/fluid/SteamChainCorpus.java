@@ -11,8 +11,7 @@ import java.nio.charset.StandardCharsets;
  * Terra's Boiler and Steam Engine, as the mod will eventually see them (#223, ADR-0048).
  *
  * <p>This class holds no number at all. It reads {@code factoryworks_core/fluid/steam_chain.json},
- * which {@code scripts/build-steam-assets.py} copies -- whole rows, every field -- out of
- * {@code data/factorio/machine.json}'s {@code boilers} and {@code generators} arrays. The same
+ * hand-owned data (#599). The same
  * idiom as {@link PumpCorpus} and {@link com.factoryworks.core.mining.rig.RigCorpus}: a
  * classpath resource rather than a datapack file, loaded once, so the numbers exist before any
  * world does.
@@ -55,26 +54,26 @@ public final class SteamChainCorpus {
         try (InputStream stream = SteamChainCorpus.class.getResourceAsStream(path)) {
             if (stream == null) {
                 throw new IllegalStateException(
-                        "no " + path + " on the classpath -- run scripts/build-steam-assets.py");
+                        "no " + path + " on the classpath");
             }
             JsonObject root = new Gson().fromJson(
                     new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class);
             JsonObject boilerRow = root.getAsJsonObject(BOILER);
             if (boilerRow == null) {
                 throw new IllegalStateException(
-                        path + " carries no " + BOILER + " row -- re-run scripts/build-steam-assets.py");
+                        path + " carries no " + BOILER + " row");
             }
             JsonObject steamEngineRow = root.getAsJsonObject(STEAM_ENGINE);
             if (steamEngineRow == null) {
                 throw new IllegalStateException(
                         path + " carries no " + STEAM_ENGINE
-                                + " row -- re-run scripts/build-steam-assets.py");
+                                + " row");
             }
             JsonObject fluidRows = root.getAsJsonObject(FLUIDS);
             if (fluidRows == null) {
                 throw new IllegalStateException(
                         path + " carries no " + FLUIDS
-                                + " rows -- re-run scripts/build-steam-assets.py");
+                                + " rows");
             }
             return new SteamChainCorpus(boilerRow, steamEngineRow, fluidRows);
         } catch (java.io.IOException e) {
@@ -128,7 +127,7 @@ public final class SteamChainCorpus {
             }
         }
         throw new IllegalStateException(
-                "the steam-engine row has no input fluid box -- re-run scripts/build-steam-assets.py");
+                "the steam-engine row has no input fluid box");
     }
 
     /**
@@ -146,8 +145,7 @@ public final class SteamChainCorpus {
             }
         }
         throw new IllegalStateException(
-                "the boiler row has no " + productionType + " fluid box -- re-run "
-                        + "scripts/build-steam-assets.py");
+                "the boiler row has no " + productionType + " fluid box");
     }
 
     /**
@@ -169,7 +167,7 @@ public final class SteamChainCorpus {
         JsonObject row = fluids.getAsJsonObject(fluid);
         if (row == null) {
             throw new IllegalStateException(
-                    "no " + fluid + " row in " + PATH + " -- re-run scripts/build-steam-assets.py");
+                    "no " + fluid + " row in " + PATH + "");
         }
         return row;
     }

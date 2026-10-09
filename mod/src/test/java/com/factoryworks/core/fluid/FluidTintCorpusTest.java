@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * That the mod reads the tint resource {@code scripts/build-fluid-tints.py} writes (#277, #619).
+ * That the mod reads the tint resource (#277, #619).
  *
- * <p>{@code tests/pack/test_fluid_tints.py} asserts the resource renders each fluid in
- * Factorio's colour, but it reads JSON. A parser reaching for the wrong key, or dropping the alpha,
+ * <p>{@code tests/pack/test_fluid_tints.py} asserts the resource names the five fluids, but
+ * it reads JSON. A parser reaching for the wrong key, or dropping the alpha,
  * leaves that check green and every fluid invisible or the wrong colour.
  */
 class FluidTintCorpusTest {

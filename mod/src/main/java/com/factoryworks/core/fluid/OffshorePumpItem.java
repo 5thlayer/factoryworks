@@ -38,8 +38,7 @@ import org.jspecify.annotations.Nullable;
 public class OffshorePumpItem extends BlockItem implements PlansPlacement {
 
     /**
-     * Named by {@code scripts/build-pump-assets.py}, which writes the string beside the block. It
-     * names no fluid: the pumpable list grows per body, and a message listing it would go stale.
+     * It names no fluid: the pumpable list grows per body, and a message listing it would go stale.
      */
     private static final String NO_SOURCE_KEY = "message.factoryworks.offshore_pump.no_source";
 

@@ -10,8 +10,8 @@ import java.nio.charset.StandardCharsets;
  * The Offshore Pump's numbers, as the mod sees them (#213, ADR-0050).
  *
  * <p>This class holds no number at all. It reads
- * {@code factoryworks_core/fluid/pumps.json}, which {@code scripts/build-pump-assets.py} copies
- * out of {@code data/factorio/machine.json}'s {@code pumps} row -- the same idiom as
+ * {@code factoryworks_core/fluid/pumps.json}, hand-owned data (#599) --
+ * the same idiom as
  * {@link com.factoryworks.core.mining.rig.RigCorpus} and
  * {@link com.factoryworks.core.ore.OreCorpus}: a classpath resource rather than a datapack file,
  * loaded once, because the rate is wanted before any world exists.
@@ -47,15 +47,14 @@ public final class PumpCorpus {
         try (InputStream stream = PumpCorpus.class.getResourceAsStream(path)) {
             if (stream == null) {
                 throw new IllegalStateException(
-                        "no " + path + " on the classpath -- run scripts/build-pump-assets.py");
+                        "no " + path + " on the classpath");
             }
             JsonObject root = new Gson().fromJson(
                     new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class);
             JsonObject row = root.getAsJsonObject(OFFSHORE_PUMP);
             if (row == null) {
                 throw new IllegalStateException(
-                        path + " carries no " + OFFSHORE_PUMP + " row -- re-run "
-                                + "scripts/build-pump-assets.py");
+                        path + " carries no " + OFFSHORE_PUMP + " row");
             }
             return new PumpCorpus(
                     row.get("pumping_speed").getAsInt(),

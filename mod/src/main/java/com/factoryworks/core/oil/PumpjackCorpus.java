@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 /**
- * The Pumpjack's prototype figures as Factorio states them, read from the resource
- * {@code scripts/build-pumpjack-assets.py} copies out of the corpus (ADR-0081). {@link PumpjackSpec}
+ * The Pumpjack's prototype figures as Factorio states them, read from hand-owned data
+ * (#599, ADR-0081). {@link PumpjackSpec}
  * converts.
  */
 public record PumpjackCorpus(double miningSpeed, double energyUsageWatts, double drainWatts, int tileWidth,
@@ -28,13 +28,13 @@ public record PumpjackCorpus(double miningSpeed, double energyUsageWatts, double
         try (InputStream stream = PumpjackCorpus.class.getResourceAsStream(path)) {
             if (stream == null) {
                 throw new IllegalStateException(
-                        "no " + path + " on the classpath -- run scripts/build-pumpjack-assets.py");
+                        "no " + path + " on the classpath");
             }
             JsonObject row = new Gson().fromJson(
                     new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class).getAsJsonObject(PUMPJACK);
             if (row == null) {
                 throw new IllegalStateException(
-                        path + " carries no " + PUMPJACK + " row -- re-run scripts/build-pumpjack-assets.py");
+                        path + " carries no " + PUMPJACK + " row");
             }
             return new PumpjackCorpus(
                     row.get("mining_speed").getAsDouble(),

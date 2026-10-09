@@ -1,19 +1,11 @@
 #!/usr/bin/env python3
 """Assert the Offshore Pump's generated halves still agree with what registers it (#213, ADR-0050).
 
-The one block that is the origin of every drop of water in the factory. Three things are asserted,
-and they fail in different ways:
+The one block that is the origin of every drop of water in the factory. `fluid/pumps.json` is
+hand-owned data (#599). Three things are asserted:
 
-  - **The corpus number.** `scripts/build-pump-assets.py` copies the `pumps` row out of
-    `data/factorio/machine.json` (#210) into a resource the mod reads at class-init. That copy is
-    the one place ADR-0022's "extracted, never transcribed" could be quietly broken -- a
-    hand-edited resource would run the pump at a rate somebody chose and nothing would fail, since
-    the mod's own tests assert the arithmetic over whatever number they are handed. So the resource
-    is asserted against the corpus field by field, never against a literal.
-  - **The rate the ratio rests on.** `tests/factorio/test_resource_extract.py` holds "one pump
-    feeds twenty boilers" against the corpus. What it cannot see is whether the *mod* reads that
-    same figure: a resource carrying a different `pumping_speed` leaves the corpus check green and
-    the game wrong. Asserted here because this is the only file that sees both.
+  - **The rate.** The resource states `pumping_speed` 20 and a `void` energy source (ADR-0050): one
+    pump feeds twenty boilers, and the pump takes no power. A change is a design change.
   - **The refusal message.** ADR-0050 requires placement to be refused *with a message* -- a pump
     that places and then silently produces nothing reaches the player as a dead factory three
     machines later. A missing lang key does not fail: it renders the raw key. So the key the item
@@ -28,14 +20,11 @@ Usage: tests/pack/test_pump_assets.py
 import json
 import pathlib
 import re
-import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PUMPS = ROOT / "mod/src/main/resources/factoryworks_core/fluid/pumps.json"
-MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
-GENERATOR = ROOT / "scripts/build-pump-assets.py"
 PUMP_ITEM = ROOT / "mod/src/main/java/com/factoryworks/core/fluid/OffshorePumpItem.java"
 ASSETS = ROOT / "kubejs/assets/factoryworks"
 
@@ -43,15 +32,7 @@ FACTORIO_NAME = "offshore-pump"
 BLOCK_NAME = "offshore_pump"
 BLOCK_ID = f"factoryworks:{BLOCK_NAME}"
 
-# Every field the generator copies. Kept here as well as in the generator so that dropping one
-# there fails rather than quietly narrowing what the mod reads.
-COPIED_FIELDS = ("pumping_speed", "energy_source")
-
-# ADR-0050's figure, and the only literal in this file. It is not a second source of truth for the
-# rate -- the field-by-field comparison above already holds that -- it is the assertion that the
-# *ratio* the corpus check defends is the one the mod actually runs at. If Factorio ever restates
-# `pumping_speed`, this line is where the pack notices that "one pump feeds twenty boilers" has
-# changed meaning, rather than shipping a new ratio in silence.
+# ADR-0050's figure.
 EXPECTED_PUMPING_SPEED = 20
 
 # `Component.translatable(NO_SOURCE_KEY)` resolves to whatever the constant holds -- so the constant
@@ -62,41 +43,23 @@ REFUSAL_KEY_RE = re.compile(r'[A-Z_]+_KEY\s*=\s*"([a-z_.]+)"')
 REFUSAL_KEY_COUNT = 1
 
 
-def check_corpus(failures):
-    corpus = {row["name"]: row for row in json.loads(MACHINE_CORPUS.read_text()).get("pumps", [])}
-    row = corpus.get(FACTORIO_NAME)
-    if row is None:
-        failures.append(
-            f"{FACTORIO_NAME} is not in {MACHINE_CORPUS.relative_to(ROOT)}'s pumps -- re-run the "
-            "machine extractor"
-        )
-        return
+def check_resource(failures):
     if not PUMPS.is_file():
-        failures.append(f"{PUMPS.relative_to(ROOT)} is missing -- run the generator")
+        failures.append(f"{PUMPS.relative_to(ROOT)} is missing")
         return
-    mod_row = json.loads(PUMPS.read_text()).get(FACTORIO_NAME)
-    if mod_row is None:
-        failures.append(f"pumps.json carries no {FACTORIO_NAME} row -- re-run the generator")
+    row = json.loads(PUMPS.read_text()).get(FACTORIO_NAME)
+    if row is None:
+        failures.append(f"pumps.json carries no {FACTORIO_NAME} row")
         return
-    for field in COPIED_FIELDS:
-        if mod_row.get(field) != row.get(field):
-            failures.append(
-                f"{FACTORIO_NAME}'s {field} is {mod_row.get(field)!r} in pumps.json but "
-                f"{row.get(field)!r} in the corpus -- every number here is extracted"
-            )
     if row.get("pumping_speed") != EXPECTED_PUMPING_SPEED:
         failures.append(
-            f"the corpus states pumping_speed {row.get('pumping_speed')!r}, not "
-            f"{EXPECTED_PUMPING_SPEED} -- ADR-0050's 'one pump feeds twenty boilers' was written "
-            "against the latter, so this is a design change rather than a regeneration"
+            f"pumping_speed is {row.get('pumping_speed')!r}, not {EXPECTED_PUMPING_SPEED} -- "
+            "ADR-0050's 'one pump feeds twenty boilers' was written against the latter"
         )
-    # ADR-0050: the pump takes no power, and that is Factorio's own `void` energy source rather
-    # than something nobody wired up. A row that stopped saying so would make the mod ask for
-    # energy the pack never gives it.
     if row.get("energy_source") != "void":
         failures.append(
             f"{FACTORIO_NAME}'s energy_source is {row.get('energy_source')!r}, not 'void' -- the "
-            "pump is powerless by ADR-0050 and the mod reads this field to say so"
+            "pump is powerless by ADR-0050"
         )
 
 
@@ -146,18 +109,7 @@ def main():
     failures = []
     lang = json.loads((ASSETS / "lang/en_us.json").read_text())
 
-    # The generator is the authority on its own output; if it is stale, everything below is
-    # asserting yesterday's files.
-    generated = subprocess.run(
-        [sys.executable, str(GENERATOR), "--check"], capture_output=True, text=True
-    )
-    if generated.returncode != 0:
-        failures.append(
-            f"{GENERATOR.relative_to(ROOT)} --check: "
-            f"{(generated.stdout + generated.stderr).strip()}"
-        )
-
-    check_corpus(failures)
+    check_resource(failures)
     check_item_map(failures)
     check_refusal_message(lang, failures)
 
@@ -166,7 +118,7 @@ def main():
         for failure in failures:
             print(f"  - {failure}")
         return 1
-    print("ok   offshore pump: corpus row extracted, item map names the block, refusal message "
+    print("ok   offshore pump: resource states ADR-0050's rate, item map names the block, refusal message "
           "resolves")
     return 0
 

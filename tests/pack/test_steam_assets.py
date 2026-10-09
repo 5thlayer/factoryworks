@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-"""Assert Terra's steam-chain corpus and its two fluids' pack-side assets still agree (#223, ADR-0048).
+"""Assert the steam chain's resource and its fluids' pack-side assets agree (#223, ADR-0048).
 
-Three things are asserted, and each fails in a different way:
+`fluid/steam_chain.json` is hand-owned data (#599). Asserted here:
 
-  - **The corpus rows.** `scripts/build-steam-assets.py` copies the `boiler` (from `machine.json`'s
-    `boilers` array) and `steam-engine` (from its `generators` array) rows -- whole, every field --
-    into a resource the mod reads at class-init. That copy is the one place a hand-edited row would
-    run the Boiler at a rate somebody chose with nothing else failing, since neither #224 nor #225
-    exists yet to notice. So the resource is asserted against the corpus field by field, never
-    against a literal, the `test_pump_assets.py` pattern.
+  - **The Boiler and the Steam Engine agree.** The Boiler's target temperature is the Steam Engine's
+    maximum (ADR-0048's one boiler tier).
   - **The fluids' lang keys.** These are `factoryworks:` fluids, so nothing else in the pack
     names them, and a missing `fluid_type` key renders the raw key in a tank tooltip.
   - **That neither fluid has a bucket.** ADR-0037 answered portable fluid for this pack --
@@ -31,14 +27,10 @@ Usage: tests/pack/test_steam_assets.py
 import json
 import pathlib
 import re
-import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 STEAM_CHAIN = ROOT / "mod/src/main/resources/factoryworks_core/fluid/steam_chain.json"
-MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
-FLUID_CORPUS = ROOT / "data/factorio/fluid.json"
-GENERATOR = ROOT / "scripts/build-steam-assets.py"
 ASSETS = ROOT / "kubejs/assets/factoryworks"
 
 FLUID_JAVA_DIR = ROOT / "mod/src/main/java/com/factoryworks/core/fluid"
@@ -51,73 +43,21 @@ STEAM_ENGINE_NAME = "steam-engine"
 FLUIDS = ("steam", "superheated_steam", "crude_oil", "heavy_oil", "light_oil", "petroleum_gas",
           "lubricant", "sulfuric_acid")
 
-# The two Factorio fluid prototypes the resource carries for #224's arithmetic. Not the same list
-# as FLUIDS above: `superheated_steam` is this pack's own fluid and has no Factorio prototype,
-# while `water` has one and is not a pack fluid.
-CORPUS_FLUIDS = ("water", "steam")
-
-
 def resolves(path):
     return path.is_file()
 
 
-def check_corpus(failures):
-    machine = json.loads(MACHINE_CORPUS.read_text())
-    boilers = {row["name"]: row for row in machine.get("boilers", [])}
-    generators = {row["name"]: row for row in machine.get("generators", [])}
-
-    boiler_row = boilers.get(BOILER_NAME)
-    if boiler_row is None:
-        failures.append(
-            f"{BOILER_NAME} is not in {MACHINE_CORPUS.relative_to(ROOT)}'s boilers -- re-run the "
-            "machine extractor"
-        )
-    steam_engine_row = generators.get(STEAM_ENGINE_NAME)
-    if steam_engine_row is None:
-        failures.append(
-            f"{STEAM_ENGINE_NAME} is not in {MACHINE_CORPUS.relative_to(ROOT)}'s generators -- "
-            "re-run the machine extractor"
-        )
+def check_chain(failures):
     if not resolves(STEAM_CHAIN):
-        failures.append(f"{STEAM_CHAIN.relative_to(ROOT)} is missing -- run the generator")
+        failures.append(f"{STEAM_CHAIN.relative_to(ROOT)} is missing")
         return
-    if boiler_row is None or steam_engine_row is None:
+    rows = json.loads(STEAM_CHAIN.read_text())
+    boiler = rows.get(BOILER_NAME)
+    engine = rows.get(STEAM_ENGINE_NAME)
+    if boiler is None or engine is None:
+        failures.append(f"steam_chain.json lacks a {BOILER_NAME} or {STEAM_ENGINE_NAME} row")
         return
-
-    mod_rows = json.loads(STEAM_CHAIN.read_text())
-    mod_boiler = mod_rows.get(BOILER_NAME)
-    mod_steam_engine = mod_rows.get(STEAM_ENGINE_NAME)
-    if mod_boiler != boiler_row:
-        failures.append(
-            f"{BOILER_NAME}'s row in steam_chain.json does not match the corpus field by field -- "
-            "every number here is extracted, not hand-edited"
-        )
-    if mod_steam_engine != steam_engine_row:
-        failures.append(
-            f"{STEAM_ENGINE_NAME}'s row in steam_chain.json does not match the corpus field by "
-            "field -- every number here is extracted, not hand-edited"
-        )
-
-    corpus_fluids = {
-        row["name"]: row for row in json.loads(FLUID_CORPUS.read_text()).get("fluids", [])
-    }
-    mod_fluids = mod_rows.get("fluids", {})
-    for name in CORPUS_FLUIDS:
-        if corpus_fluids.get(name) is None:
-            failures.append(
-                f"{name} is not in {FLUID_CORPUS.relative_to(ROOT)} -- re-run the fluid extractor"
-            )
-        elif mod_fluids.get(name) != corpus_fluids[name]:
-            failures.append(
-                f"{name}'s row in steam_chain.json does not match the corpus field by field -- "
-                "the Boiler's rate is derived from these two heat capacities (#224), and water's "
-                "is ten times steam's, so a hand-edited row is a plausible-looking wrong rate"
-            )
-
-    # ADR-0048: one boiler tier, and the Steam Engine's ceiling is the same 165 C the Boiler
-    # targets. If the corpus ever restated either, the ADR's "one boiler tier" claim would have
-    # changed meaning without anything else here noticing.
-    if boiler_row.get("target_temperature") != steam_engine_row.get("maximum_temperature"):
+    if boiler.get("target_temperature") != engine.get("maximum_temperature"):
         failures.append(
             "the Boiler's target_temperature and the Steam Engine's maximum_temperature no longer "
             "agree -- ADR-0048's 'one boiler tier, no heat layer' was written against them matching"
@@ -183,16 +123,7 @@ def main():
     failures = []
     lang = json.loads((ASSETS / "lang/en_us.json").read_text())
 
-    generated = subprocess.run(
-        [sys.executable, str(GENERATOR), "--check"], capture_output=True, text=True
-    )
-    if generated.returncode != 0:
-        failures.append(
-            f"{GENERATOR.relative_to(ROOT)} --check: "
-            f"{(generated.stdout + generated.stderr).strip()}"
-        )
-
-    check_corpus(failures)
+    check_chain(failures)
     check_assets(lang, failures)
     check_no_bucket(lang, failures)
     check_not_gtceu_steam(failures)
@@ -202,9 +133,8 @@ def main():
         for failure in failures:
             print(f"  - {failure}")
         return 1
-    print("ok   steam chain: boiler, steam-engine and both Factorio fluid rows extracted, "
-          "both pack fluids named, "
-          "no bucket, neither is gtceu:steam")
+    print("ok   steam chain: boiler and steam-engine agree, "
+          "both pack fluids named, no bucket, neither is gtceu:steam")
     return 0
 
 

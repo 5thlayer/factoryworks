@@ -16,8 +16,8 @@ drifting from it. Widening to all 33 fluids in the dump would carry 31 rows noth
 and would make it look like fluid crafting is in scope, which #210 does not touch.
 
 **Widened once, for colour (#277).** The fluids `data/pack/item-map.json` maps are in scope too,
-read off that file's `kind: fluid` rows, so `scripts/build-fluid-tints.py` can render each borrowed
-fluid in Factorio's `base_color` rather than a colour somebody picked. Still read, not typed: a fluid
+read off that file's `kind: fluid` rows, so each borrowed fluid could be drawn in
+Factorio's `base_color` rather than a colour somebody picked (the tints are hand-owned since #599). Still read, not typed: a fluid
 the map stops mapping drops out of the corpus with it.
 
 Four fields per fluid: `heat_capacity`, `default_temperature`, `base_color` and `flow_color`. Both are

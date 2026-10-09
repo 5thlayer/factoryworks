@@ -1,16 +1,8 @@
 #!/usr/bin/env python3
 """Assert both mining rigs' generated halves still agree with what registers them (#192, #193).
 
-The rig seam (ADR-0043). Two different generated things are asserted here, and they fail in different ways:
+The rig seam (ADR-0043). `mining/drills.json` is hand-owned data (#599). Asserted here:
 
-  - **Every corpus number.** `scripts/build-rig-assets.py` copies a `drills` row out of
-    `data/factorio/machine.json` (#188, widened by #193) into a resource the mod reads at
-    class-init: the footprint, the mining speed, the wattage, the output vector and the searching
-    radius. That copy is the one place ADR-0041's "every number is extracted, and none is chosen"
-    could be quietly broken -- a hand-edited resource would place a 3x3 burner rig with nothing
-    failing, since the mod's own `RigCorpusTest` only asserts the numbers it reads and would read
-    the edit. So the resource is asserted against the corpus itself, field by field, and never
-    against expected literals.
   - **The vertical extent.** How many blocks a rig stands is the one figure the corpus cannot
     supply: Factorio is played on a plane and a prototype states `tile_width` and `tile_height`,
     both ground extent. ADR-0043 carries the declared exception; what is asserted here is only that
@@ -26,7 +18,7 @@ The rig seam (ADR-0043). Two different generated things are asserted here, and t
     (#254).
 
 The tier list is read out of `RigTier.java` rather than typed here, so a third rung added to the
-enum is held to the corpus too.
+enum is held to the same assertions.
 
 Usage: tests/pack/test_rig_assets.py
 """
@@ -34,7 +26,6 @@ Usage: tests/pack/test_rig_assets.py
 import json
 import pathlib
 import re
-import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -42,8 +33,6 @@ RIG_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/rig/RigTier.ja
 DRILLS = ROOT / "mod/src/main/resources/factoryworks_core/mining/drills.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 FUEL = ROOT / "kubejs/data/factoryworks/fuel"
-MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
-GENERATOR = ROOT / "scripts/build-rig-assets.py"
 ASSETS = ROOT / "kubejs/assets/factoryworks"
 
 # `BURNER("burner-mining-drill", 2),` -- the enum constant, the corpus key it reads its ground size
@@ -212,21 +201,9 @@ def check_panels(tier, failures):
 def main():
     failures = []
     tiers = registered_tiers()
-    corpus = {row["name"]: row for row in json.loads(MACHINE_CORPUS.read_text())["drills"]}
     rows = json.loads(DRILLS.read_text())["drills"]
     item_map = json.loads(ITEM_MAP.read_text())["items"]
     lang = json.loads((ASSETS / "lang/en_us.json").read_text())
-
-    # The generator is the authority on its own output; if it is stale, everything below is
-    # asserting yesterday's files.
-    generated = subprocess.run(
-        [sys.executable, str(GENERATOR), "--check"], capture_output=True, text=True
-    )
-    if generated.returncode != 0:
-        failures.append(
-            f"{GENERATOR.relative_to(ROOT)} --check: "
-            f"{(generated.stdout + generated.stderr).strip()}"
-        )
 
     for tier, (factorio_name, blocks_tall) in sorted(tiers.items()):
         # The vertical extent is chosen, not extracted -- Factorio states two ground figures and
@@ -238,33 +215,8 @@ def main():
                 f"{tier} stands {blocks_tall} block tall -- a one-block rig reads as a platform; "
                 "see ADR-0043's declared exception"
             )
-        row = corpus.get(factorio_name)
-        if row is None:
-            failures.append(
-                f"{tier} names {factorio_name!r}, which is not a drill in "
-                f"{MACHINE_CORPUS.relative_to(ROOT)} -- re-run the machine extractor"
-            )
-            continue
-        mod_row = rows.get(factorio_name)
-        if mod_row is None:
-            failures.append(f"{factorio_name} has no row in drills.json -- re-run the generator")
-        else:
-            # Field by field against the corpus, never against literals. A generator patched to
-            # emit numbers somebody chose passes its own --check and fails here, which is the whole
-            # point of asserting against the source rather than against an expectation.
-            for field in ("tile_width", "tile_height", "mining_speed", "energy_usage",
-                          "energy_type", "vector_to_place_result", "resource_searching_radius"):
-                if mod_row.get(field) != row.get(field):
-                    failures.append(
-                        f"{factorio_name}'s {field} is {mod_row.get(field)!r} in drills.json but "
-                        f"{row.get(field)!r} in the corpus -- every number here is extracted"
-                    )
-            corpus_categories = (row.get("burner") or {}).get("fuel_categories")
-            if mod_row.get("fuel_categories") != corpus_categories:
-                failures.append(
-                    f"{factorio_name} admits {mod_row.get('fuel_categories')!r} but the corpus "
-                    f"says {corpus_categories!r}"
-                )
+        if factorio_name not in rows:
+            failures.append(f"{factorio_name} has no row in drills.json")
 
         check_panels(tier, failures)
 
@@ -284,7 +236,7 @@ def main():
         print(f"FAIL {index}: {failure}")
     if failures:
         return 1
-    print(f"ok   {len(tiers)} rigs, every number matches the corpus, every panel wears its face")
+    print(f"ok   {len(tiers)} rigs, every panel wears its face")
     return 0
 
 

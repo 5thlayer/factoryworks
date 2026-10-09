@@ -10,8 +10,8 @@ import java.nio.charset.StandardCharsets;
 /**
  * The Overload Limit: how many crafts' worth of an ingredient automated insertion leaves in a
  * machine, Factorio's {@code clamp(ceil(factor * speed / energy_required) + 1, minimum, maximum)}.
- * The constants are read from {@code factoryworks_core/machine/overload.json}, which
- * {@code scripts/build-overload-limit.py} copies out of the corpus (#517).
+ * The constants are read from {@code factoryworks_core/machine/overload.json}, which is
+ * hand-owned data (#599).
  *
  * <p>Pure: no Minecraft types.
  */
@@ -42,7 +42,7 @@ public record OverloadLimit(double factor, int minimum, int maximum) {
     private static OverloadLimit load() {
         try (InputStream stream = OverloadLimit.class.getResourceAsStream(PATH)) {
             if (stream == null) {
-                throw new IllegalStateException("no " + PATH + " on the classpath -- run scripts/build-overload-limit.py");
+                throw new IllegalStateException("no " + PATH + " on the classpath");
             }
             JsonObject root = new Gson().fromJson(new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class);
             return new OverloadLimit(

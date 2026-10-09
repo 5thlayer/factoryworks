@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assert Terra's Boiler has the pack-side files it needs, and the numbers it was built on (#224).
 
-Four things are asserted, and each fails differently:
+Three things are asserted, and each fails differently:
 
   - **Every facing and the screen's keys.** A blockstate covering every `facing`, and the lang keys
     the gauge reads. Whether each hop from blockstate to texture, the item model and the loot table
@@ -10,11 +10,9 @@ Four things are asserted, and each fails differently:
     an unmapped name, so what this adds is the other direction: that the row's target is the block
     the mod actually registers, and that the row is no longer `undecided` -- one of the three rows
     #166 tracks.
-  - **The generator is current.** `scripts/build-steam-assets.py --check`, so a corpus refresh that
-    moved a number fails here rather than shipping a stale copy.
-  - **The rate is still Factorio's own.** 1.8 MW and 165 °C into 60 mB a second, re-derived here
-    from the corpus rather than read off the Java -- this is the assertion that would catch a
-    prototype change quietly re-rating the block. The heat capacity used is *steam's*; water's is
+  - **The rate.** 1.8 MW and 165 °C into 60 mB a second, re-derived here from
+    `fluid/steam_chain.json` (hand-owned data, #599) rather than read off the Java -- this is the
+    assertion that would catch a hand edit quietly re-rating the block. The heat capacity used is *steam's*; water's is
     ten times larger and yields a plausible-looking 6 mB/s. The mod's own arithmetic is
     `BoilerSpecTest`, and the two are deliberately independent derivations of one number.
 
@@ -26,15 +24,12 @@ Usage: tests/pack/test_boiler_assets.py
 import json
 import re
 import pathlib
-import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "kubejs/assets/factoryworks"
-MACHINE_CORPUS = ROOT / "data/factorio/machine.json"
-FLUID_CORPUS = ROOT / "data/factorio/fluid.json"
 ITEM_MAP = ROOT / "data/pack/item-map.json"
-GENERATOR = ROOT / "scripts/build-steam-assets.py"
+STEAM_CHAIN = ROOT / "mod/src/main/resources/factoryworks_core/fluid/steam_chain.json"
 PF_BLOCKS = ROOT / "mod/src/main/java/com/factoryworks/core/PFBlocks.java"
 
 BLOCK = "boiler"
@@ -108,11 +103,11 @@ def check_registered(failures):
 
 def check_rate(failures):
     """Factorio's own numbers into 60 mB a second, derived here and in BoilerSpec independently."""
-    machine = json.loads(MACHINE_CORPUS.read_text())
-    boiler = next((row for row in machine.get("boilers", []) if row["name"] == BLOCK), None)
-    fluids = {row["name"]: row for row in json.loads(FLUID_CORPUS.read_text()).get("fluids", [])}
+    chain = json.loads(STEAM_CHAIN.read_text())
+    boiler = chain.get(BLOCK)
+    fluids = chain.get("fluids", {})
     if boiler is None or "steam" not in fluids or "water" not in fluids:
-        failures.append("the corpus no longer carries the boiler row or its two fluids")
+        failures.append("steam_chain.json no longer carries the boiler row or its two fluids")
         return
 
     # Steam's heat capacity, not water's: Factorio pays for the rise at the OUTPUT fluid's rate.
@@ -122,7 +117,7 @@ def check_rate(failures):
     per_second = boiler["energy_consumption"] / per_unit
     if per_second != 60:
         failures.append(
-            f"the corpus now implies {per_second} mB/s rather than Factorio's 60 -- ADR-0050's "
+            f"the resource now implies {per_second} mB/s rather than Factorio's 60 -- ADR-0050's "
             "'one pump feeds twenty boilers' was written against 60"
         )
     per_tick = boiler["energy_consumption"] / MINECRAFT_TICKS_PER_SECOND / per_unit
@@ -135,15 +130,6 @@ def check_rate(failures):
 
 def main():
     failures = []
-    generated = subprocess.run(
-        [sys.executable, str(GENERATOR), "--check"], capture_output=True, text=True
-    )
-    if generated.returncode != 0:
-        failures.append(
-            f"{GENERATOR.relative_to(ROOT)} --check: "
-            f"{(generated.stdout + generated.stderr).strip()}"
-        )
-
     check_assets(failures)
     check_item_map(failures)
     check_registered(failures)
@@ -155,7 +141,7 @@ def main():
             print(f"  - {failure}")
         return 1
     print("ok   boiler: every facing and gauge key, the item-map row names the block, "
-          "and the corpus still implies 60 mB/s")
+          "and the resource still implies 60 mB/s")
     return 0
 
 

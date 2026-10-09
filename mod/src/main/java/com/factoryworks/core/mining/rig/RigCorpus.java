@@ -19,8 +19,8 @@ import java.util.Map;
  * <p>ADR-0043 states the rule directly -- "the 2x2 and 3x3 footprints... become extracted facts
  * rather than two integers somebody typed" -- and #193 widened it past the footprint. This class
  * therefore holds no number at all. It reads
- * {@code factoryworks_core/mining/drills.json}, which {@code scripts/build-rig-assets.py}
- * copies out of {@code data/factorio/machine.json}'s {@code drills} rows. Same idiom as
+ * {@code factoryworks_core/mining/drills.json}, which is hand-owned data
+ * (#599). Same idiom as
  * {@link com.factoryworks.core.ore.OreCorpus}: a classpath resource, loaded once, read at
  * block registration time, because a machine's footprint is needed before any datapack exists.
  *
@@ -54,7 +54,7 @@ public final class RigCorpus {
         try (InputStream stream = RigCorpus.class.getResourceAsStream(path)) {
             if (stream == null) {
                 throw new IllegalStateException(
-                        "no " + path + " on the classpath -- run scripts/build-rig-assets.py");
+                        "no " + path + " on the classpath");
             }
             JsonObject root = new Gson().fromJson(
                     new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class);

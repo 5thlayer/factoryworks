@@ -12,9 +12,8 @@ import java.util.OptionalInt;
 /**
  * The tints that draw Core's oil and chemistry fluids in Factorio's colours (ADR-0109).
  *
- * <p>This class holds no colour. It reads {@code factoryworks_core/fluid/tints.json}, which
- * {@code scripts/build-fluid-tints.py} derives from Factorio's {@code base_color} and each fluid's
- * sprite -- the {@link PumpCorpus} idiom: a classpath resource, loaded once, because fluid models
+ * <p>This class holds no colour. It reads {@code factoryworks_core/fluid/tints.json}, hand-owned
+ * data (#599) -- the {@link PumpCorpus} idiom: a classpath resource, loaded once, because fluid models
  * bake before any world exists.
  *
  * <p>Free of Minecraft, so the parsing is checkable in an ordinary unit test.
@@ -39,7 +38,7 @@ public final class FluidTintCorpus {
         try (InputStream stream = FluidTintCorpus.class.getResourceAsStream(path)) {
             if (stream == null) {
                 throw new IllegalStateException(
-                        "no " + path + " on the classpath -- run scripts/build-fluid-tints.py");
+                        "no " + path + " on the classpath");
             }
             JsonObject root = new Gson().fromJson(
                     new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class);

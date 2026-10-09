@@ -11,8 +11,8 @@ import java.util.Map;
 
 /**
  * Which blocks may Fast Replace which, read from {@code factoryworks_core/placement/replace_groups.json},
- * which {@code scripts/build-replace-groups.py} copies out of Factorio's {@code fast_replaceable_group}
- * (ADR-0082). Blocks are named by registry id, so this stays free of Minecraft.
+ * which is hand-owned data
+ * (#599, ADR-0082). Blocks are named by registry id, so this stays free of Minecraft.
  */
 public final class ReplaceGroups {
 
@@ -44,7 +44,7 @@ public final class ReplaceGroups {
         try (InputStream stream = ReplaceGroups.class.getResourceAsStream(path)) {
             if (stream == null) {
                 throw new IllegalStateException(
-                        "no " + path + " on the classpath -- run scripts/build-replace-groups.py");
+                        "no " + path + " on the classpath");
             }
             JsonObject root = new Gson().fromJson(
                     new InputStreamReader(stream, StandardCharsets.UTF_8), JsonObject.class);
