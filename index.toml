@@ -262,11 +262,11 @@ hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "a31c16d89bd072b459a712ac96a7945217dddd023b28d8f39a9dfa2443099f1a"
+hash = "051ea96d27d15d4978fd48f39583a37492f02177aabae41591c29fd349357d99"
 
 [[files]]
 file = "data/jars/loot.json"
-hash = "5480207deb713e411eea04bc4126967d8fd6069d3ca3e237eedde110a37d6bfc"
+hash = "adfe8682fab779df9da6dc6d958cc2df388cb5f401ad9864ee6b4feec1557c1a"
 
 [[files]]
 file = "data/pack/art-provenance.json"
@@ -2648,6 +2648,11 @@ metafile = true
 [[files]]
 file = "mods/balm.pw.toml"
 hash = "8be50c4e769f3c0da36c64ebe7e590283fe9cdfd571d2aa7341988c299f792a9"
+metafile = true
+
+[[files]]
+file = "mods/beltworks.pw.toml"
+hash = "07289420a950de4499589de4d8b72f284da322927e9a784f9ae497a0ddf7b5e9"
 metafile = true
 
 [[files]]
