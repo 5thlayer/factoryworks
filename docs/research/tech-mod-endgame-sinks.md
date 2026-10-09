@@ -20,6 +20,9 @@ be read. So:
 
 ## Per mod
 
+The table summarises the sections below. Apart from the Mekanism and AE2 config costs and the
+Modern Industrialization goal, every cell is [U]: unverified, from prior knowledge.
+
 | Mod | Endgame goal | Shape | Upkeep / running cost | Pack-tunable? |
 | --- | --- | --- | --- | --- |
 | Mekanism | MekaSuit and Meka-Tool, SPS antimatter, fusion, QIO | gear + scaling sink | yes: fusion needs D-T fuel and SPS needs large FE | config + recipe JSON |

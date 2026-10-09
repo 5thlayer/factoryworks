@@ -9,7 +9,8 @@ lands.
 
 **Module**:
 One of the suite's mods, each owning one capability: Beltworks (items on belts), Pipeworks (fluids),
-Wireworks (energy), Craftworks (crafting machines), Fieldworks (resources) and Gearworks (Gear). Each plays alone in vanilla and requires no other Module.
+Wireworks (energy), Craftworks (crafting machines), Fieldworks (resources) and Gearworks (Gear).
+Each plays alone in vanilla and requires no other Module.
 _Avoid_: Library, Binding
 
 **Groundworks**:
