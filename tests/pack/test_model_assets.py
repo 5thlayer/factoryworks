@@ -72,7 +72,7 @@ BREAKS = [
     ("is embedded", lambda m: m["textures"][0].update(source="data:image/png;base64,AA==")),
     ("absolute path", lambda m: m["textures"][0].update(path="/Users/someone/lamp.png")),
     ("outside data/art/models/", lambda m: m["textures"][0].update(
-        relative_path="../../../../kubejs/assets/factoryworks/textures/block/steel_chest.png")),
+        relative_path="../../../../kubejs/assets/factoryworks/textures/block/copper_stromatolite.png")),
     ("Blockbench format 4.10", lambda m: m["meta"].update(format_version="4.10")),
     ("model format bedrock", lambda m: m["meta"].update(model_format="bedrock")),
     ("Java block version latest", lambda m: m.update(java_block_version="latest")),

@@ -48,15 +48,12 @@ path = [
 SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "CC-BY-4.0"
 
-# Art from malcolmriley's unused-textures: the ore sprites, the Steel Chest's sheet,
-# crude oil's sprite and the unmodified copies they are derived from (NOTICE).
+# Art from malcolmriley's unused-textures: the ore sprites, crude oil's sprite and the unmodified
+# copies they are derived from (NOTICE).
 [[annotations]]
 path = [
     "kubejs/assets/factoryworks/textures/block/ore/*.png",
-    "kubejs/assets/factoryworks/textures/entity/chest/steel_chest.png",
-    "kubejs/assets/factoryworks/textures/block/steel_chest_particle.png",
     "data/art/ore_*.png",
-    "data/art/metal_alloy_block.png",
     "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png",
     "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png.mcmeta",
 ]
@@ -85,8 +82,6 @@ path = [
     "kubejs/assets/factoryworks/textures/block/burner_mining_drill/*.png",
     "kubejs/assets/factoryworks/textures/block/electric_mining_drill/*.png",
     "kubejs/assets/factoryworks/textures/block/mining_drill_port.png",
-    "data/art/iron_frame_side.png",
-    "kubejs/assets/factoryworks/textures/entity/chest/iron_chest.png",
 ]
 SPDX-FileCopyrightText = "Futureazoo"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"

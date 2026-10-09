@@ -52,14 +52,6 @@ GECKOLIB = {
 }
 
 
-# Items drawn as vanilla's chest model, by the same `special` shape vanilla's `items/chest.json`
-# has (#540), in the sprite under `entity/chest/` that `ChestTier` names for the block (#541).
-CHEST = {
-    "factoryworks:iron_chest": "factoryworks:iron_chest",
-    "factoryworks:steel_chest": "factoryworks:steel_chest",
-}
-
-
 def definitions():
     """Every definition the asset trees imply: (path, content), by the model beside it."""
     wanted = {}
@@ -83,15 +75,6 @@ def definitions():
                             "type": "minecraft:special",
                             "base": f"{namespace}:item/{item}",
                             "model": {"type": "geckolib:geckolib"},
-                        }
-                    }
-                    continue
-                if f"{namespace}:{item}" in CHEST:
-                    wanted[path] = {
-                        "model": {
-                            "type": "minecraft:special",
-                            "base": f"{namespace}:item/{item}",
-                            "model": {"type": "minecraft:chest", "texture": CHEST[f"{namespace}:{item}"]},
                         }
                     }
                     continue
