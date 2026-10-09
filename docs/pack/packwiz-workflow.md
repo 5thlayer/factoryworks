@@ -80,9 +80,8 @@ A supported update system for "wireworks-0.4.0.jar" cannot be found.
 ### Taking a new Beltworks
 
 A 5thlayer mod reaches the Pack through the local maven repository, at a version that never changes
-once published there. `data/pack/local-jars.json` pins the version the Pack runs, one row per mod;
-Groundworks has no row, because the Pack compiles against the Groundworks nested in the Beltworks jar
-(ADR-0024).
+once published there. `data/pack/local-jars.json` pins the version the Pack runs, one row per mod,
+Groundworks included: Beltworks and Wireworks require it and nest nothing.
 
 ```sh
 scripts/sync-local-jars.py beltworks=0.2.0   # pin, install, refresh the manifest, rebuild the core mod
@@ -119,7 +118,7 @@ The release train relies on this order:
    older CurseForge file than its pin.
 
 `--check` fails when the jar in `mods/` is not the pinned one, differs from `~/.m2`'s by sha256
-(a version republished, or a jar copied by hand), or nests nothing its row names. For a
+(a version republished, or a jar copied by hand). For a
 `curseforge` row with a metafile it also fails when the metafile names another version or project, hashes another
 file than the installed jar (CurseForge's file is not `~/.m2`'s), or when `index.toml` indexes the
 jar rather than the metafile; it contacts nothing, so it holds the metafile to the pin and never to

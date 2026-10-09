@@ -2,7 +2,7 @@
 """Assert `mods/` holds the local jars `data/pack/local-jars.json` pins (#465, ADR-0024).
 
 Runs `scripts/sync-local-jars.py --check`: each pinned jar is the one in `mods/`, byte for byte the
-one `~/.m2` published when `~/.m2` holds it, and nests what its row says it nests. A row with a
+one `~/.m2` published when `~/.m2` holds it. A row with a
 `curseforge` project id has a metafile naming the pinned file, indexed in place of the jar (#532),
 or none while its CurseForge reference is pending.
 

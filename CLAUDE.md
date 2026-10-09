@@ -163,12 +163,12 @@ removes the row's metafile and prints `pending <mod> <version>`, and a later pla
 FactoryWorks Core's `mods/factoryworks-core.pw.toml` follows `gradle.properties`' `mod_version`, the
 version `scripts/release.sh` last released, the same way.
 The build reads the same
-table and names no Library (#475, ADR-0090): every pinned jar, and every jar its row `nests`, is on
-the compile classpath and the dev runs, and each nested artifact's range is read from the jarjar
-metadata into `neoforge.mods.toml` as `<artifact>_version_range`. So the Pack names no Groundworks
-version, and adding a Library is a row and a sync. `tests/pack/test_local_jars.py` runs
+table and names no Library (#475, ADR-0090): every pinned jar is on the compile classpath and the dev
+runs, and the range the pinned jars require Groundworks under is read from their `neoforge.mods.toml`
+into Core's as `groundworks_version_range`, failing the build if they disagree. So the Pack names no
+Groundworks version, and adding a Library is a row and a sync. `tests/pack/test_local_jars.py` runs
 the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
-holds it, and nests Groundworks; a newer version in `~/.m2` is named without failing. For a
+holds it; a newer version in `~/.m2` is named without failing. For a
 `curseforge` row the metafile names the pinned file and project and hashes the installed jar, and
 `index.toml` holds the metafile, not the jar; a row with no metafile is printed as pending and
 passes. `--check --strict` fails on a pending row, and must pass before any export. The check
@@ -187,21 +187,19 @@ pipes' arms report, and `kubejs/data/pipeworks/tags/` lets the Picks close a pip
 A change that crosses Groundworks, Beltworks, Wireworks, Pipeworks, Craftworks and the Pack goes through the
 `release-train` skill (`skillworks:release-train`, from 5thlayer/skillworks), in that order: each
 checkout is owned by the session working in it, and nothing is pushed without the user's word.
-Wireworks nests Groundworks too, so a Groundworks release moves Beltworks' and Wireworks' ranges
-together.
+Beltworks and Wireworks require Groundworks rather than nesting it, so a Groundworks minor moves
+their ranges and Core's together.
 
 `-PsiblingBuilds` is for trying such a change in the Pack before a library is released (#466, #475).
-It includes, as a composite, the checkout of every row of `local-jars.json` and of each jar the row
-nests, except a row marked `"sibling": false` (one whose tested binary no checkout reproduces),
+It includes, as a composite, the checkout of every row of `local-jars.json`, except a row marked `"sibling": false` (one whose tested binary no checkout reproduces),
 or of only the rows named (`-PsiblingBuilds=craftworks`), each at `-P<name>Dir`, default
 `~/minecraft_mods/<name>`. The compile and every dev run, `runGameTestServer` included, use those
 checkouts and never their `mods/` jars. The build prints one `siblingBuilds:` line per checkout,
 naming its version and HEAD.
 `installToPack` refuses under it, and `scripts/check-datapack-load.py --sibling-builds` forwards it.
 It never installs, and a green run under it proves nothing about the pinned jars: the change still
-ships through the release train. A Groundworks checkout outside the range Beltworks nests it under
-fails the build, naming the range, so a Groundworks minor needs Beltworks' range moved in its
-checkout too.
+ships through the release train. A Groundworks checkout outside the range Beltworks and Wireworks require it under
+fails the build, so a Groundworks minor needs their ranges moved in their checkouts too.
 
 ### First-party mod
 

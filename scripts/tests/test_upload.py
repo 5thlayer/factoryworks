@@ -262,7 +262,8 @@ exec "$@"
         self.assertEqual(data["loaders"], ["neoforge"])
         self.assertEqual(data["version_type"], "beta")
         self.assertEqual(data["dependencies"], [{"project_id": "4sYI62kA", "dependency_type": "required"},
-                                                {"project_id": "p4zxipln", "dependency_type": "required"}])
+                                                {"project_id": "p4zxipln", "dependency_type": "required"},
+                                                {"project_id": "AJ3Q7hSr", "dependency_type": "required"}])
         self.assertEqual(data["file_parts"], ["file"])
 
     def test_a_release_from_1_0_is_a_release_on_both_sites(self):
@@ -344,7 +345,8 @@ exec "$@"
         self.assertEqual(sorted(metadata["gameVersions"]), [101, 301, 401, 402])
         self.assertEqual(metadata["releaseType"], "beta")
         self.assertEqual(metadata["relations"], {"projects": [{"slug": "oritech", "type": "requiredDependency"},
-                                                              {"slug": "beltworks", "type": "requiredDependency"}]})
+                                                              {"slug": "beltworks", "type": "requiredDependency"},
+                                                              {"slug": "groundworks", "type": "requiredDependency"}]})
 
     def test_refuses_a_version_curseforge_already_has(self):
         self.publish("0.3.9")

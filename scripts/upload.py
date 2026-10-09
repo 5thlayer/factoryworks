@@ -32,8 +32,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CHANGELOG = "publish/core/changelog.md"
 PROJECTS = {"modrinth": "7wb8sJtC", "curseforge": "1718187"}
-# The required dependencies neoforge.mods.toml names; Groundworks arrives nested in Beltworks.
-DEPENDENCIES = {"modrinth": ["4sYI62kA", "p4zxipln"], "curseforge": ["oritech", "beltworks"]}
+# The required dependencies neoforge.mods.toml names.
+DEPENDENCIES = {"modrinth": ["4sYI62kA", "p4zxipln", "AJ3Q7hSr"],
+                "curseforge": ["oritech", "beltworks", "groundworks"]}
 MODRINTH_API = "https://api.modrinth.com/v2"
 CURSEFORGE_UPLOAD = "https://minecraft.curseforge.com"
 # The upload API can't list a project's files, so the website's own listing, which needs no key, does.

@@ -56,7 +56,7 @@ def rowJars = localJars.collectEntries { row ->
     if (!(row.mod in siblingMods)) {
         return [row.mod, fileTree(dir: rootProject.file('mods'), include: row.pattern)]
     }
-    // Asks for the jar rather than the classes directory, since `nestedRange` reads its jarjar metadata.
+    // Asks for the jar rather than the classes directory, since `requiredRange` reads its metadata.
     def jar = configurations.create("sibling_${row.mod}") {
         canBeConsumed = false
         attributes {
@@ -69,28 +69,26 @@ def rowJars = localJars.collectEntries { row ->
     [row.mod, jar]
 }
 
-def jarjarEntries = { FileCollection jars ->
-    jars.files.collectMany { jar ->
-        def metadata = zipTree(jar).matching { include 'META-INF/jarjar/metadata.json' }.files
-        metadata.collectMany { new groovy.json.JsonSlurper().parse(it).jars }
+// The range the pinned jars require `modId` under, so `neoforge.mods.toml` requires what loads
+// without the pack naming a version of it (ADR-0024). Read from the jar's metadata, since a
+// checkout's jar is named differently from a released one.
+def requiredRange = { String modId ->
+    def pattern = ~/(?s)\[\[dependencies\.[^\]]+\]\]\s*modId\s*=\s*"${modId}"(.*?)(?=\[\[|\z)/
+    def ranges = localJars.collectMany { row ->
+        rowJars[row.mod].files.collectMany { jar ->
+            zipTree(jar).matching { include 'META-INF/neoforge.mods.toml' }.files.collectMany { toml ->
+                def m = toml.text =~ pattern
+                m.collect { (it[1] =~ /versionRange\s*=\s*"([^"]+)"/)[0][1] }
+            }
+        }
+    }.unique()
+    if (ranges.size() != 1) {
+        throw new GradleException("the pinned jars require ${modId} under ${ranges ?: 'no range'}, not one -- "
+                + (siblingBuilds ? 'check the checkouts' : 'run scripts/sync-local-jars.py'))
     }
+    ranges[0]
 }
-
-// The version range a pinned jar nests `artifact` under, so `neoforge.mods.toml` requires what loads
-// without the pack naming a version of it (ADR-0024). Read from the metadata, since a checkout's
-// nested jar is named differently from a released one.
-def nestedRange = { String artifact ->
-    def rows = localJars.findAll { artifact in (it.nests ?: []) }
-    def nested = rows.collectMany { jarjarEntries(rowJars[it.mod]) }.find { it.identifier.artifact == artifact }
-    if (nested == null) {
-        throw new GradleException("no jar of ${rows*.mod ?: 'any row'} nests ${artifact} -- "
-                + (siblingBuilds ? 'check the checkout' : 'run scripts/sync-local-jars.py'))
-    }
-    nested.version.range
-}
-def nestedArtifacts = localJars.collectMany { it.nests ?: [] }.unique()
-// A checkout of these is already on the classpath, so no pinned jar's copy joins it.
-def siblingNests = localJars.findAll { it.mod in siblingMods }.collectMany { it.nests ?: [] } as Set
+def requiredArtifacts = ['groundworks']
 
 dependencies {
     // EMI is here for the recipe-viewer lock annotation (issue #75), and Jade for the
@@ -115,23 +113,15 @@ dependencies {
                       'Jade-*.jar', 'jade-*.jar', 'geckolib-neoforge-*.jar',
                       'ftb-teams-neoforge-*.jar', 'ftb-library-neoforge-*.jar',
                       'ftb-chunks-neoforge-26.1.2.8.jar'])
-    // Each pinned jar, and the jars it nests rather than a copy of their own, so its pin stays the
-    // only one (ADR-0024). On the dev runs too: the emitted recipes name their items.
+    // Each pinned jar, so its pin stays the only one (ADR-0024). On the dev runs too: the emitted
+    // recipes name their items.
     localJars.each { row ->
         if (row.mod in siblingMods) {
             compileOnly("${row.group}:${row.artifact}") { transitive = false }
-            (row.nests ?: []).each { compileOnly("${row.group}:${it}") { transitive = false } }
             devRunMods("${row.group}:${row.artifact}") { transitive = false }
         } else {
             def jars = rowJars[row.mod]
-            def nests = (row.nests ?: []) - siblingNests
             compileOnly jars
-            compileOnly files({
-                jars.files.collectMany { jar ->
-                    def paths = jarjarEntries(files(jar)).findAll { it.identifier.artifact in nests }*.path
-                    paths ? [zipTree(jar).matching { include paths }] : []
-                }
-            })
             devRunMods jars
         }
     }
@@ -238,8 +228,8 @@ def modMetadata = [
 
 tasks.named('processResources', ProcessResources).configure {
     // A checkout's jar is built by this run, so no row's metadata is read before the task runs.
-    def ranges = nestedArtifacts.collectEntries { artifact ->
-        [("${artifact}_version_range".toString()): providers.provider { nestedRange(artifact) }]
+    def ranges = requiredArtifacts.collectEntries { artifact ->
+        [("${artifact}_version_range".toString()): providers.provider { requiredRange(artifact) }]
     }
     inputs.files rowJars.values()
     inputs.properties modMetadata

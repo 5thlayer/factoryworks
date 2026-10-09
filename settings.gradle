@@ -22,8 +22,8 @@ gradle.ext.siblingMods = [] as Set
 
 // -PsiblingBuilds builds and runs against checkouts in place of the pinned jars in mods/, so a change
 // crossing repos is tried before any of them is released (#466). A bare -PsiblingBuilds swaps every
-// row; -PsiblingBuilds=beltworks,craftworks swaps those. A row's checkout comes with the checkouts of
-// the jars it nests, each at -P<name>Dir, default ~/minecraft_mods/<name>.
+// row; -PsiblingBuilds=beltworks,craftworks swaps those. Each checkout is at -P<name>Dir, default
+// ~/minecraft_mods/<name>.
 def requested = providers.gradleProperty('siblingBuilds')
 if (requested.present) {
     def byMod = localJars.collectEntries { [it.mod, it] }
@@ -65,7 +65,5 @@ if (requested.present) {
         includeBuild dir
         println "siblingBuilds: not the pinned jar -- ${name} ${props.mod_version} at ${git('rev-parse', '--short', 'HEAD')}${dirty} (${dir})"
     }
-    // A Library's own settings may include a checkout of what it nests too; the composite holds one
-    // copy only while both inclusions name the same directory.
-    selected.collectMany { [it.mod] + (it.nests ?: []) }.unique().each { includeCheckout(it) }
+    selected*.mod.each { includeCheckout(it) }
 }

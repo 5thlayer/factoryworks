@@ -19,9 +19,6 @@
       "version": "0.3.17",
       "pattern": "beltworks-*.jar",
       "curseforge": 1714527,
-      "nests": [
-        "groundworks"
-      ],
       "source": {
         "repo": "5thlayer/beltworks",
         "ref": "beltworks-v{version}"
@@ -45,9 +42,6 @@
       "artifact": "wireworks",
       "version": "0.4.0",
       "pattern": "wireworks-*.jar",
-      "nests": [
-        "groundworks"
-      ],
       "source": {
         "repo": "5thlayer/wireworks",
         "ref": "wireworks-v{version}"

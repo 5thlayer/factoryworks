@@ -13,7 +13,7 @@ the version `scripts/release.sh` last released. It then refreshes the manifest w
 until every pinned jar is in `~/.m2`.
 
 `--check` changes nothing and contacts nothing. It fails when the jar in `mods/` is not the pinned
-one, differs from `~/.m2`'s by sha256, or nests nothing its row names; it skips the sha256 when
+one or differs from `~/.m2`'s by sha256; it skips the sha256 when
 `~/.m2` lacks the pin, and names newer versions `~/.m2` holds without failing. For a `curseforge`
 row with a metafile it also fails when the metafile names another file or project, hashes another
 jar, or when `index.toml` indexes the jar instead of the metafile. A row with no metafile is named
@@ -41,14 +41,12 @@ import tomllib
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TABLE = ROOT / "data" / "pack" / "local-jars.json"
 MODS = ROOT / "mods"
 M2 = Path.home() / ".m2" / "repository"
-JARJAR = "META-INF/jarjar/metadata.json"
 INDEX = ROOT / "index.toml"
 PROPERTIES = ROOT / "gradle.properties"
 # Core's CurseForge project, as scripts/upload.py's.
@@ -97,15 +95,6 @@ def sha1(path):
     return hashlib.sha1(path.read_bytes()).hexdigest()
 
 
-def nested(jar):
-    """`artifact -> version` of every jar `jar` nests, from its jarjar metadata."""
-    with zipfile.ZipFile(jar) as zf:
-        if JARJAR not in zf.namelist():
-            return {}
-        jars = json.loads(zf.read(JARJAR))["jars"]
-    return {j["identifier"]["artifact"]: j["version"]["artifactVersion"] for j in jars}
-
-
 def version_key(version):
     return tuple((0, int(n), "") if n.isdigit() else (1, 0, n) for n in re.split(r"[.\-]", version))
 
@@ -135,13 +124,6 @@ def check_row(row, pending):
     elif sha256(jar) != sha256(source):
         failures.append(f"{row['mod']}: mods/{jar.name} differs from {source} "
                         f"-- {row['version']} was republished, or the jar was replaced by hand")
-
-    inside = nested(jar)
-    for artifact in row.get("nests", []):
-        if artifact not in inside:
-            failures.append(f"{row['mod']}: mods/{jar.name} nests no {artifact}")
-        else:
-            print(f"ok   {row['mod']} {row['version']} nests {artifact} {inside[artifact]}")
 
     if "curseforge" in row:
         if metafile(row).is_file():
