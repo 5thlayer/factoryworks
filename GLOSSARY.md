@@ -10,7 +10,7 @@ lands.
 **Module**:
 One of the suite's mods, each owning one kind of logistics, crafting or resource: Beltworks (items on
 belts), Pipeworks (fluids), Wireworks (energy), Craftworks (crafting machines) and Fieldworks
-(resources). Each plays alone in vanilla and requires no other Module.
+(resources), and Gearworks (Gear). Each plays alone in vanilla and requires no other Module.
 _Avoid_: Library, Binding
 
 **Groundworks**:
@@ -74,11 +74,11 @@ _Avoid_: endgame (for the consumer itself), resource drain, money sink
 **Gear**:
 What the player wears or carries that the suite's materials make, raising how fast they build and
 move through the factory.
-_Avoid_: equipment (that is belt equipment), armor, tools
+_Avoid_: equipment (that is belt equipment, ADR-0100), armor, tools
 
 **Gear Grid**:
 The slots in a piece of Gear that hold its upgrades.
-_Avoid_: equipment grid, module grid
+_Avoid_: equipment grid, upgrade grid
 
 **Gearworks**:
 The Module that owns Gear.
