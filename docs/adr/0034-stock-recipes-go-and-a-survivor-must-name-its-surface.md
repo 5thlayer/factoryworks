@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0127
 ---
 
 # Stock recipes go, and a survivor must name its surface

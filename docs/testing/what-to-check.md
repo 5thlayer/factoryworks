@@ -87,11 +87,10 @@ ticket is not. A new body adds a fixture entry; it does not add harness code.
 
 **A recipe that is REMOVED is the same claim read backwards, and it is the same kind of check.**
 A removal is a claim about the loaded recipe manager, which exists only in a running JVM: nothing
-static can see that a stock recipe survived a sweep, and nothing static can see a research holding
-a lock on an id that no longer resolves. ADR-0034's sweep therefore splits in two —
-`tests/factorio/test_recipe_sweep.py` asserts the files agree with each other (the row above), and
-0 failed recipes plus no JEI route to a removed idiom is a world load, asserted by a human on
-delivery. `#97`'s widened form, which has to see a *surviving stock* grid recipe rather than a
+static can see that a stock recipe survived a removal, and nothing static can see a research holding
+a lock on an id that no longer resolves. A removal therefore splits in two: a static check that
+the files agree with each other, and 0 failed recipes plus no JEI route to a removed idiom, which is
+a world load, asserted by a human on delivery. `#97`'s widened form, which has to see a *surviving stock* grid recipe rather than a
 pack-emitted one, is a world load for the same reason.
 
 **That check kind has a name: a world-load recipe-manager assertion.** It is the fixture check's

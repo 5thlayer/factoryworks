@@ -91,9 +91,6 @@
       "stack": "item:factoryworks:engineers_steel_pick"
     },
     {
-      "stack": "item:factoryworks:iron_chest"
-    },
-    {
       "stack": "item:factoryworks:iron_gear_wheel"
     },
     {
@@ -133,9 +130,6 @@
       "stack": "item:factoryworks:steam_engine"
     },
     {
-      "stack": "item:factoryworks:steel_chest"
-    },
-    {
       "stack": "item:factoryworks:steel_furnace"
     },
     {
@@ -148,28 +142,10 @@
       "stack": "item:factoryworks:sulfur"
     },
     {
-      "stack": "item:ftbfiltersystem:smart_filter"
-    },
-    {
       "stack": "item:minecraft:acacia_log"
     },
     {
-      "stack": "item:minecraft:acacia_stairs"
-    },
-    {
       "stack": "item:minecraft:birch_log"
-    },
-    {
-      "stack": "item:minecraft:birch_stairs"
-    },
-    {
-      "stack": "item:minecraft:black_concrete"
-    },
-    {
-      "stack": "item:minecraft:blue_concrete"
-    },
-    {
-      "stack": "item:minecraft:brown_concrete"
     },
     {
       "stack": "item:minecraft:chest"
@@ -178,19 +154,7 @@
       "stack": "item:minecraft:cobblestone"
     },
     {
-      "stack": "item:minecraft:cobblestone_stairs"
-    },
-    {
-      "stack": "item:minecraft:cyan_concrete"
-    },
-    {
       "stack": "item:minecraft:dirt"
-    },
-    {
-      "stack": "item:minecraft:glass"
-    },
-    {
-      "stack": "item:minecraft:glass_pane"
     },
     {
       "stack": "item:minecraft:gravel"
@@ -199,37 +163,10 @@
       "stack": "item:minecraft:gray_concrete"
     },
     {
-      "stack": "item:minecraft:green_concrete"
-    },
-    {
-      "stack": "item:minecraft:ladder"
-    },
-    {
-      "stack": "item:minecraft:light_blue_concrete"
-    },
-    {
       "stack": "item:minecraft:light_gray_concrete"
     },
     {
-      "stack": "item:minecraft:lime_concrete"
-    },
-    {
-      "stack": "item:minecraft:magenta_concrete"
-    },
-    {
       "stack": "item:minecraft:oak_log"
-    },
-    {
-      "stack": "item:minecraft:oak_stairs"
-    },
-    {
-      "stack": "item:minecraft:orange_concrete"
-    },
-    {
-      "stack": "item:minecraft:pink_concrete"
-    },
-    {
-      "stack": "item:minecraft:purple_concrete"
     },
     {
       "stack": "item:minecraft:rail"
@@ -239,9 +176,6 @@
     },
     {
       "stack": "item:minecraft:raw_iron"
-    },
-    {
-      "stack": "item:minecraft:red_concrete"
     },
     {
       "stack": "item:minecraft:red_sand"
@@ -256,19 +190,7 @@
       "stack": "item:minecraft:sandstone"
     },
     {
-      "stack": "item:minecraft:stone_brick_stairs"
-    },
-    {
       "stack": "item:minecraft:stone_bricks"
-    },
-    {
-      "stack": "item:minecraft:stone_stairs"
-    },
-    {
-      "stack": "item:minecraft:white_concrete"
-    },
-    {
-      "stack": "item:minecraft:yellow_concrete"
     },
     {
       "stack": "item:pipeworks:pipe"

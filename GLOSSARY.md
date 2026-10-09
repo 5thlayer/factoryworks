@@ -187,7 +187,7 @@ _Avoid_: the red biome, jellystem swamp, the swamp
 ### Sapros flora
 
 **Yumako**:
-The fruit harvested from a Yumako tree's leaves. The tree is felled to take it and replanted from a sapling; it is not a standing crop that regrows. A spoilable material, so ultimately four items per Freshness.
+The fruit harvested from a Yumako tree's leaves. The tree is cut down to take it and replanted from a sapling; it is not a standing crop that regrows. A spoilable material, so ultimately four items per Freshness.
 _Avoid_: yumako fruit, the orange fruit, fruiting leaves
 
 **Jellystem**:
@@ -274,23 +274,22 @@ An item or fluid a player can come to hold without creative mode: a recipe makes
 _Avoid_: reachable, available, craftable (a mob drop is Obtainable and not craftable)
 
 **Stock interaction**:
-Vanilla behaviour outside any recipe that turns an item or block into a different one: stripping a log, tilling dirt, water meeting lava, concrete powder hardening, waxing copper, a leaf's drop. None ships unless a decision names it, as a stock recipe does not (#440); a sapling growing into a tree is the one named (ADR-0051). A mechanic the pack builds, such as felling or the Offshore Pump, is not a stock interaction, and what a denied one would make is not Obtainable.
+Vanilla behaviour outside any recipe that turns an item or block into a different one: stripping a log, tilling dirt, water meeting lava, concrete powder hardening, waxing copper, a leaf's drop. Vanilla's stays as it is (ADR-0127). A mechanic the pack builds, such as the Offshore Pump, is not a stock interaction.
 _Avoid_: world interaction (a pole's wire and the Pick's Dismantle act on the world too), recipe
 
 **Shelf**:
 Where an Obtainable stack is listed in Factorio's crafting menu: an item subgroup and an order within it. A stack takes the shelf of the Factorio item it maps to; one with no Factorio item borrows a neighbour's, listed just after it (#458).
 _Avoid_: category (that is a recipe's), group (a shelf's subgroup belongs to one)
 
-**Reach**:
-How far the player places a block, uses a block and breaks a **Building**: 16 blocks, one chunk. Longer than Factorio's build distance of 10, as Satisfactory builds from far off. Anything that is not a Building breaks only within Minecraft's own reach of 4.5, so ore, trees and terrain are dug up close. Entities are reached at vanilla's 3 (#413).
+**Building**: 16 blocks, one chunk. Longer than Factorio's build distance of 10, as Satisfactory builds from far off. Anything that is not a Building breaks only within Minecraft's own reach of 4.5, so ore, trees and terrain are dug up close. Entities are reached at vanilla's 3 (#413).
 _Avoid_: build distance, range, interaction range
 
 **Building**:
-A block the player places as part of the factory: every machine, belt piece, pole, pipe, rail, chest and wall. Factorio's own split: what it places as an entity is a Building, and what it lays as a tile, such as stone brick, concrete or landfill, is not. Ore, trees and terrain are not Buildings, and neither is a building block such as bricks, planks or glass, placed or not.
+A block the player places as part of the factory: every machine, belt piece, pole, pipe, rail and wall. Factorio's own split: what it places as an entity is a Building, and what it lays as a tile, such as stone brick, concrete or landfill, is not. Ore, trees and terrain are not Buildings, and neither is a building block such as bricks, planks or glass, placed or not.
 _Avoid_: entity, structure, machine (a Building that runs)
 
 **Quick transfer**:
-The gesture that moves the held stack into the block the player is looking at, or — with an empty hand — takes out everything that block will give up, without opening its screen. **Reach** is the player's own, so the gesture and the screen answer to the same ray trace. It reads and writes through the target's item handler and imposes no slot policy of its own, which is why it can never strip a furnace of its fuel or of an input it has not smelted yet, and why a GregTech machine mid-recipe has nothing left to take back.
+The gesture that moves the held stack into the block the player is looking at, or — with an empty hand — takes out everything that block will give up, without opening its screen. The gesture and the screen answer to the same ray trace. It reads and writes through the target's item handler and imposes no slot policy of its own, which is why it can never strip a furnace of its fuel or of an input it has not smelted yet, and why a GregTech machine mid-recipe has nothing left to take back.
 _Avoid_: fast entity transfer, ctrl-click, quick insert, fast transfer
 
 **Quick split**:

@@ -231,7 +231,7 @@ class ObtainableIndex(unittest.TestCase):
         self.assertEqual([], sorted({stack.partition("{")[0] for stack in self.added} - registered()))
 
     def test_the_live_worldgen_drops_what_454_names(self):
-        for stack in ("oak_stairs", "birch_stairs", "acacia_stairs", "dirt", "oak_log"):
+        for stack in ("dirt", "oak_log"):
             self.assertIn("item:minecraft:" + stack, self.added)
         for stack in ("spruce_stairs", "grass_block", "diamond", "oak_leaves", "oak_sapling"):
             self.assertNotIn("item:minecraft:" + stack, self.added)

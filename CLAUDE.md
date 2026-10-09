@@ -83,7 +83,6 @@ check's section there before editing it or the code it guards. Run the matching 
 | any texture, model, animation, `.bbmodel` or store image or clip | `tests/pack/test_art_provenance.py` |
 | a converter run | `test_recipe_names.py`, `test_recipe_convert.py`, `test_smelting_shape.py`, `test_recipe_duplication.py`, `test_hand_recipes.py` |
 | corpus re-extract or `data/pack/item-map.json` | `test_item_map.py`, `test_fuel_convert.py` |
-| tree felling, after a dump refresh | `factorio-tree-extract.py`; `test_tree_extract.py`, `test_pack_recipes.py` |
 | `kubejs/server_scripts/starting_kit.js` | `tests/pack/test_starting_kit.py` |
 | `scripts/build-terra-worldgen.py` | `tests/worldgen/test_terra_spawning.py` |
 | `scripts/build-terra-start.py` | `tests/worldgen/test_start_geometry.py` |
@@ -97,9 +96,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | `scripts/pack-check.sh` | `tests/pack/test_pack_check.py` |
 | `scripts/sync-local-jars.py` | `tests/pack/test_sync_curseforge.py`, `tests/pack/test_local_jars.py` |
 | a `.bbmodel`, `data/art/models/`, `build-model-assets.py` | `tests/pack/test_model_assets.py` |
-| `recipes.js`, `recipe_survivors.js`, the category map | `tests/factorio/test_recipe_sweep.py` |
 | the hand-written Pick recipes | `tests/factorio/test_pack_recipes.py` |
-| `stock-admissions.json`, `stock-substitutions.json`, a jar update | `tests/factorio/test_stock_recipes.py` |
 | the gate table in `docs/spec/terra-progression.md` | `tests/factorio/test_tech_extract.py` |
 | a new kind of file, third-party art, `REUSE.toml` | `tests/pack/test_licensing.py` |
 | a lang entry, display name or quest | `tests/pack/test_licensing.py` (coined names) |

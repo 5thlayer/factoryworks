@@ -26,7 +26,7 @@ Factorio names them, and each section gives the pack's own name beside it.
 | --- | --- | --- |
 | [Resource patches and finite ore](#resource-patches-and-finite-ore) | `adapted` | Terra; Ignus, Sapros parked |
 | [Manual mining](#manual-mining) | `adapted` | Terra |
-| [Trees and wood](#trees-and-wood) | `adapted` | Terra |
+| [Trees and wood](#trees-and-wood) | `excluded` | — |
 | [Mining drills](#mining-drills) | `adapted` | Terra |
 | [Water as a resource](#water-as-a-resource) | `adapted` | Terra |
 | [Fluid handling](#fluid-handling) | `shipped` | Terra |
@@ -55,7 +55,7 @@ Factorio names them, and each section gives the pack's own name beside it.
 | [The technology tree](#the-technology-tree) | `excluded` | — |
 | [Rocket silo and rocket launch](#rocket-silo-and-rocket-launch) | `planned` | Terra |
 | [Character movement on foot](#character-movement-on-foot) | `adapted` | Terra |
-| [Character reach](#character-reach) | `adapted` | Terra |
+| [Character reach](#character-reach) | `excluded` | — |
 | [Personal transport](#personal-transport) | `blocked` | — |
 | [Terrain modification](#terrain-modification) | `adapted` | Terra |
 | [Repair and entity damage](#repair-and-entity-damage) | `blocked` | — |
@@ -248,48 +248,25 @@ Sub-rules:
 
 ### Trees and wood
 
-- **verdict**: `adapted`
-- **where**: all bodies
-- **via**: `pack`
-- **owner**: ADR-0051
-- **ticket**: #205
+- **verdict**: `excluded`
+- **where**: —
+- **owner**: ADR-0127
+- **ticket**: #603
 
-A Factorio tree is a **single entity**: one mining gesture removes it and yields its wood, with no
-trunk, no canopy and no second gesture. Minecraft's log-by-log felling is a mechanic the pack
-inherited rather than one Factorio has, so felling is re-authored in `factoryworks_core` — one
-gesture at the base removes the connected tree and pays out at the base block.
-
-The **yield diverges from the corpus on purpose**. Factorio's tree gives a flat `wood ×4`; the pack
-gives **the log count of the tree actually broken**, so a jungle giant pays more than a birch. What is
-kept from Factorio is the **rate**: `tree-01.mining_time 0.55` for `wood ×4` is **0.1375 s per log**,
-extracted into `data/factorio/tree.json`, and the gesture costs `amount × 0.1375 s` — so a 4-log tree
-costs Factorio's own 0.55 s exactly. The divergence is cheap because wood is terminal in Factorio:
-five recipes consume it (`wooden-chest`, `small-electric-pole`, `shotgun`, `combat-shotgun`,
-`tree-seed`) and no ratio downstream depends on it.
+A Factorio tree is a single entity that one mining gesture removes whole. The pack re-authored that
+as a felling gesture (ADR-0051, #205), and dropped it with the overhaul: Minecraft's tree breaking
+returns, log by log, and a tree pays its logs. The corpus rate (`tree-01.mining_time 0.55` for
+`wood x4`) is no longer read.
 
 Sub-rules:
 
-- **Felling is the base gesture only** — `adapted`, ADR-0051. A log with a log beneath it is
-  mid-trunk and breaks normally, which is also what stops a touching canopy being felled from the
-  wrong tree. The fill is bounded by count and radius; over the bound it fells what fits and leaves
-  the rest standing.
-- **A placed structure never fells** — `adapted`, ADR-0051. The fill requires at least one
-  non-persistent leaf, which a build has none of. Nether stems fall out of this as a consequence
-  rather than by name.
-- **Leaves are removed with the tree** — `adapted`, ADR-0051. No drops, no decay ticks. Factorio has
-  no leaves at all.
-- **Felling time is halved by research** — `adapted`, ADR-0051, ADR-0126. *Notice*: the Showcase has
-  no research, so the Engineer's Steel Pick, craftable from the start, fells faster.
-- **No sapling, dropped or crafted** — `excluded`, ADR-0051. Base Factorio has no replanting: a
-  wild tree yields only wood, and `tree-seed` is Space Age's. Trees are finite like an ore patch.
 - **Trees are not a fuel or a science input beyond Factorio's own use** — `shipped`. The fuel table
   already carries `wood` as the tag `minecraft:logs` (ADR-0047).
 - **A decorative drops nothing** — `adapted`, ADR-0092. Factorio's decoratives cannot be mined. A
   plant the worldgen places, leaves included, has an empty loot table, and gravel drops no flint.
-- **A log is not processed into planks or sticks** — `excluded`, ADR-0034's tail (#441). Factorio's
-  wood has no processing chain, so vanilla's planks, sticks and the wooden blocks made from them are
-  deliberately uncraftable. Wooden stairs are the one exception, made straight from each species'
-  log (#444).
+- **A log is not processed into planks or sticks** — `excluded`, ADR-0127 (#603). Factorio's wood
+  has no processing chain, and the pack no longer removes vanilla's: planks, sticks and the wooden
+  blocks made from them return through Craftworks' `vanillaRecipes` pack.
 
 ### Mining drills
 
@@ -474,8 +451,7 @@ Sub-rules:
   shape at all; the pack's three furnaces read a count-bearing `factoryworks:smelting` type
   and **only** that one. `stone-brick` (2 stone to 1) rides the same type — ADR-0046 collapsed
   #87's earlier split, which had `stone-brick` take a vanilla 1:1 shape instead. The vanilla type
-  is not read alongside it: under ADR-0034's sweep it carries no live recipe, which also makes
-  Minecraft's food cooking gone rather than merely uncraftable (#183).
+  is not read alongside it, so the pack's furnaces cook nothing vanilla's furnace recipes name.
 - **A machine with a blocked output stops** — `shipped`, #155. A furnace whose output slot cannot
   take the result does not start the smelt, burns no fuel and draws no FE; nothing is voided,
   overflowed or dropped. Factorio has no machine that ejects to the ground, and under ADR-0041
@@ -730,7 +706,7 @@ Sub-rules:
   5thlayer/beltworks#84 makes them configurable (#348, ADR-0076).
 - **Inserter filter** — `adapted`. A loader or a feeder takes FTB Filter System's smart filter as its filter
   (ADR-0084). The filter is hand-made from 4 iron sticks, 4 copper cable and 1 electronic circuit,
-  its stock recipe re-authored under ADR-0034's tail (#442).
+  its recipe the mod's own, loaded unchanged now that no sweep removes it (#603).
 - **Long-handed inserter** — `adapted` as the feeder's reach. A feeder's head and tail each reach 1 to
   3 blocks, set by key, so there is no long-handed tier; `long-handed-inserter` is `not_emitted`
   (#514, ADR-0100).
@@ -889,8 +865,7 @@ core's **supply-area pole** (ADR-0036), which feeds every machine standing in it
 since ADR-0062 reaches other areas by linking to the poles within its wire reach — one network, one
 balance. ADR-0062 supersedes ADR-0060's two-carrier clause, and **Oritech's Energy Transmission
 Pole** left the power path with it (#284): like Oritech's energy pipes and its Enderic Laser, it is
-swept by ADR-0034's default-deny (`recipes.js` admits no Oritech surface), so it has no recipe and
-does not appear in EMI. The things that stand *in* an area rather than carry between them are the
+off the power path, and no Pack script removes its recipe now that the stock-recipe sweep is gone (#603). The things that stand *in* an area rather than carry between them are the
 Pack's Steam Engine as generator and Wireworks' own Solar Panel and Accumulator (#617). *Before ADR-0060 this row was Create: Power Grid's, with
 voltage drop, wire gauge and a brownout model; the mod left with Create.*
 
@@ -973,7 +948,7 @@ Sub-rules:
   pillar under a 3x3 top layer, placed and broken whole. It makes Factorio's 60 kW (30 FE/t) at full
   Daylight along Wireworks' day curve and nothing under a roof. The Pack states the peak in
   `config/wireworks-server.toml`. The recipe is Factorio's, emitted by the converter; Wireworks' own
-  shaped recipes are swept (ADR-0034). It wears Wireworks' stand-in art. Per-body output is #7.
+  shaped recipes load unswept (#603). It wears Wireworks' stand-in art. Per-body output is #7.
   *Before ADR-0060 both were Power Grid's (#148).*
 - **Steam as a stored, pipeable intermediate** — `shipped` for low-temperature steam, which the
   Boiler puts into a Pipeworks segment and the Steam Engine draws from (#593); high-temperature steam waits on #135. **Two
@@ -1313,22 +1288,15 @@ undecided mechanic.
 
 ### Character reach
 
-- **verdict**: `adapted`
-- **where**: all bodies
-- **via**: `native_mechanic`
-- **owner**: #413
-- **notice**: build and reach distance 10 → **16**, one chunk, following Satisfactory's generous
-  Build Gun; resource reach 2.7 → Minecraft's own **4.5**, extended to every block that is not a
-  Building, because Minecraft has terrain and Factorio does not.
+- **verdict**: `excluded`
+- **where**: —
+- **owner**: ADR-0127
+- **ticket**: #603
 
 Factorio's character carries four distances: `build_distance` 10, `reach_distance` 10,
-`reach_resource_distance` 2.7 and `enter_vehicle_distance` 3. The pack keeps one reach of 16 for
-placing any block, using any block and breaking a **Building** -- a block whose Factorio item has a
-`place_result`, or a rail planner's `rails`, generated into the `factoryworks:buildings` block
-tag. Anything else, ore, trees and terrain included, breaks only within 4.5, in every game mode.
-Entity reach stays at vanilla's 3, which is Factorio's `enter_vehicle_distance`, and raising it would
-also raise melee reach against the biters [Enemies and evolution](#enemies-and-evolution) is balanced
-on. Research or equipment that raises reach is not here.
+`reach_resource_distance` 2.7 and `enter_vehicle_distance` 3. The pack raised placing and breaking
+a Building to 16 blocks (#413) and dropped it with the overhaul: the player's reach is vanilla's
+4.5, in every game mode.
 
 ### Personal transport
 
@@ -1706,8 +1674,7 @@ Sub-rules:
 
 - **Crops are farmed and replanted, not mined** — `planned`. Yumako and jellystem are Factorio
   `plant` prototypes, not `tree`s: `growth_ticks 18000`, grown from a seed, and one harvest yields
-  **50 fruit and zero wood**, consuming the plant. They are deliberately **out of ADR-0051's felling
-  rule** — wood is terminal, while these are the first link of the agricultural science loop
+  **50 fruit and zero wood**, consuming the plant. They are deliberately **not a tree** — wood is terminal, while these are the first link of the agricultural science loop
   (`yumako-mash ×15 + jelly ×12 → bioflux ×4`; `bioflux + pentapod-egg → agricultural-science-pack`;
   `yumako-mash ×4 → nutrients ×6`, feeding the towers that produce the input). The real mechanic is
   the Agricultural Tower, so building the harvest gesture alone would be a different mechanic wearing

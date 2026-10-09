@@ -431,10 +431,8 @@
       "note": "Beltworks' tier-2 feeder, crafted from the inserter's recipe (#514, ADR-0100). A feeder moves one item at a time between ends up to 3 blocks apart, the job Factorio's inserter does."
     },
     "iron-chest": {
-      "kind": "item",
-      "target": "factoryworks:iron_chest",
-      "source": "authored",
-      "note": "Authored in `kubejs/startup_scripts/blocks.js`, the shape #133 proved: `InventoryAttachment` plus `CustomChestMenu`, width 9 or the screen lays out wrong, six rows the ceiling, every face `[]` and never `null`. Vanilla ships one chest and no mod here ships a ladder, so Factorio's capacity progression is authored or absent. 9x4 = 36 slots."
+      "status": "not_emitted",
+      "note": "Dropped by #603: vanilla's chest returns and the pack ships no chest ladder."
     },
     "iron-gear-wheel": {
       "kind": "item",
@@ -789,10 +787,8 @@
       "ticket": 135
     },
     "steel-chest": {
-      "kind": "item",
-      "target": "factoryworks:steel_chest",
-      "source": "authored",
-      "note": "Authored in `kubejs/startup_scripts/blocks.js`, the shape #133 proved: `InventoryAttachment` plus `CustomChestMenu`, width 9 or the screen lays out wrong, six rows the ceiling, every face `[]` and never `null`. Vanilla ships one chest and no mod here ships a ladder, so Factorio's capacity progression is authored or absent. 9x6 = 54 slots, the ceiling."
+      "status": "not_emitted",
+      "note": "Dropped by #603: vanilla's chest returns and the pack ships no chest ladder."
     },
     "steel-furnace": {
       "kind": "item",
@@ -947,7 +943,7 @@
       "kind": "item",
       "target": "minecraft:chest",
       "source": "borrowed",
-      "note": "Vanilla's chest is Factorio's wooden chest with no argument to have about it. Vanilla's OWN shaped recipe still exists until the stock-recipe sweep (#143) removes it; leaving both would be two ways to make one thing, which ADR-0017's losing-recipe-is-removed idiom forbids. This recipe is not itself a vanilla shaped recipe, so #97 is satisfied either way."
+      "note": "Vanilla's chest is Factorio's wooden chest with no argument to have about it. Craftworks' `vanillaRecipes` pack also supplies vanilla's chest recipe as an Assembling recipe under its own id."
     }
   }
 }

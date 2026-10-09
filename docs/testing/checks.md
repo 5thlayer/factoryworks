@@ -22,23 +22,6 @@ cracking"), and `%s` for every other, which is filled with the product.
 `tests/pack/test_recipe_names.py` runs the `--check` and re-derives both halves from the corpus,
 holding the keys to the emitted recipes both ways. Run it after any converter run.
 
-## Building tag check
-
-What the player breaks at full Reach (16) rather than vanilla's 4.5 is the
-`factoryworks:buildings` block tag (#413), hand-owned data since #599. `tests/pack/test_building_tag.py`
-names the families the rule exists for and refuses anything a player digs up close.
-Run them after re-extracting the corpus or editing the item map.
-
-## Felling check
-
-A tree is one entity holding an amount, and one gesture takes it whole (ADR-0051).
-`tests/factorio/test_tree_extract.py` re-derives the rate from the corpus and names the three
-prototypes the discriminant must exclude, each of which yields a different plausible-looking wrong
-number. `tests/factorio/test_pack_recipes.py` carries the `fellable` tag: a tag whose JSON is
-missing resolves to an empty tag rather than an error, and every tree silently stops felling.
-Re-run `scripts/factorio-tree-extract.py` after a dump refresh. Whether a tree falls in a running
-game is a world load.
-
 ## Starting kit check
 
 The Showcase's starting kit is a KubeJS script, `kubejs/server_scripts/starting_kit.js`, that gives
@@ -65,7 +48,7 @@ load. See `docs/testing/fuel-table-check.md`.
 The Personal Assembler is Craftworks, a local jar (ADR-0089), and its rules are tested in its repo.
 It plans only a `craftworks:assembling` recipe whose `hand_craftable` is true, with no fluid and one
 result, and the recipes the Assemblers hold are the same recipes (ADR-0118): the converter writes the
-flag for a first Factorio category of `crafting`, as do the stock re-authoring, and the two Pick
+flag for a first Factorio category of `crafting`, as do the two Pick
 recipes are written with it. `config/craftworks-server.toml` names no Lock source, so every recipe
 is unlocked from the start (ADR-0126). `tests/factorio/test_hand_recipes.py`
 re-derives the set from the corpus, holds every emitted recipe to it, and asserts the
@@ -329,17 +312,6 @@ self-consistent by construction and blind to a shape Minecraft rejects. The asse
 shape is `test_data_formats.py`'s. Run it after any
 converter change. A KubeJS reload is enough to see the fix in a running game — no restart.
 
-## Stock-recipe sweep
-
-`kubejs/server_scripts/recipes.js` removes every recipe the pack does not admit by name, and
-`recipe_survivors.js` is the allowlist it negates (ADR-0034: a stock recipe ships only if a
-decision names it and names the surface it is crafted on). A survivor is a *surface*, not a
-recipe, and its filter's recipe type must be the one `data/pack/category-map.json` registers for
-that machine — so a machine landing later without a survivor entry fails
-`tests/factorio/test_recipe_sweep.py` rather than having its recipes swept in silence. Run that
-check after editing either script, the category map or the emitted recipes; whether the sweep
-removed the right things in a running game is a world load, not a static check.
-
 ## Recipe duplication check
 
 `tests/factorio/test_recipe_duplication.py` asserts no item is made by two emitted recipes unless
@@ -366,8 +338,7 @@ two Engineer's Pick recipes, which the corpus can never author because Factorio 
 prototype. `tests/factorio/test_pack_recipes.py` is what holds them, since every other recipe here
 is checked against the corpus and these are checked against nothing otherwise — that the
 converter still lists `pack` as foreign, which its own check reads from it rather than restating (a
-run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
-`recipe_survivors.js` admits and carry `category: crafting` and `hand_craftable` so the Personal Assembler
+run that forgets deletes them), that both carry `category: crafting` and `hand_craftable` so the Personal Assembler
 plans them at rung 0, that the steel recipe consumes the iron pick, and that each Pick
 has its model, texture, lang key, `c:tools/wrench` and `groundworks:dismantles`, the two tags that
 carry its verbs, that `groundworks:dismantles` holds nothing else (#448). Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
@@ -378,26 +349,6 @@ ADR-0060 and took the source with it, so `scripts/build-pick-textures.py` and it
 gone rather than restated. The two Picks are named in the check. Whether the Pick mines every block
 class is a world load. See
 `docs/testing/hand-written-recipe-check.md`.
-
-## Stock recipe re-authoring check
-
-A stock recipe the pack keeps is re-authored, never admitted as shipped (ADR-0034's tail).
-`scripts/stock-recipe-convert.py` reads each recipe `data/pack/stock-admissions.json` admits out of
-the installed jar, flattens a shaped pattern with every count kept, swaps each ingredient through
-`data/pack/stock-substitutions.json` and writes a hand recipe under
-`kubejs/data/factoryworks/recipe/assembling/stock/`. An ingredient in neither table, a table row
-nothing reads, and a recipe no jar or two jars ship each fail the line (#442). An admission can
-carry a `rewrite` instead of being flattened: its ingredients, all `keep` rows, and its yield,
-chosen and recorded with a reason, and only the output is read from the jar (#444).
-An `author` row is a recipe no jar ships, written whole from its row on the machine it names;
-sand is ground on an Assembler and smelted to glass under `recipe/smelting/stock/` (#445).
-`tests/factorio/test_stock_recipes.py` runs the `--check`, holds each ingredient to an item another
-pack recipe makes or a `keep` row, each output to an item a jar defines, each recipe to the
-machine's input slots, and the union of every emitted hand recipe to no cycle; a second hand route
-is `test_recipe_duplication.py`'s. It also holds the wooden stairs to one per species Terra's biomes
-grow, read out of the biome files, and the subtree to no wall. Run it after editing either file or
-after a jar update. Whether the filter appears in EMI with a route to follow is a human check on
-delivery.
 
 ## Item map check
 

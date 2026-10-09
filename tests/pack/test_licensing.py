@@ -209,7 +209,7 @@ class LicensingTest(unittest.TestCase):
         expect = {
             "scripts/build-obtainable-index.py": "LGPL-3.0-only",
             "tests/pack/test_licensing.py": "LGPL-3.0-only",
-            "kubejs/server_scripts/recipes.js": "LGPL-3.0-only",
+            "kubejs/startup_scripts/items.js": "LGPL-3.0-only",
             "docs/adr/0101-the-pack-is-factoryworks-an-overhaul-modpack.md": "CC-BY-4.0",
             "README.md": "CC-BY-4.0",
             "data/pack/item-map.json": "CC-BY-4.0",

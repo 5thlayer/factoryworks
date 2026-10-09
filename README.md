@@ -8,7 +8,7 @@ FactoryWorks is an overhaul modpack that plays like Factorio. You start with a f
 
 ## Features
 
-- **Factorio's recipes, not Minecraft's.** Recipes are converted from Factorio's data rather than written by hand, with their ingredients, counts and craft times. Every stock recipe is removed, and the few Minecraft items the pack keeps are re-authored to fit.
+- **Factorio's recipes, not Minecraft's.** Recipes are converted from Factorio's data rather than written by hand, with their ingredients, counts and craft times. Vanilla's recipes stay, and run on Craftworks' Assemblers.
 - **No crafting grid.** The Personal Assembler takes its place: ask for an item and every intermediate is planned, paid for up front and crafted over time while you play.
 - **Machines that run at Factorio's rates.** Burner and electric mining drills, stone, steel and electric furnaces, three tiers of Assembling Machine, the Chemical Plant and the Oil Refinery craft at Factorio's speeds, draw Factorio's power, and stop when their output is full rather than burning fuel into it.
 - **Steam and electricity.** An Offshore Pump feeds Boilers, Boilers feed Steam Engines, and electric poles carry the power over wires to every machine in their supply area. Accumulators store what is left over.
