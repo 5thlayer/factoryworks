@@ -68,3 +68,7 @@ burn times.
 - `heat-pipe` and `heat-exchanger` stay `undecided`, now pointing at #497, and the ledger's heat
   sub-rule is `planned` on Terra.
 - The corpus gains a reactor row and each recipe result's `probability`.
+
+## Amended by ADR-0127
+
+The Centrifuge goes, and the Reactor and the Steam Turbine are Wireworks' own blocks, not Oritech's.

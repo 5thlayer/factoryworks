@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0127
 supersedes: [39, 40]
 ---
 
@@ -319,3 +319,7 @@ grid-side** — or rung 3 silently gates the Converter.
 - **Recipe removal grows.** ADR-0017 already recipe-removes GT's Distillation Tower and Distillery on
   Terra; this ADR adds the Mekanism sulfur routes, the HDPE line's role as the polymer, and an EMI
   hide list for roughly fifteen GregTech fractions.
+
+## Superseded by ADR-0127
+
+The oil chain past crude goes. Crude's one use is tar for plastic, and no machine processes it.

@@ -67,3 +67,7 @@ would give.
 - `docs/spec/terra-progression.md`'s Fluid Drilling Rig beat and the coverage doc's pumpjack row no
   longer describe crude.
 - The `pumpjack` item-map row names `factoryworks:pumpjack`.
+
+## Amended by ADR-0127
+
+Crude stays infinite. The Pumpjack is the Harvester standing over a well, which then only pumps.

@@ -1,5 +1,5 @@
 ---
-status: provisional
+status: superseded by ADR-0127
 supersedes: []
 ---
 
@@ -102,3 +102,7 @@ and item map today.
   running game is a world load.
 - `yumako_log` and `jellystem_stem` keep their current source until #23, which is the ticket that has
   to say what grants them once the plant model lands.
+
+## Superseded by ADR-0127
+
+Tree felling goes. Trees are not a resource Fieldworks tracks, and felling mods already offer it.

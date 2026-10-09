@@ -1,5 +1,5 @@
 ---
-status: provisional
+status: superseded by ADR-0127
 supersedes: [155]
 ---
 
@@ -95,3 +95,8 @@ re-derive from the game's own formula rather than trust the number — applied t
 This is the burner half of ADR-0029, which fixed how a Factorio machine's electrical energy becomes
 a Minecraft number. `#37`'s boiler and `#135`'s reactor are the two things that will next need a
 fuel value, and both are pointed here.
+
+## Superseded by ADR-0127
+
+Burners read vanilla burn time. The joules buffer and the fuel table go, since no shared mod holds
+fuel.

@@ -82,3 +82,8 @@ An icon is recomputed from the pack's registry on each refresh, so removal is ex
   fix if a human check finds holes.
 - A Radar runs only while its own chunk is loaded. That leaves an outpost's Radar to FTB Chunks'
   force-load claims, and is to be revisited with combat (#230).
+
+## Amended by ADR-0127
+
+The Radar block, its charting and the team chart go. Each patch's marker stays, sent to every player
+through the map mod's icon API.

@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0127
 supersedes: [165]
 ---
 
@@ -236,3 +236,8 @@ corpus recipes — `small-electric-pole`, `wooden-chest` and `shotgun` (the last
   decision rather than a remaining gap — see `docs/factorio-mechanics.md`'s Manual mining sub-rules.*
   *GregTech has since left (ADR-0060), and #425 removed `wrench_rotate` with it; see the amendment
   under the wrench's four verbs.*
+
+## Superseded by ADR-0127
+
+The Engineer's Pick goes. Patch ore is mined by hand with vanilla pickaxes, at vanilla hardness and
+tool tiers.

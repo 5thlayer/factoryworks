@@ -1,5 +1,5 @@
 ---
-status: provisional
+status: superseded by ADR-0127
 supersedes: [27, 37]
 ---
 
@@ -261,3 +261,7 @@ GregTech wrapping FE does not.
 - **A no-GUI rig**, fuelled by right-clicking with coal in hand and read through Jade. Genuinely
   tempting for a machine with one input slot whose output leaves by itself. Rejected as a saving
   rather than a choice; it would make this the only machine in the pack with no screen.
+
+## Superseded by ADR-0127
+
+Both rigs are one Harvester in a burner tier and an FE tier, working the layer under its footprint.

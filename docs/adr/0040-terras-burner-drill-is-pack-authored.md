@@ -1,5 +1,5 @@
 ---
-status: provisional
+status: superseded by ADR-0127
 supersedes: []
 ---
 
@@ -126,3 +126,7 @@ approximating it.
   session opened with, and it was overruled. GT spells burner as steam, and the two-block steam pair
   is not the self-fuelled entity Factorio's opening is built around. The pack authors first-party
   when fidelity demands it — ADR-0039's picks are the precedent.
+
+## Superseded by ADR-0127
+
+The burner drill is the Harvester's burner tier, and it burns anything with a vanilla burn time.

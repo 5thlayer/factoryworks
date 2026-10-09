@@ -8,24 +8,63 @@ Everything below the Language heading still describes the retired overhaul modpa
 lands.
 
 **Module**:
-One of the suite's mods, each owning one kind of logistics or crafting: Beltworks (items on belts),
-Pipeworks (fluids), Wireworks (energy) and Craftworks (crafting machines). Each requires
-FactoryWorks and no other Module.
+One of the suite's mods, each owning one kind of logistics, crafting or resource: Beltworks (items on
+belts), Pipeworks (fluids), Wireworks (energy), Craftworks (crafting machines) and Fieldworks
+(resources). Each plays alone in vanilla and requires no other Module.
 _Avoid_: Library, Binding
 
 **Groundworks**:
 The placement mod beneath the suite: previews, rotation, stretching and dismantling, for vanilla
-blocks and any mod that plans through it. It needs nothing else, so it is not a Module.
+blocks and any mod that plans through it. It is the only mod the Modules share, so it is not a
+Module.
 
-**FactoryWorks** (the mod):
-The base every Module requires, holding what they share: ore patches, oil fields, the radar, the
-machines that extract them, and the common intermediates. The suite shares its name.
-_Avoid_: FactoryWorks Core, Core
+**Fieldworks**:
+The Module that holds resources and their base forms: ore patches, oil wells and crude oil, and the
+Harvester that works them. It holds no intermediates.
+_Avoid_: FactoryWorks Core, Core, FactoryWorks (the mod)
+
+**FactoryWorks**:
+The suite's name, and the name of its Showcase. No mod is called FactoryWorks.
 
 **FactoryWorks Showcase**:
-A modpack of FactoryWorks and its Modules with almost no content of its own, made to demo and
-integration-test the suite rather than as a product.
+A modpack of the suite's mods with almost no content of its own, made to demo and integration-test
+the suite rather than as a product.
 _Avoid_: the Pack
+
+**Harvester**:
+Fieldworks' machine that stands over an ore patch or an oil well and works the layer beneath it,
+drawing ore or pumping crude oil.
+_Avoid_: drill, rig, pumpjack, deposit
+
+**Pump**:
+Pipeworks' machine that draws a fluid's source block into a pipe, leaving water and any other
+infinite source in place.
+_Avoid_: Offshore Pump
+
+**Outlet**:
+Pipeworks' machine that sets a pipe's fluid down in the world as a source block.
+_Avoid_: Spout
+
+**Refiner**:
+Craftworks' electric furnace, which both smelts and blasts.
+_Avoid_: Electric Furnace, Oil Refinery
+
+**Tar**:
+The solid that crude oil sets into where its source block meets lava. One of the resins.
+
+**Bioresin**:
+A resin brewed or crafted from plants.
+
+**Resin**:
+Anything that blasts into Plastic: Tar, Bioresin and vanilla's resin clump.
+
+**Plastic**:
+Wireworks' material for its larger electrical parts, blasted from any Resin.
+_Avoid_: plastic bar
+
+**Battery**:
+Wireworks' part made of one cathode, one anode and one electrolyte, which the accumulator and the
+Reactor are built from.
 
 ## Language
 

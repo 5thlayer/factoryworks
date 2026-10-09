@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0127
 supersedes: [581, 582]
 ---
 
@@ -40,3 +40,8 @@ crude is simpler to show.
 - A Fluid Connection pushes into any neighbour that takes the fluid, and the Assembler tries its
   connections in `FluidLayout.ASSEMBLER`'s order, so a supply line that runs dry takes a product. The oil
   scene and its game test put the products on the first three connections and keep the supplies full.
+
+## Superseded by ADR-0127
+
+The Pack's Factorio recipes go, and with them the oil and chemistry recipes this placed on the
+Assembler.

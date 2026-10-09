@@ -164,3 +164,8 @@ because the reason the row exists is that refusal.
 - `data/pack/category-map.json` routes `centrifuging` to the Centrifuge;
   `data/pack/subgroup-owner.json` resolves all seven deferred rows; both static checks extended and
   passing.
+
+## Amended by ADR-0127
+
+The Centrifuge, enrichment and the sulfuric-acid gate on uranium go. The Reactor and the Steam
+Turbine are Wireworks', and a fuel cell is made from `#wireworks:fissile`.

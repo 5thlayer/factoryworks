@@ -82,3 +82,10 @@ fluid-holding item.
 
 Research leaves the Showcase now rather than when it is extracted: Researchd, Porting Dead Libs and the
 tech tree go, and every recipe is unlocked from the start.
+
+## Amended by ADR-0127
+
+The base is gone: no Module requires another, and Groundworks is the only shared dependency.
+FactoryWorks Core becomes Fieldworks, holding resources and their base forms and no intermediates,
+in a repository of its own named `fieldworks`; this repository keeps its name as the Showcase. The
+machines each Module holds, and the release train, are restated there.
