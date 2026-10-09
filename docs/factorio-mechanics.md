@@ -130,9 +130,9 @@ text and commits to no jar; **`pack` is admissible as a candidate only with a na
 ### Resource patches and finite ore
 
 - **verdict**: `adapted`
-- **where**: Terra, Ignus, Sapros
+- **where**: Terra, vanilla Overworld, Ignus, Sapros
 - **via**: `factoryworks_core`
-- **owner**: ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045, ADR-0060
+- **owner**: ADR-0019, ADR-0020, ADR-0021, ADR-0041, ADR-0045, ADR-0060, ADR-0127
 - **notice**: a patch is one block deep, flush with the terrain, its ragged edge drawn from
   Minecraft's noise, and an ore block shows its amount by stage and Jade line rather than a map layer.
 - **ticket**: #320, #321 and #377 closed with Terra's patches shipped; Ignus and Sapros land with #12
@@ -175,6 +175,12 @@ Sub-rules:
   than a patch size. The numbers are extracted, not chosen:
   `starting_amount = 20000 * base_density * (frequency_multiplier + 1) * size_multiplier`, and the
   per-block amount is that total over the blocks in the patch.
+- **Patches generate beside vanilla's ores** — `shipped` (#601), ADR-0127. The six structure sets (five
+  patches and the oil field) are confined to `#factoryworks:patch_land`, which holds the vanilla
+  Overworld's land biomes, and add to vanilla's ore features without replacing them. Uranium has a
+  server config switch, `generateUranium`, on by default. Patch ores are in `#c:ores/<metal>` and uranium's
+  raw ore in `#c:raw_materials/uranium`; the furnace recipes consume the `c:raw_materials` tag, so
+  vanilla raw iron and copper smelt.
 - **Patch spacing is Factorio's spots per km²** — `shipped` (#320, uranium #321), ADR-0045. `base_spots_per_km2` is
   extracted, not chosen: 2.5 for coal, copper, iron and stone and 1.25 for uranium. With the mean
   spot size that is ~671 and ~1549 blocks, ~42 and ~97 chunks, of mean spacing (#317). An outfield
