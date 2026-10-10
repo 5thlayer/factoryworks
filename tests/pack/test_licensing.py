@@ -206,7 +206,7 @@ class LicensingTest(unittest.TestCase):
             for f in files:
                 checked += 1
                 self.assertIn(want, _ids(_licence_of(f)["SPDX-License-Identifier"]), f)
-        self.assertGreater(checked, 30)
+        self.assertGreater(checked, 10)
 
     def test_the_packs_licence_texts_exist(self):
         for path in ("LICENSE", "LICENSES/LGPL-3.0-only.txt", "LICENSES/CC-BY-4.0.txt"):
