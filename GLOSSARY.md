@@ -8,16 +8,16 @@ Everything below the Language heading still describes the retired overhaul modpa
 lands.
 
 **Module**:
-One of the suite's mods, each owning one capability: Beltworks (items on belts), Pipeworks (fluids),
-Wireworks (energy), Craftworks (crafting machines), Fieldworks (resources), Gearworks (Gear) and
-Voidworks (void energy).
-Each plays alone in vanilla and requires no other Module.
+One of the suite's mods, each owning one capability: Groundworks (placement), Beltworks (items on
+belts), Pipeworks (fluids), Wireworks (energy), Craftworks (crafting machines), Fieldworks
+(resources), Gearworks (Gear) and Voidworks (void energy). Each plays in vanilla and requires no
+other Module but Groundworks (ADR-0128).
 _Avoid_: Library, Binding
 
 **Groundworks**:
-The placement mod beneath the suite: previews, rotation, stretching and dismantling, for vanilla
-blocks and any mod that plans through it. It is the only mod the Modules share, so it is not a
-Module.
+The Module that owns placement: previews, rotation, stretching, dismantling and footprints, for
+vanilla blocks and any mod that plans through it. It is the one Module others may require
+(ADR-0128).
 
 **Fieldworks**:
 The Module that holds resources and their base forms: ore patches, oil wells and crude oil, and the
