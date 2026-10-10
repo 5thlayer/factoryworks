@@ -23,7 +23,6 @@ ROOT = Path(__file__).resolve().parents[2]
 EXTRACTOR = ROOT / "scripts/jar-registry-extract.py"
 GENERATOR = ROOT / "scripts/build-obtainable-index.py"
 KUBEJS = ROOT / "kubejs"
-KIT = ROOT / "mod/src/main/java/com/factoryworks/core/start/StartingKit.java"
 PARKED = KUBEJS / "parked/data"
 PACK = "factoryworks"
 TERRAIN_AND_LOGS = {"item:minecraft:" + name for name in (
@@ -224,8 +223,7 @@ class ObtainableIndex(unittest.TestCase):
             results = recipe.get("results") or ([] if fluids else [recipe["result"]])
             outputs |= {self.generator.stack_key(result) for result in results}
             outputs |= {"fluid:" + fluid["id"] for fluid in fluids}
-        kit = {"item:" + item for item in re.findall(
-            r'new Entry\("([^"]+)"', KIT.read_text(encoding="utf-8"))}
+        kit = self.generator.kit_items()
         self.assertTrue(outputs and kit)
         self.assertEqual(set(), (outputs | kit) - set(self.added))
 

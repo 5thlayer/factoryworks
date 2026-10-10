@@ -113,8 +113,6 @@ def download(url, target):
 def jars():
     failed = []
     for meta in sorted(MODS.glob("*.pw.toml")):
-        if meta.name == "factoryworks-core.pw.toml":
-            continue  # installToPack builds it, and the dev runs want that build (ADR-0101)
         toml = tomllib.loads(meta.read_text())
         file_id = toml.get("update", {}).get("curseforge", {}).get("file-id")
         if file_id is None:

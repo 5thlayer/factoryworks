@@ -35,12 +35,8 @@ What fails quietly without it:
 `kubejs/data/factoryworks/worldgen/biome/terra_*.json` rather than typed; the stock wooden
 stairs are asserted against it.
 
-The `fellable` block tag is here because it fails as quietly: the mod names it with a `TagKey`,
-which resolves to an empty tag rather than an error when the JSON is missing, and an empty tag means
-no tree in the pack fells with no log line anywhere.
-
-The item ids are read out of `PickTier.java` rather than typed here, so a third tier fails this
-check instead of shipping without assets or a recipe.
+The `fellable` block tag is here because it fails as quietly: a missing JSON resolves to an empty
+tag rather than an error, and an empty tag means no tree in the pack fells with no log line anywhere.
 
 Usage: tests/factorio/test_pack_recipes.py
 """
@@ -56,7 +52,6 @@ SUBTREE = "assembling/pack"
 PACK = EMITTED / SUBTREE
 BIOMES = ROOT / "kubejs/data/factoryworks/worldgen/biome"
 FELLABLE_TAG = ROOT / "kubejs/data/factoryworks/tags/block/fellable.json"
-FELLING = ROOT / "mod/src/main/java/com/factoryworks/core/felling/TreeFelling.java"
 # Which vanilla tree placement carries which species. Terra's biomes name the placed feature.
 PLACEMENT_SPECIES = {
     "trees_plains": ("oak",),
@@ -67,8 +62,6 @@ PLACEMENT_SPECIES = {
     "trees_sparse_jungle": ("jungle",),
     "trees_taiga": ("spruce",),
 }
-PICK_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/PickTier.java"
-PICK_ITEM = ROOT / "mod/src/main/java/com/factoryworks/core/mining/EngineersPick.java"
 ASSETS = ROOT / "kubejs/assets/factoryworks"
 DATA = ROOT / "kubejs/data"
 SURVIVORS = ROOT / "kubejs/server_scripts/recipe_survivors.js"
@@ -82,8 +75,7 @@ NAMESPACE = "factoryworks"
 # The category a hand-craftable recipe carries, and nothing else is hand-craftable.
 HAND_CATEGORY = "crafting"
 
-# `IRON("engineers_iron_pick", 0.5f),`
-TIER_RE = re.compile(r'^\s{4}([A-Z][A-Z_]*)\("([a-z_]+)",\s*([0-9.]+)f\)[,;]', re.MULTILINE)
+PICKS = ("engineers_iron_pick", "engineers_steel_pick")
 FOREIGN_RE = re.compile(r"^FOREIGN_SUBTREES = \((.*)\)$", re.MULTILINE)
 
 failures = []
@@ -93,14 +85,6 @@ def check(condition, message):
     if not condition:
         failures.append(message)
     return condition
-
-
-def tiers():
-    """The registered picks, as {item id: mining speed}, read off the enum."""
-    parsed = TIER_RE.findall(PICK_TIER.read_text(encoding="utf-8"))
-    if not parsed:
-        raise AssertionError("no pick tiers parsed out of %s -- has the enum moved?" % PICK_TIER)
-    return {item: float(speed) for _, item, speed in parsed}
 
 
 def survivor_types():
@@ -188,14 +172,10 @@ def check_fellable_tag():
     values = json.loads(FELLABLE_TAG.read_text(encoding="utf-8")).get("values") or []
     check("#minecraft:logs" in values,
           "fellable.json does not carry `#minecraft:logs`, so Terra's own trees do not fell")
-    declared = re.search(r'"fellable"', FELLING.read_text(encoding="utf-8"))
-    check(declared is not None,
-          "TreeFelling.java no longer names the `fellable` tag; the JSON and the TagKey are the two "
-          "halves of one lookup and neither fails loudly on its own")
 
 
 def main():
-    picks = tiers()
+    picks = PICKS
 
     # The subtree exists and is exactly the two recipes. A third file here is a decision this ADR
     # did not make: its exception is narrow by design, and a general escape hatch was rejected.
@@ -281,20 +261,6 @@ def main():
                   "`%s` has an uppercase letter in its name. KubeJS rejects it -- `Invalid file "
                   "name` -- and that stops a world from loading"
                   % path.relative_to(ROOT).as_posix())
-
-    # The flat-time block tag the jar asks for by name. A tag that does not exist is empty, and an
-    # empty one silently reverts every ore to vanilla hardness -- the Factorio number the ADR is
-    # about, gone with nothing logged.
-    tag_id = re.search(r'fromNamespaceAndPath\([^)]*?"([a-z_]+)"\)',
-                       PICK_ITEM.read_text(encoding="utf-8"), re.S)
-    if check(tag_id is not None, "no block tag id parsed out of EngineersPick.java"):
-        path = ROOT / "kubejs/data" / NAMESPACE / "tags/block" / (tag_id.group(1) + ".json")
-        if check(path.is_file(),
-                 "EngineersPick asks for the block tag `%s:%s`, which no file defines -- every "
-                 "block falls back to vanilla hardness and Factorio's flat 2.0s is gone"
-                 % (NAMESPACE, tag_id.group(1))):
-            check(json.loads(path.read_text())["values"],
-                  "the flat-mining-time tag is empty, which is the same as not existing")
 
     return report()
 

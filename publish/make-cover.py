@@ -57,7 +57,7 @@ def row_ore(img,d,y,s,k):
         t=tex(PK+f'ore/{ores[(i//3+k)%5]}_stage{(i*3+k)%4}.png',s); img.paste(t,(x,y),t)
 ROWS=[row_belt,row_ground,row_craft,row_ore]
 def fonts(size): return ImageFont.truetype(IMPACT,size),ImageFont.truetype(BLACK,int(size*0.62))
-def make(W,H,out,size,s,tag=None):
+def make(W,H,out,size,s):
     fw=max(8,W//40)
     d=ImageDraw.Draw(Image.new('RGB',(1,1)))
     while True:
@@ -65,7 +65,7 @@ def make(W,H,out,size,s,tag=None):
         if d.textbbox((0,0),'FACTORY',font=f1)[2]+d.textbbox((0,0),'Works',font=f2)[2]+int(size*0.42)<=W-2*fw-W//12: break
         size-=2
     img=Image.new('RGBA',(W,H),BG+(255,)); d=ImageDraw.Draw(img)
-    bh=int(size*(2.3 if tag else 1.6)); t0=(H-bh)//2; t1=t0+bh
+    bh=int(size*1.6); t0=(H-bh)//2; t1=t0+bh
     # rows sit inside the frame, centred in the space between it and the band
     free=t0-fw; pitch=s+s//4; n=max(1,(free+s//4)//pitch); pad=(free-(n*pitch-s//4))//2
     ys=[fw+pad+i*pitch for i in range(n)]+[t1+pad+i*pitch for i in range(n)]
@@ -80,21 +80,13 @@ def make(W,H,out,size,s,tag=None):
     b1=d.textbbox((0,0),a,font=f1); b2=d.textbbox((0,0),w,font=f2)
     w1=b1[2]-b1[0]; h1=b1[3]-b1[1]; w2=b2[2]-b2[0]; h2=b2[3]-b2[1]
     px=int(size*0.16); gap=int(size*0.1); bw=w2+2*px; x=(W-(w1+gap+bw))//2
-    bt=(H-h1)//2-(int(size*0.35) if tag else 0); y=bt-b1[1]; sh=max(3,size//20)
+    bt=(H-h1)//2; y=bt-b1[1]; sh=max(3,size//20)
     d.text((x+sh-b1[0],y+sh),a,font=f1,fill=(0,0,0)); d.text((x-b1[0],y),a,font=f1,fill=(240,240,236))
     bx=x+w1+gap
     d.rounded_rectangle([bx+sh,bt+sh,bx+bw+sh,bt+h1+sh],radius=px,fill=(0,0,0))
     d.rounded_rectangle([bx,bt,bx+bw,bt+h1],radius=px,fill=ACCENT)
     d.text((bx+px-b2[0],bt+(h1-h2)//2-b2[1]),w,font=f2,fill=BG)
-    if tag:
-        # the core mod's page wears the pack's art with its own plate, so the two never read as one project
-        f3=ImageFont.truetype(BLACK,int(size*0.3)); t=' '.join(tag); b3=d.textbbox((0,0),t,font=f3)
-        p=int(size*0.1); tw=b3[2]-b3[0]; th=b3[3]-b3[1]; ty=bt+h1+int(size*0.2)
-        d.rectangle([(W-tw)//2-p,ty,(W+tw)//2+p,ty+th+2*p],fill=(240,240,236))
-        d.text(((W-tw)//2-b3[0],ty+p-b3[1]),t,font=f3,fill=BG)
     d.rectangle([0,0,W-1,H-1],outline=ACCENT,width=fw)
     img.convert('RGB').save(out)
 make(1280,640,'publish/factoryworks-cover.png',150,64)
 make(512,512,'publish/factoryworks-icon.png',84,56)
-make(1280,640,'publish/core/factoryworks-core-cover.png',150,64,'CORE')
-make(512,512,'publish/core/factoryworks-core-icon.png',84,56,'CORE')

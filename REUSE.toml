@@ -5,15 +5,12 @@ version = 1
 # whole map. The last annotation matching a file wins, so the general rules come first and the
 # exceptions after them. `tests/pack/test_licensing.py` holds it, and `reuse lint` in CI.
 
-# Code, and the files a program reads as instructions: the mod, its build, the scripts and checks,
-# KubeJS scripts, manifests and configs.
+# Code, and the files a program reads as instructions: the scripts and checks, KubeJS scripts,
+# manifests and configs.
 [[annotations]]
 path = [
-    "mod/**",
     "scripts/**",
     "tests/**",
-    "*.gradle",
-    "gradle.properties",
     "mise.toml",
     "player.env",
     ".gitignore",
@@ -30,7 +27,6 @@ path = [
     "index.toml",
     "mods/*.pw.toml",
     "publish/make-cover.py",
-    "publish/upload.env",
 ]
 SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "LGPL-3.0-only"
@@ -47,9 +43,6 @@ path = [
     "data/pack/**",
     "data/jars/**",
     "data/art/models/**",
-    "mod/src/main/resources/assets/**",
-    "mod/src/main/resources/data/**",
-    "mod/src/main/resources/factoryworks_core/**",
     "publish/**/*.txt",
 ]
 SPDX-FileCopyrightText = "2026 5thlayer"
@@ -116,18 +109,6 @@ path = [".agents/**", ".claude/skills", ".gitmodules"]
 SPDX-FileCopyrightText = "Matt Pocock"
 SPDX-License-Identifier = "MIT"
 
-# Core's release tooling, copied from 5thlayer/libworks' template, keeps the template's licence, so
-# a fix moves between the two either way (skillworks' template-drift).
-[[annotations]]
-path = [
-    "scripts/release.sh",
-    "scripts/upload.py",
-    "scripts/tests/**",
-    "publish/upload.env",
-]
-SPDX-FileCopyrightText = "2026 5thlayer"
-SPDX-License-Identifier = "MIT"
-
 # Wube's Factorio data, the corpus. Under neither of the Pack's licences (data/factorio/README.md).
 [[annotations]]
 path = [
@@ -142,9 +123,3 @@ path = ["data/factorio/README.md"]
 SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "CC-BY-4.0"
 
-# The Gradle wrapper is Gradle's.
-[[annotations]]
-path = ["gradlew", "gradlew.bat", "gradle/wrapper/**"]
-precedence = "override"
-SPDX-FileCopyrightText = "Gradle"
-SPDX-License-Identifier = "Apache-2.0"

@@ -6,25 +6,21 @@ of `~/.m2` into `mods/`, removing any other file its row's pattern matches. A ro
 `curseforge` project id gets `mods/<mod>.pw.toml` naming the pinned version's CurseForge file
 (#532). While CurseForge does not list that file yet, the row's CurseForge reference is pending:
 any metafile for the project is removed, so no export names an older file than the pin, and the
-sync carries on. A later run fills in what is pending. FactoryWorks Core's metafile,
-`mods/factoryworks-core.pw.toml`, is referenced the same way, at `gradle.properties`' `mod_version`,
-the version `scripts/release.sh` last released. It then refreshes the manifest with
-`scripts/pack-check.sh --fix` and rebuilds the core mod with `installToPack`. Nothing is written
-until every pinned jar is in `~/.m2`.
+sync carries on. A later run fills in what is pending. It then refreshes the manifest with
+`scripts/pack-check.sh --fix`. Nothing is written until every pinned jar is in `~/.m2`.
 
 `--check` changes nothing and contacts nothing. It fails when the jar in `mods/` is not the pinned
 one or differs from `~/.m2`'s by sha256; it skips the sha256 when
 `~/.m2` lacks the pin, and names newer versions `~/.m2` holds without failing. For a `curseforge`
 row with a metafile it also fails when the metafile names another file or project, hashes another
 jar, or when `index.toml` indexes the jar instead of the metafile. A row with no metafile is named
-pending and passes, unless `--strict`, which an export must pass. Core's metafile is held to Core's
-released jar in `~/.m2` alike.
+pending and passes, unless `--strict`, which an export must pass.
 
 Don't run it while the game is running: it rewrites jars in `mods/`.
 
 Usage:
 
-    scripts/sync-local-jars.py beltworks=0.2.0   # pin, install, refresh, rebuild
+    scripts/sync-local-jars.py beltworks=0.2.0   # pin, install, refresh
     scripts/sync-local-jars.py                   # install whatever is pinned, fill pending references
     scripts/sync-local-jars.py --check           # assert mods/ matches the pins; no writes
     scripts/sync-local-jars.py --check --strict  # also fail on a pending CurseForge reference
@@ -48,21 +44,9 @@ TABLE = ROOT / "data" / "pack" / "local-jars.json"
 MODS = ROOT / "mods"
 M2 = Path.home() / ".m2" / "repository"
 INDEX = ROOT / "index.toml"
-PROPERTIES = ROOT / "gradle.properties"
-# Core's CurseForge project, as scripts/upload.py's.
-CORE_CURSEFORGE = 1718187
 # The upload API can't list a project's files, so the website's own listing, which needs no key,
 # does. It omits a file still under review.
 CURSEFORGE_FILES = "https://www.curseforge.com/api/v1/mods/{project}/files"
-
-
-def core():
-    """FactoryWorks Core as a row: the version release.sh last released, which the Pack doesn't
-    install, since installToPack builds it, but references on CurseForge."""
-    props = dict(re.findall(r"^(\w+)[ \t]*=[ \t]*(.*?)[ \t]*$", PROPERTIES.read_text(encoding="utf-8"),
-                            re.MULTILINE))
-    return {"mod": "factoryworks-core", "group": props["maven_group"], "artifact": props["mod_id"],
-            "version": props["mod_version"], "curseforge": CORE_CURSEFORGE}
 
 
 def artifact_dir(row):
@@ -167,17 +151,9 @@ def check_metafile(row, jar):
     return failures
 
 
-def check_core(pending):
-    row = core()
-    if not metafile(row).is_file():
-        pending.append(row)
-        return []
-    return check_metafile(row, published(row))
-
-
 def check(rows, strict):
     pending = []
-    failures = [f for row in rows for f in check_row(row, pending)] + check_core(pending)
+    failures = [f for row in rows for f in check_row(row, pending)]
     for row in pending:
         print(f"pending {row['mod']} {row['version']}: no CurseForge reference yet "
               f"-- run scripts/sync-local-jars.py once CurseForge lists {jar_name(row)}")
@@ -188,7 +164,7 @@ def check(rows, strict):
         print(f"FAIL {index}: {failure}", file=sys.stderr)
     if failures:
         sys.exit(1)
-    print(f"OK -- {len(rows)} local jar(s) match their pin, and Core's reference its mod_version"
+    print(f"OK -- {len(rows)} local jar(s) match their pin"
           + (f", {len(pending)} CurseForge reference(s) pending" if pending else ""))
 
 
@@ -319,11 +295,7 @@ def main():
         install(row)
         if "curseforge" in row and not reference(row):
             pending.append(row)
-    if not reference(core()):
-        pending.append(core())
     run("the manifest refresh", ["scripts/pack-check.sh", "--fix"])
-    run("the core mod's build", ["./gradlew", ":factoryworks_core:installToPack"])
-    print("\ncompiled and installed factoryworks_core against the pinned jars")
     if pending:
         print()
         for row in pending:

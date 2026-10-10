@@ -140,7 +140,6 @@ def _lang_values(path):
 
 def _lang_sources():
     files = sorted((ROOT / "kubejs/assets").glob("*/lang/*.json"))
-    files += sorted((ROOT / "mod/src/main/resources/assets").glob("*/lang/*.json"))
     return {str(p.relative_to(ROOT)): _lang_values(p) for p in files}
 
 
@@ -208,28 +207,17 @@ class LicensingTest(unittest.TestCase):
 
     def test_the_packs_own_work_is_under_the_packs_licences(self):
         expect = {
-            "mod/src/main/java/com/factoryworks/core/FactoryWorksCore.java": "LGPL-3.0-only",
-            "mod/src/main/resources/META-INF/neoforge.mods.toml": "LGPL-3.0-only",
-            "scripts/build-radar-assets.py": "LGPL-3.0-only",
-            "scripts/upload.py": "MIT",
-            "scripts/tests/test_upload.py": "MIT",
-            "publish/upload.env": "MIT",
+            "scripts/build-obtainable-index.py": "LGPL-3.0-only",
             "tests/pack/test_licensing.py": "LGPL-3.0-only",
             "kubejs/server_scripts/recipes.js": "LGPL-3.0-only",
             "docs/adr/0101-the-pack-is-factoryworks-an-overhaul-modpack.md": "CC-BY-4.0",
             "README.md": "CC-BY-4.0",
             "data/pack/item-map.json": "CC-BY-4.0",
-            "gradlew": "Apache-2.0",
+            "config/konkrete/locals/en_us.local": "Apache-2.0",
         }
         for path, licence in expect.items():
             self.assertTrue((ROOT / path).exists(), path)
             self.assertEqual(licence, _licence_of(path)["SPDX-License-Identifier"], path)
-
-    def test_the_mod_declares_the_licence_the_map_gives_it(self):
-        # Gradle expands `${...}` in this file, so it is not yet TOML.
-        text = (ROOT / "mod/src/main/resources/META-INF/neoforge.mods.toml").read_text(
-            encoding="utf-8")
-        self.assertEqual("LGPL-3.0-only", re.search(r'^license = "([^"]+)"', text, re.M).group(1))
 
     def test_notice_credits_resolve_to_the_licence_notice_names(self):
         notice = (ROOT / "NOTICE").read_text(encoding="utf-8")

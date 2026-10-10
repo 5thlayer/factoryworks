@@ -1,8 +1,0 @@
-{
-  "factoryworks:electric_furnace": "furnace",
-  "factoryworks:steel_furnace": "furnace",
-  "factoryworks:stone_furnace": "furnace",
-  "wireworks:large_pole": "substation",
-  "wireworks:medium_pole": "electric-pole",
-  "wireworks:small_pole": "electric-pole"
-}
