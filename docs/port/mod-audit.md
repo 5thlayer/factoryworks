@@ -48,10 +48,22 @@ Refiner, pipe Dismantle Family or drag-laying yet.
 
 ## Unit tests (`mod/src/test`)
 
-44 files / 5646 lines, all mechanism: `mining/` (rig corpus, rate, speed), `oil/` (field, pumpjack,
-well yield), `smelting/` (fuel, furnace tiers), `ore/` (amounts, outfield, ledger, census, codecs),
-`radar/` (sweep, charts, markers), `wreck/`. Each follows its package: ore/oil/well yield/markers to
-Fieldworks, the rest dropped with their mechanism. None is integration.
+68 files / 5646 lines, all mechanism, none integration. Each follows its package's row:
+
+| package | files | goes with |
+|---|---|---|
+| `fluid/` (Boiler, Steam Engine, Offshore Pump, tints, steam) | 13 | Wireworks, Pipeworks; tint/steam corpora frozen or dropped |
+| `mining/` (rig corpus, rate, speed) | 11 | Fieldworks Harvester (rewrite), Pick and speed dropped |
+| `radar/` (sweep, charts, markers) | 10 | markers to Fieldworks, the rest dropped |
+| `ore/` (amounts, outfield, ledger, census, codecs) | 9 | Fieldworks |
+| `smelting/` (fuel, furnace tiers) | 9 | electric tier to Craftworks, the rest dropped |
+| `oil/` (field, pumpjack, well yield) | 5 | Fieldworks; pumpjack dropped |
+| `machine/` (`OverloadLimitTest`, `FootprintTest`, `MachineTooltipTest`) | 3 | Craftworks, Groundworks |
+| `wreck/` | 3 | dropped |
+| `felling/` | 2 | dropped |
+| `placement/` (`ReplaceGroupsTest`) | 1 | Groundworks |
+| `start/` | 1 | Showcase, or dropped with Terra |
+| `worldgen/` (`WaterCensusTest`) | 1 | Showcase, or dropped with Terra |
 
 ## Resources (`mod/src/main/resources`)
 
@@ -89,5 +101,4 @@ Other repo scripts naming `factoryworks_core`: `sync-local-jars.py`, `check-data
 4. Boiler/Steam Engine port to Wireworks: reuse `fluid/` code (needs Oritech-free rewrite of `SteamEngineNetworkTests`) or reimplement?
 5. Harvester: reuse Rig code (`mining/rig/`) or start fresh in Fieldworks?
 6. `transfer/GuardedResourceHandler`: shared helper in Groundworks, or copied per Module?
-7. ~~Fieldworks work on another branch~~ — checked: Fieldworks, Wireworks and Pipeworks have only `main`, so the C rows stand.
-8. Corpus JSONs under `factoryworks_core/` and their generators: move with Fieldworks, or freeze numbers (ADR-0115 "frozen numbers") into Fieldworks code?
+7. Corpus JSONs under `factoryworks_core/` and their generators: move with Fieldworks, or freeze numbers (ADR-0115 "frozen numbers") into Fieldworks code?
