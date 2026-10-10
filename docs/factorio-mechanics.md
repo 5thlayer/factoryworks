@@ -1438,7 +1438,7 @@ Sub-rules:
 - **verdict**: `planned`
 - **where**: pack-wide
 - **via**: `emi`
-- **owner**: ADR-0088 for the index; ADR-0091 for where a resource is found
+- **owner**: ADR-0129
 - **ticket**: #479; #478 closed
 
 Factoriopedia is Factorio's in-game encyclopedia. For every item, fluid and entity it shows what
@@ -1450,13 +1450,10 @@ Sub-rules:
 
 - **Made by and used in** — `adapted`, via EMI. Factoriopedia opens on a page per item. EMI opens on
   the item's recipes and uses.
-- **Lists only what exists in the game** — `shipped`, ADR-0088. The index is the Obtainable set,
-  derived rather than typed, and it takes in the drops of every block the live worldgen places
-  (#454). No mob spawns, so no mob drop is in it (ADR-0093).
-- **Where a raw resource is found** — `planned`, ADR-0091, #479. Ores, logs, water, crude oil and
-  steam come from a mechanic rather than a recipe, so EMI shows nothing for them. A pack EMI
-  category, Where it is found, gives each one what extracts it and where, derived from the
-  Obtainable sources as Factoriopedia's resource page does.
+- **Lists only what exists in the game** — `adapted`, ADR-0129. EMI lists every item the installed
+  mods register; the Pack filters nothing.
+- **Where a raw resource is found** — `excluded`, ADR-0129, #479. Nothing in the Pack is a raw
+  resource no recipe makes, so there is no category to build.
 
 ---
 

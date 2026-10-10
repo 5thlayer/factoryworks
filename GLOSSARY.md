@@ -255,16 +255,12 @@ _Avoid_: abstraction, going virtual
 
 ### Handling things
 
-**Obtainable**:
-An item or fluid a player can come to hold without creative mode: a recipe makes it, a block the world generates drops it, a mob drops it, or a mechanic produces it. Only an Obtainable item is listed in the recipe viewer.
-_Avoid_: reachable, available, craftable (a mob drop is Obtainable and not craftable)
-
 **Stock interaction**:
 Vanilla behaviour outside any recipe that turns an item or block into a different one: stripping a log, tilling dirt, water meeting lava, concrete powder hardening, waxing copper, a leaf's drop. Vanilla's stays as it is (ADR-0127). A mechanic the pack builds, such as the Offshore Pump, is not a stock interaction.
 _Avoid_: world interaction (a pole's wire and the Pick's Dismantle act on the world too), recipe
 
 **Shelf**:
-Where an Obtainable stack is listed in Factorio's crafting menu: an item subgroup and an order within it. A stack takes the shelf of the Factorio item it maps to; one with no Factorio item borrows a neighbour's, listed just after it (#458).
+Where a stack is listed in Factorio's crafting menu: an item subgroup and an order within it. A stack takes the shelf of the Factorio item it maps to; one with no Factorio item borrows a neighbour's, listed just after it (#458).
 _Avoid_: category (that is a recipe's), group (a shelf's subgroup belongs to one)
 
 **Building**: 16 blocks, one chunk. Longer than Factorio's build distance of 10, as Satisfactory builds from far off. Anything that is not a Building breaks only within Minecraft's own reach of 4.5, so ore, trees and terrain are dug up close. Entities are reached at vanilla's 3 (#413).
@@ -349,7 +345,7 @@ The generator that makes power from daylight alone: Factorio's 60 kW at noon, no
 _Avoid_: Big Solar Panel, solar generator, photovoltaic
 
 **Nuclear Reactor**:
-The pack's first-party machine that burns **Uranium Fuel Cells** and turns water into **Superheated Steam**, handing back a **Depleted Uranium Fuel Cell** per cell. Placed and broken as one footprint, dressed in Oritech's reactor blocks; not Oritech's reactor, which makes power from heat and is not Obtainable (ADR-0098).
+The pack's first-party machine that burns **Uranium Fuel Cells** and turns water into **Superheated Steam**, handing back a **Depleted Uranium Fuel Cell** per cell. Placed and broken as one footprint, dressed in Oritech's reactor blocks; not Oritech's reactor, which makes power from heat (ADR-0098).
 _Avoid_: fission reactor, reactor controller, reactor multiblock
 
 **Electric Network**:

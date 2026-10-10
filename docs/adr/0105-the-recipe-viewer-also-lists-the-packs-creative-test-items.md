@@ -1,9 +1,11 @@
 ---
-status: accepted
+status: superseded by ADR-0129
 supersedes: [173]
 ---
 
 # The recipe viewer also lists the Pack's creative test items
+
+> **Superseded by ADR-0129.** EMI's index is no longer filtered; this record is kept for its reasoning.
 
 ADR-0088 made EMI's index an allowlist of what a player can come to hold. That hides every item that
 exists only for testing, such as the creative electric pole, even with EMI's cheat mode on, because

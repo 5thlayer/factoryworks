@@ -1,8 +1,10 @@
 ---
-status: accepted
+status: superseded by ADR-0129
 ---
 
 # The recipe viewer lists only what is Obtainable, derived from a committed jar extract
+
+> **Superseded by ADR-0129.** EMI's index is no longer filtered; this record is kept for its reasoning.
 
 ADR-0034's sweep removes every recipe the pack does not admit, but EMI's index still lists every
 item every jar registers: nine vanilla wooden stairs where Terra grows three species, and about

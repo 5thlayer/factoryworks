@@ -1,8 +1,10 @@
 ---
-status: accepted
+status: superseded by ADR-0129
 ---
 
 # EMI shows where a raw resource is found, derived from the Obtainable sources
+
+> **Superseded by ADR-0129.** EMI's index is no longer filtered; this record is kept for its reasoning.
 
 ADR-0088 lists every Obtainable item and fluid in EMI's index, including those no recipe makes:
 ores, logs, water, crude oil and steam. Looking one up shows no recipe, so the index names a thing
