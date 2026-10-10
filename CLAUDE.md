@@ -123,7 +123,7 @@ project id (Beltworks, Craftworks) also gets `mods/<mod>.pw.toml` naming that ve
 file, and the jar itself is not indexed, so an export references it rather than bundling it (#532).
 The pin never waits on CurseForge: while CurseForge does not list the file, the sync installs the jar,
 removes the row's metafile and prints `pending <mod> <version>`, and a later plain sync fills it in.
-Fieldworks replaces FactoryWorks Core, which is no longer installed (#609). Adding a Library is a row and a sync.
+Adding a Library is a row and a sync.
 `tests/pack/test_local_jars.py` runs
 the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
 holds it; a newer version in `~/.m2` is named without failing. For a
@@ -149,5 +149,5 @@ their ranges together.
 ### First-party mod
 
 `factoryworks_core` left this repo (ADR-0128, `docs/port/mod-audit.md`): its source is at commit
-`fb05f50`, and each port ticket names the rows it takes from there. Its jar is no longer installed
+`fb05f50`, and each port ticket names the rows it takes from there. Fieldworks replaces its jar
 (#609); the Pack's KubeJS still registers `factoryworks:` items until the Showcase moves out (#663).

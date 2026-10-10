@@ -30,11 +30,11 @@ hash = "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
 
 [[files]]
 file = "NOTICE"
-hash = "f51510fca73f74143c56cff97c42f275c15a2d999fd5be26cfa61b9a718c39c8"
+hash = "7a1dd1e5f27d988d47f92db8f367fea235b3a8c820ba2e512b52ed4316cbcc99"
 
 [[files]]
 file = "REUSE.toml"
-hash = "55b48de3e308ffb6704d8feb2b2709ed0c198b45271cfa6fdad883ca93ecd385"
+hash = "4f7128ec16c6f075fb3b7480d3334027e6bb1450ba81792bf58056fc748b1fbc"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -153,22 +153,6 @@ file = "data/art/models/steam_engine/steam_engine.png"
 hash = "9902cd98112d069be79a07e2e4c8aa73cae71e6f408878dc6974ab25d80f1bc0"
 
 [[files]]
-file = "data/art/ore_slade_coal.png"
-hash = "9556e0b004404d7896dffefa7e2b6c4d606dae8414d743b3e3e57fad239a1934"
-
-[[files]]
-file = "data/art/ore_slade_iron.png"
-hash = "4f7aa3d2789f1f6100d9e2d77266c44827cd02a36914f1292b31a6c6861994ad"
-
-[[files]]
-file = "data/art/ore_stone_copper_2.png"
-hash = "41bc9e050109055f1ddeda6db9f2acc4b1fe149fa3d74644dec94c5a691820b6"
-
-[[files]]
-file = "data/art/ore_stone_soul.png"
-hash = "5e970d1ac2684c2443b55634f9e5d0c1f3c5e99ae9be8fbdafb4e3d5d90ce917"
-
-[[files]]
 file = "data/jars/feature.json"
 hash = "cac727953733555e770e102c92fc12cc28d6c4d0c8ce1cee35caaafac23a27f9"
 
@@ -186,7 +170,7 @@ hash = "adfe8682fab779df9da6dc6d958cc2df388cb5f401ad9864ee6b4feec1557c1a"
 
 [[files]]
 file = "data/pack/art-provenance.json"
-hash = "a172cad117ef2f016c1ad28eb41cb2ea9373894288b18233f71eafe70dcb11b4"
+hash = "6946942973e44694de3a6ef78dd73afd6398a22ea862b069b20b2d422317c2af"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
@@ -1274,7 +1258,7 @@ hash = "c434ba774a2e4425c451a2361c6d4494a8d1004ea5f62b5e707ce91a93e8f6f3"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/sulfuric_acid.json"
-hash = "162d02750493e795b7a5e083d17dda0c439ccc2864d8bab5124b3bf12f5a412c"
+hash = "bc7712dbcef3c8ea69075894b129758ac0aafea44a31e0a05bc1748a46e746fe"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/copper_plate.json"

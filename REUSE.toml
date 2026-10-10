@@ -48,18 +48,6 @@ path = [
 SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "CC-BY-4.0"
 
-# Art from malcolmriley's unused-textures: the ore sprites, crude oil's sprite and the unmodified
-# copies they are derived from (NOTICE).
-[[annotations]]
-path = [
-    "kubejs/assets/factoryworks/textures/block/ore/*.png",
-    "data/art/ore_*.png",
-    "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png",
-    "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png.mcmeta",
-]
-SPDX-FileCopyrightText = ["Malcolm Riley", "2026 5thlayer"]
-SPDX-License-Identifier = "CC-BY-4.0"
-
 # The store art's backdrop is Beltworks' belt art, which is Rearth's and malcolmriley's, and
 # Minecraft's own textures, which stay Mojang's (LICENSES/LicenseRef-Mojang.txt).
 [[annotations]]

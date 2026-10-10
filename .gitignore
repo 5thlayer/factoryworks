@@ -115,8 +115,6 @@ __pycache__/
 .gradle/
 build/
 mod/
-# Core's defaults, which its jar rewrites on launch. The Pack sets nothing there.
-config/factoryworks_core-server.toml
 
 *.log
 

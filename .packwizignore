@@ -48,7 +48,6 @@ mods/*.jar
 !mods/pipeworks-*.jar
 !mods/fieldworks-*.jar
 
-
 # --- Per-user and per-run state, never pack behaviour -------------------------
 # NOTE: the repo root is also the live game instance, so it accumulates directories
 # that never appear in a fresh checkout. This list was first written from a clean
