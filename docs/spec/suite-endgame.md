@@ -28,7 +28,8 @@ prior art is [tech-mod-endgame-sinks.md](../research/tech-mod-endgame-sinks.md),
      out FE converted from motes; neither mod names the other.
    - Top upgrades cost a top-tier material through `c:` tags with a vanilla default (netherite, nether
      stars), which other mods' materials join. No recipe is conditional on another mod (ADR-0127).
-   - The ledger row "Armor and the equipment grid" in `docs/factorio-mechanics.md` moves to Gearworks.
+   - The ledger row "Armor and the equipment grid" in `docs/factorio-mechanics.md` moves to Gearworks once the
+     Gearworks ticket exists; the row's `owner` and `ticket` fields name it, so the edit waits for it.
 
 ### Voidworks
 
