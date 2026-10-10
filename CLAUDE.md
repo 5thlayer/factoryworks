@@ -30,8 +30,8 @@ The five canonical triage roles, used verbatim as label strings. See `docs/agent
 `.out-of-scope/` holds one file per rejected enhancement, so a `wontfix` keeps its reasoning and a
 repeat request is recognised rather than re-argued. `/triage` reads it while gathering context. Only
 rejected enhancements go there — never bugs, never something already built, never a deferral. A
-Factorio mechanic the pack does not reproduce belongs in `docs/factorio-mechanics.md` instead, which
-distinguishes `excluded` from `blocked`; a decision with a considered alternative belongs in an ADR.
+Factorio mechanic the pack does not reproduce belongs in the mechanic ledger instead (private,
+see "Factorio corpus" below), which distinguishes `excluded` from `blocked`; a decision with a considered alternative belongs in an ADR.
 See `.out-of-scope/README.md`.
 
 ### Domain docs
@@ -81,31 +81,29 @@ check's section there before editing it or the code it guards. Run the matching 
 |---|---|
 | Sapros trees, stromatolites, its five biomes | `tests/flora/test_flora_data.py` |
 | any texture, model, animation, `.bbmodel` or store image or clip | `tests/pack/test_art_provenance.py` |
-| a converter run | `test_recipe_names.py`, `test_recipe_convert.py`, `test_smelting_shape.py`, `test_recipe_duplication.py`, `test_hand_recipes.py` |
-| corpus re-extract or `data/pack/item-map.json` | `test_item_map.py`, `test_fuel_convert.py` |
+| `data/pack/item-map.json` or a jar update | `tests/pack/test_item_map.py` |
 | `kubejs/server_scripts/starting_kit.js` | `tests/pack/test_starting_kit.py` |
 | a committed ADR with `supersedes:` | `scripts/adr-backlink-check.sh` (needs `gh`) |
-| closing a ticket, editing the item map or `docs/factorio-mechanics.md` | `scripts/item-map-ticket-check.sh` (needs `gh`) |
+| closing a ticket or editing the item map | `scripts/item-map-ticket-check.sh` (needs `gh`) |
 | a jar update | `tests/pack/test_jar_registry.py` |
-| removing a third-party content mod's references | `tests/pack/test_independence_guard.py` |
+| removing a third-party content mod's references, or any corpus path returning | `tests/pack/test_independence_guard.py` |
 | Oritech's oil springs | `tests/pack/test_oritech_springs.py` |
-| `scripts/factorio-enemy-extract.py` | `tests/factorio/test_enemy_extract.py` |
 | an item model | `tests/pack/test_data_formats.py` |
 | `scripts/pack-check.sh` | `tests/pack/test_pack_check.py` |
 | `scripts/sync-local-jars.py` | `tests/pack/test_sync_curseforge.py`, `tests/pack/test_local_jars.py` |
 | a `.bbmodel`, `data/art/models/`, `build-model-assets.py` | `tests/pack/test_model_assets.py` |
-| the hand-written Pick recipes | `tests/factorio/test_pack_recipes.py` |
-| the gate table in `docs/spec/terra-progression.md` | `tests/factorio/test_tech_extract.py` |
 | a new kind of file, third-party art, `REUSE.toml` | `tests/pack/test_licensing.py` |
 | a lang entry, display name or quest | `tests/pack/test_licensing.py` (coined names) |
 
 Generated output is never hand-edited: re-run its generator, whose `--check` its test runs.
 
-### Factorio mechanic ledger
+### Factorio corpus
 
-`docs/factorio-mechanics.md` lists every Factorio mechanic and what the pack does about it
-(`planned`, `shipped`, `adapted`, `blocked`, `excluded`). Read it before deciding a mechanic is out
-of scope, and update the rows a ticket touches (ADR-0028).
+No public repository holds or reads Wube's data (ADR-0103, ADR-0126, #605). The corpus
+(`data/factorio/`), its extractors and converters (`scripts/factorio-*`), the mechanic ledger,
+`docs/research/` and `docs/spec/` are in the private repository `adamico/factoryworks-corpus`, and
+`tests/pack/test_independence_guard.py` fails if any of them returns here. A ticket that needs
+them is worked from that repository. Neither this file nor any Pack check points into it.
 
 `docs/port/blocked-removals-26.1.2.md` lists every class the 26.1.2 port deleted, with the ticket
 that restores it. Read it before concluding a mechanic was dropped.

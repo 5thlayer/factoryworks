@@ -18,7 +18,7 @@ StartupEvents.registry('item', event => {
   // not with the converter.
   //
   // Their recipes are not written here: they are the corpus's, emitted by
-  // `scripts/factorio-recipe-convert.py` into `kubejs/data/factoryworks/recipe/`.
+  // the recipe converter into `kubejs/data/factoryworks/recipe/`.
 
   // Common
   //

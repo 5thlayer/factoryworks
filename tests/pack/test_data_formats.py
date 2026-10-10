@@ -4,7 +4,7 @@
 WHY THIS EXISTS. ADR-0060 called the cost of the 26.1.2 move: "every generator and every asset
 check is written against 1.21.1's data formats". The first instance was the ingredient shape, which
 reached a player as a furnace that holds the item, holds power and never smelts
-(`tests/factorio/test_smelting_shape.py`). The second is in this file.
+(the smelting-shape check, which left with the corpus). The second is in this file.
 
 The interesting half of #273 is not the shapes but the KIND of check. Every generator here has a
 `--check` that RE-RUNS THE GENERATOR AND DIFFS ITS OWN OUTPUT -- self-consistent by construction,

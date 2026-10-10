@@ -96,10 +96,8 @@ The Module that owns Gear.
 
 ### Naming exceptions
 
-The _Avoid_ lists below govern the pack's own prose. Two places quote Factorio deliberately and are
-exempt: `data/factorio/*.json`, which is an extracted dump of Factorio's own prototypes, and
-`docs/factorio-mechanics.md`, whose row keys are `Gleba` and `Vulcanus` because the ledger's value is
-being diffable against Factorio. Both carry the `factorio-` or `data/factorio/` marker that says so.
+The _Avoid_ lists below govern the pack's own prose. The Factorio corpus and the mechanic ledger quote
+Factorio deliberately and were exempt; they live in a private repository now (ADR-0103, #605).
 Every body row names the pack's own body in its `where` field, so the mapping is never lost. See ADR-0028 —
 this is not drift to be tidied up.
 
@@ -148,8 +146,7 @@ _Avoid_: space station, orbital base, ship, vessel
 ### Sapros terrain
 
 Sapros's five biomes. Identifiers carry Factorio's terms so the mapping to the wiki stays free;
-display names are plain English. Transcribed in `docs/research/gleba-worldgen.md`.
-
+display names are plain English.
 **Dark Highlands**:
 Sapros's elevated stone biome, and where its stone is found. Internal ID `gleba_dark_highlands`.
 _Avoid_: the highlands, mountains, uplands

@@ -22,10 +22,10 @@ word with it.
 Two existing records already own most of this pack's exclusions, and a concept file must not
 duplicate or contradict either:
 
-- **A Factorio mechanic the pack does not reproduce** → `docs/factorio-mechanics.md`. That ledger has
-  a finer vocabulary than this directory does: `excluded` means argued and rejected, `blocked` means
-  wanted with no known implementation. Collapsing the second into a rejection here is exactly the
-  failure ADR-0028 exists to prevent.
+- **A Factorio mechanic the pack does not reproduce** → the mechanic ledger, which lives in a private
+  repository (ADR-0103, #605). It has a finer vocabulary than this directory does: `excluded` means
+  argued and rejected, `blocked` means wanted with no known implementation. Collapsing the second
+  into a rejection here is exactly the failure ADR-0028 exists to prevent.
 - **A design decision with a considered alternative** → `docs/adr/`. An ADR records what was chosen
   *and* what was turned down, in place, and is amended rather than superseded.
 

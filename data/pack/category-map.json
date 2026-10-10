@@ -9,7 +9,7 @@
     "A `!` prefix means the category is deliberately not routed: the converter emits nothing",
     "and says why. It is not the same as a category missing from this file, which is a hard",
     "failure -- a new Factorio version adding a category must not silently drop its recipes.",
-    "A `recipe_type` of null is a machine that is not registered yet, and `blocked_by` names the ticket that registers it. `scripts/factorio-recipe-convert.py` reads both, so the converter holds no table of its own. A null with no `blocked_by` is a machine nobody has ticketed.",
+    "A `recipe_type` of null is a machine that is not registered yet, and `blocked_by` names the ticket that registers it. The recipe converter, in the private corpus repository, reads both, so the converter holds no table of its own. A null with no `blocked_by` is a machine nobody has ticketed.",
     "A machine's `category` replaces the Factorio category its recipes carry, for a Factorio category Craftworks does not have; `recipe_dir` replaces its recipe type's path in the recipe id."
   ],
   "routes": {

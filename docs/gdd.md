@@ -10,8 +10,7 @@ the ledger owns a subject, this document points at it rather than restating it, 
 has no standing against either (ADR-0054).
 
 **The design is Factorio's, and the mods implement it.** Which mechanics the pack reproduces, adapts
-or drops is `docs/factorio-mechanics.md`, ordered by Factorio's own structure and describing the
-pack in Factorio's terms. This document describes the pack's own shape on top of that; where it
+or drops is the mechanic ledger, kept in a private repository (#605). This document describes the pack's own shape on top of that; where it
 names a mod it should be because that mod owns the capability under discussion, not because the mod
 is the pack's subject. **None of them is.**
 
@@ -116,7 +115,7 @@ ladder. The spine is recorded in ADR-0018; which mod owns each rung is ADR-0017 
 ADR-0060.
 
 The beat-by-beat arc from spawn to the first launch — chapters, hour budget and what each rung
-grants — is `docs/spec/terra-progression.md` (`#34`).
+grants — is the Terra progression spec, kept in a private repository (`#34`, #605).
 
 **Terra's science packs are inert items. Sapros's science pack decays** — the buffer-as-liability
 puzzle belongs to that body and is specified with it, not here.
@@ -193,7 +192,7 @@ defer it.
 ## Delivery sequence
 
 Terra comes first and is the only body in play: its flow to the first rocket launch is
-`docs/spec/terra-progression.md`, and the launch itself is #378. Every other body waits on
+the Terra progression spec (private, #605), and the launch itself is #378. Every other body waits on
 interplanetary travel (#340).
 
 Once travel exists, bodies land one at a time, each finished before the next, and each body is two

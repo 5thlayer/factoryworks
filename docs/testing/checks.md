@@ -10,18 +10,6 @@ which marshland carries which tree and that no stromatolite drops ore — with n
 after any edit to the trees, the stromatolites or the five biomes. The worldgen half is read from
 `kubejs/parked/` while Sapros is parked (ADR-0060).
 
-## Recipe name check
-
-The corpus holds no Wube text (ADR-0103, #303), so a chemistry or oil-processing recipe is named from what
-`data/factorio/recipe.json` holds (#490). Factorio names a recipe after its main product unless it
-is not one product under its own name -- advanced oil processing has three results, heavy oil
-cracking one that is not its id -- and then it names the recipe itself. `scripts/build-recipe-names.py`
-writes a `recipe.factoryworks.<type>.<name>` key for every emitted chemistry and oil
-processing recipe: for such a recipe its id read as words (`heavy-oil-cracking` is "Heavy oil
-cracking"), and `%s` for every other, which is filled with the product.
-`tests/pack/test_recipe_names.py` runs the `--check` and re-derives both halves from the corpus,
-holding the keys to the emitted recipes both ways. Run it after any converter run.
-
 ## Starting kit check
 
 The Showcase's starting kit is a KubeJS script, `kubejs/server_scripts/starting_kit.js`, that gives
@@ -30,34 +18,6 @@ each player a few of the suite's items once, on first join, marked by a stage th
 script grants is vanilla's or resolves to an item definition in the installed jar of a suite mod,
 and a count is positive. An id that names nothing is a silent empty slot. Run it after editing the
 script. Whether the kit arrives, and arrives once, is a world load.
-
-## Fuel table check
-
-What a burner furnace burns is generated datapack JSON, not Forge's burn table (ADR-0047).
-`scripts/factorio-fuel-convert.py` joins `data/factorio/fuel.json` onto `data/pack/item-map.json`
-into `kubejs/data/factoryworks/fuel/`, and nothing is decided in the script: a fuel with no
-item-map row, an `undecided` one or a fluid is a *recorded skip*, printed with its reason.
-`tests/factorio/test_fuel_convert.py` asserts every decided fuel has a row and nothing else does,
-that `uranium-fuel-cell` fails on category as well as on its row, that coal's row still buys 888
-whole ticks at the Stone Furnace's own 4,500 J/t, and that `wood` arrives as the tag
-`minecraft:logs`. Run it after re-extracting the corpus or editing the item map. Whether a furnace burns a log in a running game is a world
-load. See `docs/testing/fuel-table-check.md`.
-
-## Hand recipe check
-
-The Personal Assembler is Craftworks, a local jar (ADR-0089), and its rules are tested in its repo.
-It plans only a `craftworks:assembling` recipe whose `hand_craftable` is true, with no fluid and one
-result, and the recipes the Assemblers hold are the same recipes (ADR-0118): the converter writes the
-flag for a first Factorio category of `crafting`, as do the two Pick
-recipes are written with it. `config/craftworks-server.toml` names no Lock source, so every recipe
-is unlocked from the start (ADR-0126). `tests/factorio/test_hand_recipes.py`
-re-derives the set from the corpus, holds every emitted recipe to it, and asserts the
-`factoryworks:hand/*` copies, their generator and `withHandCopies` are gone.
-
-`tests/factorio/test_hand_resolver.py` is the corpus half: all 113 category-`crafting` recipes
-resolve to plans bottoming out in the 21 known leaves, no item has two hand recipes (the resolver
-picks a route with no cost model), and there are no cycles. It reads `data/factorio/recipe.json` and
-fails the day a regeneration adds a recipe nothing hand-makes.
 
 ## ADR back-links
 
@@ -75,12 +35,9 @@ An `undecided` item-map row is a recorded skip only while the ticket it names is
 for good behind a pointer that looks live. `scripts/item-map-ticket-check.sh` fails every row whose
 `ticket` or `blocked_by` names a closed or missing issue, with that issue's title. When a ticket
 closes, each row naming it is rewritten to a target, made `not_emitted` or `native_mechanic`, or
-pointed at a new open ticket -- never at the reopened old one. The same command checks
-`docs/factorio-mechanics.md` (#379): a `planned` or `blocked` section must name at least one open
-issue in its `ticket` field, which is prose keeping closed refs as history; `owner` and the inline
-sub-rule verdicts are not read. A failing section is re-verdicted or pointed at a new open ticket
-the same way. It needs an authenticated `gh`, so run it after closing a ticket or editing either
-file; it is in no batch.
+pointed at a new open ticket -- never at the reopened old one. It needs an authenticated `gh`, so run it
+after closing a ticket or editing the item map; it is in no batch. The mechanic ledger's half of
+this check left with the ledger (ADR-0126, #605).
 
 ## Jar registry check
 
@@ -112,7 +69,9 @@ differ between checkouts.
 
 A count above its baseline fails: a new reference to a mod the Pack is leaving. A count below it
 fails too, naming the number to lower the baseline to, so a slice that removes references records
-the gain in the same commit and nothing can later grow back into the headroom. Run it after
+the gain in the same commit and nothing can later grow back into the headroom. It also fails on any tracked file under `data/factorio/`, `docs/research/`, `docs/spec/`,
+`docs/factorio-mechanics.md` or named `scripts/factorio-*`, with no exemption (ADR-0126, #605): the corpus
+and what reads it live in a private repository. Run it after
 removing a third-party content mod's references, or adding anything that names one.
 
 ## Blockbench model check
@@ -139,58 +98,11 @@ children name the kit's lamps, and breaks each rule once on a copy to prove the 
 to the rules but never exported. A whole texture folder left by a deleted machine is not caught. Run it
 after editing a `.bbmodel`, anything under `data/art/models/`, or the generator.
 
-## Radar check
-
-`tests/factorio/test_machine_extract.py` holds the Radar's `radars` row (#368, ADR-0079) against
-the dump when it is on disk and re-derives 33.3 s per sector.
-
 ## Oritech spring check
 
 Crude is infinite and the oil well is its only source (#377, ADR-0081).
 `tests/pack/test_oritech_springs.py` asserts Oritech's two `oil_spring` biome modifiers are
 overridden with a no-op -- NeoForge 26.1 has `none` for structure modifiers only.
-
-## Enemy corpus check
-
-`tests/factorio/test_enemy_extract.py` holds the eighth extractor's output — the units,
-nests, turrets, walls, map-settings coefficients and per-entity emission rates ADR-0055 is
-argued in. It **re-derives** rather than trusts, the way `test_resource_extract.py` does:
-the evolution factor is stepped through Factorio's own published update and checked against
-the closed form of the same differential equation, so a hand-edited `time_factor` fails here
-and nowhere in a running game; a nest's absorption is compared against the Boiler's own
-emission rather than against a literal; and each unit's `damage_per_shot` is recomputed from
-its `damages` and its `damage_modifier`. Four prototypes are the walk's controls, each of
-which yields a different plausible-looking wrong number: a premature wriggler's
-`source_effects` hold a *negative* damage the attacker pays itself, a small spitter's damage
-is 1 in a `stream` prototype and 12 in the game, a laser turret's is in a `beam` prototype
-and reads as none if the reference is not followed, and a gun turret genuinely has none
-because a magazine decides it — and the magazines are extracted too, so the turrets that
-state no damage still have one in the corpus. Run it after re-running `scripts/factorio-enemy-extract.py`.
-Nothing consumes this corpus yet; ADR-0055's arithmetic is filed against later tickets.
-
-## Factorio mechanic ledger
-
-`docs/factorio-mechanics.md` is the tracked list of every Factorio mechanic — base game and Space
-Age — and what the pack does about it: one of `planned`, `shipped`, `adapted`, `blocked`,
-`excluded`, never `undecided`. Read it before deciding a mechanic is out of scope, and update the
-rows a ticket touches; a mechanic dropped without a row is exactly the failure it exists to catch.
-It is not derived from `data/pack/subgroup-owner.json` and does not derive it — `not_emitted` there
-is never evidence for `excluded` here — and it places nothing on a progression ladder, which is
-#25's call. Row keys are Factorio's names by declared exception (ADR-0028).
-
-## Recipe conversion
-
-`scripts/factorio-recipe-convert.py` turns the extracted corpus into `craftworks:assembling` (ADR-0118) and `factoryworks:smelting` recipe JSON under `kubejs/data/factoryworks/recipe/` (#279), reading five committed data files: the corpus, the category
-map, the subgroup owners, `data/pack/item-map.json` and `data/pack/recipe-overrides.json`. Nothing is
-decided in the script — a decision is a diff to a design document. Generated output is never
-hand-edited; re-run the converter. A Factorio name with no item-map row is a hard failure, while an
-`undecided` row is a recorded skip. So is a row carrying `blocked_by`, the ticket that makes its
-target loadable, such as a machine #277 has not chosen, and a machine
-whose `recipe_type` is still null (the Centrifuge and the Rocket Silo). `--awaited` prints
-those deferred recipes by the id they will load under, which is how the duplication check tells a
-deferral from a typo.
-`tests/factorio/test_recipe_convert.py` is the static check and runs the converter's `--check`. See
-`docs/testing/recipe-conversion-check.md`.
 
 ## 26.1 data-format check
 
@@ -239,57 +151,6 @@ queried again. It exists so the Pack can take and test a Library released to `~/
 is uploaded, without ever exporting an older CurseForge file than its pin. Run it after editing
 `scripts/sync-local-jars.py`.
 
-## Emitted smelt shape check
-
-`tests/factorio/test_smelting_shape.py` asserts the four emitted `factoryworks:smelting`
-recipes are shaped the way **26.1** parses an ingredient: a string, `#`-prefixed for a tag, where
-1.21.1 took `{"item": ...}`. The old shape does not crash — it is one `Couldn't parse data file`
-line at datapack load and the recipe is then absent from the manager, which reaches a player as a
-furnace that holds the item, holds power and never smelts. It shipped that way through the port and
-cost #266's in-world check. `test_recipe_convert.py` could not see it: it runs the converter's
-`--check`, which re-runs the converter and compares the output to what the converter would emit —
-self-consistent by construction and blind to a shape Minecraft rejects. The assembling recipes'
-shape is `test_data_formats.py`'s. Run it after any
-converter change. A KubeJS reload is enough to see the fix in a running game — no restart.
-
-## Recipe duplication check
-
-`tests/factorio/test_recipe_duplication.py` asserts no item is made by two emitted recipes unless
-`MULTI_ROUTE` names it and says what the second route earns. Every other recipe check owns one
-subtree and one input table, which is the right shape for "did this converter do its job" and blind
-to the question none of them can ask: whether two converters, or one converter twice, made the same
-item. Two routes to one block fails no schema, appears in no log and loads perfectly — it reaches
-the player as two EMI entries for the same thing, and if both are `hand_craftable` the
-Personal Assembler's resolver has no cost model to choose between them. It shipped once, when
-Create's two gearbox conversions and the large cogwheel's second route were emitted alongside the
-direct recipes they duplicate and every subtree-local check passed. One item legitimately has a
-second route: solid fuel, which Factorio makes from each of its three oils, and that is a row
-with its reason, all three of whose routes are `factoryworks:chemistry` recipes (#488). The file-path
-invariant it used to hold existed because GregTech re-registered every GTRecipe under its type's
-path (#87); the pack's own types are re-registered by nothing, and the rule left with GregTech (#279).
-
-Run it after any converter change. It does not assert the routes are balanced; costing is a
-decision.
-
-## Hand-written recipe check
-
-`kubejs/data/factoryworks/recipe/assembling/pack/` is the one subtree no converter generates: ADR-0039's
-two Engineer's Pick recipes, which the corpus can never author because Factorio has no mining-tool
-prototype. `tests/factorio/test_pack_recipes.py` is what holds them, since every other recipe here
-is checked against the corpus and these are checked against nothing otherwise — that the
-converter still lists `pack` as foreign, which its own check reads from it rather than restating (a
-run that forgets deletes them), that both carry `category: crafting` and `hand_craftable` so the Personal Assembler
-plans them at rung 0, that the steel recipe consumes the iron pick, and that each Pick
-has its model, texture, lang key, `c:tools/wrench` and `groundworks:dismantles`, the two tags that
-carry its verbs, that `groundworks:dismantles` holds nothing else (#448). Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
-the Steel Pick's `netherite_pickaxe` (#241, applied on #323). The Steel Pick used to wear GTCEu's
-Damascus Steel pickaxe, flattened by a generator because GT's tool art is three greyscale layers
-that only become a material under a colour handler our item never reaches; GregTech left with
-ADR-0060 and took the source with it, so `scripts/build-pick-textures.py` and its `--check` are
-gone rather than restated. The two Picks are named in the check. Whether the Pick mines every block
-class is a world load. See
-`docs/testing/hand-written-recipe-check.md`.
-
 ## Item map check
 
 `tests/pack/test_item_map.py` holds ADR-0109: the Pack owns every material form, and a tech
@@ -300,29 +161,14 @@ authored `factoryworks:` items, and that no emitted recipe or item tag names a `
 populates -- with AlmostUnified gone, `#c:ingots/steel` accepts three items and is not a decision.
 A row whose target cannot resolve yet sits in `DEFERRED` with the ticket that owns it, and must
 carry `blocked_by` with that ticket so the converter emits nothing naming it; a stale entry
-fails, so delete one as its row resolves. Run it after editing the item map or re-running a converter.
-
-## Factorio tech tree
-
-The Showcase has no research (ADR-0126), but Terra's arc is measured against Factorio's tech tree,
-extracted rather than transcribed (ADR-0022). `data/factorio/technology.json` and
-`science_packs.json` are the committed reference. Regeneration and provenance are in
-`data/factorio/README.md`. `tests/factorio/test_tech_extract.py` asserts the pruned tree is still a
-valid tree: the extractor drops the infinite, formula-costed and upgrade technologies, re-points a
-dropped node's children to its nearest surviving ancestors, and collapses generated reverse-crafts,
-and the committed tree has no duplicate, dangling or self-referential prerequisite and every
-technology is reachable from a root. It also reads the gate table in
-`docs/spec/terra-progression.md` and holds each gate to its cost in the corpus, the launch to no
-production pack and the reactor to a branch the silo does not require (ADR-0097). Run it after
-re-extracting or after editing that table.
+fails, so delete one as its row resolves. Run it after editing the item map.
 
 ## Licence check
 
 Which licence covers which file is `REUSE.toml`'s, with the texts in `LICENSES/` (#302,
-ADR-0102): code LGPL-3.0-only, the Pack's content CC BY 4.0, Wube's corpus under neither, and
-third-party files under their own. No file carries an SPDX header. `tests/pack/test_licensing.py`
+ADR-0102): code LGPL-3.0-only, the Pack's content CC BY 4.0, and third-party files under their own. No file carries an SPDX header. `tests/pack/test_licensing.py`
 implements `reuse lint`'s rule, since that tool needs libmagic and CI runs it, and holds the
-boundaries a glob edit can silently move: the corpus never under the Pack's licences, each art
+boundary a glob edit can silently move: each art
 credit in `NOTICE` resolving to the licence `NOTICE` names, and `.packwizignore` leaving the licence
 texts in the upload. Run it after adding a file of a new kind, any third-party art, or an edit to
 `REUSE.toml`.

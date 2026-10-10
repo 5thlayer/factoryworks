@@ -58,8 +58,8 @@ the next session to read it is misled by a document that looks settled. Two rule
 and neither replaces the other — the first covers the session that reads the map, the second the
 session that opens a ticket from a search.
 
-**Read the ADRs before asking the first question.** Grep `docs/adr/`, `GLOSSARY.md`,
-`docs/factorio-mechanics.md` and `docs/gdd.md` for the ticket's own nouns before composing a
+**Read the ADRs before asking the first question.** Grep `docs/adr/`, `GLOSSARY.md`
+and `docs/gdd.md` for the ticket's own nouns before composing a
 grilling round. A question the ADRs answer is not a question.
 
 **Declare the supersede in frontmatter, and back-link the ticket.** When an ADR **contradicts a
