@@ -2,14 +2,12 @@
 """Assert every tracked file has a licence, and that the boundaries ADR-0102 draws are where it says.
 
 `REUSE.toml` is the licence map (#302): code LGPL-3.0-only, the Pack's own content CC BY 4.0, and
-everything that is not the Pack's own -- Wube's corpus, third-party art, vendored skills -- under
-its own. `reuse lint` is the authority and runs in CI, but it needs libmagic, which a developer machine may
+everything that is not the Pack's own -- third-party art, vendored skills -- under its own. `reuse lint` is the authority and runs in CI, but it needs libmagic, which a developer machine may
 lack, so the same rule is implemented here: an annotation's globs, the last match winning.
 
 A file no annotation reaches is "unlicensed", which to a redistributor reads as all rights
-reserved. The boundary assertions are the ones a glob change can silently move: the corpus must
-never fall under either of the Pack's licences, and each art credit in `NOTICE` must resolve to the
-licence `NOTICE` names for it.
+reserved. The boundary assertion is the one a glob change can silently move: each art credit in
+`NOTICE` must resolve to the licence `NOTICE` names for it. The corpus is not here (ADR-0126).
 """
 
 import json
@@ -20,7 +18,6 @@ import tomllib
 import unittest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-CORPUS_LICENCE = "LicenseRef-Wube-Factorio-Data"
 
 # ADR-0103, #304: coined proper nouns of Wube's never appear in a string a player reads. A deny-list,
 # so a term that matches nothing is the passing state.
@@ -180,31 +177,6 @@ class LicensingTest(unittest.TestCase):
         self.assertEqual(set(), used - shipped, "an annotation names a licence with no text")
         self.assertEqual(set(), shipped - used, "a licence text nothing uses")
 
-    def test_the_corpus_is_under_neither_of_the_packs_licences(self):
-        corpus = [p for p in _tracked() if p.startswith("data/factorio/")
-                  and p != "data/factorio/README.md"]
-        self.assertGreater(len(corpus), 10)
-        wrong = [p for p in corpus if _licence_of(p)["SPDX-License-Identifier"] != CORPUS_LICENCE]
-        self.assertEqual([], wrong)
-
-    def test_the_corpus_holds_no_wube_display_text(self):
-        # ADR-0103, #303: a `localised_*` field or a copy of the locale files is Wube's English.
-        def keys(node):
-            if isinstance(node, dict):
-                for key, value in node.items():
-                    yield key
-                    yield from keys(value)
-            elif isinstance(node, list):
-                for value in node:
-                    yield from keys(value)
-
-        json_files = [p for p in _tracked() if p.startswith("data/factorio/") and p.endswith(".json")]
-        self.assertGreater(len(json_files), 10)
-        held = {p: sorted({k for k in keys(json.loads((ROOT / p).read_text(encoding="utf-8")))
-                           if k.startswith("localised_")}) for p in json_files}
-        self.assertEqual({}, {p: k for p, k in held.items() if k})
-        self.assertFalse((ROOT / "data/factorio/recipe_name.json").exists())
-
     def test_the_packs_own_work_is_under_the_packs_licences(self):
         expect = {
             "tests/pack/test_licensing.py": "LGPL-3.0-only",
@@ -238,19 +210,8 @@ class LicensingTest(unittest.TestCase):
         self.assertGreater(checked, 30)
 
     def test_the_packs_licence_texts_exist(self):
-        for path in ("LICENSE", "LICENSES/LGPL-3.0-only.txt", "LICENSES/CC-BY-4.0.txt",
-                     f"LICENSES/{CORPUS_LICENCE}.txt"):
+        for path in ("LICENSE", "LICENSES/LGPL-3.0-only.txt", "LICENSES/CC-BY-4.0.txt"):
             self.assertTrue((ROOT / path).is_file(), path)
-
-    def test_the_corpus_readme_states_the_exclusion(self):
-        readme = (ROOT / "data/factorio/README.md").read_text(encoding="utf-8")
-        section = re.search(r"^## Licence\n(.*?)(?=^## )", readme, re.M | re.S)
-        self.assertIsNotNone(section, "data/factorio/README.md has no Licence section")
-        prose = " ".join(section.group(1).split())
-        self.assertIn("Wube Software's", prose)
-        self.assertIn("under neither of the Pack's licences", prose)
-        for name in ("LGPL-3.0-only", "CC BY 4.0", CORPUS_LICENCE):
-            self.assertIn(name, prose)
 
     def test_the_upload_carries_the_licence_texts(self):
         # packwiz indexes what `.packwizignore` does not exclude, and the upload is the index.

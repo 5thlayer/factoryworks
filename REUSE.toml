@@ -97,18 +97,3 @@ SPDX-License-Identifier = "Apache-2.0"
 path = [".agents/**", ".claude/skills", ".gitmodules"]
 SPDX-FileCopyrightText = "Matt Pocock"
 SPDX-License-Identifier = "MIT"
-
-# Wube's Factorio data, the corpus. Under neither of the Pack's licences (data/factorio/README.md).
-[[annotations]]
-path = [
-    "data/factorio/*.json",
-]
-SPDX-FileCopyrightText = "Wube Software Ltd."
-SPDX-License-Identifier = "LicenseRef-Wube-Factorio-Data"
-
-# The README beside the corpus is the Pack's own.
-[[annotations]]
-path = ["data/factorio/README.md"]
-SPDX-FileCopyrightText = "2026 5thlayer"
-SPDX-License-Identifier = "CC-BY-4.0"
-

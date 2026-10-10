@@ -173,54 +173,6 @@ file = "data/art/ore_stone_soul.png"
 hash = "5e970d1ac2684c2443b55634f9e5d0c1f3c5e99ae9be8fbdafb4e3d5d90ce917"
 
 [[files]]
-file = "data/factorio/building.json"
-hash = "83f7a354973ab3ebb9b1b8a1e82226788a605529681364a22f092b86efb6f490"
-
-[[files]]
-file = "data/factorio/enemy.json"
-hash = "1f6525e6b4ed98c3431c3fe0c9b36801fa9902e085d417a8885fa5a83fad3815"
-
-[[files]]
-file = "data/factorio/fluid.json"
-hash = "e1c6d6c1d52d6bc7e2b7853661fda5a7e634fbb76ea4643fdf5f4967d18e7dc0"
-
-[[files]]
-file = "data/factorio/fuel.json"
-hash = "c4a7bc14c2e3de106b73222a41fab0413acbabc14db7131f3f303367a79fb25a"
-
-[[files]]
-file = "data/factorio/logistics.json"
-hash = "eaeec89d00920c946ed363da469dd5d24bab2214582e8d290661275fa84fa188"
-
-[[files]]
-file = "data/factorio/machine.json"
-hash = "a61b8e92adfad8f7157a5b98203086672793eab8e77e4663aeb03c0a18db8515"
-
-[[files]]
-file = "data/factorio/overload.json"
-hash = "672e217bd6045fd995d5a6ef3283d9af9930552c650942fa9c2f0713f57a83df"
-
-[[files]]
-file = "data/factorio/recipe.json"
-hash = "7ecfe6c7b5a71265d7a3661dd26bf8fd78073c6705d2615018b52a733e469a66"
-
-[[files]]
-file = "data/factorio/resource.json"
-hash = "d8f0669fbf78f24beba60873a40f942b9802dd496c649c2c0585679a963afd20"
-
-[[files]]
-file = "data/factorio/science_packs.json"
-hash = "e30efb5bd025b03b63be59dc56a52913b96219333d57897d33ceb817450688f8"
-
-[[files]]
-file = "data/factorio/technology.json"
-hash = "5680227f1b45869ce8b8951f6a6fcc9fbecbe81023ad2780f7f88586d1972d29"
-
-[[files]]
-file = "data/factorio/tree.json"
-hash = "d70e2ae769b3a06d7b8c2982f78732e25e875acc5dc6b431263509d55a59dd69"
-
-[[files]]
 file = "data/jars/feature.json"
 hash = "cac727953733555e770e102c92fc12cc28d6c4d0c8ce1cee35caaafac23a27f9"
 
