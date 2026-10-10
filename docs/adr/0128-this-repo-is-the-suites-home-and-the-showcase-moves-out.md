@@ -23,11 +23,16 @@ repo holds all the history, so it becomes the suite's home rather than a new rep
   of runtime code copied between them, against about 1,100 lines of build and release tooling copied
   into every repo from libworks. **libworks becomes a dependency** (a Gradle plugin and scripts at a
   version) instead of a template copied once, so the tooling stops drifting. Runtime code shared by
-  several Modules also lives in libworks, as a runtime jar each Module nests (jar-in-jar), so players
-  install nothing extra. The first is `GuardedResourceHandler`: NeoForge's `DelegatingResourceHandler`
-  lets slot-less insert and extract bypass a face's per-slot rules
+  several Modules also lives in libworks, as `libworks-runtime`, a small mod each Module nests
+  (jar-in-jar), so players install nothing extra. The first is `GuardedResourceHandler`:
+  NeoForge's `DelegatingResourceHandler` lets slot-less insert and extract bypass a face's per-slot
+  rules
   ([research](../research/transfer-api-guarded-faces.md)).
 - **Groundworks is a Module**, owning placement, and the one Module others may require. It is not a
   home for general code.
 - **The Factorio corpus, its extractors and the mechanic ledger** still go to a private repo
   (ADR-0115), as a separate ticket.
+- **The suite has one creative tab, "Works"**, which `libworks-runtime` registers and every Module
+  fills; no Module keeps a tab of its own. A tab needs a mod to register it, so `libworks-runtime` is
+  a nested mod rather than a plain library, and NeoForge loads only the newest nested copy
+  (5thlayer/libworks#8).
