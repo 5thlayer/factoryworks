@@ -20,14 +20,11 @@ The Pack's guard (`tests/pack/test_independence_guard.py`) fails if any of them 
 | Script | Produces |
 |---|---|
 
-## Ore blocks (ADR-0041)
+## Ore textures
 
 | Script | Produces |
 |---|---|
-| `build-ore-assets.py` | ore blockstates, models, loot tables, tags, lang |
 | `build-ore-textures.py` | eight per-resource stage sprites |
-
-Check: `tests/pack/test_ore_assets.py`.
 
 ## Other asset generators
 

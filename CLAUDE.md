@@ -81,10 +81,8 @@ check's section there before editing it or the code it guards. Run the matching 
 |---|---|
 | Sapros trees, stromatolites, its five biomes | `tests/flora/test_flora_data.py` |
 | any texture, model, animation, `.bbmodel` or store image or clip | `tests/pack/test_art_provenance.py` |
-| `data/pack/item-map.json` or a jar update | `tests/pack/test_item_map.py` |
 | `kubejs/server_scripts/starting_kit.js` | `tests/pack/test_starting_kit.py` |
 | a committed ADR with `supersedes:` | `scripts/adr-backlink-check.sh` (needs `gh`) |
-| closing a ticket or editing the item map | `scripts/item-map-ticket-check.sh` (needs `gh`) |
 | a jar update | `tests/pack/test_jar_registry.py` |
 | removing a third-party content mod's references, or any corpus path returning | `tests/pack/test_independence_guard.py` |
 | Oritech's oil springs | `tests/pack/test_oritech_springs.py` |
@@ -102,7 +100,7 @@ Generated output is never hand-edited: re-run its generator, whose `--check` its
 No public repository holds or reads Wube's data (ADR-0103, ADR-0126, #605). The corpus
 (`data/factorio/`), its extractors and converters (`scripts/factorio-*`), the mechanic ledger,
 `docs/research/` and `docs/spec/` are in the private repository `adamico/factoryworks-corpus`, and
-`tests/pack/test_independence_guard.py` fails if any of them returns here. A ticket that needs
+`tests/pack/test_independence_guard.py` fails if any of them returns here, as it does for the item map and the three converter tables (`data/pack/{item-map,category-map,recipe-overrides,subgroup-owner}.json`). A ticket that needs
 them is worked from that repository. Neither this file nor any Pack check points into it.
 
 `docs/port/blocked-removals-26.1.2.md` lists every class the 26.1.2 port deleted, with the ticket

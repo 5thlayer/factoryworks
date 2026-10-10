@@ -5,7 +5,7 @@ StartupEvents.registry('item', event => {
   // a rung boundary or a mod's competing line would give a parallel escape. The circuits carry
   // progression and #62 removed GregTech's and Mekanism's competing lines; plastic gates rung 2
   // (ADR-0025). `copper-cable` is the counter-example and borrows
-  // (`powergrid:wire`) -- see `data/pack/item-map.json`.
+  // (`powergrid:wire`).
   //
   // EVERY TEXTURE MUST BE A FILE THAT EXISTS. GregTech generates its MATERIAL items (plates,
   // gears, dusts, most batteries) at runtime from a material set, so `gtceu:item/<material>_plate`

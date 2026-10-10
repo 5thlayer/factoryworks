@@ -183,7 +183,6 @@ class LicensingTest(unittest.TestCase):
             "kubejs/startup_scripts/items.js": "LGPL-3.0-only",
             "docs/adr/0101-the-pack-is-factoryworks-an-overhaul-modpack.md": "CC-BY-4.0",
             "README.md": "CC-BY-4.0",
-            "data/pack/item-map.json": "CC-BY-4.0",
             "config/konkrete/locals/en_us.local": "Apache-2.0",
         }
         for path, licence in expect.items():

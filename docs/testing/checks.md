@@ -28,17 +28,6 @@ ADR has overridden. Run `scripts/adr-backlink-check.sh` after committing an ADR 
 key — it needs an authenticated `gh`, so it is not part of any offline check. See
 `docs/agents/domain.md`.
 
-## Item-map ticket check
-
-An `undecided` item-map row is a recorded skip only while the ticket it names is open, and a
-`blocked_by` only while its blocker is (#278). A closed one leaves the converter skipping the row
-for good behind a pointer that looks live. `scripts/item-map-ticket-check.sh` fails every row whose
-`ticket` or `blocked_by` names a closed or missing issue, with that issue's title. When a ticket
-closes, each row naming it is rewritten to a target, made `not_emitted` or `native_mechanic`, or
-pointed at a new open ticket -- never at the reopened old one. It needs an authenticated `gh`, so run it
-after closing a ticket or editing the item map; it is in no batch. The mechanic ledger's half of
-this check left with the ledger (ADR-0126, #605).
-
 ## Jar registry check
 
 `scripts/jar-registry-extract.py` writes to `data/jars/` every item and fluid id the client jar and
@@ -150,18 +139,6 @@ fails. A later plain sync fills the reference in, and a metafile that already na
 queried again. It exists so the Pack can take and test a Library released to `~/.m2` before the jar
 is uploaded, without ever exporting an older CurseForge file than its pin. Run it after editing
 `scripts/sync-local-jars.py`.
-
-## Item map check
-
-`tests/pack/test_item_map.py` holds ADR-0109: the Pack owns every material form, and a tech
-mod supplies machines. It asserts every `data/pack/item-map.json` target resolves against the
-installed jars (the pack's own via its lang and KubeJS's `event.create`, vanilla via the client jar
-when present), that no row names a mod ADR-0060 removed, that the eight material-form rows are
-authored `factoryworks:` items, and that no emitted recipe or item tag names a `c:` tag more than one installed jar
-populates -- with AlmostUnified gone, `#c:ingots/steel` accepts three items and is not a decision.
-A row whose target cannot resolve yet sits in `DEFERRED` with the ticket that owns it, and must
-carry `blocked_by` with that ticket so the converter emits nothing naming it; a stale entry
-fails, so delete one as its row resolves. Run it after editing the item map.
 
 ## Licence check
 

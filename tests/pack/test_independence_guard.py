@@ -34,7 +34,8 @@ TEXT_SUFFIXES = {".json", ".json5", ".js", ".toml", ".snbt", ".cfg", ".propertie
 
 
 CORPUS_PATHS = ("data/factorio/", "docs/research/", "docs/spec/", "docs/factorio-mechanics.md",
-                "scripts/factorio-")
+                "scripts/factorio-", "data/pack/item-map.json", "data/pack/category-map.json",
+                "data/pack/recipe-overrides.json", "data/pack/subgroup-owner.json")
 
 
 def tracked_paths():
