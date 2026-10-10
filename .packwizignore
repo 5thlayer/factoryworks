@@ -102,6 +102,8 @@ config/observable.json
 config/runelic.json
 # Jade's HUD settings, rewritten by the client whenever a provider appears.
 config/jade/
+# Core's defaults, which its jar rewrites on launch. The Pack sets nothing there (ADR-0128).
+config/factoryworks_core-server.toml
 *client*.toml
 *client*.snbt
 *client*.json
