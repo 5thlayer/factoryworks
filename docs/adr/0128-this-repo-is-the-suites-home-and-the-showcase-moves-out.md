@@ -19,6 +19,11 @@ repo holds all the history, so it becomes the suite's home rather than a new rep
   history.
 - **`mod/` is audited before it moves or goes**: what Fieldworks and the other Module repos already
   carry is deleted, and integration GameTests move with the Showcase.
+- **Modules take `mod/`'s code by porting, not by a history split.** Each port commit takes rows of
+  `docs/port/mod-audit.md` from commit `fb05f50`, renamed into the Module's namespace. A
+  `git subtree split` was considered for Fieldworks (#609). It was rejected because the audit drops or
+  rewrites most of what it would carry, so the kept history would mostly be of deleted code.
+  `git blame` in a Module stops at the port commit, and this repo at `fb05f50` holds the rest.
 - **Shared code lives in libworks.** A survey of the Module repos found about 150 lines
   of runtime code copied between them, against about 1,100 lines of build and release tooling copied
   into every repo from libworks. **libworks becomes a dependency** (a Gradle plugin and scripts at a
