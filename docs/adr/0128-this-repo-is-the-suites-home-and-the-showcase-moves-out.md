@@ -19,11 +19,14 @@ repo holds all the history, so it becomes the suite's home rather than a new rep
   history.
 - **`mod/` is audited before it moves or goes**: what Fieldworks and the other Module repos already
   carry is deleted, and integration GameTests move with the Showcase.
-- **The suite has no shared runtime library yet.** A survey of the Module repos found about 150 lines
+- **Shared code lives in libworks.** A survey of the Module repos found about 150 lines
   of runtime code copied between them, against about 1,100 lines of build and release tooling copied
   into every repo from libworks. **libworks becomes a dependency** (a Gradle plugin and scripts at a
-  version) instead of a template copied once, so the tooling stops drifting. A runtime library is
-  made when real shared runtime code appears.
+  version) instead of a template copied once, so the tooling stops drifting. Runtime code shared by
+  several Modules also lives in libworks, as a runtime jar each Module nests (jar-in-jar), so players
+  install nothing extra. The first is `GuardedResourceHandler`: NeoForge's `DelegatingResourceHandler`
+  lets slot-less insert and extract bypass a face's per-slot rules
+  ([research](../research/transfer-api-guarded-faces.md)).
 - **Groundworks is a Module**, owning placement, and the one Module others may require. It is not a
   home for general code.
 - **The Factorio corpus, its extractors and the mechanic ledger** still go to a private repo
