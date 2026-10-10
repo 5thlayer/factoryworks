@@ -14,10 +14,6 @@
     "minecraft:ice_spikes",
     "minecraft:desert",
     "minecraft:swamp",
-    "minecraft:mangrove_swamp",
-    {
-      "id": "#factoryworks:terra_land",
-      "required": false
-    }
+    "minecraft:mangrove_swamp"
   ]
 }

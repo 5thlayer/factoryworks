@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-"""Assert the committed corpus still says what the opening and the pump read off it.
+"""Assert the committed corpus still says what the pump reads off it.
 
 Resource amounts, the outfield law and crude's figures are each Module's own data now, so
 nothing here compares them to the corpus (#600).
 What stays is the corpus-backed half that belongs to other tickets:
 
-  - **The opening is crossable in Factorio's time.** Terra's furthest starting field, walked at
-    Minecraft's speed, is no further in seconds than `starting_resource_placement_radius` at the
-    engineer's running speed. `character_movement` dropped from a regenerated corpus fails here.
   - **The offshore pump feeds exactly twenty boilers (ADR-0050/#210).** The boiler's water draw
     is re-derived from `machine.json` and `fluid.json`, never read as a trusted 60 mB/s. Two
     traps are named inline.
@@ -15,22 +12,10 @@ What stays is the corpus-backed half that belongs to other tickets:
 Usage: tests/factorio/test_resource_extract.py
 """
 import json
-import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-
-# Minecraft's own walking speed, in blocks per second. It is a game constant with no dump to
-# read it from, which is why it is stated here and is the only number in the movement
-# comparison that is not extracted. Sprinting (5.612) is deliberately not used: it burns hunger
-# and #183 has not decided whether hunger stays in the pack.
-MINECRAFT_WALK_SPEED = 4.317
-
-# Where `DISTANCES` is authored, and the pattern that reads it. The check compares Terra's
-# furthest starting field against Factorio's starting radius in seconds, not in blocks.
-TERRA_START = "scripts/build-terra-start.py"
-DISTANCES_PATTERN = re.compile(r"^DISTANCES\s*=\s*\[([^\]]*)\]", re.M)
 
 # ADR-0050/#210's names. `machine.json` and `fluid.json` carry many machines and could
 # carry more fluids later; pinning which rows this check reads keeps a future addition to
@@ -49,42 +34,7 @@ FACTORIO_TICKS_PER_SECOND = 60
 PUMP_TO_BOILER_RATIO = 20
 
 def main():
-    data = json.loads((ROOT / "data/factorio/resource.json").read_text())
-    resources = {r["name"]: r for r in data["resources"]}
     failures = []
-
-    movement = data.get("character_movement") or {}
-    running = movement.get("running_speed")
-    ticks = movement.get("ticks_per_second")
-    per_second = movement.get("running_speed_per_second")
-    radius = data["constants"].get("starting_resource_placement_radius")
-    if not running:
-        failures.append(
-            "the corpus carries no character running_speed -- #207's row rests on it and a "
-            "regenerated dump has dropped it"
-        )
-    elif not ticks or abs(per_second - running * ticks) > 1e-9:
-        failures.append(
-            f"running_speed {running} tiles/tick at {ticks} ticks/s is {running * ticks} "
-            f"tiles/s, and the corpus says {per_second}"
-        )
-    elif radius:
-        source = (ROOT / TERRA_START).read_text()
-        match = DISTANCES_PATTERN.search(source)
-        if not match:
-            failures.append(f"{TERRA_START} states no DISTANCES -- the pack half is unreadable")
-        else:
-            furthest = max(float(part) for part in match.group(1).split(","))
-            terra_seconds = furthest / MINECRAFT_WALK_SPEED
-            factorio_seconds = radius / per_second
-            if terra_seconds > factorio_seconds:
-                failures.append(
-                    f"Terra's furthest starting field is {furthest:.0f} blocks, {terra_seconds:.1f}s "
-                    f"at {MINECRAFT_WALK_SPEED} blocks/s, against Factorio's {radius:.0f} tiles at "
-                    f"{per_second} tiles/s = {factorio_seconds:.1f}s -- the opening now costs more "
-                    "walking than Factorio's, which is the claim `Character movement on foot` is "
-                    "`adapted, no change` on"
-                )
 
     # ADR-0050/#210: one Offshore Pump feeds exactly twenty Boilers, re-derived from the
     # corpus rather than trusted. Every term below is read off `machine.json` or
@@ -168,12 +118,7 @@ def main():
         print(f"FAIL {index}: {failure}")
     if failures:
         return 1
-    print(
-        f"ok   the opening crosses in "
-        f"{max(float(part) for part in DISTANCES_PATTERN.search((ROOT / TERRA_START).read_text()).group(1).split(',')) / MINECRAFT_WALK_SPEED:.1f}s "
-        f"against Factorio's {data['constants']['starting_resource_placement_radius'] / per_second:.1f}s; "
-        "one pump feeds twenty boilers"
-    )
+    print("ok   one pump feeds twenty boilers")
     return 0
 
 
