@@ -36,6 +36,15 @@ Fieldworks' machine that stands over an ore patch or an oil well and works the l
 drawing ore or pumping crude oil.
 _Avoid_: drill, rig, pumpjack, deposit
 
+**Harvest Recipe**:
+A recipe the Harvester runs: a resource it works, an optional Drilling Fluid it consumes, and what it
+yields. A Harvester holds one, set by the player.
+_Avoid_: drilling recipe, mining recipe
+
+**Drilling Fluid**:
+Any fluid a Harvest Recipe consumes, whether the resource needs it or it raises the yield.
+_Avoid_: mud (only the default fluid), lubricant, coolant
+
 **Pump**:
 Pipeworks' machine that draws a fluid's source block into a pipe, leaving water and any other
 infinite source in place.
