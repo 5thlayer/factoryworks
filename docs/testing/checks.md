@@ -59,33 +59,6 @@ resolve to plans bottoming out in the 21 known leaves, no item has two hand reci
 picks a route with no cost model), and there are no cycles. It reads `data/factorio/recipe.json` and
 fails the day a regeneration adds a recipe nothing hand-makes.
 
-## Terra spawning check
-
-Terra spawns no vanilla mob on its own (#480, ADR-0093). `tests/worldgen/test_terra_spawning.py`
-runs `scripts/build-terra-worldgen.py --check`, then asserts every biome the live dimension and world
-preset name has empty spawner lists and that the noise settings' `disable_mob_generation` is on.
-Whether a night on Terra passes with no mob is a human check on delivery. Run it after editing the
-generator.
-
-## Starting-area geometry check
-
-`tests/worldgen/test_start_geometry.py` asserts Terra's starting area can actually deal all four
-ore fields: every hub connector sits on the face it points out of, and no two fields overlap each
-other or the hub, for every hub variant against every combination of size variants. Vanilla drops
-an overlapping jigsaw child silently, so this failure ships as "three patches instead of four" on
-some seeds and nothing in a log. Run it after any edit to `scripts/build-terra-start.py`; it runs
-the generator's `--check` and reads the generated `.nbt` files.
-
-It also holds the water pool at every hub: a few blocks from the centre, where the spawn point is,
-one block deep, its columns cleared above, and clear of every connector and every field (ADR-0050).
-
-It is the only check standing behind the opening, and it cannot see the opening being *absent*:
-the pools, the processor list and the hub's jigsaw names are referenced from
-`TerraStartingArea` by string, with no compiler or test relationship to the datapack. #313 shipped
-with those five files parked, which reached a new world as no hub, no water and no patches, and
-one `No template pool` line at server start. No check was added for it (#313's own decision); the
-symptom is a new world.
-
 ## ADR back-links
 
 An ADR that contradicts a closed ticket's stated answer declares it as `supersedes: [55, 62]` in
@@ -129,7 +102,7 @@ its `owner` is the ADR that makes it permanent.
 The worldgen walk (#454) starts at each dimension under `kubejs/data/`, never `kubejs/parked/`: the
 noise settings' default block and fluid and its surface rule, each biome's features followed from
 placed to configured and on through the features they name, and the palettes of the live template
-pools' templates, which are the starting area's. A feature type whose blocks are not all in its
+pools' templates. A feature type whose blocks are not all in its
 config is in the generator's `IMPLICIT`, and a walked type in neither it nor `DATA_DRIVEN` fails
 the run. Drops resolve to a fixpoint: a `match_tool` condition passes only when an Obtainable item
 satisfies it, and any other tool predicate, silk touch included, is satisfied by nothing. So a grass
@@ -140,9 +113,7 @@ Each drop's block and loot table are written to
 
 `tests/pack/test_obtainable_index.py` runs both `--check`s, holds every listed stack to an id the
 corpus or the pack registers, and fails a mechanic row naming nothing, naming no ADR, or one the derivation already
-covers. It holds the drops to #454's named ids and to terrain and logs alone, so a plant new to the
-live worldgen fails until its loot table is replaced. It holds the loot rule to three cases, and
-asserts that no block only a parked body places is a source. No mob drop is derived, since no mob spawns (ADR-0093). Run it after a
+covers. It asserts that no block only a parked body places is a source. Run it after a
 jar update, a converter run, an edit to the live worldgen, or an edit to the kit or the mechanic
 list. Whether EMI shows exactly the allowlist is a human check: F3+T on a running client.
 

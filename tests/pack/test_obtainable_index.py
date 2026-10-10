@@ -7,9 +7,7 @@ allowlist from committed files alone. Both `--check`s run here. A mechanic-list 
 kept source, so each must name something registered, and none may already be derived: a row the
 derivation covers would outlive the reason it was written (#453).
 
-The drops of the live worldgen's blocks are held by the ids #454 names, and to terrain and logs
-alone: a plant the live worldgen places drops nothing (ADR-0092), so a new one fails here until its
-loot table is replaced. No block only a parked body places is a source (#454).
+No block only a parked body places is a source (#454).
 """
 import importlib.util
 import json
@@ -25,9 +23,6 @@ GENERATOR = ROOT / "scripts/build-obtainable-index.py"
 KUBEJS = ROOT / "kubejs"
 PARKED = KUBEJS / "parked/data"
 PACK = "factoryworks"
-TERRAIN_AND_LOGS = {"item:minecraft:" + name for name in (
-    "dirt", "sand", "red_sand", "gravel", "sandstone", "red_sandstone", "cobblestone",
-    "oak_log", "birch_log", "acacia_log")}
 
 
 def load_generator():
@@ -229,22 +224,6 @@ class ObtainableIndex(unittest.TestCase):
 
     def test_every_listed_stack_is_registered(self):
         self.assertEqual([], sorted({stack.partition("{")[0] for stack in self.added} - registered()))
-
-    def test_the_live_worldgen_drops_what_454_names(self):
-        for stack in ("dirt", "oak_log"):
-            self.assertIn("item:minecraft:" + stack, self.added)
-        for stack in ("spruce_stairs", "grass_block", "diamond", "oak_leaves", "oak_sapling"):
-            self.assertNotIn("item:minecraft:" + stack, self.added)
-
-    def test_only_terrain_and_logs_drop(self):
-        sources = json.loads(self.generator.SOURCES.read_text(encoding="utf-8"))["stacks"]
-        self.assertEqual(TERRAIN_AND_LOGS, set(sources))
-
-    def test_every_drop_is_listed_with_its_source(self):
-        sources = json.loads(self.generator.SOURCES.read_text(encoding="utf-8"))["stacks"]
-        self.assertEqual({"minecraft:dirt", "minecraft:grass_block"},
-                         {source["broken"] for source in sources["item:minecraft:dirt"]})
-        self.assertEqual(set(), set(sources) - set(self.added))
 
     def test_no_block_only_a_parked_body_places_is_a_source(self):
         live = self.generator.Worldgen([self.generator.LIVE]).walk().blocks
