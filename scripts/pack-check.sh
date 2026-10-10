@@ -162,8 +162,7 @@ if os.path.exists("data/pack/local-jars.json"):
 stray = [os.path.basename(j) for j in sorted(glob.glob("mods/*.jar"))
          if os.path.basename(j) not in named
          and os.path.basename(j) not in index
-         and os.path.basename(j) not in pinned
-         and not os.path.basename(j).startswith("factoryworks_core-")]
+         and os.path.basename(j) not in pinned]
 
 for m in missing:
     print("MISSING\t" + m)

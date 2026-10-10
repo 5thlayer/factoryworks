@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assert the generated fuel table is the join it claims to be, and that the mod reads it.
+"""Assert the generated fuel table is the join it claims to be.
 
 `scripts/factorio-fuel-convert.py` joins `data/factorio/fuel.json` onto `data/pack/item-map.json`
 and writes `kubejs/data/factoryworks/fuel/*.json`, which is what a burner furnace burns
@@ -20,11 +20,6 @@ and writes `kubejs/data/factoryworks/fuel/*.json`, which is what a burner furnac
     this one makes it on what the *game* will read, which is the artifact a player meets.
   - **`wood` reaches the table as a tag.** `minecraft:logs`, not one species and not an item row,
     or every log but one stops burning.
-  - **the mod reads this folder, in this namespace.** The listener's folder and the emitted path
-    are one string in two files; a rename in either is a table that silently loads nothing.
-  - **the vanilla burn table is gone, and so is the flame.** `getBurnTime` reached for a
-    default-allow alphabet, and the flame widget was drawn from a burn-tick fraction that no
-    longer exists.
 
 Usage: tests/factorio/test_fuel_convert.py
 """
@@ -36,7 +31,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 OUT_DIR = ROOT / "kubejs/data/factoryworks/fuel"
 CONVERTER = ROOT / "scripts/factorio-fuel-convert.py"
-SMELTING = ROOT / "mod/src/main/java/com/factoryworks/core/smelting"
 
 TICKS_PER_SECOND = 20
 
@@ -164,45 +158,6 @@ def main():
             f"wood is emitted as {wood!r} -- ADR-0047 resolves it through minecraft:logs, so an "
             "item row here stops every log but one burning"
         )
-
-    # The folder and the namespace are one string in two files. A rename in either is a table
-    # that loads nothing, in a game that reports no error because an absent fuel is not fuel.
-    # 26.1 replaced the listener's `(Gson, String)` constructor with a codec and a
-    # `FileToIdConverter`; the folder name is still the one string that has to agree.
-    listener = (SMELTING / "PFFuel.java").read_text(encoding="utf-8")
-    if f'FileToIdConverter.json("{OUT_DIR.name}")' not in listener:
-        failures.append(
-            f"PFFuel does not read the {OUT_DIR.name!r} folder the converter writes"
-        )
-    if "NAMESPACE.equals(file.getKey().getNamespace())" not in listener:
-        failures.append("PFFuel no longer restricts the table to the pack's own namespace")
-
-    # The two removals ADR-0047 names.
-    for path in sorted(SMELTING.rglob("*.java")):
-        text = path.read_text(encoding="utf-8")
-        if "getBurnTime" in text:
-            failures.append(
-                f"{path.name} still asks Forge's vanilla burn table, which is a default-allow "
-                "alphabet under ADR-0034's default-deny sweep"
-            )
-        if "lit_progress" in text:
-            failures.append(
-                f"{path.name} still draws the flame, which was a fraction of a burn duration "
-                "that no longer exists"
-            )
-
-    # The buffer persists or it does not; there is no third outcome and no error either way.
-    # A field saved and not loaded is a furnace that comes back cold with the coal gone, which is
-    # the silent loss ADR-0038 asks the assembler's codecs to catch. The block entity is a
-    # Minecraft type and the unit test source set has no Minecraft, so this is a source-text check
-    # -- the same reason `tests/pack/test_smelting_type.py` is one.
-    entity = (SMELTING / "FurnaceBlockEntity.java").read_text(encoding="utf-8")
-    for key in ("FuelJoules", "FuelLitJoules"):
-        if entity.count(f'"{key}"') != 2:
-            failures.append(
-                f"FurnaceBlockEntity does not both save and load {key!r} -- a part-spent buffer "
-                "does not survive a reload, and nothing reports it"
-            )
 
     lang = json.loads((ROOT / "kubejs/assets/factoryworks/lang/en_us.json")
                       .read_text(encoding="utf-8"))

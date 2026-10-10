@@ -26,9 +26,9 @@ ASSETS = ROOT / "kubejs/assets/factoryworks"
 WORLDGEN = next(d for d in (DATA / "worldgen", ROOT / "kubejs/parked/data/factoryworks/worldgen")
                 if (d / "configured_feature/yumako_tree.json").is_file())
 
-# Ids the mod registers, per ADR-0015's ownership rule. Parsed from the Java rather than
-# hardcoded, so moving one across the boundary fails here instead of at startup.
-MOD_SOURCE = ROOT / "mod/src/main/java/com/factoryworks/core/PFBlocks.java"
+# The saplings the deleted Core mod registered, as of fb05f50, which the pack still names until
+# the Showcase moves out (#663, ADR-0128).
+CORE_SAPLINGS = frozenset({"factoryworks:yumako_sapling", "factoryworks:jellystem_sapling"})
 KUBEJS_BLOCKS = ROOT / "kubejs/startup_scripts/blocks.js"
 KUBEJS_ITEMS = ROOT / "kubejs/startup_scripts/items.js"
 
@@ -39,11 +39,6 @@ def check(condition, message):
     if not condition:
         failures.append(message)
     print(("ok   " if condition else "FAIL ") + message)
-
-
-def mod_block_ids():
-    return {"factoryworks:" + m
-            for m in re.findall(r'sapling\("([a-z_]+)"', MOD_SOURCE.read_text())}
 
 
 def kubejs_ids(path):
@@ -84,16 +79,13 @@ def nested_uniform_providers(node):
 
 
 def main():
-    blocks = mod_block_ids() | kubejs_ids(KUBEJS_BLOCKS)
+    blocks = CORE_SAPLINGS | kubejs_ids(KUBEJS_BLOCKS)
     items = kubejs_ids(KUBEJS_ITEMS)
     # A block item exists for every block, so a loot table may name either.
     registered = blocks | items
 
-    check(mod_block_ids() == {"factoryworks:yumako_sapling",
-                              "factoryworks:jellystem_sapling"},
-          "the mod registers exactly the two saplings")
-    check(not (mod_block_ids() & kubejs_ids(KUBEJS_BLOCKS)),
-          "no id is registered by both the mod and KubeJS")
+    check(not (CORE_SAPLINGS & kubejs_ids(KUBEJS_BLOCKS)),
+          "no sapling is registered by KubeJS too")
     check({"factoryworks:yumako_fresh", "factoryworks:jellynut_fresh"} <= items,
           "the two harvested materials are registered, as Fresh")
     check({"factoryworks:iron_bacteria_fresh",
@@ -119,18 +111,11 @@ def main():
         check(json.loads(placed.read_text())["feature"] == f"factoryworks:{tree}_tree",
               f"{tree}'s placed feature points at its configured feature")
 
-    # The grower reaches its tree by resource key, and a typo there fails silently: the
-    # sapling simply never grows.
-    grower = (ROOT / "mod/src/main/java/com/factoryworks/core/PFTrees.java").read_text()
-    check('feature(name + "_tree")' in grower and 'grower("yumako")' in grower
-          and 'grower("jellystem")' in grower,
-          "each grower names its tree's configured feature")
-
     # Only this file's own blocks. `loot_table/blocks/` is shared with every other pack-authored
     # block, and `registered` above is built from the two sources flora is registered through --
     # the mod's saplings and KubeJS -- so a block registered in Java anywhere else reads as a
     # stray item here. It is not: the furnaces and machines have loot tables of their own,
-    # asserted by `tests/pack/test_block_assets.py`. Each
+    # asserted by their own checks. Each
     # family checks its own drops against its own registry, and sweeping the whole directory from
     # here only lets this check fail for another family's content.
     foreign = []
@@ -228,7 +213,7 @@ def main():
                        "gleba_green_marshland", "gleba_red_marshland"):
         check(f"biome.factoryworks.{biome_name}" in lang,
               f"{biome_name} has a display name")
-    for sapling in mod_block_ids():
+    for sapling in CORE_SAPLINGS:
         key = "block.factoryworks." + sapling.split(":")[1]
         check(key in lang, f"the mod's {sapling} has a lang entry (the pack names it, not the jar)")
 

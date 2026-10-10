@@ -32,18 +32,6 @@ mise.local.toml
 *.swo
 *~
 
-# --- The first-party mod's source and build tooling ---------------------------
-# `mod/` is fully tracked in git, so hashing it records nothing new.
-mod/
-gradle/
-gradlew
-gradlew.bat
-gradle.properties
-settings.gradle
-build.gradle
-.gradle/
-build/
-
 # --- The jars themselves ------------------------------------------------------
 # packwiz assumes `mods/` holds metafiles and that an installer fetches the jars.
 # This pack root *is* the playable instance, so the jars are present too — and
@@ -60,8 +48,7 @@ mods/*.jar
 !mods/pipeworks-*.jar
 
 # `factoryworks_core` is indexed by its metafile, mods/factoryworks-core.pw.toml, naming the
-# released CurseForge file (ADR-0101). The jar `installToPack` builds into mods/ for dev runs is
-# not byte-reproducible, so it stays covered by the `mods/*.jar` rule above.
+# released CurseForge file (ADR-0101).
 
 # --- Per-user and per-run state, never pack behaviour -------------------------
 # NOTE: the repo root is also the live game instance, so it accumulates directories

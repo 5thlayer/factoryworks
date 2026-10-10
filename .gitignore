@@ -14,8 +14,6 @@
 **/*.bak
 **/*.exe
 **/*.jar
-# ...except the Gradle wrapper, which is how the first-party mod is built.
-!gradle/wrapper/gradle-wrapper.jar
 **/*.zip
 # ...except the filter pack, which is pack content and must ship.
 !kubejs/data/*.zip
@@ -113,21 +111,7 @@ config/emi.css
 # Python bytecode from the test harness
 __pycache__/
 
-# Gradle build state for `mod/` (ADR-0014). The jar it produces lands in mods/, already ignored.
-.gradle/
-mod/build/
-build/
 *.log
-
-# Eclipse JDT's own output, which is what VSCodium's Java extensions compile into when they import
-# the Gradle project -- `bin/main` and `bin/test` beside Gradle's `mod/build/classes`. Duplicate
-# class files, never a source of truth, and regenerated on the next import.
-mod/bin/
-.eclipse/
-
-# Where a `run*` Gradle task puts its working directory: the GameTest run's throwaway universe
-# (#271), and the config the server writes on first start. Both are regenerated per run.
-mod/run/
 
 .probe
 kubejs/config/probe-settings.json

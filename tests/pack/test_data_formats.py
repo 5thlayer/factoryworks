@@ -52,11 +52,9 @@ GENERATOR = ROOT / "scripts/build-item-definitions.py"
 # Every tree the game loads. `kubejs/parked/` is deliberately absent.
 ASSET_ROOTS = (
     ROOT / "kubejs/assets",
-    ROOT / "mod/src/main/resources/assets",
 )
 DATA_ROOTS = (
     ROOT / "kubejs/data",
-    ROOT / "mod/src/main/resources/data",
 )
 
 

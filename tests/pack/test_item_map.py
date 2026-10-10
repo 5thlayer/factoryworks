@@ -47,7 +47,6 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 ITEM_MAP = ROOT / "data/pack/item-map.json"
 MODS = ROOT / "mods"
 KUBEJS = ROOT / "kubejs"
-MOD_ASSETS = ROOT / "mod/src/main/resources/assets"
 VANILLA = pathlib.Path(
     os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
         "~/curseforge/Install/versions/26.1.2/26.1.2.jar")))
@@ -107,9 +106,9 @@ def jar_lang():
 
 @functools.lru_cache(maxsize=None)
 def pack_lang():
-    """The pack's own lang keys -- the mod's resources and KubeJS's assets together."""
+    """The pack's own lang keys, from KubeJS's assets."""
     keys = set()
-    for path in list(KUBEJS.glob("assets/*/lang/*.json")) + list(MOD_ASSETS.glob("*/lang/*.json")):
+    for path in list(KUBEJS.glob("assets/*/lang/*.json")):
         keys |= set(json.loads(path.read_text(encoding="utf-8")))
     return keys
 

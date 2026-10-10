@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-"""Assert the committed corpus still says what the Pick, the opening and the pump read off it.
+"""Assert the committed corpus still says what the opening and the pump read off it.
 
-Resource amounts, the outfield law and crude's figures are hand-owned data in
-`factoryworks_core/ore/amounts.json` now, so nothing here compares them to the corpus (#600).
+Resource amounts, the outfield law and crude's figures are each Module's own data now, so
+nothing here compares them to the corpus (#600).
 What stays is the corpus-backed half that belongs to other tickets:
 
-  - **`PickTier` is not transcribed.** Its two speeds are asserted against the character's own
-    `mining_speed` and `steel-axe`'s modifier, and the pack's `MINING_TIME` is half Factorio's
-    flat mining time (ADR-0039). `steel-axe`'s modifier is a fraction, so +100% is 1.0.
   - **The opening is crossable in Factorio's time.** Terra's furthest starting field, walked at
     Minecraft's speed, is no further in seconds than `starting_resource_placement_radius` at the
     engineer's running speed. `character_movement` dropped from a regenerated corpus fails here.
@@ -51,63 +48,10 @@ FACTORIO_TICKS_PER_SECOND = 60
 # ADR-0050's claim: one Offshore Pump feeds exactly this many Boilers.
 PUMP_TO_BOILER_RATIO = 20
 
-PICK_TIER = "mod/src/main/java/com/factoryworks/core/mining/PickTier.java"
-
-# The four resources ADR-0039's flat mining time speaks for. Uranium is excluded on
-# Factorio's own terms rather than on the pack's: its `mining_time` is 2 and it wants
-# sulfuric acid, so it was never one of the four that number was flat across.
-FLAT_MINING_TIME = ("iron-ore", "copper-ore", "coal", "stone")
-
-# ADR-0039 halves Factorio's mining time; the amendment is this ratio, not a second number.
-PACK_MINING_TIME_RATIO = 0.5
-
-
-def pick_tiers(source):
-    """The two tiers' mining speeds and the pack's mining time, read out of the Java."""
-    speeds = {
-        name: float(speed)
-        for name, speed in re.findall(r'(\w+)\("[^"]+",\s*([0-9.]+)f\)', source)
-    }
-    time = re.search(r"MINING_TIME\s*=\s*([0-9.]+)f", source)
-    return speeds, float(time.group(1)) if time else None
-
-
 def main():
     data = json.loads((ROOT / "data/factorio/resource.json").read_text())
     resources = {r["name"]: r for r in data["resources"]}
     failures = []
-
-    hand = data.get("hand_mining") or {}
-    source = (ROOT / PICK_TIER).read_text()
-    speeds, mining_time = pick_tiers(source)
-    bare = hand.get("character_mining_speed")
-    researched = hand.get("character_mining_speed_researched")
-    if speeds.get("IRON") != bare:
-        failures.append(
-            f"PickTier.IRON mines at {speeds.get('IRON')}, and Factorio's character at {bare}"
-        )
-    if speeds.get("STEEL") != researched:
-        failures.append(
-            f"PickTier.STEEL mines at {speeds.get('STEEL')}, and Factorio's character after "
-            f"steel-axe at {researched}"
-        )
-    factorio_times = {
-        resources[name]["mining_time"] for name in FLAT_MINING_TIME if name in resources
-    }
-    if len(factorio_times) != 1:
-        failures.append(
-            f"the four flat resources carry {sorted(factorio_times)} mining times, not one "
-            "-- ADR-0039's flat time no longer speaks for them"
-        )
-    elif mining_time is None:
-        failures.append("PickTier states no MINING_TIME")
-    else:
-        want = factorio_times.pop() * PACK_MINING_TIME_RATIO
-        if abs(mining_time - want) > 1e-6:
-            failures.append(
-                f"PickTier.MINING_TIME is {mining_time}, and half Factorio's is {want} "
-                "-- ADR-0039 halves it and does not choose it"
-            )
 
     movement = data.get("character_movement") or {}
     running = movement.get("running_speed")
@@ -225,7 +169,7 @@ def main():
     if failures:
         return 1
     print(
-        f"ok   PickTier {bare}/{researched} matches the character; the opening crosses in "
+        f"ok   the opening crosses in "
         f"{max(float(part) for part in DISTANCES_PATTERN.search((ROOT / TERRA_START).read_text()).group(1).split(',')) / MINECRAFT_WALK_SPEED:.1f}s "
         f"against Factorio's {data['constants']['starting_resource_placement_radius'] / per_second:.1f}s; "
         "one pump feeds twenty boilers"

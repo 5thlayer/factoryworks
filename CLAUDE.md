@@ -68,23 +68,9 @@ When you edit code, trim the comments you touch to this rule. Leave comments els
 `uv run --with pytest pytest tests/` runs **every** check under `tests/`. Most files are
 `main()`-style scripts; `tests/conftest.py` wraps each as one test asserting exit 0, and fails the
 run if any `test_*.py` produced no tests (#171). A single script runs directly too:
-`uv run tests/pack/test_rig_assets.py`.
+`uv run tests/pack/test_licensing.py`.
 
-Three checks are in no batch and this command does not reach them: the GameTest harness,
-`scripts/check-datapack-load.py` and the upload check, `python3 -m unittest discover scripts/tests`.
 Whether an asset renders is a human's check in game, never an agent's (ADR-0119).
-
-### GameTest harness
-
-`./gradlew :factoryworks_core:runGameTestServer` is the only check that loads a world: headless,
-no human, fails the command on a failed test. Tests live in the **main** source set under
-`mod/src/main/java/com/factoryworks/core/gametest/`, since the game loads them. The run selects
-`--tests factoryworks:*` (one wildcard pattern, not a list); the showcase scenes are under
-`factoryworks_showcase:*`. The pack's `kubejs/` and server configs are linked into `mod/run/` by
-Gradle tasks, so tests assert against the data the pack ships. Run it after editing anything under
-`core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`, `core/reach/`,
-`core/dismantle/`, `core/stretch/`, `core/worldgen/` or `core/gametest/`. How it is wired, and what
-each test class holds, is in `docs/testing/checks.md` § GameTest harness.
 
 ### Which check to run
 
@@ -94,37 +80,22 @@ check's section there before editing it or the code it guards. Run the matching 
 | Edit | Check |
 |---|---|
 | Sapros trees, stromatolites, its five biomes | `tests/flora/test_flora_data.py` |
-| any block, blockstate, model, texture, lang key, loot table | `tests/pack/test_block_assets.py` |
 | any texture, model, animation, `.bbmodel` or store image or clip | `tests/pack/test_art_provenance.py` |
-| furnace tiers, `core/smelting/` | `test_furnace_assets.py`, `test_smelting_type.py`, `:factoryworks_core:test`, GameTest |
-| `core/wreck/`, the wreck generators | `tests/pack/test_wreck_assets.py`, GameTest |
-| a converter run | `test_recipe_names.py`, `test_recipe_convert.py`, `test_smelting_shape.py`, `test_recipe_duplication.py`, `test_hand_recipes.py`, `check-datapack-load.py` |
+| a converter run | `test_recipe_names.py`, `test_recipe_convert.py`, `test_smelting_shape.py`, `test_recipe_duplication.py`, `test_hand_recipes.py` |
 | corpus re-extract or `data/pack/item-map.json` | `test_item_map.py`, `test_fuel_convert.py` |
-| `core/placement/` | GameTest (`PlacementPlanTests`), then `check-datapack-load.py` if the platform moved |
-| tree felling, after a dump refresh | `factorio-tree-extract.py`, then `build-tree-assets.py`; `test_tree_extract.py`, `test_pack_recipes.py` |
-| `core/start/` or the spec's Opening | `tests/pack/test_starting_kit.py`, `:factoryworks_core:test` |
-| `scripts/build-terra-worldgen.py` | `tests/worldgen/test_terra_spawning.py`, GameTest (`WorldgenFixtureTests`) |
-| `core/worldgen/VanillaSpawning` | GameTest (`SpawningRuleTests`) |
+| tree felling, after a dump refresh | `factorio-tree-extract.py`; `test_tree_extract.py`, `test_pack_recipes.py` |
+| `scripts/build-terra-worldgen.py` | `tests/worldgen/test_terra_spawning.py` |
 | `scripts/build-terra-start.py` | `tests/worldgen/test_start_geometry.py` |
-| `core/ore/`, the ore generators | `test_ore_assets.py`, `:factoryworks_core:test`, GameTest |
 | a committed ADR with `supersedes:` | `scripts/adr-backlink-check.sh` (needs `gh`) |
 | closing a ticket, editing the item map or `docs/factorio-mechanics.md` | `scripts/item-map-ticket-check.sh` (needs `gh`) |
 | a jar update, live worldgen, the kit, the mechanic or creative lists | `tests/pack/test_obtainable_index.py` |
 | removing a third-party content mod's references | `tests/pack/test_independence_guard.py` |
-| an item or fluid face | `tests/pack/test_transfer_guards.py`, `test_capability_registration.py`, `test_energy_faces.py` |
-| `core/fluid/` | `test_pump_assets.py`, `test_boiler_assets.py`, `:factoryworks_core:test`, GameTest |
-| a fluid row, an Oritech update | `tests/pack/test_fluid_tints.py` |
-| `SteamEngineSpec` | `:factoryworks_core:test` |
-| `core/radar/` or its generator | `test_radar_assets.py`, `test_machine_extract.py`, `:factoryworks_core:test`, GameTest |
-| `core/oil/`, the oil field, its generators | `test_pumpjack_assets.py`, `test_resource_extract.py`, GameTest |
+| Oritech's oil springs | `tests/pack/test_oritech_springs.py` |
 | `scripts/factorio-enemy-extract.py` | `tests/factorio/test_enemy_extract.py` |
 | an item model | `tests/pack/test_data_formats.py` |
 | `scripts/pack-check.sh` | `tests/pack/test_pack_check.py` |
-| `scripts/upload.py`, `scripts/release.sh` | `python3 -m unittest discover scripts/tests` |
 | `scripts/sync-local-jars.py` | `tests/pack/test_sync_curseforge.py`, `tests/pack/test_local_jars.py` |
 | a `.bbmodel`, `data/art/models/`, `build-model-assets.py` | `tests/pack/test_model_assets.py` |
-| any edit to `kubejs/`, the dev runtime classpath | `scripts/check-datapack-load.py` |
-| a reload listener, recipe serializer or item codec | `tests/pack/test_load_codecs.py` |
 | `recipes.js`, `recipe_survivors.js`, the category map | `tests/factorio/test_recipe_sweep.py` |
 | the hand-written Pick recipes | `tests/factorio/test_pack_recipes.py` |
 | `stock-admissions.json`, `stock-substitutions.json`, a jar update | `tests/factorio/test_stock_recipes.py` |
@@ -148,25 +119,21 @@ that restores it. Read it before concluding a mechanic was dropped.
 The jar set is a packwiz manifest tracked in git (ADR-0024) — `pack.toml`, `index.toml` and one
 `mods/*.pw.toml` per externally-sourced mod. `mods/*` is gitignored with `!mods/*.pw.toml` re-included;
 never rewrite that as a bare `mods`, or the manifest silently stops being tracked. The local
-Beltworks jar is an unmanaged hashed entry and `factoryworks_core` is not indexed at all.
+Beltworks jar is an unmanaged hashed entry.
 `scripts/pack-check.sh` asserts the installed jars still match. See `docs/pack/packwiz-workflow.md`.
 
 ### Local jar check
 
 Beltworks is a **local jar**: `data/pack/local-jars.json` pins the version the Pack runs, and
 `scripts/sync-local-jars.py beltworks=<version>` writes the pin, copies that jar out of `~/.m2` into
-`mods/`, refreshes the manifest and rebuilds the core mod (#465, ADR-0024). A row with a `curseforge`
+`mods/` and refreshes the manifest (#465, ADR-0024). A row with a `curseforge`
 project id (Beltworks, Craftworks) also gets `mods/<mod>.pw.toml` naming that version's CurseForge
 file, and the jar itself is not indexed, so an export references it rather than bundling it (#532).
 The pin never waits on CurseForge: while CurseForge does not list the file, the sync installs the jar,
 removes the row's metafile and prints `pending <mod> <version>`, and a later plain sync fills it in.
-FactoryWorks Core's `mods/factoryworks-core.pw.toml` follows `gradle.properties`' `mod_version`, the
-version `scripts/release.sh` last released, the same way.
-The build reads the same
-table and names no Library (#475, ADR-0090): every pinned jar is on the compile classpath and the dev
-runs, and the range the pinned jars require Groundworks under is read from their `neoforge.mods.toml`
-into Core's as `groundworks_version_range`, intersected across them. So the Pack names no
-Groundworks version, and adding a Library is a row and a sync. `tests/pack/test_local_jars.py` runs
+FactoryWorks Core's `mods/factoryworks-core.pw.toml` names its last released CurseForge file, and
+no script moves it: Core's source left this repo (ADR-0128). Adding a Library is a row and a sync.
+`tests/pack/test_local_jars.py` runs
 the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
 holds it; a newer version in `~/.m2` is named without failing. For a
 `curseforge` row the metafile names the pinned file and project and hashes the installed jar, and
@@ -177,35 +144,18 @@ the sync or any change to `mods/`. Take a new Beltworks, Wireworks or Pipeworks 
 Wireworks, the electric poles, is pinned the same way (#476). It has no CurseForge project yet, so
 its jar is indexed by hash and negated in `.packwizignore`. Its Bindings are the Pack's:
 `config/wireworks-server.toml` sets Factorio's supply areas and wire reaches; `kubejs/data/wireworks/tags/` puts the Picks in `wire_tools`
-and the Pack's generators in their tag, held by `tests/pack/test_network_tags.py`;
-and `FactoryWorksCore` states the pole Replace group.
+and the Pack's generators in their tag, held by `tests/pack/test_network_tags.py`.
 Pipeworks, the pipes and the storage tank, is pinned the same way (#557, ADR-0110): no CurseForge
-project, so indexed by hash and negated in `.packwizignore`. Core registers crude oil, the
-Pumpjack's anchor and parts are its `FluidPort`s, and the pipe Dismantle Family and drag-laying
-(`core/dismantle/PipeFamily`, `core/stretch/PipeworksPipeLegs`) are Pack Bindings over what its
-pipes' arms report, and `kubejs/data/pipeworks/tags/` lets the Picks close a pipe's side (ADR-0125).
+project, so indexed by hash and negated in `.packwizignore`. `kubejs/data/pipeworks/tags/` lets the
+Picks close a pipe's side (ADR-0125).
 A change that crosses Groundworks, Beltworks, Wireworks, Pipeworks, Craftworks and the Pack goes through the
 `release-train` skill (`skillworks:release-train`, from 5thlayer/skillworks), in that order: each
 checkout is owned by the session working in it, and nothing is pushed without the user's word.
 Beltworks and Wireworks require Groundworks rather than nesting it, so a Groundworks minor moves
-their ranges and Core's together.
-
-`-PsiblingBuilds` is for trying such a change in the Pack before a library is released (#466, #475).
-It includes, as a composite, the checkout of every row of `local-jars.json`, except a row marked `"sibling": false` (one whose tested binary no checkout reproduces),
-or of only the rows named (`-PsiblingBuilds=craftworks`), each at `-P<name>Dir`, default
-`~/minecraft_mods/<name>`. The compile and every dev run, `runGameTestServer` included, use those
-checkouts and never their `mods/` jars. The build prints one `siblingBuilds:` line per checkout,
-naming its version and HEAD.
-`installToPack` refuses under it, and `scripts/check-datapack-load.py --sibling-builds` forwards it.
-It never installs, and a green run under it proves nothing about the pinned jars: the change still
-ships through the release train. A Groundworks checkout outside the range Beltworks and Wireworks require it under
-fails the build, so a Groundworks minor needs their ranges moved in their checkouts too.
+their ranges together.
 
 ### First-party mod
 
-`factoryworks_core` is a Gradle subproject in `mod/`, built from the repo root with
-`./gradlew :factoryworks_core:installToPack` — required after a fresh clone, since the jar
-lands in the gitignored `mods/`. It owns mechanism only; ADR-0015 has the ownership table for
-what goes in the mod, in KubeJS and in datapack JSON. See `mod/README.md`.
-A Core change a player will notice adds its line under `## Unreleased` in `publish/core/changelog.md`
-as it lands. Before releasing, tagging or uploading Core, read `docs/agents/releases.md`.
+`factoryworks_core` left this repo (ADR-0128, `docs/port/mod-audit.md`): its source is at commit
+`fb05f50`, and each port ticket names the rows it takes from there. The Pack still names Core's
+`factoryworks:` blocks and items until the Showcase moves out (#663).

@@ -1,7 +1,0 @@
-{
-  "factoryworks_core.recipe.locked": "Recipe not researched",
-  "factoryworks_core.recipe_viewer.locked_badge": "!",
-  "factoryworks_core.recipe_viewer.locked": "Locked by research",
-  "factoryworks_core.recipe_viewer.locked_by": "Complete: %s",
-  "factoryworks_core.recipe_viewer.locked_by_unknown": "The research that unlocks it is unknown"
-}

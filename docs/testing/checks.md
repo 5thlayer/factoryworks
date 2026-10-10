@@ -10,201 +10,6 @@ which marshland carries which tree and that no stromatolite drops ore — with n
 after any edit to the trees, the stromatolites or the five biomes. The worldgen half is read from
 `kubejs/parked/` while Sapros is parked (ADR-0060).
 
-## Block asset check
-
-`tests/pack/test_block_assets.py` walks every block the mod registers (#254): blockstate, model
-parents and textures (the pack's, the installed jars' and the client jar's), lang key, item model
-where the block has an item, and a loot table unless it is registered with `noLootTable`; a block
-with an item of its own name must drop exactly it. The block list is parsed from every
-`DeferredRegister.createBlocks` source and each ladder's names evaluated from its enum's
-`blockName()`, so a new block is walked with no edit here, and a registration it cannot name fails.
-Blocks with no item are the `NO_ITEM` patterns, each with its reason. Each machine's own
-`test_*_assets.py` keeps only what a generic walker cannot judge.
-Run it after adding a block or editing any blockstate, model, texture, lang key or loot table.
-
-## Furnace ladder check
-
-`tests/pack/test_furnace_assets.py` asserts the three furnace tiers `FurnaceTier.java` registers
-have a blockstate covering both `facing` and `lit`; that each file resolves is the block asset
-check's. Two of its assertions are the ladder's own -- the Electric tier wears no texture a burner tier wears, so it reads as a
-different machine at a glance, and every texture it names is in the pack's namespace and credited
-in `NOTICE`, since the art is copied from a CC BY-NC-SA repository (#324).
-`tests/pack/test_smelting_type.py` holds the recipe type itself: that the pack's recipe class is **not** assignable to vanilla's
-`SmeltingRecipe` -- GT's `proxyRecipes` converts that class specifically and would drop the count,
-turning `5 iron_plate -> 1 steel_plate` into a 1:1 with no error and no log line -- that the count
-survives both codecs, and that nothing in the mod reads recipes off vanilla's smelting type. It is
-a source-text check because the assertion needs to name a Minecraft class the unit-test classpath
-deliberately does not have. The arithmetic and the rules are
-Minecraft-free unit tests under `mod/src/test/java/com/factoryworks/core/smelting/`: the
-per-tier duration, the 90 FE/t draw and its buffer, the unsided routing by item, and the stall —
-a blocked output starts no smelt, burns no fuel and voids nothing (ADR-0041). Whether the three
-blocks smelt in a running game is `gametest/EnergyFaceTests` for the Electric tier (#271) and
-`gametest/BurnerFurnaceTests` for the two burners (#432): on coal, each makes iron plate at its
-tier's rate for 4,500 J a working tick, keeps the steel smelt's 5:1, and with a full output lights
-no coal, spends no banked joule and starts no smelt. Dropping the output check, shrinking the input
-by one, or a 4,000 J tick each turns both tiers' tests red.
-`gametest/FurnaceOverloadTests` holds the input to the Overload Limit of the smelt taking it on all
-three tiers (#518): 2 raw iron, 10 iron plates for the 5:1 steel smelt, fuel uncapped, and a
-shift-click in the screen still placing 64; `FurnaceOverloadTest` holds the figures. Dropping the
-cap in `FurnaceItemHandler` turns all three tiers red.
-
-## GameTest harness
-
-`./gradlew :factoryworks_core:runGameTestServer` from the repo root is the pack's only check
-that loads a world. It is headless, needs no display and no human, and fails the command when a
-test fails. The tests are in `mod/src/main/java/com/factoryworks/core/gametest/`, in the
-**main** source set — a GameTest is code the game loads, so it cannot live in the Minecraft-free
-test source set. 26.1 has no `@GameTestHolder` and no `neoforge.enabledGameTestNamespaces`: a test
-is an entry in the `test_instance` datapack registry, registered through NeoForge's
-`RegisterGameTestsEvent`. Groundworks and Beltworks register tests too, some of them for cases the
-Pack's settings rule out on purpose, so the run selects `--tests factoryworks:*` and each repo's
-own run holds its tests (#448). The selector takes one wildcard pattern, not a list.
-`PFGameTestInstance` is the shape that event has no answer for — vanilla's `function` instance
-resolves a `Consumer` out of the `test_function` registry, which is populated during `Bootstrap`,
-before any mod is loaded.
-
-Two seams are the harness's own rather than generic plumbing. The tests stand on a **generated**
-stone platform (`scripts/build-gametest-structures.py`), for the reason `build-terra-start.py`
-exists: a committed `.nbt` nobody can regenerate is a binary with no source. And the pack's data
-reaches the run through **KubeJS**, on the dev runtime classpath with Rhino, reading the repo's own
-`kubejs/` through a link `mod/run/kubejs` that the `linkKubeJS` Gradle task makes before every dev
-run (#338). KubeJS resolves `kubejs/` against the game directory with no setting to move it, and
-`mod/run/` is untracked, so the link is built rather than committed. There is no second copy: the
-startup scripts register the pack's items, the server scripts run the recipe sweep, and every file
-under `kubejs/data/` loads. That is what lets a test assert against the recipe the pack ships rather
-than a fixture written to pass, and what `scripts/check-datapack-load.py` watches the game read. The same goes for `config/beltworks-server.toml`, `config/craftworks-server.toml`, and `config/factoryworks_core-server.toml`, linked in by `linkServerConfigs`: loaders need power (#447) only because the pack's configs say so, and every default is off. Two things follow from it. Terra's dimension type starts at y=0 (ADR-0019), below
-vanilla's hard-coded test origin of y=-59, so `mixin/minecraft/GameTestServerMixin` places the tests
-five blocks above the floor; without it no test block places and the run hangs rather than fails.
-And KubeJS reads a Better Advanced Tooltips class on a server as well, so that jar is on the
-classpath too. Oritech, Railcraft Reborn, Beltworks and FTB Materials are there because the pack's
-recipes name their items.
-
-What is there is `EnergyFaceTests` (#271), `BurnerFurnaceTests` (#432), `FurnaceOverloadTests` (#518), `HandSetTests` (#279),
-`BoilerTests` (#274), `SteamChainTests` (#593), `RigBreakTests` (#310), `ElectricRigTests` (#194), `SteamEngineNetworkTests` (#292, #352), `AssemblingMachineTests` (#559), `AssemblingFluidTests` (#580), `AssemblerOilChainTests` (#644)
-`PackChestTests` (#540), `FootprintBreakTests` (#352), `RadarTests` (#368), `PumpjackTests` (#377), `PipeDismantleTests` (#431) and `PipeStretchTests` (#452), all registered only when Oritech is loaded, `ReachTests` (#413), registered always but for its `Screens`, `SpawningRuleTests` (#480), `ChestTests` (#542), `WreckTests` (#544, #545, #546), and `BeltworksPackTests`, registered only when
-Beltworks (`beltworks`) is loaded. The belt mechanics are Beltworks' own GameTests, in its repo
-(#438). `ShowcaseSceneTests` (#538) build the `core/showcase/` scenes that `/factoryworks showcase` builds
-for filming, under `factoryworks_showcase:*` so the run never selects them; swap the run's selector
-for theirs to check each still makes its product. What is here is only what a JVM test cannot reach: that Craftworks plans every hand-craftable
-recipe the server loaded, resolves a tag ingredient to its items and leaves out a fluid recipe and
-one that is not hand-craftable (`HandSetTests`, ADR-0118); that a pole
-placed first feeds an Electric Furnace placed after it within one rescan interval, that the furnace's
-face, probed as a pole probes it — an insert inside a transaction it aborts — reports its whole buffer
-as room and keeps no FE, and that a fed furnace smelts at 90 FE/t while a
-starved one freezes where it stood; that an Electric Mining Drill's parts name its anchor as their
-energy owner, that a pole reaching only those parts feeds it, and that it draws 45 FE/t, mines when fed
-and freezes when starved (making the part its
-own energy owner, returning false from `pay`, or dropping the journal each turn one red). How a pole
-scans, counts and rations, and how power crosses a wire, stops beyond
-reach and stops when the link is broken, are Wireworks' own GameTests (#476). And that a furnace on a pole reaching only a Steam Engine's
-parts receives that engine's 450 FE every tick, once -- `SupplyScanTest` holds
-the resolve-then-classify rule, and forcing every block to be its own owner turns the GameTest red.
-And that a footprint machine, such as the Steam Engine (ADR-0116) or the Radar, broken at its anchor or at any part leaves none of its blocks standing and
-drops exactly one item; dropping the part's teardown turns the part tests red. The Assemblers are Craftworks' (ADR-0118), and its GameTests hold the machine. `AssemblingMachineTests`
-holds what the Pack owns of them: an Assembler on a creative pole's area is powered and crafts copper
-cable in whole crafts of two; Fill Recipe answers `HELD` for a player who has unlocked nothing, since
-the linked-in `craftworks-server.toml` names no Lock source (ADR-0126); and every `factoryworks:assembling/` recipe in the manager is one some tier can hold,
-its fluids included. How many machines a pole counts is Wireworks', so the test asks only that the
-Assembler crafts. It and `HandSetTests` call Craftworks' internals, the one exception to the
-Consumer rule (`what-to-check.md`), until Craftworks names a Consumer API (5thlayer/craftworks#37).
-Every other GameTest names a Library's blocks by registry id, through `LibraryBlocks`.
-`AssemblingFluidTests` holds the Pack's claim over a Craftworks Fluid Connection and a Pipeworks pipe
-(#580): a tier 2 Assembler holding `electric_engine_unit` (lubricant) or `concrete` (water), with a
-pipe from its connection to a `LibraryBlocks.storageTank()` filled through the tank's own capability,
-crafts the recipe on a creative pole's power, and tier 1 answers both recipes with anything but `HELD`
-and holds nothing. The recipe is held before the pipe is placed, since a connection exists only while
-the Held recipe has a fluid. The pull is Craftworks' and the segment Pipeworks', so the Pack moves no
-fluid and the test asks only that the product comes out; a Pack-side fluid mover is the thing it must
-never need.
-And that a small pole's demand probe leaves a Beltworks loader no FE, that the loader's face reports
-its buffer as room to a probe made by hand and keeps nothing from it, and that no `beltworks:` recipe
-survives the stock-recipe sweep, against the pack's express belt recipe as a control
-(`BeltworksPackTests`). The loader's face is Beltworks', so the two static FE checks cannot read it.
-Rotate is Groundworks' (#451): the Pack only states that every block turns in place, and its
-footprint machines refuse through the library's `TurnsInPlace`. The mechanism's tests are
-Groundworks' and Beltworks', in their own runs.
-And that the Pick takes up a span of Pipeworks' pipes, a **Dismantle Family** Groundworks runs
-(`PipeDismantleTests`, #431, #448, ADR-0086): each test sneak-clicks a start through the player's
-game mode, asks `Dismantles.spanTo` for the end, clicks it plainly, and holds the world, the
-inventory and the stored start to the span. A straight run leaves none of the span's pipes standing,
-keeps every pipe outside it and hands over a pipe each. Opposite points of a ring, a closed connection
-and an end on a Boiler change no block, slot or stored start and name their reason, and an iron
-pickaxe stores no start, since the Pack trims `groundworks:dismantles` to the Picks. A join rule that
-ignores the pipes' links turns the closed-connection test red. The shortest path, a bend, a tee, one
-block and the tie are Groundworks' `ShortestPathTest`, and a stale start and a sneak-use in the air
-its `DismantlesTest` and `DismantleTests`. A full inventory dropping the rest at the player's feet and
-creative handing over nothing are Groundworks' too, kept here until its own tests hold them
-(5thlayer/groundworks#43). The red outline and that the Pick's plain click with no start still
-toggles a connection are a human check on delivery.
-And that Pipeworks' pipe is laid by Groundworks' Stretch (`PipeStretchTests`, #452,
-`stretch/PipeworksPipeLegs`): a flat stretch and one raised 3, which stacks 3 at the start and runs
-level after, lay exactly the plan, each pipe open to the next and no end open to the air, for one
-pipe a block. A pipe already beside the leg is joined both ways, and a pipe's Raise reaches the
-Pack's 16. The detour round a block and the refusal for too few items are Groundworks' `StretchTests`.
-Dropping the leg's own pipes from the links the plan draws turns the laying tests red, and not asking Pipeworks for
-the rest turns the joining test red. The pipes at an interior anchor are not joined yet (#467), and whether a
-stretch with a rise and a detour previews as it lays is a human check on delivery.
-And that a mining drill broken at its anchor or at any part, through the player's game mode, leaves
-none of its blocks standing and drops exactly one drill item. 26.1 removes a block entity before
-`affectNeighborsAfterRemoval`, so the part's teardown lives in `RigPartBlockEntity.preRemoveSideEffects`;
-moving it back to the block turns both part tests red.
-The Overload Limit's rule is `OverloadLimitTest`. `AssemblerOilChainTests` holds what the Pack owns of its chemistry
-and oil recipes on Craftworks' Assembler (#644, ADR-0125), which is how they meet Pipeworks: with a creative
-pole beside it, an Assembler 2 with a segment of petroleum gas on one connection and coal in its slot makes
-plastic, and one with a segment of water on a connection of the edge it faces and sulfur and iron in its slots sends
-sulfuric acid out of a connection of the opposite edge through a pipe to a storage tank. An Assembler 3 on advanced oil
-processing, with water and crude from two tanks on its fourth and sixth connections, sends heavy oil, light
-oil and petroleum gas out of the first three through pipes into three tanks, one fluid to a tank and in
-whole crafts of 25, 45 and 55 mB. Craftworks 0.7.0 spaces the six connections, so no two pipes touch and the
-test closes no pipe side. The connections have no direction and the Assembler pushes through them in
-`FluidLayout.ASSEMBLER`'s order, so the products leave by the first three and the supplies stay full. Craftworks' own GameTests hold the Assembler, and none asserts on art
-(ADR-0119). And that the screen's status (#332) is recomputed on
-each ask, with no tick between, and names an empty buffer only once nothing earlier in the craft
-cycle stops the machine; forcing the power probe true turns it red. The precedence is
-`AssemblingStatusTest`, and the energy figures' split across 16-bit data slots `DataSlotHalvesTest`. A pole reaching only one hull block of a footprint machine still finds it: the hull blocks have
-no block entity, so they resolve to the anchor through `EnergyOwnerBlock` in `SupplyAreaScan`, and
-without it one machine counts as more than one. Each was checked against the defect it exists for: dropping
-the furnace's `journal.updateSnapshots` call, restoring #266's `return 0`, and deleting the
-furnace's `Capabilities.Energy.BLOCK` registration each turn two or three of them red.
-`tests/pack/test_energy_faces.py` and `tests/pack/test_capability_registration.py` are the static
-half and read source text, so they cannot see any of those three.
-
-Two decisions are recorded rather than assumed. The platform generator has a `--check`, like every
-other generator here, but **no test file owns it**: the template has no corpus, no tuning dial and
-no input to go stale against, so the `--check` is the whole of the guard. And the GameTest run is
-in no batch — this repo has no aggregate runner, and this is the one check that builds the mod and
-boots a server, so it is run against a change that touched mechanism. Run it after editing
-anything under `core/energy/`, `core/smelting/`, `core/fluid/`, `core/oil/`, `core/placement/`,
-`core/reach/`, `core/dismantle/`, `core/stretch/`, `core/worldgen/` or `core/gametest/`.
-
-## Wreck check
-
-The wreck's blocks, the hull with its stairs and slab, the window and the cargo hold, have hardness -1 and no item
-(ADR-0107, #544). The hold's slot count is Factorio's `crash-site-spaceship` `inventory_size`:
-`scripts/factorio-container-extract.py` writes `data/factorio/container.json`, and
-`scripts/build-wreck-assets.py` copies the row into the resource `CargoHoldCorpus` reads and writes
-the blocks' blockstates, models and lang names. The **Debris** is three blocks, one per Factorio size
-class, each breakable for nothing in its class's `mining_time` by hand: the extractor writes the
-`crash-site-spaceship-wreck-*` rows, the generator copies each class's time into the resource
-`DebrisCorpus` reads, and `DebrisCorpusTest` holds the hardness to Factorio's seconds on both Picks
-(#550). `tests/pack/test_wreck_assets.py` runs its `--check`,
-holds the copy to the corpus field by field, holds the corpus to the hopper screen's five slots and
-holds the blocks to no item; `CargoHoldCorpusTest` is the parse. `gametest/WreckTests` holds a
-survival player breaking each block through the game mode, the hold's face taking and giving on
-every side on both overloads, its contents through the save hook, and the spawn on the wreck's
-floor (#545). The hold is ten blocks, 5x2, and stores no offsets, since the template is rotated per
-world (#548): the `anchor` boolean marks the one block with a block entity, and `HoldAnchor`, whose
-walk is `HoldAnchorTest`, finds it from any part by a bounded flood fill. The Item face is
-registered on the block, so every part answers with the anchor's inventory. `WreckTests` builds the
-hold along x and along z and holds an insert through any part, on both overloads, to coming out of
-any other, a hold with no anchor or two to answering nothing, one block entity in ten, and a
-survival break of a part or the anchor to leaving it standing, and a survival break of each debris
-block to removing it with no drop. Resolving a part to itself, giving
-every block a block entity and registering the face on the anchor's type each turn tests red.
-The blocks' textures are `scripts/build-wreck-textures.py`'s, from unused-textures' art under
-`data/art/`, deriving the scorched hull and the window (#551); the same test runs its `--check`.
-Run them after editing `core/wreck/` or either generator. How the blocks look is a human check on delivery.
-
 ## Recipe name check
 
 The corpus holds no Wube text (ADR-0103, #303), so a chemistry or oil-processing recipe is named from what
@@ -217,123 +22,22 @@ cracking"), and `%s` for every other, which is filled with the product.
 `tests/pack/test_recipe_names.py` runs the `--check` and re-derives both halves from the corpus,
 holding the keys to the emitted recipes both ways. Run it after any converter run.
 
-## Overload Limit check
-
-The furnaces read the Overload Limit's constants (#517) from `factoryworks_core/machine/overload.json`,
-hand-owned data since #599. Factorio's crafting machines are Craftworks', and carry their own figures.
-`OverloadLimitTest` holds the rule with typed figures.
-
-## Replace group check
-
-Which blocks may Fast Replace which (ADR-0082) is `factoryworks_core/placement/replace_groups.json`,
-hand-owned data since #599. `tests/pack/test_replace_groups.py` holds each key to a block the pack
-has a blockstate for or a jar registers, and names #299's three families. `ReplaceGroupsTest` covers
-the parse and the same-group rule.
-
 ## Building tag check
 
 What the player breaks at full Reach (16) rather than vanilla's 4.5 is the
 `factoryworks:buildings` block tag (#413), hand-owned data since #599. `tests/pack/test_building_tag.py`
 names the families the rule exists for and refuses anything a player digs up close.
-`ReachTests` holds the rule in a world: through `handleBlockBreakAction`, stone 6
-blocks off is refused with the block and inventory unchanged, a Stone Furnace 6 off and stone 4 off
-break, and so does a burner drill's part 7 off, since a footprint's or a rig's part answers as its
-anchor. Dropping the listener turns the first red, and dropping the part's resolution the last. Only
-a break's start is refused, with vanilla's 1.0 of server lenience, so a start the client allowed is
-never refused behind it. An Oritech machine core is not synced its controller, so the client refuses
-one beyond 4.5. On the client a refused start is attacked as a miss (`mixin/minecraft/MinecraftMixin`),
-swinging once the way vanilla does out of reach rather than cracking the block every tick; that is a
-human check on delivery. Run them after re-extracting the corpus or editing the item map.
-
-## Placement plan check
-
-Placement is computed as a **plan** and executed separately (#297, ADR-0069): a `PlacementPlan` is
-the positions a held item would fill, the blockstate at each, and a refusal or none. The preview
-draws a plan and the click executes one, so the two cannot drift -- a preview that lies is worse
-than none, because a player builds against it. The plan, its drawing and the vanilla plan
-(deferring to `BlockPlaceContext` for facing, replaceable blocks and state survival) are the
-Groundworks library's, which the pack compiles against as its own pinned jar (#446, #465). `Placements.planFor` is the one entry point, and every `factoryworks:` block, and every
-other block with a facing, an axis or a rotation (`Oriented`, #450), is opted into the vanilla plan in
-`FactoryWorksCore`; a door or bed draws one half, an accepted quirk. Only an item whose placement is *not* vanilla's implements
-`PlansPlacement` -- the rig's footprint, the pump's dry site -- and its refusals are `PackRefusal`.
-What the pack draws beside a plan is `placement/client/`, on the library's `PlacementPreviewEvent`:
-the mining area as an `Overlay`, a family dismantle as a `Takeover`. A pole's column plan, its
-supply area and its wires are Wireworks' (#476).
-
-`gametest/PlacementPlanTests` is the check ADR-0069 asks for by name, and the only one that can
-exist: ask each item for a plan, then use the block the way a player does, then hold the world to
-what the plan promised. An accepted plan must have put **every** block down in the state it named; a
-refused plan must have changed **nothing**, which is read before the gesture as well as after,
-because "nothing changed" is not the same claim as "the positions are empty". Both halves are load-
-bearing -- the preview's two failure modes are promising a placement that does not happen and
-refusing one that does. Each test was checked against the defect it exists for: forcing the rig's
-footprint to always fit turns one red, flattening the rig to a single layer turns two more, and
-dropping the pump's water question turns one. A belt piece plans itself, and
-Beltworks' GameTests hold it, and an Assembler's is Craftworks'. Two fixtures are load-bearing rather
-than arbitrary -- the rig's size is compared against `RigGeometry`'s own footprint rather than a
-floor, and the rig's obstruction sits a block *up*, where a player cannot see it. The geometry
-underneath stays Minecraft-free (`RigGeometry`) and is unit-tested there.
-
-A Fast Replace is a plan too (#388, ADR-0082): its `replaces` names the block it swaps out, and
-`PlacementPlanTests.Replaces` asks for it, clicks, and holds the world, the new furnace's contents and
-the inventory to it -- Stone to Steel and back, a burner to Electric and back with the fuel handed
-over, the last held item's freed slot, and a full inventory refused with nothing changed and the
-reason on the action bar. A sneak places beside, and a same-tier furnace or another group's block
-replaces nothing. Skipping the handover or letting the inventory check pass turns three red. The
-blue the preview draws a replace in is a human check on delivery.
-A pole column's replace is Groundworks' Fast Replace through Wireworks' `PoleColumnReplace`, held by
-Wireworks' own GameTests. The Pack states only the group (#476): `FactoryWorksCore` passes the
-builder to `FastReplace.group` with the blocks `ReplaceGroups` puts in Factorio's `electric-pole`.
-`PlacementPlanTests.PoleReplaces` holds that statement: a medium pole replaces a small column, and a
-substation does not. Dropping the statement turns the first red.
-An Assembler's Fast Replace is Craftworks' `AssemblerReplace` (ADR-0118), so the Pack holds none.
-
-Run it after editing anything under `core/placement/`, and re-run `scripts/check-datapack-load.py`
-too when the platform moves, since the same server reads it.
-
-The platform grew from five blocks tall to seven so a column can reach `MAX_SEGMENTS`; re-run
-`scripts/build-gametest-structures.py` if it moves again. Whether the preview **draws** correctly is
-a human check on delivery -- no check here claims it, and the library draws on
-`SubmitCustomGeometryEvent` rather than the `RenderLevelStageEvent` ADR-0069 names, because 26.1's
-collector pipeline is reached through the former.
+Run them after re-extracting the corpus or editing the item map.
 
 ## Felling check
 
-A tree is one entity holding an amount, and one gesture takes it whole (ADR-0051). Three checks,
-none of which launches the game. `mod/src/test/java/com/factoryworks/core/felling/` is the rule:
-`TreeShapeTest` is the fill over a block-position graph — it terminates on a ring of logs, respects
-each of its three bounds, refuses a mid-trunk block, refuses a log cabin (no naturally-grown leaf),
-never descends below the base, and does not cross into a touching canopy, which is vanilla's leaf
-`distance` doing the work. `FellingCostTest` is the arithmetic: `amount × 0.1375s`, halved by
-the Steel Pick, and a four-log tree costing Factorio's own 0.55s exactly — the rate is asked of
-`TreeCorpus` rather than typed, because `0.5/4 = 0.125` is the *dead* trees' and the plants' rate and
-#205 was written against it. `tests/factorio/test_tree_extract.py` re-derives the rate from the
-corpus and names the three prototypes the discriminant must exclude, each of which yields a
-different plausible-looking wrong number. `tests/factorio/test_pack_recipes.py` carries the
-`fellable` tag: a `TagKey` whose JSON is missing resolves to an empty tag rather than an error —
-every tree silently stops felling. Re-run `scripts/factorio-tree-extract.py` and then `scripts/build-tree-assets.py`
-after a dump refresh; the second is the copy the mod reads. Whether a tree falls in a running game
-is a world load.
-
-## Starting kit check
-
-The pocket `docs/spec/terra-progression.md` specifies is granted once per *player* by `core/start/`,
-not once per join, and the hold is put in the wreck's cargo hold by `TerraStartingArea`'s stamp, once
-per world (ADR-0107, #546). `gametest/WreckTests` finds the cargo hold the server stamped around the
-level's spawn and holds it to exactly `StartingKit.HOLD`; removing the stamp's fill turns it red.
-A grant that re-fires on login is an unlimited iron supply and would invalidate every pace reading
-after the first relog (#203). Two static checks, neither of which launches the game. `tests/pack/test_starting_kit.py` asserts every granted id resolves — ours
-against the tier enums that produce the registry paths, every foreign one against the installed jars
-(none today), the hold against
-`data/pack/item-map.json` — and that the pocket is the spec's pocket and the hold exactly the spec's
-three items: an id that names nothing is a silent empty slot, and the moment the hold holds a green
-circuit rung 0 has stopped being taught. The foreign loop filters by namespace rather than by id, so
-it is the assertion that a borrowed id resolves at all and the next borrowed pocket entry has to
-pass it too — which is what `gtceu:prospector.lv` stopped doing when GregTech left.
-`mod/src/test/java/com/factoryworks/core/start/` is the once-per-player rule and the flag's
-codec round trip, which are Minecraft-free because the kit names items by string. Run both after
-editing `core/start/` or the spec's Opening. Whether the kit is in the inventory at spawn is a
-world load.
+A tree is one entity holding an amount, and one gesture takes it whole (ADR-0051).
+`tests/factorio/test_tree_extract.py` re-derives the rate from the corpus and names the three
+prototypes the discriminant must exclude, each of which yields a different plausible-looking wrong
+number. `tests/factorio/test_pack_recipes.py` carries the `fellable` tag: a tag whose JSON is
+missing resolves to an empty tag rather than an error, and every tree silently stops felling.
+Re-run `scripts/factorio-tree-extract.py` after a dump refresh. Whether a tree falls in a running
+game is a world load.
 
 ## Fuel table check
 
@@ -343,11 +47,8 @@ into `kubejs/data/factoryworks/fuel/`, and nothing is decided in the script: a f
 item-map row, an `undecided` one or a fluid is a *recorded skip*, printed with its reason.
 `tests/factorio/test_fuel_convert.py` asserts every decided fuel has a row and nothing else does,
 that `uranium-fuel-cell` fails on category as well as on its row, that coal's row still buys 888
-whole ticks at the Stone Furnace's own 4,500 J/t, that `wood` arrives as the tag `minecraft:logs`,
-and that the mod's listener reads the folder the converter writes. The arithmetic and the
-default-deny rule are `FuelBufferTest` and `FuelTableTest` under
-`./gradlew :factoryworks_core:test`. Run all three after re-extracting the corpus, editing the
-item map or touching `core/smelting/`. Whether a furnace burns a log in a running game is a world
+whole ticks at the Stone Furnace's own 4,500 J/t, and that `wood` arrives as the tag
+`minecraft:logs`. Run it after re-extracting the corpus or editing the item map. Whether a furnace burns a log in a running game is a world
 load. See `docs/testing/fuel-table-check.md`.
 
 ## Hand recipe check
@@ -359,40 +60,20 @@ flag for a first Factorio category of `crafting`, as do the stock re-authoring, 
 recipes are written with it. `config/craftworks-server.toml` names no Lock source, so every recipe
 is unlocked from the start (ADR-0126). `tests/factorio/test_hand_recipes.py`
 re-derives the set from the corpus, holds every emitted recipe to it, and asserts the
-`factoryworks:hand/*` copies, their generator and `withHandCopies` are gone. `gametest/HandSetTests`
-holds that Craftworks plans every hand-craftable recipe the server loaded.
+`factoryworks:hand/*` copies, their generator and `withHandCopies` are gone.
 
 `tests/factorio/test_hand_resolver.py` is the corpus half: all 113 category-`crafting` recipes
 resolve to plans bottoming out in the 21 known leaves, no item has two hand recipes (the resolver
 picks a route with no cost model), and there are no cycles. It reads `data/factorio/recipe.json` and
 fails the day a regeneration adds a recipe nothing hand-makes.
 
-## Terra water fixture
-
-`gametest/WorldgenFixtureTests` is the world-load fixture harness (#356), in the GameTest run's
-default set. The GameTest world is flat, so each test decodes the datapack's own
-`minecraft:dimension/overworld.json` and samples ±4096 at 128-block spacing, on three seeds, through
-the biome source and `getBaseHeight`, without generating a chunk. It takes about a second. Each body
-is a `WaterFixture` row, and a new body adds a row, not harness code. `WaterCensus` holds the
-verdict and is unit-tested as `WaterCensusTest`. Terra's row asserts that water is 20–32% of the
-map, that the Sea sits on the water and the water under the Sea (at least 90% each way), that the
-Shore is at most 5%, that the shelf is 8–25% of the water and every other water column reaches the
-bedrock band, and that no water lies within `TerraStartingArea`'s reach of the spawn search's
-point. The terrain's thresholds in `scripts/build-terra-worldgen.py` are tuned against it, and the
-test logs each seed's continentalness quantiles for that. Run it after editing that script, whose
-`--check` asserts the generated files are current. Terra's pre-#356 noise and the old sea point
-each turn all three tests red.
-
 ## Terra spawning check
 
 Terra spawns no vanilla mob on its own (#480, ADR-0093). `tests/worldgen/test_terra_spawning.py`
 runs `scripts/build-terra-worldgen.py --check`, then asserts every biome the live dimension and world
 preset name has empty spawner lists and that the noise settings' `disable_mob_generation` is on.
-`gametest/SpawningRuleTests` holds the other half: a new world starts with the spawn game rules
-`core/worldgen/VanillaSpawning` turns off. The GameTest server turns `spawn_mobs` off itself, so
-only the other three can fail there. Whether a night on Terra passes with no mob is a human check on
-delivery. Run the static check after editing the generator, and the GameTest run after editing
-`VanillaSpawning`.
+Whether a night on Terra passes with no mob is a human check on delivery. Run it after editing the
+generator.
 
 ## Starting-area geometry check
 
@@ -413,9 +94,7 @@ size class and kept off the wreck, the pool, the doorway's line, the hold's face
 (#550). `TerraStartingArea` reads none of that: it
 puts the spawn point on the floor at the hub's centre facing template +z turned by the hub's
 rotation, and the hub's processor list lays the wreck's box on one height. A doorway moved or a
-level box that misses the wreck fails here; the stamp itself is a world. `PlayerSpawnFinderMixin`
-returns that spawn point unscattered at its own height, and `WreckTests` holds `findSpawn` to a
-roofed room's floor; removing the mixin turns it red. Waking inside, respawning inside and seeing
+level box that misses the wreck fails here; the stamp itself is a world. Waking inside, respawning inside and seeing
 the fields from the doorway are a human check on delivery.
 
 It is the only check standing behind the opening, and it cannot see the opening being *absent*:
@@ -424,48 +103,6 @@ the pools, the processor list and the hub's jigsaw names are referenced from
 with those five files parked, which reached a new world as no hub, no water and no patches, and
 one `No template pool` line at server start. No check was added for it (#313's own decision); the
 symptom is a new world.
-
-## Ore amount checks
-
-An ore block carries an amount and a break draws one unit (ADR-0041). That is four checks, none of
-which launches the game: `amounts.json` is hand-owned data (#600), so no check compares it to a corpus;
-`mod/src/test/java/com/factoryworks/core/ore/` asserts a block pays out exactly what it holds
-and that an exhausted position retires its delta, since a delta left behind is inherited by the next
-block placed there; `tests/pack/test_ore_assets.py` asserts a blockstate variant per stage,
-that every ore block is in `c:ores`, and resolves every drop against the installed jars, since an
-id nothing registers pays air rather than throwing (#321);
-`MiningSpeedTest` asserts a field costs its *amount* times the tier's seconds rather than its
-block count; and `OutfieldAmountTest` asserts an outfield disc's uniform amount, read at its centre's
-distance from origin with no cap. Run
-them after editing anything under `core/ore/` or the two ore generators. See `docs/testing/ore-amount-check.md`.
-
-## Outfield disc check
-
-Every patch beyond the starting area is a surface disc placed by worldgen (#320, ADR-0045): one
-`factoryworks:outfield_disc` structure and one `random_spread` structure set per resource,
-uranium included (#321). The structure and structure-set JSON under `kubejs/data/factoryworks/worldgen/`
-is hand-owned (#600) and no static check holds it; `OutfieldDiscTests` resolves each set from a
-running server. The footprint is `OutfieldShapeTest`, Minecraft-free:
-each column is asked for its own biome, because vanilla asks only at the centre and a coastal disc
-would run onto the seabed, and the column mask is saved with the piece so placement never
-recomputes it.
-
-`gametest/OutfieldDiscTests` is the world half, in the GameTest run's default set. For each
-resource it resolves the structure set out of the server's registry by id, generates a disc about
-2,300 blocks out with a tree on its centre, and places it chunk by chunk the way `/place` does. It
-also records the start in its chunk, which `/place` skips. Then it asserts every column holds
-exactly the shape's ore, one deep and flush with the terrain, and that the centre's ore is under the
-trunk. It asserts that the placed count is the piece's stored count, that the reach fits the law's
-radius for the disc's size and distance, and that nothing reaches the pack's saved data. Breaking a
-block reads `amountPerBlock` back through the structure manager, which is the only check that
-reaches #319's read path. A second test per resource generates every chunk within 150 blocks of the
-origin and gets no start, and a third generates against the structure's own biome predicate on the
-flat world's plains and gets none. An off-by-one count, placing on the heightmap instead of walking down to
-the ground, a second block below, the wrong resource's ore, a doubled radius, a density fade from 0
-instead of from 150, and a read path that skips the piece each turn their test red. The GameTest
-world is all plains, so a column-by-column confinement is `OutfieldShapeTest`'s alone. Whether discs
-land on real terrain across Terra's biomes is a world load. Run both after editing `core/ore/`, the
-disc's structure or piece, or the generator.
 
 ## ADR back-links
 
@@ -542,11 +179,8 @@ that file's `baseline`. Static; no game launch. `researchd` and `portingdeadlibs
 though both mods are gone (ADR-0126), so neither grows back; Craftworks' generated comment in
 `config/craftworks-server.toml` still names its `researchd` Lock source.
 
-Each namespace has two counts, each with its own baseline: the data count below, and a Java count
-(`java_baseline`).
-
-The data count is the sum of three things. Each `<ns>:` occurrence in a text file under `kubejs/` (not
-`kubejs/parked/`, which is never loaded), `mod/src/main/resources/`, `config/`, `data/pack/*.json`
+The count is the sum of three things. Each `<ns>:` occurrence in a text file under `kubejs/` (not
+`kubejs/parked/`, which is never loaded), `config/`, `data/pack/*.json`
 (not the baseline file) and `mods/*.pw.toml`, and in `index.toml`. Each of those files whose path,
 lowercased with `-` and `_` removed, contains the namespace, so `mods/ftb-materials.pw.toml` and
 `config/oritech-common.toml` count once each. Each `index.toml` `file = "..."` line whose path matches
@@ -554,150 +188,10 @@ the same way. `data/jars/` is an extract of the installed jars, not shipped data
 tracked files count, since the game writes untracked client configs that would make the count
 differ between checkouts.
 
-The Java count covers `mod/src/main/java` and `mod/src/test/java`. It is the sum of every `import` or
-`import static` line of the namespace's package root (`rearth.oritech` for `oritech`,
-`com.portingdeadmods.researchd` for `researchd`, `com.portingdeadmods.portingdeadlibs` for
-`portingdeadlibs`) and every `"<ns>:` string id. `railcraft` and `ftbmaterials` have no package root,
-since the Pack has no Java against them, so they count string ids only. The roots are `JAVA_PACKAGES` in
-the guard.
-
-A count, data or Java, above its baseline fails: a new reference to a mod the Pack is leaving. A count below it
+A count above its baseline fails: a new reference to a mod the Pack is leaving. A count below it
 fails too, naming the number to lower the baseline to, so a slice that removes references records
 the gain in the same commit and nothing can later grow back into the headroom. Run it after
 removing a third-party content mod's references, or adding anything that names one.
-
-## Transfer-face check
-
-`tests/pack/test_transfer_guards.py` asserts every item and fluid face in the mod is reachable by
-both of the transfer API's overloads. NeoForge states `insert` and `extract` twice -- once naming a
-slot, once meaning "anywhere it fits" -- and `DelegatingResourceHandler` forwards the second pair
-straight to its delegate, so a subclass that refuses a slot is simply not consulted by a caller
-that does not name one. Every face here is a refusal (the furnace, the Boiler and the rig refuse
-extraction from what they are burning), so all of them are built on
-`core/transfer/GuardedResourceHandler`, which overrides both slot-less methods to loop back
-through itself. The check is the rule that `DelegatingResourceHandler` is named once, inside the
-guard. It is a source-text check because NeoForge is deliberately off the unit-test classpath.
-Whether a pipe actually respects the refusal is a world load.
-
-## Capability registration check
-
-`tests/pack/test_capability_registration.py` is the other half of the transfer-face check (#265):
-that half asserts a face which *is* registered refuses correctly on both overloads, and this one
-asserts the face exists at all. A machine whose registration is missing is not broken, it is
-**inert** — it places, ticks and renders, and no pipe, funnel or pole ever reaches it, with nothing
-thrown and nothing logged. Two seams make that reachable: a block entity type is declared in
-`BLOCK_ENTITIES.register` and its faces in `registerCapabilities`, with no compiler relationship
-between them, and both event handlers are reached only by an `addListener` line in
-`FactoryWorksCore` — dropping that one line makes every machine in the mod inert at once.
-`FACES` and `ITEM_FACES` are the recorded tables of which type gets which faces, listed rather
-than discovered so that a new machine fails here instead of being answered "none"; a type that
-genuinely wants no face records an empty tuple, which is then a decision somebody wrote down.
-`ITEM_FACES` is asserted by *counting* `event.registerItem` calls rather than by matching their
-shape, because the next one will be spelled differently and a shape-matching regex would let it
-past — which is the failure the table exists to catch. Three assertions are the pack's own rather
-than generic plumbing — each of
-the **ladders** registers for every tier off its own
-enum (a loop over fewer ships the remaining tiers inert, and the face assertion cannot see it
-because the spelling is still there), the rig's **parts** answer as well as its anchor (which
-corner holds the anchor is not visible, so a hopper under the wrong one finds nothing), and the
-Barrel's face is on the **item**, in `PFItems`, where no block-side assertion reaches.
-#265's own criterion — that the faces are the Transfer API's rather than the legacy system's — is
-carried by the positive half, each recorded face asserted to be spelled `Capabilities.<Kind>.BLOCK`.
-The legacy spellings are asserted absent too, but that half is a marker rather than a guard and
-says so: none of those names resolves on this NeoForge and GregTech's jars left with ADR-0060, so
-the compiler catches a backslide first. Source-text for the reason the guard check is:
-`RegisterCapabilitiesEvent` is a NeoForge type and the test source set has no NeoForge on it by
-design. Whether a pipe placed against a Boiler moves steam is a world load.
-
-## FE face check
-
-`tests/pack/test_energy_faces.py` is one layer in from the capability-registration check: that one
-asserts the furnace *has* an `Energy` face, and this one asserts the face does
-anything when a pole inserts into it. The failure shipped (#266) — the furnace's `insert` was
-`return 0`, carried over from the EU buffer where refusing insertion kept a GregTech cable and
-ADR-0036's pole from meeting at one block. With FE the pack's one currency there is no second route
-to refuse, and the line only meant the Electric Furnace could never be powered by the one thing
-built to power it, with nothing thrown and nothing logged. The other half is the snapshot: the pole
-measures a machine's room with an insert it then **aborts**, so a face that takes energy without
-journalling keeps a probe's worth every tick and runs on power nobody spent.
-`core/energy/LongSnapshotJournal` is where that rule is spelled, and it is asserted to be spelled
-once, the way `GuardedResourceHandler` is. Source-text for the same reason: `SnapshotJournal` and
-`TransactionContext` are NeoForge types and the test source set has no NeoForge by design. The
-arithmetic under the faces is `FurnaceEnergyBufferTest` and `EnergyLedgerTest`. Whether a pole
-placed beside an Electric Furnace lights it is a world load.
-
-## Offshore Pump check
-
-`tests/pack/test_pump_assets.py` asserts the one block water enters the factory through (#213,
-ADR-0050). `fluid/pumps.json` is hand-owned data (#599). The check holds the seam the asset hops
-cannot see: that `pumping_speed` is still 20 and the energy source `void`, so ADR-0050's "one pump feeds twenty boilers" has not quietly changed meaning; that
-the item-map row names the block now that it exists; and that the **refusal message** has a lang key,
-read out of `OffshorePumpItem` rather than typed, because a missing one renders the raw key on the
-very gesture the message exists to explain.
-
-The rule itself is Minecraft-free and lives under `mod/src/test/java/com/factoryworks/core/fluid/`:
-`OffshorePumpSitingTest` is the predicate — one adjacent source, flowing refused, no minimum size —
-and `OffshorePumpSpecTest` the two tick rates, which are the easiest thing here to get wrong, since
-`pumping_speed` is stated per *Factorio* tick and its value happens to be Minecraft's tick rate.
-`PumpCorpusTest` closes the loop by parsing the resource. Whether a pump placed against
-the hub pool actually feeds a pipe is a world load.
-
-## Boiler check
-
-Terra's Boiler is the burner model's third customer (#224, ADR-0048): fuel and water in,
-low-temperature steam out. Two checks, neither of which launches the game.
-`mod/src/test/java/com/factoryworks/core/fluid/` holds the arithmetic and the stall —
-`BoilerSpecTest` is the rate, and every figure in it is reachable by a wrong route that looks
-right: the rise is paid for at **steam's** 0.2 kJ and water's is ten times larger (6 mB/s instead
-of 60), and `energy_consumption` is per *second* against a buffer drained per tick. `BoilerCycleTest`
-is the stall #224 names as mattering as much as the rate — a full steam tank makes no steam, burns
-no fuel and, because water and room are asked *before* the fuel buffer is, lights no item either;
-a boiler quietly eating coal into a full tank is a leak with no symptom.
-`tests/pack/test_boiler_assets.py` is the pack side: every `facing` and the gauge's lang keys, that `boiler`'s
-item-map row is `authored` and names the block the mod registers rather than the LP Solid Boiler it
-replaces, and a **second, independent derivation** of the 60 mB/s from `fluid/steam_chain.json`, hand-owned
-data since #599. Run both after editing `core/fluid/` or that file. Whether a placed Boiler
-boils water is the third check, `gametest/BoilerTests` (#274, #593): that a Boiler with water in
-its front row, fuel and room in its steam segment makes 3 mB a tick and spends the same water
-doing it -- unit for unit, since Factorio's boiler is a temperature change and not a reaction;
-that the item face takes fuel and hands nothing back; that the three front blocks are one 600 mB
-water segment, the back middle a separate 200 mB steam segment and the back corners in none (a
-water row sharing the steam port's segment would launder water through a machine that consumes it);
-and that no block answers a fluid capability. The rate is typed rather than read from
-`BoilerSpec`, the way `EnergyFaceTests`' furnace demand is -- reading it off the spec would make
-the test agree with the spec by construction. `gametest/SteamChainTests` (#593) is the chain on
-Pipeworks: a pump, a pipe, the Boiler, two pipes and an Engine make power; water passes through one
-Boiler's front row to a second; and a pipe that would join the steam to the water row waits outside
-both segments and moves neither.
-
-## Fluid colour check
-
-Core registers the oil and chemistry fluids (ADR-0109, #619): crude, heavy oil, light oil, petroleum gas,
-lubricant and sulfuric acid. Crude is drawn from malcolmriley's unused-textures sprite under a tint typed in
-`OilFluidClient` (#557); the other five from Oritech's sprites under the tint in
-`factoryworks_core/fluid/tints.json`. The tint file and the sprites are hand-owned data (#599).
-`tests/pack/test_fluid_tints.py` asserts the resource names the five fluids, that `OilFluidClient`
-draws each, that Core registers each with its flowing form and block, that each is named as Factorio
-names it, and that no recipe, tag, item-map row or index names an `oritech:still_*` fluid.
-`FluidTintCorpusTest` covers the parse. Run both after editing a fluid row in the item map or the
-tint file. Whether the colours read right in a
-running client is a human check on delivery.
-
-## Steam Engine check
-
-The Steam Engine is a Core block entity (#282, #594, ADR-0062, ADR-0116), placed and broken as one
-footprint (#352). The HUD's status precedence is `SteamEngineStatusTest`. `SteamEngineSpecTest` under
-`./gradlew :factoryworks_core:test` is the arithmetic, read from `SteamChainCorpus`: one engine burns
-30 mB/s and makes 450 FE/t **over whole ticks** -- a segment moves whole millibuckets and 1.5 mB/t
-floors to 1, so the spec carries the fraction -- and the port and buffer are 200 mB and 450 FE. A
-buffer of one tick's output would floor a pole-drained engine to whole 300 FE millibuckets (300 FE/t),
-so the burn keeps the millibucket that starts inside the room and carries its overshoot as energy
-(#292). `SteamEngineSpecTest` also holds a row on one segment: fed, each engine makes 450 FE/t;
-starved, the row burns what it is fed and no engine passes its rate. `SteamEngineNetworkTests` is
-that a pole draws an engine through a part, once; that the engine stands in a segment by its anchor
-alone, makes nothing from water and fills its buffer from steam; that its charge and carried
-fractions survive a save; and that a row's touching anchors are one segment, each engine drawing its
-own 450 FE/t when fed and none passing it when starved. Run the spec test after editing `core/fluid/SteamEngineSpec`.
 
 ## Blockbench model check
 
@@ -725,55 +219,14 @@ after editing a `.bbmodel`, anything under `data/art/models/`, or the generator.
 
 ## Radar check
 
-The Radar (#368, ADR-0079) is a 3x3x3 on the footprint seam that charts one 32-block sector per
-10 MJ into its owner's FTB team's chart. `tests/factorio/test_machine_extract.py` holds the `radars`
-row against the dump when it is on disk and re-derives 33.3 s per sector;
-`tests/pack/test_radar_assets.py` runs `scripts/build-radar-assets.py --check` and holds the mod's
-resource against the corpus and each ore's patch-marker lang key (#370). The rules are Minecraft-free under
-`mod/src/test/java/com/factoryworks/core/radar/`: the draw, the 10 MJ sector and the 250 kJ
-nearby pulse counted from the same draw (`RadarSpecTest`, `RadarEnergyTest`), the 9x9 nearby area
-and the long range's clockwise rings, unexplored first (`RadarSweepTest`), the 3x3x3
-(`RadarFootprintTest`) and the chart's round trip (`RadarChartsTest`). `gametest/RadarTests` is
-the world half: a pole-fed Radar has charted exactly its 9x9 by tick 100, nothing more at 640, and
-the fifth ring's top-left sector by 720, and a starved one charts nothing; dropping the pulse turns
-it red; its placement and break are in `PlacementPlanTests` and
-`FootprintBreakTests`. Without FTB Teams on the classpath, as in the GameTest run, a player is their
-own team. What each player's map is sent (#369) is `ChartDeliveryTest`: at login, on joining a team
-and on entering a dimension, exactly the team's sectors that map lacks, a sector at a time, and
-nothing twice. Which outfield patches a charted sector marks, by the disc's centre and never a
-starting field, is `SectorPatchesTest`, and which markers each player is sent -- every one of the
-team's chart and of their own walking that their client lacks, again after a logout since the client
-holds them in memory -- is `MarkerDeliveryTest` (#370), and the walked record `WalkedPatchesTest`.
-The same test holds the amount a marker carries: sent again only when a chart, re-scan or walk finds
-it changed, and once as a removal to every map holding it when the patch runs out, never to a map
-that did not (#371). What a patch has left is `PatchLedgerTest`, its hover text `PatchAmountTest`, and
-`gametest/OutfieldDiscTests`' `outfield_last_block_removes_its_marker` holds the world half: a
-charted disc sends its total, breaking all but one block and re-scanning sends one block's worth,
-and mining the last block out sends exactly one removal and nothing before it. The drawing calls FTB Chunks' internal `ChunkUpdateTask`, compiled against 26.1.2.8
-by name, and the GameTest run has no FTB Chunks, so it is also the check that the Radar charts
-without it. Whether the terrain and the patch icons appear on the big map and minimap is a human check on
-delivery.
-Run these after editing `core/radar/` or the generator.
+`tests/factorio/test_machine_extract.py` holds the Radar's `radars` row (#368, ADR-0079) against
+the dump when it is on disk and re-derives 33.3 s per sector.
 
-## Crude oil check
+## Oritech spring check
 
-Crude is infinite (#377, ADR-0081): an **oil well** holds an amount, a Pumpjack on it yields
-`10 × amount / normal` a cycle and takes 10 off it, down to the higher of 20% yield and 20% of the
-well's start. Crude's figures sit in `amounts.json` beside the ores, as hand-owned data (#600). The derivations are Minecraft-free under
-`mod/src/test/java/com/factoryworks/core/oil/`: `WellYieldTest` (yield, the 1,000 cap, the floor,
-the carried fraction), `OilFieldTest` (1/96 of the mask, 3 apart, ore columns turned away, the
-amount), and `PumpjackEnergyTest` and `PumpjackSpecTest` (45 FE/t, a 1.5 FE/t drain paid idle, a
-cycle per 900 FE). `oil/pumpjack.json` is hand-owned data (#599). `tests/pack/test_pumpjack_assets.py` holds the
-registered block names, the lang keys, and asserts Oritech's two `oil_spring` biome modifiers
-are overridden with a no-op -- NeoForge 26.1 has `none` for structure modifiers only. The field's
-structure set is hand-owned under `kubejs/data/factoryworks/worldgen/`. `gametest/OilFieldTests` places a field 2,300 blocks
-out and holds its wells to their drawn amounts, spacing and ground, with an iron disc on the same
-centre turning away exactly the wells on its columns; `PumpjackTests` holds a fed Pumpjack to 10 mB a
-cycle a second into its Pipeworks segment, reached by a pipe on any face and filling a storage tank
-through three pipes (#557, ADR-0110), and a starved one to nothing. Disabling the ore check or the
-well refusal turns its test red. Whether the scaled Pump model reads well and the oil-field icons
-appear on the FTB map is a human check on delivery. Run these after editing `core/oil/`, the oil
-field's structure or piece, or the pumpjack generator.
+Crude is infinite and the oil well is its only source (#377, ADR-0081).
+`tests/pack/test_oritech_springs.py` asserts Oritech's two `oil_spring` biome modifiers are
+overridden with a no-op -- NeoForge 26.1 has `none` for structure modifiers only.
 
 ## Enemy corpus check
 
@@ -814,8 +267,7 @@ target loadable, such as a machine #277 has not chosen, and a machine
 whose `recipe_type` is still null (the Centrifuge and the Rocket Silo). `--awaited` prints
 those deferred recipes by the id they will load under, which is how the duplication check tells a
 deferral from a typo.
-`tests/factorio/test_recipe_convert.py` is the static check and runs the converter's `--check`; the
-recipe *shape* is `scripts/check-datapack-load.py`'s. See
+`tests/factorio/test_recipe_convert.py` is the static check and runs the converter's `--check`. See
 `docs/testing/recipe-conversion-check.md`.
 
 ## 26.1 data-format check
@@ -841,21 +293,7 @@ the same three fields mechanically derived from the model beside it, and half th
 are hand-written with no generator to add the line to. An item wanting a tint, a range dispatch or a
 condition stops being this script's and becomes its subject generator's. Run its `--check` (the test
 does) after adding any item model. Whether the emitted files actually load is a datapack-load run
-with zero `Couldn't parse data file` lines; nothing reads the log today, and that is the rest of
-#273.
-
-`scripts/check-datapack-load.py` is that in-world half, and the only check here that reads a log.
-It runs the GameTest server — which loads the pack's whole `kubejs/` through KubeJS — and asserts
-the game did not reject any of it. A rejected file is one ERROR
-line at load and then an entry absent from its manager, which is the exact shape of #266's evening.
-It is also the only check that can see whether the **ids inside** a file name anything: it found
-`gcyr:mercury_rock`, a perfectly shaped stromatolite drop, naming an item whose mod left with
-ADR-0060 and passing every static check in the repo. Every rejection the log may hold is in
-`EXPECTED` with the ticket that owns it, and an entry that stops appearing fails too — a stale one
-is a guard nobody re-armed. `--rerun-tasks` is not optional: Gradle would otherwise call the run up
-to date, print no log, and the check would pass having loaded nothing. Like the GameTest run it is
-in no batch; run it after a converter change, after editing the dev runtime classpath, or after any
-edit to `kubejs/`.
+with zero `Couldn't parse data file` lines.
 
 ## Pack check restore
 
@@ -871,34 +309,13 @@ Run it after editing `scripts/pack-check.sh`.
 ## Sync CurseForge references
 
 `tests/pack/test_sync_curseforge.py` runs `scripts/sync-local-jars.py` over a scratch `~/.m2` and
-`mods/`, with stand-ins for CurseForge's listing, `packwiz` and Gradle. A listed file gets its
+`mods/`, with stand-ins for CurseForge's listing and `packwiz`. A listed file gets its
 metafile. An unlisted or unreachable one still pins and installs the jar, removes the older
 metafile and is reported pending. Plain `--check` passes on a pending row and `--check --strict`
 fails. A later plain sync fills the reference in, and a metafile that already names the pin is not
-queried again. FactoryWorks Core's metafile follows `mod_version` the same way, and fails `--check`
-when it names an older Core or hashes another jar than `~/.m2`'s. It exists so the Pack can take and
-test a Library released to `~/.m2` before the jar is uploaded, without ever exporting an older
-CurseForge file than its pin, or an older Core than the last released. Run it after editing
+queried again. It exists so the Pack can take and test a Library released to `~/.m2` before the jar
+is uploaded, without ever exporting an older CurseForge file than its pin. Run it after editing
 `scripts/sync-local-jars.py`.
-
-## Load-time codec check
-
-`tests/pack/test_load_codecs.py` is the other direction of the 26.1 format work (#273): the data
-checks assert the shape of the files the pack *emits*, and this one asserts the codecs in the jar
-that *read* them. The trap is `ItemStack.CODEC`, which in 26.1 is
-`Item.CODEC_WITH_BOUND_COMPONENTS`, and an item's components are bound during the same datapack
-load that reads the recipes -- so a stack decoded there fails with `Item ... does not have
-components yet`, one ERROR line, and the file is then absent from its manager. The emitted JSON is
-identical either way, which is why `test_data_formats.py` and `test_smelting_shape.py` are blind to
-it by construction, and a KubeJS `/reload` rebinds first, so it is a bug that exists only on a
-clean world load. It shipped once, on all four smelts, and #271's GameTest server found it.
-The rule is swept both ways: no class carrying a load-time registration (`RecipeSerializer`,
-`SimpleJsonResourceReloadListener`, `AddServerReloadListenersEvent`) may name a stack codec, and
-every other use is an `ALLOWED` entry with its reason -- one today, Jade's tooltip transport, which
-runs on a live server long after binding. A stale entry fails too. Source-text for the reason
-`test_smelting_type.py` is: the test source set has no Minecraft, so `ItemStackTemplate` is not
-nameable from a JVM test. Run it after adding a reload listener, a recipe serializer or any codec
-that decodes an item.
 
 ## Emitted smelt shape check
 
@@ -910,7 +327,7 @@ furnace that holds the item, holds power and never smelts. It shipped that way t
 cost #266's in-world check. `test_recipe_convert.py` could not see it: it runs the converter's
 `--check`, which re-runs the converter and compares the output to what the converter would emit —
 self-consistent by construction and blind to a shape Minecraft rejects. The assembling recipes'
-shape is `test_data_formats.py`'s and `check-datapack-load.py`'s. Run it after any
+shape is `test_data_formats.py`'s. Run it after any
 converter change. A KubeJS reload is enough to see the fix in a running game — no restart.
 
 ## Stock-recipe sweep
@@ -952,16 +369,15 @@ is checked against the corpus and these are checked against nothing otherwise �
 converter still lists `pack` as foreign, which its own check reads from it rather than restating (a
 run that forgets deletes them, and the sweep leaves no stock pickaxe to fall back on), that both land on a surface
 `recipe_survivors.js` admits and carry `category: crafting` and `hand_craftable` so the Personal Assembler
-plans them at rung 0, that the steel recipe consumes the iron pick, and that each registered tier
+plans them at rung 0, that the steel recipe consumes the iron pick, and that each Pick
 has its model, texture, lang key, `c:tools/wrench` and `groundworks:dismantles`, the two tags that
-carry its verbs, that `groundworks:dismantles` holds nothing else (#448), and the block tag the jar asks for by name. Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
+carry its verbs, that `groundworks:dismantles` holds nothing else (#448). Both sprites are vanilla's own — the Iron Pick's `iron_pickaxe` and
 the Steel Pick's `netherite_pickaxe` (#241, applied on #323). The Steel Pick used to wear GTCEu's
 Damascus Steel pickaxe, flattened by a generator because GT's tool art is three greyscale layers
 that only become a material under a colour handler our item never reaches; GregTech left with
 ADR-0060 and took the source with it, so `scripts/build-pick-textures.py` and its `--check` are
-gone rather than restated. The tier list is read out of `PickTier.java`. The pick's arithmetic —
-that Factorio's seconds survive Minecraft's break-time formula — is `MiningSpeedTest` under
-`./gradlew :factoryworks_core:test`. Whether the Pick mines every block class is a world load. See
+gone rather than restated. The two Picks are named in the check. Whether the Pick mines every block
+class is a world load. See
 `docs/testing/hand-written-recipe-check.md`.
 
 ## Stock recipe re-authoring check
@@ -1017,8 +433,8 @@ ADR-0102): code LGPL-3.0-only, the Pack's content CC BY 4.0, Wube's corpus under
 third-party files under their own. No file carries an SPDX header. `tests/pack/test_licensing.py`
 implements `reuse lint`'s rule, since that tool needs libmagic and CI runs it, and holds the
 boundaries a glob edit can silently move: the corpus never under the Pack's licences, each art
-credit in `NOTICE` resolving to the licence `NOTICE` names, the mod declaring what the map
-gives it, and `.packwizignore` leaving the licence texts in the upload. The core jar bundles them too. Run it after adding a file of a new kind, any third-party art, or an edit to
+credit in `NOTICE` resolving to the licence `NOTICE` names, and `.packwizignore` leaving the licence
+texts in the upload. Run it after adding a file of a new kind, any third-party art, or an edit to
 `REUSE.toml`.
 
 ## Art provenance check
@@ -1028,8 +444,8 @@ is (#564, ADR-0122): `drawn`; `vendored`, with its `source` and `licence`; `stan
 `subkind` of `placeholder`, `procgen` or `ai` and its `generator`; or `unknown`, for what no
 `REUSE.toml` entry, `NOTICE` credit or generator has yet classified. `tests/pack/test_art_provenance.py`
 holds the manifest to the files. What counts as shipped is `scripts/art_provenance.py`'s `SHIPPED`: every
-file under a `textures/`, `models/` or `sounds/` folder of `kubejs/assets/*/` and the mod's
-`assets/*/` (so each `.png.mcmeta` animation and each model JSON), the images and `.bbmodel`
+file under a `textures/`, `models/` or `sounds/` folder of `kubejs/assets/*/` (so each
+`.png.mcmeta` animation and each model JSON), the images and `.bbmodel`
 sources under `data/art/`, and the images and clips under `publish/`. Blockstates, item
 definitions and lang only point at art and have no row. The check fails on:
 
@@ -1066,13 +482,3 @@ mod's), skipping keys that start with `_`; the literal argument of each `.displa
 scanner that stops matching cannot pass by finding nothing. Run it after adding a lang entry, a
 display name or a quest.
 
-## Upload check
-
-`python3 -m unittest discover scripts/tests` drives `scripts/upload.py` as a release does, a
-version, the environment and a maven repository holding Core's jar, against a stand-in server on
-localhost (`scripts/tests/standin.py`), and checks only what reaches it and the exit status: the jar
-byte for byte, the changelog section, the release type and `upload_release_type`, Core's projects and
-required dependencies, a missing token filled through `op run` and never printed, each site on its
-own, and a version a site already has refused. Both scripts and the tests are copies of
-5thlayer/libworks' template, kept level with it by skillworks' `template-drift`; a fix lands in the
-template too. Run it after editing either script; it is in no batch.

@@ -17,7 +17,7 @@ STAND_IN_SUBKINDS = ("placeholder", "procgen", "ai")
 _MEDIA = "png|jpe?g|gif|webp|svg|mp4|webm|mov"
 # Blockstates, item definitions and lang only point at art, so they have no row (#564).
 SHIPPED = (
-    re.compile(r"(?:kubejs|mod/src/main/resources)/assets/[^/]+/(?:textures|models|sounds)/.+\Z"),
+    re.compile(r"kubejs/assets/[^/]+/(?:textures|models|sounds)/.+\Z"),
     re.compile(r"data/art/.+\.(?:" + _MEDIA + r"|bbmodel)\Z"),
     re.compile(r"publish/.+\.(?:" + _MEDIA + r")\Z"),
 )

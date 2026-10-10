@@ -40,12 +40,7 @@ CONVERTER = ROOT / "scripts/factorio-recipe-convert.py"
 FOREIGN_SUBTREES = tuple(re.findall(r'"([^"]+)"', re.search(
     r"^FOREIGN_SUBTREES = \((.*)\)$", CONVERTER.read_text(encoding="utf-8"), re.MULTILINE).group(1)))
 STARTUP = ROOT / "kubejs/startup_scripts"
-MOD = ROOT / "mod/src/main/java/com/factoryworks/core"
-PF_BLOCKS = MOD / "PFBlocks.java"
-PF_ITEMS = MOD / "PFItems.java"
-FURNACE_TIER = MOD / "smelting/FurnaceTier.java"
-RIG_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/mining/rig/RigTier.java"
-CHEST_TIER = ROOT / "mod/src/main/java/com/factoryworks/core/chest/ChestTier.java"
+
 
 # Factorio's three assembling categories are Craftworks' Assembling recipes (ADR-0118).
 CRAFTWORKS_ASSEMBLING = "craftworks:assembling"
@@ -77,53 +72,21 @@ NAMESPACES = {"minecraft", "factoryworks",
               "pipeworks"}
 
 
-def mod_registered_blocks():
-    """The `factoryworks:` blocks `factoryworks_core` registers, not KubeJS.
-
-    ADR-0015 splits registration by what a thing is: content goes to KubeJS, mechanism to the mod.
-    Both land in the same namespace, so an item-map row cannot tell which side registered its
-    target -- and until the supply-area poles (#147) nothing on the mod's side had a row at all.
-    Reading only the startup scripts would now report four registered blocks as unregistered, and
-    the natural "fix" for that is to weaken the check, which is the one thing it must not do.
-
-    The furnaces and the mining rigs derive their ids from their tier enums, so they are
-    read the same way rather than typed out: a fourth furnace or a third rung of the drill ladder is
-    then registered here without this file being edited.
-
-    The rig parts are deliberately absent. A part has no `BlockItem` -- it is placed only by the
-    anchor's own item and never held -- so a row naming one would be a row naming something a
-    player cannot have.
-    """
-    blocks = set(re.findall(r'BLOCKS\.register(?:Block)?\("([a-z0-9_]+)"',
-                            (PF_BLOCKS).read_text(encoding="utf-8")))
-    furnaces = re.findall(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]",
-                          FURNACE_TIER.read_text(encoding="utf-8"), re.MULTILINE)
-    blocks |= {f"{tier.lower()}_furnace" for tier in furnaces}
-    rigs = re.findall(r"^\s{4}([A-Z][A-Z_]*)\([^)]*\)[,;]",
-                      RIG_TIER.read_text(encoding="utf-8"), re.MULTILINE)
-    blocks |= {f"{tier.lower()}_mining_drill" for tier in rigs}
-    blocks |= set(re.findall(r'^\s{4}[A-Z]+\("([a-z0-9_]+)"',
-                             CHEST_TIER.read_text(encoding="utf-8"), re.MULTILINE))
-    return {f"factoryworks:{name}" for name in blocks}
-
-
-def mod_registered_items():
-    """The `factoryworks:` items `factoryworks_core` registers with no block behind them.
-
-    Everything the mod registered used to be a block, so reading `PFBlocks` and the tier enums
-    covered it. The barrel (ADR-0037) is the first item that is only an item: it carries a fluid capability,
-    which is mechanism and therefore the mod's under ADR-0015, and it has nothing to place. Without
-    this its row would read as unregistered while sitting in `PFItems` -- and the natural "fix" for
-    that is to weaken the check, which is the one thing it must not do.
-    """
-    return {f"factoryworks:{name}" for name in re.findall(
-        r'ITEMS\.register(?:SimpleItem|Item)?\(\s*"([a-z0-9_]+)"', PF_ITEMS.read_text(encoding="utf-8"))}
+# The `factoryworks:` ids the deleted Core mod registered, as of fb05f50. The pack still names them
+# until the Showcase moves out and the ports land (#663, ADR-0128).
+CORE_IDS = frozenset(f"factoryworks:{name}" for name in (
+    "barrel", "boiler", "boiler_part", "burner_mining_drill", "cargo_hold", "electric_furnace",
+    "electric_mining_drill", "iron_chest", "offshore_pump", "oil_well", "pumpjack",
+    "pumpjack_part", "radar", "radar_part", "steam_engine", "steam_engine_part", "steel_chest",
+    "steel_furnace", "stone_furnace", "wreck_debris_big", "wreck_debris_medium",
+    "wreck_debris_small", "wreck_hull", "wreck_hull_slab", "wreck_hull_stairs", "wreck_window",
+))
 
 
 def first_party_items():
     """The `factoryworks:` items and machines the pack actually registers.
 
-    Both halves of ADR-0015's split: the KubeJS startup scripts and `factoryworks_core`.
+    The KubeJS startup scripts, and the ids the deleted Core mod registered.
     """
     items = set(re.findall(r"event\.create\('(factoryworks:[a-z0-9_]+)'",
                            (STARTUP / "items.js").read_text()))
@@ -134,8 +97,7 @@ def first_party_items():
     # first-party set makes every "is this item registered" assertion below pass vacuously,
     # which is exactly what a9a965d's rename of `event.create(` produced.
     assert items, "the KubeJS startup scripts register nothing -- has `event.create(` been renamed?"
-    items |= mod_registered_blocks()
-    items |= mod_registered_items()
+    items |= CORE_IDS
     return items
 
 
