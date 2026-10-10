@@ -34,7 +34,7 @@ Refiner, pipe Dismantle Family or drag-laying yet.
 | `dismantle/` | pipe Dismantle Family | 3 / 119 | C | Pipeworks (ADR-0127); not present there | `PipeFamily`, `PipeworksPipeJoin`; no `DismantleFamily` use in pipeworks |
 | `stretch/` | pipe drag-laying | 1 / 120 | C | Pipeworks (ADR-0127); not present there | `PipeworksPipeLegs` |
 | `energy/` | FE exchange rate, snapshot journal | 2 / 59 | A | Wireworks `ForgeEnergy`, `LongSnapshotJournal` (same names) | identical class names |
-| `transfer/` | slot-honouring `DelegatingResourceHandler` | 1 / 60 | C | copy into each Module with routed faces (Fieldworks, Wireworks Boiler) or Groundworks utility | `GuardedResourceHandler` |
+| `transfer/` | slot-honouring `DelegatingResourceHandler` | 1 / 60 | C | copy into each Module with routed faces (Fieldworks, Wireworks Boiler) or Groundworks utility | `GuardedResourceHandler`; NeoForge needs it too ([research](../research/transfer-api-guarded-faces.md)) |
 | `network/` | radar chunk/markers, fuel-table packets | 4 / 200 | C | `RadarMarkersPacket` → Fieldworks if markers need sync; rest drop | `PFNetwork` |
 | `compat/` (incl. `emi/`) | Jade plugins (rig, furnace, ore, radar, steam engine, footprint), EMI smelting | 10 / 876 | C / A | `FootprintJadePlugin` A (Groundworks); others follow their machine (Fieldworks/Wireworks/Craftworks) or drop | `RigJadePlugin`, `SmeltingEmiPlugin` |
 | `mixin/minecraft/` | `ChestBlockMixin` (no double chests), `PlayerSpawnFinderMixin` (wreck spawn), `MinecraftMixin` (reach), `GameTestServerMixin` (Terra floor y=0) | 4 / ~120 | B / C | `ChestBlockMixin` → Showcase (ADR-0106) or drop; `PlayerSpawnFinder`, `MinecraftMixin` → drop; `GameTestServerMixin` → Showcase test harness if Terra stays | mixin javadocs |
@@ -100,5 +100,5 @@ Other repo scripts naming `factoryworks_core`: `sync-local-jars.py`, `check-data
 3. Pipe Dismantle Family / drag-laying: port from `dismantle/`+`stretch/` into Pipeworks, or rewrite there? Its tests (`PipeDismantleTests`, `PipeStretchTests`) would move too.
 4. Boiler/Steam Engine port to Wireworks: reuse `fluid/` code (needs Oritech-free rewrite of `SteamEngineNetworkTests`) or reimplement?
 5. Harvester: reuse Rig code (`mining/rig/`) or start fresh in Fieldworks?
-6. `transfer/GuardedResourceHandler`: shared helper in Groundworks, or copied per Module?
+6. `transfer/GuardedResourceHandler`: shared helper in Groundworks, or copied per Module? ([research](../research/transfer-api-guarded-faces.md))
 7. Corpus JSONs under `factoryworks_core/` and their generators: move with Fieldworks, or freeze numbers (ADR-0115 "frozen numbers") into Fieldworks code?
