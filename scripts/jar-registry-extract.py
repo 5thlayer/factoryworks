@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Extract what the installed jars register and drop into `data/jars/` (#453, #454, ADR-0088).
+"""Extract what the installed jars register and drop into `data/jars/` (#453, #454).
 
 Reads Minecraft's client jar and every jar in `mods/` except the pack's own, whose ids are the
 repo's and are resolved from its sources. The corpus is committed, so a jar update arrives as a
-diff to review, and `scripts/build-obtainable-index.py` never opens a jar.
+diff to review.
 
 An item is an item model definition, `assets/<ns>/items/<path>.json`: 26.1 draws every item through
 one, so every item a jar ships has one. A fluid has no such file. It is a source fluid a fluid tag

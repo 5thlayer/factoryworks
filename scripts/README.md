@@ -53,7 +53,6 @@ fuels are nothing on Terra. `tests/factorio/test_fuel_convert.py` is the check.
 
 | Script | Produces |
 |---|---|
-| `nbt.py` | *library* — minimal NBT writer and reader, used by `build-obtainable-index.py` |
 
 ## Ore blocks (ADR-0041)
 
@@ -70,8 +69,7 @@ Checks: `tests/pack/test_ore_assets.py`, `tests/factorio/test_resource_extract.p
 |---|---|
 | `gen-flora-textures.py` | placeholder 16×16 flora sprites for Sapros's trees (stdlib, meant to be redrawn) |
 | `build-filter-pack.sh` | rebuilds `kubejs/data/<name>.zip` from `packs/<name>/` (pack.mcmeta filter sections) |
-| `jar-registry-extract.py` | the installed jars' item and fluid ids, block loot and features → `data/jars/` (ADR-0088) |
-| `build-obtainable-index.py` | EMI's Obtainable allowlist → `kubejs/assets/emi/index/stacks/`, and each block drop's source → `kubejs/assets/factoryworks/obtainable/` (ADR-0088, ADR-0091) |
+| `jar-registry-extract.py` | the installed jars' item and fluid ids, block loot and features → `data/jars/` |
 
 ## Manifest + config integrity checks
 

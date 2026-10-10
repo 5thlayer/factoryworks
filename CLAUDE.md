@@ -86,7 +86,7 @@ check's section there before editing it or the code it guards. Run the matching 
 | `kubejs/server_scripts/starting_kit.js` | `tests/pack/test_starting_kit.py` |
 | a committed ADR with `supersedes:` | `scripts/adr-backlink-check.sh` (needs `gh`) |
 | closing a ticket, editing the item map or `docs/factorio-mechanics.md` | `scripts/item-map-ticket-check.sh` (needs `gh`) |
-| a jar update, live worldgen, the kit, the mechanic or creative lists | `tests/pack/test_obtainable_index.py` |
+| a jar update | `tests/pack/test_jar_registry.py` |
 | removing a third-party content mod's references | `tests/pack/test_independence_guard.py` |
 | Oritech's oil springs | `tests/pack/test_oritech_springs.py` |
 | `scripts/factorio-enemy-extract.py` | `tests/factorio/test_enemy_extract.py` |

@@ -245,10 +245,6 @@ file = "data/pack/category-map.json"
 hash = "e4f57534da2772d2bff1a2dab9536c7bd4f6fdd71be24963518b234652492e52"
 
 [[files]]
-file = "data/pack/creative-listed.json"
-hash = "a06ddd6c447b79c7f97eda6aa668151b49867d5155b763c5f843ba8ee1cce2e1"
-
-[[files]]
 file = "data/pack/independence-baseline.json"
 hash = "3a4f996e35eadeed2c23bd6d3fdb032c58cd84bb09283c5c0ecb13ae5a9fdb5d"
 
@@ -259,10 +255,6 @@ hash = "c9f74d965a08e4c56b9a8380d17a8d30847cf55788beae477fb2ab41df014ca3"
 [[files]]
 file = "data/pack/local-jars.json"
 hash = "9856ae2612268dee5c5a850c655ae043962fcc86ea482a44da036d201db04c7c"
-
-[[files]]
-file = "data/pack/mechanic-obtainable.json"
-hash = "4a67fdecf860e44db21d80dea7812fac34a36a598fcfc3b904e363ecabbb24b9"
 
 [[files]]
 file = "data/pack/recipe-overrides.json"
@@ -283,10 +275,6 @@ hash = "989f3737ae4621b8ff6730bce4cbeeee756921e7e510e0c281c8a350501d98af"
 [[files]]
 file = "kubejs/assets/craftworks/lang/en_us.json"
 hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
-
-[[files]]
-file = "kubejs/assets/emi/index/stacks/obtainable.json"
-hash = "6c14242e3f49f908a5cf25f7e24c88dbfb1efda5f813813ca95716f0ec7b4990"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/boiler.json"
@@ -883,10 +871,6 @@ hash = "b2c2365f371e0aef406ef9610115463b296ec07debf2eeeee04153309ce70fb2"
 [[files]]
 file = "kubejs/assets/factoryworks/models/item/yumako_sapling.json"
 hash = "26f02282009ca19e11ec336b5b82a33a748fbc7dcc9e85070869a9132888cf4d"
-
-[[files]]
-file = "kubejs/assets/factoryworks/obtainable/sources.json"
-hash = "5f181ab79cb943dc4cd482bba40dfd19f995f8810d390efb9f6bdd0c4c97027d"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/burner_mining_drill/bottom.png"

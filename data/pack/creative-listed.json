@@ -1,8 +1,0 @@
-{
-  "rows": [
-    {
-      "id": "wireworks:creative_pole",
-      "why": "Tests a power layout without building the supply it would draw on (ADR-0105)."
-    }
-  ]
-}
