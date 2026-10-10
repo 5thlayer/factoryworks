@@ -1,5 +1,6 @@
 ---
 status: accepted
+supersedes: [173]
 ---
 
 # The Pack stops filtering EMI's item index
