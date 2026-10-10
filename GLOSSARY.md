@@ -8,9 +8,10 @@ Everything below the Language heading still describes the retired overhaul modpa
 lands.
 
 **Module**:
-One of the suite's mods, each owning one kind of logistics, crafting or resource: Beltworks (items on
-belts), Pipeworks (fluids), Wireworks (energy), Craftworks (crafting machines) and Fieldworks
-(resources). Each plays alone in vanilla and requires no other Module.
+One of the suite's mods, each owning one capability: Beltworks (items on belts), Pipeworks (fluids),
+Wireworks (energy), Craftworks (crafting machines), Fieldworks (resources), Gearworks (Gear) and
+Voidworks (void energy).
+Each plays alone in vanilla and requires no other Module.
 _Avoid_: Library, Binding
 
 **Groundworks**:
@@ -35,6 +36,15 @@ _Avoid_: the Pack
 Fieldworks' machine that stands over an ore patch or an oil well and works the layer beneath it,
 drawing ore or pumping crude oil.
 _Avoid_: drill, rig, pumpjack, deposit
+
+**Harvest Recipe**:
+A recipe the Harvester runs: a resource it works, an optional Drilling Fluid it consumes, and what it
+yields. A Harvester holds one, set by the player.
+_Avoid_: drilling recipe, mining recipe
+
+**Drilling Fluid**:
+Any fluid a Harvest Recipe consumes, whether the resource needs it or it raises the yield.
+_Avoid_: mud (only the default fluid), lubricant, coolant
 
 **Pump**:
 Pipeworks' machine that draws a fluid's source block into a pipe, leaving water and any other
@@ -65,6 +75,22 @@ _Avoid_: plastic bar
 **Battery**:
 Wireworks' part made of one cathode, one anode and one electrolyte, which the accumulator and the
 Reactor are built from.
+
+**Sink**:
+A consumer whose demand grows with the factory and never runs out, so a bigger factory always has
+somewhere for its output to go.
+_Avoid_: endgame (for the consumer itself), resource drain, money sink
+
+**Gear**:
+What the player wears or carries that the suite's materials make, upgraded through a Gear Grid.
+_Avoid_: equipment (that is belt equipment, ADR-0100), armor, tools
+
+**Gear Grid**:
+The slots in a piece of Gear that hold its upgrades.
+_Avoid_: equipment grid, upgrade grid
+
+**Gearworks**:
+The Module that owns Gear.
 
 ## Language
 
