@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0127
 ---
 
 # The Nether and the End do not exist

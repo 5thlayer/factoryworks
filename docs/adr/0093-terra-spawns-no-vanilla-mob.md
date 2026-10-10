@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0127
 ---
 
 # Terra spawns no vanilla mob on its own

@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0127
 ---
 
 # Terra is flat and cave-free, and its ore is prospected rather than dug

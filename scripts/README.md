@@ -49,15 +49,11 @@ Re-run it after editing either input. Unlike the recipe converter, a **missing**
 item-map row here is a recorded skip rather than a hard failure: most of Factorio's
 fuels are nothing on Terra. `tests/factorio/test_fuel_convert.py` is the check.
 
-## Worldgen + starting area (→ datapack JSON / `.nbt`)
+## NBT
 
 | Script | Produces |
 |---|---|
-| `build-terra-worldgen.py` | Terra's flat, cave-free worldgen and its sea (ADR-0019, #59, #356); `--check` |
-| `build-terra-start.py` | spawn-anchored starting area `.nbt` templates (ADR-0019, #84) |
-| `nbt.py` | *library* — minimal NBT writer and reader, used by `build-terra-start.py` and `build-obtainable-index.py` |
-
-Checks: `tests/worldgen/test_start_geometry.py`, and the GameTest `WorldgenFixtureTests` for the sea.
+| `nbt.py` | *library* — minimal NBT writer and reader, used by `build-obtainable-index.py` |
 
 ## Ore blocks (ADR-0041)
 

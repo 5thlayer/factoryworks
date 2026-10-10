@@ -69,10 +69,7 @@ placed. The check is a launch into a fresh world that asserts against what the g
 loaded and, for biomes, actually located. **On 26.1.2 the harness is `WorldgenFixtureTests`**
 (#356), a GameTest in the default set. The GameTest world is flat, so it decodes the datapack's own
 dimension file, builds a `RandomState` per seed, and samples columns through the biome source and
-the generator's base height without generating a chunk. A body's facts are a `WaterFixture` row,
-with Terra's the first: its water share, the sea biome sitting on the water, the Shore's width, the
-shelf and the bedrock-band floor, and no water within the starting area's reach of spawn.
-`scripts/worldgen-check.py`, GregTech's vein and layer check, left with GregTech (ADR-0060).
+the generator's base height without generating a chunk. `scripts/worldgen-check.py`, GregTech's vein and layer check, left with GregTech (ADR-0060).
 
 **The client is a second world, and a human checks it (ADR-0119).** A registered block is not a
 block anybody can see, and it is read by a client that no server run starts. Booting that client

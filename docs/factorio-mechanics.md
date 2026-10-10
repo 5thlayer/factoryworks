@@ -46,7 +46,7 @@ Factorio names them, and each section gives the pack's own name beside it.
 | [Nuclear fission](#nuclear-fission) | `adapted` | Terra |
 | [Pollution](#pollution) | `planned` | Terra |
 | [Enemies and evolution](#enemies-and-evolution) | `planned` | Terra |
-| [Wildlife and natural mob spawning](#wildlife-and-natural-mob-spawning) | `shipped` | Terra |
+| [Wildlife and natural mob spawning](#wildlife-and-natural-mob-spawning) | `excluded` | — |
 | [Combat: guns, ammo, turrets, walls](#combat-guns-ammo-turrets-walls) | `planned` | Terra |
 | [Armor and the equipment grid](#armor-and-the-equipment-grid) | `planned` | Terra |
 | [Capsules](#capsules) | `planned` | Terra |
@@ -152,8 +152,7 @@ Sub-rules:
   Since ADR-0041 this is finite in the literal sense as well as the generated one: the patch holds a
   number of units and mining spends them, rather than being finite only because the disc has edges.
 - **Stone is a resource patch, not scenery** — `shipped`, ADR-0041. Factorio mines stone out of a
-  patch like anything else, and Terra now deals a fourth starting field for it, with its own vein
-  beyond. *ADR-0021 ruled stone "ambient terrain, never a patch", on the grounds that
+  patch like anything else, and it is dealt as a patch like the rest. *ADR-0021 ruled stone "ambient terrain, never a patch", on the grounds that
   "a stone patch in a world made of stone reads as a joke". ADR-0041 reverses it: the mechanism
   ADR-0021 discharged stone's bulk-material function onto was never built, and quarries exist on
   Earth because what makes one is concentration, not the rock being absent elsewhere.*
@@ -356,15 +355,9 @@ Sub-rules:
   creation and defeats every siting constraint above it.
 - **Buckets** — `excluded`. ADR-0050 refuses a 1,000 mB hand container beside ADR-0037's 50 mB barrel.
   Rung 0 reaches water by pumping or digging a channel from the hub pool, not by carrying it.
-- **Water in the starting area** — `shipped` (#212, restored #313). `scripts/build-terra-start.py`
-  puts a pool in the hub itself — the hub's own blocks, one deep and flush with the ground, not a
-  fifth jigsaw child that vanilla could drop silently. Factorio starts the player beside water and
-  the pack has no bucket, so under the rule above water is not something rung 0 can make but a
-  *place* it has to find, and without the pool that is an unbounded walk ADR-0049's traversal budget
-  has no room for. It was argued for Create's water wheel; Create left with ADR-0060 and what the
-  pool now sites is the Offshore Pump, and behind it the Boiler.
-  `tests/worldgen/test_start_geometry.py` asserts the pool's presence — but not the opening's, which
-  the 26.1.2 move parked whole until #313.
+- **Water in the starting area** — `excluded`, #602. There is no starting area: a new world is
+  vanilla's, and vanilla places water on its own. The hub and its pool were Terra's, and a Pipeworks
+  Pump sites on any natural water.
 - **Placed flowing water** — `planned`. A pack outlet block maintaining flowing water from a pipe, for
   contraptions tidier than a dug channel. Safe without any tracking because what it places is never a
   source. Lands after the pump and pipes.
@@ -1078,21 +1071,19 @@ Sub-rules:
 
 ### Wildlife and natural mob spawning
 
-- **verdict**: `shipped`
-- **where**: Terra
-- **via**: `pack`
-- **owner**: ADR-0093
-- **ticket**: #480
+- **verdict**: `excluded`
+- **where**: —
+- **owner**: ADR-0127
+- **ticket**: #602
 
-Base Factorio has no wildlife but fish, and no enemy but the biters. Terra spawns no vanilla mob on
-its own: every biome's spawner lists are empty and chunk generation places no animal, and a new
-world starts with the mob, phantom, patrol and wandering-trader game rules off. The biters are
-[Enemies and evolution](#enemies-and-evolution), which spawns its own mobs.
+Base Factorio has no wildlife but fish, and no enemy but the biters. A new world spawns vanilla's
+mobs as vanilla does (#602); the pack no longer empties the spawner lists or turns the spawn game
+rules off. The biters are [Enemies and evolution](#enemies-and-evolution), which spawns its own mobs.
 
 Sub-rules:
 
 - **Fish** — `unargued`, no verdict. Factorio's fish swim in water, are mined for raw fish and heal
-  the player. Terra's sea spawns none.
+  the player. Vanilla's own fish swim in vanilla's water.
 
 ### Combat: guns, ammo, turrets, walls
 
@@ -1239,48 +1230,21 @@ Sub-rules:
 
 - **verdict**: `adapted`
 - **where**: all bodies
-- **via**: Minecraft's own walk, against Terra's starting-area distances
-- **owner**: ADR-0049, #207
+- **via**: Minecraft's own walk
+- **owner**: ADR-0049, #207, #602
 
 Base movement on foot only. Vehicles are [Personal transport](#personal-transport) and #121; the two
 do not collide.
 
 Factorio's engineer and Minecraft's player do not walk at the same speed, and the pack does not
-change that. The traversal budget has two halves, and both are extracted rather than felt:
+change that: `character.running_speed` is 0.15 tiles/tick, **9.0 tiles/s**, against Minecraft's walk
+of **4.317 blocks/s**. The speed is in `data/factorio/resource.json`.
 
-| | Factorio | Terra |
-| --- | --- | --- |
-| speed | `character.running_speed` 0.15 tiles/tick × 60 = **9.0 tiles/s** | Minecraft's walk **4.317 blocks/s** (sprint 5.612) |
-| furthest starting resource | `starting_resource_placement_radius` **150 tiles** | `DISTANCES` in `scripts/build-terra-start.py`, furthest field **62 blocks** |
-| hub to furthest field | 150 / 9.0 = **16.7 s** | 62 / 4.317 = **14.4 s** |
-| two fields, perpendicular | 212 / 9.0 = **23.6 s** | 88 / 4.317 = **20.3 s** |
-| two fields, opposite | 300 / 9.0 = **33.3 s** | 124 / 4.317 = **28.7 s** |
-
-A tile and a block are both one metre, so nothing is converted but the tick rate. The speed is
-in `data/factorio/resource.json` and asserted by `tests/factorio/test_resource_extract.py`; the radius
-is the corpus constant the same file already carried.
-
-**Both halves drifted, in opposite directions, and they cancel.** Terra's player walks at 48% of the
-engineer's speed and its fields sit at 41% of Factorio's starting radius, so **every** leg comes out
-at 0.86× Factorio's time — the ratio is the same whichever pair you measure, which is what keeps the
-verdict from resting on a chosen leg. Three legs are tabled rather than one because #170's report is
-about moving *between patches*, not out from the hub: Terra's four fields sit on the four cardinal
-faces (iron east, copper north, coal west, stone south) at the size variant's distance, so the
-traversal a player actually makes is a chord — up to 124 blocks — and not the 62-block radius.
-So: **no base speed is set, and `DISTANCES` does not move.** A flat global buff would also have spent
-Block Runner's concrete bonus ([Terrain modification](#terrain-modification)), which is `adapted`
-precisely so that a built surface is the thing that makes you faster.
-
-**The one soft number is Factorio's side.** `starting_resource_placement_radius` is the bound a
-starting patch may be placed within, not where patches typically land. If Factorio's own starting
-patches cluster well inside 150, the 0.86 flatters Terra and this row is worth reopening against
-measured patch positions rather than the bound.
-
-The playtest report that opened #207 stands as a report — the opening *feels* long, and a measured
-patch-to-patch leg is about 100 blocks, some 23 s walked — but the arithmetic says the cause is not
-distance or speed relative to Factorio. Factorio lets you zoom out and see all three
-patches at once; Minecraft does not. That is legibility, and its surfaces are #116 (radar and surface
-indicators) and #158 (pole supply-area overlay), not movement.
+The traversal budget this row once measured, Terra's starting-area distances against
+`starting_resource_placement_radius`, left with the starting area (#602), so nothing compares the two
+now. A flat global buff would also have spent Block Runner's concrete bonus
+([Terrain modification](#terrain-modification)), which is `adapted` precisely so that a built surface
+is the thing that makes you faster.
 
 Sprinting is not counted above. It burns hunger, and #183 has not decided whether Minecraft's hunger
 mechanic stays in the pack at all; a budget that assumed sprinting would be load-bearing on an

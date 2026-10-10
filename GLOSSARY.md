@@ -145,20 +145,6 @@ _Avoid_: registry name, dimension key
 A player-expanded orbital factory that mines and processes asteroids. Static — it never travels (ADR-0006).
 _Avoid_: space station, orbital base, ship, vessel
 
-### Terra terrain
-
-**Sea**:
-Terra's biome over water. The terrain decides it: a column is sea because its ground lies below sea level, and the biome is only the name painted on it, never the other way round. About a quarter of Terra, Nauvis's own share: a shallow **shelf** along the shore, then deep water whose floor is a thin seabed over bedrock (#356). Internal ID `terra_sea`.
-_Avoid_: ocean, lake, water biome
-
-**Shore**:
-The thin band of Terra just above the water line. It is land in every sense, and an ore patch may lie on it, as Factorio's patches reach the water's edge (#356). Internal ID `terra_shore`.
-_Avoid_: beach, coast, shoreline biome
-
-**Land**:
-Every Terra biome but the **Sea**, the Shore included. The only ground an **outfield patch** lands on.
-_Avoid_: inland, dry land, continent
-
 ### Sapros terrain
 
 Sapros's five biomes. Identifiers carry Factorio's terms so the mapping to the wiki stays free;
@@ -302,18 +288,6 @@ _Avoid_: insertion limit, cap, 2× rule
 
 ### Terra's opening
 
-**Starting area**:
-The structure stamped onto world spawn once per world, and the only place a **starting field** is found: a **hub**, the four fields it deals, and the **water pool**. Anchored to spawn rather than to the world origin, and so not a thing ordinary worldgen places (ADR-0019 and its amendment).
-_Avoid_: spawn structure, starting hub, tutorial area, start island
-
-**Hub**:
-The starting area's centre piece. It places no terrain of its own: it is what holds the four fields apart and carries the water pool.
-_Avoid_: spawn platform, base, hub structure
-
-**Water pool**:
-The body of water in the hub, one block deep and flush with the ground. Since water is never created (ADR-0050), it is what makes water somewhere rung 0 already stands rather than somewhere it has to go.
-_Avoid_: pond, lake, starting water, spawn pool
-
 **Starting kit**:
 What the Showcase hands a new player: a few of the suite's own items, given once per player on their first join by a KubeJS script (ADR-0127). A new world has no wreck and no cargo hold.
 _Avoid_: starter kit, spawn items, loadout
@@ -324,12 +298,8 @@ _Avoid_: starter kit, spawn items, loadout
 The shape FactoryWorks' ore takes: a filled disc of a single ore, one block deep, flush with the surface.
 _Avoid_: vein, deposit, ore blob, ore body, ore field
 
-**Starting field**:
-One of the patches the starting area deals at spawn, whose total is Factorio's stated starting amount divided over the blocks that actually landed. Distinguished from an **outfield patch** because Factorio states its total and the world has to count its blocks; everything else derives both.
-_Avoid_: starting patch, spawn patch, tutorial patch
-
 **Outfield patch**:
-Every ore patch beyond the starting area, placed by ordinary worldgen.
+Every ore patch, placed by ordinary worldgen on the vanilla land biomes `#factoryworks:patch_land` names.
 _Avoid_: regular patch, wild patch, remote patch
 
 **Amplitude**:
