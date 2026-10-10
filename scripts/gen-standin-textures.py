@@ -1,5 +1,5 @@
 # Stand-in art for the items whose sprites came from All Rights Reserved mods (ADR-0109): the three
-# circuit tiers, the engine units, the battery, the two sheets and the eight material forms (#622). 16x16 RGBA PNGs, pure stdlib, drawn here rather than copied.
+# circuit tiers, the engine units, the battery, the two sheets and the six material forms (#622). 16x16 RGBA PNGs, pure stdlib, drawn here rather than copied.
 # They are placeholders, meant to be replaced by commissioned art.
 import os
 import struct
@@ -121,27 +121,6 @@ def cable(base):
     return rows
 
 
-def sulfur(base):
-    rows = blank()
-    for row, (x0, x1) in zip(range(7, 13), ((6, 9), (4, 11), (3, 12), (3, 12), (3, 12), (4, 11))):
-        for x in range(x0, x1 + 1):
-            rows[row][x] = dark(base, -40 if row == 12 or x in (x0, x1) else 0)
-    for x in (6, 7):
-        rows[6][x] = dark(base, 30)
-    return rows
-
-
-def raw_ore(base):
-    rows = blank()
-    for row, (x0, x1) in zip(range(4, 13), ((6, 9), (4, 11), (3, 12), (2, 13), (2, 13),
-                                              (2, 13), (3, 12), (4, 11), (6, 9))):
-        for x in range(x0, x1 + 1):
-            rows[row][x] = dark(base, -45 if row in (4, 12) or x in (x0, x1) else 0)
-    for x, y in ((5, 6), (9, 8), (6, 10), (11, 6)):
-        rows[y][x] = (180, 235, 90, 255)
-    return rows
-
-
 png(f"{BASE}/electronic_circuit.png", board((70, 150, 78, 255), 1))
 png(f"{BASE}/advanced_circuit.png", board((176, 70, 62, 255), 2))
 png(f"{BASE}/processing_unit.png", board((72, 108, 176, 255), 3))
@@ -156,6 +135,4 @@ png(f"{BASE}/steel_plate.png", plate((104, 112, 130, 255)))
 png(f"{BASE}/iron_gear_wheel.png", gear((150, 156, 164, 255)))
 png(f"{BASE}/iron_stick.png", stick((160, 166, 174, 255)))
 png(f"{BASE}/copper_cable.png", cable((210, 130, 84, 255)))
-png(f"{BASE}/sulfur.png", sulfur((226, 206, 70, 255)))
-png(f"{BASE}/raw_uranium.png", raw_ore((92, 140, 62, 255)))
 print("ok")

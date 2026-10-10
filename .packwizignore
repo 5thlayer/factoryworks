@@ -46,9 +46,8 @@ mods/*.jar
 # --check. Beltworks and Craftworks are named by their metafiles, like any CurseForge mod (#532).
 !mods/wireworks-*.jar
 !mods/pipeworks-*.jar
+!mods/fieldworks-*.jar
 
-# `factoryworks_core` is indexed by its metafile, mods/factoryworks-core.pw.toml, naming the
-# released CurseForge file (ADR-0101).
 
 # --- Per-user and per-run state, never pack behaviour -------------------------
 # NOTE: the repo root is also the live game instance, so it accumulates directories
@@ -102,8 +101,6 @@ config/observable.json
 config/runelic.json
 # Jade's HUD settings, rewritten by the client whenever a provider appears.
 config/jade/
-# Core's defaults, which its jar rewrites on launch. The Pack sets nothing there (ADR-0128).
-config/factoryworks_core-server.toml
 *client*.toml
 *client*.snbt
 *client*.json

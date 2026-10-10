@@ -1,7 +1,0 @@
-{
-  "type": "factoryworks:oil_field",
-  "biomes": "#factoryworks:patch_land",
-  "step": "top_layer_modification",
-  "spawn_overrides": {},
-  "terrain_adaptation": "none"
-}

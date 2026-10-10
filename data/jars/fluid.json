@@ -1,9 +1,11 @@
 {
   "jars": [
     "26.1.2.jar",
+    "fieldworks-0.1.0.jar",
     "oritech-2.0.0-exp6.jar"
   ],
   "fluids": [
+    "fieldworks:crude_oil",
     "minecraft:lava",
     "minecraft:water",
     "oritech:still_biofuel",

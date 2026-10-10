@@ -32,7 +32,6 @@ MODS = ROOT / "mods"
 VANILLA = Path(os.environ.get("PF_CLIENT_JAR", os.path.expanduser(
     os.environ.get("CURSEFORGE_ROOT", "~/curseforge") + "/Install/versions/26.1.2/26.1.2.jar")))
 OUT = ROOT / "data" / "jars"
-PACK_JAR = "factoryworks_core-"
 
 ITEM_DEFINITION = re.compile(r"assets/([a-z0-9_.-]+)/items/([a-z0-9_./-]+)\.json")
 FLUID_TAG = re.compile(r"data/[a-z0-9_.-]+/tags/fluid/.+\.json")
@@ -45,7 +44,7 @@ NOT_PLACED = {"placement", "predicate", "target", "if_true", "replaceable_blocks
 
 
 def jars():
-    found = [path for path in sorted(MODS.glob("*.jar")) if not path.name.startswith(PACK_JAR)]
+    found = sorted(MODS.glob("*.jar"))
     return [VANILLA] + found if VANILLA.is_file() and found else []
 
 

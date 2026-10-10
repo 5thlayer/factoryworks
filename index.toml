@@ -174,11 +174,11 @@ hash = "cac727953733555e770e102c92fc12cc28d6c4d0c8ce1cee35caaafac23a27f9"
 
 [[files]]
 file = "data/jars/fluid.json"
-hash = "440a27ca79ee734deba0bff08b2e252a38115d2b63778aa2f8ae45a67abe7866"
+hash = "bc0f5f440b31a819772a63955527181c1b8195b37705fdd10496a3724a6c6af5"
 
 [[files]]
 file = "data/jars/item.json"
-hash = "051ea96d27d15d4978fd48f39583a37492f02177aabae41591c29fd349357d99"
+hash = "d21eb038f0cf5b6da59385925528417a76354f071932315b1eef28bd69ddc73c"
 
 [[files]]
 file = "data/jars/loot.json"
@@ -186,7 +186,7 @@ hash = "adfe8682fab779df9da6dc6d958cc2df388cb5f401ad9864ee6b4feec1557c1a"
 
 [[files]]
 file = "data/pack/art-provenance.json"
-hash = "d579179bfe52a9c70b2b175ef9a2d9f81d9b75c81a189937a65d60d3b0c8aff6"
+hash = "a172cad117ef2f016c1ad28eb41cb2ea9373894288b18233f71eafe70dcb11b4"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
@@ -194,7 +194,7 @@ hash = "19d4ba059341fa16a45bece54d7b08eb650bf21b0d123c03d23fda8d1a620258"
 
 [[files]]
 file = "data/pack/local-jars.json"
-hash = "9856ae2612268dee5c5a850c655ae043962fcc86ea482a44da036d201db04c7c"
+hash = "bc09661a518a1820bf388137ce8cb2983f06ca6a1ae0e2b0ab80de13cac7f7ee"
 
 [[files]]
 file = "defaultconfigs/ftbessentials-server.snbt"
@@ -225,18 +225,6 @@ file = "kubejs/assets/factoryworks/blockstates/burner_mining_drill_part.json"
 hash = "ee7e624750e746cc3ace216c1f3495117d80854d42cfc03fe8f1646c4c6e6d7a"
 
 [[files]]
-file = "kubejs/assets/factoryworks/blockstates/coal_ore.json"
-hash = "994c86c72ba98f4c28bbf69a8ca9daa58de03c6cc823fff83f77421e44ec5f30"
-
-[[files]]
-file = "kubejs/assets/factoryworks/blockstates/copper_ore.json"
-hash = "8aa2c94c1663bf4ab8ef9cc568e0dd700f1d5633511eeb014d1db1b787c3d240"
-
-[[files]]
-file = "kubejs/assets/factoryworks/blockstates/crude_oil.json"
-hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
-
-[[files]]
 file = "kubejs/assets/factoryworks/blockstates/electric_furnace.json"
 hash = "e7847c7cf83088d9e41aa004900b8b319f814a7082ba55b849e461b17b19650b"
 
@@ -253,10 +241,6 @@ file = "kubejs/assets/factoryworks/blockstates/heavy_oil.json"
 hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
 
 [[files]]
-file = "kubejs/assets/factoryworks/blockstates/iron_ore.json"
-hash = "177c43ef9b3c171972c91ea43a5393a0966425e08778a704778b5c2b78d5545c"
-
-[[files]]
 file = "kubejs/assets/factoryworks/blockstates/jellystem_sapling.json"
 hash = "22225f0cd06ad86ce90d5ae548bfec0f95c454faee7f471ca44322aa41950b7c"
 
@@ -271,10 +255,6 @@ hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/offshore_pump.json"
 hash = "be696f3c071e18057f7c30994d4809abe84e90df945f642d19af380ee3dabb7d"
-
-[[files]]
-file = "kubejs/assets/factoryworks/blockstates/oil_well.json"
-hash = "587b1aa7d3c2579dd29cb4c2622e5e6c85e76d67873fcd0f26f1656cf176d447"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/petroleum_gas.json"
@@ -317,20 +297,12 @@ file = "kubejs/assets/factoryworks/blockstates/stone_furnace.json"
 hash = "8fe26f0c0bc1698575f599272cc4df29f0fefd0f4a82a6a1e71a2da53739489a"
 
 [[files]]
-file = "kubejs/assets/factoryworks/blockstates/stone_ore.json"
-hash = "81aa7b90c42db2af584c3836ad94ecc5e9981c369219dc17f72c925fc2eaf109"
-
-[[files]]
 file = "kubejs/assets/factoryworks/blockstates/sulfuric_acid.json"
 hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/superheated_steam.json"
 hash = "590e1d52b50db0647a36c74bc9ab03b608f80f2e06b7ce0795d6939da0384611"
-
-[[files]]
-file = "kubejs/assets/factoryworks/blockstates/uranium_ore.json"
-hash = "ae3c02fce000831d8010c902ba4c4842e1ca708416793d85dec8919ed2e996a4"
 
 [[files]]
 file = "kubejs/assets/factoryworks/blockstates/yumako_sapling.json"
@@ -398,7 +370,7 @@ hash = "c4f3b3ee106426f1322240cc01e60027429b080937c9c02917d8560bdbd4fec0"
 
 [[files]]
 file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "0a1cc1736f60d29a89fb4b4cc383d1c61d016b90ac9afb7a270f8556168534b4"
+hash = "ad1e0abcfdf30452e1f8237ef952107f8c4719c9f772387a1b090d088bea0ad6"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/boiler.json"
@@ -463,170 +435,6 @@ hash = "b04826faa9be069759dfc6cf134dda7f6dcdfae496f5d061ed44f163ba3a8ce0"
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/offshore_pump.json"
 hash = "1a0f0f26f9b18b0b430c6be860684d132a75872e17423100ff864b7b20e4ade5"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/oil_well.json"
-hash = "3007062396b1921e5047b752b86dd036298742b8a85833c226273724b08af4ab"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/coal_stage0.json"
-hash = "946e6b7418199f1b8d408c8645f4bfdd0e124e9f5639dbbad428b326fdc07890"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/coal_stage1.json"
-hash = "7cafbe32f1050441b64be27808dde98ae0cb6025f1385bfe269cf36e1deaf6a8"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/coal_stage2.json"
-hash = "d5ae85b1fe3ad807bd5a2992d9f478c6c4970d711b17f473cd0b8ef7a693fd02"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/coal_stage3.json"
-hash = "0e0c030a45017e419d7c796e4adc1d213b5cae1f334f2bd5b05b31301500405d"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/coal_stage4.json"
-hash = "9138188fa30c9ad1586c090df0d522d5479bd6031fb40163ab5f2a83a9775755"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/coal_stage5.json"
-hash = "068c406ffbd4fb213450c75c3127caa6759e9ecfb5bb9cc39c7ae81ed021fb48"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/coal_stage6.json"
-hash = "78b20ad0f3d7c118d3ab72214a9c8bd25706c0ae2cbf3da6ee75e2c113cdf5cf"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/coal_stage7.json"
-hash = "1588823a408e4972f7c95983fa722531c5bd847cda279b47c2e701288aa72d84"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/copper_stage0.json"
-hash = "3a08efeb45f6c6aa4e5c661225a3f3cea8f4cbed33ff770b6595d995fdc8f2de"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/copper_stage1.json"
-hash = "cc2bf5d13c1f41f3af1abd6202e8f021474ba210a3c21d2160ab0140b253207b"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/copper_stage2.json"
-hash = "0ca4a5faf08945cf3a2a68a06f2836b63afaa1220fee23cebfe523070de563d8"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/copper_stage3.json"
-hash = "db09c59f98fef527131cbe585466e87b4f0a08bc26abc76f9e79c1ec199ee6b2"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/copper_stage4.json"
-hash = "523fd3c6404d58ff0a7cc8ef81ed9995de69a9deb64c7a79fcf6587b4445bb84"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/copper_stage5.json"
-hash = "d80e62e6740df07351c94a91421089d003d84c6b83f9752db678eaba9db47865"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/copper_stage6.json"
-hash = "f4616684ed1a11037e1fbcc8658b0b8b2bbc83c760943f79c9e2af52571aa3ab"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/copper_stage7.json"
-hash = "41fbaba198c8e40fce9cb2ef998d67e14150db3c21ccea7245684a6b832c9d8c"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/iron_stage0.json"
-hash = "a29a6641606bbe686fb4ad8eb5b379dcdee12dfc5cbc0772b1dd780d12859cb2"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/iron_stage1.json"
-hash = "bd029d436ca9dda6b3b760ba0f5839aa6242293a42b755f73ac76f7395230d57"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/iron_stage2.json"
-hash = "a9c2c25a33cd1fe32dad953eeb659bdd144e4d488f4b6006b9f713f21ba9fb9e"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/iron_stage3.json"
-hash = "cc510de9286ca4fa59345b4744ae5b5cdefe3343bc4ad6fc34fda0cfe042c35c"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/iron_stage4.json"
-hash = "27e257fc94becf92ad490148efde929d8eb2e300c28f5eb962dfe1e22cc1f4f5"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/iron_stage5.json"
-hash = "54cbbe20eabb785fefecfdec4000328ef9dd1f82495257268acb0fabfe672bdd"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/iron_stage6.json"
-hash = "15cdc0b6e2e7ca61280d91ee7015c4f59009ca5c362a94fa2273149b163d0f52"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/iron_stage7.json"
-hash = "ac9e1df0507a995fb05357d9716a5669a8d721344e0be0e8a2b6a23b48a67409"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/stone_stage0.json"
-hash = "96d30b9942cbfbb6395995511f347fb6453b7db3a2e3b16a2016db0790dc0419"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/stone_stage1.json"
-hash = "dcc014b8b2e93735ba3021a4e3d8b533e5ee18063ad8be4bc325eba279028ac1"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/stone_stage2.json"
-hash = "348a83119c782685abadf9428ea911e31f7375768a14dea45acd7b25ccee511f"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/stone_stage3.json"
-hash = "67765fc9e0343b2ede0c0698e1955ae30f797990c804a5269c0e5751403a6422"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/stone_stage4.json"
-hash = "a4ba7df1043a3c696d04ba80283a66dbb315f6664e5a06daff0a6391588ab028"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/stone_stage5.json"
-hash = "478a24003c732577039a4135622bb1c1b31ae1a5bdcdfdad5b1a352e57621082"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/stone_stage6.json"
-hash = "b5beaea392239b460ff50925c98704f13a95160a21beb960251bcb4c0a2a5159"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/stone_stage7.json"
-hash = "6eaefded58bd9a2c5a4c0a21e144aa2c426bf4da141b64c0abc573d4cab6cbc5"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/uranium_stage0.json"
-hash = "a78d0e225b902218c414bd09a2a94edfc49bc821da21ba28e4cac8011c716c04"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/uranium_stage1.json"
-hash = "72b2259115e9c03ef154f2734c3a0cbd19ca1501073da709fd34d34d2e3d80bf"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/uranium_stage2.json"
-hash = "d0420b165fe4abf7eacf24b7cde007ccc9a7fa490d6d446aa072552610b8c813"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/uranium_stage3.json"
-hash = "4e482a1ddb34adbf2b7e0f66dad721613ef9a28c4878ea97b5dd93c6d97f9788"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/uranium_stage4.json"
-hash = "be6deac4d229b6ab9ef64fbffe6cd86d67e8dd5a059faae8cab54b523b20a38c"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/uranium_stage5.json"
-hash = "05177b6decaf80e7ac4ff0f9179777055717431eee3d23919ef119a646c30b79"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/uranium_stage6.json"
-hash = "b743956bbc0bbf96315b075ba377230a250d42f1b22ee8315ff18eb1fc615075"
-
-[[files]]
-file = "kubejs/assets/factoryworks/models/block/ore/uranium_stage7.json"
-hash = "d2dec16e2fd6bb36f6eca5884b5238e06ee70b2157c072e28a0ab4a2e44376e1"
 
 [[files]]
 file = "kubejs/assets/factoryworks/models/block/pumpjack.json"
@@ -869,14 +677,6 @@ file = "kubejs/assets/factoryworks/textures/block/electric_mining_drill/top.png"
 hash = "88fddc8773354d5acb5e33c49890368c67d1c741bf73be64bd9e8c9d47ed766d"
 
 [[files]]
-file = "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png"
-hash = "3613ee2cae631758a0a86ee724db520cf0ed7c3405dd93fe14d895e87bc2d6d7"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/fluid/crude_oil.png.mcmeta"
-hash = "d859a74124fbfe6745e73c7bbf5af93ac70a427f40067f5dd60910aa46c10c14"
-
-[[files]]
 file = "kubejs/assets/factoryworks/textures/block/fluid/liquid_amber.png"
 hash = "590c8951bd3c1059e92bc0356a1d097b31420ee84af2c55695404f8a9018a525"
 
@@ -939,166 +739,6 @@ hash = "2ba72a04a21bf74f711930d8cccd6dacc6c013d088e756cc9a4008f86f021be6"
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/mining_drill_port.png"
 hash = "bf738fd9e206ce18f49e4379f5ca6bbf856efeb719e137ad048a47c7c8db2bb5"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage0.png"
-hash = "2cc68601d08abe0a95c587e41dc5accf71b021bb13a188a6e6410c597c411e37"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage1.png"
-hash = "88656fdb890d230d1151290e7bcb231990d459cf13fbcafaa662cbdd3cb0b2ec"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage2.png"
-hash = "a919fffcac1aeaf0bbccb23e267d5a235edd927e95f866db4a4a44b4df913fcf"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage3.png"
-hash = "b866459ac8a29a276207531f08527fe724bc1c0b1810257c8952f5d2529e9b49"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage4.png"
-hash = "e28be36cd21154d1adf77e5479e4b8e8ab64b295f08ba42a2d7a2a5e100c47b5"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage5.png"
-hash = "a9817f13afae97a1a28c3154e98d38021d115d98cb7159108c298dae7745cb16"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage6.png"
-hash = "94ed445e60eeb8c40705491f2c4fc9f47d40eca0eca46648fbee54dd3ae3c062"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/coal_stage7.png"
-hash = "96033f0cc0ad068e6d0153555d2c2d15f9c665a309fa34fec6062afde8b1fbb8"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/copper_stage0.png"
-hash = "b67cafa403d3e42144dbfd881ff727d5b9152441df2f32f5bebe89da96911018"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/copper_stage1.png"
-hash = "838e2942b4fb94f8b93d918b37f368297ee2c71e9e1d83ebec2a2be12e12f596"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/copper_stage2.png"
-hash = "42654ca5469ed38c781405bb5762d43003ca62608421ef76164ed24d08104b24"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/copper_stage3.png"
-hash = "6255af8ed37bb2efc661a61c8d9395bc60d72a9adf266c1b71e3ce07a69c2f8d"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/copper_stage4.png"
-hash = "e12e6cedd8584b512b5d44a2e26c75312ae8c49fe76430d1aeb5d20934c287cd"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/copper_stage5.png"
-hash = "826bd746d8dfc1ceff94bcb923367f31349c63f5789fc45229b93bdcbc4ed184"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/copper_stage6.png"
-hash = "b5f9cfdf3455bb1bea42383fdfc4ef74da2be9eb459b3ea0b5d54224b23bda3e"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/copper_stage7.png"
-hash = "fe52cd57d715dabb2b074186a02d1f754aac344fb8f08a5c97ab1c86ed130b2d"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/iron_stage0.png"
-hash = "d5cacdc118fc83f3aa0452deb235ebd7d76c6212bd092599e93dc3101280eff5"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/iron_stage1.png"
-hash = "883f4168e510f102e3e86e85d454e94c7b1114c03b7118b5bf79e9e922a74c71"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/iron_stage2.png"
-hash = "f3e4138f27b8ee45f4daa79a4b3058bf2954d2c4f52e963d8529413fa1cc4535"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/iron_stage3.png"
-hash = "bbb5ad4940a051b9f4e8f82da8112a84e0e709503b4a975b061d80c9eef3e7bc"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/iron_stage4.png"
-hash = "1dc79f35ba3ae2329ab43e0d397ba49f53f9f662a391f8366529a11cc4aa0cb8"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/iron_stage5.png"
-hash = "21346a0c3c5030a6f17e80763f99b7f5c8079b68d1a9ac37b5f5a010f5d8b1c2"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/iron_stage6.png"
-hash = "47042af9711254c94e13832ac38f033c33bb50d4ecec9224bb7bcb5a2eb87c4c"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/iron_stage7.png"
-hash = "c3e172bd1f0e0f8624181d3fa08e85e58a90494c370fbc15c123af40de0cafdd"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/stone_stage0.png"
-hash = "c0dfdb2b3edf667f80a1c6144e7f969122a3b855f3b1b258d0080a7418032d20"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/stone_stage1.png"
-hash = "4fa40678ece9fc868129381ef27b33f1deb1e167986ea2dac429143c429d9248"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/stone_stage2.png"
-hash = "60a07edadd1720845cb61b34b5a5627bcea061a4b6145cb5ebd3271da4e9c463"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/stone_stage3.png"
-hash = "028cf5af3a56f9c0231275d0fba7baa2f4c1433a1e87e2eed46b7bfcb0f22e75"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/stone_stage4.png"
-hash = "bb1da1d0bdb932a31cd2af91291c1717f546e89b026f9f1722dbbb1336627e3a"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/stone_stage5.png"
-hash = "a545c996e68e5260432b216d025e9c4a529f002bf411bc64fa00ad2eab28116e"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/stone_stage6.png"
-hash = "ac232a60f6c3220b1d5ed9740febfbbc429a067104950bb00f2c0c14952f0b55"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/stone_stage7.png"
-hash = "6f3419ea77791b38d952dafcabcc89257b80979c3a4e28c64ad41a4a9982f995"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage0.png"
-hash = "6ead7baf3ff34e42ab3a2790e1576fd0acf080baf5aec421375a68c391cdb104"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage1.png"
-hash = "37b9148a97b96c2573e379bd13ca8490e23b8ba85a3c7b240be1a31c7167d376"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage2.png"
-hash = "d60b9bedf841f17529c3b0e4d08744561912f84a3463a784d2ec7359eb7ba5dc"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage3.png"
-hash = "c8e1527293544d4b6b62b698bd74c053b48fb0b9c468bcbf00f2462453ba9b05"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage4.png"
-hash = "1e914bebee6d3dac2c06080e02ae52a747018daedac275044a80c17eac8ea4a1"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage5.png"
-hash = "40d9883f16f8fb5728d983f73b738e182df10625ca591ef5defd196b06592e16"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage6.png"
-hash = "12b7b91dc06d79d9b1f784d159edf2a70cf8206c3243910d038ac16fc8e69ffd"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/ore/uranium_stage7.png"
-hash = "01ab2bc337c268c107cdc11b6c6541bce279741a21dbcf8a0594547f264f9a2c"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/block/steam_engine/steam_engine.png"
@@ -1185,16 +825,8 @@ file = "kubejs/assets/factoryworks/textures/item/processing_unit.png"
 hash = "6adeca29a86f6b542ecf6468d0e0fec64ea5c93ae786620fee893256e8230e8e"
 
 [[files]]
-file = "kubejs/assets/factoryworks/textures/item/raw_uranium.png"
-hash = "3fb5a17f150a9f6ba8d8d7dd41ad4ac07d5a5e519610cbe062d2d20dfc4244c1"
-
-[[files]]
 file = "kubejs/assets/factoryworks/textures/item/steel_plate.png"
 hash = "353438e35fb93c107fe95280e9a027b0d69ee1978a6e211fb0e4d6416f1f821d"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/item/sulfur.png"
-hash = "36ab02895aea3d7d373d510766d7878793604c88a16283a07871239adb13d210"
 
 [[files]]
 file = "kubejs/assets/factoryworks/textures/item/yumako.png"
@@ -1226,23 +858,23 @@ hash = "c143fb8b2ce84da8c834b2cd3a9435246dae66e025e5e7a439f463e170310f3a"
 
 [[files]]
 file = "kubejs/data/c/tags/block/ores.json"
-hash = "d3526ad16836dcc0ccf5459d3b91dbe89449e2c1579876d70be0ddb367ca3441"
+hash = "7bdd04ee38c065436cc128700837a38e4d3d3b4aae1d5e3a02a6040bc6ccae38"
 
 [[files]]
 file = "kubejs/data/c/tags/block/ores/coal.json"
-hash = "81113c95d12430ab282fdc6a545a730c4e576faa8b5a1728cf73b5e195ff078b"
+hash = "cd4da6a52943d1015a9a4c1dade326efa227f91d7b088a94693264d2a739d1ed"
 
 [[files]]
 file = "kubejs/data/c/tags/block/ores/copper.json"
-hash = "ddc3d6117ad1396ef53d798bbfe71e1810ff60477c0107ecf456530264cc60c6"
+hash = "31ab5631c3823e850e6ab1c82a32c114f02b77eb8ce1b1da048992467de7bee8"
 
 [[files]]
 file = "kubejs/data/c/tags/block/ores/iron.json"
-hash = "558cd265fbedce3864749d412ef560602584477f69d4902e12721e5ffa85563b"
+hash = "4f3cc42ccfa657eb08f42e2677da83d9d0fa595fab1636acc920670914ffdf49"
 
 [[files]]
 file = "kubejs/data/c/tags/block/ores/uranium.json"
-hash = "2a6fae088e72a53285acc33cf5de5740d27bd175431eb60bab2ae356050d111b"
+hash = "5d4432b9519d65fcbeed51fd7e8ea160208c5e34c4688e3b1397bf936942a5bc"
 
 [[files]]
 file = "kubejs/data/c/tags/fluid/steam.json"
@@ -1250,7 +882,7 @@ hash = "340b02aa5a8209f65e1cc9c99388477b4511ff4d948745cf5294a51ed21cf16b"
 
 [[files]]
 file = "kubejs/data/c/tags/item/raw_materials/uranium.json"
-hash = "6c93fd0d8f6e316fa54bc3197be70f748e455feb40446878f9d059355743f64c"
+hash = "5cb8cd4c67d60cba0040a8b73d09464db0990bd9adb72dcad21e44f3825adaaf"
 
 [[files]]
 file = "kubejs/data/c/tags/item/tools/wrench.json"
@@ -1638,11 +1270,11 @@ hash = "bce4f6ef8ff874dfb3edfa4f1204a378cbf7ca6f76271565aeb014fc8f5e4169"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/sulfur.json"
-hash = "0713924228223b03ca774230ab7acef08017e00d8ada6eb5238b1601121ad153"
+hash = "c434ba774a2e4425c451a2361c6d4494a8d1004ea5f62b5e707ce91a93e8f6f3"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/chemistry/sulfuric_acid.json"
-hash = "40deba898fdf2a16dd7cebec9701ad1b3939f7d664ee315b5c89bccbbf072be5"
+hash = "162d02750493e795b7a5e083d17dda0c439ccc2864d8bab5124b3bf12f5a412c"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/copper_plate.json"
@@ -1654,7 +1286,7 @@ hash = "223b99132652cfd6e414d8f02e2393c646f7b5a11c72fcb22f0a5ed0b323e96a"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/oil_processing/advanced_oil_processing.json"
-hash = "73d904d88969068271251c4cb0db42e9082b6f6d6389608efa15c813d536716d"
+hash = "d7a2eb0f83b64ff504ee1c4eb28f1aa6e0f73d479a7d0bd11961c692774d17e5"
 
 [[files]]
 file = "kubejs/data/factoryworks/recipe/steel_plate.json"
@@ -1681,14 +1313,6 @@ file = "kubejs/data/factoryworks/tags/block/factorio_mining_time.json"
 hash = "cbab82c4d2472193b5e4bddb109e2067a46f02e300f69791dca54b9fa991dcc1"
 
 [[files]]
-file = "kubejs/data/factoryworks/tags/worldgen/biome/patch_land.json"
-hash = "72ef16acf81e3ebf7ee0d8644ee204b9b39337ac6a57576b713de69a9c44ade5"
-
-[[files]]
-file = "kubejs/data/factoryworks/worldgen/structure/oil_field.json"
-hash = "12dc8c85a413176a476e8397d564be3549c1d1d7441683ff41f23f9a46220b89"
-
-[[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/outfield_coal.json"
 hash = "22d72c8abfe2d435c70749a70cea80922b9ae990157b49e48b858661e6dae7d9"
 
@@ -1707,10 +1331,6 @@ hash = "a54fb0fe0df15c410125bdedd51712b28818ac183425fa8ec77132edb95066e9"
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure/outfield_uranium.json"
 hash = "724c6cd0475eecc369fdfe20a54fd37e2a03db703480ecb877db65e57753d713"
-
-[[files]]
-file = "kubejs/data/factoryworks/worldgen/structure_set/oil_field.json"
-hash = "fe85a72e516deeaa4121fb9f03ae8207392ea1e00bbe7238c2c95a37feedb8b8"
 
 [[files]]
 file = "kubejs/data/factoryworks/worldgen/structure_set/outfield_coal.json"
@@ -1966,7 +1586,7 @@ hash = "f3ac4d11e187529c8fdbff5ed1be87ba9bcec92ec3d5e475803e0b9db9467f1b"
 
 [[files]]
 file = "kubejs/startup_scripts/items.js"
-hash = "dc0ceec641a2cecfadb2648a3ed0ab200751d88152451666178e3fd2f6435df9"
+hash = "aaabe1623f093ac6d305bfd8ddce1bed9e6998ba2563ba4c8fc77dd6a24125e8"
 
 [[files]]
 file = "kubejs/startup_scripts/jsconfig.json"
@@ -2027,14 +1647,13 @@ hash = "4f2b02a68a2cb7f91d22790bb64cfaed7e9f226a1c61080a860af2abef703c1e"
 metafile = true
 
 [[files]]
-file = "mods/factoryworks-core.pw.toml"
-hash = "4d6aff9b0106550104d2dbfcfb0c30b6d79b5adf811c518cb36c14a985da6405"
-metafile = true
-
-[[files]]
 file = "mods/ferritecore.pw.toml"
 hash = "c2d1674a4d1466e09946819d58436b555256613d2cbcb8f12e26d950bd76d8ef"
 metafile = true
+
+[[files]]
+file = "mods/fieldworks-0.1.0.jar"
+hash = "f140f663826899a3e277e3cb8898aeec823cf5322a4a6cc065c12f6f0940f8a9"
 
 [[files]]
 file = "mods/ftb-chunks-forge.pw.toml"

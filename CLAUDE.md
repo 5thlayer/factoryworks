@@ -123,8 +123,7 @@ project id (Beltworks, Craftworks) also gets `mods/<mod>.pw.toml` naming that ve
 file, and the jar itself is not indexed, so an export references it rather than bundling it (#532).
 The pin never waits on CurseForge: while CurseForge does not list the file, the sync installs the jar,
 removes the row's metafile and prints `pending <mod> <version>`, and a later plain sync fills it in.
-FactoryWorks Core's `mods/factoryworks-core.pw.toml` names its last released CurseForge file, and
-no script moves it: Core's source left this repo (ADR-0128). Adding a Library is a row and a sync.
+Fieldworks replaces FactoryWorks Core, which is no longer installed (#609). Adding a Library is a row and a sync.
 `tests/pack/test_local_jars.py` runs
 the sync's `--check`: the jar in `mods/` is the pinned one, byte for byte `~/.m2`'s when `~/.m2`
 holds it; a newer version in `~/.m2` is named without failing. For a
@@ -137,8 +136,9 @@ Wireworks, the electric poles, is pinned the same way (#476). It has no CurseFor
 its jar is indexed by hash and negated in `.packwizignore`. Its Bindings are the Pack's:
 `config/wireworks-server.toml` sets Factorio's supply areas and wire reaches; `kubejs/data/wireworks/tags/` puts the Picks in `wire_tools`
 and the Pack's generators in their tag, held by `tests/pack/test_network_tags.py`.
-Pipeworks, the pipes and the storage tank, is pinned the same way (#557, ADR-0110): no CurseForge
-project, so indexed by hash and negated in `.packwizignore`. `kubejs/data/pipeworks/tags/` lets the
+Pipeworks, the pipes and the storage tank, and Fieldworks, the ore patches and oil wells, are pinned
+the same way (#557, ADR-0110, #609): no CurseForge project, so indexed by hash and negated in
+`.packwizignore`. `kubejs/data/pipeworks/tags/` lets the
 Picks close a pipe's side (ADR-0125).
 A change that crosses Groundworks, Beltworks, Wireworks, Pipeworks, Craftworks and the Pack goes through the
 `release-train` skill (`skillworks:release-train`, from 5thlayer/skillworks), in that order: each
@@ -149,5 +149,5 @@ their ranges together.
 ### First-party mod
 
 `factoryworks_core` left this repo (ADR-0128, `docs/port/mod-audit.md`): its source is at commit
-`fb05f50`, and each port ticket names the rows it takes from there. The Pack still names Core's
-`factoryworks:` blocks and items until the Showcase moves out (#663).
+`fb05f50`, and each port ticket names the rows it takes from there. Its jar is no longer installed
+(#609); the Pack's KubeJS still registers `factoryworks:` items until the Showcase moves out (#663).

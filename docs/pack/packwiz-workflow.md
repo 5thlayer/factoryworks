@@ -65,10 +65,9 @@ whether it has a CurseForge file:
 | Jar | How it is tracked |
 | --- | --- |
 | Beltworks, Craftworks | row carries a `curseforge` project id; `mods/<mod>.pw.toml` names the pinned version's CurseForge file, and the jar beside it is not indexed (#532) |
-| Wireworks, Pipeworks | unmanaged entry in `index.toml`, path plus sha256 and no metafile, since neither has a CurseForge project yet |
-| FactoryWorks Core | `mods/factoryworks-core.pw.toml` names the CurseForge file of `gradle.properties`' `mod_version`, the version `scripts/release.sh` last released (ADR-0101), and the sync moves it as it does a row's; the jar `installToPack` builds is not indexed |
+| Wireworks, Pipeworks, Fieldworks | unmanaged entry in `index.toml`, path plus sha256 and no metafile, since none has a CurseForge project yet |
 
-`packwiz update --all` prints this for the two unmanaged jars:
+`packwiz update --all` prints this for the unmanaged jars:
 
 ```
 A supported update system for "wireworks-0.4.0.jar" cannot be found.

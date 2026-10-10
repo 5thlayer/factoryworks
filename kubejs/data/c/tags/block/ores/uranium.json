@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    "factoryworks:uranium_ore"
+    "fieldworks:uranium_ore"
   ]
 }

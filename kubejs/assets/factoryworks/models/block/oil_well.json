@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_bottom_top",
-  "textures": {
-    "top": "minecraft:block/black_concrete_powder",
-    "bottom": "minecraft:block/stone",
-    "side": "minecraft:block/stone"
-  }
-}

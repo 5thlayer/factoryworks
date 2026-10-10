@@ -20,12 +20,6 @@ The Pack's guard (`tests/pack/test_independence_guard.py`) fails if any of them 
 | Script | Produces |
 |---|---|
 
-## Ore textures
-
-| Script | Produces |
-|---|---|
-| `build-ore-textures.py` | eight per-resource stage sprites |
-
 ## Other asset generators
 
 | Script | Produces |

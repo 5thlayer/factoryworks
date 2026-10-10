@@ -2,10 +2,10 @@
   "__comment": "GregTech's Miner scans this tag; a block outside it is invisible to rung 1's drill.",
   "replace": false,
   "values": [
-    "factoryworks:coal_ore",
-    "factoryworks:copper_ore",
-    "factoryworks:iron_ore",
-    "factoryworks:stone_ore",
-    "factoryworks:uranium_ore"
+    "fieldworks:coal_ore",
+    "fieldworks:copper_ore",
+    "fieldworks:iron_ore",
+    "fieldworks:stone_ore",
+    "fieldworks:uranium_ore"
   ]
 }

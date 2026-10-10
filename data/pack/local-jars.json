@@ -57,6 +57,17 @@
         "repo": "5thlayer/pipeworks",
         "ref": "pipeworks-v{version}"
       }
+    },
+    {
+      "mod": "fieldworks",
+      "group": "io.github.5thlayer",
+      "artifact": "fieldworks",
+      "version": "0.1.0",
+      "pattern": "fieldworks-*.jar",
+      "source": {
+        "repo": "5thlayer/fieldworks",
+        "ref": "fieldworks-v{version}"
+      }
     }
   ]
 }
