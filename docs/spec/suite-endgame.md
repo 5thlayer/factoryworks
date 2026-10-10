@@ -20,8 +20,8 @@ prior art is [tech-mod-endgame-sinks.md](../research/tech-mod-endgame-sinks.md),
 
 ### Gearworks, a new Module
 
-6. **Gearworks owns Gear**: what the player wears or carries to build and move through the factory
-   faster, not combat gear. Upgrades fit a **Gear Grid**.
+6. **Gearworks owns Gear**: what the player wears or carries, made from the suite's materials.
+   Upgrades fit a **Gear Grid**.
    - An item fits the Grid by tag plus a data map that names its stats. Gearworks owns every upgrade
      behaviour; other mods contribute only items, through tags.
    - Gear draws FE through NeoForge's energy capability. Voidworks can be its best source by handing

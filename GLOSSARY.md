@@ -82,8 +82,7 @@ somewhere for its output to go.
 _Avoid_: endgame (for the consumer itself), resource drain, money sink
 
 **Gear**:
-What the player wears or carries that the suite's materials make, raising how fast they build and
-move through the factory.
+What the player wears or carries that the suite's materials make, upgraded through a Gear Grid.
 _Avoid_: equipment (that is belt equipment, ADR-0100), armor, tools
 
 **Gear Grid**:
