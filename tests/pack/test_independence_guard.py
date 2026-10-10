@@ -14,6 +14,9 @@ COUNTING RULE. For each forbidden namespace, one count is the sum of:
 tracked files count: the game writes untracked client configs, which would make the count differ
 between checkouts.
 
+CORPUS. Separately, any tracked file under `CORPUS_PATHS` or named `scripts/factorio-*` fails, with no
+exemption (ADR-0126, #605): Wube's data and what reads it live in a private repository.
+
 A count above its baseline fails. A count below it fails too, asking for the baseline to be lowered,
 so a slice that removes references locks the gain in.
 """
@@ -30,6 +33,15 @@ TEXT_SUFFIXES = {".json", ".json5", ".js", ".toml", ".snbt", ".cfg", ".propertie
                  ".mcmeta", ".ini", ".css", ".lang", ".bak"}
 
 
+CORPUS_PATHS = ("data/factorio/", "docs/research/", "docs/spec/", "docs/factorio-mechanics.md",
+                "scripts/factorio-")
+
+
+def tracked_paths():
+    return subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True,
+                          check=True).stdout.splitlines()
+
+
 def shipped_files():
     files = []
     for sub in ("kubejs", "config"):
@@ -38,8 +50,7 @@ def shipped_files():
     files += sorted((ROOT / "mods").glob("*.pw.toml"))
     files.append(ROOT / "index.toml")
     parked = ROOT / "kubejs/parked"
-    tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True,
-                                 check=True).stdout.splitlines())
+    tracked = set(tracked_paths())
     return sorted(p for p in files
                   if parked not in p.parents and p.relative_to(ROOT).as_posix() in tracked)
 
@@ -86,12 +97,15 @@ def main():
         elif n < base:
             failures.append(f"{ns}: {n} references, baseline {base}: lower the baseline to {n} "
                             "in data/pack/independence-baseline.json")
+    for path in tracked_paths():
+        if path.startswith(CORPUS_PATHS):
+            failures.append(f"{path} is corpus: it belongs in the private repository (ADR-0126, #605)")
     print("counts: " + ", ".join(f"{ns}={counts[ns]}" for ns in namespaces))
     for f in failures:
         print("FAIL " + f)
     if failures:
         return 1
-    print("OK independence guard: every count equals its baseline")
+    print("OK independence guard: every count equals its baseline, no corpus path tracked")
     return 0
 
 
