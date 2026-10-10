@@ -2,7 +2,7 @@
 
 A Minecraft 26.1.2 / NeoForge modpack reproducing the progression, logistics puzzles and
 interplanetary scope of Factorio's Space Age expansion, built on a curated mod stack and bound
-together by `factoryworks_core` and KubeJS into a stationary, automation-first loop.
+together by Groundworks and its Modules (Fieldworks, Wireworks, Pipeworks, Craftworks, Beltworks) and KubeJS into a stationary, automation-first loop.
 
 This document describes intended design. Decisions that are hard to reverse are recorded as ADRs in
 `docs/adr/`; domain vocabulary is defined in `GLOSSARY.md` and used here verbatim. Where an ADR or
@@ -30,9 +30,9 @@ the packwiz manifest (ADR-0024); ADR-0060 records which of them are pre-releases
 - **Researchd**, forked by the pack — the research tree and the Research Lab that gates it
   (ADR-0022). The tree's shape is Factorio's, extracted rather than transcribed, and research is
   held per team; a machine locks by the team that placed it (ADR-0058's amendment). FTB Quests keeps the book and the reward surface, and gates nothing.
-- **`factoryworks_core`** — the pack's own mod, for mechanism no other mod supplies at
-  Factorio's numbers (ADR-0014, ADR-0015). Among it: the pole network, the only power carrier
-  (ADR-0062), the pack's recipe types (ADR-0063) and the machines built on Oritech's bodies.
+- **Modules** — `factoryworks_core` left the pack (ADR-0128); the ore, oil wells and crude oil are
+  Fieldworks'. The boiler, steam engine, offshore pump, furnaces, mining drills, radar, pumpjack and
+  the oil chain beyond crude are not in the pack yet; their ports are in `docs/port/mod-audit.md`.
 - **KubeJS** — registers the pack's items and runs the stock-recipe sweep (ADR-0015, ADR-0034).
 
 FE is the pack's only energy currency, at 1 FE = 100 J (ADR-0060). Create, Create: Power Grid,
@@ -77,8 +77,8 @@ interplanetary travel (#340).
 ### The launch
 
 The launch is the payoff moment, physical and watchable, and is never simulated. The Rocket Silo is
-a `factoryworks_core` machine that makes Rocket Parts and launches, and it does not wait on an
-Oritech release (ADR-0080). What a launch does, with no travel yet to give it a destination, is
+a machine that makes Rocket Parts and launches, planned for a Module now that
+`factoryworks_core` has left (ADR-0128), and it does not wait on an Oritech release (ADR-0080). What a launch does, with no travel yet to give it a destination, is
 #378.
 
 ### Travel and cargo

@@ -26,9 +26,6 @@ ASSETS = ROOT / "kubejs/assets/factoryworks"
 WORLDGEN = next(d for d in (DATA / "worldgen", ROOT / "kubejs/parked/data/factoryworks/worldgen")
                 if (d / "configured_feature/yumako_tree.json").is_file())
 
-# The saplings the deleted Core mod registered, as of fb05f50, which the pack still names until
-# the Showcase moves out (#663, ADR-0128).
-CORE_SAPLINGS = frozenset({"factoryworks:yumako_sapling", "factoryworks:jellystem_sapling"})
 KUBEJS_BLOCKS = ROOT / "kubejs/startup_scripts/blocks.js"
 KUBEJS_ITEMS = ROOT / "kubejs/startup_scripts/items.js"
 
@@ -79,13 +76,11 @@ def nested_uniform_providers(node):
 
 
 def main():
-    blocks = CORE_SAPLINGS | kubejs_ids(KUBEJS_BLOCKS)
+    blocks = kubejs_ids(KUBEJS_BLOCKS)
     items = kubejs_ids(KUBEJS_ITEMS)
     # A block item exists for every block, so a loot table may name either.
     registered = blocks | items
 
-    check(not (CORE_SAPLINGS & kubejs_ids(KUBEJS_BLOCKS)),
-          "no sapling is registered by KubeJS too")
     check({"factoryworks:yumako_fresh", "factoryworks:jellynut_fresh"} <= items,
           "the two harvested materials are registered, as Fresh")
     check({"factoryworks:iron_bacteria_fresh",
@@ -111,13 +106,7 @@ def main():
         check(json.loads(placed.read_text())["feature"] == f"factoryworks:{tree}_tree",
               f"{tree}'s placed feature points at its configured feature")
 
-    # Only this file's own blocks. `loot_table/blocks/` is shared with every other pack-authored
-    # block, and `registered` above is built from the two sources flora is registered through --
-    # the mod's saplings and KubeJS -- so a block registered in Java anywhere else reads as a
-    # stray item here. It is not: the furnaces and machines have loot tables of their own,
-    # asserted by their own checks. Each
-    # family checks its own drops against its own registry, and sweeping the whole directory from
-    # here only lets this check fail for another family's content.
+    # Only this file's own blocks: each family checks its own drops against its own registry.
     foreign = []
     for table in sorted((DATA / "loot_table/blocks").glob("*.json")):
         if f"factoryworks:{table.stem}" not in blocks:
@@ -138,8 +127,8 @@ def main():
     # two trees into one with two textures.
     leaves = json.loads((DATA / "loot_table/blocks/yumako_leaves.json").read_text())
     leaf_drops = set(json_strings(leaves)) & registered
-    check(leaf_drops == {"factoryworks:yumako_sapling", "factoryworks:yumako_fresh"},
-          "yumako leaves yield Yumako and the sapling to replant with")
+    check(leaf_drops == {"factoryworks:yumako_fresh"},
+          "yumako leaves yield Yumako")
     stem = json.loads((DATA / "loot_table/blocks/jellystem_stem.json").read_text())
     stem_drops = set(json_strings(stem)) & registered
     check(stem_drops == {"factoryworks:jellynut_fresh"},
@@ -158,7 +147,6 @@ def main():
 
     for texture in ("block/yumako_log", "block/yumako_leaves",
                     "block/jellystem_stem", "block/jellystem_leaves",
-                    "block/yumako_sapling", "block/jellystem_sapling",
                     "item/yumako", "item/jellynut"):
         check((ASSETS / f"textures/{texture}.png").is_file(), f"texture {texture}.png exists")
 
@@ -213,9 +201,6 @@ def main():
                        "gleba_green_marshland", "gleba_red_marshland"):
         check(f"biome.factoryworks.{biome_name}" in lang,
               f"{biome_name} has a display name")
-    for sapling in CORE_SAPLINGS:
-        key = "block.factoryworks." + sapling.split(":")[1]
-        check(key in lang, f"the mod's {sapling} has a lang entry (the pack names it, not the jar)")
 
     return 1 if failures else 0
 
