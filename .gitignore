@@ -111,6 +111,13 @@ config/emi.css
 # Python bytecode from the test harness
 __pycache__/
 
+# Leftovers from the Core mod's build in a checkout that predates ADR-0128.
+.gradle/
+build/
+mod/
+# Core's defaults, which its jar rewrites on launch. The Pack sets nothing there.
+config/factoryworks_core-server.toml
+
 *.log
 
 .probe
