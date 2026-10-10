@@ -2,7 +2,7 @@ hash-format = "sha256"
 
 [[files]]
 file = "LICENSE"
-hash = "c64b624c9bc7b998944cbe76b8139feb12d6f063f260074170934ef4f36d8020"
+hash = "35c0c02ab8e2b387eed66f62ca34d1f1edc02df99897fc3438f4554df5d5fbe2"
 
 [[files]]
 file = "LICENSES/Apache-2.0.txt"
@@ -25,10 +25,6 @@ file = "LICENSES/LicenseRef-Mojang.txt"
 hash = "2e6528fa0e3fb40fadcd4c6c7c0f39a81f83c2ea122ac3acf25eda32fb609518"
 
 [[files]]
-file = "LICENSES/LicenseRef-Wube-Factorio-Data.txt"
-hash = "be31ba5a7f332d8d8e9819b77c7af6d4b029af7fc59d2bb2729bb27a05f662ae"
-
-[[files]]
 file = "LICENSES/MIT.txt"
 hash = "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
 
@@ -38,7 +34,7 @@ hash = "f51510fca73f74143c56cff97c42f275c15a2d999fd5be26cfa61b9a718c39c8"
 
 [[files]]
 file = "REUSE.toml"
-hash = "71896a1a3eb70e8637ac43b98fa04547d561b8b34563063faa3425f3bb21b240"
+hash = "55b48de3e308ffb6704d8feb2b2709ed0c198b45271cfa6fdad883ca93ecd385"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -190,31 +186,15 @@ hash = "adfe8682fab779df9da6dc6d958cc2df388cb5f401ad9864ee6b4feec1557c1a"
 
 [[files]]
 file = "data/pack/art-provenance.json"
-hash = "79053afff86cea6df6e5808312438feec898c9ed027593ad429a0505bcd1ef45"
-
-[[files]]
-file = "data/pack/category-map.json"
-hash = "e4f57534da2772d2bff1a2dab9536c7bd4f6fdd71be24963518b234652492e52"
+hash = "d579179bfe52a9c70b2b175ef9a2d9f81d9b75c81a189937a65d60d3b0c8aff6"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
-hash = "3a4f996e35eadeed2c23bd6d3fdb032c58cd84bb09283c5c0ecb13ae5a9fdb5d"
-
-[[files]]
-file = "data/pack/item-map.json"
-hash = "c9f74d965a08e4c56b9a8380d17a8d30847cf55788beae477fb2ab41df014ca3"
+hash = "19d4ba059341fa16a45bece54d7b08eb650bf21b0d123c03d23fda8d1a620258"
 
 [[files]]
 file = "data/pack/local-jars.json"
 hash = "9856ae2612268dee5c5a850c655ae043962fcc86ea482a44da036d201db04c7c"
-
-[[files]]
-file = "data/pack/recipe-overrides.json"
-hash = "75e782cb9d101e3103ba81e39fbdfa406d697f7a5f4825a64b9a7396f4aad09b"
-
-[[files]]
-file = "data/pack/subgroup-owner.json"
-hash = "96feab283d45f0882ee351adf9b6a828225f0972951e108f2ccd1a73b97d1188"
 
 [[files]]
 file = "defaultconfigs/ftbessentials-server.snbt"
@@ -1986,7 +1966,7 @@ hash = "f3ac4d11e187529c8fdbff5ed1be87ba9bcec92ec3d5e475803e0b9db9467f1b"
 
 [[files]]
 file = "kubejs/startup_scripts/items.js"
-hash = "95f8cfa6b76c91ed565c6eba5227e856636ad07437038cbc39c5e22adaba3118"
+hash = "dc0ceec641a2cecfadb2648a3ed0ab200751d88152451666178e3fd2f6435df9"
 
 [[files]]
 file = "kubejs/startup_scripts/jsconfig.json"
