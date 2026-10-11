@@ -34,7 +34,7 @@ hash = "6a84ffd87b50dce9c0b170d7f85e4d1dd12e2c89a916a3c013179fd45c178a30"
 
 [[files]]
 file = "REUSE.toml"
-hash = "712f0b8f76fc86c4f52d6b26e513ce1a034af473199ce0523f148132e89eb48d"
+hash = "aa9fe5654f528ddf01d305a0dae3f5c8833efdce7c0e36ee6d54aa2b9da51910"
 
 [[files]]
 file = "config/MouseTweaks.cfg"
@@ -166,7 +166,7 @@ hash = "adfe8682fab779df9da6dc6d958cc2df388cb5f401ad9864ee6b4feec1557c1a"
 
 [[files]]
 file = "data/pack/art-provenance.json"
-hash = "c9c36e2a137ff9819b36d445f8681896b9d7f12ace33d025e38918ba99559fbf"
+hash = "87d008fed6ac4eb7982e2d42f7b77b591b1cd8a1fb7e1f569fa2c433079aba3d"
 
 [[files]]
 file = "data/pack/independence-baseline.json"
@@ -187,50 +187,6 @@ hash = "989f3737ae4621b8ff6730bce4cbeeee756921e7e510e0c281c8a350501d98af"
 [[files]]
 file = "kubejs/assets/craftworks/lang/en_us.json"
 hash = "327056348d9af8988e6b6b4408f8aa461aae5e44dd62db05f4f63491f5cedb4c"
-
-[[files]]
-file = "kubejs/assets/factoryworks/lang/en_us.json"
-hash = "efccbdc753e98b8c2b665144be6bd79f0d11fe0aa132434df1ffd373f5feaf09"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/copper_stromatolite.png"
-hash = "6c50e423fd15a16b1699d4b97b261102a1a0ad0c6685fe9f9ed6fa61da090cd6"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/iron_stromatolite.png"
-hash = "4b018f17f58cdb85ffb841f67b294c2c26ee5643edc72c790e58d1d01a8d73a1"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/jellystem_leaves.png"
-hash = "e7723aecc73744eab838dbd92eb286abe3331dbafe8c458b020d29b0124b5584"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/jellystem_stem.png"
-hash = "c4c8f5b363881e5fa2255e3983ca5e5a808eae512fe94bda4f02e25899c5474f"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/yumako_leaves.png"
-hash = "c05ff631707618721e45f3a25e67004be785d16407d86aa68d29d6e511b35060"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/block/yumako_log.png"
-hash = "e6076ea16f27bbd6a57a9c2c1709b8a06addf13d6f363a3f060dd478a9b7b36a"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/item/copper_bacteria.png"
-hash = "3e50d0b6f8629688c4ceb0a131cb987121fc413923c6c2a91e8abad1fb9fd02f"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/item/iron_bacteria.png"
-hash = "4413aad8dd3b7d28f39238e7a58b3024aa881e98835ecef686aec0926dc2c7c5"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/item/jellynut.png"
-hash = "f01897634fc01d7da89fb6c1970561af76e01f8c4adc98116e0fafdb6358131d"
-
-[[files]]
-file = "kubejs/assets/factoryworks/textures/item/yumako.png"
-hash = "ecafbd0c6b1dd0019e31731a53239f055684eb32fde4480e1ea8c382d365314e"
 
 [[files]]
 file = "kubejs/assets/minecraft/lang/en_us.json"
@@ -281,74 +237,6 @@ file = "kubejs/data/c/tags/item/raw_materials/uranium.json"
 hash = "5cb8cd4c67d60cba0040a8b73d09464db0990bd9adb72dcad21e44f3825adaaf"
 
 [[files]]
-file = "kubejs/data/factoryworks/gcyr/planets/aquilo.json"
-hash = "591a09888f9503f309622f1f51eb31338b295f910fcaeac02bdd1ccee0007cdb"
-
-[[files]]
-file = "kubejs/data/factoryworks/gcyr/planets/fulgora.json"
-hash = "e5ff91a78d7039ed6470d6cec72dbd914dd1425f9ca66278f5529943c322f00e"
-
-[[files]]
-file = "kubejs/data/factoryworks/gcyr/planets/gleba.json"
-hash = "1b66f9a90daafd81ffd9a7ee8e5b1b74aa70f7a1178f518f7861ab41a5eb0adc"
-
-[[files]]
-file = "kubejs/data/factoryworks/gcyr/planets/overworld.json"
-hash = "970ec04dc5b4b7ac6b98bfecb3b862b74ecd8db3b5c146c0aed880e87e484aa1"
-
-[[files]]
-file = "kubejs/data/factoryworks/gcyr/planets/shattered_planet.json"
-hash = "249c6d8dda8d64ed31b9faf09fe56a20d0a9de4da876e6108b63b5f8e3175f76"
-
-[[files]]
-file = "kubejs/data/factoryworks/gcyr/planets/vulcanus.json"
-hash = "dfe289b0d262b953b94a008fbe347ba9119b9e09b18d398c124874deed68e880"
-
-[[files]]
-file = "kubejs/data/factoryworks/gt_materials/scrap.json"
-hash = "4e6d7a3754dbc3652a54048fbbe1c7970dfeb9f1ff2c74e21d656012f55a50fc"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/copper_stromatolite.json"
-hash = "a4496040c13ede9a244122d724f9c537e4e3636bc7d48a773b016e41c72a6d52"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/fulgorite.json"
-hash = "4858fa2903f0c20e90e0939e1e24ac03801722ab60d273881a3730f7f3b85b54"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/iron_stromatolite.json"
-hash = "5bca5349ff46836901651fd219b8f00d6e6aa5b5fa1926e093ebed5b90bccfc8"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/jellystem_leaves.json"
-hash = "f2ef2d7bc8fa2d343b0a7dd834f0eb550f84937bc0ce41f37b2cbae81c945496"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/jellystem_stem.json"
-hash = "4be4c844b4bcddb422015d9bfa3a7aa04daad1a49e0bf19153071bb61b881bfe"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/scrap_pile.json"
-hash = "9883d710e25702d7b0605d433b1095cb983afe08e12636d51c44527fba2c0fbb"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/yumako_leaves.json"
-hash = "7c3a703b839ac9e3ca755a8717cf3db4ae5a6e15c842ce5285af7fd1f456f8d1"
-
-[[files]]
-file = "kubejs/data/factoryworks/loot_table/blocks/yumako_log.json"
-hash = "e24c029cc7bf385e96cdd9249e06f70e2deeacb38a25889a7683601ee1d63bc1"
-
-[[files]]
-file = "kubejs/data/factoryworks/structure/electro_ruin_1.nbt"
-hash = "35c14d4bd26e5f5e6ce7e6303c10e960431e516d0341b6029a94c4dacb0a2f93"
-
-[[files]]
-file = "kubejs/data/factoryworks/structure/electro_ruin_2.nbt"
-hash = "3a73f16df25ebb574462a2f75f1b704c7bc9e545340489485ae87e8867e50e0b"
-
-[[files]]
 file = "kubejs/data/factoryworks/tags/block/dismantle/pipes.json"
 hash = "603787ebc99ef53d3f25c7d6cda3562891061e103d4a0c10bbd255d129d469e2"
 
@@ -369,186 +257,6 @@ file = "kubejs/data/oritech/neoforge/biome_modifier/oil_spring_desert.json"
 hash = "003a38d109ac87f9da363fc7d62a00daaa83f83509fa0518e3ca0f15b12b115b"
 
 [[files]]
-file = "kubejs/parked/data/factoryworks/dimension/aquilo.json"
-hash = "cdfcd370b515e9d4eb0a04b2b1fdd55fd63b90fcce5a4b07a91015ffb15cafdb"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/aquilo_orbit.json"
-hash = "a616d38296854ee437b299bad517415b425cab549d6ef72e46b44803ca5a1ce9"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/fulgora.json"
-hash = "4a13253d5bc3136f25029356d3e839a5aceaefc3a0c3beb3753701dad9eea8a1"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/fulgora_orbit.json"
-hash = "a616d38296854ee437b299bad517415b425cab549d6ef72e46b44803ca5a1ce9"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/gleba.json"
-hash = "7aad02d3511c40ae7e1ec0b63bb8adcd7a43cd31536615d01d6227477e0e9e51"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/gleba_orbit.json"
-hash = "a616d38296854ee437b299bad517415b425cab549d6ef72e46b44803ca5a1ce9"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/shattered_planet.json"
-hash = "cdfcd370b515e9d4eb0a04b2b1fdd55fd63b90fcce5a4b07a91015ffb15cafdb"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/shattered_planet_orbit.json"
-hash = "a616d38296854ee437b299bad517415b425cab549d6ef72e46b44803ca5a1ce9"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/vulcanus.json"
-hash = "d37dbc8778da9b1fda39e639ee93299f37519ad2c180afc3013d2fa74c8f672f"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension/vulcanus_orbit.json"
-hash = "a616d38296854ee437b299bad517415b425cab549d6ef72e46b44803ca5a1ce9"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension_type/electro.json"
-hash = "e692111b2ed9ce02ba90d8e433981d15eb4f514a48531afe292dea994e796bd8"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension_type/ignus.json"
-hash = "dc44b951c91777c4c4c977fd47603ef6c97ecdf7328c76ba1fa69ef64b5d5fa1"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension_type/placeholder_surface.json"
-hash = "aaab2324def92e574e7229b4eb8bbbd10ad0d268ed2be69d03fdc6c9478c037b"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/dimension_type/sapros.json"
-hash = "44a51a2da7f0975a1771a59cc13d676b134c780a84ab590d64476bb2f183e85d"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/tags/worldgen/biome/is_electro.json"
-hash = "4b90c449013cd6076ca26cb02dfdf28e8b5a28a264d1cc3d13013b08330fa11c"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/tags/worldgen/biome/is_ignus.json"
-hash = "f9c49668ba00230ddcee9fea7e990e7f328551362b6ccef5ac77ea358ea22a9c"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/tags/worldgen/biome/is_sapros.json"
-hash = "fd62227378fac3f9eb653fb964b8616ed1b3ea6c71aab2eb9d91006ae42d3fd6"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/electro_barren_plateau.json"
-hash = "024077bd2308360a4299841094cbc4836d8ad2818cab1580f5df17f4dc2bbdde"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/electro_oil_ocean.json"
-hash = "149a2906677662e23ffd10fed495be8cc7788b0fc3f5fe6ef59c1baaa7d0a90a"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/electro_scrap_plateau.json"
-hash = "2dea4a19fc3e9fc6f5c790a1409c5e63d1ef1ce96c92d619258bce1a36ad850a"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/gleba_dark_highlands.json"
-hash = "383ea5e45fd07566c17c2249707ab21120a202cb5dcc2b043611cd93a8ad48f0"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/gleba_green_marshland.json"
-hash = "2d1c7a9bbba870a7f46b6adf9e15542678cc5d3631a6069bfac62e2d5d11e602"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/gleba_marshes.json"
-hash = "2d3f2e25d45ef450e20e42dd8f857c574423cf9d28ac97f962cffafcf59551bf"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/gleba_midlands.json"
-hash = "289aea0fd7f6628b96684f06328ecbc8ab9cd65eed0ff6fd983ab725249b54a0"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/gleba_red_marshland.json"
-hash = "7288e05f8f50c57baa3ae735ea741fc90c99903c1c4420d0102f592b74306903"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/ignus_barren_plains.json"
-hash = "a7cd7d0880af83c6538f4167f8fea8b5d62721616345c0b8654b4cd2877f11bc"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/biome/ignus_eroded_plains.json"
-hash = "a7cd7d0880af83c6538f4167f8fea8b5d62721616345c0b8654b4cd2877f11bc"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/configured_feature/electro_fulgorite.json"
-hash = "51f6d1791ff2e7c9dc033b90596d0be4e8f7b8e1f4ceb246644f3e69ef493cf9"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/configured_feature/electro_scrap_pile.json"
-hash = "5734a250bee6961c3b9b8f218f41514a2681e0b27ee3ddb5360b82cb55576b42"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/configured_feature/jellystem_tree.json"
-hash = "cef4b7265ba99638d6a0ed09d27ae21259ccaabdbd87476ac50591592cd4de10"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/configured_feature/sapros_copper_stromatolite.json"
-hash = "9a99043370500cc8b194814e47b53a055edc60b24bfaeb442e64c1bb7ffcd1e7"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/configured_feature/sapros_iron_stromatolite.json"
-hash = "973ad3354c294fad8bcfc31ff761126b241b5aa42e85eea6289dc2fe37ac250d"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/configured_feature/yumako_tree.json"
-hash = "589df4f9ab1a14888457da4a46cc76be7836fcdb5b878398c1c706f577524c47"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/noise_settings/electro.json"
-hash = "833b79ca4939edc730a3a6bfc9a0850e4936ccebf6b7f49f3ccb7d66666cdc79"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/noise_settings/ignus.json"
-hash = "1b09c150105d0904f914da80cc226ee1c7a41a2e218303c8807471b0cf29d990"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/noise_settings/sapros.json"
-hash = "7b6fb624e2de3a5d4e112b1e87b03121c38e2c1b6d7c5bf5d2d1464342430d0d"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/placed_feature/electro_fulgorite.json"
-hash = "8032b70a0dd78d7490f9d17df39916f633cc3a3ce39c717fc10e7c24f5ce2ad0"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/placed_feature/electro_scrap_pile.json"
-hash = "9c036651d521b7563a5f5fceedeb7f5ef9b2c35c2b2abdf93f78f5336a1be0b9"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/placed_feature/jellystem_tree.json"
-hash = "ba9b59bfe374ac3dcfb4ee36742bf6e62e89ad95c89530f4adefdc94000d029c"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/placed_feature/sapros_copper_stromatolite.json"
-hash = "48af26599f7042f704e87acf2aeb0e6ce32f0cac89f8e779dc43b7c2e993fb3e"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/placed_feature/sapros_iron_stromatolite.json"
-hash = "833e4468ebee399b291ccf1cd79545bbab75cc54edb005d63a18d5b8fb57af40"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/placed_feature/yumako_tree.json"
-hash = "46add7c0e12e1f4e64790c0c2c19daa499781bcb43a21faa17852face2c71817"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/structure/electro_ruin.json"
-hash = "daf9456f474cc7cb3b99de179f55fe9d168ff12132bdfda173332bdd14adce84"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/structure_set/electro_ruins.json"
-hash = "41d41db4c2e92105e16ae68d3d95776d1cb9261c4a3c86029c86ac178c08c1f5"
-
-[[files]]
-file = "kubejs/parked/data/factoryworks/worldgen/template_pool/electro_ruin.json"
-hash = "86617f3214fa891dbf9c4009aab509f759da6a12dc09d4f8f0669cdd428ca979"
-
-[[files]]
 file = "kubejs/server_scripts/jsconfig.json"
 hash = "f15c97d8f27ee4fd7b51c3a5843723da5cc1d241b1d21d1a1de4baeea6c1bc90"
 
@@ -559,18 +267,6 @@ hash = "dae099ae3be7f033c0c190ee8c3b023b42f6b235d9d0591be5926e8435dbd67f"
 [[files]]
 file = "kubejs/server_scripts/starting_kit.js"
 hash = "514ca8b3d5d47cc751df7f1040ab9fdb0df4557d2018b0a0e85ca2cd99dbc68c"
-
-[[files]]
-file = "kubejs/startup_scripts/_throwaway_decay_test_items.js"
-hash = "028aea8ceb339a87e48067837b5493228673d808596407345d3efdd09562c3ce"
-
-[[files]]
-file = "kubejs/startup_scripts/blocks.js"
-hash = "f3ac4d11e187529c8fdbff5ed1be87ba9bcec92ec3d5e475803e0b9db9467f1b"
-
-[[files]]
-file = "kubejs/startup_scripts/items.js"
-hash = "cfdaf1b46255cb651d72ba1acb81fbb6fe360974b24be3f15c25a5c4e5f0fc7e"
 
 [[files]]
 file = "kubejs/startup_scripts/jsconfig.json"

@@ -37,8 +37,7 @@ Minecraft's loading checks that they agree with each other: a lang key naming a 
 never registered, a blockstate pointing at a texture that does not exist, a loot table for a block
 that dropped out of the mod — all of these load without complaint and fail in front of a player.
 
-That is what a static data check catches. `tests/flora/test_flora_data.py` is the pattern:
-it reads the registered ids out of the mod source, reads the ids out of KubeJS and the datapack,
+That is what a static data check catches. It reads the registered ids out of the mod source, reads the ids out of KubeJS and the datapack,
 and asserts that every reference on either side resolves — plus the pack-specific facts that no
 file could contradict on its own, such as which marshland carries which tree. It launches no game
 and needs no JVM.
@@ -197,7 +196,7 @@ stale the day it is written, and a per-ticket list is verifiable at the moment i
 ## Checks
 
 - emitted → fixture rows for the five Sapros biomes in the world-load harness
-- references → assertions in `tests/flora/test_flora_data.py` for both trees' loot and lang
+- references → assertions that both trees' loot tables and lang entries resolve
 - in-world behaviour → none; `SaprosSapling` is a real `SaplingBlock`, vanilla by construction
 - looks right → human: land on Sapros, confirm sky and that both marshlands carry their tree
 ```

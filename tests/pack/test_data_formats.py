@@ -32,8 +32,7 @@ WHAT IT CHECKS.
     renamed to the singular before 26.1. A datapack directory the game does not know is not an
     error either: it is simply never walked, and every file under it is absent.
 
-WHAT IT IS NOT. `kubejs/parked/` is excluded: nothing loads it. The `gtceu:` recipe subtrees it
-used to defer were deleted when #279 re-targeted the converter onto `factoryworks:assembling`,
+WHAT IT IS NOT. The `gtceu:` recipe subtrees it used to defer were deleted when #279 re-targeted the converter onto `factoryworks:assembling`,
 and a `gtceu:` recipe appearing again fails here like any other stale shape.
 
 It cannot tell whether an id RESOLVES; that is a running server, and the cheap version of it -- a
@@ -49,7 +48,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 GENERATOR = ROOT / "scripts/build-item-definitions.py"
 
-# Every tree the game loads. `kubejs/parked/` is deliberately absent.
+# Every tree the game loads.
 ASSET_ROOTS = (
     ROOT / "kubejs/assets",
 )

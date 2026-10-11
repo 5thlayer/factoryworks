@@ -4,7 +4,7 @@
 COUNTING RULE. For each forbidden namespace, one count is the sum of:
 
 * every `<ns>:` occurrence (not preceded by a word character) in a text file under `kubejs/`
-  (except `kubejs/parked/`, which is never loaded), `config/`,
+  `config/`,
   `data/pack/*.json` (not the baseline file) and `mods/*.pw.toml`, plus `index.toml`;
 * every such file whose path, lowercased with `-` and `_` removed, contains the namespace, so
   `mods/ftb-materials.pw.toml` and `config/oritech-common.toml` each count once;
@@ -35,7 +35,9 @@ TEXT_SUFFIXES = {".json", ".json5", ".js", ".toml", ".snbt", ".cfg", ".propertie
 
 CORPUS_PATHS = ("data/factorio/", "docs/research/", "docs/spec/", "docs/factorio-mechanics.md",
                 "scripts/factorio-", "data/pack/item-map.json", "data/pack/category-map.json",
-                "data/pack/recipe-overrides.json", "data/pack/subgroup-owner.json")
+                "data/pack/recipe-overrides.json", "data/pack/subgroup-owner.json",
+                "kubejs/parked/", "kubejs/data/factoryworks/gcyr/", "docs/planets.md",
+                "tests/flora/", "scripts/gen-flora-textures.py")
 
 
 def tracked_paths():
@@ -50,10 +52,9 @@ def shipped_files():
     files += [p for p in (ROOT / "data/pack").glob("*.json") if p != BASELINE_FILE]
     files += sorted((ROOT / "mods").glob("*.pw.toml"))
     files.append(ROOT / "index.toml")
-    parked = ROOT / "kubejs/parked"
     tracked = set(tracked_paths())
     return sorted(p for p in files
-                  if parked not in p.parents and p.relative_to(ROOT).as_posix() in tracked)
+                  if p.relative_to(ROOT).as_posix() in tracked)
 
 
 def normalized(path):

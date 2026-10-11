@@ -79,7 +79,6 @@ check's section there before editing it or the code it guards. Run the matching 
 
 | Edit | Check |
 |---|---|
-| Sapros trees, stromatolites, its five biomes | `tests/flora/test_flora_data.py` |
 | any texture, model, animation, `.bbmodel` or store image or clip | `tests/pack/test_art_provenance.py` |
 | `kubejs/server_scripts/starting_kit.js` | `tests/pack/test_starting_kit.py` |
 | a committed ADR with `supersedes:` | `scripts/adr-backlink-check.sh` (needs `gh`) |

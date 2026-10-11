@@ -167,7 +167,7 @@ is the only body with nests. What emission does on other bodies is the ledger's 
 
 ## 8. Resource substitution policy
 
-Per-body content is drawn from `docs/planets.md`, a transcription of Factorio's own
+Per-body content is drawn from `docs/planets.md` (in the private corpus repository, #673), a transcription of Factorio's own
 resource lists organised under Factorio's names. Every resource named there is resolved by this rule,
 applied in order:
 

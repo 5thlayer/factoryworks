@@ -90,7 +90,7 @@ def main():
     failures = self_test()
 
     assets = ap.shipped_assets()
-    for tree in ("textures/", "models/", "data/art/", "publish/"):
+    for tree in ("data/art/", "publish/"):
         if not any(tree in a for a in assets):
             failures.append(f"the scan found no shipped asset under {tree}; the enumeration is broken")
 

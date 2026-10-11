@@ -24,7 +24,6 @@ The Pack's guard (`tests/pack/test_independence_guard.py`) fails if any of them 
 
 | Script | Produces |
 |---|---|
-| `gen-flora-textures.py` | placeholder 16×16 flora sprites for Sapros's trees (stdlib, meant to be redrawn) |
 | `build-filter-pack.sh` | rebuilds `kubejs/data/<name>.zip` from `packs/<name>/` (pack.mcmeta filter sections) |
 | `jar-registry-extract.py` | the installed jars' item and fluid ids, block loot and features → `data/jars/` |
 

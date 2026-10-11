@@ -39,7 +39,6 @@ path = [
     "kubejs/README.txt",
     "kubejs/assets/**",
     "kubejs/data/**",
-    "kubejs/parked/**",
     "data/pack/**",
     "data/jars/**",
     "data/art/models/**",

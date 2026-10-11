@@ -157,9 +157,8 @@ def _player_text():
 class LicensingTest(unittest.TestCase):
     def test_no_coined_factorio_name_in_a_string_a_player_reads(self):
         text = _player_text()
-        for source in ("kubejs/assets/factoryworks/lang/en_us.json",
-                       "kubejs/startup_scripts/blocks.js", "kubejs/startup_scripts/items.js"):
-            self.assertTrue(text[source], f"{source} yielded no strings; the scan has rotted")
+        self.assertTrue(text.get("kubejs/assets/craftworks/lang/en_us.json"),
+                        "the Pack's lang yielded no strings; the scan has rotted")
         hits = {f"{src}: {s!r}": m.group(0) for src, strings in text.items() for s in strings
                 if (m := COINED.search(s))}
         self.assertEqual({}, hits, "a coined name in player-facing text (ADR-0103)")
@@ -180,7 +179,7 @@ class LicensingTest(unittest.TestCase):
     def test_the_packs_own_work_is_under_the_packs_licences(self):
         expect = {
             "tests/pack/test_licensing.py": "LGPL-3.0-only",
-            "kubejs/startup_scripts/items.js": "LGPL-3.0-only",
+            "kubejs/server_scripts/starting_kit.js": "LGPL-3.0-only",
             "docs/adr/0101-the-pack-is-factoryworks-an-overhaul-modpack.md": "CC-BY-4.0",
             "README.md": "CC-BY-4.0",
             "config/konkrete/locals/en_us.local": "Apache-2.0",

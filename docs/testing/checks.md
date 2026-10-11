@@ -2,14 +2,6 @@
 
 What each check asserts, why, and the defect it exists for. `CLAUDE.md` indexes them by when to run each.
 
-## Flora data check
-
-`tests/flora/test_flora_data.py` asserts Sapros's tree and surface data are internally consistent
-— features, loot tables, blockstates, textures and lang against what is actually registered, plus
-which marshland carries which tree and that no stromatolite drops ore — with no game launch. Run it
-after any edit to the trees, the stromatolites or the five biomes. The worldgen half is read from
-`kubejs/parked/` while Sapros is parked (ADR-0060).
-
 ## Starting kit check
 
 The Showcase's starting kit is a KubeJS script, `kubejs/server_scripts/starting_kit.js`, that gives
@@ -47,8 +39,7 @@ that file's `baseline`. Static; no game launch. `researchd` and `portingdeadlibs
 though both mods are gone (ADR-0126), so neither grows back; Craftworks' generated comment in
 `config/craftworks-server.toml` still names its `researchd` Lock source.
 
-The count is the sum of three things. Each `<ns>:` occurrence in a text file under `kubejs/` (not
-`kubejs/parked/`, which is never loaded), `config/`, `data/pack/*.json`
+The count is the sum of three things. Each `<ns>:` occurrence in a text file under `kubejs/`, `config/`, `data/pack/*.json`
 (not the baseline file) and `mods/*.pw.toml`, and in `index.toml`. Each of those files whose path,
 lowercased with `-` and `_` removed, contains the namespace, so `mods/ftb-materials.pw.toml` and
 `config/oritech-common.toml` count once each. Each `index.toml` `file = "..."` line whose path matches
@@ -191,7 +182,7 @@ case-insensitive, plural included; a term that matches nothing is the passing st
 there goes stale. It scans every value of every shipped lang file (`kubejs/assets/*/lang/` and the
 mod's), skipping keys that start with `_`; the literal argument of each `.displayName(...)` in
 `kubejs/startup_scripts/`, with comments ignored. Registry ids and lang keys are exempt, and
-`kubejs/parked/` and `publish/` are out of scope. A source that yields no strings fails, so a
+`publish/` is out of scope. A source that yields no strings fails, so a
 scanner that stops matching cannot pass by finding nothing. Run it after adding a lang entry, a
 display name or a quest.
 
