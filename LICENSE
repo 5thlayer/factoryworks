@@ -1,6 +1,6 @@
 FactoryWorks is licensed per file (ADR-0102):
 
-- Code is LGPL-3.0-only (LICENSES/LGPL-3.0-only.txt): the scripts and the workflows.
+- Code, and the files a program reads as instructions, are LGPL-3.0-only (LICENSES/LGPL-3.0-only.txt): the scripts, the workflows, `mise.toml`, `.gitignore`, `.claude/hooks` and `.claude/settings.json`.
 - The suite's own prose is CC BY 4.0 (LICENSES/CC-BY-4.0.txt): docs, the glossary and the ADRs.
 - The vendored agent skills keep the licence they came with (LICENSES/MIT.txt).
 
