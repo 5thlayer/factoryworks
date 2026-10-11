@@ -32,6 +32,7 @@ crude is simpler to show.
 **Consequences.**
 
 - ADR-0123 and ADR-0124 are superseded.
+- ADR-0115's clause giving Craftworks the chemical plant and refinery is amended: Craftworks holds neither.
 - Five fluids on one Assembler need five pipe networks. Craftworks 0.7.0 spaces the six Fluid Connections so
   that no two pipes beside them touch: the two ends of the edge it faces, the two ends of the opposite edge
   and the centre of each side. Each fluid gets a pipe of its own with no side closed. The Pack still puts the

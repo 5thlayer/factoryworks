@@ -78,6 +78,11 @@ of them.
 Pipeworks takes no barrel. The barrel goes, and fluid is carried in buckets or any mod's
 fluid-holding item.
 
+## Amended by ADR-0125
+
+Craftworks has no chemical plant or refinery: Craftworks 0.6.0 removed both, and every recipe with a
+fluid in or out runs on its Assemblers as `crafting-with-fluid`.
+
 ## Amended by ADR-0126
 
 Research leaves the Showcase now rather than when it is extracted: Researchd, Porting Dead Libs and the
