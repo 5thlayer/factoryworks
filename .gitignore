@@ -113,3 +113,7 @@ mod/
 .claude/worktrees/
 .rtk/
 debug-profile.json
+
+mise.local.toml
+.probe
+kubejs/config/probe-settings.json
