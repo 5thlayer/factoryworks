@@ -6,7 +6,7 @@ FactoryWorks is a fan project and is not affiliated with or endorsed by Wube Sof
 
 ## The suite
 
-The mods live in their own repositories: [Groundworks](https://github.com/5thlayer/groundworks) (placement), [Beltworks](https://github.com/5thlayer/beltworks) (items on belts), [Pipeworks](https://github.com/5thlayer/pipeworks) (fluids), [Wireworks](https://github.com/5thlayer/wireworks) (energy) and [Craftworks](https://github.com/5thlayer/craftworks) (crafting machines). FactoryWorks ships no modpack of its own: a player puts the mods in whatever pack they like.
+The mods live in their own repositories: [Groundworks](https://github.com/5thlayer/groundworks) (placement), [Beltworks](https://github.com/5thlayer/beltworks) (items on belts), [Pipeworks](https://github.com/5thlayer/pipeworks) (fluids), [Wireworks](https://github.com/5thlayer/wireworks) (energy), [Craftworks](https://github.com/5thlayer/craftworks) (crafting machines) and [Fieldworks](https://github.com/5thlayer/fieldworks) (resources). FactoryWorks ships no modpack of its own: a player puts the mods in whatever pack they like.
 
 ## This repository
 
