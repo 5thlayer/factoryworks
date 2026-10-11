@@ -12,7 +12,7 @@ own. Harnesses come and go; the claims do not. Find the claim, read off the chec
 | The feature claims | The check |
 |---|---|
 | This data parses, and this thing is registered | **Nothing.** Load-time facts are free. |
-| Cross-file references resolve | **Static data check** — `tests/`, no game launch. |
+| Cross-file references resolve | **Static data check** — a test with no game launch. |
 | This is emitted into a world | **Fixture row** in `WorldgenFixtureTests` (see below). |
 | This pack logic computes something | **Unit test** in `factoryworks_core` or `respoiled`. |
 | This block or entity behaves in-world | **Nothing** if vanilla by construction, else **GameTest**. |
@@ -46,19 +46,13 @@ and needs no JVM.
 writing the assertion. This is the opposite of the fixture row below, and the difference is real —
 do not read the fixture check's "a new body adds data, not code" rule as covering both.
 
-**Block hops are one generic walker.** `tests/pack/test_block_assets.py` (#254) reads every block
-the mod registers, each tier ladder's names out of its enum, and walks blockstate, model parents,
-textures, lang key, item model and loot table for all of them; a registration it cannot name fails
-rather than being skipped. **The judgement assertions stay** in each machine's own file -- the ones
-no generic walker could make and which are the reason those files exist: which states a block's
-blockstate must cover, the Boiler's independent 60 mB/s derivation from the corpus, the Offshore
-Pump's refusal-message lang key read out of `OffshorePumpItem`, the ore blocks' `c:ores` membership,
-the Electric Furnace's credited art, a rig's visible front, each generated resource held against the
-corpus.
+**Block hops are one generic walker.** A check that walks blockstate, model parents, textures, lang
+key, item model and loot table for every block a mod registers fails on a registration it cannot
+name, rather than skipping it. The judgement assertions stay in each machine's own file: the ones no
+generic walker could make.
 
 A hop that is present but rejected by the game is seen only in the client, by a human (ADR-0119); a
-hop that is simply absent is logged nowhere, so it needs the static walker. The item model definition is
-`test_data_formats.py`'s.
+hop that is simply absent is logged nowhere, so it needs the static walker.
 
 ### This is emitted into a world
 
@@ -68,13 +62,13 @@ placed. The check is a launch into a fresh world that asserts against what the g
 loaded and, for biomes, actually located. **On 26.1.2 the harness is `WorldgenFixtureTests`**
 (#356), a GameTest in the default set. The GameTest world is flat, so it decodes the datapack's own
 dimension file, builds a `RandomState` per seed, and samples columns through the biome source and
-the generator's base height without generating a chunk. `scripts/worldgen-check.py`, GregTech's vein and layer check, left with GregTech (ADR-0060).
+the generator's base height without generating a chunk.
 
 **The client is a second world, and a human checks it (ADR-0119).** A registered block is not a
 block anybody can see, and it is read by a client that no server run starts. Booting that client
 boots the game instance in the repo root, so *this renders at all* is checked by a human in game on
 delivery, with *this looks or feels right*. A missing item model definition is logged nowhere, so
-that half stays static in `tests/pack/test_data_formats.py`.
+that half stays static.
 
 **A fixture row is unconditional.** Every body-level worldgen fact gets one — there is no
 judgement call about whether a given vein is important enough. The launch happens regardless and
@@ -150,10 +144,7 @@ touched mechanism, not to a docs edit. Run it after editing anything under `core
 
 **Where the tests live:** `mod/src/main/java/com/factoryworks/core/gametest/`, in the *main*
 source set rather than the test one, because a GameTest is code the game loads. `PFGameTests`
-registers them; a test body is a method taking a `GameTestHelper`. They stand on a generated stone
-platform, `scripts/build-gametest-structures.py`. The pack's recipes are not in the mod jar, so the
-run loads KubeJS reading the repo's own `kubejs/` (#338) — which is how a GameTest can assert
-against the recipe the pack ships rather than a fixture.
+registers them; a test body is a method taking a `GameTestHelper`.
 
 The shape of that decision generalises, so it is worth stating once. Most of what looked like
 in-world behaviour was arithmetic that had no business needing a server, and it was written to be
