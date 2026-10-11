@@ -1,3 +1,0 @@
-#Namespaces whose every block gets a Vanilla Plan, and so a preview, as if the
-#groundworks:plan_opt_in block tag held it. For example ["mypack"].
-planOptInNamespaces = []
