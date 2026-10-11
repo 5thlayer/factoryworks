@@ -71,3 +71,8 @@ extractors and converters, the mechanic ledger, research and specs are in the pr
 
 `docs/port/blocked-removals-26.1.2.md` lists every class the 26.1.2 port deleted, with the ticket
 that restores it. Read it before concluding a mechanic was dropped.
+
+### First-party mod
+
+`factoryworks_core` left this repo (ADR-0128): its source is at commit `fb05f50`, and `docs/port/`
+(`mod-audit.md`, `blocked-removals-26.1.2.md`) says which Module takes each row.
