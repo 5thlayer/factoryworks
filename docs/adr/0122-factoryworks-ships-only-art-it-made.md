@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0130
 ---
 
 # FactoryWorks ships only art it made

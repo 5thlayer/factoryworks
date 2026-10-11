@@ -252,5 +252,5 @@ A shipped texture, model or animation meant to be replaced: a placeholder, a gen
 _Avoid_: temp art, programmer art, WIP texture
 
 **Vendored art**:
-Third-party art still shipped under its own licence, with attribution, until **Stand-in art** or art of our own replaces it (ADR-0122). Art under a non-commercial licence is the first to replace.
-_Avoid_: final art
+Third-party art shipped under its own open licence, credited in the repository's `NOTICE` and `REUSE.toml` (ADR-0130). It is final art, not a **Stand-in art**.
+_Avoid_: borrowed art, temporary art
