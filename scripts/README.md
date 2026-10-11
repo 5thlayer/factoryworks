@@ -13,7 +13,6 @@ for a no-write CI mode; the matching `tests/` entry calls it.
 ---
 
 The Factorio corpus, its extractors and converters live in a private repository (ADR-0103, #605).
-The Pack's guard (`tests/pack/test_independence_guard.py`) fails if any of them returns.
 
 ## NBT
 

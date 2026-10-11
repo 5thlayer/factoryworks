@@ -169,10 +169,6 @@ file = "data/pack/art-provenance.json"
 hash = "87d008fed6ac4eb7982e2d42f7b77b591b1cd8a1fb7e1f569fa2c433079aba3d"
 
 [[files]]
-file = "data/pack/independence-baseline.json"
-hash = "19d4ba059341fa16a45bece54d7b08eb650bf21b0d123c03d23fda8d1a620258"
-
-[[files]]
 file = "data/pack/local-jars.json"
 hash = "bc09661a518a1820bf388137ce8cb2983f06ca6a1ae0e2b0ab80de13cac7f7ee"
 
