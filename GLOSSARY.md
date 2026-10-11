@@ -75,12 +75,18 @@ somewhere for its output to go.
 _Avoid_: endgame (for the consumer itself), resource drain, money sink
 
 **Gear**:
-What the player wears or carries that the suite's materials make, upgraded through a Gear Grid.
+What the player wears that the suite's materials make, upgraded through a Gear Grid: one suit, in
+the chest slot.
 _Avoid_: equipment (that is belt equipment, ADR-0100), armor, tools
 
 **Gear Grid**:
-The slots in a piece of Gear that hold its upgrades.
+The two-dimensional area in a piece of Gear that holds its upgrades, each covering a rectangle of it.
 _Avoid_: equipment grid, upgrade grid
+
+**Gear Upgrade**:
+An item that fits a Gear Grid and gives the Gear one of the stats Gearworks owns. It carries its own
+level, which rises without limit at an exponentially growing cost. Any mod can make one.
+_Avoid_: equipment, module, augment
 
 **Gearworks**:
 The Module that owns Gear.
