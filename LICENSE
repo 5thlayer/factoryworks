@@ -1,10 +1,7 @@
 FactoryWorks is licensed per file (ADR-0102):
 
-- Code is LGPL-3.0-only (LICENSES/LGPL-3.0-only.txt): FactoryWorks Core, the build, the scripts and
-  checks, and the KubeJS scripts.
-- The Pack's own content is CC BY 4.0 (LICENSES/CC-BY-4.0.txt): docs, data, assets and the store
-  pages.
-- Whatever else is not the Pack's own keeps the licence it came with: third-party art, the vendored
-  agent skills and the Gradle wrapper. NOTICE names each.
+- Code is LGPL-3.0-only (LICENSES/LGPL-3.0-only.txt): the scripts and the workflows.
+- The suite's own prose is CC BY 4.0 (LICENSES/CC-BY-4.0.txt): docs, the glossary and the ADRs.
+- The vendored agent skills keep the licence they came with (LICENSES/MIT.txt).
 
 REUSE.toml says which licence covers which file.

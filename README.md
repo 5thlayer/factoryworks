@@ -1,41 +1,20 @@
-![FactoryWorks](https://raw.githubusercontent.com/5thlayer/factoryworks/main/publish/factoryworks-cover.png)
+# FactoryWorks
 
-FactoryWorks is an overhaul modpack that plays like Factorio. You start with a furnace, a burner drill and a pick beside four ore fields, and build a factory from there: every recipe and rate is carried over from Factorio's own data, and the crafting grid, stock recipes, mobs, the Nether and the End are gone.
-
-**NeoForge, Minecraft 26.1.2 only.** FactoryWorks is early work: Terra, the starting planet, is the only one so far.
-
-**Join the [Discord](https://discord.gg/m3ta8fuCca)** for builds, help, and the Alpha's tester applications.
-
-## Features
-
-- **Factorio's recipes, not Minecraft's.** Recipes are converted from Factorio's data rather than written by hand, with their ingredients, counts and craft times. Vanilla's recipes stay, and run on Craftworks' Assemblers.
-- **No crafting grid.** The Personal Assembler takes its place: ask for an item and every intermediate is planned, paid for up front and crafted over time while you play.
-- **Machines that run at Factorio's rates.** Burner and electric mining drills, stone, steel and electric furnaces, three tiers of Assembling Machine, the Chemical Plant and the Oil Refinery craft at Factorio's speeds, draw Factorio's power, and stop when their output is full rather than burning fuel into it.
-- **Steam and electricity.** An Offshore Pump feeds Boilers, Boilers feed Steam Engines, and electric poles carry the power over wires to every machine in their supply area. Accumulators store what is left over.
-- **Ore patches that run out.** Four ore fields surround your spawn and more lie across the map, flush with the surface. Each block holds an amount, and a patch shrinks as you mine it. Crude oil wells never run dry, but slow down as you pump them.
-- **Belts.** Factorio-style transport belts laid block by block on the grid, in four tiers, with splitters and loaders.
-- **Building like Factorio.** Every placement is previewed before you click. Lay a whole line of belts or pipes in one drag, upgrade a machine by placing the next tier over it, take up a run of pipes with the Engineer's Pick, and break buildings from sixteen blocks away.
-- **The Radar.** It charts the map around it, sector by sector, and marks the ore patches it finds with what they have left.
-- **A quiet world.** No mob spawns and there is nothing to fight yet. The factory is the whole game.
-
-## Built with
-
-FactoryWorks' rules live in its own mod, **FactoryWorks Core**, and in three mods made alongside it: [Beltworks](https://www.curseforge.com/minecraft/mc-mods/beltworks) for belts, [Craftworks](https://www.curseforge.com/minecraft/mc-mods/craftworks) for the Personal Assembler, and Groundworks, bundled in Beltworks, for placement. Other mods supply parts: Oritech's machine models, FTB Materials' items, FTB Chunks' map, FTB Quests' guide book, and EMI's item list.
-
-## Working on the pack
-
-- This repository is the pack's live CurseForge instance: configs, KubeJS scripts, data and the manifest sit where the game reads them.
-- After a fresh clone, `scripts/bootstrap.py` puts the jars the manifest names into `mods/`, which git does not track.
-- `uv run --with pytest pytest tests/` runs every check.
-- The pack's vocabulary is in [GLOSSARY.md](https://github.com/5thlayer/factoryworks/blob/main/GLOSSARY.md), its decisions in [docs/adr](https://github.com/5thlayer/factoryworks/tree/main/docs/adr).
-- Report bugs and ideas on the [issue tracker](https://github.com/5thlayer/factoryworks/issues).
-- Beltworks, Craftworks and Groundworks are developed in their own repositories: [5thlayer/beltworks](https://github.com/5thlayer/beltworks), [5thlayer/craftworks](https://github.com/5thlayer/craftworks), [5thlayer/groundworks](https://github.com/5thlayer/groundworks).
-
-## Credits
+A suite of Minecraft 26.1.2 / NeoForge tech mods that brings Factorio's logistics into an ordinary world and mixes with other tech mods. Each mod owns one capability and plays in vanilla.
 
 FactoryWorks is a fan project and is not affiliated with or endorsed by Wube Software, the makers of Factorio.
 
-- Electric Furnace textures by Futureazoo ([TextureRepository](https://github.com/Futureazoo/TextureRepository)), under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
-- Ore textures and the crude oil sprite from **unused-textures** by malcolmriley ([GitHub](https://github.com/malcolmriley/unused-textures)), under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+## The suite
 
-Factorio's numbers, recipes and tech tree are used; its text, art and sounds are not. FactoryWorks' code is [LGPL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html) and its own assets are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The data derived from Factorio is Wube's and is covered by neither, and the third-party art above keeps its own licence.
+The mods live in their own repositories: [Groundworks](https://github.com/5thlayer/groundworks) (placement), [Beltworks](https://github.com/5thlayer/beltworks) (items on belts), [Pipeworks](https://github.com/5thlayer/pipeworks) (fluids), [Wireworks](https://github.com/5thlayer/wireworks) (energy) and [Craftworks](https://github.com/5thlayer/craftworks) (crafting machines). FactoryWorks ships no modpack of its own: a player puts the mods in whatever pack they like.
+
+## This repository
+
+This is the suite's home: the shared vocabulary, the decisions that touch more than one mod, and the parent issue of every cross-mod topic.
+
+- The suite's vocabulary is in [GLOSSARY.md](https://github.com/5thlayer/factoryworks/blob/main/GLOSSARY.md), its decisions in [docs/adr](https://github.com/5thlayer/factoryworks/tree/main/docs/adr).
+- Report bugs and ideas on the [issue tracker](https://github.com/5thlayer/factoryworks/issues).
+
+## Licence
+
+Code is [LGPL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html) and prose is [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Factorio's data is Wube's and is covered by neither.
