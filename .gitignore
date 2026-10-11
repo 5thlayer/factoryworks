@@ -1,5 +1,4 @@
 # Folders/wildcards
-!kubejs/data
 !servers.json
 .DS_Store
 .DS_Store?
@@ -15,8 +14,6 @@
 **/*.exe
 **/*.jar
 **/*.zip
-# ...except the filter pack, which is pack content and must ship.
-!kubejs/data/*.zip
 backups
 classes
 crash-reports
@@ -26,13 +23,6 @@ libraries
 llibrary
 local
 logs
-# The jar set is tracked as a packwiz manifest (ADR-0024). The jars themselves stay
-# out of git, but packwiz writes one `.pw.toml` metafile per mod into `mods/` and
-# those ARE the manifest. Written as `mods/*` rather than a bare `mods`, because git
-# will not re-include a file beneath an excluded *directory* — a negation under the
-# bare form fails silently, leaving the manifest untracked.
-mods/*
-!mods/*.pw.toml
 profilekeys
 saves
 screenshots
@@ -83,8 +73,7 @@ minecraftinstance.json
 # Drive stubs, not content
 docs/scratch/
 
-# Client configuration is per-user, never pack behaviour. Scripts under
-# kubejs/client_scripts/ are code, not configuration, and stay tracked.
+# Client configuration is per-user.
 **/*client*.toml
 **/*client*.snbt
 **/*client*.json
@@ -126,6 +115,3 @@ kubejs/config/probe-settings.json
 .claude/worktrees/
 .rtk/
 debug-profile.json
-
-# Machine-local tool settings, such as CURSEFORGE_ROOT.
-mise.local.toml

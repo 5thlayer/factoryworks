@@ -1,71 +1,27 @@
 version = 1
 
-# Code is LGPL-3.0-only, the Pack's own content is CC BY 4.0, and whatever is not the Pack's own
+# Code is LGPL-3.0-only, the suite's own prose is CC BY 4.0, and whatever is not the suite's own
 # keeps the licence it came with (ADR-0102). Nothing carries an SPDX header: this file is the
 # whole map. The last annotation matching a file wins, so the general rules come first and the
-# exceptions after them. `tests/pack/test_licensing.py` holds it, and `reuse lint` in CI.
+# exceptions after them. `reuse lint` in CI holds it.
 
-# Code, and the files a program reads as instructions: the scripts and checks, KubeJS scripts,
-# manifests and configs.
+# Code, and the files a program reads as instructions.
 [[annotations]]
 path = [
     "scripts/**",
-    "tests/**",
-    "mise.toml",
-    "player.env",
     ".gitignore",
-    ".packwizignore",
     ".github/**",
     ".claude/hooks/**",
     ".claude/settings.json",
-    "kubejs/**/*.js",
-    "kubejs/**/jsconfig.json",
-    "kubejs/config/**",
-    "config/**",
-    "defaultconfigs/**",
-    "pack.toml",
-    "index.toml",
-    "mods/*.pw.toml",
-    "publish/make-cover.py",
 ]
 SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "LGPL-3.0-only"
 
-# The Pack's own content: docs, data, assets, quests, structures and the store pages.
+# The suite's own prose: the glossary, ADRs, docs and READMEs.
 [[annotations]]
-path = [
-    "**/*.md",
-    "NOTICE",
-    "kubejs/README.txt",
-    "kubejs/assets/**",
-    "kubejs/data/**",
-    "data/pack/**",
-    "data/jars/**",
-    "data/art/models/**",
-    "publish/**/*.txt",
-]
+path = ["**/*.md"]
 SPDX-FileCopyrightText = "2026 5thlayer"
 SPDX-License-Identifier = "CC-BY-4.0"
-
-# The store art's backdrop is Beltworks' belt art, which is Rearth's and malcolmriley's, and
-# Minecraft's own textures, which stay Mojang's (LICENSES/LicenseRef-Mojang.txt).
-[[annotations]]
-path = ["publish/**/*.png"]
-SPDX-FileCopyrightText = ["Rearth", "Malcolm Riley", "Mojang AB", "2026 5thlayer"]
-SPDX-License-Identifier = "CC-BY-4.0 AND LicenseRef-Mojang"
-
-# The showcase clips (#534, #538) film the game: Oritech's machines and Beltworks' belts, Minecraft's
-# textures, and in the steam scene the Electric Furnace's CC BY-NC-SA art.
-[[annotations]]
-path = ["publish/**/*.mp4"]
-SPDX-FileCopyrightText = ["Rearth", "Malcolm Riley", "Futureazoo", "Mojang AB", "2026 5thlayer"]
-SPDX-License-Identifier = "CC-BY-4.0 AND LicenseRef-Mojang AND CC-BY-NC-SA-4.0"
-
-# Konkrete's own translations, shipped as its config.
-[[annotations]]
-path = ["config/konkrete/**"]
-SPDX-FileCopyrightText = "Keksuccino"
-SPDX-License-Identifier = "Apache-2.0"
 
 # The agent skills, from mattpocock/skills.
 [[annotations]]
