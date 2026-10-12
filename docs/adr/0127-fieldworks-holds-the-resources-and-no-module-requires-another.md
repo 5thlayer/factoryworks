@@ -93,3 +93,16 @@ resource Fieldworks tracks.
   superseded, and worlds are not migrated to the `fieldworks` namespace.
 - The release train is Groundworks, then the other mods in any order, then the Showcase.
 - #598 is amended in place, and its tickets are re-cut to match.
+
+## Amended by #678
+
+**Fieldworks owns tar, not Wireworks.** Wireworks registers no crude, so a tar of its own could be
+reached only with Fieldworks beside it (wireworks#26). A crude source block (any fluid in
+`c:crude_oil`) touching lava, on any side, sets as a tar block. A tar block broken or pushed by a
+piston gives one tar, in `c:tar` (fieldworks#22). Wireworks keeps plastic, battery and bioresin,
+takes `#c:tar` into `#wireworks:plastic_resins` and has no tar item (wireworks#34).
+
+**Tar is made no other way.** No smelting or blasting recipe makes it. A cooking recipe would also
+run in Craftworks' Refiner, which takes crude only in a bucket and would lose the empty bucket with
+each tar, while the interaction takes crude as a fluid, from the Harvester through a Pipeworks
+Outlet.

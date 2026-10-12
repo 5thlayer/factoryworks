@@ -58,7 +58,7 @@ Craftworks' electric furnace, which both smelts and blasts.
 _Avoid_: Electric Furnace, Oil Refinery
 
 **Tar**:
-The solid that crude oil sets into where its source block meets lava. One of the resins.
+Fieldworks' solid that crude oil sets into where its source block meets lava, and made no other way. One of the resins.
 
 **Bioresin**:
 A resin brewed or crafted from plants.
