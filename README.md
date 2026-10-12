@@ -6,7 +6,7 @@ FactoryWorks is a fan project and is not affiliated with or endorsed by Wube Sof
 
 ## The suite
 
-The mods live in their own repositories: [Groundworks](https://github.com/5thlayer/groundworks) (placement), [Beltworks](https://github.com/5thlayer/beltworks) (items on belts), [Pipeworks](https://github.com/5thlayer/pipeworks) (fluids), [Wireworks](https://github.com/5thlayer/wireworks) (energy), [Craftworks](https://github.com/5thlayer/craftworks) (crafting machines), [Fieldworks](https://github.com/5thlayer/fieldworks) (resources), [Voidworks](https://github.com/5thlayer/voidworks) (void energy) and [Gearworks](https://github.com/5thlayer/gearworks) (Gear, not yet released). Only Groundworks is required by the others. FactoryWorks ships no modpack of its own: a player puts the mods in whatever pack they like.
+The mods live in their own repositories: [Groundworks](https://github.com/5thlayer/groundworks) (placement), [Beltworks](https://github.com/5thlayer/beltworks) (items on belts), [Pipeworks](https://github.com/5thlayer/pipeworks) (fluids), [Wireworks](https://github.com/5thlayer/wireworks) (energy), [Craftworks](https://github.com/5thlayer/craftworks) (crafting machines), [Fieldworks](https://github.com/5thlayer/fieldworks) (resources), [Voidworks](https://github.com/5thlayer/voidworks) (void energy) and [Gearworks](https://github.com/5thlayer/gearworks) (Gear, not yet released). Only Groundworks is required by the others. A player can put the mods in whatever pack they like; the [Showcase](https://github.com/5thlayer/factoryworks-showcase) is a modpack that runs them all together.
 
 ## This repository
 

@@ -22,8 +22,13 @@ Harvester that works them. It holds no intermediates.
 _Avoid_: Core, FactoryWorks (the mod)
 
 **FactoryWorks**:
-The suite's name. No mod is called FactoryWorks, and the suite ships no modpack of its own (ADR-0115).
+The suite's name. No mod is called FactoryWorks (ADR-0115).
 _Avoid_: the Pack, the Showcase
+
+**Showcase**:
+The CurseForge modpack that puts every Module in one world beside the third-party mods chosen to play
+with them. It curates jars and configs and authors no content of its own (ADR-0131).
+_Avoid_: the Pack, FactoryWorks (the modpack)
 
 **Harvester**:
 Fieldworks' machine that stands over an ore patch or an oil well and works the layer beneath it,

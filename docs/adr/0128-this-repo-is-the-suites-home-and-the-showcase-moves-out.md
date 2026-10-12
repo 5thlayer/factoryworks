@@ -19,7 +19,8 @@ repo holds all the history, so it becomes the suite's home rather than a new rep
   history.
   *Amended (#663): the Showcase is retired rather than moved. Once the Pack had no content of its
   own, a pack only curated jars and configs each mod already decides; a custom modpack is out of
-  scope (`.out-of-scope/custom-modpack.md`).*
+  scope (`.out-of-scope/custom-modpack.md`).* *Superseded by ADR-0131: the Showcase returns, in
+  `5thlayer/factoryworks-showcase`, as a curated pack with no content of its own.*
 - **`mod/` is audited before it moves or goes**: what Fieldworks and the other Module repos already
   carry is deleted, and integration GameTests move with the Showcase.
 - **Modules take `mod/`'s code by porting, not by a history split.** Each port commit takes rows of
