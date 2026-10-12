@@ -1,119 +1,22 @@
-# Folders/wildcards
-!servers.json
-.DS_Store
-.DS_Store?
 # Editor scratch, alive only while a file is open.
 *.swp
 *.swo
 *~
-.mixin.out
-*.dll
-*.jar.disabled
-*.jar.meta
-**/*.bak
-**/*.exe
-**/*.jar
-**/*.zip
-backups
-classes
-crash-reports
-downloads
-dumps
-libraries
-llibrary
-local
-logs
-profilekeys
-saves
-screenshots
-world
-world_backup
-
-# Utilities
-.curseclient
-.vote2020_marker
-banned-ips.json
-banned-players.json
-ds_private_storage.json
-eula.txt
-ItemDump.txt
-knownkeys.txt
-mode.json
-ops.json
-options.txt
-realms_persistence.json
-server.properties
-settings.cfg
-stop-java-detection.txt
-usercache.json
-usernamecache.json
-whitelist.json
-
-# MultiMC / PrismLauncher
-icon.png
-
-# vscode
+.DS_Store
 .vscode
-
-# Random stuff to ignore
-.qmenu_opened.marker
-manifest.json
 *.code-workspace
 
-**/emojiful/cache
-**/fancymenu_data
-**/config/jei/**
-command_history.txt
-emi.json
-supportercache.json
-
-# CurseForge instance metadata (contains local paths)
-minecraftinstance.json
+# Python test runs
+__pycache__/
+.pytest_cache/
 
 # Drive stubs, not content
 docs/scratch/
 
-# Client configuration is per-user.
-**/*client*.toml
-**/*client*.snbt
-**/*client*.json
-**/*client*.json5
-**/*client*.properties
-# Jade's HUD settings, rewritten by the client whenever a provider appears.
-config/jade/
-config/InventoryHUD/
-# Sodium's hash of this machine's GPU and driver, rewritten on every launch.
-config/sodium-fingerprint.json
-config/sodium-options.json
-config/runelic.json
-
-# Profiler output, regenerated per run
-config/spark/
-config/observable.json
-observable_announce
-
-# Per-save state, keyed by world/player UUID
-gtceu/prospection_cache/
-config/chunky/tasks/
-config/emi.css
-
-# Python bytecode from the test harness
-__pycache__/
-
-# Leftovers from the Core mod's build in a checkout that predates ADR-0128.
-.gradle/
-build/
-mod/
-
-*.log
-
-
-# Agent worktrees. Each is a second checkout of this repo, not pack content, and a
-# `git add -A` from the repo root would otherwise commit every session's copy of it.
+# Agent worktrees. Each is a second checkout of this repo, and a `git add -A` from the repo root
+# would otherwise commit every session's copy of it.
 .claude/worktrees/
 .rtk/
-debug-profile.json
 
 mise.local.toml
-.probe
-kubejs/config/probe-settings.json
+*.log
