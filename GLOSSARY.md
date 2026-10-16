@@ -7,8 +7,8 @@ design reference for mechanics, not the authority for numbers.
 **Module**:
 One of the suite's mods, each owning one capability: Groundworks (placement), Beltworks (items on
 belts), Pipeworks (fluids), Wireworks (energy), Craftworks (crafting machines), Fieldworks
-(resources), Gearworks (Gear) and Voidworks (void energy). Each plays in vanilla and requires no
-other Module but Groundworks (ADR-0128).
+(resources), Gearworks (Gear) and Voidworks (void energy, and matter carried through the void).
+Each plays in vanilla and requires no other Module but Groundworks (ADR-0128).
 _Avoid_: Library, Binding
 
 **Groundworks**:
