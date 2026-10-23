@@ -28,7 +28,9 @@ so the Electric Harvester gated nothing (fieldworks#35).
   blocks: a Nether centre's distance is its Nether distance ×8, so one set of law numbers serves
   both dimensions. The figures are a starting point for playtesting.
 - **Nether Patches lie on the open Nether floor**, found by scanning down from under the bedrock
-  roof, never on the roof or a lava sea, and follow the floor column by column.
+  roof, never on the roof or a lava sea, and follow the floor column by column, a column further than 8
+  blocks above or below the centre's floor being left out, so a patch is one place to build beside and
+  not a scatter over every cave level.
 - **Rare resources sit behind a tech step.** The Burner Harvester works every common resource.
   Uranium and diamond need the Electric Harvester and Overworld Drilling Fluid; netherite needs the
   Electric Harvester and Nether Drilling Fluid; Oil wells need the Electric Harvester and no fluid.
