@@ -26,7 +26,7 @@ job of its own (#648).
   into its namespace.
 - **FactoryWorks Core becomes Fieldworks**, mod id `fieldworks`, in its own repository and
   CurseForge project. It holds resources and their base forms, never intermediates: the ore patches
-  (iron, copper, coal, stone, uranium, sulfur), each behind a generation switch; the oil wells and
+  (iron, copper, coal, stone, uranium, sulfur; this list is superseded by [Fieldworks ADR 0007](https://github.com/5thlayer/fieldworks/blob/main/docs/adr/0007-a-patch-exists-for-every-mineral-a-module-recipe-uses.md)), each behind a generation switch; the oil wells and
   crude oil, whose yield decays to a floor and never to zero (ADR-0081); and the **Harvester**. One map
   marker per patch names its resource and what it has left, through each map mod's API, FTB Chunks
   first. Sulfur, crude and uranium carry `c:dusts/sulfur`, `c:crude_oil` and `c:ingots/uranium`.
