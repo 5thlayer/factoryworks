@@ -94,3 +94,10 @@ The base is gone: no Module requires another, and Groundworks is the only shared
 FactoryWorks Core becomes Fieldworks, holding resources and their base forms and no intermediates,
 in a repository of its own named `fieldworks`; this repository keeps its name as the Showcase. The
 machines each Module holds, and the release train, are restated there.
+
+## Amended by Showcase issue #4
+
+FTB Teams stays in the Showcase: FTB Chunks on 26.1.2 requires it, and the claims and force-loading
+it gives teams are what a shared server needs now that the Showcase supports multiplayer
+([5thlayer/factoryworks-showcase#4](https://github.com/5thlayer/factoryworks-showcase/issues/4)).
+FTB Quests still leaves.
