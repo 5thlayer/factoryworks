@@ -1,5 +1,7 @@
 # FactoryWorks
 
+> **Archived on 2026-11-16.** The suite's glossary, decisions and parent issues are no longer kept here. The issues, pull requests and documents below stay readable as they were on that date. Each mod's own repository is still active: see the list under [The suite](#the-suite).
+
 A suite of Minecraft 26.1.2 / NeoForge tech mods that brings Factorio's logistics into an ordinary world and mixes with other tech mods. Each mod owns one capability and plays in vanilla.
 
 FactoryWorks is a fan project and is not affiliated with or endorsed by Wube Software, the makers of Factorio.
